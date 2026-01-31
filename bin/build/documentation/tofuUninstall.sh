@@ -2,19 +2,21 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="package - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="tofu.sh"
-description="Uninstall tofu binary and apt sources keys"$'\n'"Argument: package - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: tofuInstall packageUninstall"$'\n'""
+description="Uninstall tofu binary and apt sources keys"$'\n'""
 file="bin/build/tools/tofu.sh"
-foundNames=()
+foundNames=([0]="argument" [1]="see")
 rawComment="Uninstall tofu binary and apt sources keys"$'\n'"Argument: package - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: tofuInstall packageUninstall"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+see="tofuInstall packageUninstall"$'\n'""
 sourceFile="bin/build/tools/tofu.sh"
 sourceHash="43ee145bf6b54d6972866add37ebf9eda9c165df"
 summary="Uninstall tofu binary and apt sources keys"
-usage="tofuUninstall"
+summaryComputed="true"
+usage="tofuUninstall [ package ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mtofuUninstall'$'\e''[0m'$'\n'''$'\n''Uninstall tofu binary and apt sources keys'$'\n''Argument: package - String. Optional. Additional packages to uninstall using '$'\e''[[(code)]mpackageUninstall'$'\e''[[(reset)]m'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''See: tofuInstall packageUninstall'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mtofuUninstall'$'\e''[0m '$'\e''[[(blue)]m[ package ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mpackage  '$'\e''[[(value)]mString. Optional. Additional packages to uninstall using '$'\e''[[(code)]mpackageUninstall'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Uninstall tofu binary and apt sources keys'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: tofuUninstall'$'\n'''$'\n''Uninstall tofu binary and apt sources keys'$'\n''Argument: package - String. Optional. Additional packages to uninstall using packageUninstall'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''See: tofuInstall packageUninstall'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.541
+helpPlain='Usage: [[(info)]mtofuUninstall [[(blue)]m[ package ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]mpackage  String. Optional. Additional packages to uninstall using [[(code)]mpackageUninstall'$'\n''    [[(blue)]m--help   Flag. Optional. Display this help.'$'\n'''$'\n''Uninstall tofu binary and apt sources keys'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
+# elapsed 3.89

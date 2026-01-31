@@ -3,7 +3,14 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# Experimental
+# **Experimental**: Compile usage using multiple processes and a writer and several readers.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --workers workerCount - PositiveInteger. Optional. Create this many workers to do the job.
+# Argument: --all - Flag. Optional. Check and build all of the build functions usage data.
+# Argument: --clean - Flag. Optional. Delete all usage files before starting.
 buildUsageCompileParallel() {
   local handler="_${FUNCNAME[0]}"
   local totalWorkers=1 allFlag=false cleanFlag=false
@@ -30,7 +37,7 @@ buildUsageCompileParallel() {
     shift
   done
 
-  local start && start=$(timingStart)
+  local start && start=$(timingStart) || return $?
 
   # Load test stuff here
   __buildUsageLoad "$handler" || return $?
@@ -41,7 +48,7 @@ buildUsageCompileParallel() {
   if $cleanFlag; then
     catchEnvironment "$handler" rm -rf "$cachePath" || return $?
     catchEnvironment "$handler" muzzle directoryRequire "$cachePath" || return $?
-    decorate info "Cleaned process state"
+    decorate info "Cleaned process state" || return $?
   fi
   # shellcheck disable=SC2064
   trap "__buildUsageCompileParallel \"$cachePath\"" EXIT INT
@@ -65,9 +72,11 @@ buildUsageCompileParallel() {
 
   catchEnvironment "$handler" rm -f "$fifo" || return $?
   catchEnvironment "$handler" mkfifo "$fifo" || returnUndo $? "${undo[@]}" || return $?
-  catchEnvironment "$handler" touch "$cachePath/lock" || returnUndo $? "${undo[@]}" || return $?
+  catchEnvironment "$handler" touch "$cachePath/lock" "$cachePath/displayLock" || returnUndo $? "${undo[@]}" || return $?
 
   catchEnvironment "$handler" printf "%d\n" "$totalWorkers" >"$cachePath/total" || returnUndo $? "${undo[@]}" || return $?
+
+  local _x startY && IFS=$'\n' read -r -d '' _x startY < <(cursorGet)
 
   # start multiple workers in parallel
   catchEnvironment "$handler" rm -rf "$workerPidFile" || return $?
@@ -75,21 +84,29 @@ buildUsageCompileParallel() {
     __buildUsageCompileWorker "$handler" "$cachePath" "$workerId" &
     pid=$!
     catchEnvironment "$handler" printf "%d\n" "$!" >>"$workerPidFile" || returnUndo $? "${undo[@]}" || return $?
-    statusMessage decorate info "Started worker $pid"
+    statusMessage --last decorate info "Worker $workerId: Process $pid" || return $?
   done
 
   # start writer
   __buildUsageCompileWriter "$handler" "$cachePath" "$allFlag" &
   pid=$!
   catchEnvironment "$handler" printf "%d\n" "$pid" >"$writerPidFile" || returnUndo $? "${undo[@]}" || return $?
-  statusMessage decorate info "Started writer $pid"
+  local endY && IFS=$'\n' read -r -d '' _x endY < <(cursorGet)
 
-  catchEnvironment "$handler" wait || return $?
+  catchReturn "$handler" printf "%s\n" "$startY" "$endY" >"$cachePath/term" || return $?
+
+  statusMessage decorate info "Started writer $pid" || return $?
+
+  if ! wait; then
+    __buildUsageCompileParallel "$cachePath" || :
+    trap - EXIT INT || :
+    throwEnvironment "$handler" "Processes failed." || return $?
+  fi
 
   __buildUsageCompileParallel "$cachePath" || return $?
 
-  trap - EXIT INT
-  statusMessage timingReport "$start" "Ran $(pluralWord "$totalWorkers" "worker")"
+  trap - EXIT INT || :
+  statusMessage timingReport "$start" "Ran $(pluralWord "$totalWorkers" "worker")" || return $?
 }
 _buildUsageCompileParallel() {
   # __IDENTICAL__ usageDocument 1
@@ -117,9 +134,9 @@ __buildUsageCompileCleanupProcesses() {
   fi
   if [ -f "$cachePath/writer" ]; then
     local pid && pid=$(head -n 1 "$cachePath/writer")
-    pids+=("$pid")
+    pids=("$pid" "${pids[@]+"${pids[@]}"}")
   fi
-  [ "${#pids[@]}" -eq 0 ] || catchEnvironment "$handler" processWait --signals STOP,TERM,KILL "${pids[@]}" || return $?
+  [ "${#pids[@]}" -eq 0 ] || catchEnvironment "$handler" processWait --timeout 10 --signals HUP,TERM,STOP,KILL "${pids[@]}" || return $?
   catchEnvironment "$handler" rm -rf "$cachePath/workers" "$cachePath/writer" || return $?
 }
 
@@ -134,6 +151,9 @@ __buildUsageCompileWriter() {
 
   ! buildDebugEnabled usage-writer || verboseFlag=true
 
+  # shellcheck disable=SC2064
+  catchReturn "$handler" trap "__buildUsageCompileProcessTerminate \"\" \"Writer\"" HUP TERM || return $?
+
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   local docPath="$home/bin/build/documentation/"
@@ -146,7 +166,7 @@ __buildUsageCompileWriter() {
   local clean=("$docMod" "$toolsMod" "$recordSizeFile")
 
   catchReturn "$handler" fileModificationTimes "$docPath" -name '*.sh' | sort -rn >"$docMod" || returnClean $? "${clean[@]}" || return $?
-  catchReturn "$handler" fileModificationTimes "$toolsPath" -name '*.sh' | sort -rn >"$toolsMod" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" fileModificationTimes "$toolsPath" -name '*.sh' ! -name '*deprecated.sh' | sort -rn >"$toolsMod" || returnClean $? "${clean[@]}" || return $?
 
   local docNewestModified docNewestModifiedFile
   read -r docNewestModified docNewestModifiedFile < <(catchEnvironment "$handler" head -n 1 "$docMod") || return $?
@@ -209,18 +229,25 @@ __buildUsageCompileWorker() {
   local workerId="$1" && shift
   local workerCount && catchEnvironment "$handler" read -r workerCount <"$cachePath/total" || return $?
   local recordSizeFile="$cachePath/size"
+  local termSizeFile="$cachePath/term"
+  local totalWorkersFile="$cachePath/total"
+  local waitFiles=("$recordSizeFile" "$termSizeFile" "$totalWorkersFile")
   local prefix && prefix="Worker $(catchReturn "$handler" textAlignRight "${#workerCount}" "$workerId")/$workerCount:" || return $?
 
   local debugFlag=false
 
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" flock || return $?
+
   ! buildDebugEnabled usage-worker || debugFlag=true
 
-  local init && init=$(timingStart)
-  while [ ! -f "$recordSizeFile" ]; do
-    catchEnvironment "$handler" sleep 0.1 || return $?
-    if [ "$(timingElapsed "$init")" -gt 10000 ]; then
-      throwEnvironment "$handler" "$prefix quit waiting for the record size $(decorate file "$recordSizeFile")" || return $?
-    fi
+  local waitSeconds=30 init && init=$(timingStart) || return $?
+  local waitFile && for waitFile in "${waitFiles[@]}"; do
+    while [ ! -f "$waitFile" ]; do
+      catchEnvironment "$handler" sleep 0.1 || return $?
+      if [ "$(timingElapsed "$init")" -gt $((waitSeconds * 1000)) ]; then
+        throwEnvironment "$handler" "$prefix quit waiting for  $(decorate file "$waitFile")" || return $?
+      fi
+    done
   done
   local recordSize && recordSize="$(head -n 1 "$recordSizeFile")"
   if ! isUnsignedInteger "$recordSize"; then
@@ -228,23 +255,33 @@ __buildUsageCompileWorker() {
   fi
   local docPath && docPath="$(catchReturn "$handler" buildHome)/bin/build/documentation" || return $?
   local functionName fileModificationTime sourceFile
-  local fifo="$cachePath/fifo"
+  local totalWorkers && totalWorkers=$(catchReturn "$handler" head -n 1 "$totalWorkersFile") || return $?
   local lock="$cachePath/lock"
+  local displayLock="$cachePath/displayLock"
   [ -e "$fifo" ] || throwEnvironment "$handler" "$prefix missing fifo $(decorate file "$fifo")" || return $?
   [ -e "$lock" ] || throwEnvironment "$handler" "$prefix missing lock $(decorate file "$lock")" || return $?
+  [ -e "$displayLock" ] || throwEnvironment "$handler" "$prefix missing displayLock $(decorate file "$displayLock")" || return $?
+
+  local termBottom && termBottom="$(catchReturn "$handler" tail -n 1 "$termSizeFile")" || return $?
+  local yOffset=""
+  ! isUnsignedInteger "$termBottom" || yOffset=$((termBottom - totalWorkers + workerId))
 
   ! $debugFlag || statusMessage --last printf -- "%s starting up (record size: %d)" "$prefix" "$recordSize" 1>&2
   # open fifo and lock
   exec 3<"$fifo"
   exec 4<"$lock"
+  exec 5<"$displayLock"
   local icon="✅"
+  # shellcheck disable=SC2064
+  export __CHILD=true
+  catchReturn "$handler" trap "__buildUsageCompileProcessTerminate \"$yOffset\" \"$prefix\"" HUP TERM || return $?
   local returnCode=0 && while true; do
-    flock 4 # grab lock
+    catchReturn "$handler" flock 4 || return $? # grab lock
     if ! IFS="" read -r -d $'\0' -n "$recordSize" -u 3 recordLine; then
-      flock -u 4
+      catchReturn "$handler" flock -u 4 || return $?
       break
     fi
-    flock -u 4 # release lock
+    catchReturn "$handler" flock -u 4 || return $? # release lock
     ! $debugFlag || decorate pair "$prefix line (${#recordLine})" "$(trimSpace "$recordLine")" 1>&2
     IFS=" " read -r functionName fileModificationTime sourceFile <<<"$recordLine"
     [ -n "$functionName" ] || continue
@@ -254,13 +291,41 @@ __buildUsageCompileWorker() {
       printf "%s\n" "$prefix: Not a function: $functionName; fileModificationTime:$fileModificationTime; sourceFile:$sourceFile; – skipping" 1>&2
       continue
     fi
-    local start && start=$(timingStart)
+    # Just yield a little
+    if ! catchReturn "$handler" sleep 0; then
+      returnCode=1
+      break
+    fi
+    local start && start=$(timingStart) || return $?
     if ! __buildUsageCompileFunction "$handler" "$docPath" "$functionName" "$sourceFile" "$prefix" 1>&2; then
       returnCode=1
       break
     fi
-    statusMessage printf "%s %s %s %s %s" "$(decorate info "$prefix")" "$(timingFormat "$(timingElapsed "$start")")" "$icon" "$(decorate code "$functionName")" "$(decorate file "$sourceFile")"
+    if flock -w 0.1 5; then
+      ! isUnsignedInteger "$yOffset" || cursorSet 1 "$yOffset" || :
+      statusMessage printf -- "%s %s %s %s %s" "$(decorate info "$prefix")" "$(timingFormat "$(timingElapsed "$start")")" "$icon" "$(decorate code "$functionName")" "$(decorate file "$sourceFile")" || :
+      if ! catchReturn "$handler" flock -u 5; then
+        returnCode=1
+        break
+      fi
+    fi
   done <"$fifo"
-  exec 3<&- 4<&-
+  exec 3<&- 4<&- 5<&- || return $?
   return $returnCode
+}
+
+__buildUsageCompileProcessTerminate() {
+  local returnCode="$?"
+  local yOffset="$1" && shift
+  local title="$1" && shift
+  catchReturn "$handler" flock 5 || :
+  ! isUnsignedInteger "$yOffset" || cursorSet 1 "$yOffset" || :
+  statusMessage decorate notice "$title Terminating with $(decorate error "[$(returnCodeString "$returnCode")]")"
+  catchReturn "$handler" flock -u 5 || :
+  exec 3<&- 4<&- 5<&- || :
+  export __CHILD
+  if [ "${__CHILD-}" = true ]; then
+    exit "$returnCode"
+  fi
+  return "$returnCode"
 }

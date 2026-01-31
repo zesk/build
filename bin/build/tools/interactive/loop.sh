@@ -66,8 +66,7 @@ __loopExecute() {
       suffix=$(decorate warning "(loading)")
     fi
 
-    catchReturn "$handler" consoleHeadingBoxed --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
-    printf "%s\n" "$statusLine" | plasterLines
+    catchReturn "$handler" consoleHeadingBoxed --size 0 --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" && printf -- "%s\n" "$statusLine" | plasterLines || return $?
     IFS=$'\n' read -r -d '' _ saveY < <(cursorGet)
 
     local start showRows
@@ -95,15 +94,14 @@ __loopExecute() {
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then
-      catchReturn "$handler" consoleHeadingBoxed --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
+      catchReturn "$handler" consoleHeadingBoxed --size 0 --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
       printf "%s\n" "$statusLine" | plasterLines || return $?
       catchEnvironment "$handler" plasterLines <"$outputBuffer" || return $?
       cursorSet 1 "$((rowCount - 1))"
       bigText "Success"
       done=true
     else
-      catchReturn "$handler" consoleHeadingBoxed --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
-      printf "%s\n" "$statusLine" | plasterLines || return $?
+      catchReturn "$handler" consoleHeadingBoxed --size 0 --outside "$outsideColor" --inside "" "$title $(decorate orange "(looping)")" && printf -- "%s\n" "$statusLine" | plasterLines || echo "EXIT CODE: $?"
       (
         tail -n "$showRows" <"$outputBuffer"
         [ "$showRows" -lt "$nLines" ] || textRepeat "$((showRows - nLines))" "\n"
@@ -111,7 +109,7 @@ __loopExecute() {
       elapsed=$((elapsed / 1000))
       if [ "$elapsed" -lt "$sleepDelay" ]; then
         cursorSet 1 "$((saveY - 1))"
-        catchReturn "$handler" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
+        catchReturn "$handler" interactiveCountdown --prefix "$statusLine, running in" "$((sleepDelay - elapsed))" || return $?
       fi
     fi
     iterations=$((iterations + 1))

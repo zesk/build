@@ -2,19 +2,21 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
-description="Set up a pre-commit hook and create a cache of our files by extension."$'\n'"See: gitPreCommitCleanup"$'\n'"Return code: 0 - One or more files are available as part of the commit"$'\n'"Return code: 1 - Error, or zero files are available as part of the commit"$'\n'""
+description="Set up a pre-commit hook and create a cache of our files by extension."$'\n'""
 file="bin/build/tools/git.sh"
-foundNames=()
-rawComment="Set up a pre-commit hook and create a cache of our files by extension."$'\n'"See: gitPreCommitCleanup"$'\n'"Return code: 0 - One or more files are available as part of the commit"$'\n'"Return code: 1 - Error, or zero files are available as part of the commit"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="see" [1]="argument" [2]="return_code")
+rawComment="Set up a pre-commit hook and create a cache of our files by extension."$'\n'"See: gitPreCommitCleanup"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return code: 0 - One or more files are available as part of the commit"$'\n'"Return code: 1 - Error, or zero files are available as part of the commit"$'\n'""$'\n'""
+return_code="0 - One or more files are available as part of the commit"$'\n'"1 - Error, or zero files are available as part of the commit"$'\n'""
+see="gitPreCommitCleanup"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="3d571e2d1ac61ab50aca59a14e16e0ada007496b"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
 summary="Set up a pre-commit hook and create a cache of"
-usage="gitPreCommitSetup"
+summaryComputed="true"
+usage="gitPreCommitSetup [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitPreCommitSetup'$'\e''[0m'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n''See: gitPreCommitCleanup'$'\n''Return code: 0 - One or more files are available as part of the commit'$'\n''Return code: 1 - Error, or zero files are available as part of the commit'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitPreCommitSetup'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - One or more files are available as part of the commit'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Error, or zero files are available as part of the commit'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitPreCommitSetup'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n''See: gitPreCommitCleanup'$'\n''Return code: 0 - One or more files are available as part of the commit'$'\n''Return code: 1 - Error, or zero files are available as part of the commit'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.484
+helpPlain='Usage: gitPreCommitSetup [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- 0 - One or more files are available as part of the commit'$'\n''- 1 - Error, or zero files are available as part of the commit'$'\n'''
+# elapsed 3.666

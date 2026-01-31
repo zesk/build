@@ -2,17 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
-description="Get the last reported version."$'\n'"Argument: ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""
+description="Get the last reported version."$'\n'""
 file="bin/build/tools/git.sh"
+foundNames=([0]="argument")
 rawComment="Get the last reported version."$'\n'"Argument: ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceHash="0d4d5f47dbc638a6a3fc43178a3954586bc34adf"
+sourceFile="bin/build/tools/git.sh"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
 summary="Get the last reported version."
-usage="gitVersionLast"
+summaryComputed="true"
+usage="gitVersionLast [ ignorePattern ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitVersionLast'$'\e''[0m'$'\n'''$'\n''Get the last reported version.'$'\n''Argument: ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitVersionLast'$'\e''[0m '$'\e''[[(blue)]m[ ignorePattern ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mignorePattern  '$'\e''[[(value)]mOptional. String. Specify a grep pattern to ignore; allows you to ignore current version'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help         '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Get the last reported version.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitVersionLast'$'\n'''$'\n''Get the last reported version.'$'\n''Argument: ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.536
+helpPlain='[[(label)]mUsage: [[(info)]mgitVersionLast [[(blue)]m[ ignorePattern ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]mignorePattern  [[(value)]mOptional. String. Specify a grep pattern to ignore; allows you to ignore current version[[(reset)]m'$'\n''    [[(blue)]m--help         [[(value)]mFlag. Optional. Display this help.[[(reset)]m'$'\n'''$'\n''Get the last reported version.'$'\n'''$'\n''Return codes:'$'\n''- 0[[(reset)]m - Success'$'\n''- 1[[(reset)]m - Environment error'$'\n''- 2[[(reset)]m - Argument error'$'\n'''
+# elapsed 3.619

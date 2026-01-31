@@ -25,6 +25,7 @@ your systems.
 
 - [`FUNCNAME` and `BASH_SOURCE` notes](./notes.md)
 - [`test` cheatsheet](./test-cheatsheet.md) - Bash `test` and `[ ]` expressions
+- [Trap Manual Page](./trap.md) - Never enjoy digging to find this definition for `trap`.
 - [Bash cheatsheet](./bash-cheatsheet.md) - `shopt` and `set` meanings
 - [Bash FAQ](./bash-FAQ.md) - Raw, original document.
 

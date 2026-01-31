@@ -94,14 +94,7 @@ buildUsageCompile() {
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   if $gitActions; then
-    local deprecatedFiles=()
-    local fun && while read -r fun; do
-      local target="$home/bin/build/documentation/$fun.sh"
-      if [ -f "$target" ]; then
-        deprecatedFiles+=("$target")
-      fi
-    done < <(buildDeprecatedFunctions)
-    [ "${#deprecatedFiles[@]}" -eq 0 ] || catchEnvironment "$handler" git rm "${deprecatedFiles[@]}" || return $?
+    buildUsageRemoveDeprecated --handler "$handler" || return $?
     catchEnvironment "$handler" git add "$home/bin/build/documentation/"*.sh || return $?
   fi
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
@@ -111,6 +104,44 @@ _buildUsageCompile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+buildUsageRemoveDeprecated() {
+  local handler="_${FUNCNAME[0]}"
+
+  local dryRun=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --dry-run) dryRun=true ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  local deprecatedFiles=()
+  local fun && while read -r fun; do
+    local target="$home/bin/build/documentation/$fun.sh"
+    if [ -f "$target" ]; then
+      deprecatedFiles+=("$target")
+    fi
+  done < <(catchReturn "$handler" buildDeprecatedFunctions) || return $?
+  if $dryRun; then
+    [ "${#deprecatedFiles[@]}" -eq 0 ] && statusMessage --last printf -- "%s\n" "# No deprecated files." || printf -- "git rm %s\n" "${deprecatedFiles[@]}" || return $?
+  else
+    [ "${#deprecatedFiles[@]}" -eq 0 ] || catchEnvironment "$handler" git rm "${deprecatedFiles[@]}" || return $?
+  fi
+}
 __buildUsageLoad() {
   local handler="$1" && shift
 
@@ -293,7 +324,7 @@ __buildUsageIsComplete() {
   local tempFunctions="$1" && shift
   local missing=() finished=false && while ! $finished; do
     local fun && read -r fun || finished=true
-    if [ -z "$fun" ] || ! isFunction "_$fun"; then continue; fi
+    [ -n "$fun" ] || continue
     if [ ! -f "$docPath/$fun.sh" ]; then
       missing+=("$fun")
     fi

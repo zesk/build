@@ -19,14 +19,14 @@ cursorGet() {
 
   isTTYAvailable || throwEnvironment "$handler" "no tty" || return $?
 
-  local x y
-
   # Read the response from the terminal
   # Again - terminal does this: row/col (Y X), we like (X Y)
-  IFS=';' read -r -sdR -p $'\033[6n' y x </dev/tty >/dev/tty || :¬
-
+  local x y && IFS=';' read -d '' -t 2 -r -sdR -p $'\033[6n' y x </dev/tty >/dev/tty
   # Extract row and column numbers
   y=${y#*[}
+  if ! isUnsignedInteger "$x" || ! isUnsignedInteger "$y"; then
+    throwEnvironment "$handler" "Invalid response from tty: \"$(printf "%s" "$y;$x" | dumpBinary)\"" || return $?
+  fi
   printf "%d\n" "$x" "$y"
 }
 _cursorGet() {

@@ -4,15 +4,20 @@
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
-description="Return Code: 1 - the repo has NOT been modified"$'\n'"Return Code: 0 - the repo has been modified"$'\n'"Has a git repository been changed from HEAD?"$'\n'"Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'"Credit: Chris Johnsen"$'\n'""
+credit="Chris Johnsen"$'\n'""
+description="Has a git repository been changed from HEAD?"$'\n'""
 file="bin/build/tools/git.sh"
+foundNames=([0]="return_code" [1]="source" [2]="credit")
 rawComment="Return Code: 1 - the repo has NOT been modified"$'\n'"Return Code: 0 - the repo has been modified"$'\n'"Has a git repository been changed from HEAD?"$'\n'"Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'"Credit: Chris Johnsen"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceHash="0d4d5f47dbc638a6a3fc43178a3954586bc34adf"
-summary="Return Code: 1 - the repo has NOT been modified"
+return_code="1 - the repo has NOT been modified"$'\n'"0 - the repo has been modified"$'\n'""
+source="https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'""
+sourceFile="bin/build/tools/git.sh"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+summary="Has a git repository been changed from HEAD?"
+summaryComputed="true"
 usage="gitRepositoryChanged"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitRepositoryChanged'$'\e''[0m'$'\n'''$'\n''Return Code: 1 - the repo has NOT been modified'$'\n''Return Code: 0 - the repo has been modified'$'\n''Has a git repository been changed from HEAD?'$'\n''Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339'$'\n''Credit: Chris Johnsen'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitRepositoryChanged'$'\e''[0m'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - the repo has NOT been modified'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - the repo has been modified'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitRepositoryChanged'$'\n'''$'\n''Return Code: 1 - the repo has NOT been modified'$'\n''Return Code: 0 - the repo has been modified'$'\n''Has a git repository been changed from HEAD?'$'\n''Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339'$'\n''Credit: Chris Johnsen'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.518
+helpPlain='[[(label)]mUsage: gitRepositoryChanged'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m1 - the repo has NOT been modified'$'\n''- [[(code)]m0 - the repo has been modified'$'\n'''
+# elapsed 3.073

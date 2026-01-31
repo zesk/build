@@ -2,19 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="target - File. Required. File to update."$'\n'"version - String. Required. Version to place at the top of the file."$'\n'""
 base="deprecated-tools.sh"
-description="Take a deprecated.txt file and add a comment with the current version number to the top"$'\n'"Argument: target - File. Required. File to update."$'\n'"Argument: version - String. Required. Version to place at the top of the file."$'\n'""
+description="Take a deprecated.txt file and add a comment with the current version number to the top"$'\n'""
 file="bin/build/tools/deprecated-tools.sh"
-foundNames=()
+foundNames=([0]="argument")
 rawComment="Take a deprecated.txt file and add a comment with the current version number to the top"$'\n'"Argument: target - File. Required. File to update."$'\n'"Argument: version - String. Required. Version to place at the top of the file."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deprecated-tools.sh"
 sourceHash="f6ff1d0254473f216c6361ebc735edfbb7a60b50"
 summary="Take a deprecated.txt file and add a comment with the"
-usage="deprecatedFilePrependVersion"
+summaryComputed="true"
+usage="deprecatedFilePrependVersion target version"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdeprecatedFilePrependVersion'$'\e''[0m'$'\n'''$'\n''Take a deprecated.txt file and add a comment with the current version number to the top'$'\n''Argument: target - File. Required. File to update.'$'\n''Argument: version - String. Required. Version to place at the top of the file.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdeprecatedFilePrependVersion'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mtarget'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mversion'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mtarget   '$'\e''[[(value)]mFile. Required. File to update.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mversion  '$'\e''[[(value)]mString. Required. Version to place at the top of the file.'$'\e''[[(reset)]m'$'\n'''$'\n''Take a deprecated.txt file and add a comment with the current version number to the top'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: deprecatedFilePrependVersion'$'\n'''$'\n''Take a deprecated.txt file and add a comment with the current version number to the top'$'\n''Argument: target - File. Required. File to update.'$'\n''Argument: version - String. Required. Version to place at the top of the file.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.432
+helpPlain='Usage: deprecatedFilePrependVersion target version'$'\n'''$'\n''    target   File. Required. File to update.'$'\n''    version  String. Required. Version to place at the top of the file.'$'\n'''$'\n''Take a deprecated.txt file and add a comment with the current version number to the top'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 3.491

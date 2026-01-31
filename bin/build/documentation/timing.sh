@@ -2,19 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="command - Executable. Required. Command to run."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--name - String. Optional. Display this help."$'\n'""
 base="timing.sh"
-description="Time command, similar to \`time\` but uses internal functions"$'\n'"Argument: command - Executable. Required. Command to run."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --name - String. Optional. Display this help."$'\n'"Outputs time as \`timingReport\`"$'\n'""
+description="Time command, similar to \`time\` but uses internal functions"$'\n'"Outputs time as \`timingReport\`"$'\n'""
 file="bin/build/tools/timing.sh"
-foundNames=()
+foundNames=([0]="argument")
 rawComment="Time command, similar to \`time\` but uses internal functions"$'\n'"Argument: command - Executable. Required. Command to run."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --name - String. Optional. Display this help."$'\n'"Outputs time as \`timingReport\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/timing.sh"
 sourceHash="8cfb9a50fadfff4b381ff34068eab3136b206319"
 summary="Time command, similar to \`time\` but uses internal functions"
-usage="timing"
+summaryComputed="true"
+usage="timing command [ --help ] [ --name ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mtiming'$'\e''[0m'$'\n'''$'\n''Time command, similar to '$'\e''[[(code)]mtime'$'\e''[[(reset)]m but uses internal functions'$'\n''Argument: command - Executable. Required. Command to run.'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Argument: --name - String. Optional. Display this help.'$'\n''Outputs time as '$'\e''[[(code)]mtimingReport'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mtiming'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mcommand'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --name ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mcommand  '$'\e''[[(value)]mExecutable. Required. Command to run.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--name   '$'\e''[[(value)]mString. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Time command, similar to '$'\e''[[(code)]mtime'$'\e''[[(reset)]m but uses internal functions'$'\n''Outputs time as '$'\e''[[(code)]mtimingReport'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: timing'$'\n'''$'\n''Time command, similar to time but uses internal functions'$'\n''Argument: command - Executable. Required. Command to run.'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Argument: --name - String. Optional. Display this help.'$'\n''Outputs time as timingReport'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.524
+helpPlain='[[(label)]mUsage: [[(info)]mtiming [[(bold)]m[[(magenta)]mcommand [[(blue)]m[ --help ] [[(blue)]m[ --name ]'$'\n'''$'\n''    [[(red)]mcommand  [[(value)]mExecutable. Required. Command to run.'$'\n''    [[(blue)]m--help   [[(value)]mFlag. Optional. Display this help.'$'\n''    [[(blue)]m--name   [[(value)]mString. Optional. Display this help.'$'\n'''$'\n''Time command, similar to [[(code)]mtime but uses internal functions'$'\n''Outputs time as [[(code)]mtimingReport'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
+# elapsed 4.148

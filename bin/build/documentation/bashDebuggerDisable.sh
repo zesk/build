@@ -2,19 +2,21 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="debugger.sh"
-description="Disables the debugger immediately"$'\n'"Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively"$'\n'"    Usage: bashDebuggerDisable [ --help ]"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: bashDebug bashDebuggerEnable"$'\n'""
+description="Disables the debugger immediately"$'\n'"Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively"$'\n'""
 file="bin/build/tools/debugger.sh"
-foundNames=()
+foundNames=([0]="____usage" [1]="argument" [2]="see")
 rawComment="Disables the debugger immediately"$'\n'"Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively"$'\n'"    Usage: bashDebuggerDisable [ --help ]"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: bashDebug bashDebuggerEnable"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+see="bashDebug bashDebuggerEnable"$'\n'""
 sourceFile="bin/build/tools/debugger.sh"
 sourceHash="6ad7118699fc0df1b74d7db2a4f2a2eda40309d8"
 summary="Disables the debugger immediately"
-usage="bashDebuggerDisable"
+summaryComputed="true"
+usage="bashDebuggerDisable [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashDebuggerDisable'$'\e''[0m'$'\n'''$'\n''Disables the debugger immediately'$'\n''Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively'$'\n''    Usage: bashDebuggerDisable [ --help ]'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''See: bashDebug bashDebuggerEnable'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashDebuggerDisable'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Disables the debugger immediately'$'\n''Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashDebuggerDisable'$'\n'''$'\n''Disables the debugger immediately'$'\n''Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively'$'\n''    Usage: bashDebuggerDisable [ --help ]'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''See: bashDebug bashDebuggerEnable'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.462
+helpPlain='Usage: [[(info)]mbashDebuggerDisable [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Disables the debugger immediately'$'\n''Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 3.288

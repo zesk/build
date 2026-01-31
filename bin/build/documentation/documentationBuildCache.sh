@@ -2,19 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="suffix - String. Optional. Directory suffix - created if does not exist."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
-description="Get the cache directory for the documentation"$'\n'"Argument: suffix - String. Optional. Directory suffix - created if does not exist."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""
+description="Get the cache directory for the documentation"$'\n'""
 file="bin/build/tools/documentation.sh"
-foundNames=()
+foundNames=([0]="argument")
 rawComment="Get the cache directory for the documentation"$'\n'"Argument: suffix - String. Optional. Directory suffix - created if does not exist."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
 sourceHash="46ab638aa51f9a58ed6d53b666c068deff5385ca"
 summary="Get the cache directory for the documentation"
-usage="documentationBuildCache"
+summaryComputed="true"
+usage="documentationBuildCache [ suffix ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdocumentationBuildCache'$'\e''[0m'$'\n'''$'\n''Get the cache directory for the documentation'$'\n''Argument: suffix - String. Optional. Directory suffix - created if does not exist.'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdocumentationBuildCache'$'\e''[0m '$'\e''[[(blue)]m[ suffix ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]msuffix  '$'\e''[[(value)]mString. Optional. Directory suffix - created if does not exist.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Get the cache directory for the documentation'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: documentationBuildCache'$'\n'''$'\n''Get the cache directory for the documentation'$'\n''Argument: suffix - String. Optional. Directory suffix - created if does not exist.'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.479
+helpPlain='Usage: documentationBuildCache [[(blue)]m[ suffix ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]msuffix  String. Optional. Directory suffix - created if does not exist.'$'\n''    [[(blue)]m--help  Flag. Optional. Display this help.'$'\n'''$'\n''Get the cache directory for the documentation'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 3.242

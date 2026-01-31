@@ -2,19 +2,21 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="colors.sh"
-description="Summary: Converts backticks, bold and italic to console colors."$'\n'"stdin: Markdown"$'\n'"stdout: decorated console output"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""
+description="Converts backticks, bold and italic to console colors."$'\n'""
 file="bin/build/tools/colors.sh"
-foundNames=()
+foundNames=([0]="summary" [1]="stdin" [2]="stdout" [3]="argument")
 rawComment="Summary: Converts backticks, bold and italic to console colors."$'\n'"stdin: Markdown"$'\n'"stdout: decorated console output"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
 sourceHash="9f54e9ae3d6bd1960826e3412b3edfd9c241f895"
-summary="Summary: Converts backticks, bold and italic to console colors."
-usage="markdownToConsole"
+stdin="Markdown"$'\n'""
+stdout="decorated console output"$'\n'""
+summary="Converts backticks, bold and italic to console colors."$'\n'""
+usage="markdownToConsole [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmarkdownToConsole'$'\e''[0m'$'\n'''$'\n''Summary: Converts backticks, bold and italic to console colors.'$'\n''stdin: Markdown'$'\n''stdout: decorated console output'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmarkdownToConsole'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Converts backticks, bold and italic to console colors.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[(code)]mstdin'$'\e''[[(reset)]m:'$'\n''Markdown'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''decorated console output'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: markdownToConsole'$'\n'''$'\n''Summary: Converts backticks, bold and italic to console colors.'$'\n''stdin: Markdown'$'\n''stdout: decorated console output'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.468
+helpPlain='[[(label)]mUsage: markdownToConsole [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]m--help  [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Converts backticks, bold and italic to console colors.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''$'\n''Reads from [[(code)]mstdin:'$'\n''Markdown'$'\n'''$'\n''Writes to [[(code)]mstdout:'$'\n''decorated console output'$'\n'''
+# elapsed 3.533

@@ -667,9 +667,9 @@ _gitCommitHash() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Get the current branch name
-#
+# Summary: Get the current branch name
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 gitCurrentBranch() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -681,8 +681,13 @@ _gitCurrentBranch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Does git have any tags?
+# Summary: Does git have any tags?
+# Do any tags exist at all in `git`?
 # May need to `git pull --tags`, or no tags exist.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Return Code: 0 - At least one tag exists
+# Return Code: 1 - No tags exist
 gitHasAnyRefs() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -700,14 +705,16 @@ _gitHasAnyRefs() {
 # List current valid git hook types
 # Output: lines:gitHookType
 # Hook types:
-# - pre-commit
-# - pre-push
-# - pre-merge-commit
-# - pre-rebase
-# - pre-receive
-# - update
-# - post-update
-# - post-commit
+# - `pre-commit`
+# - `pre-push`
+# - `pre-merge-commit`
+# - `pre-rebase`
+# - `pre-receive`
+# - `update`
+# - `post-update`
+# - `post-commit`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 gitHookTypes() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
@@ -726,15 +733,17 @@ _gitHookTypes() {
 # Argument: --application home - Directory. Optional. Set the application home directory to this prior to looking for hooks.
 # Argument: hookName - String. Optional. A hook or hook names to install. See `gitHookTypes`
 # Hook types:
-# - pre-commit
-# - pre-push
-# - pre-merge-commit
-# - pre-rebase
-# - pre-receive
-# - update
-# - post-update
-# - post-commit
+# - `pre-commit`
+# - `pre-push`
+# - `pre-merge-commit`
+# - `pre-rebase`
+# - `pre-receive`
+# - `update`
+# - `post-update`
+# - `post-commit`
 # See: gitHookTypes
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 gitInstallHooks() {
   local hook
   local argument
@@ -804,10 +813,13 @@ _gitInstallHooks() {
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
 # Environment: BUILD-HOME - The default application home directory used for `.git` and build hooks.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 gitInstallHook() {
   local handler="_${FUNCNAME[0]}"
 
   local execute=true verbose=false home="" types=()
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -817,16 +829,9 @@ gitInstallHook() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --copy)
-      execute=false
-      ;;
-    --verbose)
-      verbose=true
-      ;;
-    --application)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      home=$(validate "$handler" Directory "applicationHome" "$1") || return $?
-      ;;
+    --copy) execute=false ;;
+    --verbose) verbose=true ;;
+    --application) shift && home=$(validate "$handler" Directory "applicationHome" "$1") || return $? ;;
     *)
       [ "${#types[@]}" -gt 0 ] || read -r -a types < <(gitHookTypes) || :
       [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
@@ -877,6 +882,8 @@ __gitPreCommitCache() {
 
 # Set up a pre-commit hook and create a cache of our files by extension.
 # See: gitPreCommitCleanup
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Return code: 0 - One or more files are available as part of the commit
 # Return code: 1 - Error, or zero files are available as part of the commit
 gitPreCommitSetup() {
@@ -900,6 +907,8 @@ _gitPreCommitSetup() {
 
 # Output a display for pre-commit files changed
 # Argument: extension - String. Optional. Extension to display
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 gitPreCommitHeader() {
   local handler="_${FUNCNAME[0]}" width=5
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -936,6 +945,8 @@ _gitPreCommitHeader() {
 
 # Does this commit have the following file extensions?
 # Argument: extension - String. Optional. Extension to check. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Return code: 0 - if all extensions are present
 # Return code: 1 - if any extension is not present
 gitPreCommitHasExtension() {

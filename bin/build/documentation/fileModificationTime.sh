@@ -2,19 +2,21 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="filename ... - File to fetch modification time"$'\n'""
 base="file.sh"
-description="Fetch the modification time of a file as a timestamp"$'\n'"Argument: filename ... - File to fetch modification time"$'\n'"Return Code: 2 - If file does not exist"$'\n'"Return Code: 0 - If file exists and modification times are output, one per line"$'\n'"Example:     fileModificationTime ~/.bash_profile"$'\n'""
+description="Fetch the modification time of a file as a timestamp"$'\n'""
+example="    fileModificationTime ~/.bash_profile"$'\n'""
 file="bin/build/tools/file.sh"
-foundNames=()
+foundNames=([0]="argument" [1]="return_code" [2]="example")
 rawComment="Fetch the modification time of a file as a timestamp"$'\n'"Argument: filename ... - File to fetch modification time"$'\n'"Return Code: 2 - If file does not exist"$'\n'"Return Code: 0 - If file exists and modification times are output, one per line"$'\n'"Example:     fileModificationTime ~/.bash_profile"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+return_code="2 - If file does not exist"$'\n'"0 - If file exists and modification times are output, one per line"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="3b2ff8d50f51bb66cfa45739fb7abe9787c417f0"
 summary="Fetch the modification time of a file as a timestamp"
-usage="fileModificationTime"
+summaryComputed="true"
+usage="fileModificationTime [ filename ... ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileModificationTime'$'\e''[0m'$'\n'''$'\n''Fetch the modification time of a file as a timestamp'$'\n''Argument: filename ... - File to fetch modification time'$'\n''Return Code: 2 - If file does not exist'$'\n''Return Code: 0 - If file exists and modification times are output, one per line'$'\n''Example:     fileModificationTime ~/.bash_profile'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileModificationTime'$'\e''[0m '$'\e''[[(blue)]m[ filename ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mfilename ...  '$'\e''[[(value)]mFile to fetch modification time'$'\e''[[(reset)]m'$'\n'''$'\n''Fetch the modification time of a file as a timestamp'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - If file does not exist'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - If file exists and modification times are output, one per line'$'\n'''$'\n''Example:'$'\n''    fileModificationTime ~/.bash_profile'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileModificationTime'$'\n'''$'\n''Fetch the modification time of a file as a timestamp'$'\n''Argument: filename ... - File to fetch modification time'$'\n''Return Code: 2 - If file does not exist'$'\n''Return Code: 0 - If file exists and modification times are output, one per line'$'\n''Example:     fileModificationTime ~/.bash_profile'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.49
+helpPlain='[[(label)]mUsage: [[(info)]mfileModificationTime [[(blue)]m[ filename ... ]'$'\n'''$'\n''    [[(blue)]mfilename ...  [[(value)]mFile to fetch modification time'$'\n'''$'\n''Fetch the modification time of a file as a timestamp'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m2 - If file does not exist'$'\n''- [[(code)]m0 - If file exists and modification times are output, one per line'$'\n'''$'\n''Example:'$'\n''    fileModificationTime ~/.bash_profile'$'\n'''
+# elapsed 3.577

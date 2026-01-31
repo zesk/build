@@ -4,17 +4,18 @@
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
-description="Return code is \`leak\`"$'\n'"Return Code: 108"$'\n'""
+description="Return code is \`leak\`"$'\n'""
 file="bin/build/tools/test.sh"
-foundNames=()
+foundNames=([0]="return_code")
 rawComment="Return code is \`leak\`"$'\n'"Return Code: 108"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+return_code="108"$'\n'""
 sourceFile="bin/build/tools/test.sh"
 sourceHash="d5d12954f38b51540f87d67aa3d877d2c77a97bc"
 summary="Return code is \`leak\`"
+summaryComputed="true"
 usage="returnLeak"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnLeak'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]mleak'$'\e''[[(reset)]m'$'\n''Return Code: 108'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnLeak'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]mleak'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: returnLeak'$'\n'''$'\n''Return code is leak'$'\n''Return Code: 108'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.721
+helpPlain='[[(label)]mUsage: [[(info)]mreturnLeak'$'\n'''$'\n''Return code is [[(code)]mleak'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
+# elapsed 3.341

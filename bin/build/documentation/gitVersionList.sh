@@ -2,17 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
-description="Fetches a list of tags from git and filters those which start with v and a digit and returns"$'\n'"them sorted by version correctly."$'\n'"Return Code: 1 - If the \`.git\` directory does not exist"$'\n'"Return Code: 0 - Success"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""
+description="Fetches a list of tags from git and filters those which start with v and a digit and returns"$'\n'"them sorted by version correctly."$'\n'""
 file="bin/build/tools/git.sh"
+foundNames=([0]="return_code" [1]="argument")
 rawComment="Fetches a list of tags from git and filters those which start with v and a digit and returns"$'\n'"them sorted by version correctly."$'\n'"Return Code: 1 - If the \`.git\` directory does not exist"$'\n'"Return Code: 0 - Success"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceHash="0d4d5f47dbc638a6a3fc43178a3954586bc34adf"
+return_code="1 - If the \`.git\` directory does not exist"$'\n'"0 - Success"$'\n'""
+sourceFile="bin/build/tools/git.sh"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
 summary="Fetches a list of tags from git and filters those"
-usage="gitVersionList"
+summaryComputed="true"
+usage="gitVersionList [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitVersionList'$'\e''[0m'$'\n'''$'\n''Fetches a list of tags from git and filters those which start with v and a digit and returns'$'\n''them sorted by version correctly.'$'\n''Return Code: 1 - If the '$'\e''[[(code)]m.git'$'\e''[[(reset)]m directory does not exist'$'\n''Return Code: 0 - Success'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitVersionList'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Fetches a list of tags from git and filters those which start with v and a digit and returns'$'\n''them sorted by version correctly.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If the '$'\e''[[(code)]m.git'$'\e''[[(reset)]m directory does not exist'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitVersionList'$'\n'''$'\n''Fetches a list of tags from git and filters those which start with v and a digit and returns'$'\n''them sorted by version correctly.'$'\n''Return Code: 1 - If the .git directory does not exist'$'\n''Return Code: 0 - Success'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.584
+helpPlain='Usage: [[(info)]mgitVersionList [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Fetches a list of tags from git and filters those which start with v and a digit and returns'$'\n''them sorted by version correctly.'$'\n'''$'\n''Return codes:'$'\n''- 1 - If the .git directory does not exist'$'\n''- 0 - Success'$'\n'''
+# elapsed 3.725

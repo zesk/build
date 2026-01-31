@@ -2,19 +2,19 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="file ... - Required. One or more files to get size of."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
-description="Argument: file ... - Required. One or more files to get size of."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Environment error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""
+description="No documentation for \`fileSize\`."$'\n'""
 file="bin/build/tools/file.sh"
-foundNames=()
+foundNames=([0]="argument" [1]="return_code")
 rawComment="Argument: file ... - Required. One or more files to get size of."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Environment error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="3b2ff8d50f51bb66cfa45739fb7abe9787c417f0"
-summary="Argument: file ... - Required. One or more files to"
-usage="fileSize"
+summary="undocumented"
+usage="fileSize file ... [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileSize'$'\e''[0m'$'\n'''$'\n''Argument: file ... - Required. One or more files to get size of.'$'\n''Return Code: 0 - Success'$'\n''Return Code: 1 - Environment error'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileSize'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfile ...'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mfile ...  '$'\e''[[(value)]mRequired. One or more files to get size of.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help    '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]mfileSize'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileSize'$'\n'''$'\n''Argument: file ... - Required. One or more files to get size of.'$'\n''Return Code: 0 - Success'$'\n''Return Code: 1 - Environment error'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.476
+helpPlain='Usage: fileSize file ... [ --help ]'$'\n'''$'\n''    file ...  Required. One or more files to get size of.'$'\n''    --help    Flag. Optional. Display this help.'$'\n'''$'\n''No documentation for fileSize.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n'''
+# elapsed 3.554

@@ -2,19 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="--exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"--delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"fileToCheck ... - File. Optional. Shell file to validate."$'\n'""
 base="lint.sh"
-description="Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"Argument: fileToCheck ... - File. Optional. Shell file to validate."$'\n'"Run checks interactively until errors are all fixed."$'\n'""
+description="Run checks interactively until errors are all fixed."$'\n'""
 file="bin/build/tools/lint.sh"
-foundNames=()
+foundNames=([0]="argument")
 rawComment="Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"Argument: fileToCheck ... - File. Optional. Shell file to validate."$'\n'"Run checks interactively until errors are all fixed."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/lint.sh"
 sourceHash="1117fb23c3a75ca6a646bab1404a8f455c97fb49"
-summary="Argument: --exec binary - Callable. Optional. Run binary with files"
-usage="bashLintFilesInteractive"
+summary="Run checks interactively until errors are all fixed."
+summaryComputed="true"
+usage="bashLintFilesInteractive [ --exec binary ] [ --delay delaySeconds ] [ fileToCheck ... ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashLintFilesInteractive'$'\e''[0m'$'\n'''$'\n''Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.'$'\n''Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.'$'\n''Argument: fileToCheck ... - File. Optional. Shell file to validate.'$'\n''Run checks interactively until errors are all fixed.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashLintFilesInteractive'$'\e''[0m '$'\e''[[(blue)]m[ --exec binary ]'$'\e''[0m '$'\e''[[(blue)]m[ --delay delaySeconds ]'$'\e''[0m '$'\e''[[(blue)]m[ fileToCheck ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--exec binary         '$'\e''[[(value)]mCallable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--delay delaySeconds  '$'\e''[[(value)]mInteger. Optional. Delay in seconds between checks in interactive mode.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mfileToCheck ...       '$'\e''[[(value)]mFile. Optional. Shell file to validate.'$'\e''[[(reset)]m'$'\n'''$'\n''Run checks interactively until errors are all fixed.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashLintFilesInteractive'$'\n'''$'\n''Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.'$'\n''Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.'$'\n''Argument: fileToCheck ... - File. Optional. Shell file to validate.'$'\n''Run checks interactively until errors are all fixed.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.448
+helpPlain='[[(label)]mUsage: [[(info)]mbashLintFilesInteractive [[(blue)]m[ --exec binary ] [[(blue)]m[ --delay delaySeconds ] [[(blue)]m[ fileToCheck ... ]'$'\n'''$'\n''    [[(blue)]m--exec binary         [[(value)]mCallable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.'$'\n''    [[(blue)]m--delay delaySeconds  [[(value)]mInteger. Optional. Delay in seconds between checks in interactive mode.'$'\n''    [[(blue)]mfileToCheck ...       [[(value)]mFile. Optional. Shell file to validate.'$'\n'''$'\n''Run checks interactively until errors are all fixed.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 3.658

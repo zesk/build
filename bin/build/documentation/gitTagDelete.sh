@@ -2,17 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="--help - Flag. Optional. Display this help."$'\n'"tag - The tag to delete locally and at origin"$'\n'""
 base="git.sh"
-description="Delete git tag locally and at origin"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: tag - The tag to delete locally and at origin"$'\n'"Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur."$'\n'""
+description="Delete git tag locally and at origin"$'\n'""
 file="bin/build/tools/git.sh"
+foundNames=([0]="argument" [1]="return_code")
 rawComment="Delete git tag locally and at origin"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: tag - The tag to delete locally and at origin"$'\n'"Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceHash="0d4d5f47dbc638a6a3fc43178a3954586bc34adf"
+return_code="argument - Any stage fails will result in this exit code. Partial deletion may occur."$'\n'""
+sourceFile="bin/build/tools/git.sh"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
 summary="Delete git tag locally and at origin"
-usage="gitTagDelete"
+summaryComputed="true"
+usage="gitTagDelete [ --help ] [ tag ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitTagDelete'$'\e''[0m'$'\n'''$'\n''Delete git tag locally and at origin'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Argument: tag - The tag to delete locally and at origin'$'\n''Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitTagDelete'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ tag ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mtag     '$'\e''[[(value)]mThe tag to delete locally and at origin'$'\e''[[(reset)]m'$'\n'''$'\n''Delete git tag locally and at origin'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]margument'$'\e''[[(reset)]m - Any stage fails will result in this exit code. Partial deletion may occur.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitTagDelete'$'\n'''$'\n''Delete git tag locally and at origin'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Argument: tag - The tag to delete locally and at origin'$'\n''Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.666
+helpPlain='Usage: gitTagDelete [ --help ] [ tag ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n''    tag     The tag to delete locally and at origin'$'\n'''$'\n''Delete git tag locally and at origin'$'\n'''$'\n''Return codes:'$'\n''- argument - Any stage fails will result in this exit code. Partial deletion may occur.'$'\n'''
+# elapsed 3.329

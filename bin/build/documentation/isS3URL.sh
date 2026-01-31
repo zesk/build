@@ -2,19 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="value - EmptyString. Value to check."$'\n'""
 base="aws.sh"
-description="Is the URL passed in a S3 URL?"$'\n'"Argument: value - EmptyString. Value to check."$'\n'"Without arguments, displays help."$'\n'""
+description="Is the URL passed in a S3 URL?"$'\n'"Without arguments, displays help."$'\n'""
 file="bin/build/tools/aws.sh"
-foundNames=()
+foundNames=([0]="argument")
 rawComment="Is the URL passed in a S3 URL?"$'\n'"Argument: value - EmptyString. Value to check."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
 sourceHash="3b62faeca80ac2a7aa667991589c611b8a721864"
 summary="Is the URL passed in a S3 URL?"
-usage="isS3URL"
+summaryComputed="true"
+usage="isS3URL [ value ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misS3URL'$'\e''[0m'$'\n'''$'\n''Is the URL passed in a S3 URL?'$'\n''Argument: value - EmptyString. Value to check.'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misS3URL'$'\e''[0m '$'\e''[[(blue)]m[ value ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mvalue  '$'\e''[[(value)]mEmptyString. Value to check.'$'\e''[[(reset)]m'$'\n'''$'\n''Is the URL passed in a S3 URL?'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isS3URL'$'\n'''$'\n''Is the URL passed in a S3 URL?'$'\n''Argument: value - EmptyString. Value to check.'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.536
+helpPlain='[[(label)]mUsage: isS3URL [[(blue)]m[ value ]'$'\n'''$'\n''    [[(blue)]mvalue  [[(value)]mEmptyString. Value to check.'$'\n'''$'\n''Is the URL passed in a S3 URL?'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
+# elapsed 3.634

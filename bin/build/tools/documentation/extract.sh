@@ -179,12 +179,13 @@ __bashDocumentationExtractDirect() {
     [ -n "$line" ] || continue
     rawComment="$rawComment$line"$'\n'
     local name="${line%%:*}" value cleanName
-    cleanName="$(sed -e 's/[- ]/_/g' -e 's/.*/\\L&/' <<<"$name")" || return $?
+    cleanName="$(catchReturn "$handler" tr '[:upper:]' '[:lower:]' <<<"${name//[- ]/_}")" || return $?
     __profileLabel="$cleanName"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
+
     if ! environmentVariableNameValid "$cleanName" || [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
       # no colon or ends with colon *or* starts with :
       # strip starting colon (end colon STAYS)
@@ -209,15 +210,10 @@ __bashDocumentationExtractDirect() {
         ;;
       esac
       if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
+        dumper=__dumpNameValueAppend
         if ! inArray "$lastName" "${foundNames[@]+${foundNames[@]}}"; then
           foundNames+=("$lastName")
-          if inArray "$lastName" "${simpleNames[@]}"; then
-            dumper=__dumpSimpleValue
-          else
-            dumper=__dumpNameValue
-          fi
-        else
-          dumper=__dumpNameValueAppend
+          inArray "$lastName" "${simpleNames[@]}" && dumper=__dumpSimpleValue || dumper=__dumpNameValue
         fi
         catchReturn "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
         values=()
@@ -234,19 +230,13 @@ __bashDocumentationExtractDirect() {
     __bashDocumentationSettingsFileDetails "$handler" "$source" || return $?
   fi
   if [ "${#values[@]}" -gt 0 ]; then
+    dumper=__dumpNameValueAppend
     if ! inArray "$lastName" "${foundNames[@]+"${foundNames[@]}"}"; then
       foundNames+=("$lastName")
-      if inArray "$lastName" "${simpleNames[@]}"; then
-        dumper=__dumpSimpleValue
-      else
-        dumper=__dumpNameValue
-      fi
-    else
-      dumper=__dumpNameValueAppend
+      inArray "$lastName" "${simpleNames[@]}" && dumper=__dumpSimpleValue || dumper=__dumpNameValue
     fi
     catchReturn "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
   fi
-
   if [ "${#desc[@]}" -gt 0 ]; then
     catchReturn "$handler" __dumpNameValue "description" "${desc[@]}" || return $?
     if ! inArray "summary" "${foundNames[@]+"${foundNames[@]}"}"; then
@@ -254,6 +244,7 @@ __bashDocumentationExtractDirect() {
       summary="$(trimWords 10 "${desc[0]}")"
       [ -n "$summary" ] || summary="undocumented"
       catchReturn "$handler" __dumpSimpleValue "summary" "$summary" || return $?
+      catchReturn "$handler" __dumpSimpleValue "summaryComputed" "true" || return $?
     fi
   elif inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
     catchReturn "$handler" __dumpAliasedValue description summary || return $?
@@ -274,6 +265,7 @@ __bashDocumentationExtractDirect() {
     fi
   else
     if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
+      # lazy
       catchReturn "$handler" printf "%s\n" "export usage; usage=\"\$fn\$(__bashDocumentationDefaultArguments \"\$argument\")\"" || return $?
     fi
   fi

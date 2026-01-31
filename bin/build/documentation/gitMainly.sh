@@ -4,17 +4,18 @@
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
-description="Return Code: 1 - Already in main, staging, or HEAD, or git merge failed"$'\n'"Return Code: 0 - git merge succeeded"$'\n'"Merge \`staging\` and \`main\` branches of a git repository into the current branch."$'\n'"Will merge \`origin/staging\` and \`origin/main\` after doing a \`--pull\` for both of them"$'\n'"Current repository should be clean and have no modified files."$'\n'""
+description="Merge \`staging\` and \`main\` branches of a git repository into the current branch."$'\n'"Will merge \`origin/staging\` and \`origin/main\` after doing a \`--pull\` for both of them"$'\n'"Current repository should be clean and have no modified files."$'\n'""
 file="bin/build/tools/git.sh"
-foundNames=()
+foundNames=([0]="return_code")
 rawComment="Return Code: 1 - Already in main, staging, or HEAD, or git merge failed"$'\n'"Return Code: 0 - git merge succeeded"$'\n'"Merge \`staging\` and \`main\` branches of a git repository into the current branch."$'\n'"Will merge \`origin/staging\` and \`origin/main\` after doing a \`--pull\` for both of them"$'\n'"Current repository should be clean and have no modified files."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+return_code="1 - Already in main, staging, or HEAD, or git merge failed"$'\n'"0 - git merge succeeded"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="3d571e2d1ac61ab50aca59a14e16e0ada007496b"
-summary="Return Code: 1 - Already in main, staging, or HEAD,"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+summary="Merge \`staging\` and \`main\` branches of a git repository into"
+summaryComputed="true"
 usage="gitMainly"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitMainly'$'\e''[0m'$'\n'''$'\n''Return Code: 1 - Already in main, staging, or HEAD, or git merge failed'$'\n''Return Code: 0 - git merge succeeded'$'\n''Merge '$'\e''[[(code)]mstaging'$'\e''[[(reset)]m and '$'\e''[[(code)]mmain'$'\e''[[(reset)]m branches of a git repository into the current branch.'$'\n''Will merge '$'\e''[[(code)]morigin/staging'$'\e''[[(reset)]m and '$'\e''[[(code)]morigin/main'$'\e''[[(reset)]m after doing a '$'\e''[[(code)]m--pull'$'\e''[[(reset)]m for both of them'$'\n''Current repository should be clean and have no modified files.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitMainly'$'\e''[0m'$'\n'''$'\n''Merge '$'\e''[[(code)]mstaging'$'\e''[[(reset)]m and '$'\e''[[(code)]mmain'$'\e''[[(reset)]m branches of a git repository into the current branch.'$'\n''Will merge '$'\e''[[(code)]morigin/staging'$'\e''[[(reset)]m and '$'\e''[[(code)]morigin/main'$'\e''[[(reset)]m after doing a '$'\e''[[(code)]m--pull'$'\e''[[(reset)]m for both of them'$'\n''Current repository should be clean and have no modified files.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Already in main, staging, or HEAD, or git merge failed'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - git merge succeeded'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitMainly'$'\n'''$'\n''Return Code: 1 - Already in main, staging, or HEAD, or git merge failed'$'\n''Return Code: 0 - git merge succeeded'$'\n''Merge staging and main branches of a git repository into the current branch.'$'\n''Will merge origin/staging and origin/main after doing a --pull for both of them'$'\n''Current repository should be clean and have no modified files.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.518
+helpPlain='[[(label)]mUsage: gitMainly'$'\n'''$'\n''Merge staging and main branches of a git repository into the current branch.'$'\n''Will merge origin/staging and origin/main after doing a --pull for both of them'$'\n''Current repository should be clean and have no modified files.'$'\n'''$'\n''Return codes:'$'\n''- 1 - Already in main, staging, or HEAD, or git merge failed'$'\n''- 0 - git merge succeeded'$'\n'''
+# elapsed 3.152

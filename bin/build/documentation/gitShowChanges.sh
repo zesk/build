@@ -2,17 +2,22 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
-description="Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - the repo has been modified"$'\n'"Return Code: 1 - the repo has NOT bee modified"$'\n'"Show changed files from HEAD"$'\n'"Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'"Credit: Chris Johnsen"$'\n'""
+credit="Chris Johnsen"$'\n'""
+description="Show changed files from HEAD"$'\n'""
 file="bin/build/tools/git.sh"
+foundNames=([0]="argument" [1]="return_code" [2]="source" [3]="credit")
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - the repo has been modified"$'\n'"Return Code: 1 - the repo has NOT bee modified"$'\n'"Show changed files from HEAD"$'\n'"Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'"Credit: Chris Johnsen"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceHash="0d4d5f47dbc638a6a3fc43178a3954586bc34adf"
-summary="Argument: --help - Flag. Optional. Display this help."
-usage="gitShowChanges"
+return_code="0 - the repo has been modified"$'\n'"1 - the repo has NOT bee modified"$'\n'""
+source="https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'""
+sourceFile="bin/build/tools/git.sh"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+summary="Show changed files from HEAD"
+summaryComputed="true"
+usage="gitShowChanges [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitShowChanges'$'\e''[0m'$'\n'''$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Return Code: 0 - the repo has been modified'$'\n''Return Code: 1 - the repo has NOT bee modified'$'\n''Show changed files from HEAD'$'\n''Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339'$'\n''Credit: Chris Johnsen'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitShowChanges'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Show changed files from HEAD'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - the repo has been modified'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - the repo has NOT bee modified'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitShowChanges'$'\n'''$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Return Code: 0 - the repo has been modified'$'\n''Return Code: 1 - the repo has NOT bee modified'$'\n''Show changed files from HEAD'$'\n''Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339'$'\n''Credit: Chris Johnsen'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.506
+helpPlain='[[(label)]mUsage: gitShowChanges [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]m--help  [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Show changed files from HEAD'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - the repo has been modified'$'\n''- [[(code)]m1 - the repo has NOT bee modified'$'\n'''
+# elapsed 3.17

@@ -2,19 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="none"
+argument="extension - String. Optional. Extension to check. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
-description="Does this commit have the following file extensions?"$'\n'"Argument: extension - String. Optional. Extension to check. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"Return code: 0 - if all extensions are present"$'\n'"Return code: 1 - if any extension is not present"$'\n'""
+description="Does this commit have the following file extensions?"$'\n'""
 file="bin/build/tools/git.sh"
-foundNames=()
-rawComment="Does this commit have the following file extensions?"$'\n'"Argument: extension - String. Optional. Extension to check. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"Return code: 0 - if all extensions are present"$'\n'"Return code: 1 - if any extension is not present"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Does this commit have the following file extensions?"$'\n'"Argument: extension - String. Optional. Extension to check. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return code: 0 - if all extensions are present"$'\n'"Return code: 1 - if any extension is not present"$'\n'""$'\n'""
+return_code="0 - if all extensions are present"$'\n'"1 - if any extension is not present"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="3d571e2d1ac61ab50aca59a14e16e0ada007496b"
+sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
 summary="Does this commit have the following file extensions?"
-usage="gitPreCommitHasExtension"
+summaryComputed="true"
+usage="gitPreCommitHasExtension [ extension ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitPreCommitHasExtension'$'\e''[0m'$'\n'''$'\n''Does this commit have the following file extensions?'$'\n''Argument: extension - String. Optional. Extension to check. Use '$'\e''[[(code)]m!'$'\e''[[(reset)]m for blank extension and '$'\e''[[(code)]m@'$'\e''[[(reset)]m for all extensions. Can specify one or more.'$'\n''Return code: 0 - if all extensions are present'$'\n''Return code: 1 - if any extension is not present'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitPreCommitHasExtension'$'\e''[0m '$'\e''[[(blue)]m[ extension ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mextension  '$'\e''[[(value)]mString. Optional. Extension to check. Use '$'\e''[[(code)]m!'$'\e''[[(reset)]m for blank extension and '$'\e''[[(code)]m@'$'\e''[[(reset)]m for all extensions. Can specify one or more.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help     '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Does this commit have the following file extensions?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if all extensions are present'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if any extension is not present'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitPreCommitHasExtension'$'\n'''$'\n''Does this commit have the following file extensions?'$'\n''Argument: extension - String. Optional. Extension to check. Use ! for blank extension and @ for all extensions. Can specify one or more.'$'\n''Return code: 0 - if all extensions are present'$'\n''Return code: 1 - if any extension is not present'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.447
+helpPlain='[[(label)]mUsage: [[(info)]mgitPreCommitHasExtension [[(blue)]m[ extension ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]mextension  [[(value)]mString. Optional. Extension to check. Use ! for blank extension and @ for all extensions. Can specify one or more.'$'\n''    [[(blue)]m--help     [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Does this commit have the following file extensions?'$'\n'''$'\n''Return codes:'$'\n''- 0 - if all extensions are present'$'\n''- 1 - if any extension is not present'$'\n'''
+# elapsed 3.632
