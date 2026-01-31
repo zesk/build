@@ -10,12 +10,12 @@ foundNames=([0]="return_code")
 rawComment="Return code is \`leak\`"$'\n'"Return Code: 108"$'\n'""$'\n'""
 return_code="108"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="d5d12954f38b51540f87d67aa3d877d2c77a97bc"
+sourceHash="c65b326bd9c53bff28df0d6b559128726394401b"
 summary="Return code is \`leak\`"
 summaryComputed="true"
 usage="returnLeak"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnLeak'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]mleak'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mreturnLeak'$'\n'''$'\n''Return code is [[(code)]mleak'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
-# elapsed 3.341
+helpPlain='Usage: returnLeak'$'\n'''$'\n''Return code is leak'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
+# elapsed 0.679

@@ -470,13 +470,16 @@ _housekeeper() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Check output for content and trigger environment error if found
-# Usage {fn} [ --help ] [ --verbose ] [ --name name ]
 # Argument: --help - Help
 # Argument: --verbose - Flag. Optional. Verbose messages when no errors exist.
 # Argument: --name name - String. Optional. Name for verbose mode.
-# # shellcheck source=/dev/null
+# Argument: message ... - Optional. Optional. Message for verbose mode.
+# Return Code: 0 - If no content is read from `stdin`
+# Return Code: 1 - If any content is read from `stdin` (and output to `stdout`)
+# Return Code: 2 - Argument error
+# stdin: Any content
+# stdout: Same content
 # Example:     source "$include" > >(outputTrigger source "$include") || return $?
 outputTrigger() {
   local handler="_${FUNCNAME[0]}"

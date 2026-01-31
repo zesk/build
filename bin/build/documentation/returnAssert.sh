@@ -10,12 +10,12 @@ foundNames=([0]="return_code")
 rawComment="Return code is \`assert\`"$'\n'"Return Code: 97"$'\n'""$'\n'""
 return_code="97"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="d5d12954f38b51540f87d67aa3d877d2c77a97bc"
+sourceHash="c65b326bd9c53bff28df0d6b559128726394401b"
 summary="Return code is \`assert\`"
 summaryComputed="true"
 usage="returnAssert"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnAssert'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]massert'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mreturnAssert'$'\n'''$'\n''Return code is [[(code)]massert[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''
-# elapsed 3.182
+helpPlain='Usage: returnAssert'$'\n'''$'\n''Return code is assert'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''
+# elapsed 0.674

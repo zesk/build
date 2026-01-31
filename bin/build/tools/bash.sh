@@ -548,7 +548,7 @@ _bashCommentFilter() {
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
+  grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
   # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered

@@ -10,7 +10,7 @@ foundNames=()
 rawComment="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="3e4ac7234593313eddb63a76e2aa170841269b82"
+sourceHash="a904ac31e55b57261f1d3e3fb6c67407a1f69618"
 summary="Output current open files"
 summaryComputed="true"
 usage="filesOpenStatus"
@@ -18,4 +18,4 @@ usage="filesOpenStatus"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfilesOpenStatus'$'\e''[0m'$'\n'''$'\n''Output current open files'$'\n''stdout'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: filesOpenStatus'$'\n'''$'\n''Output current open files'$'\n''stdout'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 2.911
+# elapsed 0.637
