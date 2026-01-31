@@ -111,6 +111,7 @@ __deprecatedCleanup() {
   __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
   __BUILD_DEPRECATED_EXTRAS+=(
+    ! -path '*/bin/build/main.sh'
     ! -path '*/bin/build/documentation/*'
     ! -path '*/documentation/*/release/*'
     ! -path '*/documentation/.site/*'
