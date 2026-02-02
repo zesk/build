@@ -212,12 +212,6 @@ _assertConditionHelper() {
   local doPlumber="" leaks=() whichEnd="tail"
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false debugLines=false
 
-  # IDENTICAL profileFunctionHead 4
-  # ********************************************************************************************************************
-  local __profile="false" __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
-  if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
-  # ********************************************************************************************************************
-
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -267,6 +261,12 @@ _assertConditionHelper() {
     esac
     shift
   done
+
+  # IDENTICAL profileFunctionHead 4
+  # ********************************************************************************************************************
+  local __profile="false" __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
+  if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
+  # ********************************************************************************************************************
 
   if $code1; then
     [ "$expectedExitCode" -eq 0 ] || catchArgument "$handler" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
@@ -409,6 +409,7 @@ _assertConditionHelper() {
   fi
   # ********************************************************************************************************************
 
+  return "$exitCode"
 }
 
 # Argument: thisName - Reported function for success or failure
@@ -447,8 +448,7 @@ __assertFileContainsHelper() {
       if [ -z "$file" ]; then
         file=$(validate "$handler" File "$displayName" "$argument") || return $?
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        break
       fi
       ;;
     esac

@@ -925,7 +925,7 @@ _assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper true false --line-depth 2 "$@" || return $?
+  __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper true false --line-depth 5 "$@" || return $?
 }
 _assertFileContains() {
   # __IDENTICAL__ usageDocument 1
@@ -970,7 +970,7 @@ _assertFileContains() {
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
-  __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper false false --line-depth 2 "$@" || return $?
+  __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper false false --line-depth 5 "$@" || return $?
 }
 _assertFileDoesNotContain() {
   # __IDENTICAL__ usageDocument 1

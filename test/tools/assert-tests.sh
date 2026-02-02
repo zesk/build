@@ -37,20 +37,40 @@ testAssertEquality() {
 }
 
 testAssertComparisons() {
-  # Simple numbers
-  assertExitCode 0 assertGreaterThan --line "$LINENO" 10 9 || return $?                   # a > b
-  assertNotExitCode --stderr-ok 0 assertGreaterThan --line "$LINENO" 9 10 || return $?    # a > b
-  assertNotExitCode --stderr-ok 0 assertGreaterThan --line "$LINENO" 100 100 || return $? # a > b
+  local handler="returnMessage"
+  local tempError
 
-  assertExitCode 0 assertGreaterThanOrEqual --line "$LINENO" 10 9 || return $?                # a > b
+  tempError=$(fileTemporaryName "$handler") || return $?
+  exec 2>"$tempError"
+  # Simple numbers
+  assertExitCode 0 assertGreaterThan --line "$LINENO" 10 9 || return $? # a > b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+
+  assertNotExitCode --stderr-ok 0 assertGreaterThan --line "$LINENO" 9 10 || return $? # a > b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+  assertNotExitCode --stderr-ok 0 assertGreaterThan --line "$LINENO" 100 100 || return $? # a > b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+
+  assertExitCode 0 assertGreaterThanOrEqual --line "$LINENO" 10 9 || return $? # a > b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
   assertNotExitCode --stderr-ok 0 assertGreaterThanOrEqual --line "$LINENO" 9 10 || return $? # a > b
-  assertExitCode 0 assertGreaterThanOrEqual --line "$LINENO" 100 100 || return $?             # a > b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+  assertExitCode 0 assertGreaterThanOrEqual --line "$LINENO" 100 100 || return $? # a > b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
 
   assertNotExitCode --stderr-ok 0 assertLessThan --line "$LINENO" 10 9 || return $? # a < b
-  assertExitCode 0 assertLessThan 9 10 || return $?                                 # a < b
-  assertNotExitCode --stderr-ok 0 assertLessThan 100 100 || return $?               # a < b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+  assertExitCode 0 assertLessThan 9 10 || return $? # a < b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+  assertNotExitCode --stderr-ok 0 assertLessThan 100 100 || return $? # a < b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
 
   assertNotExitCode --stderr-ok 0 assertLessThanOrEqual --line "$LINENO" 10 9 || return $? # a <= b
-  assertExitCode 0 assertLessThanOrEqual --line "$LINENO" 9 10 || return $?                # a <= b
-  assertExitCode 0 assertLessThanOrEqual --line "$LINENO" 100 100 || return $?             # a <= b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+  assertExitCode 0 assertLessThanOrEqual --line "$LINENO" 9 10 || return $? # a <= b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+  assertExitCode 0 assertLessThanOrEqual --line "$LINENO" 100 100 || return $? # a <= b
+  fileIsEmpty "$tempError" || throwEnvironment "$handler" "last test output stderr" "$(dumpPipe <"$tempError")" || return $?
+
+  catchEnvironment "$handler" rm -f "$tempError" || return $?
 }
