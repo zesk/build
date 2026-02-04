@@ -89,8 +89,8 @@ __characterClassReport() {
   else
     local index character && for index in "${indexList[@]}"; do
       case "$index" in
-        0) character=$'\0' ;;
-        *) character="$(catchEnvironment "$handler" characterFromInteger "$index")" || return $? ;;
+      0) character=$'\0' ;;
+      *) character="$(catchEnvironment "$handler" characterFromInteger "$index")" || return $? ;;
       esac
       case "$character" in
       [[:print:]])

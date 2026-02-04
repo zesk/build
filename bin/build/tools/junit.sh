@@ -126,22 +126,22 @@ junitPropertyList() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ helpHandler 1
-      --help) "$handler" 0 && return $? || return $? ;;
-      # _IDENTICAL_ handlerHandler 1
-      --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-      *)
-        local name value
-        IFS="=" read -r name value <<<"$1" || :
-        [ -n "$name" ] || continue
-        if stringContains "$value" $'\n'; then
-          catchReturn "$handler" __xmlTagOpen property name="$name" || return $?
-          catchReturn "$handler" printf "%s\n" "$value" || return $?
-          catchReturn "$handler" __xmlTagClose property || return $?
-        else
-          catchReturn "$handler" __xmlTag property name="$name" value="$value" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *)
+      local name value
+      IFS="=" read -r name value <<<"$1" || :
+      [ -n "$name" ] || continue
+      if stringContains "$value" $'\n'; then
+        catchReturn "$handler" __xmlTagOpen property name="$name" || return $?
+        catchReturn "$handler" printf "%s\n" "$value" || return $?
+        catchReturn "$handler" __xmlTagClose property || return $?
+      else
+        catchReturn "$handler" __xmlTag property name="$name" value="$value" || return $?
+      fi
+      ;;
     esac
     shift
   done

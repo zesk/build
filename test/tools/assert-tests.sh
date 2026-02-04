@@ -86,7 +86,7 @@ testZeroFile() {
   assertFileExists "$tempFile" || return $?
   assertExitCode --stderr-ok "$assertCode" assertNotZeroFileSize "$tempFile" || return $?
   assertZeroFileSize "$tempFile" || return $?
-   catchEnvironment "$handler" printf "%s\n" "1" >"$tempFile" || return $?
+  catchEnvironment "$handler" printf "%s\n" "1" >"$tempFile" || return $?
   assertExitCode --stderr-ok "$assertCode" assertZeroFileSize "$tempFile" || return $?
   assertNotZeroFileSize "$tempFile" || return $?
 
