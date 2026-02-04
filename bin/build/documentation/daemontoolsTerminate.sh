@@ -10,11 +10,12 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Terminate daemontools as gracefully as possible"$'\n'"Argument: --timeout seconds - Integer. Optional."$'\n'"Requires: throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment validate statusMessage"$'\n'"Requires: svscanboot id svc svstat"$'\n'""$'\n'""
 requires="throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment validate statusMessage"$'\n'"svscanboot id svc svstat"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceHash="929a6d188c3238b309730c2f688d5c50304d76d3"
+sourceFile="bin/build/tools/daemontools.sh"
+sourceHash="857f204c053a784dde5252c1bff78b826a67097e"
 summary="Terminate daemontools as gracefully as possible"
 summaryComputed="true"
 usage="daemontoolsTerminate [ --timeout seconds ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdaemontoolsTerminate'$'\e''[0m '$'\e''[[(blue)]m[ --timeout seconds ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--timeout seconds  '$'\e''[[(value)]mInteger. Optional.'$'\e''[[(reset)]m'$'\n'''$'\n''Terminate daemontools as gracefully as possible'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: daemontoolsTerminate [ --timeout seconds ]'$'\n'''$'\n''    --timeout seconds  Integer. Optional.'$'\n'''$'\n''Terminate daemontools as gracefully as possible'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+helpPlain='[[(label)]mUsage: [[(info)]mdaemontoolsTerminate [[(blue)]m[ --timeout seconds ]'$'\n'''$'\n''    [[(blue)]m--timeout seconds  [[(value)]mInteger. Optional.'$'\n'''$'\n''Terminate daemontools as gracefully as possible'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''

@@ -10,6 +10,7 @@ file="bin/build/tools/xdebug.sh"
 foundNames=([0]="environment" [1]="argument")
 rawComment="Disable Xdebug on systems that have it"$'\n'"Environment: XDEBUG_ENABLED"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/xdebug.sh"
 sourceHash="fe6ae7580979930084fb1503b37ee54f23a6b6ef"
 summary="Disable Xdebug on systems that have it"
 summaryComputed="true"

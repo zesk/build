@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="fieldIndex - UnsignedInteger. Required. The field to compute the maximum length for"$'\n'"separatorChar - String. Optional. The separator character to delineate fields. Uses space if not supplied."$'\n'""
 base="text.sh"

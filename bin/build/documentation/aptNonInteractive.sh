@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="... - Arguments. Pass through arguments to \`apt-get\`"$'\n'""
 base="apt.sh"
 description="Run apt-get non-interactively"$'\n'""
 file="bin/build/tools/apt.sh"
+foundNames=([0]="argument")
 rawComment="Run apt-get non-interactively"$'\n'"Argument: ... - Arguments. Pass through arguments to \`apt-get\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/apt.sh"

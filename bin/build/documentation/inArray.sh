@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="element - EmptyString. Thing to search for"$'\n'"arrayElement0 ... - Array. Optional. One or more array elements to match"$'\n'""
 base="text.sh"

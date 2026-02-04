@@ -175,6 +175,25 @@ testUrlOpen() {
   unset BUILD_URL_BINARY
 }
 
+testFetchMethods() {
+  local handler="returnMessage"
+  local curlFile
+
+  local clean=()
+  local curlFile && curlFile=$(fileTemporaryName "$handler") || return $?
+  clean+=("$curlFile" "$curlFile.headers")
+
+  local wgetFile && wgetFile=$(fileTemporaryName "$handler") || returnClean $? "${clean[@]}" || return $?
+  clean+=("$wgetFile" "$wgetFile.headers")
+
+  assertExitCode 0 urlFetch --curl --dump "$curlFile.headers" "https://marketacumen.com/" "$curlFile" || returnClean $? "${clean[@]}" || return $?
+  assertExitCode 0 urlFetch --wget --dump "$wgetFile.headers" "https://marketacumen.com/" "$wgetFile" || returnClean $? "${clean[@]}" || return $?
+  assertExitCode 0 diff -I '[Dd]ate:\s*' "$curlFile.headers" "$wgetFile.headers" || returnClean $? "${clean[@]}" || return $?
+  assertExitCode 0 diff "$curlFile" "$wgetFile" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" dumpPipe headers <"$curlFile.headers" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -f "${clean[@]}" || returnClean $? "${clean[@]}" || return $?
+}
+
 testFetch() {
   local handler="returnMessage"
   local targetFile

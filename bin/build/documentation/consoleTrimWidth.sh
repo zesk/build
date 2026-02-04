@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="width - UnsignedInteger. Required. Width to maintain."$'\n'"text - String. Optional. Text to trim to a console width."$'\n'""
 base="text.sh"

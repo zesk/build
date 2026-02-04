@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-02
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="globalName - EnvironmentVariable. Required. Global to change temporarily to a value."$'\n'"value - EmptyString. Optional. Force the value of \`globalName\` to this value temporarily. Saves the original value."$'\n'"... - Continue passing pairs of globalName value to mock additional values."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="test.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--end - Flag. Optional. Stop testing for recursion."$'\n'""
 base="debug.sh"
@@ -19,4 +19,4 @@ usage="bashRecursionDebug [ --end ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashRecursionDebug'$'\e''[0m '$'\e''[[(blue)]m[ --end ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--end  '$'\e''[[(value)]mFlag. Optional. Stop testing for recursion.'$'\e''[[(reset)]m'$'\n'''$'\n''Place this in code where you suspect an infinite loop occurs'$'\n''It will fail upon a second call; to reset call with '$'\e''[[(code)]m--end'$'\e''[[(reset)]m'$'\n''When called twice, fails on the second invocation and dumps a call stack to stderr.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- __BUILD_RECURSION'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mbashRecursionDebug [[(blue)]m[ --end ]'$'\n'''$'\n''    [[(blue)]m--end  [[(value)]mFlag. Optional. Stop testing for recursion.'$'\n'''$'\n''Place this in code where you suspect an infinite loop occurs'$'\n''It will fail upon a second call; to reset call with --end'$'\n''When called twice, fails on the second invocation and dumps a call stack to stderr.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- __BUILD_RECURSION'$'\n'''
+helpPlain='Usage: [[(info)]mbashRecursionDebug [[(blue)]m[ --end ]'$'\n'''$'\n''    [[(blue)]m--end  Flag. Optional. Stop testing for recursion.'$'\n'''$'\n''Place this in code where you suspect an infinite loop occurs'$'\n''It will fail upon a second call; to reset call with --end'$'\n''When called twice, fails on the second invocation and dumps a call stack to stderr.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- __BUILD_RECURSION'$'\n'''

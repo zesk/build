@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--outside outsideStyle - String. Optional. Style to apply to the outside border. (Default \`decoration\`)"$'\n'"--inside insideStyle - String. Optional. Style to apply to the inside spacing. (Default blank)"$'\n'"--shrink characterCount - UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)"$'\n'"--size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)"$'\n'"text ... - Text to put in the box"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="box.sh"

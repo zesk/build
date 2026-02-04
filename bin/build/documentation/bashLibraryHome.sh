@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="libraryRelativePath - RelativeFile. Required. Path of file to find from the home directory. Must also be executable."$'\n'"startDirectory - Directory. Optional. Place to start searching. Uses \`pwd\` if not specified."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"

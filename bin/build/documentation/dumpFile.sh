@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="fileName0 - File. Optional. File to dump."$'\n'"--symbol symbolString - String. Optional. Prefix for each output line."$'\n'"--lines lineCount - PositiveInteger. Optional. Number of lines to output."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="dump.sh"

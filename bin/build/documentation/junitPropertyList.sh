@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-02
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"nameValue ... - Optional. String. A list of name value pairs (unquoted) to output as XML \`property\` tags."$'\n'""
 base="junit.sh"
 description="Output list of \`property\` tags"$'\n'""
 file="bin/build/tools/junit.sh"
-foundNames=([0]="argument")
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Output list of \`property\` tags"$'\n'"Argument: nameValue ... - Optional. String. A list of name value pairs (unquoted) to output as XML \`property\` tags."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/junit.sh"
-sourceHash="7e5cb224f083289f9915636cbaa6e1e8cdaa3dcb"
+sourceHash="f92f864478de7e8478b8b8c16722ea1f4d009ea0"
 summary="Output list of \`property\` tags"
 summaryComputed="true"
 usage="junitPropertyList [ --help ] [ nameValue ... ]"

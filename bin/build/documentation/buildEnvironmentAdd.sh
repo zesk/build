@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--force - Flag. Optional. Replace the existing file if it exists or create it if it does not."$'\n'"--quiet - Flag. Optional. No status messages."$'\n'"--verbose - Flag. Optional. Display status messages."$'\n'"--value value - String. Optional. Set the value to this fixed string in the file. Only valid when a single \`environmentName\` is used."$'\n'"environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project."$'\n'""
 base="build.sh"

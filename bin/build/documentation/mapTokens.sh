@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="\`prefix\` - Optional prefix for token search, defaults to \`{\` (same as \`map.sh\`)"$'\n'"\`suffix\` - Optional suffix for token search, defaults to \`}\` (same as \`map.sh\`)"$'\n'""
 base="map.sh"
@@ -19,4 +19,4 @@ usage="mapTokens [ \`prefix\` ] [ \`suffix\` ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmapTokens'$'\e''[0m '$'\e''[[(blue)]m[ `prefix` ]'$'\e''[0m '$'\e''[[(blue)]m[ `suffix` ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m'$'\e''[[(code)]mprefix'$'\e''[[(reset)]m  '$'\e''[[(value)]mOptional prefix for token search, defaults to '$'\e''[[(code)]m{'$'\e''[[(reset)]m (same as '$'\e''[[(code)]mmap.sh'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m'$'\e''[[(code)]msuffix'$'\e''[[(reset)]m  '$'\e''[[(value)]mOptional suffix for token search, defaults to '$'\e''[[(code)]m}'$'\e''[[(reset)]m (same as '$'\e''[[(code)]mmap.sh'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]mmapTokens'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- None.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mmapTokens [ `prefix` ] [ `suffix` ]'$'\n'''$'\n''    prefix  [[(value)]mOptional prefix for token search, defaults to { (same as map.sh)'$'\n''    suffix  [[(value)]mOptional suffix for token search, defaults to } (same as map.sh)'$'\n'''$'\n''No documentation for mapTokens.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- None.'$'\n'''
+helpPlain='[[(label)]mUsage: [[(info)]mmapTokens [[(blue)]m[ `prefix` ] [[(blue)]m[ `suffix` ]'$'\n'''$'\n''    [[(blue)]m[[(code)]mprefix  [[(value)]mOptional prefix for token search, defaults to [[(code)]m{ (same as [[(code)]mmap.sh)'$'\n''    [[(blue)]m[[(code)]msuffix  [[(value)]mOptional suffix for token search, defaults to [[(code)]m} (same as [[(code)]mmap.sh)'$'\n'''$'\n''No documentation for [[(code)]mmapTokens.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- None.'$'\n'''

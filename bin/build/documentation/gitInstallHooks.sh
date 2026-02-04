@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--copy - Flag. Optional. Copy the hook but do not execute it."$'\n'"--verbose - Flag. Optional. Be verbose about what is done."$'\n'"--application home - Directory. Optional. Set the application home directory to this prior to looking for hooks."$'\n'"hookName - String. Optional. A hook or hook names to install. See \`gitHookTypes\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"

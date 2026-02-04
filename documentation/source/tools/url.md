@@ -25,3 +25,5 @@
 {urlMatchesLocalFileSize}
 
 {urlContentLength}
+
+{userAgentDefault}

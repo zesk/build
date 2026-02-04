@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="command - String. Required. The command to test."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="docker-compose.sh"
@@ -15,7 +15,3 @@ sourceHash="d76bbd31ab881ad7554c01ea2d1740afa9a1a92d"
 summary="Is this a docker compose command?"
 summaryComputed="true"
 usage="isDockerComposeCommand command [ --help ]"
-# shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misDockerComposeCommand'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mcommand'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mcommand  '$'\e''[[(value)]mString. Required. The command to test.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Is this a docker compose command?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Yes, it is.'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - No, it is not.'$'\n'''
-# shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]misDockerComposeCommand [[(bold)]m[[(magenta)]mcommand [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(red)]mcommand  [[(value)]mString. Required. The command to test.[[(reset)]m'$'\n''    [[(blue)]m--help   [[(value)]mFlag. Optional. Display this help.[[(reset)]m'$'\n'''$'\n''Is this a docker compose command?'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0[[(reset)]m - Yes, it is.'$'\n''- [[(code)]m1[[(reset)]m - No, it is not.'$'\n'''

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"-- - Flag. Optional. Interactive mode on fixing errors."$'\n'"--home home - Directory. Optional. Sanitize files starting here. (Defaults to \`buildHome\`)"$'\n'"--interactive - Flag. Optional. Interactive mode on fixing errors."$'\n'"--check checkDirectory - Directory. Optional. Check shell scripts in this directory for common errors."$'\n'"... - Additional arguments are passed to \`bashLintFiles\` \`validateFileContents\`"$'\n'""
 base="bash.sh"

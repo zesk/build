@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--path pathName=icon - Flag. Optional. Add an additional path mapping to icon."$'\n'"--no-app - Flag. Optional. Do not map \`BUILD_HOME\`."$'\n'"--skip-app - Flag. Optional. Synonym for \`--no-app\`."$'\n'"path - String. Path to display and replace matching paths with icons."$'\n'""
 base="path.sh"

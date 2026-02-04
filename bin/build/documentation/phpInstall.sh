@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="package - Additional packages to install"$'\n'""
 base="php.sh"
@@ -16,4 +16,4 @@ usage="phpInstall [ package ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mphpInstall'$'\e''[0m '$'\e''[[(blue)]m[ package ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mpackage  '$'\e''[[(value)]mAdditional packages to install'$'\e''[[(reset)]m'$'\n'''$'\n''Install '$'\e''[[(code)]mphp'$'\e''[[(reset)]m'$'\n''If this fails it will output the installation log.'$'\n''When this tool succeeds the '$'\e''[[(code)]mphp'$'\e''[[(reset)]m binary is available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If installation fails'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - If installation succeeds'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mphpInstall [ package ]'$'\n'''$'\n''    package  Additional packages to install'$'\n'''$'\n''Install php'$'\n''If this fails it will output the installation log.'$'\n''When this tool succeeds the php binary is available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- 1 - If installation fails'$'\n''- 0 - If installation succeeds'$'\n'''
+helpPlain='[[(label)]mUsage: [[(info)]mphpInstall [[(blue)]m[ package ]'$'\n'''$'\n''    [[(blue)]mpackage  [[(value)]mAdditional packages to install'$'\n'''$'\n''Install [[(code)]mphp'$'\n''If this fails it will output the installation log.'$'\n''When this tool succeeds the [[(code)]mphp binary is available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m1 - If installation fails'$'\n''- [[(code)]m0 - If installation succeeds'$'\n'''

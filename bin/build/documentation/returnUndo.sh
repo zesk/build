@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"code - UnsignedInteger. Required. Exit code to return."$'\n'"undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored."$'\n'"-- - Flag. Optional. Used to delimit multiple commands."$'\n'""
 base="sugar.sh"

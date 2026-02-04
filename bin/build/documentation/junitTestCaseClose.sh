@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-02
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="junit.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Close tag for \`testcase\` - Test case"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/junit.sh"
-sourceHash="7e5cb224f083289f9915636cbaa6e1e8cdaa3dcb"
+sourceHash="f92f864478de7e8478b8b8c16722ea1f4d009ea0"
 summary="Close tag for \`testcase\` - Test case"
 summaryComputed="true"
 usage="junitTestCaseClose [ --help ]"

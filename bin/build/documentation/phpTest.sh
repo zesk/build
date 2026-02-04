@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--env-file envFile - File. Optional. Environment file to load."$'\n'"--home homeDirectory - Directory. Optional. Directory for application home."$'\n'""
 base="php.sh"
@@ -18,4 +18,4 @@ usage="phpTest [ --env-file envFile ] [ --home homeDirectory ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mphpTest'$'\e''[0m '$'\e''[[(blue)]m[ --env-file envFile ]'$'\e''[0m '$'\e''[[(blue)]m[ --home homeDirectory ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--env-file envFile    '$'\e''[[(value)]mFile. Optional. Environment file to load.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--home homeDirectory  '$'\e''[[(value)]mDirectory. Optional. Directory for application home.'$'\e''[[(reset)]m'$'\n'''$'\n''Test a docker-based PHP application during build'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: phpTest [ --env-file envFile ] [ --home homeDirectory ]'$'\n'''$'\n''    --env-file envFile    File. Optional. Environment file to load.'$'\n''    --home homeDirectory  Directory. Optional. Directory for application home.'$'\n'''$'\n''Test a docker-based PHP application during build'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+helpPlain='Usage: [[(info)]mphpTest [ --env-file envFile ] [ --home homeDirectory ]'$'\n'''$'\n''    --env-file envFile    File. Optional. Environment file to load.'$'\n''    --home homeDirectory  Directory. Optional. Directory for application home.'$'\n'''$'\n''Test a docker-based PHP application during build'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

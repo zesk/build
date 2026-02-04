@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="file ... - File. Required. File to check if the last character is a newline."$'\n'""
 base="text.sh"
@@ -18,4 +18,4 @@ usage="fileEndsWithNewline file ..."
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileEndsWithNewline'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfile ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mfile ...  '$'\e''[[(value)]mFile. Required. File to check if the last character is a newline.'$'\e''[[(reset)]m'$'\n'''$'\n''Does a file end with a newline or is empty?'$'\n''Typically used to determine if a newline is needed before appending a file.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All files ends with a newline'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - One or more files ends with a non-newline'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mfileEndsWithNewline [[(magenta)]mfile ...'$'\n'''$'\n''    [[(red)]mfile ...  File. Required. File to check if the last character is a newline.'$'\n'''$'\n''Does a file end with a newline or is empty?'$'\n''Typically used to determine if a newline is needed before appending a file.'$'\n'''$'\n''Return codes:'$'\n''- 0 - All files ends with a newline'$'\n''- 1 - One or more files ends with a non-newline'$'\n'''
+helpPlain='[[(label)]mUsage: [[(info)]mfileEndsWithNewline [[(bold)]m[[(magenta)]mfile ...'$'\n'''$'\n''    [[(red)]mfile ...  [[(value)]mFile. Required. File to check if the last character is a newline.'$'\n'''$'\n''Does a file end with a newline or is empty?'$'\n''Typically used to determine if a newline is needed before appending a file.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - All files ends with a newline'$'\n''- [[(code)]m1 - One or more files ends with a non-newline'$'\n'''

@@ -778,11 +778,12 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL urlFetch 160
+# IDENTICAL urlFetch 182
 
-# Fetch URL content
+# Summary: Fetch URL content
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: --dump headerFile - String. Optional. Dump the headers to the file specified, specify `-` to output to `stdout`.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
 # Argument: --wget - Flag. Optional. Force use of wget. If unavailable, fail.
 # Argument: --redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.
@@ -805,7 +806,7 @@ urlFetch() {
 
   local wgetArgs=() curlArgs=() genericArgs=() headers=()
   local binary=() userHasColons=false user="" password="" format="" url="" target=""
-  local maxRedirections=9 timeoutSeconds="" debugFlag=false
+  local maxRedirections=9 timeoutSeconds="" debugFlag=false saveHeadersFile=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -825,6 +826,13 @@ urlFetch() {
       curlArgs+=("--header" "$1")
       wgetArgs+=("--header=$1")
       genericArgs+=("$argument" "$1")
+      ;;
+    --dump)
+      local file && shift && file=$(validate "$handler" String "$argument" "${1-}") || return $?
+      [ "$file" = '-' ] || file=$(validate "$handler" FileDirectory "$argument" "$file") || return $?
+      curlArgs+=("-D" "$file")
+      wgetArgs+=("--save-headers")
+      saveHeadersFile="$file"
       ;;
     --wget) binary=("wget") ;;
     --curl) binary=("curl") ;;
@@ -916,7 +924,16 @@ urlFetch() {
   wget)
     # -q - quiet
     wgetArgs+=(--max-redirect "$maxRedirections" -q)
-    catchEnvironment "$handler" "${binary[@]}" --output-document="$target" "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $?
+    if [ -z "$saveHeadersFile" ]; then
+      catchEnvironment "$handler" "${binary[@]}" --output-document="$target" "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $?
+    else
+      # wget outputs headers at top of file as CRLF lines terminated by a blank CRLF line then the content
+      local tempDownload && tempDownload=$(fileTemporaryName "$handler") || return $?
+      catchEnvironment "$handler" "${binary[@]}" --output-document="$tempDownload" "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $?
+      catchEnvironment "$handler" sed -e 's/\r$//g' -e '/^$/ q' <"$tempDownload" | catchEnvironment "$handler" tee "$saveHeadersFile" || return $?
+      catchEnvironment "$handler" sed -e '/\r$/d' <"$tempDownload" | catchEnvironment "$handler" tee "$target" || return $?
+      catchEnvironment "$handler" rm -f "$tempDownload" || return $?
+    fi
     ;;
   curl)
     # -L - follow redirects, -s - silent, -f - (FAIL) ignore documents for 4XX or 5XX errors
@@ -931,6 +948,11 @@ _urlFetch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Default user agent string for web agents
+# A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)
+# stdout: String
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 userAgentDefault() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"

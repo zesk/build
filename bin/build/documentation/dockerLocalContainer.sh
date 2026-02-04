@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--image imageName - String. Optional. Docker image name to run. Defaults to \`BUILD_DOCKER_IMAGE\`."$'\n'"--path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to \`BUILD_DOCKER_PATH\`."$'\n'"--platform platform - String. Optional. Platform to run (arm vs intel)."$'\n'"--env-file envFile - File. Optional. One or more environment files which are suitable to load for docker; must be valid"$'\n'"--env envVariable=envValue - File. Optional. One or more environment variables to set."$'\n'"extraArgs - Mixed. Optional. The first non-file argument to \`dockerLocalContainer\` is passed directly through to \`docker run\` as arguments"$'\n'""
 base="docker.sh"

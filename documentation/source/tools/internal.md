@@ -14,6 +14,8 @@
 
 {buildUsageCompileParallel}
 
+{buildUsageRemoveDeprecated}
+
 {buildToolsCompile}
 
 ## Deployment

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="factor - floatValue. Required. Red RGB value (0-255)"$'\n'"redValue - Integer. Required. Red RGB value (0-255)"$'\n'"greenValue - Integer. Required. Red RGB value (0-255)"$'\n'"blueValue - Integer. Required. Red RGB value (0-255)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="colors.sh"

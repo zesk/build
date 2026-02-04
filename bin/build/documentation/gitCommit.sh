@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--last - Flag. Optional. Append last comment"$'\n'"-- - Flag. Optional. Skip updating release notes with comment."$'\n'"--help - Flag. Optional. I need somebody."$'\n'"comment - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message."$'\n'""
 base="git.sh"

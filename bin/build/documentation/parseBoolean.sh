@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="none"
 base="text.sh"
@@ -18,4 +18,4 @@ usage="parseBoolean"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mparseBoolean'$'\e''[0m'$'\n'''$'\n''Parses text and determines if it'\''s true-ish'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - true'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - false'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Neither'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Text is plain'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Text contains non-plain characters'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: parseBoolean'$'\n'''$'\n''Parses text and determines if it'\''s true-ish'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - true'$'\n''- 1 - false'$'\n''- 2 - Neither'$'\n''- 0 - Text is plain'$'\n''- 1 - Text contains non-plain characters'$'\n'''
+helpPlain='Usage: [[(info)]mparseBoolean'$'\n'''$'\n''Parses text and determines if it'\''s true-ish'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - true'$'\n''- 1 - false'$'\n''- 2 - Neither'$'\n''- 0 - Text is plain'$'\n''- 1 - Text contains non-plain characters'$'\n'''

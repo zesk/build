@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -16,4 +16,4 @@ usage="gitHasAnyRefs [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitHasAnyRefs'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Do any tags exist at all in '$'\e''[[(code)]mgit'$'\e''[[(reset)]m?'$'\n''May need to '$'\e''[[(code)]mgit pull --tags'$'\e''[[(reset)]m, or no tags exist.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - At least one tag exists'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - No tags exist'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mgitHasAnyRefs [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]m--help  [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Do any tags exist at all in [[(code)]mgit?'$'\n''May need to [[(code)]mgit pull --tags, or no tags exist.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - At least one tag exists'$'\n''- [[(code)]m1 - No tags exist'$'\n'''
+helpPlain='Usage: gitHasAnyRefs [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Do any tags exist at all in git?'$'\n''May need to git pull --tags, or no tags exist.'$'\n'''$'\n''Return codes:'$'\n''- 0 - At least one tag exists'$'\n''- 1 - No tags exist'$'\n'''
