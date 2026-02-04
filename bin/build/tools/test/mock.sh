@@ -18,17 +18,12 @@ __mockEnvironmentEmpty() {
 
 __mockEnvironmentStart() {
   local handler="$1" && shift
+
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
     local argument="${1-}" && shift
-    local value="${1-}"
+    __mockVariableStart "$argument" "${1-}"
     [ $# -eq 0 ] || shift
-    local emptyValue saveGlobal
-    emptyValue="$(__mockEnvironmentEmpty "$argument")"
-    saveGlobal="$(__mockEnvironmentGlobal "$argument")"
-    statusMessage --last decorate notice "MOCK: Saving $argument"
-    # shellcheck disable=SC2163
-    export "$saveGlobal"="${!argument-"$emptyValue"}"
-    export "$argument"="$value"
   done
 }
 
@@ -46,35 +41,50 @@ __mockEnvironmentStop() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
-      local emptyValue saveGlobal
-      emptyValue="$(__mockEnvironmentEmpty "$argument")"
-      saveGlobal="$(__mockEnvironmentGlobal "$argument")"
-      # shellcheck disable=SC2163
-      export "$argument"
-      if [ "${!saveGlobal-"$emptyValue"}" = "$emptyValue" ]; then
-        unset "$argument"
-        statusMessage --last decorate notice "MOCK: Removing $argument (was unset)"
-      else
-        local value="${!saveGlobal-}"
-        export "$argument"="$value"
-        statusMessage --last decorate notice "MOCK: Restoring $argument ($(pluralWord "${#value}" character))"
-      fi
-      unset "$saveGlobal"
+      __mockVariableStop "$argument"
       ;;
     esac
     shift
   done
 }
 
+__mockVariableStart() {
+  local argument="$1"
+  local value="$2"
+  local emptyValue && emptyValue="$(__mockEnvironmentEmpty "$argument")"
+  local saveGlobal && saveGlobal="$(__mockEnvironmentGlobal "$argument")"
+  statusMessage --last decorate notice "MOCK: Saving $argument"
+  # shellcheck disable=SC2163
+  export "$saveGlobal"="${!argument-"$emptyValue"}"
+  export "$argument"="$value"
+}
+
+__mockVariableStop() {
+  local argument="$1"
+  local emptyValue && emptyValue="$(__mockEnvironmentEmpty "$argument")"
+  local saveGlobal && saveGlobal="$(__mockEnvironmentGlobal "$argument")"
+  # shellcheck disable=SC2163
+  export "$argument"
+  if [ "${!saveGlobal-"$emptyValue"}" = "$emptyValue" ]; then
+    unset "$argument"
+    statusMessage --last decorate notice "MOCK: Removing $argument (was unset)"
+  else
+    local value="${!saveGlobal-}"
+    export "$argument"="$value"
+    statusMessage --last decorate notice "MOCK: Restoring $argument ($(pluralWord "${#value}" character))"
+  fi
+  unset "$saveGlobal"
+}
+
 __mockConsoleAnimationStart() {
   local handler="$1" && shift
-
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local flag && flag=$(validate "$handler" Boolean "flag" "${1-}") || return $?
-  __mockEnvironmentStart "$handler" CI || return $?
-  export CI && CI="$(booleanChoose "$flag" "" "testCI")"
+  __mockVariableStart CI "$(booleanChoose "$flag" "" "testCI")" || return $?
 }
 
 __mockConsoleAnimationStop() {
   local handler="$1" && shift
-  __mockEnvironmentStop "$@" CI || return $?
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  __mockVariableStop CI
 }

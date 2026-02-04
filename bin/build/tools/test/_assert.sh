@@ -427,7 +427,7 @@ __assertFileContainsHelper() {
   local handler="$1" && shift
   local success="$1" && shift
   local __profile="$1" && shift
-  local lineNumber="" file="" displayName="" lineDepth="" debugLines=false matches=() quoted=()
+  local lineNumber="" file="" displayName="" lineDepth="" debugLines=false
 
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
@@ -446,7 +446,7 @@ __assertFileContainsHelper() {
       ;;
     *)
       if [ -z "$file" ]; then
-        file=$(validate "$handler" File "$displayName" "$argument") || return $?
+        file=$(validate "$handler" File file "$argument") || return $?
       else
         break
       fi
@@ -454,7 +454,9 @@ __assertFileContainsHelper() {
     esac
     shift
   done
-  while [ $# -gt 0 ]; do
+  [ -n "$file" ] || throwArgument "$handler" "file is required" || return $?
+
+  local matches=() quoted=() && while [ $# -gt 0 ]; do
     local match && match="$(validate "$handler" String "match" "$1")" || return $?
     matches+=("$match")
     quoted+=("$(catchReturn "$handler" quoteGrepPattern "$match")") || return $?

@@ -2,7 +2,10 @@
 #
 # developer.sh
 #
-# Copyright &copy; 2026 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc. - [removed]
+# [removed]
+# [removed]
+# Copyright &copy; {year} {APPLICATION_OWNER}
 #
 # Developer scripts
 

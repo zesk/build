@@ -532,7 +532,7 @@ _commentArgumentsRemainder() {
   printf "%s\n" "$stateFile" "$@"
 }
 
-# IDENTICAL __help 56
+# IDENTICAL __help 57
 
 # Simple help argument handler.
 #
@@ -550,9 +550,10 @@ _commentArgumentsRemainder() {
 # Example:     # NOT DEFINED handler
 # Example:
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+# Example:     # Argument 1 absolutely exists
+# Example:     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:
 # Example:     # DEFINED handler
 # Example:

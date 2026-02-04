@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-04
 # shellcheck disable=SC2034
 argument="none"
 base="daemontools.sh"
@@ -10,8 +10,7 @@ foundNames=([0]="requires")
 rawComment="List any processes associated with daemontools supervisors"$'\n'"Requires: pgrep read printf"$'\n'""$'\n'""
 requires="pgrep read printf"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/daemontools.sh"
-sourceHash="ad7724ecae1a0dfef00687192388ecf23b24032c"
+sourceHash="929a6d188c3238b309730c2f688d5c50304d76d3"
 summary="List any processes associated with daemontools supervisors"
 summaryComputed="true"
 usage="daemontoolsProcessIds"

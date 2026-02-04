@@ -1107,7 +1107,12 @@ _assertNotFileSize() {
 # Example:     {fn} /var/www/log/error.log
 #
 assertZeroFileSize() {
-  assertFileSize --handler "_${FUNCNAME[0]}" 0 "$@" || return $?
+  # IDENTICAL faConsumeFlagArguments 4
+  local fa=() && while [ $# -gt 0 ]; do
+    case "$1" in -*) fa+=("$1") ;; *) break ;; esac
+    shift
+  done
+  __testLoader "_${FUNCNAME[0]}" _assertFileSizeHelper "${fa[@]+"${fa[@]}"}" 0 "$@" || return $?
 }
 _assertZeroFileSize() {
   # __IDENTICAL__ usageDocument 1
@@ -1152,7 +1157,12 @@ _assertZeroFileSize() {
 # Example:     {fn} 0 .env
 #
 assertNotZeroFileSize() {
-  assertNotFileSize --handler "_${FUNCNAME[0]}" 0 "$@" || return $?
+  # IDENTICAL faConsumeFlagArguments 4
+  local fa=() && while [ $# -gt 0 ]; do
+    case "$1" in -*) fa+=("$1") ;; *) break ;; esac
+    shift
+  done
+  __testLoader "_${FUNCNAME[0]}" _assertFileSizeHelper --success false "${fa[@]+"${fa[@]}"}" 0 "$@" || return $?
 }
 _assertNotZeroFileSize() {
   # __IDENTICAL__ usageDocument 1
@@ -1336,7 +1346,7 @@ _assertLessThan() {
 # Argument: rightValue - Integer. Required. Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
 # Example:     assertLessThanOrEqual 3 $found
-# Reviewed: 2023-11-12
+# Reviewed: 2026-02-02
 # Return Code: 0 - expected less than or equal to actual
 # Return Code: 1 - expected greater than actual, or invalid numbers
 #
@@ -1352,6 +1362,8 @@ _assertLessThanOrEqual() {
 # Argument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value.
 # Argument: value - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.
 # Argument: ... - Continue passing pairs of globalName value to mock additional values.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 mockEnvironmentStart() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -1361,9 +1373,9 @@ _mockEnvironmentStart() {
 }
 
 # Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).
+# Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.
 mockEnvironmentStop() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -1374,7 +1386,8 @@ _mockEnvironmentStop() {
 
 # Fake `consoleHasAnimation` for testing
 # Argument: true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value.
-# Developer Note: Keep this here to keep it close to the definition it modifies
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 mockConsoleAnimationStart() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -1384,6 +1397,8 @@ _mockConsoleAnimationStart() {
 }
 
 # Stop faking `consoleHasAnimation` for testing
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 mockConsoleAnimationStop() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -1392,29 +1407,47 @@ _mockConsoleAnimationStop() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL returnAssert 7
+# IDENTICAL returnAssert 13
 
 # Return code is `assert`
+# Summary: Assertion return code
 # Return Code: 97
 returnAssert() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnAssertCode 1
   return 97 # "$(returnCode assert)"
 }
+_returnAssert() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# IDENTICAL returnIdentical 7
+# IDENTICAL returnIdentical 13
 
+# Summary: Identical return code
 # Return code is `identical`
 # Return Code: 105
 returnIdentical() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnIdenticalCode 1
   return 105 # "$(returnCode identical)"
 }
+_returnIdentical() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# IDENTICAL returnLeak 7
+# IDENTICAL returnLeak 13
 
+# Summary: Leak return code
 # Return code is `leak`
 # Return Code: 108
 returnLeak() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnLeakCode 1
   return 108 # "$(returnCode leak)"
+}
+_returnLeak() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

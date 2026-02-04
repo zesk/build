@@ -139,7 +139,7 @@ _applicationHomeAliases() {
 buildApplicationConfigure() {
   local handler="_${FUNCNAME[0]}"
 
-  local home="" name="" interactive=true code=""
+  local home="" name="" interactive=true code="" company=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -153,6 +153,7 @@ buildApplicationConfigure() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --non-interactive) interactive=false ;;
+    --company) shift && company="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --code) shift && code="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --path) shift && home="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
@@ -172,13 +173,15 @@ buildApplicationConfigure() {
     code="$(catchReturn "$handler" basename "$home")" || return $?
   fi
 
+  local year && year=$(catchEnvironment "$handler" date +%Y) || return $?
+  local sets=(year="$year" APPLICATION_OWNER="$company" APPLICATION_CODE="$code" APPLICATION_NAME="$name")
   __buildApplicationConfigurePaths "$handler" "$home" true || return $?
   __buildApplicationConfigureShellFiles "$handler" "$home" true "$templateHome" || return $?
-  APPLICATION_CODE=$code APPLICATION_NAME=$name __buildApplicationConfigureEnvironmentFiles "$handler" "$home" true "$interactive" || return $?
+  "${sets[@]}" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" true "$interactive" || return $?
 
   __buildApplicationConfigurePaths "$handler" "$home" false || return $?
-  __buildApplicationConfigureShellFiles "$handler" "$home" false "$templateHome" || return $?
-  APPLICATION_CODE=$code APPLICATION_NAME=$name __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$interactive" || return $?
+  "${sets[@]}" __buildApplicationConfigureShellFiles "$handler" "$home" false "$templateHome" || return $?
+  "${sets[@]}" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$interactive" || return $?
 }
 _buildApplicationConfigure() {
   # __IDENTICAL__ usageDocument 1
@@ -268,7 +271,7 @@ __buildApplicationConfigureShellFiles() {
     file=${files[1]}
     target="$home/$file"
     if [ ! -e "$target" ]; then
-      catchReturn "$handler" mapEnvironment <"$templateHome/bin/build/developer.sample.sh" >"$target" || return $?
+      catchReturn "$handler" mapEnvironment < <(grep -v '[removed]' <"$templateHome/bin/build/developer.sample.sh") >"$target" || return $?
     fi
 
     # bin/developer.sh

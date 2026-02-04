@@ -88,7 +88,10 @@ __characterClassReport() {
     done
   else
     local index character && for index in "${indexList[@]}"; do
-      character="$(catchEnvironment "$handler" characterFromInteger "$index")" || return $?
+      case "$index" in
+        0) character=$'\0' ;;
+        *) character="$(catchEnvironment "$handler" characterFromInteger "$index")" || return $? ;;
+      esac
       case "$character" in
       [[:print:]])
         outerText="$(decorate blue "$(textAlignRight 5 "$character")")"

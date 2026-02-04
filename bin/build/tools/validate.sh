@@ -7,13 +7,15 @@
 # Test: ./test/tools/validate-tests.sh
 # Docs: ./documentation/source/tools/validate.md
 
-# IDENTICAL validate 126
+# IDENTICAL validate 132
 
-# Validate a value by type
+# Summary: Validate a value by type
 # Argument: handler - Function. Required. Error handler.
-# Argument: type - Type. Required. Type to validate.
-# Argument: name - String. Required. Name of the variable which is being validated.
+# Argument: type - Type. Required. Type to validate. If more than validation set is specified, specifying a `type` of "" inherits the previous `type`. Blank `types` are not allowed.
+# Argument: name - String. Required. Name of the variable which is being validated. If more than validation set is specified, specifying a name of "" inherits the previous name. Blank names are not allowed.
 # Argument: value - EmptyString. Required. Value to validate.
+#
+# Validation sets are passed as three arguments, optionally repeated: `type` `name ` `value`
 #
 # Types are case-insensitive:
 #
@@ -81,8 +83,12 @@ validate() {
 
   local handler="$1" && shift
 
+  local name="" index=0
   while [ $# -ge 3 ]; do
-    local type="$1" name="$2" value="$3"
+    index=$((index + 1))
+    local type="$1" value="$3"
+    name="${2:-"$name"}"
+    [ -n "$name" ] || throwArgument "$handler" "name required" || return $?
     if isFunction _validateTypeMapper; then
       type=$(_validateTypeMapper "$type")
     fi
@@ -90,9 +96,9 @@ validate() {
     isFunction "$typeFunction" || throwArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
     # Outputs stdout value if successful
     if ! "$typeFunction" "$value"; then
-      local suffix=""
+      local suffix="" ess="s" && [ "${#value}" -ne 1 ] || ess=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
-      throwArgument "$handler" "$name ($(decorate each code -- "$@")) is not type $(decorate label "$type")$suffix" || return $?
+      throwArgument "$handler" "$name (#$index \"$(decorate code "$value")\" [${#value} char$ess]) is not type $(decorate label "$type")$suffix" || return $?
     fi
     shift 3
   done

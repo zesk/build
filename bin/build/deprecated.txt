@@ -37,6 +37,7 @@ maximumFieldLength|fileFieldMaximum|
 maximumLineLength|fileLineMaximum|
 stripAnsi|consoleToPlain|
 testTools testSuite|testSuite|
+junitTestCaseFailed|junitTestCaseFailure|
 
 # v0.40.4
 usageArgumentDate "$handler"|validate "$handler" Date|

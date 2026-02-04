@@ -273,6 +273,13 @@ _daemontoolsHome() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__daemontoolsRequirements() {
+  local handler="$1"
+  local binary && for binary in svscanboot id svc svstat; do
+    muzzle validate "$handler" Executable "${handler#_} requirements" "$binary" || return $?
+  done
+}
+
 # Launch the daemontools daemon
 # Do not use this for production
 # Run the daemontools root daemon
@@ -282,13 +289,14 @@ daemontoolsExecute() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
+  __daemontoolsRequirements "$handler" || return $?
+
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
 
   local home
   home="$(catchReturn "$handler" daemontoolsHome)" || return $?
 
-  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svscanboot id svc svstat || return $?
   catchReturn "$handler" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
   catchEnvironment "$handler" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
@@ -344,10 +352,10 @@ daemontoolsTerminate() {
     shift
   done
 
+  __daemontoolsRequirements "$handler" || return $?
+
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
-
-  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svscanboot id svc svstat || return $?
 
   local home && home="$(catchEnvironment "$handler" daemontoolsHome)" && home="${home%/}" || return $?
 
@@ -402,14 +410,13 @@ daemontoolsRestart() {
     shift
   done
 
-  local home
+  __daemontoolsRequirements "$handler" || return $?
 
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
 
-  home="$(catchEnvironment "$handler" daemontoolsHome)" || return $?
+  local home && home="$(catchEnvironment "$handler" daemontoolsHome)" || return $?
   home="${home%/}"
-  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svscanboot id svc svstat || return $?
 
   local killLoop foundOne maxLoops
 
@@ -526,7 +533,7 @@ daemontoolsManager() {
 
   catchReturn "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
-  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svc svstat || return $?
+  __daemontoolsRequirements "$handler" || return $?
 
   svcBin=$(catchEnvironment "$handler" which svc) || return $?
   statBin=$(catchEnvironment "$handler" which svstat) || return $?

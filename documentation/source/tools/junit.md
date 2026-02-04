@@ -28,9 +28,9 @@ These functions are for generating jUnit XML output files:
 
 {junitTestCaseSkipped}
 
-{junitTestCaseFailedOpen}
+{junitTestCaseFailureOpen}
 
-{junitTestCaseFailedClose}
+{junitTestCaseFailureClose}
 
 {junitTestCaseErrorOpen}
 

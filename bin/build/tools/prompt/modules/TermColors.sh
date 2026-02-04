@@ -6,7 +6,7 @@
 __bashPromptModule_TermColors() {
   local handler="$1" && shift
 
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local home
   home=$(catchReturn "$handler" buildHome) || return 0

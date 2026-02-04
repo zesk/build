@@ -22,7 +22,7 @@ xdebugInstall() {
   catchEnvironment "$handler" phpInstall || return $?
   catchReturn "$handler" packageWhich pear php-pear || return $?
   catchReturn "$handler" packageWhich phpize php-dev || return $?
-  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" pear pecl || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" pear Executable "${FUNCNAME[0]} requirements" pecl || return $?
 
   iniFile=$(catchEnvironment "$handler" phpIniFile) || return $?
   [ -f "$iniFile" ] || throwEnvironment "$handler" "php.ini not found $(decorate file "$iniFile")" || return $?

@@ -17,7 +17,7 @@ testDaemontools() {
   local home
 
   home=$(catchReturn "$handler" buildHome) || return $?
-  assertExitCode --stderr-match "not production" 0 daemontoolsInstall || return $?
+  assertExitCode --head --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then
     decorate info "Running daemontools manually"

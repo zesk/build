@@ -81,10 +81,6 @@ testBuildFunctionsCoverage() {
   __deprecatedFunctions "$handler" "$home" >"$deprecatedFunctions" || return $?
   catchEnvironment "$handler" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
 
-  local requireCoverageDate
-  requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
-  assertExitCode 0 dateValid "$requireCoverageDate" || return $?
-
   local function missing=()
   while read -r function; do
     if [ "${function#test}" != "$function" ]; then
@@ -114,11 +110,8 @@ testBuildFunctionsCoverage() {
     fi
   done < <(buildFunctions)
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-  if [ "$(date +%s)" -lt "$(dateToTimestamp "$requireCoverageDate")" ]; then
-    [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
-  else
-    [ "${#missing[@]}" -eq 0 ] || throwEnvironment "$handler" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
-  fi
+
+  [ "${#missing[@]}" -eq 0 ] || throwEnvironment "$handler" "Functions require at least 1 test:"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
 }
 
 # Tag: slow
@@ -135,14 +128,6 @@ testBuildFunctionsHelpCoverage() {
   clean+=("$deprecatedFunctions")
 
   __deprecatedFunctions "$handler" "$home" >"$deprecatedFunctions" || return $?
-
-  local requireCoverageDate
-  requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
-  assertExitCode 0 dateValid "$requireCoverageDate" || return $?
-
-  local coverageRequired=false
-
-  [ "$(date +%s)" -lt "$(dateToTimestamp "$requireCoverageDate")" ] || coverageRequired=true
 
   local eof fun missing=() functions=() blanks=() helpless=()
 
@@ -196,6 +181,10 @@ testBuildFunctionsHelpCoverage() {
   BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 
+  local verboseFlag=false
+
+  ! buildDebugEnabled coverage-verbose || verboseFlag=true
+
   local lastPassedCache lastPassed="" stopAfter=1000000
 
   lastPassedCache="$(catchReturn "$handler" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
@@ -225,21 +214,9 @@ testBuildFunctionsHelpCoverage() {
       if inArray "$fun" "${blanks[@]}"; then
         helpCall=("$fun")
       fi
-      if $coverageRequired; then
-        assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
-        catchEnvironment "$handler" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
-      else
-        statusMessage decorate info "Attempting $(decorate each code "${helpCall[@]}") ..."
-        # "$fun" --help | dumpPipe "$fun --help"
-        if ! assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}"; then
-          missing+=("$fun")
-          catchEnvironment "$handler" printf "%s\n" "$fun" >>"$missingFile" || return $?
-        else
-          if [ "${#missing[@]}" -eq 0 ]; then
-            catchEnvironment "$handler" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
-          fi
-        fi
-      fi
+      ! $verboseFlag || statusMessage decorate subtle "Attempting: $(decorate code "${helpCall[@]}")"
+      assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
+      catchEnvironment "$handler" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
     fi
     stopAfter=$((stopAfter - 1))
     if [ $stopAfter -le 0 ]; then
@@ -255,10 +232,8 @@ testBuildFunctionsHelpCoverage() {
   mockEnvironmentStop BUILD_COLORS
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
+
   [ "${#missing[@]}" -gt 0 ] || $stopped || catchEnvironment "$handler" rm -f "$lastPassedCache" || return $?
-  if ! $coverageRequired; then
-    [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "Functions require --help support. This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
-  fi
 }
 
 __dataBuildFunctionsWithBlankHelp() {
@@ -376,6 +351,7 @@ mariadbUninstall
 mariadbDumpClean
 markdownRemoveUnfinishedSections
 markdownFormatList
+mockConsoleAnimationStop
 nodePackageManagerInstall
 nodePackageManagerUninstall
 npmUninstall
@@ -389,6 +365,9 @@ phpUninstall
 phpLog
 phpIniFile
 ipLookup
+returnAssert
+returnIdentical
+returnLeak
 rsyncInstall
 buildHome
 trimBoth

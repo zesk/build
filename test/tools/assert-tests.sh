@@ -74,3 +74,21 @@ testAssertComparisons() {
 
   catchEnvironment "$handler" rm -f "$tempError" || return $?
 }
+
+testZeroFile() {
+  local handler="returnMessage"
+  local tempFile
+
+  tempFile=$(fileTemporaryName "$handler") || return $?
+
+  local assertCode && returnAssert || assertCode=$?
+
+  assertFileExists "$tempFile" || return $?
+  assertExitCode --stderr-ok "$assertCode" assertNotZeroFileSize "$tempFile" || return $?
+  assertZeroFileSize "$tempFile" || return $?
+   catchEnvironment "$handler" printf "%s\n" "1" >"$tempFile" || return $?
+  assertExitCode --stderr-ok "$assertCode" assertZeroFileSize "$tempFile" || return $?
+  assertNotZeroFileSize "$tempFile" || return $?
+
+  catchEnvironment "$handler" rm -f "$tempFile" || return $?
+}

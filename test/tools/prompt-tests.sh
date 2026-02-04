@@ -70,3 +70,19 @@ testBashPrompt() {
 }
 
 # TODO reloadChanges test
+
+testBashPromptModule_TermColors() {
+
+  export BUILD_TERM_COLORS_STATE BUILD_COLORS __BUILD_DECORATE
+
+  mockEnvironmentStart BUILD_TERM_COLORS_STATE ""
+  mockEnvironmentStart BUILD_COLORS true
+  mockEnvironmentStart __BUILD_DECORATE ""
+
+  assertExitCode 0 bashPromptModule_TermColors || return $?
+
+  assertNotEquals "${BUILD_TERM_COLORS_STATE-}" "" || return $?
+  assertNotEquals "${__BUILD_DECORATE-}" "" || return $?
+
+  mockEnvironmentStop BUILD_TERM_COLORS_STATE BUILD_COLORS __BUILD_DECORATE
+}
