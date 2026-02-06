@@ -180,7 +180,6 @@ environmentFileBashCompatibleToDocker() {
 
   local tempFile
   tempFile=$(fileTemporaryName "$handler") || return $?
-
   local clean=("$tempFile")
   if [ $# -eq 0 ]; then
     catchEnvironment "$handler" muzzle tee "$tempFile.bash" || returnClean $? "${clean[@]}" || return $?
@@ -196,9 +195,9 @@ environmentFileBashCompatibleToDocker() {
     env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || throwArgument "$handler" "$file is not a valid bash file" || returnClean $? "${clean[@]}" || return $?
   done
   while IFS='' read -r envLine; do
-    local name=${envLine%%=*} value=${envLine#*=}
+    local name="${envLine%%=*}" value="${envLine#*=}"
     printf -- "%s=%s\n" "$name" "$(unquote "\"" "$value")"
-  done < <(removeFields 2 <"$tempFile" | grep -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)' || :)
+  done < <(removeFields 2 <"$tempFile" | grepSafe -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)')
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 _environmentFileBashCompatibleToDocker() {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="filename - Docker environment file to check for common issues"$'\n'""
 base="convert.sh"
@@ -10,11 +10,11 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Ensure an environment file is compatible with non-quoted docker environment files"$'\n'"Argument: filename - Docker environment file to check for common issues"$'\n'"Return Code: 1 - if errors occur"$'\n'"Return Code: 0 - if file is valid"$'\n'""$'\n'""
 return_code="1 - if errors occur"$'\n'"0 - if file is valid"$'\n'""
 sourceFile="bin/build/tools/environment/convert.sh"
-sourceHash="0af760fb116b765ae72552e07e1d167314941918"
+sourceHash="84c434e3d773478cd2e8301530ba662623f81c49"
 summary="Ensure an environment file is compatible with non-quoted docker environment"
 summaryComputed="true"
 usage="environmentFileIsDocker [ filename ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]menvironmentFileIsDocker'$'\e''[0m '$'\e''[[(blue)]m[ filename ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mfilename  '$'\e''[[(value)]mDocker environment file to check for common issues'$'\e''[[(reset)]m'$'\n'''$'\n''Ensure an environment file is compatible with non-quoted docker environment files'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if errors occur'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if file is valid'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: [[(info)]menvironmentFileIsDocker [[(blue)]m[ filename ]'$'\n'''$'\n''    [[(blue)]mfilename  Docker environment file to check for common issues'$'\n'''$'\n''Ensure an environment file is compatible with non-quoted docker environment files'$'\n'''$'\n''Return codes:'$'\n''- 1 - if errors occur'$'\n''- 0 - if file is valid'$'\n'''
+helpPlain='Usage: environmentFileIsDocker [ filename ]'$'\n'''$'\n''    filename  Docker environment file to check for common issues'$'\n'''$'\n''Ensure an environment file is compatible with non-quoted docker environment files'$'\n'''$'\n''Return codes:'$'\n''- 1 - if errors occur'$'\n''- 0 - if file is valid'$'\n'''

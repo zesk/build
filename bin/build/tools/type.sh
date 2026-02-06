@@ -184,7 +184,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL isCallable 48
+# IDENTICAL isCallable 46
 
 # Test if all arguments are callable as a command
 # Argument: string - EmptyString. Required. Path to binary to test if it is executable.
@@ -206,7 +206,7 @@ _isCallable() {
 }
 
 # Test if all arguments are executable binaries
-# Argument: string ... - String. Required. Path to binary to test if it is executable.
+# Argument: string - String. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
@@ -218,15 +218,13 @@ isExecutable() {
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   if [ -f "$1" ]; then
-    local mode
     # Docker has an issue when you mount a local volume inside a container
     # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
     # Report *correctly* when you use `ls`.
-    mode=$(catchEnvironment "$handler" ls -l "$1") || return $?
-    mode="${mode%% *}"
-    [ "${mode#*x}" != "$mode" ]
+    local mode && mode=$(catchEnvironment "$handler" ls -l "$1") || return $?
+    mode="${mode%% *}" && [ "${mode#*x}" != "$mode" ]
   else
-    [ -n "$(command -v "$1")" ]
+    [ -n "$(which "$1")" ]
   fi
 }
 _isExecutable() {

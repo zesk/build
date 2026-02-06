@@ -139,7 +139,7 @@ testExecutableCallable() {
   _dataCallableExecutables | _testValidateExecutable || return $?
   _dataCallableExecutables | _testValidateCallable || return $?
   _dataCallableExecutables | _testValidateNotFunction || return $?
-  _dataCallableFunctions | grep -v echo | _testValidateNotExecutable || return $?
+  _dataCallableFunctions | grep -v 'echo' | _testValidateNotExecutable || return $?
   _dataCallableFunctions | _testValidateCallable || return $?
 
   catchEnvironment "$handler" muzzle popd || return $?

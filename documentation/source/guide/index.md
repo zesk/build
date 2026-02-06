@@ -2,6 +2,7 @@
 
 ## Zesk Build Guides
 
+- [Why Zesk Build](./why.md)
 - [Coding in Bash](./coding.md)
 - [Testing Tools](./testing.md)
 - [Environment file formats](./environment-files.md) - Docker vs. Bash-compatible environment files
@@ -28,6 +29,8 @@ your systems.
 - [Trap Manual Page](./trap.md) - Never enjoy digging to find this definition for `trap`.
 - [Bash cheatsheet](./bash-cheatsheet.md) - `shopt` and `set` meanings
 - [Bash FAQ](./bash-FAQ.md) - Raw, original document.
+- [man read](./man-read.md) - Manual page for `read`
+- [man trap](./man-trap.md) - Manual page for `trap`
 
 ## History
 

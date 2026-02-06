@@ -57,17 +57,17 @@ testDocumentation() {
     source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
     set +a
     assertEquals "Assert two strings are not equal"$'\n' "${summary}" || return $?
-    assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n' "${description}" || return $?
+    assertEquals $'Assert two strings are not equal.\nIf this fails it will output an error and exit.\n' "${description}" || return $?
 
     fn="ass""ertEquals" # "" hides from bashFindUncaughtAssertions
     sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
     bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
     set -a # UNDO ok
     # shellcheck source=/dev/null
-    source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
+    source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || returnUndo $? set +a || return $?
     set +a
     consoleLine '='
-    assertEquals $'Assert two strings are equal.\n\nIf this fails it will output an error and exit.\n\n\n' "${description}" || return $?
+    assertEquals $'Assert two strings are equal.\nIf this fails it will output an error and exit.\n' "${description}" || return $?
     consoleLine -
     desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
     assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
