@@ -32,8 +32,10 @@ testApplicationHomeAliases() {
 
 testBuildApplicationConfigure() {
   local handler="returnMessage"
+  local companyName="Widgets, LLC"
+
   local tempPath && tempPath=$(fileTemporaryName "$handler" -d) || return $?
-  catchReturn "$handler" buildApplicationConfigure --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
+  catchReturn "$handler" buildApplicationConfigure --company "$companyName" --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
   assertExitCode 0 buildApplicationConfigure --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
   local f && for f in "bin/developer.sh" "bin/tools.sh" "bin/install-bin-build.sh"; do
     assertFileExists "$tempPath/$f" || return $?
@@ -45,5 +47,7 @@ testBuildApplicationConfigure() {
   assertExitCode --stdout-match "Hello, world." 0 "$tempPath/bin/tools.sh" decorate info "Hello, world." || return $?
   assertDirectoryExists "$tempPath/bin/build" || return $?
 
+  assertFileDoesNotContain "$tempPath/bin/env/APPLICATION_OWNER.sh" "__appOwnerLoader" || return $?
+  assertFileContains "$tempPath/bin/env/APPLICATION_OWNER.sh" "$companyName" || return $?
   catchEnvironment "$handler" rm -rf "$tempPath" || return $?
 }

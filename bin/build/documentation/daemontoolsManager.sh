@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="--home serviceHome - Directory. Optional. Service directory home. Defaults to \`DAEMONTOOLS_HOME\`."$'\n'"--interval intervalSeconds - PositiveInteger. Optional. Number of seconds to check for presence of the file. Defaults to 10."$'\n'"--stat statFile - FileDirectory. Optional. Output the \`svstat\` status to this file every \`intervalSeconds\`. If not specified nothing is output."$'\n'"--chirp chirpSeconds - PositiveInteger. Optional. Output a message saying we're alive every \`chirpSeconds\` seconds."$'\n'"--action actions - String. Optional. Onr or more actions permitted \`start\`, \`stop\`, \`restart\`, use comma to separate. Default is \`restart\`."$'\n'"service0 - Directory. Required. Service to control (e.g. \`/etc/service/application/\`)"$'\n'"file1 - File. Required. Absolute path to a file. Presence of  \`file\` triggers \`action\`"$'\n'""
 base="daemontools.sh"

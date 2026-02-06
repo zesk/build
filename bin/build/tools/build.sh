@@ -298,7 +298,7 @@ __buildEnvironmentMakeFile() {
 
   __buildEnvironmentFileHeader "$handler" || return $?
   if [ -n "$template" ]; then
-    catchReturn "$handler" grepSafe -v -e "^$name" -e "^#!" -e 'Copyright' "$template" || return $?
+    catchReturn "$handler" grepSafe -v -e "^$name" -e "^#!" -e 'Copyright' "$template" | sed "/# REMOVE {/,/# }/d" || return $?
   else
     __buildEnvironmentDefaultFile "$handler" "$name" || return $?
   fi

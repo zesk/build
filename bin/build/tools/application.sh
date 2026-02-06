@@ -136,10 +136,16 @@ _applicationHomeAliases() {
 # - Registers git hooks
 # - Configures base environment variables
 # EXPERIMENTAL - not finished yet.
+# Argument: --non-interactive - Flag. Optional. Do not prompt for input and fail if input is required.
+# Argument: --owner ownerName - String. Optional. The `APPLICATION_OWNER`.
+# Argument: --name applicationName - String. Optional. The `APPLICATION_NAME`.
+# Argument: --code codeName - String. Optional. The `APPLICATION_CODE`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 buildApplicationConfigure() {
   local handler="_${FUNCNAME[0]}"
 
-  local home="" name="" interactive=true code="" company=""
+  local home="" name="" interactive=true code="" owner=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -153,7 +159,7 @@ buildApplicationConfigure() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --non-interactive) interactive=false ;;
-    --company) shift && company="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --owner) shift && owner="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --code) shift && code="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --path) shift && home="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
@@ -174,14 +180,14 @@ buildApplicationConfigure() {
   fi
 
   local year && year=$(catchEnvironment "$handler" date +%Y) || return $?
-  local sets=(year="$year" APPLICATION_OWNER="$company" APPLICATION_CODE="$code" APPLICATION_NAME="$name")
+
   __buildApplicationConfigurePaths "$handler" "$home" true || return $?
-  __buildApplicationConfigureShellFiles "$handler" "$home" true "$templateHome" || return $?
-  "${sets[@]}" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" true "$interactive" || return $?
+  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureShellFiles "$handler" "$home" true "$templateHome" || return $?
+  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" true "$interactive" || return $?
 
   __buildApplicationConfigurePaths "$handler" "$home" false || return $?
-  "${sets[@]}" __buildApplicationConfigureShellFiles "$handler" "$home" false "$templateHome" || return $?
-  "${sets[@]}" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$interactive" || return $?
+  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureShellFiles "$handler" "$home" false "$templateHome" || return $?
+  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$interactive" || return $?
 }
 _buildApplicationConfigure() {
   # __IDENTICAL__ usageDocument 1
@@ -210,7 +216,7 @@ __buildApplicationConfigureEnvironmentFiles() {
   local interactive="$1" && shift
 
   local envs=(
-    APPLICATION_NAME APPLICATION_CODE APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX BUILD_RELEASE_NOTES
+    APPLICATION_NAME APPLICATION_CODE APPLICATION_OWNER APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX BUILD_RELEASE_NOTES
   )
   local e && for e in "${envs[@]}"; do
     local target="$home/bin/env/$e.sh"

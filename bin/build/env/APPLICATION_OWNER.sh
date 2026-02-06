@@ -6,6 +6,7 @@
 # The entity which owns or manages the application. Typically the owning company name.
 # This is used in Copyright notices in code and other locations.
 export APPLICATION_OWNER
+# REMOVE {
 __appOwnerLoader() {
   export BUILD_HOME
   # shellcheck source=/dev/null
@@ -25,3 +26,5 @@ __appOwnerLoader() {
 APPLICATION_OWNER="${APPLICATION_OWNER-}"
 [ -n "$APPLICATION_OWNER" ] || APPLICATION_OWNER=$(__appOwnerLoader) || return $?
 unset __appOwnerLoader
+# }
+APPLICATION_OWNER="${APPLICATION_OWNER-}"

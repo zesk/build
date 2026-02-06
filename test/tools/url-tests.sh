@@ -234,3 +234,7 @@ testUrlToVariables() {
   )
   assertExitCode "${matches[@]}" 0 urlParse --prefix DSN_ "https://user:who-would-guess-this@localhost/theDude" || return $?
 }
+
+testUserAgentDefault() {
+  assertExitCode --stdout-match "Mozilla" 0 userAgentDefault || return $?
+}

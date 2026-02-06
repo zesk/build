@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
@@ -16,4 +16,4 @@ usage="returnAssert"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnAssert'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]massert'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: returnAssert'$'\n'''$'\n''Return code is assert'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''
+helpPlain='[[(label)]mUsage: [[(info)]mreturnAssert'$'\n'''$'\n''Return code is [[(code)]massert'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''

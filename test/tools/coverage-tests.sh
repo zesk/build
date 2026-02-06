@@ -65,12 +65,40 @@ __deprecatedFunctions() {
   catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | trimSpace | grep -v ' ' | grep -v '/' | sort -u || return $?
 }
 
+#__testBuildFunctionsCoverageFaster() {
+#  local handler="returnMessage"
+#
+#  local home && home=$(catchReturn "$handler" buildHome) || return $?
+#
+#  local tempFun && tempFun="$home/test.fun"
+#  # local tempFun && tempFun=$(fileTemporaryName "$handler") || return $?
+#
+#  local clean=("$tempFun")
+#  catchEnvironment "$handler" buildFunctions >"$tempFun" || returnClean $? "${clean[@]}" || return $?
+#  local testToolsHome="$home/test/tools"
+#
+#  clean+=("$tempFun.tokens")
+#  clean+=("$tempFun.tokens")
+#  find "$testToolsHome" -name '*.sh' ! -path '*/.*/*' -print0 | xargs -0 cat | tee "$tempFun.code" | bashStripComments | tr -c './[:alnum:]' $'\n' | sort -u >"$tempFun.tokens" || returnClean $? "${clean[@]}" || return $?
+#
+#  diff -u "$tempFun" "$tempFun.tokens" | grep '^-' | grep -v '^---' | cut -c 2- >"$tempFun.covered"
+#
+#  local total=0 testFailed=false missingFunction && while read -r missingFunction; do
+#    decorate info "No coverage for $(decorate code "$missingFunction")"
+#    testFailed=true
+#    total=$((total + 1))
+#  done < <(diff -u "$tempFun" "$tempFun.covered" | grep '^-' | grep -v '^---' | cut -c 2-)
+#
+#  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+#
+#  ! $testFailed || throwEnvironment "$handler" "$(pluralWord "$total" function) are missing tests."
+#}
+
 # Tag: slow-30-seconds slow
 testBuildFunctionsCoverage() {
   local handler="returnMessage"
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   local deprecatedFunctions allTestFiles clean=()
   deprecatedFunctions=$(fileTemporaryName "$handler") || return $?
