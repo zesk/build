@@ -426,7 +426,7 @@ __assertFileContainsHelper() {
   local __aa=("$@")
   local handler="$1" && shift
   local success="$1" && shift
-  local __profile="$1" && shift
+  local __profileLabel="none" __profile="$1" && shift
   local lineNumber="" file="" displayName="" lineDepth="" debugLines=false
 
   # _IDENTICAL_ argumentBlankLoopHandler 4

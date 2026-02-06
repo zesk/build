@@ -35,8 +35,8 @@ testBuildApplicationConfigure() {
   local companyName="Widgets, LLC"
 
   local tempPath && tempPath=$(fileTemporaryName "$handler" -d) || return $?
-  catchReturn "$handler" buildApplicationConfigure --company "$companyName" --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
-  assertExitCode 0 buildApplicationConfigure --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
+  # catchReturn "$handler" buildApplicationConfigure --owner "$companyName" --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
+  assertExitCode 0 buildApplicationConfigure --owner "$companyName" --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
   local f && for f in "bin/developer.sh" "bin/tools.sh" "bin/install-bin-build.sh"; do
     assertFileExists "$tempPath/$f" || return $?
   done
