@@ -897,7 +897,6 @@ gitPreCommitSetup() {
   total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
   if [ "$total" -eq 0 ]; then
     catchReturn "$handler" rm -rf "$directory" || return $?
-    throwEnvironment "$handler" "No files to commit." || return $?
   fi
 }
 _gitPreCommitSetup() {
