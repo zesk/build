@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="environment" [1]="return_code")
 rawComment="Are we currently inside a git hook?"$'\n'"Tests non-blank strings in our environment."$'\n'"Environment: GIT_EXEC_PATH - Must be set to pass"$'\n'"Environment: GIT_INDEX_FILE - Must be set to pass"$'\n'"Return Code: 0 - We are, semantically, inside a git hook"$'\n'"Return Code: 1 - We are NOT, semantically, inside a git hook"$'\n'""$'\n'""
 return_code="0 - We are, semantically, inside a git hook"$'\n'"1 - We are NOT, semantically, inside a git hook"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
 summary="Are we currently inside a git hook?"
 summaryComputed="true"
 usage="gitInsideHook"

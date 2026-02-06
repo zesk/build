@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="branch - String. Required. Branch to merge the current branch with."$'\n'"--skip-ip - Boolean. Optional. Do not add the IP address to the comment."$'\n'"--comment - String. Optional. Comment for merge commit."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Merge the current branch with another, push to remote, and then return to the original branch."$'\n'"Argument: branch - String. Required. Branch to merge the current branch with."$'\n'"Argument: --skip-ip - Boolean. Optional. Do not add the IP address to the comment."$'\n'"Argument: --comment - String. Optional. Comment for merge commit."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
 summary="Merge the current branch with another, push to remote, and"
 summaryComputed="true"
 usage="gitBranchMergeCurrent branch [ --skip-ip ] [ --comment ] [ --help ]"

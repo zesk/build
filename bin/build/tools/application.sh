@@ -80,7 +80,7 @@ applicationHome() {
   [ -n "$here" ] || here=$(catchEnvironment "$handler" pwd) || return $?
   home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
   printf "%s\n" "$home" >"$(__applicationHomeFile)"
-  __applicationHomeGo "$handler" "${__saved[0]-} Application home set to" || return $?
+  __applicationHomeGo "$handler" "Application home set to" || return $?
 }
 _applicationHome() {
   # __IDENTICAL__ usageDocument 1

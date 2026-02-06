@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="package - Additional packages to uninstall"$'\n'""
 base="git.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="summary")
 rawComment="Uninstalls the \`git\` binary"$'\n'"Argument: package - Additional packages to uninstall"$'\n'"Summary: Uninstall git"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
 summary="Uninstall git"$'\n'""
 usage="gitUninstall [ package ]"
 # shellcheck disable=SC2016

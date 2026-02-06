@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -11,7 +11,7 @@ output="lines:gitHookType"$'\n'""
 rawComment="List current valid git hook types"$'\n'"Output: lines:gitHookType"$'\n'"Hook types:"$'\n'"- \`pre-commit\`"$'\n'"- \`pre-push\`"$'\n'"- \`pre-merge-commit\`"$'\n'"- \`pre-rebase\`"$'\n'"- \`pre-receive\`"$'\n'"- \`update\`"$'\n'"- \`post-update\`"$'\n'"- \`post-commit\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
 summary="List current valid git hook types"
 summaryComputed="true"
 usage="gitHookTypes [ --help ]"

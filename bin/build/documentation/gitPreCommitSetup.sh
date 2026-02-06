@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-06
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -11,11 +11,11 @@ rawComment="Set up a pre-commit hook and create a cache of our files by extensio
 return_code="0 - One or more files are available as part of the commit"$'\n'"1 - Error, or zero files are available as part of the commit"$'\n'""
 see="gitPreCommitCleanup"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="6ddead0079491da7c7f55886b428a38512863e13"
+sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
 summary="Set up a pre-commit hook and create a cache of"
 summaryComputed="true"
 usage="gitPreCommitSetup [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitPreCommitSetup'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - One or more files are available as part of the commit'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Error, or zero files are available as part of the commit'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mgitPreCommitSetup [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]m--help  [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - One or more files are available as part of the commit'$'\n''- [[(code)]m1 - Error, or zero files are available as part of the commit'$'\n'''
+helpPlain='Usage: gitPreCommitSetup [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- 0 - One or more files are available as part of the commit'$'\n''- 1 - Error, or zero files are available as part of the commit'$'\n'''
