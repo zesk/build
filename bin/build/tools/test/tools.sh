@@ -390,7 +390,7 @@ __testSuite() {
         TEST_FILE=$sectionFile TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-start "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || return $?
         continue
       fi
-      if $continueFlag; then
+      if $continueFlag && [ "$finalReturnCode" -eq 0 ]; then
         catchReturn "$handler" printf "%s\n" "$item" >"$continueFile" || returnUndo $? "${suiteUndo[@]}" || return $?
       fi
       if [ "$suiteName" != "$suiteNameHeading" ]; then
@@ -829,21 +829,6 @@ __testSuitesNames() {
     find "$1" -type f -name '*-tests.sh'
     shift
   done
-}
-
-# Check our global test failure as a back up to some how missing a failure elsewhere
-# Environment: __TEST_FAILED
-# Return Code: 0 - Something failed somewhere
-# Return Code: 1 - Nothing failed anywhere, we should pass
-__testDidAnythingFail() {
-  export __TEST_FAILED
-
-  __TEST_FAILED=${__TEST_FAILED:-}
-  if test "$__TEST_FAILED"; then
-    printf %s "$__TEST_FAILED"
-    return 0
-  fi
-  return 1
 }
 
 # Load one or more test files and run the tests defined within

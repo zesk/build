@@ -108,6 +108,16 @@ __testRun() {
     catchReturn "$handler" environmentValueWrite plumber false >>"$stateFile" || return $?
   fi
 
+  local startDirectory
+  startDirectory=$(catchEnvironment "$handler" pwd) || return $?
+  catchReturn "$handler" muzzle pushd "$startDirectory" || return $?
+
+  # ============================================================================================================
+  # HOOK test-start
+  # ============================================================================================================
+  local resultCode=0
+  local assertions && assertions=$(_assertionTotals)
+
   ###########################################
   ###########################################
   ###########################################
@@ -126,15 +136,6 @@ __testRun() {
   ###########################################
   ###########################################
   # ! $verboseMode || decorate each code "${runner[@]}"
-  local startDirectory
-  startDirectory=$(catchEnvironment "$handler" pwd) || return $?
-  catchReturn "$handler" muzzle pushd "$startDirectory" || return $?
-
-  # ============================================================================================================
-  # HOOK test-start
-  # ============================================================================================================
-  local resultCode=0 stickyCode=0
-  local assertions && assertions=$(_assertionTotals)
   if "${runner[@]}" 2> >(tee -a "$captureStderr") > >(tee -a "$captureStdout"); then
     catchReturn "$handler" muzzle popd || :
     TMPDIR="$savedTMPDIR"
@@ -142,15 +143,13 @@ __testRun() {
       printf "%s\n" "SUCCESS $__test" | tee -a "$output" >>"$quietLog"
       __TEST_SUITE_RESULT=""
     else
-      returnAssert || stickyCode=$?
-      resultCode=$stickyCode
+      returnAssert || resultCode=$?
       printf "%s\n" "stderr-SUCCESS $__test has STDERR:" | tee -a "$error" | tee -a "$quietLog"
       dumpPipe <"$captureStderr" | tee -a "$quietLog"
       __TEST_SUITE_RESULT="[$resultCode] $__test failed, found stderr"
     fi
   else
     resultCode=$?
-    stickyCode=$resultCode
     catchReturn "$handler" muzzle popd || :
     TMPDIR="$savedTMPDIR"
     printf "\n%s\n" "FAILED [$resultCode] $__test" | tee -a "$error" | tee -a "$quietLog"
@@ -174,7 +173,7 @@ __testRun() {
     else
       decorate success "Test supposed to fail: $resultCode -> 0"
       printf "%s\n" "$__test: Test supposed to fail: $resultCode -> 0" >>"$output" || return $?
-      resultCode=0 && stickyCode=0
+      resultCode=0
     fi
   fi
 
@@ -194,23 +193,18 @@ __testRun() {
   local timingText && timingText="$(timingReport "$__testStart")"
   if [ "$resultCode" = "$(returnCode leak)" ]; then
     resultCode=0
-    printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
+    statusMessage printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
   elif [ "$resultCode" -eq 0 ]; then
-    printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
+    statusMessage printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
   else
-    printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
+    statusMessage --last printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
     dumpPipe --lines 30 LOGFILE <"$quietLog" 1>&2 || :
     __TEST_SUITE_RESULT="$__test failed"
-    returnAssert || stickyCode=$?
-  fi
-
-  if [ "$stickyCode" -eq 0 ] && __TEST_SUITE_RESULT=$(__testDidAnythingFail); then
-    # Should probably reset test status but ...
-    returnAssert || stickyCode=$?
+    returnAssert || resultCode=$?
   fi
 
   local passed=true
-  if [ "$stickyCode" -ne 0 ]; then
+  if [ "$resultCode" -ne 0 ]; then
     decorate pair "Reason:" "\"$__TEST_SUITE_RESULT\""
     passed=false
     hh+=(--failed "$__TEST_SUITE_RESULT")
@@ -221,11 +215,11 @@ __testRun() {
   # ============================================================================================================
   # HOOK test-stop
   # ============================================================================================================
-  TEST_ASSERTIONS=$(($(_assertionTotals) - assertions)) TEST_RETURN_CODE=$stickyCode TEST_SKIPPED=false TEST_PASS=$passed catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || return $?
+  TEST_ASSERTIONS=$(($(_assertionTotals) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_PASS=$passed catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || return $?
 
   __testRunCleanup "$handler" "$stateFile" || return $?
 
-  return "$stickyCode"
+  return "$resultCode"
 }
 
 __testRunCleanup() {

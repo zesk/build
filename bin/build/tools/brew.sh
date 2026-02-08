@@ -72,8 +72,8 @@ __brewUpgrade() {
   quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   upgradeLog=$(catchReturn "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
-  catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
-  catchEnvironmentQuiet "$quietLog" packageInstall || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" packageUpdate || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" packageInstall || return $?
   catchReturn "$handler" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then

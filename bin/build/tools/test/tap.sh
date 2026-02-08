@@ -4,7 +4,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-
 __testSuiteTAP_plan() {
   local testCount="$1"
   printf -- "%d%s%d\n" "$(incrementor 1 TAP_TEST)" ".." "$testCount"

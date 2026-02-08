@@ -102,8 +102,8 @@ __portUpgrade() {
   quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   upgradeLog=$(catchReturn "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
-  catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
-  catchEnvironmentQuiet "$quietLog" packageInstall || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" packageUpdate || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" packageInstall || return $?
   catchReturn "$handler" __sudoPortWrapper upgrade outdated | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "macports upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   printf "%s\n" "$result"

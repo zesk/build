@@ -184,7 +184,7 @@ pipUninstall() {
   local quietLog
 
   statusMessage decorate info "Uninstalling pip packages $showNames ... "
-  catchEnvironmentQuiet "$handler" - pipWrapper uninstall "${removeNames[@]}" || return $?
+  catchEnvironmentQuiet "$handler" - pipWrapper uninstall -y "${removeNames[@]}" || return $?
   if pythonPackageInstalled --any "${names[@]}"; then
     throwEnvironment "$handler" "One or more packages are still installed: $showNames" || return $?
   fi

@@ -19,13 +19,18 @@ testPythonStuff() {
 
   # uninstall if needed
   if pythonPackageInstalled mkdocs; then
-    assertExitCode 0 pipUninstall mkdocs || return $?
+    catchReturn "$handler" pipUninstall --debug mkdocs || return $?
+
+    assertExitCode 0 pipUninstall --debug mkdocs || return $?
   fi
+
   assertExitCode 1 pythonPackageInstalled mkdocs || return $?
-  assertExitCode 0 pipInstall mkdocs || return $?
+  assertExitCode --debug 0 pipInstall mkdocs || return $?
+
   assertExitCode 0 pythonPackageInstalled mkdocs || return $?
   assertExitCode --stdout-match "mkdocs" 0 pipWrapper list || return $?
   # TODO Fix later?
+
   # Needs a test: pipUpgrade
   #  assertExitCode 0 pipUninstall mkdocs || return $?
   #  assertExitCode 1 pythonPackageInstalled mkdocs || return $?

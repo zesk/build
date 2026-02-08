@@ -17,19 +17,18 @@ catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
-  if [ ! -f "$quietLog" ]; then
-    if [ "$quietLog" = "-" ]; then
-      quietLog=$(fileTemporaryName "$handler") || return $?
-      clean+=("$quietLog")
-    elif [ ! -d "$(dirname "$quietLog")" ]; then
-      throwArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
-    fi
+  if [ "$quietLog" = "-" ]; then
+    quietLog=$(fileTemporaryName "$handler") || return $?
+    clean+=("$quietLog")
+  elif [ ! -d "$(dirname "$quietLog")" ]; then
+    throwArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
   fi
+  catchEnvironment "$handler" touch "$quietLog" || return $?
   if "$@" >>"$quietLog" 2>&1; then
     returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?
     return 0
   fi
-  tail -f 30 "$quietLog" 1>&2 || :
+  tail -n 30 "$quietLog" 1>&2 || :
   throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
 }
 

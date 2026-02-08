@@ -70,7 +70,6 @@ __testLoadFlags() {
   [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
 }
 
-
 # Outputs the platform name
 # Requires: __testPlatformName
 _testPlatform() {
@@ -89,7 +88,6 @@ ___testPlatforms() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # Argument: testPattern - String. Required. Test string to match.
 # Argument: testMatches ... - String. Optional. One or more tests to match with.

@@ -46,7 +46,6 @@ __testFailed() {
   local handler="$1" && shift
   local returnCode="$1" && shift
   local stateFile="$1" && shift
-  local testInfo="$*"
   local suiteName="$1" && shift
   local item="$1" && shift
 
@@ -57,6 +56,5 @@ __testFailed() {
 
     printf "\n%s: %s %s (Suite: %s) on %s\n" "$(decorate error "Test failed")" "$(decorate code "[ $returnCode ]")" "$(decorate info "$item")" "$(decorate magenta "$suiteName")" "$(decorate value "$(date +"%F %T")")" || :
   ) || return $?
-  export __TEST_FAILED="$testInfo"
   returnAssert
 }
