@@ -87,6 +87,10 @@ exampleFunction() {
   printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code -- "$@")" # DEBUG LINE
   timingReport "$start" "Completed in"
 
+  ################################################################################################################################################################
+  echo "${FUNCNAME[0]}:$LINENO" 1>&2 # DEBUG REMOVE ME TODO
+  ################################################################################################################################################################
+
   # LOG ALL CALLS TO A FUNCTION
   # TO DO REMOVE THIS LATER
   printf "%s\n" "-- CALLED ARGS:" "$@" "--STACK" "$(debuggingStack)" >>"${BUILD_HOME-}/.${FUNCNAME[0]}.log"

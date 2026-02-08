@@ -12,13 +12,19 @@
 
 # Argument: count - Integer. Optional. Sets the value for any following named variables to this value.
 # Argument: variable - String. Optional. Variable to change or increment.
+# Argument: --path cacheDirectory - Directory. Optional. Use this directory path as the state directory.
 # Argument: --reset - Flag. Optional. Reset all counters to zero.
+# Argument: --separator - String. Optional. When dumping all variables use this as the separator between name and value. (Default is space: `"  "`)
+# Argument: --line - String. Optional. When dumping all variables use this as the separator between values. (Default is newline: `$'\n'`)
 #
-# Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.
+# Set or increment a incrementor state based on a state directory. If no numeric value is supplied the default is to increment the current value and output it.
 # New values are set to 0 by default so will output `1` upon first handler.
 # If no variable name is supplied it uses the default variable name `default`.
 #
 # Variable names can contain alphanumeric characters, underscore, or dash.
+#
+# The special count `?` is used to query variables directly by name without modifying them.
+# Passing `?` on the command line without any name arguments will output all incrementors active using the `--separator` and `--line` markers.
 #
 # Sets `default` incrementor to 1 and outputs `1`
 #
@@ -32,18 +38,22 @@
 #
 #     {fn} 2 kitty
 #
+# Dumps the current incrementors:
+#
+#     {fn} ?
+#     default 1
+#     kitty 2
+#
+# The default cache `--path` is placed within the `buildCacheDirectory`.
+#
 # Depends: buildCacheDirectory
 # See: buildCacheDirectory
 # shellcheck disable=SC2120
 incrementor() {
   local handler="_${FUNCNAME[0]}"
-  local argument cacheDirectory
-  local name value counterFile
+  local cacheDirectory="" counterFile=""
+  local separator=" " name="" value="" nextValue="" newline=$'\n' showMarker="?"
 
-  cacheDirectory=$(catchReturn "$handler" buildCacheDirectory "${FUNCNAME[0]}/$$") || return $?
-  cacheDirectory="$(catchReturn "$handler" directoryRequire "$cacheDirectory")" || return $?
-  name=""
-  value=""
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -53,23 +63,52 @@ incrementor() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --path) shift && cacheDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --separator) shift && separator="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --line) shift && newline="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --reset)
-      rm -rf "$cacheDirectory" || :
+      __incrementorCache false
+      [ ! -d "$cacheDirectory" ] || catchReturn "$handler" rm -rf "$cacheDirectory" || return $?
+      return 0
+      ;;
+    "$showMarker")
+      shift
+      if [ $# -gt 0 ]; then
+        while [ $# -gt 0 ]; do
+          nextValue=""
+          counterFile="$cacheDirectory/$1"
+          __incrementorGet
+          printf -- "%d%s" "$nextValue" "$newline"
+          shift
+        done
+      else
+        __incrementorCache false
+        if [ -d "$cacheDirectory" ]; then
+          while read -r name; do
+            counterFile="$cacheDirectory/$name"
+            __incrementorGet
+            printf "%s%s%d%s" "$name" "$separator" "$nextValue" "$newline"
+          done < <(find "$cacheDirectory" -type f -exec basename {} \; | sort)
+        fi
+      fi
       return 0
       ;;
     *[^-_a-zA-Z0-9]*)
       throwArgument "$handler" "Invalid argument or variable name: $argument" || return $?
       ;;
     *)
+      __incrementorCache
       if isInteger "$argument"; then
         if [ -n "$name" ]; then
-          __incrementor "$cacheDirectory/$name" "$value"
+          counterFile="$cacheDirectory/$name"
+          __incrementor
           name=
         fi
         value="$argument"
       else
         if [ -n "$name" ]; then
-          __incrementor "$cacheDirectory/$name" "$value"
+          counterFile="$cacheDirectory/$name"
+          __incrementor
         fi
         name="$argument"
         [ -n "$name" ] || name=default
@@ -78,12 +117,27 @@ incrementor() {
     esac
     shift
   done
+
   [ -n "$name" ] || name=default
-  __incrementor "$cacheDirectory/$name" "$value"
+  __incrementorCache
+  counterFile="$cacheDirectory/$name"
+  __incrementor
 }
 _incrementor() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Local: handler
+# Local: cacheDirectory
+__incrementorCache() {
+  local create="${1-true}"
+  if [ -z "$cacheDirectory" ]; then
+    cacheDirectory="$(catchReturn "$handler" buildCacheDirectory)/incrementor/$$" || return $?
+    if $create; then
+      cacheDirectory="$(catchReturn "$handler" directoryRequire "$cacheDirectory")" || return $?
+    fi
+  fi
 }
 
 # Argument: counterFile - File. Required. File to store our value.
@@ -91,18 +145,35 @@ _incrementor() {
 # stdout: Integer
 # When value is non-blank - write it to the counter file
 # When value is blank - load it (if it exists), increment it, and then write it to the counter file. First run writes `0`.
+# Local: value
+# Local: counterFile
+# Local: newline
 __incrementor() {
-  local counterFile="$1" value="${2-}"
-  if [ -z "$value" ]; then
-    if [ -f "$counterFile" ]; then
-      value="$(head -n 1 "$counterFile")"
-    fi
-    if ! isInteger "$value"; then
-      value=0
-    fi
-    value=$((value + 1))
+  local nextValue="$value"
+  if [ -z "$nextValue" ]; then
+    __incrementorBump
   fi
-  printf -- "%d\n" "$value" | tee "$counterFile"
+  printf -- "%d%s" "$nextValue" "$newline" | tee "$counterFile"
+}
+
+# Local: nextValue
+# Local: counterFile
+__incrementorBump() {
+  __incrementorGet "$counterFile"
+  nextValue=$((nextValue + 1))
+}
+
+# Argument: counterFile - File. Required. File to store our value.
+# stdout: Integer
+# When value is non-blank - write it to the counter file
+# When value is blank - load it (if it exists), increment it, and then write it to the counter file. First run writes `0`.
+# Local: nextValue
+# Local: counterFile
+__incrementorGet() {
+  if [ -f "$counterFile" ]; then
+    nextValue="$(head -n 1 "$counterFile")"
+  fi
+  isInteger "$nextValue" || nextValue=0
 }
 
 # Single reader, multiple writers

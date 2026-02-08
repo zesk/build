@@ -48,12 +48,14 @@ __testLoader() {
 # Argument: --delete directoryOrFile - FileDirectory. Optional. A file or directory to delete when the test suite terminates.
 # Argument: --delete-common - Flag. Delete `./vendor` and `./node_modules` (and other temporary build directories) by default.
 # Argument: --verbose - Flag. Optional. Be verbose.
+# Argument: --stop - Flag. Optional. Stop after a failure instead of attempting to continue.
 # Argument: --coverage - Flag. Optional. Feature in progress - generate a coverage file for tests.
 # Argument: --no-stats - Flag. Optional. Do not generate a test.stats file showing test timings when completed.
 # Argument: --messy - Flag. Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Callable. Optional. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
 # Argument: --cd-away - Flag. Optional. Change directories to a temporary directory before each test.
 # Argument: --tap tapFile - FileDirectory. Optional. Output test results in TAP format to `tapFile`.
+# Argument: --junit junitFile - FileDirectory. Optional. Output test results in junit format to `junitFile`. If a directory is specified the output is to `results.xml`.
 # Argument: --show - Flag. Optional. List all test suites.
 # Argument: -l - Flag. Optional. List all test suites.
 # Argument: --one testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
@@ -63,9 +65,11 @@ __testLoader() {
 # Argument: --show-tags - Flag. Optional. Of the matched tests, display the tags that they have, if any. Unique list.
 # Argument: --skip-tag tagName - String. Optional. Skip tests tagged with this name.
 # Argument: testFunctionPattern - String. Optional. Test function (or substring of function name) to run.
-# Hook: bash-test-start
-# Hook: bash-test-pass
-# Hook: bash-test-fail
+# Hook: tests-start
+# Hook: test-start
+# Hook: test-pass
+# Hook: test-fail
+# Hook: tests-finalize
 # Requires: head tee printf trap
 # Requires: decorate loadAverage consoleConfigureColorMode
 # Requires: buildEnvironmentLoad usageArgumentString catchEnvironment

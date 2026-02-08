@@ -184,10 +184,8 @@ __buildUsageCompileFunction() {
     # ********************************************************************************************************************
 
     IFS=" " read -r -d $'\n' sourceHash sourceFile < <(
-      export sourceFile=""
-      export sourceHash="none"
-      # shellcheck source=/dev/null
-      source "$documentationSettingsFile" || :
+      local sourceFile="" sourceHash="none"
+      catchReturn "$handler" source "$documentationSettingsFile" || :
       printf -- "%s %s\n" "$sourceHash" "$sourceFile" || :
     ) || :
     if [ -z "$sourceFile" ]; then
@@ -242,6 +240,7 @@ __buildUsageCompileFunction() {
       fi
       # ********************************************************************************************************************
 
+      catchReturn "$handler" touch "$documentationSettingsFile" || return $?
       return 0
     fi
   fi

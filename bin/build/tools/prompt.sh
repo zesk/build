@@ -194,17 +194,19 @@ _bashPromptColorScheme() {
 # stdout: Outputs color *codes* separated by colons.
 # Requires: decorations read inArray decorate listJoin
 bashPromptColorsFormat() {
-  local index color colorArray=() cc=()
   local all=("BOLD")
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while read -r color; do all+=("$color"); done < <(decorations)
-  IFS=":" read -r -a colorArray <<<"$1:::::" || :
-  for index in "${!colorArray[@]}"; do
-    IFS=" " read -r -a cc <<<"${colorArray[index]}" || :
+  local colorArray=() && IFS=":" read -r -a colorArray <<<"$1:::::"
+  local index && for index in "${!colorArray[@]}"; do
+    if [ "$index" -ge 5 ]; then
+      unset "colorArray[$index]"
+      continue
+    fi
+    local cc=() && IFS=" " read -r -a cc <<<"${colorArray[index]}"
     local skip=false
-    for color in "${cc[@]}"; do inArray "$color" "${all[@]}" || skip=true && break; done
+    local color && for color in "${cc[@]}"; do inArray "$color" "${all[@]}" || skip=true && break; done
     $skip && colorArray[index]="" || colorArray[index]=$(decorate "${cc[@]}" --)
-    [ "$index" -le 4 ] || unset "colorArray[$index]"
   done
   colorArray+=("$(decorate reset --)")
   printf "%s\n" "$(listJoin ":" "${colorArray[@]}")"

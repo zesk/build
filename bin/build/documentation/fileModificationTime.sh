@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-08
 # shellcheck disable=SC2034
 argument="filename ... - File to fetch modification time"$'\n'""
 base="file.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="example")
 rawComment="Fetch the modification time of a file as a timestamp"$'\n'"Argument: filename ... - File to fetch modification time"$'\n'"Return Code: 2 - If file does not exist"$'\n'"Return Code: 0 - If file exists and modification times are output, one per line"$'\n'"Example:     fileModificationTime ~/.bash_profile"$'\n'""$'\n'""
 return_code="2 - If file does not exist"$'\n'"0 - If file exists and modification times are output, one per line"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="3b2ff8d50f51bb66cfa45739fb7abe9787c417f0"
+sourceHash="ddb116448fdcba656336f2f25e7f2ec6eb97eaff"
 summary="Fetch the modification time of a file as a timestamp"
 summaryComputed="true"
 usage="fileModificationTime [ filename ... ]"

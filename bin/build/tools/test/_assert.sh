@@ -151,13 +151,10 @@ _assertSuccess() {
   shift && statusMessage printf -- "%s %s %s%s" "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?
 }
 _assertionStatistics() {
-  local item
-  for item in assert-failure assert-success; do
-    local value
-    value=$(($(incrementor "$item") - 1))
-    printf "%d\n" "$value"
-  done
-  incrementor --reset
+  incrementor "?" assert-failure assert-success
+}
+_assertionTotals() {
+  local total=0 add && while read -r add; do ! isInteger "$add" || total=$((total + add)); done < <(_assertionStatistics) && printf "%d\n" "$total"
 }
 
 # INTERNAL: To optimize this (or see where it is slow), use
@@ -343,7 +340,7 @@ _assertConditionHelper() {
   local message
   message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
-  message="$(printf -- "%s ➡️ %s -> %s\n" "$linePrefix" "$message" "$result")"
+  message="$(printf -- "%s➡️ %s -> %s\n" "$linePrefix" "$message" "$result")"
   if $code1 || [ "$expectedExitCode" -ne 0 ]; then
     message="$message ($exitCode $(booleanChoose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(booleanChoose "$testPassed" correct incorrect)")"
   fi

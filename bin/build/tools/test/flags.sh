@@ -44,3 +44,69 @@ __testFlagPlatformMatch() {
     fi
   done < <(__testPlatforms)
 }
+
+# Load flags associated with a test
+# Parses a test comment header and fetches values which are in the form `# Test-Foo: value`
+# Converts these to a string in the form:
+#
+#     Foo:value;Bar:anotherValue;Marker:true
+#
+# Which can be easily scanned by other tools to determine eligibility of a test to run or
+# other options.
+# Argument: source - File. Required. File to scan.
+# Argument: functionName - String. Required. Function to fetch the flags for
+# stdout: String
+# stdin: none
+__testLoadFlags() {
+  local source="$1" functionName="$2"
+  local values=()
+  while read -r variableLine; do
+    local __flags=() flag
+    IFS=" " read -r -a __flags <<<"$(trimSpace "${variableLine#*:}")"
+    [ "${#__flags[@]}" -eq 0 ] || for flag in "${__flags[@]}"; do
+      [ -z "$flag" ] || values+=("$(trimSpace "${variableLine%%:*}"):$flag")
+    done
+  done < <(bashFunctionCommentVariable --prefix "$source" "$functionName" "Test-")
+  [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
+}
+
+
+# Outputs the platform name
+# Requires: __testPlatformName
+_testPlatform() {
+  __testPlatformName
+}
+
+# Outputs ALL platform names
+# See: __testPlatformName
+__testPlatforms() {
+  local handler="_${FUNCNAME[0]}"
+  local home
+  home="$(catchReturn "$handler" buildHome)" || return $?
+  find "$home/bin/build/tools/platform/" -type f -name '*.sh' -print0 | xargs -0 grep -A 1 '__testPlatformName()' | grep printf | awk '{ print $5 }' | sed 's/"//g'
+}
+___testPlatforms() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
+# Argument: testPattern - String. Required. Test string to match.
+# Argument: testMatches ... - String. Optional. One or more tests to match with.
+# Performs a case-insensitive anywhere-in-the-string match
+# Return Code: 0 - Test was found in the list
+# Return Code: 1 - Test was not found in the list
+__testMatches() {
+  local testPattern match
+
+  testPattern=$(lowercase "$1")
+  shift
+  while [ "$#" -gt 0 ]; do
+    match=$(lowercase "$1")
+    if [ "${testPattern#*"$match"}" != "$testPattern" ]; then
+      return 0
+    fi
+    shift
+  done
+  return 1
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-08
 # shellcheck disable=SC2034
 argument="file ... - File. Required. One or more files to examine"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Output the newest file in the list"$'\n'"Argument: file ... - File. Required. One or more files to examine"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="3b2ff8d50f51bb66cfa45739fb7abe9787c417f0"
+sourceHash="ddb116448fdcba656336f2f25e7f2ec6eb97eaff"
 summary="Output the newest file in the list"
 summaryComputed="true"
 usage="fileNewest file ... [ --help ]"

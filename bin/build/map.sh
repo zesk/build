@@ -966,7 +966,7 @@ _fileReverseLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL environmentVariables 16
+# IDENTICAL environmentVariables 19
 
 # Output a list of environment variables and ignore function definitions
 #
@@ -975,8 +975,11 @@ _fileReverseLines() {
 #
 # Requires: declare grep cut usageDocument __help
 environmentVariables() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  declare -px | grep 'declare -x ' | cut -f 1 -d "=" | cut -f 3 -d " "
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  {
+    declare -px | grep 'declare -x ' | cut -f 1 -d "=" | cut -f 3 -d " " && declare -ax | grep 'declare -ax ' | cut -f 1 -d '=' | cut -f 3 -d " "
+  } | catchReturn "$handler" sort -u || return $?
 }
 _environmentVariables() {
   true || environmentVariables --help

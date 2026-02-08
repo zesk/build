@@ -813,10 +813,12 @@ _fileTemporaryName() {
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Piped to a temporary file until EOF and then moved to target
 # stdout: A copy of stdin
+# Summary: tee but atomic (EXPERIMENTAL)
+# EXPERIMENTAL not a lot of testing of this don't use quite yet.
 fileTeeAtomic() {
   local handler="_${FUNCNAME[0]}"
 
-  local tt=() copy=false
+  local tt=() copy=false target=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -832,7 +834,7 @@ fileTeeAtomic() {
     esac
     shift
   done
-  [ ${#tt[@]} -eq 0 ] || throwArgument "$handler" "No file arguments: $__count ${__saved[*]}" || return $?
+  [ -n "$target" ] || throwArgument "$handler" "No file arguments: $__count ${__saved[*]}" || return $?
 
   local clean=("$target.$$")
   ! $copy || [ ! -f "$target" ] || catchEnvironment "$handler" cp -f "$target" "$target.$$" || return $?

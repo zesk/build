@@ -25,3 +25,14 @@ testGroupID() {
 testPathShow() {
   assertExitCode 0 pathShow || return $?
 }
+
+testLoadAverage() {
+  local handler="returnMessage"
+  local text
+
+  assertExitCode --stdout-match "." 0 loadAverage || return $?
+
+  while read -r text; do
+    assertExitCode 0 isNumber "$text" || return $?
+  done < <(catchReturn "$handler" loadAverage) || return $?
+}

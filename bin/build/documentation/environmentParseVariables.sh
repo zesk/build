@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-08
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="environment.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="stdin" [1]="stdout" [2]="argument")
 rawComment="Parse variables from an environment variable stream"$'\n'"Extracts lines with \`NAME=value\`"$'\n'"Details:"$'\n'"- Remove \`export \` from lines"$'\n'"- Skip lines containing \`read -r\`"$'\n'"- Anything before a \`=\` is considered a variable name"$'\n'"- Returns a sorted, unique list"$'\n'"stdin: Environment File"$'\n'"stdout: EnvironmentVariable. One per line."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="4226efba8a29858c837cfce31f7416e4226eaa32"
+sourceHash="2c3f0c76084e33e120f499cfbee6c0fd271a043c"
 stdin="Environment File"$'\n'""
 stdout="EnvironmentVariable. One per line."$'\n'""
 summary="Parse variables from an environment variable stream"

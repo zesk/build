@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-08
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
@@ -10,10 +10,10 @@ foundNames=([0]="summary" [1]="return_code")
 rawComment="Return code is \`assert\`"$'\n'"Summary: Assertion return code"$'\n'"Return Code: 97"$'\n'""$'\n'""
 return_code="97"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="3ada3b92753c9fb7ad54f96d764ea888ad800ab1"
+sourceHash="e8716ffc6ca4c79ff9a6d79d8fa20f19526c049f"
 summary="Assertion return code"$'\n'""
 usage="returnAssert"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnAssert'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]massert'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mreturnAssert'$'\n'''$'\n''Return code is [[(code)]massert'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''
+helpPlain='Usage: returnAssert'$'\n'''$'\n''Return code is assert'$'\n'''$'\n''Return codes:'$'\n''- 97'$'\n'''

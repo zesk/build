@@ -59,12 +59,13 @@ testFileTeeAtomic() {
 
   local tempDir
 
-  tempDir=$(fileTemporaryName "$handler") || return $?
+  tempDir=$(fileTemporaryName "$handler" -d) || return $?
 
   printf "%s\n" a b c | assertExitCode 0 fileTeeAtomic -a "$tempDir/a" || return $?
 
-  catchEnvironment "$handler" rm -f "$tempDir" || return $?
+  catchEnvironment "$handler" rm -rf "$tempDir" || return $?
 }
+
 _invertMatches() {
   local output
   while [ $# -gt 0 ]; do

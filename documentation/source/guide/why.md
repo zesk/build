@@ -9,8 +9,13 @@
 - Littering of shell scripts in every project
 - Rewriting the same shell code in many places
 - Patterns in Bash are consistent
-- System tools and flags used across platforms is inconsistent
+- System tools and flags used across platforms are inconsistent
 - Useful to have a toolkit which operates outside the default application languages (isolation, independence)
+- Useful to have a toolkit with few dependencies which can fully configure and set up other platforms in a
+  platform-independent language
+- No assertion libraries available which work well with Bash
+- No validation libraries available which work well with Bash
+- Everyone invents their own decoration libraries so why not us?
 
 ## Why `bash`?
 
@@ -28,6 +33,8 @@ The name is sort of like **desk** or **zest** which is a nice association for so
 
 ## Why Bash 3 support and not Bash 4?
 
-Honestly our development is primarily on **macOS** which has stubbornly fixed on Bash 3 and since set the default shell to `zsh`.
+Honestly our development is primarily on **macOS** which has stubbornly fixed on Bash 3 and since set the default shell
+to `zsh`.
 
-It has not been a challenge to remain compatible with Bash 3 so until that becomes a burden the intent is to maintain support of Bash 3 and greater.
+It has **not** been a challenge to remain compatible with **Bash 3** so until that becomes a burden the intent is to maintain
+support of **Bash 3** and greater.

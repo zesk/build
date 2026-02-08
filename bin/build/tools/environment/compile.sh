@@ -15,7 +15,7 @@
 environmentCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local environmentFiles=() aa=() __debugFlag=false keepComments=false __parseFlag=false variables=()
+  local environmentFiles=() aa=() __debugFlag=false keepComments=false __parseFlag=false __inplaceFlag=false variables=()
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -26,6 +26,7 @@ environmentCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) __debugFlag=true ;;
     --parse) __parseFlag=true ;;
+    --in-place) __inplaceFlag=true ;;
     --variables)
       shift && local listText && listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
       local variableList=() && IFS="," read -r -a variableList <<<"$listText" || :
@@ -39,11 +40,12 @@ environmentCompile() {
     shift
   done
 
-  local tempEnv
-  tempEnv=$(fileTemporaryName "$handler") || return $?
+  [ ${#environmentFiles[@]} -gt 0 ] || ! $__inplaceFlag || throwArgument "$handler" "--in-place requires a file" || return $?
+
+  local tempEnv && tempEnv=$(fileTemporaryName "$handler") || return $?
   local clean=("$tempEnv" "$tempEnv.after" "$tempEnv.source" "$tempEnv.save")
   if [ ${#environmentFiles[@]} -eq 0 ]; then
-    catchEnvironment "$handler" cat >"$tempEnv.source" || return $?
+    catchEnvironment "$handler" cat >"$tempEnv.source" || returnClean $? "${clean[@]}" || return $?
     environmentFiles+=("$tempEnv.source")
   fi
   if $__parseFlag; then
@@ -53,7 +55,7 @@ environmentCompile() {
   if $__debugFlag; then cat "${environmentFiles[@]}" | dumpPipe SOURCES 1>&2; fi
   (
     local __handler="$handler"
-    catchReturn "$__handler" environmentClean || return $?
+    catchReturn "$__handler" environmentClean || returnClean $? "${clean[@]}" || return $?
     if $__debugFlag; then printf "# variables: %s\n" "${variables[*]}" | tee "$tempEnv" >"$tempEnv.after"; fi
     [ "${#variables[@]}" -eq 0 ] || export "${variables[@]+"${variables[@]}"}"
     ! $__debugFlag || statusMessage --last decorate info "environmentOutput(BEFORE)" "${aa[@]+"${aa[@]}"}" || :
@@ -88,8 +90,16 @@ environmentCompile() {
     decorate success RESULT 1>&2
   fi
   [ ! -f "$tempEnv.save" ] || catchEnvironment "$handler" cat "$tempEnv.save" || return $?
-  diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' | sort -u || returnClean $? "${clean[@]}" || return 0
+  if $__inplaceFlag; then
+    local outputFile="${environmentFiles[0]}"
+    __environmentCompilePostProcess "$tempEnv" >"$outputFile" || returnClean $? "${clean[@]}" || return 0
+  else
+    __environmentCompilePostProcess "$tempEnv" || returnClean $? "${clean[@]}" || return 0
+  fi
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+}
+__environmentCompilePostProcess() {
+  local tempEnv="$1" && diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' | sort -u
 }
 _environmentCompile() {
   # __IDENTICAL__ usageDocument 1

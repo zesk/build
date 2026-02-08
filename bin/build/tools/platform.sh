@@ -356,7 +356,7 @@ loadAverage() {
     text="$(cat /proc/loadavg)"
   elif executableExists uptime; then
     text=$(catchEnvironment "$handler" uptime) || return $?
-    text="${text##*average}"_
+    text="${text##*average}"
     text="${text##*:}"
     text="${text# }"
     text="${text//,/ }"

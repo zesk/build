@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-08
 # shellcheck disable=SC2034
 argument="none"
 base="environment.sh"
@@ -11,7 +11,7 @@ rawComment="Output a list of environment variables and ignore function definitio
 requires="declare grep cut usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="4226efba8a29858c837cfce31f7416e4226eaa32"
+sourceHash="2c3f0c76084e33e120f499cfbee6c0fd271a043c"
 summary="Output a list of environment variables and ignore function definitions"
 summaryComputed="true"
 usage="environmentVariables"

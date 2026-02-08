@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-08
 # shellcheck disable=SC2034
 argument="--application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"--next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts."$'\n'"hookName0 - one or more hook names which must exist"$'\n'""
 base="hook.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="test" [4]="envir
 rawComment="Does a hook exist in the local project?"$'\n'"Check if one or more hook exists. All hooks must exist to succeed."$'\n'"Summary: Determine if a hook exists"$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts."$'\n'"Argument: hookName0 - one or more hook names which must exist"$'\n'"Return Code: 0 - If all hooks exist"$'\n'"Test: testHookSystem"$'\n'"Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'""$'\n'""
 return_code="0 - If all hooks exist"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
-sourceHash="ca4324b993995a1e38420f04516f1fbf3aaa6bef"
+sourceHash="0b6650f1dc30eac11ec9a82aa21eaa4aad50e591"
 summary="Determine if a hook exists"$'\n'""
 test="testHookSystem"$'\n'""
 usage="hasHook [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] [ hookName0 ]"

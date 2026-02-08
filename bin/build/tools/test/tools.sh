@@ -5,21 +5,20 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-export __TEST_SUITE_TRACE
-export globalTestFailure=
-
 # TODO: bashCoverage support
 # TODO: results.xml output (hooks?)
 __testSuite() {
   local handler="$1" && shift
 
   local tags=() skipTags=() runner=()
-  local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile="" cleanFlag=false
-  local cdAway=false
-  local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=()
+  local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false cleanFlag=false
+  local cdAway=false stopFlag=false
+  local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=() hookArgs=()
   local startTest="" df=()
 
   set -eou pipefail
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -37,6 +36,9 @@ __testSuite() {
     --debugger)
       bashDebuggerEnable
       ;;
+    --stop)
+      stopFlag=true
+      ;;
     --verbose)
       verboseMode=true
       ;;
@@ -44,9 +46,13 @@ __testSuite() {
       beQuiet=true
       showTags=true
       ;;
-    --tap)
-      shift
-      tapFile=$(validate "$handler" FileDirectory "$argument" "${1-}") || return $?
+    --junit | --tap)
+      local hookPath && hookPath="bin/build/tools/test/${argument#--}/hooks"
+      [ -d "$home/$hookPath" ] || throwEnvironment "$handler" "$hookPath must exist for $argument" || return $?
+      export BUILD_HOOK_DIRS
+      catchReturn "$handler" buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
+      BUILD_HOOK_DIRS="$hookPath:${BUILD_HOOK_DIRS-}"
+      shift && hookArgs+=("$argument" "$(validate "$handler" FileDirectory "$argument" "${1-}")") || return $?
       ;;
     --tag)
       shift
@@ -94,8 +100,7 @@ __testSuite() {
       listFlag=true
       ;;
     --fail)
-      shift
-      failExecutors+=("$(validate "$handler" Callable "failExecutor" "${1-}")") || return $?
+      shift && failExecutors+=("$(validate "$handler" Callable "failExecutor" "${1-}")") || return $?
       # shellcheck disable=SC2015
       while [ $# -gt 0 ]; do [ "$1" != "--" ] && failExecutors+=("$1") && shift || break; done
       failExecutors+=("--")
@@ -147,8 +152,6 @@ __testSuite() {
 
   local load home testTemporaryHome testTemporaryInternal testTemporaryTest clean=()
 
-  home=$(catchReturn "$handler" buildHome) || return $?
-
   testTemporaryHome=$(catchReturn "$handler" buildCacheDirectory "testSuite.$$") || return $?
 
   clean+=("$testTemporaryHome")
@@ -161,15 +164,16 @@ __testSuite() {
 
   load=$(decorate value "(Load $(loadAverage | head -n 1))")
 
-  local startString allTestStart quietLog
+  local startString allTestStart
 
   startString="$(catchEnvironment "$handler" date +"%F %T")" || returnClean $? "${clean[@]}" || return $?
   allTestStart=$(timingStart) || returnClean $? "${clean[@]}" || return $?
 
-  quietLog="$(fileTemporaryName "$handler")" || returnClean $? "${clean[@]}" || return $?
+  local quietLog && quietLog="$(fileTemporaryName "$handler")" || returnClean $? "${clean[@]}" || return $?
 
   # Start tracing
   catchEnvironment "$handler" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  # QUIET LOG =============== QUIET LOG =============== QUIET LOG =============== QUIET LOG ===============
 
   # Color mode
   decorateInitialized || muzzle consoleConfigureDecorate || :
@@ -190,6 +194,7 @@ __testSuite() {
       statusMessage printf -- "%s" "$intro"
     fi
     catchEnvironment "$handler" printf -- "%s\n" "$intro" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
+    # QUIET LOG =============== QUIET LOG =============== QUIET LOG =============== QUIET LOG ===============
   fi
 
   #
@@ -267,8 +272,8 @@ __testSuite() {
       if [ "$startTest" = "PASSED" ]; then
         statusMessage --last decorate success "All tests passed successfully. Next test run will start from the beginning."
         catchEnvironment "$handler" rm -rf "$continueFile" || returnClean $? "${clean[@]}" || return $?
-        __TEST_SUITE_CLEAN_EXIT=true
         catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+        __TEST_SUITE_CLEAN_EXIT=true
         return 0
       fi
     fi
@@ -342,42 +347,68 @@ __testSuite() {
   #     ▌▞▀▖▞▀▘▜▀ ▄ ▛▀▖▞▀▌ ▐ ▞▀▖▞▀▖▛▀▖
   #     ▌▛▀ ▝▀▖▐ ▖▐ ▌ ▌▚▄▌ ▐ ▌ ▌▌ ▌▙▄▘
   #     ▘▝▀▘▀▀  ▀ ▀▘▘ ▘▗▄▘  ▘▝▀ ▝▀ ▌
-
-  [ -z "$tapFile" ] || __testSuiteTAP_plan "$tapFile" "${#filteredTests[@]}" || returnClean $? "${clean[@]}" || return $?
-  [ -z "$tapFile" ] || failExecutors+=("__testSuiteTAP_not_ok" "$tapFile" --)
-
-  local runTime testsRun=()
+  local runTime testsRun=() finalReturnCode=0
   if [ ${#filteredTests[@]} -gt 0 ]; then
+    local globalFlags && globalFlags=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
+    local stateFile && stateFile="$(fileTemporaryName "$handler")" || return $?
+    local clean=("$stateFile")
+    {
+      catchReturn "$handler" environmentValueWrite __count "$__count" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWriteArray __saved "${__saved[@]}" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWrite testNames "${filteredTests[@]}" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWriteArray tests "${#filteredTests[@]}" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWriteArray flags "$globalFlags" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWriteArray timestamp "$(date +'%FT%T')" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWriteArray platform "$(_testPlatform)" || returnClean $? "${clean[@]}" || return $?
+    } >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+
+    # ============================================================================================================
+    # HOOK tests-start
+    # ============================================================================================================
+    hookRunOptional --handler "$handler" --application "$home" tests-start "$stateFile" "${hookArgs[@]+"${hookArgs[@]}"}" || returnClean $? "${clean[@]}" || return $?
+
+    local undo=("hookRunOptional" "tests-end" "--failed" "undo called" "$stateFile" -- rm -rf "${clean[@]}")
+
     __TEST_SUITE_TRACE=options
-    local sectionName="" sectionNameHeading="" sectionFile
+    local suiteName="" suiteNameHeading="" sectionFile=""
     for item in "${filteredTests[@]}"; do
+      local suiteUndo=()
+      [ -z "$suiteName" ] || suiteUndo=(hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile")
+      suiteUndo+=("${undo[@]}")
       if [ "$item" != "${item#\#}" ]; then
         sectionFile="${item#\#}"
-        sectionName=$(__testSuitePathToCode "$sectionFile")
+        if [ -n "$suiteName" ]; then
+          # ============================================================================================================
+          # HOOK testsuite-stop
+          # ============================================================================================================
+          TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || return $?
+        fi
+        suiteName=$(__testSuitePathToCode "$sectionFile")
+        # ============================================================================================================
+        # HOOK testsuite-start
+        # ============================================================================================================
+        TEST_FILE=$sectionFile TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-start "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || return $?
         continue
       fi
       if $continueFlag; then
-        printf "%s\n" "$item" >"$continueFile"
+        catchReturn "$handler" printf "%s\n" "$item" >"$continueFile" || returnUndo $? "${suiteUndo[@]}" || return $?
       fi
-      if [ "$sectionName" != "$sectionNameHeading" ]; then
+      if [ "$suiteName" != "$suiteNameHeading" ]; then
         consoleLineFill
-        __testHeading "$sectionName"
+        __testHeading "$suiteName"
         timingReport "$allTestStart" "elapsed"
-        sectionNameHeading="$sectionName"
+        suiteNameHeading="$suiteName"
       fi
 
-      local __testStart testLine
-      __testStart=$(timingStart)
-      catchEnvironment "$handler" hookRunOptional bash-test-start "$sectionName" "$item" || throwEnvironment "$handler" "... continuing" || :
+      local __testStart && __testStart=$(timingStart)
 
       #  ▛▀▖
       #  ▙▄▘▌ ▌▛▀▖▛▀▖▞▀▖▙▀▖
       #  ▌▚ ▌ ▌▌ ▌▌ ▌▛▀ ▌
       #  ▘ ▘▝▀▘▘ ▘▘ ▘▝▀▘▘
-      local __flags globalFlags
-      testLine=$(__testGetLine "$item" <"$sectionFile") || :
-      __flags=$(__testLoadFlags "$sectionFile" "$item")
-      globalFlags=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
+
+      local testLine && testLine=$(__testGetLine "$item" <"$sectionFile") || :
+      local __flags && __flags=$(__testLoadFlags "$sectionFile" "$item")
       local rawFlags="$__flags;$globalFlags"
 
       ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
@@ -405,18 +436,46 @@ __testSuite() {
       catchEnvironment "$handler" cd "$testHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
       ! $verboseMode || statusMessage --last decorate pair "Raw flags" "$rawFlags"
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$__flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
+
+      #       ▐        ▐  ▛▀▖
+      #       ▜▀ ▞▀▖▞▀▘▜▀ ▙▄▘▌ ▌▛▀▖
+      #       ▐ ▖▛▀ ▝▀▖▐ ▖▌▚ ▌ ▌▌ ▌
+      #  ▀▀▀▀▀▀▀ ▝▀▘▀▀  ▀ ▘ ▘▝▀▘▘ ▘
+      local testReturnCode=0
+      TEST_FILE=$sectionFile TEST_VERBOSE=$verboseMode TEST_LINE=$testLine TEST_FLAGS=$rawFlags TEST_SUITE_NAME="$suiteName" TEST_NAME=$item "${runner[@]+"${runner[@]}"}" __testRun "$handler" "$stateFile" "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || testReturnCode=$?
+      if [ $testReturnCode -eq 0 ]; then
+        passed=true
+      else
+        passed=false
+        __testSuiteExecutor "$item" "$sectionFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || throwEnvironment "$handler" "failure executors failed" || :
+        catchEnvironment "$handler" cd "$saveHome" || :
+        __testFailed "$handler" "$testReturnCode" "$stateFile" "$suiteName" "$item" || finalReturnCode=$?
+      fi
 
       catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
-      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$rawFlags" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
+      __testRunCleanup "$handler" "$stateFile" || return $?
 
       runTime=$(($(timingStart) - __testStart))
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
-      catchEnvironment "$handler" hookRunOptional bash-test-pass "$sectionName" "$item" "$rawFlags" || throwEnvironment "$handler" "... continuing" || :
 
       [ "${#cleanTestOnly[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${cleanTestOnly[@]}" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
+      if ! $passed && $stopFlag; then
+        break
+      fi
     done
+    if [ -n "$suiteName" ]; then
+      # ============================================================================================================
+      # HOOK testsuite-stop
+      # ============================================================================================================
+      TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || return $?
+    fi
+
+    # ============================================================================================================
+    # HOOK tests-stop
+    # ============================================================================================================
+    hookRunOptional --handler "$handler" --application "$home" tests-stop "$stateFile" || returnClean $? "${clean[@]}" || return $?
+
     [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || throwArgument "$handler" "Match not found: $(decorate each code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
     bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
     if $continueFlag; then
@@ -433,6 +492,7 @@ __testSuite() {
   local assertionFailures assertionSuccesses stats=()
   IFS=$'\n' read -r -d '' assertionFailures assertionSuccesses < <(_assertionStatistics)
 
+  _assertionStatistics
   local failColor="error"
   [ "$assertionFailures" -ne 0 ] || failColor="info"
 
@@ -443,7 +503,7 @@ __testSuite() {
 
   timingReport "$allTestStart" "Completed $(decorate orange "${stats[*]}") in"
 
-  _textExit 0
+  _textExit "$finalReturnCode"
 }
 _testSuite() {
   local defaultName
@@ -458,7 +518,7 @@ __testSuiteInitialize() {
 
   $beQuiet || statusMessage decorate info "Initializing test suite ..."
 
-  # Add fast-usage to debugging
+  # Add fast-usage to debugging TODO consider removing this now that usage is fast
   export BUILD_DEBUG
   BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
   BUILD_DEBUG="${BUILD_DEBUG#,}"
@@ -616,14 +676,14 @@ __testSuiteFilterTags() {
 }
 
 __testSuiteListTests() {
-  local sectionFile sectionName
-  sectionName=""
+  local sectionFile suiteName
+  suiteName=""
   while [ $# -gt 0 ]; do
     local item="$1"
     if [ "$item" != "${item#\#}" ]; then
       sectionFile="${item#\#}"
-      sectionName=$(__testSuitePathToCode "$sectionFile")
-      printf -- "# %s\n" "$sectionName"
+      suiteName=$(__testSuitePathToCode "$sectionFile")
+      printf -- "# %s\n" "$suiteName"
       shift
       continue
     fi
@@ -721,21 +781,19 @@ __testGetLine() {
 }
 
 __testSuiteExecutor() {
-  local item="${1-}"
-  local file="${2-}"
-  local line="${3-}"
+  local item="$1" && shift
+  local file="$1" && shift
+  local line="$1" && shift
   local executor=()
-
-  shift 3 || returnArgument "Missing item file or line" || return $?
 
   [ -z "$line" ] || line=":$line"
 
-  statusMessage decorate error "Test $item failed in $file" || :
+  statusMessage decorate error "Test $item failed in $file" || return $?
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
       if [ "${#executor[@]}" -gt 0 ]; then
-        statusMessage decorate info "Running" "${executor[@]}" "$item" "$file" "$line"
-        "${executor[@]}" "$item" "$file" "$line"
+        statusMessage decorate info "Running" "${executor[@]}" "$item" "$file" "$line" || return $?
+        "${executor[@]}" "$item" "$file" "$line" || return $?
       fi
       executor=()
     else
@@ -743,8 +801,7 @@ __testSuiteExecutor() {
     fi
     shift
   done
-  consoleLineFill
-  return 1
+  consoleLineFill || return $?
 }
 
 # Given a path to a file which contains a test suite, return the code for the suite
@@ -775,78 +832,18 @@ __testSuitesNames() {
 }
 
 # Check our global test failure as a back up to some how missing a failure elsewhere
-# Environment: globalTestFailure
+# Environment: __TEST_FAILED
 # Return Code: 0 - Something failed somewhere
 # Return Code: 1 - Nothing failed anywhere, we should pass
 __testDidAnythingFail() {
-  export globalTestFailure
+  export __TEST_FAILED
 
-  globalTestFailure=${globalTestFailure:-}
-  if test "$globalTestFailure"; then
-    printf %s "$globalTestFailure"
+  __TEST_FAILED=${__TEST_FAILED:-}
+  if test "$__TEST_FAILED"; then
+    printf %s "$__TEST_FAILED"
     return 0
   fi
   return 1
-}
-
-#
-# Output a heading for a test section
-#
-# Argument: String. Required. Test heading.
-#
-__testSection() {
-  [ -n "$*" ] || returnArgument "Blank argument $(debuggingStack)"
-  consoleLineFill
-  consoleHeadingBoxed --size 0 "$@"
-}
-
-#
-# Output a heading for a test
-#
-__testHeading() {
-  local bar
-
-  bar=$(decorate code "$(consoleLine '*')")
-
-  consoleLineFill
-  printf -- "%s\n" "$bar"
-  bigText "$@" | decorate wrap --fill " " "    " | decorate code
-  printf -- "%s\n" "$bar"
-}
-
-#
-# Output debugging for terminal issues and colors/CI
-#
-__testDebugTermDisplay() {
-  printf -- "TERM: %s DISPLAY: %s consoleHasColors: %s\n" "${TERM-none}" "${DISPLAY-none}" "$(
-    consoleHasColors
-    printf %d $?
-  )"
-}
-
-# Load flags associated with a test
-# Parses a test comment header and fetches values which are in the form `# Test-Foo: value`
-# Converts these to a string in the form:
-#
-#     Foo:value;Bar:anotherValue;Marker:true
-#
-# Which can be easily scanned by other tools to determine eligibility of a test to run or
-# other options.
-# Argument: source - File. Required. File to scan.
-# Argument: functionName - String. Required. Function to fetch the flags for
-# stdout: String
-# stdin: none
-__testLoadFlags() {
-  local source="$1" functionName="$2"
-  local values=()
-  while read -r variableLine; do
-    local __flags=() flag
-    IFS=" " read -r -a __flags <<<"$(trimSpace "${variableLine#*:}")"
-    [ "${#__flags[@]}" -eq 0 ] || for flag in "${__flags[@]}"; do
-      [ -z "$flag" ] || values+=("$(trimSpace "${variableLine%%:*}"):$flag")
-    done
-  done < <(bashFunctionCommentVariable --prefix "$source" "$functionName" "Test-")
-  [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
 }
 
 # Load one or more test files and run the tests defined within
@@ -917,238 +914,6 @@ __testRunShellInitialize() {
   shopt -s shift_verbose failglob
 }
 
-# Outputs the platform name
-# Requires: __testPlatformName
-_testPlatform() {
-  __testPlatformName
-}
-
-# Outputs ALL platform names
-# See: __testPlatformName
-__testPlatforms() {
-  local handler="_${FUNCNAME[0]}"
-  local home
-  home="$(catchReturn "$handler" buildHome)" || return $?
-  find "$home/bin/build/tools/platform/" -type f -name '*.sh' -print0 | xargs -0 grep -A 1 '__testPlatformName()' | grep printf | awk '{ print $5 }' | sed 's/"//g'
-}
-___testPlatforms() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Load one or more test files and run the tests defined within
-#
-# Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
-#
-__testRun() {
-  local handler="_${FUNCNAME[0]}"
-  local quietLog="${1-}" && shift
-  local tempDirectory="${1-}" && shift
-  local __test="${1-}" __flagText="${2-}" platform
-
-  local tests __testDirectory __TEST_SUITE_RESULT
-  local __test __tests tests __testStart
-  local __beforeFunctions errorTest
-
-  export __TEST_SUITE_TRACE
-  export __TEST_SUITE_RESULT
-
-  __testRunShellInitialize
-
-  errorTest=$(returnCode assert)
-  stickyCode=0
-
-  # Renamed to avoid clobbering by tests
-  __testDirectory=$(pwd)
-
-  __TEST_SUITE_RESULT=AOK
-
-  # Test
-  __testSection "$__test" || :
-  printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
-
-  catchEnvironment "$handler" muzzle fileDirectoryRequire "$quietLog" || return $?
-
-  printf "%s\n" "Running $__test" >>"$quietLog"
-
-  local resultCode=0 stickyCode=0
-  __TEST_SUITE_TRACE="$__test"
-  __testStart=$(timingStart)
-  platform="$(_testPlatform)"
-  [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || return $?
-  if ! __testFlagPlatformMatch "$platform" "$__flagText" 2>>"$quietLog"; then
-    statusMessage --last decorate warning "Skipping $(decorate code "$__test") on $(decorate error "$platform")"
-    __TEST_SUITE_RESULT="skipped platform $platform"
-    resultCode=0
-  else
-    local captureStderr
-    captureStderr=$(fileTemporaryName "$handler") || return $?
-    #     ▖   ▐        ▐
-    #  ▄▄▖▝▚▖ ▜▀ ▞▀▖▞▀▘▜▀
-    #     ▞▘  ▐ ▖▛▀ ▝▀▖▐ ▖
-    #          ▀ ▝▀▘▀▀  ▀
-    local savedTMPDIR
-    export TMPDIR
-    savedTMPDIR=$TMPDIR
-    TMPDIR="$tempDirectory"
-
-    local doHousekeeper="" doPlumber="" buildHomeRequired="" testActuallyFails=""
-    doHousekeeper=$(__testFlagBoolean "Housekeeper" "$__flagText")
-    doPlumber=$(__testFlagBoolean "Plumber" "$__flagText")
-    [ -n "$doHousekeeper" ] || doHousekeeper=true
-    [ -n "$doPlumber" ] || doPlumber=true
-
-    buildHomeRequired=$(__testFlagBoolean "Build-Home" "$__flagText" false)
-    testActuallyFails=$(__testFlagBoolean "Fail" "$__flagText" false)
-
-    if $verboseMode; then
-      decorate pair "Platform" "$platform"
-      decorate pair "Housekeeper" "$(decorate "$(booleanChoose "$doHousekeeper" green orange)" "$doHousekeeper")"
-      decorate pair "Plumber" "$(decorate "$(booleanChoose "$doPlumber" green orange)" "$doPlumber")"
-      decorate pair "Build-Home" "$(decorate "$(booleanChoose "$buildHomeRequired" green orange)" "$buildHomeRequired")"
-      ! $testActuallyFails || decorate pair "Fail" "$(decorate green "$testActuallyFails")"
-    fi
-    local runner=()
-    runner=("$__test" "$quietLog")
-    if $doHousekeeper; then
-      housekeeperCache=$(catchReturn "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
-      runner=(--ignore '.last-run-test' --ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
-      ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flagText;" || runner=(--overhead "${runner[@]}")
-      runner=(housekeeper --cache "$housekeeperCache" "${runner[@]}")
-    fi
-    if $doPlumber; then
-      runner=(plumber --leak __BUILD_LOADER --temporary "$savedTMPDIR" "${runner[@]}")
-    fi
-    ###########################################
-    ###########################################
-    ###########################################
-    ###########################################
-    ###########################################
-    ##########                       ##########
-    ##########                       ##########
-    ##########                       ##########
-    ########## Here is the test call ##########
-    ##########                       ##########
-    ##########                       ##########
-    ##########                       ##########
-    ###########################################
-    ###########################################
-    ###########################################
-    ###########################################
-    ###########################################
-    # ! $verboseMode || decorate each code "${runner[@]}"
-    local startDirectory
-    startDirectory=$(catchEnvironment "$handler" pwd) || return $?
-    catchReturn "$handler" muzzle pushd "$startDirectory" || return $?
-    if "${runner[@]}" 2> >(tee -a "$captureStderr"); then
-      catchReturn "$handler" muzzle popd || :
-      TMPDIR="$savedTMPDIR"
-      if fileIsEmpty "$captureStderr"; then
-        printf "%s\n" "SUCCESS $__test" >>"$quietLog"
-      else
-        resultCode=97
-        stickyCode=$errorTest
-        printf "%s\n" "stderr-SUCCESS $__test has STDERR:" | tee -a "$quietLog"
-        dumpPipe <"$captureStderr" | tee -a "$quietLog"
-      fi
-    else
-      resultCode=$?
-      catchReturn "$handler" muzzle popd || :
-      TMPDIR="$savedTMPDIR"
-      stickyCode=$errorTest
-      printf "\n%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
-      if ! fileIsEmpty "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flagText;"; then
-        printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$quietLog"
-        dumpPipe <"$captureStderr" | tee -a "$quietLog"
-      fi
-    fi
-
-    ! $doHousekeeper || catchEnvironment "$handler" rm -rf "$housekeeperCache" || return $?
-    catchEnvironment "$handler" rm -rf "$captureStderr" || return $?
-
-    if $testActuallyFails; then
-      if [ $resultCode -eq 0 ]; then
-        decorate error "Test supposed to fail but succeeded?" || return $?
-        resultCode=$(returnCode assert)
-      else
-        decorate success "Test supposed to fail: $resultCode -> 0"
-        resultCode=0 && stickyCode=0
-      fi
-    fi
-
-    handler="_${FUNCNAME[0]}"
-  fi
-
-  # So, `handler` can be overridden if it is made global somehow, declare -r prevents changing here
-  # documentation-tests.sh change this apparently
-  # Instead of preventing this handler, just work around it
-  catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
-  local timingText
-  timingText="$(timingReport "$__testStart")"
-  if [ "$resultCode" = "$(returnCode leak)" ]; then
-    resultCode=0
-    printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
-  elif [ "$resultCode" -eq 0 ]; then
-    printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
-  else
-    printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
-    dumpPipe --lines 30 LOGFILE <"$quietLog" 1>&2 || :
-    __TEST_SUITE_RESULT="test $__test failed"
-    stickyCode=$errorTest
-  fi
-
-  if [ "$stickyCode" -eq 0 ] && __TEST_SUITE_RESULT=$(__testDidAnythingFail); then
-    # Should probably reset test status but ...
-    stickyCode=$errorTest
-  fi
-  if [ "$stickyCode" -ne 0 ]; then
-    decorate pair "Reason:" "\"$__TEST_SUITE_RESULT\""
-  fi
-  return "$stickyCode"
-}
-___testRun() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Argument: testPattern - String. Required. Test string to match.
-# Argument: testMatches ... - String. Optional. One or more tests to match with.
-# Performs a case-insensitive anywhere-in-the-string match
-# Return Code: 0 - Test was found in the list
-# Return Code: 1 - Test was not found in the list
-__testMatches() {
-  local testPattern match
-
-  testPattern=$(lowercase "$1")
-  shift
-  while [ "$#" -gt 0 ]; do
-    match=$(lowercase "$1")
-    if [ "${testPattern#*"$match"}" != "$testPattern" ]; then
-      return 0
-    fi
-    shift
-  done
-  return 1
-}
-
-# Our test failed
-# BUILD_DEBUG: test-dump-environment - When set tests will dump the environment at the end.
-__testFailed() {
-  local errorCode sectionName="$1" item="$2"
-
-  catchEnvironment "$handler" hookRunOptional bash-test-fail "$sectionName" "$item" || throwEnvironment "$handler" "... continuing" || :
-
-  errorCode="$(returnCode assert)"
-  printf "\n%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate BOLD red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
-
-  ! buildDebugEnabled "test-dump-environment" || dumpEnvironment || :
-  dumpLoadAverages || :
-
-  decorate info "$(decorate magenta "$sectionName") $(decorate code "$item") failed on $(decorate value "$(date +"%F %T")")" || :
-  export globalTestFailure="$*"
-  return "$errorCode"
-}
-
 #
 #
 __testCleanup() {
@@ -1187,87 +952,3 @@ _textExit() {
   fi
   exit "$@"
 }
-
-__testSuiteTAP_plan() {
-  local tapFile="${1-}" testCount="$2"
-  printf -- "%d%s%d\n" "$(incrementor 1 TAP_TEST)" ".." "$testCount" >"$tapFile"
-}
-
-__testSuiteTAP_line() {
-  local status="$1" && shift
-  local handler="returnMessage"
-  local tapFile="${1-}"
-
-  export __TEST_SUITE_RESULT
-
-  [ -f "$tapFile" ] && shift 1 || throwEnvironment "$handler" "tapFile does not exist: $tapFile" || return $?
-
-  local functionName="${1-}" source="${2-}" functionLine="${3-}" __flagText="${4-}"
-  shift 4 || throwArgument "$handler" "Missing functionName source or functionLine" || return $?
-
-  local directive="" value
-  if isSubstringInsensitive ";Skip:true;" ";$__flagText;"; then
-    directive="skip in test comment"
-  fi
-  if isSubstringInsensitive ";Ignore:true;" ";$__flagText;"; then
-    directive="TODO Ignore test comment"
-  fi
-  value=$(bashFunctionCommentVariable "$source" "$functionName" "TODO") || :
-  [ -z "$value" ] || directive="TODO ${value//$'\n'/ }"
-  [ -z "$directive" ] || directive="$__TEST_SUITE_RESULT"
-  [ -z "$directive" ] || directive="# $directive"
-  printf -- "%s %d %s%s\n" "$status" "$(incrementor TAP_TEST)" "$functionName @ $source:$functionLine" "$directive" >>"$tapFile"
-}
-
-# Argument: tapFile - File. Required. The target output file.
-# Argument: functionName - String. Required. Test function.
-# Argument: functionFile - File. Required. File where test is defined.
-# Argument: functionLine - UnsignedInteger. Required. Line number where test is defined.
-# Argument: flags - SemicolonList. Required. Flags from the test in the form
-__testSuiteTAP_ok() {
-  __testSuiteTAP_line "ok" "$@"
-}
-
-# Argument: tapFile - File. Required. The target output file.
-# Argument: functionName - String. Required. Test function.
-# Argument: functionFile - File. Required. File where test is defined.
-# Argument: functionLine - UnsignedInteger. Required. Line number where test is defined.
-__testSuiteTAP_not_ok() {
-  __testSuiteTAP_line "not ok" "$@"
-}
-
-# TODO: https://github.com/Perl-Toolchain-Gang/Test-Harness/blob/master/reference/Test-Harness-2.64/lib/Test/Harness/TAP.pod#php
-# Argument: --tap - Flag. Optional. TAP output instead of console output.
-#
-# TAP's general format is:
-#
-#    1..N
-#    ok 1 Description # Directive
-#    not ok 2 Something
-#    # Diagnostic
-#    ....
-#    ok 47 Description
-#    ok 48 Description
-#    more tests....
-#
-# TAP syntax:
-#
-#     1..N
-#
-# N is number of tests
-#
-# Directives for comments in descriptions:
-#
-#     not ok 2 # skip No processor installed.
-#     not ok 3 # SKIP Note case does not matter
-#
-# Terminate testing:
-#
-#     Bail out!
-#
-# Test may pass or fail:
-#
-#     not ok 2 # TO DO This test may pass when Intel ships ARM chips
-#
-# Not the words TO and DO are together but are not here to avoid having this show up as a thing to do in the IDE.
-#

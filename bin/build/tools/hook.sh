@@ -24,6 +24,8 @@ __hookRunner() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --require)
       requireHook=true
       ;;
@@ -54,6 +56,8 @@ __hookRunner() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --next)
       shift
       whichArgs+=("$argument" "$(validate "$handler" File "$argument" "${1-}")") || return $?
@@ -81,9 +85,9 @@ __hookRunner() {
       if "$sourceHook"; then
         set -- "$@"
         # shellcheck disable=SC1090
-        source "$hook" || throwEnvironment "$handler" "source $hook failed" || return $?
+        HOOK_NAME="$binary" source "$hook" || throwEnvironment "$handler" "source $hook failed" || return $?
       else
-        command env HOME="$HOME" PATH="$PATH" BUILD_HOME="$BUILD_HOME" "$hook" "$@" || return $?
+        command env HOME="$HOME" PATH="$PATH" BUILD_HOME="$BUILD_HOME" HOOK_NAME="$binary" "$hook" "$@" || return $?
       fi
       return 0
       ;;
