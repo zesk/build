@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="needle - String. Required."$'\n'"haystack - String. Required."$'\n'""
 base="text.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="Outputs the integer offset of \`needle\` if found as substring in \`haystack\`"$'\n'"If \`haystack\` is not found, -1 is output"$'\n'"Argument: needle - String. Required."$'\n'"Argument: haystack - String. Required."$'\n'"stdout: \`Integer\`. The offset at which the \`needle\` was found in \`haystack\`. Outputs -1 if not found."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="0fd758750c580a32fcbee69b6f6578e372baf3cd"
+sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
 stdout="\`Integer\`. The offset at which the \`needle\` was found in \`haystack\`. Outputs -1 if not found."$'\n'""
 summary="Outputs the integer offset of \`needle\` if found as substring"
 summaryComputed="true"

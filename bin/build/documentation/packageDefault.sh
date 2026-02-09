@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="none"
 base="package.sh"
@@ -10,7 +10,7 @@ foundNames=()
 rawComment="Fetch the binary name for the default package in a group"$'\n'"Groups are:"$'\n'"- mysql"$'\n'"- mysqldump"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="42f79b3d34a0383d43d5dccba57a982493535358"
+sourceHash="9446d27b896551a886e9f28cfed65cfe5e5451bf"
 summary="Fetch the binary name for the default package in a"
 summaryComputed="true"
 usage="packageDefault"

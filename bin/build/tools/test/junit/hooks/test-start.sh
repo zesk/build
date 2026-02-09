@@ -7,7 +7,7 @@
 # Hook: test-start
 
 # shellcheck source=/dev/null
-if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
+if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
   # fn: hookRun test-start
   # Summary: Run when a test is started (before running)
@@ -25,11 +25,11 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
       case "$argument" in
       *)
         if [ -z "$suiteName" ]; then
-          suiteName=$(validate "$handler" String "$argument") || return $?
+          suiteName=$(validate "$handler" String "suiteName" "$argument") || return $?
         elif [ -z "$testName" ]; then
-          testName=$(validate "$handler" String "$argument") || return $?
+          testName=$(validate "$handler" String "testName" "$argument") || return $?
         elif [ -z "$stateFile" ]; then
-          stateFile=$(validate "$handler" File "$argument") || return $?
+          stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
         fi
         ;;
       esac
@@ -47,8 +47,11 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
         catchReturn "$handler" printf "%s\n" "$testName" >>"$junitSuiteTemp/tests" || return $?
       fi
     ) || returnCode=$?
+
+    # IDENTICAL hookRunOptionalNext 2
     local home && home=$(catchReturn "$handler" buildHome) || return $?
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "$@" || return $?
+    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+
     return "$returnCode"
   }
   ___hookTestStart() {

@@ -13,9 +13,6 @@ buildUsageCompile() {
 
   local cleanFlag=false quickFlag=true gitActions=true
 
-  # turn off aliases
-  shopt -u expand_aliases
-
   decorateInitialized || decorate info --
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -85,13 +82,17 @@ buildUsageCompile() {
   fi
   local finished=false
   local index=0
+  # turn off aliases
+  local undo=(shopt -s expand_aliases)
+  shopt -u expand_aliases || :
   while ! $finished; do
     index=$((index + 1))
     local prefix="#$index/$totalFunctions -"
     local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
-    statusMessage timing --name "$prefix $fun" __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" || return $?
-  done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
+    statusMessage timing --name "$prefix $fun" __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+  done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+  shopt -s expand_aliases || :
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   if $gitActions; then
     buildUsageRemoveDeprecated --handler "$handler" || return $?

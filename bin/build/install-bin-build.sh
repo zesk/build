@@ -213,6 +213,7 @@ __installCheck() {
 __installPackageConfiguration() {
   local rel="$1"
   shift
+  ! consoleHasColors || decorateInitialized || decorate info -- >/dev/null
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
@@ -778,7 +779,7 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL urlFetch 182
+# IDENTICAL urlFetch 168
 
 # Summary: Fetch URL content
 # DOC TEMPLATE: --help 1
@@ -944,20 +945,6 @@ urlFetch() {
   esac
 }
 _urlFetch() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Summary: Default user agent string for web agents
-# A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)
-# stdout: String
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-userAgentDefault() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  printf "%s\n" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
-}
-_userAgentDefault() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1428,7 +1415,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 289
+# IDENTICAL decorate 290
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1538,6 +1525,7 @@ _decorate() {
 # Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# shellcheck disable=SC2120
 decorateInitialized() {
   [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE
@@ -1570,7 +1558,7 @@ __decorateStyle() {
 if ! isFunction __decorateStyles; then
   # This sets __BUILD_DECORATE to the styles strings
   __decorateStyles() {
-    __decorateStylesDefaultLight
+    __decorateStylesDefaultLight || __decorateStylesDefaultDark # Solely for link
   }
 fi
 
@@ -1861,6 +1849,8 @@ catchReturn() {
 
 # <-- END of IDENTICAL _tinySugar
 
+# IDENTICAL returnUndo 42
+
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1
@@ -1874,10 +1864,10 @@ catchReturn() {
 # Example:     undo+=(-- deleteLargeResource "$thing")
 # Example:     thing=$(catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
-# Requires: isPositiveInteger catchArgument decorate execute
+# Requires: isUnsignedInteger throwArgument decorate execute
 # Requires: usageDocument
 returnUndo() {
-  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" args=()
+  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" execArguments=()
   # __IDENTICAL__ __checkHelp1__handler 1
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
   shift
@@ -1886,16 +1876,16 @@ returnUndo() {
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
-      [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
-      args=()
+      [ "${#execArguments[@]}" -eq 0 ] || execute "${execArguments[@]}" || :
+      execArguments=()
       ;;
     *)
-      args+=("$1")
+      execArguments+=("$1")
       ;;
     esac
     shift
   done
-  [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
+  [ "${#execArguments[@]}" -eq 0 ] || execute "${execArguments[@]}" || :
   return "$code"
 }
 _returnUndo() {

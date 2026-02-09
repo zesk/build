@@ -74,7 +74,7 @@ __deprecatedFunctions() {
 #  # local tempFun && tempFun=$(fileTemporaryName "$handler") || return $?
 #
 #  local clean=("$tempFun")
-#  catchEnvironment "$handler" buildFunctions >"$tempFun" || returnClean $? "${clean[@]}" || return $?
+#  catchReturn "$handler" buildFunctions >"$tempFun" || returnClean $? "${clean[@]}" || return $?
 #  local testToolsHome="$home/test/tools"
 #
 #  clean+=("$tempFun.tokens")

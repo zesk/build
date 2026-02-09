@@ -192,7 +192,6 @@ _waitForValue() {
 testDeployApplication() {
   local handler="returnMessage"
 
-  mockEnvironmentStart BUILD_COLORS
   mockEnvironmentStart BUILD_DEBUG_LINES
 
   exec 2>&1
@@ -404,7 +403,7 @@ testDeployApplication() {
   _testAssertDeploymentLinkages "$d" || return $?
 
   # ________________________________________________________________________________________________________________________________
-  echo "GOING TO: kill ::::$PHP_SERVER_PID:::: My PID is $$"
+  printf "%s\n" "GOING TO: kill ::::$PHP_SERVER_PID:::: My PID is $$"
   kill -TERM "$PHP_SERVER_PID" || :
   PHP_SERVER_PID=
   _waitForDeath "$PHP_SERVER_PID"
@@ -423,7 +422,6 @@ testDeployApplication() {
 
   catchReturn "$handler" rm -rf "$d" || return $?
 
-  mockEnvironmentStop BUILD_COLORS
   mockEnvironmentStop BUILD_DEBUG_LINES
 }
 

@@ -20,7 +20,7 @@ pythonInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if ! executableExists python; then
-    catchReturn "$handler" packageGroupInstall "$@" python || return $?
+    catchReturn "$handler" packageGroupInstall --force "$@" python || return $?
   fi
 }
 _pythonInstall() {

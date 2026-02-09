@@ -5,51 +5,85 @@
 #
 
 __testSuiteTAP_plan() {
+  local cachePath="$1" && shift
   local testCount="$1"
-  printf -- "%d%s%d\n" "$(incrementor 1 TAP_TEST)" ".." "$testCount"
+  muzzle incrementor --path "$cachePath" 0 TAP_TEST
+  printf -- "%d%s%d\n" "1" ".." "$testCount"
+}
+
+__testSuiteTAP_bail() {
+  local reason="${1-}" && shift
+  [ -z "$reason" ] || reason=" ${reason# }"
+  printf -- "%s%s\n" "Bail out!" "$reason"
+}
+
+__testSuiteTAP_ParseFlags() {
+  local directive=""
+  if isSubstringInsensitive ";Skip:true;" ";$1;"; then
+    directive="SKIP in test comment"
+  fi
+  if isSubstringInsensitive ";Ignore:true;" ";$1;"; then
+    directive="TODO Ignore test comment"
+  fi
+  printf "%s\n" "$directive"
+  [ -n "$directive" ]
 }
 
 __testSuiteTAP_line() {
   local status="$1" && shift
-  local handler="returnMessage"
-  local tapFile="${1-}"
+  local cachePath="$1" && shift
+  local suiteName="$1" && shift
+  local functionName="$1" && shift
+  local functionFile="$1" && shift
+  local functionLine="$1" && shift
+  local directive="$1" && shift
 
-  export __TEST_SUITE_RESULT
-
-  [ -f "$tapFile" ] && shift 1 || throwEnvironment "$handler" "tapFile does not exist: $tapFile" || return $?
-
-  local functionName="${1-}" source="${2-}" functionLine="${3-}" __flagText="${4-}"
-  shift 4 || throwArgument "$handler" "Missing functionName source or functionLine" || return $?
-
-  local directive="" value
-  if isSubstringInsensitive ";Skip:true;" ";$__flagText;"; then
-    directive="skip in test comment"
-  fi
-  if isSubstringInsensitive ";Ignore:true;" ";$__flagText;"; then
-    directive="TODO Ignore test comment"
-  fi
-  value=$(bashFunctionCommentVariable "$source" "$functionName" "TODO") || :
-  [ -z "$value" ] || directive="TODO ${value//$'\n'/ }"
-  [ -z "$directive" ] || directive="$__TEST_SUITE_RESULT"
-  [ -z "$directive" ] || directive="# $directive"
-  printf -- "%s %d %s%s\n" "$status" "$(incrementor TAP_TEST)" "$functionName @ $source:$functionLine" "$directive" >>"$tapFile"
+  [ -z "$directive" ] || directive=" # $directive"
+  local suffix="$*"
+  [ -z "$suffix" ] || suffix=" $suffix"
+  printf -- "%s %d - %s%s%s\n" "$status" "$(incrementor --path "$cachePath" TAP_TEST)" "[$suiteName] $functionName @ $functionFile:$functionLine" "$directive" "$suffix"
 }
 
-# Argument: tapFile - File. Required. The target output file.
 # Argument: functionName - String. Required. Test function.
 # Argument: functionFile - File. Required. File where test is defined.
 # Argument: functionLine - UnsignedInteger. Required. Line number where test is defined.
 # Argument: flags - SemicolonList. Required. Flags from the test in the form
 __testSuiteTAP_ok() {
-  __testSuiteTAP_line "ok" "$@"
+  local cachePath="$1" && shift
+  local suiteName="$1" && shift
+  local functionName="$1" && shift
+  local functionFile="$1" && shift
+  local functionLine="$1" && shift
+  __testSuiteTAP_line "ok" "$cachePath" "$suiteName" "$functionName" "$functionFile" "$functionLine" "$@"
 }
 
-# Argument: tapFile - File. Required. The target output file.
 # Argument: functionName - String. Required. Test function.
 # Argument: functionFile - File. Required. File where test is defined.
 # Argument: functionLine - UnsignedInteger. Required. Line number where test is defined.
+# Argument: directive - String. Optional. Directive for TAP line.
+__testSuiteTAP_skip() {
+  local cachePath="$1" && shift
+  local suiteName="$1" && shift
+  local functionName="$1" && shift
+  local functionFile="$1" && shift
+  local functionLine="$1" && shift
+  if [ $# -eq 0 ] || ! stringBeginsInsensitive "$1" "skip"; then
+    set -- "SKIP" "$@"
+  fi
+  __testSuiteTAP_line "ok" "$cachePath" "$suiteName" "$functionName" "$functionFile" "$functionLine" "$@"
+}
+
+# Argument: functionName - String. Required. Test function.
+# Argument: functionFile - File. Required. File where test is defined.
+# Argument: functionLine - UnsignedInteger. Required. Line number where test is defined.
+# Argument: directive - String. Optional. Directive for TAP line.
 __testSuiteTAP_not_ok() {
-  __testSuiteTAP_line "not ok" "$@"
+  local cachePath="$1" && shift
+  local suiteName="$1" && shift
+  local functionName="$1" && shift
+  local functionFile="$1" && shift
+  local functionLine="$1" && shift
+  __testSuiteTAP_line "not ok" "$cachePath" "$suiteName" "$functionName" "$functionFile" "$functionLine" "$@"
 }
 
 # TODO: https://github.com/Perl-Toolchain-Gang/Test-Harness/blob/master/reference/Test-Harness-2.64/lib/Test/Harness/TAP.pod#php

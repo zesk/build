@@ -33,7 +33,7 @@ returnUndo() {
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
-      [ "${#execArguments[@]}" -eq 0 ] || muzzle execute "${execArguments[@]}" || :
+      [ "${#execArguments[@]}" -eq 0 ] || execute "${execArguments[@]}" || :
       execArguments=()
       ;;
     *)
@@ -42,7 +42,7 @@ returnUndo() {
     esac
     shift
   done
-  [ "${#execArguments[@]}" -eq 0 ] || muzzle execute "${execArguments[@]}" || :
+  [ "${#execArguments[@]}" -eq 0 ] || execute "${execArguments[@]}" || :
   return "$code"
 }
 _returnUndo() {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"--help - Flag. Optional. Display this help."$'\n'"text - EmptyString. Required. Text to convert to lowercase"$'\n'""
 base="text.sh"
@@ -11,7 +11,7 @@ rawComment="Convert text to lowercase"$'\n'"Argument: -- - Flag. Optional. Stops
 requires="tr"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="0fd758750c580a32fcbee69b6f6578e372baf3cd"
+sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
 stdout="\`String\`. The lowercase version of the \`text\`."$'\n'""
 summary="Convert text to lowercase"
 summaryComputed="true"
@@ -19,4 +19,4 @@ usage="lowercase [ -- ] [ --help ] text"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mlowercase'$'\e''[0m '$'\e''[[(blue)]m[ -- ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mtext'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--      '$'\e''[[(value)]mFlag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mtext    '$'\e''[[(value)]mEmptyString. Required. Text to convert to lowercase'$'\e''[[(reset)]m'$'\n'''$'\n''Convert text to lowercase'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n'''$'\e''[[(code)]mString'$'\e''[[(reset)]m. The lowercase version of the '$'\e''[[(code)]mtext'$'\e''[[(reset)]m.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mlowercase [[(blue)]m[ -- ] [[(blue)]m[ --help ] [[(magenta)]mtext'$'\n'''$'\n''    [[(blue)]m--      [[(value)]mFlag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.'$'\n''    [[(blue)]m--help  [[(value)]mFlag. Optional. Display this help.'$'\n''    [[(red)]mtext    [[(value)]mEmptyString. Required. Text to convert to lowercase'$'\n'''$'\n''Convert text to lowercase'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''String. The lowercase version of the text.'$'\n'''
+helpPlain='Usage: lowercase [ -- ] [ --help ] text'$'\n'''$'\n''    --      Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.'$'\n''    --help  Flag. Optional. Display this help.'$'\n''    text    EmptyString. Required. Text to convert to lowercase'$'\n'''$'\n''Convert text to lowercase'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''String. The lowercase version of the text.'$'\n'''

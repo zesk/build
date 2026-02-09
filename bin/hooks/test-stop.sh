@@ -17,22 +17,45 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
   __hookTestStop() {
     local handler="_${FUNCNAME[0]}"
 
-    export TEST_PASS
+    local suiteName="" testName="" stateFile="" failedMessage=""
+
+    # _IDENTICAL_ argumentNonBlankLoopHandler 6
+    local __saved=("$@") __count=$#
+    while [ $# -gt 0 ]; do
+      local argument="$1" __index=$((__count - $# + 1))
+      # __IDENTICAL__ __checkBlankArgumentHandler 1
+      [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+      case "$argument" in
+      --failed) shift && failedMessage="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+      *)
+        if [ -z "$suiteName" ]; then
+          suiteName=$(validate "$handler" String "suiteName" "$argument") || return $?
+        elif [ -z "$testName" ]; then
+          testName=$(validate "$handler" String "testName" "$argument") || return $?
+        elif [ -z "$stateFile" ]; then
+          stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
+        fi
+        ;;
+      esac
+      shift
+    done
+
+    export TEST_SUCCESS
 
     local passed=true
-    parseBoolean "${TEST_PASS-}" || passed=false
+    parseBoolean "${TEST_SUCCESS-}" || passed=false
 
-    local module="$1" testFunction="$2" name symbol="✅"
-
-    $passed || symbol="❌"
+    local symbol="✅" && $passed || symbol="❌"
 
     # IDENTICAL hookBashTestFinish 3
     local name && name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -z "$name" ] || name="🍎 ${name}"
-    iTerm2Badge -i "${name}\n👀 ${module} \n${symbol}️ ${testFunction}"
+    local badge="${name}\n👀 ${suiteName} \n${symbol}️ ${testName}"
+    [ -z "$failedMessage" ] || badge="$badge\n${failedMessage:0:20}"
+    iTerm2Badge -i "$badge"
 
     local home && home=$(catchReturn "$handler" buildHome) || return $?
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "$@" || return $?
+    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
   }
   ___hookTestStop() {
     # __IDENTICAL__ usageDocument 1

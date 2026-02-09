@@ -3,7 +3,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 289
+# IDENTICAL decorate 290
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -113,6 +113,7 @@ _decorate() {
 # Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# shellcheck disable=SC2120
 decorateInitialized() {
   [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE
@@ -145,7 +146,7 @@ __decorateStyle() {
 if ! isFunction __decorateStyles; then
   # This sets __BUILD_DECORATE to the styles strings
   __decorateStyles() {
-    __decorateStylesDefaultLight
+    __decorateStylesDefaultLight || __decorateStylesDefaultDark # Solely for link
   }
 fi
 

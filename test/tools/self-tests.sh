@@ -17,8 +17,8 @@ testBinBuildRequires() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install.sample.sh" || return $?
-  assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
+  assertExitCode 0 bashCheckRequires --require --unused --ignore-prefix __decorateExtension --report "$home/bin/build/install.sample.sh" || return $?
+  assertExitCode 0 bashCheckRequires --require --unused --ignore-prefix __decorateExtension --report "$home/bin/build/install-bin-build.sh" || return $?
   assertExitCode 0 bashCheckRequires --ignore catchReturn --ignore-prefix returnEnvironment --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
 }
@@ -106,7 +106,7 @@ testBuildEnvironmentLoadAll() {
 }
 
 testBuildDeprecatedFunctions() {
-  assertExitCode --stdout-match bashMakeExecutable 0 buildDeprecatedFunctions || return $?
+  assertExitCode --stdout-match "makeShell""FilesExecutable" 0 buildDeprecatedFunctions || return $?
 }
 
 testBuildFunctions() {
@@ -118,7 +118,7 @@ testBuildFunctions() {
   buildFunctions --deprecated >"$fun.deprecated" || returnEnvironment "buildFunctions failed" || return $?
 
   assertFileContains "$fun" buildFunctions catchEnvironment "$handler" returnArgument returnEnvironment catchReturn housekeeper || return $?
-  assertFileContains "$fun.deprecated" bashMakeExecutable || return $?
+  assertFileContains "$fun.deprecated" "makeShell""FilesExecutable" || return $?
 
   catchEnvironment "$handler" rm -f "$fun" "$fun.deprecated" || return $?
 }

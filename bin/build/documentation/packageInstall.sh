@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="package - One or more packages to install"$'\n'"--verbose - Flag. Optional. Display progress to the terminal."$'\n'"--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"--force - Flag. Optional. Force even if it was updated recently."$'\n'"--show-log - Flag. Optional. Show package manager logs."$'\n'""
 artifact="\`packageInstall.log\` is left in the \`buildCacheDirectory\`"$'\n'""
@@ -12,7 +12,7 @@ foundNames=([0]="example" [1]="return_code" [2]="summary" [3]="argument" [4]="ar
 rawComment="Install packages using a package manager."$'\n'"Supported managers:"$'\n'"- apk"$'\n'"- apt-get"$'\n'"- brew"$'\n'"Example:     {fn} shellcheck"$'\n'"Return Code: 0 - If \`apk\` is not installed, returns 0."$'\n'"Return Code: 1 - If \`apk\` fails to install the packages"$'\n'"Summary: Install packages using a package manager"$'\n'"Argument: package - One or more packages to install"$'\n'"Artifact: \`{fn}.log\` is left in the \`buildCacheDirectory\`"$'\n'"Argument: --verbose - Flag. Optional. Display progress to the terminal."$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: --force - Flag. Optional. Force even if it was updated recently."$'\n'"Argument: --show-log - Flag. Optional. Show package manager logs."$'\n'""$'\n'""
 return_code="0 - If \`apk\` is not installed, returns 0."$'\n'"1 - If \`apk\` fails to install the packages"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="42f79b3d34a0383d43d5dccba57a982493535358"
+sourceHash="9446d27b896551a886e9f28cfed65cfe5e5451bf"
 summary="Install packages using a package manager"$'\n'""
 usage="packageInstall [ package ] [ --verbose ] [ --manager packageManager ] [ --force ] [ --show-log ]"
 # shellcheck disable=SC2016

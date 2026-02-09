@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="none"
 base="text.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="stdin" [1]="stdout")
 rawComment="Replaces the first and only the first occurrence of a pattern in a line with a replacement string."$'\n'"Without arguments, displays help."$'\n'"stdin: Reads lines from stdin until EOF"$'\n'"stdout: Outputs modified lines"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="0fd758750c580a32fcbee69b6f6578e372baf3cd"
+sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs modified lines"$'\n'""
 summary="Replaces the first and only the first occurrence of a"

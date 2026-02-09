@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="command ... - Callable. Command to run"$'\n'"--temporary tempPath - Directory. Optional. Use this for the temporary path."$'\n'"--leak envName ... - EnvironmentVariable. Variable name which is OK to leak."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="debug.sh"
@@ -12,11 +12,11 @@ rawComment="Run command and detect any global or local leaks"$'\n'"Requires: dec
 requires="declare diff grep"$'\n'"throwArgument decorate usageArgumentString isCallable"$'\n'"fileTemporaryName removeFields"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="a904ac31e55b57261f1d3e3fb6c67407a1f69618"
+sourceHash="f57dc5b6b3fd2c48404157fc334b5c69bb18e80f"
 summary="Run command and detect any global or local leaks"
 summaryComputed="true"
 usage="plumber [ command ... ] [ --temporary tempPath ] [ --leak envName ... ] [ --verbose ] [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mplumber'$'\e''[0m '$'\e''[[(blue)]m[ command ... ]'$'\e''[0m '$'\e''[[(blue)]m[ --temporary tempPath ]'$'\e''[0m '$'\e''[[(blue)]m[ --leak envName ... ]'$'\e''[0m '$'\e''[[(blue)]m[ --verbose ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mcommand ...           '$'\e''[[(value)]mCallable. Command to run'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--temporary tempPath  '$'\e''[[(value)]mDirectory. Optional. Use this for the temporary path.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--leak envName ...    '$'\e''[[(value)]mEnvironmentVariable. Variable name which is OK to leak.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--verbose             '$'\e''[[(value)]mFlag. Optional. Be verbose.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help                '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Run command and detect any global or local leaks'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n'''$'\e''[[(code)]mBUILD_DEBUG'$'\e''[[(reset)]m settings:'$'\n''- '$'\e''[[(code)]mplumber-verbose'$'\e''[[(reset)]m - The plumber outputs the exact variable captures before and after'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mplumber [[(blue)]m[ command ... ] [[(blue)]m[ --temporary tempPath ] [[(blue)]m[ --leak envName ... ] [[(blue)]m[ --verbose ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]mcommand ...           [[(value)]mCallable. Command to run'$'\n''    [[(blue)]m--temporary tempPath  [[(value)]mDirectory. Optional. Use this for the temporary path.'$'\n''    [[(blue)]m--leak envName ...    [[(value)]mEnvironmentVariable. Variable name which is OK to leak.'$'\n''    [[(blue)]m--verbose             [[(value)]mFlag. Optional. Be verbose.'$'\n''    [[(blue)]m--help                [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Run command and detect any global or local leaks'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- plumber-verbose - The plumber outputs the exact variable captures before and after'$'\n'''
+helpPlain='Usage: plumber [ command ... ] [ --temporary tempPath ] [ --leak envName ... ] [ --verbose ] [ --help ]'$'\n'''$'\n''    command ...           Callable. Command to run'$'\n''    --temporary tempPath  Directory. Optional. Use this for the temporary path.'$'\n''    --leak envName ...    EnvironmentVariable. Variable name which is OK to leak.'$'\n''    --verbose             Flag. Optional. Be verbose.'$'\n''    --help                Flag. Optional. Display this help.'$'\n'''$'\n''Run command and detect any global or local leaks'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- plumber-verbose - The plumber outputs the exact variable captures before and after'$'\n'''

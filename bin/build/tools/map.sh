@@ -136,7 +136,7 @@ _mapValueTrim() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 87
+# IDENTICAL mapEnvironment 88
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -221,6 +221,7 @@ mapEnvironment() {
   )
 }
 _mapEnvironment() {
+  decorateInitialized || decorate info --
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

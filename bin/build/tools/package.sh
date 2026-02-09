@@ -734,7 +734,7 @@ _packageGroupWhich() {
 # Any unrecognized groups are installed using the name as-is.
 packageGroupInstall() {
   local handler="_${FUNCNAME[0]}"
-  local groups=() manager=""
+  local groups=() manager="" ii=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -751,6 +751,7 @@ packageGroupInstall() {
       manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
+    --force) ii+=("$argument") ;;
     *)
       groups+=("$(validate "$handler" String "group" "$argument")") || return $?
       ;;
@@ -768,7 +769,7 @@ packageGroupInstall() {
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    catchReturn "$handler" packageInstall --manager "$manager" "${packages[@]}" || return $?
+    catchReturn "$handler" packageInstall "${ii[@]+"${ii[@]}"}" --manager "$manager" "${packages[@]}" || return $?
   done
 }
 _packageGroupInstall() {

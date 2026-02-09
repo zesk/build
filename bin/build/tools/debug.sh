@@ -444,13 +444,19 @@ housekeeper() {
     testEnd=$(timingStart)
     _housekeeperAccountant "" "${watchPaths[@]}" >"$__after"
     if [ "${#__ignore[@]}" -gt 0 ]; then
-      __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' | grep -v "${__ignore[@]+${__ignore[@]}}" || :)"
+      __changed="$(diff -u "$__before" "$__after" | grep -e '^[-+][^+-]' | grep -v "${__ignore[@]+${__ignore[@]}}" || :)"
     else
-      __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' || :)"
+      __changed="$(diff "$__before" "$__after" | grep -e '^[-+][^+-]' || :)"
     fi
     __cmd=$(decorate each code -- "$@")
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$(decorate code "$__cmd") modified files:" "$(printf "%s\n" "$__changed" | decorate wrap "- ")" "Watching:" "$(printf "%s\n" "${watchPaths[@]}" | decorate wrap "- ")" 1>&2
+      local messages=(
+        "$(decorate code "$__cmd") modified files:"
+        "$(decorate wrap "- " <<<"$__changed")"
+        "Watching:"
+        "$(printf -- "%s\n" "${watchPaths[@]}" | decorate wrap "- ")"
+      )
+      printf -- "%s\n" "${messages[@]}" 1>&2
       __result=$(returnCode leak)
     fi
   else

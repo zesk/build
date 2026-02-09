@@ -71,7 +71,7 @@ ___printResultPair() {
 __assertTimingSetup() {
   export __BUILD_SAVED_CACHE_DIRECTORY
   if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
-    __BUILD_SAVED_CACHE_DIRECTORY="$(catchReturn "$handler" buildCacheDirectory)" || return $?
+    __BUILD_SAVED_CACHE_DIRECTORY="$(catchReturn "$handler" buildCacheDirectory "${FUNCNAME[0]}")" || return $?
   fi
 }
 
@@ -132,26 +132,33 @@ ___assertedFunctions() {
 _assertFailure() {
   local function="${1-None}" failIcon="❌"
   export BUILD_TEST_FLAGS
-  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
-  if [ "${flags#*;"$flag";}" != "$flags" ]; then
-    __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
-    incrementor assert-failure >/dev/null 2>&1 &
-  fi
+  #  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
+  #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
+  export __BUILD_SAVED_CACHE_DIRECTORY
+  __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
+  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure >/dev/null 2>&1 &
+  #  fi
   shift && statusMessage --last printf -- "%s %s %s%s" "$failIcon" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
   returnAssert
 }
 
 _assertSuccess() {
   local function="${1-None}" successIcon="✅"
-  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
-  if [ "${flags#*;"$flag";}" != "$flags" ]; then
-    __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
-    incrementor assert-success >/dev/null 2>&1 &
-  fi
+  #  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
+  #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
+  export __BUILD_SAVED_CACHE_DIRECTORY
+  __assertTimingSetup && timing=" [$(__assertTimingCalculate || :)]" || :
+  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success >/dev/null 2>&1 &
+  #  fi
   shift && statusMessage printf -- "%s %s %s%s" "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?
 }
 _assertionStatistics() {
-  incrementor "?" assert-failure assert-success
+  export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
+  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" "?" assert-failure assert-success
+}
+_assertionStatisticsReset() {
+  export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
+  muzzle incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" 0 assert-failure assert-success
 }
 _assertionTotals() {
   local total=0 add && while read -r add; do ! isInteger "$add" || total=$((total + add)); done < <(_assertionStatistics) && printf "%d\n" "$total"
@@ -739,7 +746,7 @@ ___assertFileExists() {
 ___assertFileExistsFormat() {
   local testPassed="${1-}" success="${2-}"
   shift 2
-  printf -- "%s %s wd: \"%s" "$(__resultText "$testPassed" "$*")" "$(booleanChoose "$testPassed" "is a file" "is not a file")" "$(decorate value "$(pwd)")"
+  printf -- "%s %s (wd: \"%s\")" "$(__resultText "$testPassed" "$*")" "$(booleanChoose "$testPassed" "is a file" "is not a file")" "$(decorate value "$(pwd)")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===

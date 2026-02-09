@@ -7,7 +7,7 @@
 # Hook: tests-start
 
 # shellcheck source=/dev/null
-if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
+if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
   # fn: hookRun tests-start
   # Summary: Run when a tests are started (before running)
@@ -15,9 +15,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
   __hookTestsStart() {
     local handler="_${FUNCNAME[0]}"
 
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "$@" || return $?
-
-    local junitPath="" stateFile=""
+    local junitPath="" stateFile="" junitKeepTemp=false
 
     # _IDENTICAL_ argumentNonBlankLoopHandler 6
     local __saved=("$@") __count=$#
@@ -26,10 +24,11 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
       # __IDENTICAL__ __checkBlankArgumentHandler 1
       [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
       case "$argument" in
-      --junit) shift && junitPath="$(validate "$handler" "FileDirectory" "${1-}")" || return $? ;;
+      --debug) junitKeepTemp=true ;;
+      --junit) shift && junitPath="$(validate "$handler" "FileDirectory" "$argument" "${1-}")" || return $? ;;
       *)
         if [ -z "$stateFile" ]; then
-          stateFile=$(validate "$handler" File "$argument") || return $?
+          stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
         fi
         ;;
       esac
@@ -37,23 +36,39 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
     done
 
     [ -n "$stateFile" ] || throwArgument "$handler" "stateFile is required" || return $?
-    local home && home=$(catchReturn "$handler" buildHome) || return $?
     if [ -n "$junitPath" ]; then
+      if [ "${junitPath%/}" != "$junitPath" ]; then
+        junitPath=$(catchReturn "$handler" directoryRequire "$junitPath") || return $?
+      fi
       if [ -d "$junitPath" ]; then
         junitPath="$(catchReturn "$handler" realPath "$junitPath")/results.xml" || return $?
       fi
       if [ ! -f "$junitPath" ]; then
         catchReturn "$handler" touch "$junitPath" || return $?
       fi
-      local junitTemp && junitTemp=$(fileTemporaryName "$handler" -d) || return $?
-      catchReturn "$handler" muzzle directoryRequire "$junitTemp/.xml" || return $?
+      local junitTemp
+      if $junitKeepTemp; then
+        junitTemp="$(dirname "$junitPath")/.junitTemp" || return $?
+        catchReturn "$handler" rm -rf "$junitTemp" || return $?
+      else
+        junitTemp="$(fileTemporaryName "$handler" -d)" || return $?
+      fi
+      catchReturn "$handler" muzzle directoryRequire "$junitTemp/.suiteXML" || return $?
+      catchReturn "$handler" muzzle directoryRequire "$junitTemp/.totals/" || return $?
+      catchReturn "$handler" environmentValueWrite junitKeepTemp "$junitKeepTemp" >>"$stateFile" || return $?
       catchReturn "$handler" environmentValueWrite junitTemp "$junitTemp" >>"$stateFile" || return $?
+      catchReturn "$handler" environmentValueWrite junitPath "$junitPath" >>"$stateFile" || return $?
+      catchReturn "$handler" environmentValueWrite timestamp "$(date "+%FT%T")" >>"$stateFile" || return $?
+      catchReturn "$handler" environmentValueWrite start "$(timingStart)" >>"$stateFile" || return $?
     fi
-    catchReturn "$handler" environmentValueWrite junitPath "$junitPath" >>"$stateFile" || return $?
+
+    # IDENTICAL hookRunOptionalNext 2
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
+    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
   }
   ___hookTestsStart() {
     # __IDENTICAL__ usageDocument 1
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
-  ___hookTestsStart "$@"
+  __hookTestsStart "$@"
 fi

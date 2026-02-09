@@ -16,4 +16,6 @@ returnEnvironment
 returnThrow
 throwArgument
 throwEnvironment
+trimLeftSpace
+trimRightSpace
 trimSpace

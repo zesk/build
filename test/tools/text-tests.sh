@@ -118,6 +118,22 @@ a b c|  a b c        |
 EOF
 }
 
+__dataTrimLeftSpace() {
+  cat <<'EOF'
+trimSpace   | trimSpace   |
+|     |
+a b c        |  a b c        |
+EOF
+}
+
+__dataTrimRightSpace() {
+  cat <<'EOF'
+ trimSpace| trimSpace   |
+|     |
+  a b c|  a b c        |
+EOF
+}
+
 testTrimSpace() {
   local expected test remainder
   while IFS="|" read -r expected test remainder; do
@@ -125,6 +141,24 @@ testTrimSpace() {
     assertEquals "$expected" "$(trimSpace <<<"$test")" || return $?
     : "$remainder"
   done < <(__dataTrimSpace)
+}
+
+testTrimRightSpace() {
+  local expected test remainder
+  while IFS="|" read -r expected test remainder; do
+    assertEquals "$expected" "$(trimRightSpace "$test")" || return $?
+    assertEquals "$expected" "$(trimRightSpace <<<"$test")" || return $?
+    : "$remainder"
+  done < <(__dataTrimRightSpace)
+}
+
+testTrimLeftSpace() {
+  local expected test remainder
+  while IFS="|" read -r expected test remainder; do
+    assertEquals "$expected" "$(trimLeftSpace "$test")" || return $?
+    assertEquals "$expected" "$(trimLeftSpace <<<"$test")" || return $?
+    : "$remainder"
+  done < <(__dataTrimLeftSpace)
 }
 
 __dataStringReplace() {
@@ -346,7 +380,7 @@ __dataPlainLength() {
   cat <<EOF
 5|Hello
 5|$(decorate bold Hello)
-9|$(decorate file README.md)
+20|$(decorate file /var/never/README.md)
 EOF
 }
 

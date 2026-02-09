@@ -68,7 +68,7 @@ _junitClose() {
 junitSuiteOpen() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  catchReturn "$handler" __xmlTag testsuite "$@" name || return $?
+  catchReturn "$handler" __xmlTagOpen testsuite "$@" name || return $?
 }
 _junitSuiteOpen() {
   # __IDENTICAL__ usageDocument 1

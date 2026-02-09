@@ -44,6 +44,10 @@
 
 {trimSpace}
 
+{trimLeftSpace}
+
+{trimRightSpace}
+
 {trimHead}
 
 {trimTail}

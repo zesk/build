@@ -7,7 +7,7 @@
 # Hook: test-stop
 
 # shellcheck source=/dev/null
-if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
+if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
   # fn: hookRun test-stop
   # Summary: Run when a test is finished (after running)
@@ -26,74 +26,78 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
       --failed) shift && failedMessage="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
       *)
         if [ -z "$suiteName" ]; then
-          suiteName=$(validate "$handler" String "$argument") || return $?
+          suiteName=$(validate "$handler" String "suiteName" "$argument") || return $?
         elif [ -z "$testName" ]; then
-          testName=$(validate "$handler" String "$argument") || return $?
+          testName=$(validate "$handler" String "testName" "$argument") || return $?
         elif [ -z "$stateFile" ]; then
-          stateFile=$(validate "$handler" File "$argument") || return $?
+          stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
         fi
         ;;
       esac
       shift
     done
 
+    export TEST_SUCCESS
+
     [ -n "$suiteName" ] || throwArgument "$handler" "suiteName is required" || return $?
     [ -n "$stateFile" ] || throwArgument "$handler" "stateFile is required" || return $?
     [ -n "$testName" ] || throwArgument "$handler" "testName is required" || return $?
 
     local returnCode=0 && (
-      local junitSuiteTemp="" testFile="-testFile-" stderr="" stdout="" error="" output passed=true
+      local junitSuiteTemp="" testFile="-testFile-" stderr="" stdout="" error="" output
 
       local buildHomeRequired="-" plumber="-" housekeeper="-" testShouldFail="-"
 
       catchReturn "$handler" source "$stateFile" || return $?
-      [ -n "$failedMessage" ] || passed=false
+      [ -z "$failedMessage" ] || TEST_SUCCESS=false
 
       if [ -d "$junitSuiteTemp" ]; then
-        local target="$junitSuiteTemp/success" && $passed || target="$junitSuiteTemp/failures"
+        local target="$junitSuiteTemp/success"
+        [ "${TEST_SUCCESS-}" = true ] || target="$junitSuiteTemp/failures"
+        [ "${TEST_SKIPPED-}" != true ] || target="$junitSuiteTemp/skipped"
         catchReturn "$handler" printf "%s\n" "$testName" >>"$target" || return $?
+
         local testCaseXML="$junitSuiteTemp/$testName.xml"
         {
-          junitTestCaseOpen name="$testName" file="$testFile" "assertions=$TEST_ASSERTIONS"
+          junitTestCaseOpen name="$testName" file="$testFile" "assertions=${TEST_ASSERTIONS-0}"
           junitProperties testShouldFail=$testShouldFail plumber=$plumber housekeeper=$housekeeper buildHomeRequired=$buildHomeRequired
           if [ -n "$failedMessage" ]; then
             junitTestCaseFailureOpen "$failedMessage"
             junitTestCaseFailureClose
           fi
-          if [ -n "$skipped" ]; then
-            junitTestCaseSkipped "$skipped"
-          fi
-          if [ -f "$output" ]; then
-            junitTestCaseOutputOpen
-            cat "$output"
-            junitTestCaseOutputClose
+          if "${TEST_SKIPPED-false}"; then
+            junitTestCaseSkipped "$TEST_REASON"
           fi
           if [ -f "$error" ]; then
             junitTestCaseErrorOpen
-            cat "$error"
+            consoleToPlain <"$error" | __xmlContent
             junitTestCaseErrorClose
           fi
-          if [ -f "$stdout" ]; then
+          if [ -f "$stdout" ] || [ -f "$output" ]; then
             junitSystemOutputOpen
-            cat "$stdout"
+            [ ! -f "$output" ] || consoleToPlain <"$output" | __xmlContent | printfOutputPrefix "%s\n" "[output]:"
+            [ ! -f "$stdout" ] || consoleToPlain <"$stdout" | __xmlContent | printfOutputPrefix "%s\n" "[stdout]:"
             junitSystemOutputClose
           fi
           if [ -f "$stderr" ]; then
             junitSystemErrorOpen
-            cat "$stdout"
+            consoleToPlain <"$stderr" | __xmlContent
             junitSystemErrorClose
           fi
           junitTestCaseClose
         } >"$testCaseXML"
       fi
     ) || returnCode=$?
+
+    # IDENTICAL hookRunOptionalNext 2
     local home && home=$(catchReturn "$handler" buildHome) || return $?
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "$@" || return $?
+    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+
     return "$returnCode"
   }
   ___hookTestStop() {
     # __IDENTICAL__ usageDocument 1
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
-  __hookTestEnd "$@"
+  __hookTestStop "$@"
 fi

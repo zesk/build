@@ -47,6 +47,7 @@ __testLoader() {
 # Argument: -c - Flag. Optional. Continue from last successful test.
 # Argument: --delete directoryOrFile - FileDirectory. Optional. A file or directory to delete when the test suite terminates.
 # Argument: --delete-common - Flag. Delete `./vendor` and `./node_modules` (and other temporary build directories) by default.
+# Argument: --debug - Flag. Optional. Enable debugging for `--junit` (saves caches).
 # Argument: --verbose - Flag. Optional. Be verbose.
 # Argument: --stop - Flag. Optional. Stop after a failure instead of attempting to continue.
 # Argument: --coverage - Flag. Optional. Feature in progress - generate a coverage file for tests.
@@ -69,7 +70,7 @@ __testLoader() {
 # Hook: test-start
 # Hook: test-pass
 # Hook: test-fail
-# Hook: tests-finalize
+# Hook: tests-stop
 # Requires: head tee printf trap
 # Requires: decorate loadAverage consoleConfigureColorMode
 # Requires: buildEnvironmentLoad usageArgumentString catchEnvironment

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="needle - String. Required. Thing to search for, not blank."$'\n'"haystack ... - EmptyString. Optional. One or more array elements to match"$'\n'""
 base="text.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="tested")
 rawComment="Check if one string is a substring of another set of strings (case-insensitive)"$'\n'"Argument: needle - String. Required. Thing to search for, not blank."$'\n'"Argument: haystack ... - EmptyString. Optional. One or more array elements to match"$'\n'"Return Code: 0 - If element is a substring of any haystack"$'\n'"Return Code: 1 - If element is NOT found as a substring of any haystack"$'\n'"Tested: No"$'\n'""$'\n'""
 return_code="0 - If element is a substring of any haystack"$'\n'"1 - If element is NOT found as a substring of any haystack"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="0fd758750c580a32fcbee69b6f6578e372baf3cd"
+sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
 summary="Check if one string is a substring of another set"
 summaryComputed="true"
 tested="No"$'\n'""

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="component - the url component to get: \`url\`, \`path\`, \`name\`, \`scheme\`, \`user\`, \`password\`, \`host\`, \`port\`, \`portDefault\`, \`error\`"$'\n'"url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection"$'\n'""
 base="url.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument" [2]="example")
 rawComment="Extract a component from one or more URLs"$'\n'"Summary: Get a URL component directly"$'\n'"Argument: component - the url component to get: \`url\`, \`path\`, \`name\`, \`scheme\`, \`user\`, \`password\`, \`host\`, \`port\`, \`portDefault\`, \`error\`"$'\n'"Argument: url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection"$'\n'"Example:     decorate info \"Connecting as \$(urlParseItem user \"\$url\")\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="20e8178d6bceadb8b86839a449310e2507a61877"
+sourceHash="5c17cd3be5908f799dcf52a229b158e5866260c8"
 summary="Get a URL component directly"$'\n'""
 usage="urlParseItem [ component ] url ..."
 # shellcheck disable=SC2016

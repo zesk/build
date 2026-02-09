@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="url.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="summary" [1]="stdout" [2]="argument")
 rawComment="Summary: Default user agent string for web agents"$'\n'"A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)"$'\n'"stdout: String"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="20e8178d6bceadb8b86839a449310e2507a61877"
+sourceHash="5c17cd3be5908f799dcf52a229b158e5866260c8"
 stdout="String"$'\n'""
 summary="Default user agent string for web agents"$'\n'""
 usage="userAgentDefault [ --help ]"

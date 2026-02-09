@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="message - Optional. String. Why failure occurred."$'\n'""
 base="junit.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="example" [1]="argument")
 rawComment="Open tag for \`failure\` - test failed"$'\n'"Example:     <failure message=\"Expected value did not match.\" type=\"AssertionError\">"$'\n'"Example:         Failure description or stack trace"$'\n'"Example:     </failure>"$'\n'"Argument: message - Optional. String. Why failure occurred."$'\n'"Argument ... - String. Optional. Name/value tag attributes"$'\n'"Attributes:"$'\n'"- \`type=AssertionError\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/junit.sh"
-sourceHash="f92f864478de7e8478b8b8c16722ea1f4d009ea0"
+sourceHash="a571b497675fc8f0150b346132dcce8611ac99a3"
 summary="Open tag for \`failure\` - test failed"
 summaryComputed="true"
 usage="junitTestCaseFailureOpen [ message ]"

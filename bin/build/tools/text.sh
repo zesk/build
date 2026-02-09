@@ -279,6 +279,64 @@ _singleBlankLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Trim spaces and only spaces from the right side of a string passed as arguments or a pipe
+# Argument: text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs trimmed lines
+# Example:     {fn} "$token"
+# Example:     grep "$tokenPattern" | {fn} > "$tokensFound"
+# Summary: Trim whitespace of a bash argument
+trimRightSpace() {
+  local handler="_${FUNCNAME[0]}"
+
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      local var
+      var="$1"
+      # remove trailing whitespace characters
+      printf -- "%s" "${var%"${var##*[![:space:]]}"}"
+      shift
+    done
+  else
+    # shellcheck disable=SC2016
+    catchEnvironment "$handler" sed 's/[[:blank:]]*$//' || return $?
+  fi
+}
+_trimRightSpace() {
+  true || trimSpace "" # SC2120 fix
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Trim spaces and only spaces from the left side of a string passed as arguments or a pipe
+# Argument: text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs trimmed lines
+# Example:     {fn} "$token"
+# Example:     grep "$tokenPattern" | {fn} > "$tokensFound"
+# Summary: Trim whitespace of a bash argument
+trimLeftSpace() {
+  local handler="_${FUNCNAME[0]}"
+
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      local var
+      var="$1"
+      # remove leading whitespace characters
+      printf -- "%s" "${var#"${var%%[![:space:]]*}"}"
+      shift
+    done
+  else
+    # shellcheck disable=SC2016
+    catchEnvironment "$handler" sed 's/^[[:blank:]]*//' || return $?
+  fi
+}
+_trimLeftSpace() {
+  true || trimSpace "" # SC2120 fix
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Trim spaces and only spaces from arguments or a pipe
 # Argument: text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
 # stdin: Reads lines from stdin until EOF

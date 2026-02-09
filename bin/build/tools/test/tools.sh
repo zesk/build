@@ -6,7 +6,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 
 # TODO: bashCoverage support
-# TODO: results.xml output (hooks?)
 __testSuite() {
   local handler="$1" && shift
 
@@ -14,7 +13,7 @@ __testSuite() {
   local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false cleanFlag=false
   local cdAway=false stopFlag=false
   local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=() hookArgs=()
-  local startTest="" df=()
+  local startTest="" df=() debugFlag=false
 
   set -eou pipefail
 
@@ -46,6 +45,7 @@ __testSuite() {
       beQuiet=true
       showTags=true
       ;;
+    --debug) hookArgs+=("$argument") && debugFlag=true ;;
     --junit | --tap)
       local hookPath && hookPath="bin/build/tools/test/${argument#--}/hooks"
       [ -d "$home/$hookPath" ] || throwEnvironment "$handler" "$hookPath must exist for $argument" || return $?
@@ -211,7 +211,8 @@ __testSuite() {
   if $showFlag; then
     __testSuitePathToCode "${allSuites[@]}"
     catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-    _textExit 0
+    _testExit 0
+    return 0
   fi
 
   # Determine the list of tests to run from the list of suites (or all suites)
@@ -350,7 +351,12 @@ __testSuite() {
   local runTime testsRun=() finalReturnCode=0
   if [ ${#filteredTests[@]} -gt 0 ]; then
     local globalFlags && globalFlags=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
-    local stateFile && stateFile="$(fileTemporaryName "$handler")" || return $?
+    local stateFile
+    if $debugFlag; then
+      stateFile="$home/.test.state"
+    else
+      stateFile="$(fileTemporaryName "$handler")" || return $?
+    fi
     local clean=("$stateFile")
     {
       catchReturn "$handler" environmentValueWrite __count "$__count" || returnClean $? "${clean[@]}" || return $?
@@ -367,16 +373,17 @@ __testSuite() {
     # ============================================================================================================
     hookRunOptional --handler "$handler" --application "$home" tests-start "$stateFile" "${hookArgs[@]+"${hookArgs[@]}"}" || returnClean $? "${clean[@]}" || return $?
 
-    local undo=("hookRunOptional" "tests-end" "--failed" "undo called" "$stateFile" -- rm -rf "${clean[@]}")
+    local undo=("hookRunOptional" "tests-stop" "--failed" "undo called" "$stateFile" -- rm -rf "${clean[@]}")
 
     __TEST_SUITE_TRACE=options
-    local suiteName="" suiteNameHeading="" sectionFile=""
+    local suiteName="" suiteNameHeading="" sectionFile="" terminated=()
     for item in "${filteredTests[@]}"; do
       local suiteUndo=()
       [ -z "$suiteName" ] || suiteUndo=(hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile")
       suiteUndo+=("${undo[@]}")
       if [ "$item" != "${item#\#}" ]; then
         sectionFile="${item#\#}"
+        sectionFile="${sectionFile#"$home/"}"
         if [ -n "$suiteName" ]; then
           # ============================================================================================================
           # HOOK testsuite-stop
@@ -461,6 +468,7 @@ __testSuite() {
 
       [ "${#cleanTestOnly[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${cleanTestOnly[@]}" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
       if ! $passed && $stopFlag; then
+        terminated=(--terminate "Stopped after $item failed")
         break
       fi
     done
@@ -474,12 +482,18 @@ __testSuite() {
     # ============================================================================================================
     # HOOK tests-stop
     # ============================================================================================================
-    hookRunOptional --handler "$handler" --application "$home" tests-stop "$stateFile" || returnClean $? "${clean[@]}" || return $?
+    hookRunOptional --handler "$handler" --application "$home" tests-stop "${terminated[@]+"${terminated[@]}"}" "$stateFile" || returnClean $? "${clean[@]}" || return $?
 
     [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || throwArgument "$handler" "Match not found: $(decorate each code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
-    bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
-    if $continueFlag; then
-      printf "%s\n" "PASSED" >"$continueFile"
+
+    consoleLineFill
+    if [ $finalReturnCode -eq 0 ]; then
+      bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
+      if $continueFlag; then
+        printf "%s\n" "PASSED" >"$continueFile"
+      fi
+    else
+      bigText --bigger FAILED | decorate wrap "" "    " | decorate error | decorate wrap --fill "." "    "
     fi
   else
     local message=()
@@ -492,18 +506,19 @@ __testSuite() {
   local assertionFailures assertionSuccesses stats=()
   IFS=$'\n' read -r -d '' assertionFailures assertionSuccesses < <(_assertionStatistics)
 
-  _assertionStatistics
+  _assertionStatisticsReset
+
   local failColor="error"
   [ "$assertionFailures" -ne 0 ] || failColor="info"
 
   stats+=("$(decorate "$failColor" "$(pluralWord "$assertionFailures" "failed assertion")")," "$(decorate success "$(pluralWord "$assertionSuccesses" "successful assertion")")")
   [ -z "$statsFile" ] || __testStats "$statsFile"
 
-  [ ${#clean[@]} -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  [ ${#clean[@]} -eq 0 ] || $debugFlag || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   timingReport "$allTestStart" "Completed $(decorate orange "${stats[*]}") in"
 
-  _textExit "$finalReturnCode"
+  _testExit "$finalReturnCode"
 }
 _testSuite() {
   local defaultName
@@ -930,10 +945,8 @@ __testCleanupMess() {
   __testCleanup
 }
 
-_textExit() {
-  export __TEST_SUITE_CLEAN_EXIT
-  if [ "${1-}" = 0 ]; then
-    __TEST_SUITE_CLEAN_EXIT=true
-  fi
-  exit "$@"
+_testExit() {
+  local returnCode="${1-0}"
+  trap - EXIT QUIT TERM ERR
+  return "$returnCode"
 }

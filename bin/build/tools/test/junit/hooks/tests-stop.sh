@@ -4,22 +4,22 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Hook: tests-finalize
+# Hook: tests-stop
 
 # shellcheck source=/dev/null
-if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
+if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
-  # fn: hookRun tests-finalize
+  # fn: hookRun tests-stop
   # Summary: Run when a tests are finalized (after test running is terminated)
   # Argument: stateFile - File. Required. State file for test suite.
-  __hookTestsFinalize() {
+  __hookTestsStop() {
     local handler="_${FUNCNAME[0]}"
 
     local home && home=$(catchReturn "$handler" buildHome) || return $?
 
     catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "$@" || return $?
 
-    local junitPath="" stateFile=""
+    local junitPath="" stateFile="" terminateReason=""
 
     # _IDENTICAL_ argumentNonBlankLoopHandler 6
     local __saved=("$@") __count=$#
@@ -28,9 +28,10 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
       # __IDENTICAL__ __checkBlankArgumentHandler 1
       [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
       case "$argument" in
+      --terminate) shift && terminateReason=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
       *)
         if [ -z "$stateFile" ]; then
-          stateFile=$(validate "$handler" File "$argument") || return $?
+          stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
         fi
         ;;
       esac
@@ -39,26 +40,49 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
 
     [ -n "$stateFile" ] || throwArgument "$handler" "stateFile is required" || return $?
 
-    if ! junitPath="$(environmentValueRead "$stateFile" junitPath)" || [ -z "$junitPath" ]; then
-      return 0
-    fi
-
-    (
+    local returnCode=0 && (
       # local flags="" __count="" __saved=""
-      local undo=(rm -rf "$junitTemp")
-      local tests=0 failures=0 errors=0 skipped=0 assertions=0 elapsed=0 timestamp="none" junitTemp=""
-      catchReturn "$handler" source "$stateFile" || returnUndo $? "${undo[@]}" || return $?
-      catchReturn "$handler" junitOpen tests=$tests failures=$failures errors=$errors skipped=$skipped assertions=$assertions time=$elapsed timestamp=$timestamp >>"$junitPath" || returnUndo $? "${undo[@]}" || return $?
-      if [ -d "$junitTemp" ]; then
-        catchReturn "$handler" find "$junitTemp/.xml" -type f | sort -u | xargs cat >>"$junitPath" || returnUndo $? "${undo[@]}" || return $?
-        catchReturn "$handler" rm -rf "$junitTemp" || return $?
+      local tests=0 failures=0 errors=0 skipped=0 start=0 timestamp="none" junitTemp="" junitKeepTemp=false
+
+      __testLoader "$handler" : || return $?
+      catchReturn "$handler" source "$stateFile" || return $?
+      if [ -n "$junitPath" ] && [ -n "$junitTemp" ]; then
+        local allStats="$junitTemp/all.stats"
+
+        __collectStats "$handler" "$junitTemp/.totals" tests success failures errors skipped >>"$allStats" || return $?
+        catchReturn "$handler" source "$allStats" || return $?
+        $junitKeepTemp || catchReturn "$handler" rm -f "$allStats" || return $?
+
+        local junit=(
+          "tests=$tests"
+          "failures=$failures"
+          "errors=$errors"
+          "skipped=$skipped"
+          "assertions=$(_assertionTotals)"
+          "time=$(timingFormat "$(timingElapsed "$start")")"
+          "timestamp=$timestamp"
+        )
+        if [ -n "$terminateReason" ]; then
+          junit+=("terminated=true" "reason=$terminateReason")
+        fi
+        catchReturn "$handler" junitOpen name="$(buildEnvironmentGet APPLICATION_NAME)" "${junit[@]}" >"$junitPath" || return $?
+        if [ -d "$junitTemp" ]; then
+          catchReturn "$handler" find "$junitTemp/.suiteXML" -type f | sort -u | xargs cat >>"$junitPath" || return $?
+          $junitKeepTemp || catchReturn "$handler" rm -rf "$junitTemp" || return $?
+        fi
+        catchReturn "$handler" junitClose >>"$junitPath" || return $?
       fi
-      catchReturn "$handler" junitClose >>"$junitPath" || return $?
-    ) || return $?
+    ) || returnCode=$?
+
+    # IDENTICAL hookRunOptionalNext 2
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
+    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+
+    return "$returnCode"
   }
-  ___hookTestsFinalize() {
+  ___hookTestsStop() {
     # __IDENTICAL__ usageDocument 1
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
-  __hookTestsFinalize "$@"
+  __hookTestsStop "$@"
 fi

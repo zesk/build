@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
-# jUnit
+# TAP
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Hook: test-start
+# Hook: test-stop
 
 # shellcheck source=/dev/null
-if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
+if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
-  # fn: hookRun test-start
-  # Summary: Run when a test is started (before running)
+  # fn: hookRun test-stop
+  # Summary: Run when a test is finished (after running)
   __hookTestSkip() {
     local handler="_${FUNCNAME[0]}"
 
@@ -25,11 +25,11 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
       case "$argument" in
       *)
         if [ -z "$suiteName" ]; then
-          suiteName=$(validate "$handler" String "$argument") || return $?
+          suiteName=$(validate "$handler" String "suiteName" "$argument") || return $?
         elif [ -z "$testName" ]; then
-          testName=$(validate "$handler" String "$argument") || return $?
+          testName=$(validate "$handler" String "testName" "$argument") || return $?
         elif [ -z "$stateFile" ]; then
-          stateFile=$(validate "$handler" File "$argument") || return $?
+          stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
         fi
         ;;
       esac
@@ -37,18 +37,29 @@ if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
     done
 
     [ -n "$suiteName" ] || throwArgument "$handler" "suiteName is required" || return $?
-    [ -n "$testName" ] || throwArgument "$handler" "testName is required" || return $?
     [ -n "$stateFile" ] || throwArgument "$handler" "stateFile is required" || return $?
+    [ -n "$testName" ] || throwArgument "$handler" "testName is required" || return $?
 
     local returnCode=0 && (
-      local junitSuiteTemp=""
+      local tapPath="" tapCachePath=""
       catchReturn "$handler" source "$stateFile" || return $?
-      if [ -d "$junitSuiteTemp" ]; then
-        catchReturn "$handler" printf "%s\n" "$testName" >>"$junitSuiteTemp/skipped" || return $?
+      if [ -f "$tapPath" ]; then
+        __testLoader "$handler" :
+        {
+          if ! directive=$(__testSuiteTAP_ParseFlags "${TEST_FLAGS}"); then
+            directive="$TEST_REASON"
+          else
+            directive=$(trimSpace "$directive $TEST_REASON")
+          fi
+          catchReturn "$handler" __testSuiteTAP_skip "$tapCachePath" "$TEST_SUITE_NAME" "$TEST_NAME" "$TEST_FILE" "$TEST_LINE" "$directive" || return $?
+        } >>"$tapPath" || return $?
       fi
     ) || returnCode=$?
+
+    # IDENTICAL hookRunOptionalNext 2
     local home && home=$(catchReturn "$handler" buildHome) || return $?
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "$@" || return $?
+    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+
     return "$returnCode"
   }
   ___hookTestSkip() {

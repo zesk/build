@@ -7,6 +7,13 @@
 # Docs: ./documentation/source/tools/xml.md
 # Test: ./test/tools/xml.sh
 
+# Pipe to embed raw XML content in a tag.
+# stdin: Text
+# stdout: Text suitable for XML documents
+__xmlContent() {
+  jq -R -r '@html'
+}
+
 # Prints the `<?xml` header for XML files
 # stdout: String. XML header
 __xmlHeader() {

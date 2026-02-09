@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"scheme ... - String. Required. Scheme to look up the default port used for that scheme."$'\n'""
 base="url.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Output the port for the given scheme"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: scheme ... - String. Required. Scheme to look up the default port used for that scheme."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="20e8178d6bceadb8b86839a449310e2507a61877"
+sourceHash="5c17cd3be5908f799dcf52a229b158e5866260c8"
 summary="Output the port for the given scheme"
 summaryComputed="true"
 usage="urlSchemeDefaultPort [ --help ] [ --handler handler ] scheme ..."
