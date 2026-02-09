@@ -15,10 +15,6 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
   __hookTestsStop() {
     local handler="_${FUNCNAME[0]}"
 
-    local home && home=$(catchReturn "$handler" buildHome) || return $?
-
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "$@" || return $?
-
     local junitPath="" stateFile="" terminateReason=""
 
     # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -74,9 +70,8 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
       fi
     ) || returnCode=$?
 
-    # IDENTICAL hookRunOptionalNext 2
-    local home && home=$(catchReturn "$handler" buildHome) || return $?
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+    # IDENTICAL hookRunOptionalNext 1
+    catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
 
     return "$returnCode"
   }

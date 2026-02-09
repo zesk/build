@@ -16,6 +16,7 @@ environmentCompile() {
   local handler="_${FUNCNAME[0]}"
 
   local environmentFiles=() aa=() __debugFlag=false keepComments=false __parseFlag=false __inplaceFlag=false variables=()
+  local __removeBlankFlag=false
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -27,6 +28,7 @@ environmentCompile() {
     --debug) __debugFlag=true ;;
     --parse) __parseFlag=true ;;
     --in-place) __inplaceFlag=true ;;
+    --remove-blank) __removeBlankFlag=true ;;
     --variables)
       shift && local listText && listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
       local variableList=() && IFS="," read -r -a variableList <<<"$listText" || :
@@ -90,11 +92,15 @@ environmentCompile() {
     decorate success RESULT 1>&2
   fi
   [ ! -f "$tempEnv.save" ] || catchEnvironment "$handler" cat "$tempEnv.save" || return $?
+  local postPostProcess=(cat)
+  ! $__removeBlankFlag || postPostProcess=(grep -v -e '=""$')
   if $__inplaceFlag; then
     local outputFile="${environmentFiles[0]}"
-    __environmentCompilePostProcess "$tempEnv" >"$outputFile" || returnClean $? "${clean[@]}" || return 0
-  else
-    __environmentCompilePostProcess "$tempEnv" || returnClean $? "${clean[@]}" || return 0
+    exec 1>"$outputFile"
+  fi
+  __environmentCompilePostProcess "$tempEnv" | "${postPostProcess[@]}" || returnClean $? "${clean[@]}" || return 0
+  if $__inplaceFlag; then
+    exec 1>-
   fi
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }

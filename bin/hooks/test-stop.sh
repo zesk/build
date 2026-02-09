@@ -47,15 +47,15 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
 
     local symbol="✅" && $passed || symbol="❌"
 
-    # IDENTICAL hookBashTestFinish 3
     local name && name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -z "$name" ] || name="🍎 ${name}"
+
     local badge="${name}\n👀 ${suiteName} \n${symbol}️ ${testName}"
     [ -z "$failedMessage" ] || badge="$badge\n${failedMessage:0:20}"
     iTerm2Badge -i "$badge"
 
-    local home && home=$(catchReturn "$handler" buildHome) || return $?
-    catchReturn "$handler" hookRunOptional --application "$home" --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+    # IDENTICAL hookRunOptionalNext 1
+    catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
   }
   ___hookTestStop() {
     # __IDENTICAL__ usageDocument 1
