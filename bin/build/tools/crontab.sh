@@ -130,14 +130,14 @@ crontabApplicationUpdate() {
   fi
   if $flagDiff; then
     printf "%s\n" "$(decorate red "Differences")"
-    crontab -u "$user" -l | diff "$newCrontab" - | decorate code | decorate wrap --fill ">>> " " <<<"
+    crontab -u "$user" -l | muzzleReturn diff "$newCrontab" - | decorate code | decorate wrap --fill ">>> " " <<<"
     return $?
   fi
   #
   # Update crontab
   #
   # 2>/dev/null HIDES stderr "no crontab for user" message
-  if crontab -u "$user" -l 2>/dev/null | diff -q "$newCrontab" - >/dev/null; then
+  if filesAreIdentical -q "$newCrontab" - < <(crontab -u "$user" -l 2>/dev/null); then
     rm -f "$newCrontab" || :
     return 0
   fi

@@ -70,7 +70,7 @@ __documentationTemplateUpdateUnlinked() {
 
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
-  if [ -f "$template" ] && diff -q "$template" "$template.$$" >/dev/null; then
+  if [ -f "$template" ] && filesAreIdentical "$template" "$template.$$"; then
     statusMessage decorate info "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
     catchEnvironment "$handler" rm -f "$template.$$" || return $?
   else

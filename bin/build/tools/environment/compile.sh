@@ -88,24 +88,30 @@ environmentCompile() {
     dumpPipe BEFORE <"$tempEnv" 1>&2
     dumpPipe AFTER <"$tempEnv.after" 1>&2
     decorate info DIFF 1>&2
-    diff -U0 "$tempEnv" "$tempEnv.after" 1>&2
+    muzzleReturn diff -U0 "$tempEnv" "$tempEnv.after" 1>&2
     decorate success RESULT 1>&2
   fi
   [ ! -f "$tempEnv.save" ] || catchEnvironment "$handler" cat "$tempEnv.save" || return $?
   local postPostProcess=(cat)
-  ! $__removeBlankFlag || postPostProcess=(grep -v -e '=""$')
+  ! $__removeBlankFlag || postPostProcess=(catchReturn "$handler" grepSafe -v -e '=""$')
+  # 3 is a copy of 1 (stdout)
+  exec 3>&1
   if $__inplaceFlag; then
     local outputFile="${environmentFiles[0]}"
-    exec 1>"$outputFile"
+    # 3 is opened to write to `$outputFile`
+    exec 3>"$outputFile"
   fi
-  __environmentCompilePostProcess "$tempEnv" | "${postPostProcess[@]}" || returnClean $? "${clean[@]}" || return 0
-  if $__inplaceFlag; then
-    exec 1>-
-  fi
+  # redirect postprocess output to 3
+  local returnCode=0 && __environmentCompilePostProcess "$handler" "$tempEnv" "$tempEnv.after" | "${postPostProcess[@]}" 1>&3 || returnCode=$?
+  # close 3
+  exec 3>&-
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+  return "$returnCode"
 }
 __environmentCompilePostProcess() {
-  local tempEnv="$1" && diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' | sort -u
+  local handler="$1" && shift
+  # diff returns 1 when files differ so hide it
+  muzzleReturn diff -U0 "$@" | catchEnvironment "$handler" grepSafe '^+' | catchEnvironment "$handler" cut -c 2- | catchEnvironment "$handler" grepSafe -v '^+' | catchEnvironment "$handler" sort -u || return $?
 }
 _environmentCompile() {
   # __IDENTICAL__ usageDocument 1

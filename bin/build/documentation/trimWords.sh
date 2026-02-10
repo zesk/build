@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="wordCount - PositiveInteger. Words to output"$'\n'"word0 ... - EmptyString. One or more words to output"$'\n'""
 base="text.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="example" [2]="tested")
 rawComment="Remove words from the end of a phrase"$'\n'"Argument: wordCount - PositiveInteger. Words to output"$'\n'"Argument: word0 ... - EmptyString. One or more words to output"$'\n'"Example:     printf \"%s: %s\\n\" \"Summary:\" \"\$(trimWords 10 \$description)\""$'\n'"Tested: No"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
+sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
 summary="Remove words from the end of a phrase"
 summaryComputed="true"
 tested="No"$'\n'""

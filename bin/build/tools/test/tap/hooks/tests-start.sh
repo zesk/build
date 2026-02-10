@@ -24,7 +24,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
       # __IDENTICAL__ __checkBlankArgumentHandler 1
       [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
       case "$argument" in
-      --tap) shift && tapPath="$(validate "$handler" "FileDirectory" "$argument" "${1-}")" || return $? ;;
+      --tap) shift && tapPath="$(validate "$handler" "RealFileDirectory" "$argument" "${1-}")" || return $? ;;
       *)
         if [ -z "$stateFile" ]; then
           stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
@@ -40,7 +40,6 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
         tapPath="${tapPath%/}/results.tap" || return $?
       fi
       catchReturn "$handler" touch "$tapPath" || return $?
-      tapPath="$(catchReturn "$handler" realPath "$tapPath")" || return $?
 
       local tapTemp && tapTemp=$(fileTemporaryName "$handler" -d) || return $?
       local tapCachePath="$tapTemp/.inc"

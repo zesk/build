@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="command - Callable. Required. Thing to muzzle."$'\n'"... - Arguments. Optional. Additional arguments."$'\n'""
 base="sugar.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="example" [2]="stdout")
 rawComment="Suppress stdout without piping. Handy when you just want a behavior not the output."$'\n'"Argument: command - Callable. Required. Thing to muzzle."$'\n'"Argument: ... - Arguments. Optional. Additional arguments."$'\n'"Example:     {fn} pushd \"\$buildDir\""$'\n'"Example:     catchEnvironment \"\$handler\" phpBuild || returnUndo \$? {fn} popd || return \$?"$'\n'"stdout: - No output from stdout ever from this function"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
-sourceHash="6ee10abbe0bbfcb62e1afb931a286aa3b9ce8c92"
+sourceHash="805a01b4c2e623a9ee22e4d243ea0285d3491b66"
 stdout="- No output from stdout ever from this function"$'\n'""
 summary="Suppress stdout without piping. Handy when you just want a"
 summaryComputed="true"

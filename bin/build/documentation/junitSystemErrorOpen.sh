@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="junit.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Open tag for \`system-err\` - test errors"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/junit.sh"
-sourceHash="a571b497675fc8f0150b346132dcce8611ac99a3"
+sourceHash="24d0f9dca105f6fb5fdf23b4d03ffd7756f79902"
 summary="Open tag for \`system-err\` - test errors"
 summaryComputed="true"
 usage="junitSystemErrorOpen [ --help ]"

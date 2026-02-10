@@ -42,9 +42,9 @@ testValidateCharacterClass() {
   home=$(catchReturn "$handler" buildHome) || return $?
   temp=$(fileTemporaryName "$handler") || return $?
   __testIsCharacterClass | tee "$temp" || return $?
-  if ! diff -q "$temp" "$home/test/example/isCharacterClass.txt"; then
+  if ! filesAreIdentical "$temp" "$home/test/example/isCharacterClass.txt"; then
     decorate error "Classifications changed:"
-    diff "$temp" "$home/test/example/isCharacterClass.txt"
+    diff -U0 "$temp" "$home/test/example/isCharacterClass.txt" | decorate diff
     return 1
   fi
   rm "$temp" || :

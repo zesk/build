@@ -49,12 +49,13 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
         catchReturn "$handler" source "$allStats" || return $?
         $junitKeepTemp || catchReturn "$handler" rm -f "$allStats" || return $?
 
+        local total && total=$(catchReturn "$handler" assertStatistics --total) || return $?
         local junit=(
           "tests=$tests"
           "failures=$failures"
           "errors=$errors"
           "skipped=$skipped"
-          "assertions=$(_assertionTotals)"
+          "assertions=$total"
           "time=$(timingFormat "$(timingElapsed "$start")")"
           "timestamp=$timestamp"
         )

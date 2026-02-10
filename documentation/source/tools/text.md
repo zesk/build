@@ -22,6 +22,8 @@
 
 {printfOutputSuffix}
 
+{printfOutputEmpty}
+
 {newlineHide}
 
 ## Formatting

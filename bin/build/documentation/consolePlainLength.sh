@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="text - EmptyString. Optional. text to determine the plaintext length of. If not supplied reads from standard input."$'\n'""
 base="text.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Length of an unformatted string"$'\n'"Argument: text - EmptyString. Optional. text to determine the plaintext length of. If not supplied reads from standard input."$'\n'"stdin: A file to determine the plain-text length"$'\n'"stdout: \`UnsignedInteger\`. Length of the plain characters in the input arguments."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
+sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
 stdin="A file to determine the plain-text length"$'\n'""
 stdout="\`UnsignedInteger\`. Length of the plain characters in the input arguments."$'\n'""
 summary="Length of an unformatted string"

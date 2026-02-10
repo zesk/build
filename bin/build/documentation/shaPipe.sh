@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="filename ... - File. One or more filenames to generate a checksum for"$'\n'"--cache cacheDirectory - Directory. Cache file cache values here for speed optimization."$'\n'""
 base="text.sh"
@@ -14,7 +14,7 @@ output="cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'""
 rawComment="Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff"$'\n'"You can use this as a pipe or pass in arguments which are files to be hashed."$'\n'"Argument: filename ... - File. One or more filenames to generate a checksum for"$'\n'"Argument: --cache cacheDirectory - Directory. Cache file cache values here for speed optimization."$'\n'"Depends: sha1sum"$'\n'"Summary: SHA1 checksum of standard input"$'\n'"Example:     shaPipe < \"\$fileName\""$'\n'"Example:     shaPipe \"\$fileName0\" \"\$fileName1\""$'\n'"Output: cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'"BUILD_DEBUG: shaPipe - Outputs all requested shaPipe calls to log called \`shaPipe.log\`."$'\n'"stdin: any file"$'\n'"stdout: \`String\`. A hexadecimal string which uniquely represents the data in \`stdin\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
+sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
 stdin="any file"$'\n'""
 stdout="\`String\`. A hexadecimal string which uniquely represents the data in \`stdin\`."$'\n'""
 summary="SHA1 checksum of standard input"$'\n'""

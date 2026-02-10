@@ -25,7 +25,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
       [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
       case "$argument" in
       --debug) junitKeepTemp=true ;;
-      --junit) shift && junitPath="$(validate "$handler" "FileDirectory" "$argument" "${1-}")" || return $? ;;
+      --junit) shift && junitPath="$(validate "$handler" "RealFileDirectory" "$argument" "${1-}")" || return $? ;;
       *)
         if [ -z "$stateFile" ]; then
           stateFile=$(validate "$handler" File "stateFile" "$argument") || return $?
@@ -41,7 +41,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
         junitPath=$(catchReturn "$handler" directoryRequire "$junitPath") || return $?
       fi
       if [ -d "$junitPath" ]; then
-        junitPath="$(catchReturn "$handler" realPath "$junitPath")/results.xml" || return $?
+        junitPath="$junitPath/results.xml" || return $?
       fi
       if [ ! -f "$junitPath" ]; then
         catchReturn "$handler" touch "$junitPath" || return $?

@@ -333,8 +333,9 @@ __validateTypeLink() {
 
 # A file directory exists (file may exist or not)
 __validateTypeFileDirectory() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
-  fileDirectoryExists "${1-}" || _validateThrow "Parent directory does not exist for $1" || return $?
+  local value="${1-}"
+  [ -n "$value" ] || _validateThrow "blank" || return $?
+  fileDirectoryExists "$value" || _validateThrow "Parent directory does not exist for $value" || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -352,6 +353,16 @@ __validateTypeRealFile() {
   local value="${1-}"
   [ -n "$value" ] || _validateThrow "blank" || return $?
   value=$(realPath "$value") || _validateThrow "realPath failed" || return $?
+  printf "%s\n" "$value"
+}
+
+# A real path for a file's directory (file may not exist)
+__validateTypeRealFileDirectory() {
+  local value="${1-}"
+  [ -n "$value" ] || _validateThrow "blank" || return $?
+  local wantDir="" && [ "${value%/}" = "$value" ] || wantDir="/"
+  fileDirectoryExists "$value" || _validateThrow "Parent directory does not exist for $value" || return $?
+  value="$(realPath "$(dirname "$value")")/$(basename "$value")$wantDir" || _validateThrow "realPath failed" || return $?
   printf "%s\n" "$value"
 }
 
@@ -473,6 +484,7 @@ _validateTypeMapper() {
     filedirectory | parent) t=FileDirectory ;;
     realdirectory | realdir) t=RealDirectory ;;
     realfile | real) t=RealFile ;;
+    realfiledirectory | realparent) t=RealFileDirectory ;;
     remotedirectory | remotedir) t=RemoteDirectory ;;
     secret) t=Secret ;;
     url) t=URL ;;

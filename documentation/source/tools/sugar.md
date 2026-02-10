@@ -27,17 +27,27 @@ This is universally used throughout.
 ## Usage Sugar References
 
 {execute}
+
 {catchReturn}
+
 {catchCode}
+
 {catchEnvironment}
+
 {catchEnvironmentQuiet}
 
 {catchArgument}
+
 {throwEnvironment}
+
 {throwArgument}
 
 {muzzle}
+
+{muzzleReturn}
+
 {returnMap}
+
 {convertValue}
 
 ## Handling arguments and stdin similarly

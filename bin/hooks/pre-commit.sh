@@ -33,7 +33,7 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       catchEnvironment "$handler" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
       local fileCopies=("$nonOriginalWithEOF" "$original")
       # Can not be trusted to not edit the right one
-      if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
+      if ! filesAreIdentical "${fileCopies[@]}"; then
         catchEnvironment "$handler" cp "${fileCopies[@]}" || returnClean "$nonOriginalWithEOF" || return $?
         decorate warning "Someone edited non-original file $nonOriginal"
         touch "${fileCopies[0]}" # make newer

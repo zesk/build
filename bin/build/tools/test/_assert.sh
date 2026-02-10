@@ -75,6 +75,38 @@ __assertTimingSetup() {
   fi
 }
 
+__assertStatistics() {
+  local handler="$1" && shift
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --reset)
+      export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
+      muzzle incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" 0 assert-failure assert-success
+      return 0
+      ;;
+    --total)
+      local total=0 add && while read -r add; do ! isInteger "$add" || total=$((total + add)); done < <(assertStatistics) && printf "%d\n" "$total"
+      return 0
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
+  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" "?" assert-failure assert-success | tr $'\n' ' ' | trimRightSpace | printfOutputSuffix "\n"
+}
+
 # Save and report the timing since the last call
 __assertTimingCalculate() {
   local handler="returnMessage"
@@ -100,6 +132,8 @@ __assertTimingCalculate() {
   timingStart >"$timingFile"
 }
 
+# Argument:
+# Environment: TEST_TRACK_ASSERTIONS
 __assertedFunctions() {
   export TEST_TRACK_ASSERTIONS
   if [ "${TEST_TRACK_ASSERTIONS-}" != "false" ]; then
@@ -108,18 +142,20 @@ __assertedFunctions() {
 
     logFile="$(catchReturn "$handler" buildCacheDirectory)/$handler" || return $?
     logFile="$(catchReturn "$handler" fileDirectoryRequire "$logFile")" || return $?
+    [ ! -f "$logFile.clean" ] || catchReturn "$handler" touch "$logFile.clean" || return $?
     if [ $# -eq 0 ]; then
       catchEnvironment "$handler" touch "$logFile" || return $?
-      if [ -f "$logFile.dirty" ]; then
+      if [ "$logFile" -nt "$logFile.clean" ]; then
+        printf "%s\n" "SORTED" 1>&2
         catchEnvironment "$handler" sort -u "$logFile" -o "$logFile" || return $?
-        catchEnvironment "$handler" rm -f "$logFile.dirty" || return $?
+        catchEnvironment "$handler" touch "$logFile.clean" || return $?
       fi
       printf -- "%s\n" "$logFile"
       return 0
     fi
     catchEnvironment "$handler" printf -- "%s\n" "$@" >>"$logFile" || return $?
-    catchEnvironment "$handler" touch "$logFile.dirty" || return $?
   fi
+  return 1
 }
 ___assertedFunctions() {
   # __IDENTICAL__ usageDocument 1
@@ -127,7 +163,7 @@ ___assertedFunctions() {
 }
 
 #
-# Decorations
+# Decorations and statistics collection
 #
 _assertFailure() {
   local function="${1-None}" failIcon="❌"
@@ -136,7 +172,7 @@ _assertFailure() {
   #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
   export __BUILD_SAVED_CACHE_DIRECTORY
   __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
-  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure >/dev/null 2>&1 &
+  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure
   #  fi
   shift && statusMessage --last printf -- "%s %s %s%s" "$failIcon" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
   returnAssert
@@ -148,20 +184,9 @@ _assertSuccess() {
   #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
   export __BUILD_SAVED_CACHE_DIRECTORY
   __assertTimingSetup && timing=" [$(__assertTimingCalculate || :)]" || :
-  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success >/dev/null 2>&1 &
+  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success
   #  fi
   shift && statusMessage printf -- "%s %s %s%s" "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?
-}
-_assertionStatistics() {
-  export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
-  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" "?" assert-failure assert-success
-}
-_assertionStatisticsReset() {
-  export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
-  muzzle incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" 0 assert-failure assert-success
-}
-_assertionTotals() {
-  local total=0 add && while read -r add; do ! isInteger "$add" || total=$((total + add)); done < <(_assertionStatistics) && printf "%d\n" "$total"
 }
 
 # INTERNAL: To optimize this (or see where it is slow), use
@@ -582,7 +607,7 @@ ___assertIsEqualFormat() {
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 #
-# assert equals
+# assert is empty
 #
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 
@@ -844,7 +869,7 @@ _assertExitCodeHelper() {
 ___assertExitCodeTest() {
   local binary="${1-}"
   isCallable "$binary" || returnArgument "$binary is not callable: $*" || return $?
-  ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
+  ! isFunction "$binary" || __assertedFunctions "$binary" || :
   "$@" || return $?
 }
 ___assertExitCodeFormat() {
@@ -888,7 +913,7 @@ ___assertOutputContainsTest() {
   isCallable "$binary" || throwArgument "$handler" "$binary is not callable: $*" || return $?
   captureOut=$(fileTemporaryName "$handler") || return $?
   exitCode=1
-  ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
+  ! isFunction "$binary" || __assertedFunctions "$binary" || :
   if "$@" >"$captureOut"; then
     if grep -q -e "$(quoteGrepPattern "$contains")" <"$captureOut"; then
       exitCode=0

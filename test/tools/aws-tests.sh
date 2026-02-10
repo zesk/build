@@ -344,28 +344,28 @@ testAWSCredentialsEdit() {
   # Internal MUST be after __awsLoader is called by `awsCredentialsFile` above
   # Note when loaded in a subshell - code is NOT shared
   _awsCredentialsRemoveSection returnMessage "$testCredentials" "$profileName" "" >"$testResults" || return $?
-  assertExitCode 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
+  assertExitCode 0 diff -U3 "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
 
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
 
   assertFileExists "$testAWSCredentials" || return $?
-  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.1.txt" || return $?
+  assertExitCode 0 diff -U3 "$testAWSCredentials" "$home/test/example/aws/fake.credentials.1.txt" || return $?
 
   catchEnvironment "$handler" cp "$testCredentials" "$testAWSCredentials" || return $?
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
-  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
+  assertExitCode 0 diff -U3 "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
 
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001234" "$testPassword" || return $?
-  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.3.txt" || return $?
+  assertExitCode 0 diff -U3 "$testAWSCredentials" "$home/test/example/aws/fake.credentials.3.txt" || return $?
 
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
-  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
+  assertExitCode 0 diff -U3 "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
 
   assertExitCode 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000001233" "$testPassword" || return $?
-  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.4.txt" || return $?
+  assertExitCode 0 diff -U3 "$testAWSCredentials" "$home/test/example/aws/fake.credentials.4.txt" || return $?
 
   assertExitCode 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000009999" "deadbeef" || return $?
-  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
+  assertExitCode 0 diff -U3 "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
 
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 

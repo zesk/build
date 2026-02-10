@@ -846,7 +846,7 @@ gitInstallHook() {
           relFromTo+=("./$item")
         done
         if [ -f "${fromTo[1]}" ]; then
-          if diff -q "${fromTo[@]}" >/dev/null; then
+          if filesAreIdentical "${fromTo[@]}"; then
             ! $verbose || decorate pair 15 "No changes:" "${relFromTo[@]}"
             return 0
           fi

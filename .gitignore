@@ -30,3 +30,4 @@ ORIGINALS/
 /.interrupt.log
 /.venv/
 /.env-ATTIC/
+/test-results/

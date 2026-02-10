@@ -238,7 +238,7 @@ __jsonSetValue() {
   decoratedValue=$(decorate value "$value")
   decoratedOldValue=$(decorate value "$oldValue")
 
-  if muzzle diff -q "$json" "$newJSON"; then
+  if filesAreIdentical "$json" "$newJSON"; then
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key is $decoratedValue (up to date)"
     catchEnvironment "$handler" rm -rf "$newJSON" || return $?
     ! $statusFlag || return "$(returnCode identical)"

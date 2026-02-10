@@ -1083,6 +1083,31 @@ _removeFields() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: printf when output is blank
+# Pipes all input to output, if any input exists behaves like `cat`. If input is empty then runs and outputs the `printf` statement result.
+# Argument: ... - Arguments. Required. printf arguments.
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
+# stdin: text (Optional)
+# stdout: printf output and then the stdin text IFF stdin text is blank
+# Example:     cat "$failedFunctions" | decorate wrap -- "- " | {fn} "%s\n" "No functions failed."
+printfOutputEmpty() {
+  local handler="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  local finished=false char=$'\n' line
+  if ! IFS="" read -r line; then finished=true && char=""; fi
+  if [ -z "$line" ] && $finished; then
+    catchReturn "$handler" printf -- "$@" || return $?
+  else
+    catchReturn "$handler" printf -- "%s%s" "$line" "$char" || return $?
+    catchReturn "$handler" cat || return $?
+  fi
+}
+_printfOutputEmpty() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Pipe to output some text before any output, otherwise, nothing is output.
 # Argument: ... - Arguments. Required. printf arguments.
 # DOC TEMPLATE: noArgumentsForHelp 1

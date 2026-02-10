@@ -442,11 +442,32 @@ testLowercase() {
   assertOutputEquals lowercase lowercase LoWerCaSe || return $?
 }
 
-testPrintfOutput() {
-  assertEquals "$(echo "ab" | printfOutputPrefix "c")" "cab" || return $?
-  assertEquals "$(printf "" | printfOutputPrefix "c")" "" || return $?
-  assertEquals "$(echo "ab" | printfOutputSuffix "c")" "ab"$'\n'"c" || return $?
-  assertEquals "$(printf "" | printfOutputSuffix "c")" "" || return $?
+testPrintfOutputPrefix() {
+  assertEquals "" "$(printf "" | printfOutputPrefix "c")" || return $?
+  assertEquals "" "$(printf "" | printfOutputSuffix "c")" || return $?
+  assertEquals "c"$'\n' "$(printf "\n" | printfOutputPrefix "c")" || return $?
+  assertEquals "cab" "$(echo "ab" | printfOutputPrefix "c")" || return $?
+  assertEquals "cab"$'\n' "$(echo "ab" | printfOutputPrefix "c")" || return $?
+  assertEquals "gab"$'\n'"cd"$'\n'"ef"$'\n' "$(printf "%s\n" "ab" "cd" "ef" | printfOutputPrefix "g")" || return $?
+}
+
+testPrintfOutputSuffix() {
+  assertEquals "" "$(printf "" | printfOutputSuffix "c")" || return $?
+  assertEquals "" "$(printf "" | printfOutputSuffix "c")" || return $?
+  assertEquals $'\n'"c" "$(printf "\n" | printfOutputSuffix "c")" || return $?
+  assertEquals "ab"$'\n'"c" "$(echo "ab" | printfOutputSuffix "c")" || return $?
+  assertEquals "ab"$'\n'"cd"$'\n'"ef"$'\n'"g" "$(printf "%s\n" "ab" "cd" "ef" | printfOutputSuffix "g")" || return $?
+}
+
+testPrintfOutputEmpty() {
+  assertEquals "c" "$(printf "" | printfOutputEmpty "c")" || return $?
+  assertEquals "c" "$(printf "" | printfOutputEmpty "c")" || return $?
+  # newlines are stripped from the quoted "$(printf "\n\n\n")"
+  assertEquals "" "$(printf "\n\n\n")" || return $?
+  assertEquals "" "$(printf "\n" | printfOutputEmpty "c")" || return $?
+  assertEquals "ab"$'\n' "$(echo "ab" | printfOutputEmpty "c")" || return $?
+  assertEquals "ab"$'\n' "$(echo "ab" | printfOutputEmpty "c")" || return $?
+  assertEquals "ab"$'\n'"cd"$'\n'"ef"$'\n' "$(printf "%s\n" "ab" "cd" "ef" | printfOutputEmpty "g")" || return $?
 }
 
 __maxLineLengthFile() {

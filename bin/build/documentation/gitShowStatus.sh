@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
 credit="Chris Johnsen"$'\n'""
 description="Show changed files from HEAD with their status prefix character:"$'\n'"- ' ' = unmodified"$'\n'"- \`M\` = modified"$'\n'"- \`A\` = added"$'\n'"- \`D\` = deleted"$'\n'"- \`R\` = renamed"$'\n'"- \`C\` = copied"$'\n'"- \`U\` = updated but unmerged"$'\n'"(See \`man git\` for more details on status flags)"$'\n'""
 file="bin/build/tools/git.sh"
-foundNames=([0]="argument" [1]="return_code" [2]="source" [3]="credit")
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - the repo has been modified"$'\n'"Return Code: 1 - the repo has NOT bee modified"$'\n'"Show changed files from HEAD with their status prefix character:"$'\n'"- ' ' = unmodified"$'\n'"- \`M\` = modified"$'\n'"- \`A\` = added"$'\n'"- \`D\` = deleted"$'\n'"- \`R\` = renamed"$'\n'"- \`C\` = copied"$'\n'"- \`U\` = updated but unmerged"$'\n'"(See \`man git\` for more details on status flags)"$'\n'"Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'"Credit: Chris Johnsen"$'\n'""$'\n'""
 return_code="0 - the repo has been modified"$'\n'"1 - the repo has NOT bee modified"$'\n'""
-source="https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
+sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
 summary="Show changed files from HEAD with their status prefix character:"
 summaryComputed="true"
 usage="gitShowStatus [ --help ]"

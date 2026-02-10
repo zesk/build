@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Get the last reported version."$'\n'"Argument: ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
+sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
 summary="Get the last reported version."
 summaryComputed="true"
 usage="gitVersionLast [ ignorePattern ] [ --help ]"

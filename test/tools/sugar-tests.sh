@@ -241,12 +241,31 @@ testArgEnvStuff() {
   k=$(returnCode environment)
   assertExitCode --stderr-match foo "$k" returnEnvironment "foo" || return $?
   assertExitCode --stderr-match foo "$k" throwEnvironment returnMessage "foo" || return $?
+  assertExitCode --stderr-match foo 99 returnMessage 99 foo || return $?
   assertExitCode --stderr-match foo "$k" catchEnvironment "$usage" returnMessage 99 foo || return $?
 
   k=$(returnCode argument)
   assertExitCode --stderr-match foo "$k" returnArgument "foo" || return $?
   assertExitCode --stderr-match foo "$k" throwArgument returnMessage "foo" || return $?
   assertExitCode --stderr-match foo "$k" catchArgument "$usage" returnMessage 99 foo || return $?
+}
+
+__testMuzzleReturnRan() {
+  export __MUZZLE_RAN=true
+  return 99
+}
+testMuzzleReturn() {
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  assertEquals "${__MUZZLE_RAN-}" "" || return $?
+  assertExitCode 0 muzzleReturn __testMuzzleReturnRan || return $?
+  assertEquals "${__MUZZLE_RAN-}" "true" || return $?
+  unset __MUZZLE_RAN
+
+  assertExitCode 0 muzzleReturn test ! -f "/var/not/a/file" || return $?
+  assertExitCode 0 muzzleReturn test -f "/var/not/a/file" || return $?
+  assertExitCode 0 muzzleReturn test -d "$home" || return $?
+  assertExitCode 0 muzzleReturn test ! -d "$home" || return $?
 }
 
 testMuzzle() {

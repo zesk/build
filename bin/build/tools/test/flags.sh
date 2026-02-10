@@ -58,6 +58,7 @@ __testFlagPlatformMatch() {
 # stdout: String
 # stdin: none
 __testLoadFlags() {
+  local handler="$1" && shift
   local source="$1" functionName="$2"
   local values=()
   while read -r variableLine; do
@@ -66,7 +67,7 @@ __testLoadFlags() {
     [ "${#__flags[@]}" -eq 0 ] || for flag in "${__flags[@]}"; do
       [ -z "$flag" ] || values+=("$(trimSpace "${variableLine%%:*}"):$flag")
     done
-  done < <(bashFunctionCommentVariable --prefix "$source" "$functionName" "Test-")
+  done < <(catchReturn "$handler" bashFunctionCommentVariable --prefix "$source" "$functionName" "Test-") || return $?
   [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
 }
 

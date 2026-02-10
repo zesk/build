@@ -113,7 +113,7 @@ testBashSetScopes() {
     __doSetAndExit "-$opt"
     set -o >"$temp.after"
     __doSetAndExit "+$opt"
-    assertExitCode 0 muzzle diff -q "$temp" "$temp.1" || return $?
+    assertExitCode 0 filesAreIdentical "$temp" "$temp.1" || return $?
     if inArray "$opt" "${funScope[@]}"; then
       assertExitCode --display "$opt usually is scoped to a function so no changes should appear" 0 diff "$temp" "$temp.after" || return $?
     else

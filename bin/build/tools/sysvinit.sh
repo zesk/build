@@ -32,7 +32,7 @@ sysvInitScriptInstall() {
       target="$initHome/$baseName"
       [ -x "$argument" ] || throwArgument "$handler" "Not executable: $argument" || return $?
       if [ -f "$target" ]; then
-        if diff -q "$1" "$target" >/dev/null; then
+        if ! filesAreIdentical "$1" "$target"; then
           statusMessage decorate success "reinstalling script: $(decorate code "$baseName")"
         else
           throwEnvironment "$handler" "$(decorate code "$target") already exists - remove first" || return $?

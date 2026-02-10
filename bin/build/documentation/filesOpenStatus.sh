@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
@@ -10,7 +10,7 @@ foundNames=()
 rawComment="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="f57dc5b6b3fd2c48404157fc334b5c69bb18e80f"
+sourceHash="ba51ddf8f11b84c72594f57830f2d1db335f9f42"
 summary="Output current open files"
 summaryComputed="true"
 usage="filesOpenStatus"

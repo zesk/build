@@ -58,6 +58,22 @@ _muzzle() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Suppress return codes
+# Suppress return code without piping. Handy when using diff to generate text
+# Argument: command - Callable. Required. Thing to muzzle.
+# Argument: ... - Arguments. Optional. Additional arguments.
+# Example:     {fn} diff -U0 "$buildDir"
+# Return Code: 0 - Always
+muzzleReturn() {
+  # __IDENTICAL__ __checkHelp1FUNCNAME 1
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  "$@" || return 0
+}
+_muzzleReturn() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # map a return value from one value to another
 #

@@ -342,7 +342,7 @@ __dockerComposeEnvironmentSetup() {
   if [ -f "$envFile" ]; then
     local checkEnv
     while read -r checkEnv; do
-      if muzzle diff -q "$envFile" "$checkEnv"; then
+      if filesAreIdentical "$envFile" "$checkEnv"; then
         ! $debugFlag || statusMessage decorate warning "Deleting $(decorate file "$envFile")"
         catchEnvironment "$handler" rm -f "$envFile" || return $?
         break

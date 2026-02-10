@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"type - String. Optional. Type to validate as \`validate\` type."$'\n'""
 base="validate.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="example")
 rawComment="Are all arguments passed a valid validate type?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: type - String. Optional. Type to validate as \`validate\` type."$'\n'"Example:     isValidateType string || returnMessage 1 \"string is not a type.\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="e2b065a7c19c1a525b54a4d8bb35613729b77675"
+sourceHash="626fa7a95e08fba2ab84d5e1e12ed0b36667998c"
 summary="Are all arguments passed a valid validate type?"
 summaryComputed="true"
 usage="isValidateType [ --help ] [ type ]"

@@ -71,10 +71,10 @@ __identicalCheckInsideLoopLineHandler() {
       _identicalMapAttributesFilter "$handler" "$searchFile" <"$countFile" >"$countFile.mapped" || return $?
       countFile="$countFile.mapped"
     fi
-    if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
+    if ! filesAreIdentical -b "$countFile" "$compareFile"; then
       {
         statusMessage --last printf -- "[%s] %s\n< %s\n> %s%s\n" "$(decorate code "$token")" "$(decorate error "Token code changed ($count)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")"
-        diff -u -b "$countFile" "$compareFile" | decorate diff info subtle | decorate wrap "$(decorate subtle "diff: ")" || :
+        muzzleReturn diff -U3 -b "$countFile" "$compareFile" | decorate diff info subtle | decorate wrap "$(decorate subtle "diff: ")" || :
         if buildDebugEnabled identical-compare; then
           decorate info <"$countFile" | decorate wrap "<: "
           decorate subtle <"$compareFile" | decorate wrap ">: "

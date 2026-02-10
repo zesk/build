@@ -10,6 +10,8 @@
 
 {testSuite}
 
+{assertStatistics}
+
 ## Code quality tools
 
 {bashFindUncaughtAssertions}

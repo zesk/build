@@ -90,7 +90,7 @@ __documentationTemplateCompile() {
   # As well, document template change will affect this template
   if [ "$tokenCount" -eq 0 ]; then
     message="Empty document"
-    if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
+    if [ ! -f "$targetFile" ] || ! filesAreIdentical "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
       printf "%s (mapped) -> %s %s" "$(decorate warning "$sourceFile")" "$(decorate success "$targetFile")" "$(decorate error "(no tokens found)")"
       catchEnvironment "$handler" cp "$mappedDocumentTemplate" "$targetFile" || returnClean $? "${clean[@]}" || return $?
     fi

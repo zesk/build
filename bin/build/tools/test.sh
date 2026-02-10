@@ -84,6 +84,23 @@ _testSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Output assertion counts
+# Output the total number of assertion failures and assertion successes, separated by a space and terminated with a newline
+# Argument: --reset - Flag. Optional. Reset statistics to zero.
+# Argument: --total - Flag. Optional. Just output the total.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# stdout: UnsignedInteger. 2 lines.
+# Example:     read -r failures successes < <({fn}) || return $?
+assertStatistics() {
+  __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_assertStatistics() {
+  true || assertStatistics --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Assert a process runs and exits with the correct exit code.
 #
 # If this fails it will output an error and exit.

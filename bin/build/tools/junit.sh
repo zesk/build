@@ -6,6 +6,8 @@
 #
 # Docs: ./documentation/source/tools/junit.md
 # Test: ./test/tools/junit-tests.sh
+#
+# Check out: https://github.com/testmoapp/junitxml?tab=readme-ov-file#example
 
 # Open tag for `testsuites`
 #

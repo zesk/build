@@ -374,7 +374,7 @@ __backgroundProcessManager() {
       if [ "$stopSeconds" -gt 0 ] && [ "$now" -gt "$waitStop" ]; then
         "${condition[@]}" >"$d/condition.stop" || :
         # Just compare
-        if [ -f "$d/condition.stop" ] && muzzle diff -q "$d/condition" "$d/condition.stop" 2>&1; then
+        if [ -f "$d/condition.stop" ] && filesAreIdentical "$d/condition" "$d/condition.stop" 2>&1; then
           ! $verboseFlag || decorate info "$showId: Stop check - condition is the same, do nothing."
           catchEnvironment "$handler" rm -f "$d/condition.stop" || return $?
           catchEnvironment "$handler" printf -- "%s\n" "$((now + (stopSeconds * 1000)))" >"$d/waitStop" || return $?

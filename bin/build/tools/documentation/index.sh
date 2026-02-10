@@ -162,7 +162,7 @@ _documentationIndexUnlinkedFunctions() {
   clean+=("$tempFile.code")
   # shellcheck disable=SC2016
   catchEnvironment "$handler" awk '{ print $1 }' "$cacheDirectory/code.index" | sort -u >"$tempFile.code" || returnClean $? "${clean[@]}" || return $?
-  diff -U0 "$tempFile" "$tempFile.code" | grep -e '^[+][^+]' | cut -c 2- || :
+  muzzleReturn diff -U0 "$tempFile" "$tempFile.code" | catchReturn "$handler" grepSafe -e '^[+][^+]' | catchReturn "$handler" cut -c 2- || return $?
 
   if $debugFlag; then
     dumpPipe --tail --lines 20 "documentation index" <"$tempFile" 1>&2

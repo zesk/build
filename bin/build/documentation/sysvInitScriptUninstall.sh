@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="binary - String. Required. Basename of installed script to remove."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="sysvinit.sh"
 description="Remove an initialization script"$'\n'""
 file="bin/build/tools/sysvinit.sh"
-foundNames=([0]="argument")
 rawComment="Remove an initialization script"$'\n'"Argument: binary - String. Required. Basename of installed script to remove."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sysvinit.sh"
-sourceHash="e64c6fa1ae04f7475888437756536aedff1dfaf8"
+sourceHash="b3cad94deea156966b3930c1447d15d5991e1577"
 summary="Remove an initialization script"
 summaryComputed="true"
 usage="sysvInitScriptUninstall binary [ --help ]"

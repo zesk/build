@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
 description="Return code is \`identical\`"$'\n'""
 file="bin/build/tools/test.sh"
+foundNames=([0]="summary" [1]="return_code")
 rawComment="Summary: Identical return code"$'\n'"Return code is \`identical\`"$'\n'"Return Code: 105"$'\n'""$'\n'""
 return_code="105"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="670a4e686e34b1958529352fc0f8e476aaf24568"
+sourceHash="e9d0646fcae9fb14ad04885092bf5a6df3a02eca"
 summary="Identical return code"$'\n'""
 usage="returnIdentical"
 # shellcheck disable=SC2016

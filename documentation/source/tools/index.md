@@ -43,6 +43,7 @@
 - [Character](./character.md) - Character manipulation tools
 - [Directory](./directory.md) - Directory manipulation tools
 - [Date](./date.md) - Date validation, math and now-related generation
+- [Diff](./diff.md) - File differencing tools.
 - [Dump](./dump.md) - Dump the environment, files, binary data or stack information easily and securely.
 - [Environment](./environment.md) - Anything you could need to manipulate, load, modify, or generate environment files.
 - [File](./file.md) - File attributes accessors, link tools

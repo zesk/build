@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="summary" [1]="return_code")
 rawComment="Return code is \`assert\`"$'\n'"Summary: Assertion return code"$'\n'"Return Code: 97"$'\n'""$'\n'""
 return_code="97"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="670a4e686e34b1958529352fc0f8e476aaf24568"
+sourceHash="e9d0646fcae9fb14ad04885092bf5a6df3a02eca"
 summary="Assertion return code"$'\n'""
 usage="returnAssert"
 # shellcheck disable=SC2016

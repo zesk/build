@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
 description="Has a lot of caveats"$'\n'"gitRemoveFileFromHistory path/to/file"$'\n'"usually have to \`git push --force\`"$'\n'""
 file="bin/build/tools/git.sh"
-foundNames=()
 rawComment="Has a lot of caveats"$'\n'"gitRemoveFileFromHistory path/to/file"$'\n'"usually have to \`git push --force\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
+sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
 summary="Has a lot of caveats"
 summaryComputed="true"
 usage="gitRemoveFileFromHistory"

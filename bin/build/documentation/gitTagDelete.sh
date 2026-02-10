@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"tag - The tag to delete locally and at origin"$'\n'""
 base="git.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Delete git tag locally and at origin"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: tag - The tag to delete locally and at origin"$'\n'"Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur."$'\n'""$'\n'""
 return_code="argument - Any stage fails will result in this exit code. Partial deletion may occur."$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
+sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
 summary="Delete git tag locally and at origin"
 summaryComputed="true"
 usage="gitTagDelete [ --help ] [ tag ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="startingDirectory - Directory. Optional."$'\n'""
 base="git.sh"
@@ -11,7 +11,7 @@ rawComment="Finds \`.git\` directory above or at \`startingDirectory\`"$'\n'"Arg
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="findFileHome"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="b64591ea9644714eed503008edb648a5136a36d8"
+sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
 summary="Finds \`.git\` directory above or at \`startingDirectory\`"
 summaryComputed="true"
 usage="gitFindHome [ startingDirectory ]"

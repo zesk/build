@@ -70,10 +70,10 @@ __fileCopy() {
         verb=""
       fi
       if [ -f "$destination" ]; then
-        if ! diff -q "$destination" "$actualSource" >/dev/null; then
+        if ! filesAreIdentical "$destination" "$actualSource"; then
           prefix="$(decorate subtle "$(basename "$source")"): "
           _fileCopyPrompt "$source" "$destination" "Changes" || :
-          diff "$destination" "$actualSource" | sed '1d' | decorate code | decorate wrap "$prefix"
+          muzzleReturn diff "$destination" "$actualSource" | sed '1d' | decorate code | decorate wrap "$prefix"
           verb="File changed${verb}"
         else
           return 0
@@ -138,13 +138,13 @@ __fileCopyWouldChange() {
         if $mapFlag; then
           actualSource=$(fileTemporaryName "$handler") || return $?
           catchReturn "$handler" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
-          if ! diff -q "$actualSource" "$destination" >/dev/null; then
+          if ! filesAreIdentical "$actualSource" "$destination"; then
             exitCode=0
           fi
           catchEnvironment "$handler" rm -f "$actualSource" || return $?
         else
           actualSource="$source"
-          if ! diff -q "$actualSource" "$destination" >/dev/null; then
+          if ! filesAreIdentical "$actualSource" "$destination"; then
             exitCode=0
           fi
         fi

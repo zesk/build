@@ -26,6 +26,8 @@ __testRun() {
 
   export TEST_FILE TEST_VERBOSE TEST_LINE TEST_FLAGS TEST_SUITE_NAME TEST_NAME
 
+  local verboseMode="${TEST_VERBOSE-false}"
+
   # ============================================================================================================
   # HOOK test-start
   # ============================================================================================================
@@ -90,7 +92,7 @@ __testRun() {
     catchReturn "$handler" environmentValueWrite testShouldFail "$testActuallyFails" || return $?
   } >>"$stateFile" || return $?
 
-  if "${TEST_VERBOSE-false}"; then
+  if $verboseMode; then
     decorate pair "Platform" "$platform"
     decorate pair "Housekeeper" "$(decorate "$(booleanChoose "$doHousekeeper" green orange)" "$doHousekeeper")"
     decorate pair "Plumber" "$(decorate "$(booleanChoose "$doPlumber" green orange)" "$doPlumber")"
@@ -121,7 +123,7 @@ __testRun() {
   catchReturn "$handler" muzzle pushd "$startDirectory" || return $?
 
   local resultCode=0
-  local assertions && assertions=$(_assertionTotals)
+  local assertions && assertions=$(assertStatistics --total)
 
   ###########################################
   ###########################################
@@ -140,7 +142,7 @@ __testRun() {
   ###########################################
   ###########################################
   ###########################################
-  # ! $verboseMode || decorate each code "${runner[@]}"
+  ! $verboseMode || decorate each code "${runner[@]}"
   if "${runner[@]}" > >(tee -a "$captureStdout") 2> >(tee -a "$captureStderr"); then
     catchReturn "$handler" muzzle popd || :
     TMPDIR="$savedTMPDIR"
@@ -224,7 +226,7 @@ __testRun() {
   # ============================================================================================================
   # HOOK test-stop
   # ============================================================================================================
-  TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(_assertionTotals) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" return $?
+  TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" return $?
 
   __testRunCleanup "$handler" "$stateFile" || return $?
 

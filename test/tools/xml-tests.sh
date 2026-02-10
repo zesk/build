@@ -19,6 +19,7 @@ test_XMLBasics() {
     --stdout-match "version=\"2.0\""
     --stdout-match "encoding=\"UTF-8\""
   )
+  __xmlHeader "version=2.0"
   assertExitCode "${matches[@]}" 0 __xmlHeader "version=2.0" || return $?
 
   assertEquals "</html>" "$(__xmlTagClose html)" || return $?

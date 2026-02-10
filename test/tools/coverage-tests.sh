@@ -81,13 +81,13 @@ __deprecatedFunctions() {
 #  clean+=("$tempFun.tokens")
 #  find "$testToolsHome" -name '*.sh' ! -path '*/.*/*' -print0 | xargs -0 cat | tee "$tempFun.code" | bashStripComments | tr -c './[:alnum:]' $'\n' | sort -u >"$tempFun.tokens" || returnClean $? "${clean[@]}" || return $?
 #
-#  diff -u "$tempFun" "$tempFun.tokens" | grep '^-' | grep -v '^---' | cut -c 2- >"$tempFun.covered"
+#  diff -U0 "$tempFun" "$tempFun.tokens" | grep '^-' | grep -v '^---' | cut -c 2- >"$tempFun.covered"
 #
 #  local total=0 testFailed=false missingFunction && while read -r missingFunction; do
 #    decorate info "No coverage for $(decorate code "$missingFunction")"
 #    testFailed=true
 #    total=$((total + 1))
-#  done < <(diff -u "$tempFun" "$tempFun.covered" | grep '^-' | grep -v '^---' | cut -c 2-)
+#  done < <(diff -U0 "$tempFun" "$tempFun.covered" | grep '^-' | grep -v '^---' | cut -c 2-)
 #
 #  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 #

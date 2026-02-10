@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="needle - String. Required. String to replace."$'\n'"replacement - EmptyString.  String to replace needle with."$'\n'"haystack - EmptyString. Optional. String to modify. If not supplied, reads from standard input."$'\n'""
 base="text.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Replace all occurrences of a string within another string"$'\n'"Argument: needle - String. Required. String to replace."$'\n'"Argument: replacement - EmptyString.  String to replace needle with."$'\n'"Argument: haystack - EmptyString. Optional. String to modify. If not supplied, reads from standard input."$'\n'"stdin: If no haystack supplied reads from standard input and replaces the string on each line read."$'\n'"stdout: New string with needle replaced"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="c20cbacc0c65838645f2e404358fc35b5b38e188"
+sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
 stdin="If no haystack supplied reads from standard input and replaces the string on each line read."$'\n'""
 stdout="New string with needle replaced"$'\n'""
 summary="Replace all occurrences of a string within another string"
