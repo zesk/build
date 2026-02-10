@@ -11,9 +11,12 @@ foundNames=([0]="argument" [1]="output" [2]="example" [3]="stdout")
 output="Single quotes are prefixed with a backslash"$'\n'""
 rawComment="Quote strings for inclusion in shell quoted strings"$'\n'"Argument: text - Text to quote"$'\n'"Output: Single quotes are prefixed with a backslash"$'\n'"Example:     {fn} \"Now I can't not include this in a bash string.\""$'\n'"Without arguments, displays help."$'\n'"stdout: The input text properly quoted"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
+sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
 stdout="The input text properly quoted"$'\n'""
 summary="Quote strings for inclusion in shell quoted strings"
 summaryComputed="true"
 usage="escapeQuotes [ text ]"
+# shellcheck disable=SC2016
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mescapeQuotes'$'\e''[0m '$'\e''[[(blue)]m[ text ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mtext  '$'\e''[[(value)]mText to quote'$'\e''[[(reset)]m'$'\n'''$'\n''Quote strings for inclusion in shell quoted strings'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''The input text properly quoted'$'\n'''$'\n''Example:'$'\n''    escapeQuotes "Now I can'\''t not include this in a bash string."'$'\n'''
+# shellcheck disable=SC2016
+helpPlain='Usage: escapeQuotes [ text ]'$'\n'''$'\n''    text  Text to quote'$'\n'''$'\n''Quote strings for inclusion in shell quoted strings'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''The input text properly quoted'$'\n'''$'\n''Example:'$'\n''    escapeQuotes "Now I can'\''t not include this in a bash string."'$'\n'''

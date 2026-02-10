@@ -105,10 +105,12 @@ __bashDocumentationExtractCheckCache() {
   local sourceHash && sourceHash=$(catchReturn "$handler" shaPipe <"$source") || return $?
   if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
     local savedSourceHash && savedSourceHash=$(
-      local sourceHash
+      local sourceHash sourceFile=""
       # shellcheck source=/dev/null
       catchEnvironment "$handler" source "$definitionFile" || return $?
-      catchEnvironment "$handler" printf -- "%s\n" "${sourceHash-}" || return $?
+      if [ -n "$sourceFile" ]; then
+        catchEnvironment "$handler" printf -- "%s\n" "${sourceHash-}" || return $?
+      fi
     ) || :
     if [ "$savedSourceHash" -eq "$sourceHash" ]; then
       catchEnvironment "$handler" touch "$definitionFile" || return $?
@@ -228,6 +230,8 @@ __bashDocumentationExtractDirect() {
   done
   if [ -f "$source" ]; then
     __bashDocumentationSettingsFileDetails "$handler" "$source" || return $?
+  elif [ -n "$source" ]; then
+    throwArgument "$handler" "source is not a file: $source" || return $?
   fi
   if [ "${#values[@]}" -gt 0 ]; then
     dumper=__dumpNameValueAppend

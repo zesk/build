@@ -6,10 +6,10 @@ argument="fieldIndex - UnsignedInteger. Required. The field to compute the maxim
 base="text.sh"
 description="Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields"$'\n'"Defaults to first field (fieldIndex of \`1\`), space separator (separatorChar is \` \`)"$'\n'""
 file="bin/build/tools/text.sh"
+foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields"$'\n'"Defaults to first field (fieldIndex of \`1\`), space separator (separatorChar is \` \`)"$'\n'"Argument: fieldIndex - UnsignedInteger. Required. The field to compute the maximum length for"$'\n'"Argument: separatorChar - String. Optional. The separator character to delineate fields. Uses space if not supplied."$'\n'"stdin: Lines are read from standard in and line length is computed for each line"$'\n'"stdout: \`UnsignedInteger\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
+sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
 stdin="Lines are read from standard in and line length is computed for each line"$'\n'""
 stdout="\`UnsignedInteger\`"$'\n'""
 summary="Given an input file, determine the maximum length of fieldIndex,"
