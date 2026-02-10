@@ -92,7 +92,10 @@ __assertStatistics() {
       return 0
       ;;
     --total)
-      local total=0 add && while read -r add; do ! isInteger "$add" || total=$((total + add)); done < <(assertStatistics) && printf "%d\n" "$total"
+      local add=() && IFS=' ' read -r -d $'\n' -a add < <(__assertStatistics "$handler") || return $?
+      set -- "${add[@]+"${add[@]}"}"
+      local total=0 && while [ $# -gt 0 ]; do total=$((total + $1)) && shift; done
+      printf "%d\n" "$total"
       return 0
       ;;
     *)
@@ -171,7 +174,7 @@ _assertFailure() {
   #  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
   #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
   export __BUILD_SAVED_CACHE_DIRECTORY
-  __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
+  ! __assertTimingSetup || timing=" [$(__assertTimingCalculate)]"
   incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure
   #  fi
   shift && statusMessage --last printf -- "%s %s %s%s" "$failIcon" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
@@ -183,7 +186,7 @@ _assertSuccess() {
   #  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
   #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
   export __BUILD_SAVED_CACHE_DIRECTORY
-  __assertTimingSetup && timing=" [$(__assertTimingCalculate || :)]" || :
+  ! __assertTimingSetup || timing=" [$(__assertTimingCalculate)]"
   incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success
   #  fi
   shift && statusMessage printf -- "%s %s %s%s" "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?

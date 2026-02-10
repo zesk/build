@@ -46,6 +46,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:assertOutputContains}
 - {SEE:assertOutputDoesNotContain}
 - {SEE:assertOutputEquals}
+- {SEE:assertStatistics}
 - {SEE:assertStringEmpty}
 - {SEE:assertStringNotEmpty}
 - {SEE:assertZeroFileSize}
@@ -335,6 +336,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:fileOldest}
 - {SEE:fileOwner}
 - {SEE:fileReverseLines}
+- {SEE:filesAreIdentical}
 - {SEE:fileSize}
 - {SEE:filesOpenStatus}
 - {SEE:filesRename}
@@ -513,6 +515,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:mockEnvironmentStart}
 - {SEE:mockEnvironmentStop}
 - {SEE:muzzle}
+- {SEE:muzzleReturn}
 - {SEE:networkIPList}
 - {SEE:networkMACAddressList}
 - {SEE:newlineHide}
@@ -571,6 +574,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:plumber}
 - {SEE:plural}
 - {SEE:pluralWord}
+- {SEE:printfOutputEmpty}
 - {SEE:printfOutputPrefix}
 - {SEE:printfOutputSuffix}
 - {SEE:processMemoryUsage}
@@ -649,6 +653,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:tools}
 - {SEE:trimBoth}
 - {SEE:trimHead}
+- {SEE:trimLeftSpace}
+- {SEE:trimRightSpace}
 - {SEE:trimSpace}
 - {SEE:trimTail}
 - {SEE:trimWords}

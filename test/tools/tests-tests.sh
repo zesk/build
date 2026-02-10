@@ -44,3 +44,9 @@ testReturns() {
   assertExitCode 108 returnLeak || return $?
   assertExitCode 105 returnIdentical || return $?
 }
+
+testsAssertStats() {
+  local total && total=$(assertStatistics --total)
+  assertGreaterThanOrEqual "$total" "0" || return $?
+  assertEquals "$((total + 1))" "$(assertStatistics --total)" || return $?
+}

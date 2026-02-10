@@ -34,7 +34,7 @@ __decorateExtensionDiff() {
 # Summary: Are files identical?
 # Argument: -b - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal.
 # Argument: -B - Flag. Causes chunks that include only blank lines to be ignored.
-# Argument: -i - Flag. Ignores the case of letters.  E.g., “A” will compare equal to “a”.
+# Argument: -i - Flag. Ignores the case of letters.  E.g., "A" will compare equal to "a".
 # Argument: -w - Flag. Ignores all blanks and tabs.
 # Argument: -I pattern - String. Optional. Ignore lines which match extended regular expression `pattern`.
 # Argument: source - File. Required. File to compare to.

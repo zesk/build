@@ -1,5 +1,6 @@
 # v0.41.0
-consoleColorMode|consoleConfigureDecorate|
+“|"|
+”|"|
 decorate bold-black|decorate BOLD black|
 decorate bold-black-contrast|decorate BOLD black-contrast|
 decorate bold-blue|decorate BOLD blue|
