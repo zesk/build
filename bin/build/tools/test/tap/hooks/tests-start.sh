@@ -36,6 +36,9 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
     [ -n "$stateFile" ] || throwArgument "$handler" "stateFile is required" || return $?
     if [ -n "$tapPath" ]; then
+      if [ "${tapPath%/}" != "$tapPath" ]; then
+        tapPath=$(catchReturn "$handler" directoryRequire "$tapPath") || return $?
+      fi
       if [ -d "$tapPath" ]; then
         tapPath="${tapPath%/}/results.tap" || return $?
       fi

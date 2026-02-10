@@ -38,6 +38,9 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
     [ -n "$stateFile" ] || throwArgument "$handler" "stateFile is required" || return $?
 
     if [ -n "$statsReportPath" ]; then
+      if [ "${statsReportPath%/}" != "$statsReportPath" ]; then
+        statsReportPath=$(catchReturn "$handler" directoryRequire "$statsReportPath") || return $?
+      fi
       if [ -d "$statsReportPath" ]; then
         statsReportPath="${statsReportPath%/}/stats.txt" || return $?
       fi
@@ -45,6 +48,9 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
     fi
 
     if [ -n "$statsPath" ]; then
+      if [ "${statsPath%/}" != "$statsPath" ]; then
+        statsPath=$(catchReturn "$handler" directoryRequire "$statsPath") || return $?
+      fi
       if [ -d "$statsPath" ]; then
         statsPath="${statsPath%/}/results.stats" || return $?
       fi
