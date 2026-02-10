@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"binary - String. Required. The binary to look for."$'\n'""
 base="version.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Check if something matches a version"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: binary - String. Required. The binary to look for."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="d77afda1e8e2f6fc82e83a8aab8cb537d29f8c0e"
+sourceHash="7a78765522ff0f6d520a46d13938a5e77aabd972"
 summary="Check if something matches a version"
 summaryComputed="true"
 usage="isVersion [ --help ] binary"

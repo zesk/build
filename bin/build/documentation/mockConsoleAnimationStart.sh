@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Fake \`consoleHasAnimation\` for testing"$'\n'"Argument: true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="e9d0646fcae9fb14ad04885092bf5a6df3a02eca"
+sourceHash="a3a58999ef549fd98fb9efa4fed99fc011939c4e"
 summary="Fake \`consoleHasAnimation\` for testing"
 summaryComputed="true"
 usage="mockConsoleAnimationStart [ true | false ] [ --help ]"

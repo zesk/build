@@ -19,10 +19,10 @@ __testSuiteTAP_bail() {
 
 __testSuiteTAP_ParseFlags() {
   local directive=""
-  if isSubstringInsensitive ";Skip:true;" ";$1;"; then
+  if stringFoundInsensitive ";Skip:true;" ";$1;"; then
     directive="SKIP in test comment"
   fi
-  if isSubstringInsensitive ";Ignore:true;" ";$1;"; then
+  if stringFoundInsensitive ";Ignore:true;" ";$1;"; then
     directive="TODO Ignore test comment"
   fi
   printf "%s\n" "$directive"

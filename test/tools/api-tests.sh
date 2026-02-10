@@ -11,10 +11,10 @@ testHooks() {
   mockEnvironmentStart BUILD_COLORS
   local h
   for h in application-environment deploy-cleanup deploy-confirm version-created version-live; do
-    assertExitCode 0 hasHook "$h" || return $?
+    assertExitCode 0 hookExists "$h" || return $?
   done
   for h in misspelled-deployed-cleanup not-rude-confirm; do
-    assertNotExitCode 0 hasHook "$h" || return $?
+    assertNotExitCode 0 hookExists "$h" || return $?
   done
   decorate success testHooks OK
   mockEnvironmentStop BUILD_COLORS

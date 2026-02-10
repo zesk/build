@@ -789,7 +789,7 @@ gitInstallHooks() {
     hookNames=("${types[@]}")
   fi
   for hook in "${hookNames[@]}"; do
-    if hasHook --application "$home" "git-$hook"; then
+    if hookExists --application "$home" "git-$hook"; then
       catchEnvironment "$handler" gitInstallHook --application "$home" --copy "$hook" || return $?
       ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
     fi
@@ -837,7 +837,7 @@ gitInstallHook() {
       [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
       if inArray "$argument" "${types[@]}"; then
         local fromTo relFromTo item
-        hasHook --application "$home" "git-$argument" || throwArgument "$handler" "Hook git-$argument does not exist (Home: $home)" || return $?
+        hookExists --application "$home" "git-$argument" || throwArgument "$handler" "Hook git-$argument does not exist (Home: $home)" || return $?
         fromTo=("$(hookFind --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || throwEnvironment "$handler" "Unable to hookFind git-$argument (Home: $home)" || rewturn $?
         relFromTo=()
         home="${home%/}/"

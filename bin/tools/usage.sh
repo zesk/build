@@ -56,6 +56,7 @@ buildUsageCompile() {
   totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
   actualTotalFunctions=$totalFunctions
   if $quickFlag; then
+    catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' -empty -delete || return $?
     if __buildUsageIsComplete "$handler" "$docPath" "$tempFunctions"; then
       local allModificationTimes="$tempFunctions.all"
       clean+=("$allModificationTimes")

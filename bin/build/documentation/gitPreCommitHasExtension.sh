@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Does this commit have the following file extensions?"$'\n'"Argument: extension - String. Optional. Extension to check. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return code: 0 - if all extensions are present"$'\n'"Return code: 1 - if any extension is not present"$'\n'""$'\n'""
 return_code="0 - if all extensions are present"$'\n'"1 - if any extension is not present"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 summary="Does this commit have the following file extensions?"
 summaryComputed="true"
 usage="gitPreCommitHasExtension [ extension ] [ --help ]"

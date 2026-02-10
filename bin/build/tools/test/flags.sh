@@ -38,7 +38,7 @@ __testFlagPlatformMatch() {
     if [ "$testPlatform" = "$platform" ]; then
       testPlatform="!$platform"
     fi
-    if isSubstringInsensitive ";Platform:$testPlatform;" ";$flags;"; then
+    if stringFoundInsensitive ";Platform:$testPlatform;" ";$flags;"; then
       printf "%s\n" "Skipping Platform:$testPlatform (Flags=$flags)" 1>&2
       return 1
     fi

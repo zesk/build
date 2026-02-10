@@ -10,7 +10,7 @@ foundNames=([0]="summary" [1]="return_code")
 rawComment="Return code is \`assert\`"$'\n'"Summary: Assertion return code"$'\n'"Return Code: 97"$'\n'""$'\n'""
 return_code="97"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="e9d0646fcae9fb14ad04885092bf5a6df3a02eca"
+sourceHash="a3a58999ef549fd98fb9efa4fed99fc011939c4e"
 summary="Assertion return code"$'\n'""
 usage="returnAssert"
 # shellcheck disable=SC2016

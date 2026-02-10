@@ -10,7 +10,7 @@ foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="stdout")
 rawComment="Summary: Truncate console output width"$'\n'"Argument: width - UnsignedInteger. Required. Width to maintain."$'\n'"Argument: text - String. Optional. Text to trim to a console width."$'\n'"stdin: String. Optional. Text to trim to a console width."$'\n'"stdout: String. Console string trimmed to the width requested."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
+sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
 stdin="String. Optional. Text to trim to a console width."$'\n'""
 stdout="String. Console string trimmed to the width requested."$'\n'""
 summary="Truncate console output width"$'\n'""

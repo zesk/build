@@ -2,19 +2,19 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-02-10
 # shellcheck disable=SC2034
-argument="needle - String. Required. Thing to search for, not blank."$'\n'"haystack ... - EmptyString. Optional. One or more array elements to match"$'\n'""
-base="text.sh"
-description="Check if one string is a substring of another set of strings (case-insensitive)"$'\n'""
-file="bin/build/tools/text.sh"
-rawComment="Check if one string is a substring of another set of strings (case-insensitive)"$'\n'"Argument: needle - String. Required. Thing to search for, not blank."$'\n'"Argument: haystack ... - EmptyString. Optional. One or more array elements to match"$'\n'"Return Code: 0 - If element is a substring of any haystack"$'\n'"Return Code: 1 - If element is NOT found as a substring of any haystack"$'\n'"Tested: No"$'\n'""$'\n'""
-return_code="0 - If element is a substring of any haystack"$'\n'"1 - If element is NOT found as a substring of any haystack"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
-summary="Check if one string is a substring of another set"
-summaryComputed="true"
-tested="No"$'\n'""
-usage="isSubstringInsensitive needle [ haystack ... ]"
+argument="none"
+base="deprecated.sh"
+deprecated="2026-01"$'\n'""
+description="No documentation for \`isSubstringInsensitive\`."$'\n'""
+file="bin/build/tools/deprecated.sh"
+foundNames=([0]="deprecated")
+rawComment="Deprecated: 2026-01"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/deprecated.sh"
+sourceHash="a3f5a21b0010c338bb9c8f9de17c6aebf2f28ebc"
+summary="undocumented"
+usage="isSubstringInsensitive"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misSubstringInsensitive'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mneedle'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ haystack ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mneedle        '$'\e''[[(value)]mString. Required. Thing to search for, not blank.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mhaystack ...  '$'\e''[[(value)]mEmptyString. Optional. One or more array elements to match'$'\e''[[(reset)]m'$'\n'''$'\n''Check if one string is a substring of another set of strings (case-insensitive)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - If element is a substring of any haystack'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If element is NOT found as a substring of any haystack'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misSubstringInsensitive'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]misSubstringInsensitive'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isSubstringInsensitive needle [ haystack ... ]'$'\n'''$'\n''    needle        String. Required. Thing to search for, not blank.'$'\n''    haystack ...  EmptyString. Optional. One or more array elements to match'$'\n'''$'\n''Check if one string is a substring of another set of strings (case-insensitive)'$'\n'''$'\n''Return codes:'$'\n''- 0 - If element is a substring of any haystack'$'\n''- 1 - If element is NOT found as a substring of any haystack'$'\n'''
+helpPlain='Usage: isSubstringInsensitive'$'\n'''$'\n''No documentation for isSubstringInsensitive.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

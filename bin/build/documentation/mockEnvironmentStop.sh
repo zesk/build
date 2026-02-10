@@ -6,11 +6,10 @@ argument="globalName ... - EnvironmentVariable. Required. Global to restore from
 base="test.sh"
 description="Restore a mocked value. Works solely with the default \`saveGlobalName\` (e.g. \`__MOCK_\${globalName}\`)."$'\n'""
 file="bin/build/tools/test.sh"
-foundNames=([0]="argument")
 rawComment="Restore a mocked value. Works solely with the default \`saveGlobalName\` (e.g. \`__MOCK_\${globalName}\`)."$'\n'"Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="e9d0646fcae9fb14ad04885092bf5a6df3a02eca"
+sourceHash="a3a58999ef549fd98fb9efa4fed99fc011939c4e"
 summary="Restore a mocked value. Works solely with the default \`saveGlobalName\`"
 summaryComputed="true"
 usage="mockEnvironmentStop globalName ... [ --help ]"

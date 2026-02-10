@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Delete git tag locally and at origin"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: tag - The tag to delete locally and at origin"$'\n'"Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur."$'\n'""$'\n'""
 return_code="argument - Any stage fails will result in this exit code. Partial deletion may occur."$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 summary="Delete git tag locally and at origin"
 summaryComputed="true"
 usage="gitTagDelete [ --help ] [ tag ]"

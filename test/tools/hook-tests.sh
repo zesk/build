@@ -89,43 +89,43 @@ testHookSystem() {
 
   printf "%s %s\n" "$(decorate label "Current directory is")" "$(decorate value "$(pwd)")"
 
-  statusMessage decorate info "hasHook test0"
+  statusMessage decorate info "hookExists test0"
   # Allowed hooks have .sh or no .sh but must be +x
-  assertExitCode 0 hasHook --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hookExists --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook test1"
-  assertExitCode 0 hasHook --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists test1"
+  assertExitCode 0 hookExists --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook test2"
-  assertExitCode 0 hasHook --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists test2"
+  assertExitCode 0 hookExists --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook test3"
-  assertNotExitCode 0 hasHook --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists test3"
+  assertNotExitCode 0 hookExists --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook nonZero"
-  assertExitCode 0 hasHook --application "$testDir" nonZero || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists nonZero"
+  assertExitCode 0 hookExists --application "$testDir" nonZero || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook noExtension"
-  assertNotExitCode 0 hasHook --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists noExtension"
+  assertNotExitCode 0 hookExists --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook nonZeroNoExt"
-  assertNotExitCode 0 hasHook --application "$testDir" nonZeroNoExt || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists nonZeroNoExt"
+  assertNotExitCode 0 hookExists --application "$testDir" nonZeroNoExt || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook result"
-  assertExitCode 0 hasHook --application "$testDir" result || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists result"
+  assertExitCode 0 hookExists --application "$testDir" result || _hookTestFailed "$testDir" || return $?
 
-  statusMessage decorate info "hasHook reflect"
-  assertExitCode 0 hasHook --application "$testDir" reflect || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists reflect"
+  assertExitCode 0 hookExists --application "$testDir" reflect || _hookTestFailed "$testDir" || return $?
 
   # If not -x, then ignored
-  statusMessage decorate info "hasHook nonX"
-  assertExitCode --stderr-ok 1 hasHook --application "$testDir" nonX || _hookTestFailed "$testDir" || return $?
-  statusMessage decorate info "hasHook nonXNoExt"
-  assertExitCode 1 hasHook --application "$testDir" nonXNoExt || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists nonX"
+  assertExitCode --stderr-ok 1 hookExists --application "$testDir" nonX || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists nonXNoExt"
+  assertExitCode 1 hookExists --application "$testDir" nonXNoExt || _hookTestFailed "$testDir" || return $?
 
   # No hook
-  statusMessage decorate info "hasHook test3"
-  assertNotExitCode 0 hasHook test3 || _hookTestFailed "$testDir" || return $?
+  statusMessage decorate info "hookExists test3"
+  assertNotExitCode 0 hookExists test3 || _hookTestFailed "$testDir" || return $?
 
   # Exit codes
   statusMessage decorate info "hookRun test0"
@@ -165,11 +165,11 @@ testHookSystem() {
 
   local matches=(--stdout-match "$randomApp")
 
-  assertExitCode 0 hasHook --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hookExists --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
   assertExitCode "${matches[@]}" --stdout-match "test0.sh" --stdout-no-match ".bash" 0 hookRun --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
   assertExitCode "${matches[@]}" --stdout-match "test1.sh" --stdout-no-match ".bash" 0 hookRun --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
   assertExitCode --stdout-match "$randomDefault" --stdout-match "test2.sh" --stdout-no-match ".bash" 0 hookRun --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?
-  assertExitCode 0 hasHook --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hookExists --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
   assertExitCode "${matches[@]}" --stdout-match "test3.bash" 0 hookRun --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
   assertExitCode "${matches[@]}" --stdout-match "noExtension.bash" 0 hookRun --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun nonXNoExt"
@@ -185,7 +185,7 @@ testHookSystem() {
   export BUILD_HOOK_EXTENSIONS="bash:sh"
   decorate pair BUILD_HOOK_EXTENSIONS "$BUILD_HOOK_EXTENSIONS"
 
-  assertExitCode 0 hasHook --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hookExists --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
   assertExitCode "${matches[@]}" --stdout-match "test0.bash" --stdout-no-match ".sh" 0 hookRun --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
   assertExitCode "${matches[@]}" --stdout-match "test1.bash" --stdout-no-match ".sh" 0 hookRun --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
   assertExitCode --stdout-match "$randomDefault" --stdout-match "test2.sh" --stdout-no-match ".bash" 0 hookRun --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?

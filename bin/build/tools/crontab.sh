@@ -137,7 +137,7 @@ crontabApplicationUpdate() {
   # Update crontab
   #
   # 2>/dev/null HIDES stderr "no crontab for user" message
-  if filesAreIdentical -q "$newCrontab" - < <(crontab -u "$user" -l 2>/dev/null); then
+  if filesAreIdentical "$newCrontab" - < <(crontab -u "$user" -l 2>/dev/null); then
     rm -f "$newCrontab" || :
     return 0
   fi

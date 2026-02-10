@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Extract a range of lines from a file"$'\n'"Argument: startLine - Integer. Required. Starting line number."$'\n'"Argument: endLine - Integer. Required. Ending line number."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Reads lines until EOF"$'\n'"stdout: Outputs the selected lines only"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
+sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
 stdin="Reads lines until EOF"$'\n'""
 stdout="Outputs the selected lines only"$'\n'""
 summary="Extract a range of lines from a file"

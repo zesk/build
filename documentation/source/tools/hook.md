@@ -7,7 +7,7 @@
 
 Hooks are called to enable custom actions at specific times which can be overwritten or intercepted by the application.
 
-{hasHook}
+{hookExists}
 
 {hookRun}
 

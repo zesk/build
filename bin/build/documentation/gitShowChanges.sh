@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="source" [3]="credit")
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - the repo has been modified"$'\n'"Return Code: 1 - the repo has NOT bee modified"$'\n'"Show changed files from HEAD"$'\n'"Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'"Credit: Chris Johnsen"$'\n'""$'\n'""
 return_code="0 - the repo has been modified"$'\n'"1 - the repo has NOT bee modified"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 summary="Show changed files from HEAD"
 summaryComputed="true"
 usage="gitShowChanges [ --help ]"

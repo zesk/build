@@ -189,7 +189,7 @@ testIsSubstringInsensitive() {
   while IFS="|" read -r -a testRow; do
     set -- "${testRow[@]}"
     local expected="$1" haystack="$2" && shift 2
-    assertExitCode "$expected" isSubstringInsensitive "$haystack" "$@" || return $?
+    assertExitCode "$expected" stringFoundInsensitive "$haystack" "$@" || return $?
   done < <(__dataIsSubstringInsensitive)
 }
 
@@ -406,7 +406,7 @@ EOF
 testIsSubstring() {
   local exitCode needle haystack
   __testIsSubstringData | while read -r exitCode needle haystack; do
-    assertExitCode "$exitCode" isSubstring "$needle" "$haystack" || return $?
+    assertExitCode "$exitCode" stringFound "$needle" "$haystack" || return $?
   done
 }
 

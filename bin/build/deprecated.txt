@@ -1,4 +1,6 @@
 # v0.41.0
+isSubstring|stringFound
+hasHook|hookExists|
 “|"|
 ”|"|
 decorate bold-black|decorate BOLD black|

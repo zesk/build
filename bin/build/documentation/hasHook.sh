@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-08
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
-argument="--application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"--next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts."$'\n'"hookName0 - one or more hook names which must exist"$'\n'""
-base="hook.sh"
-description="Does a hook exist in the local project?"$'\n'"Check if one or more hook exists. All hooks must exist to succeed."$'\n'""
-environment="BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'""
-file="bin/build/tools/hook.sh"
-foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="test" [4]="environment")
-rawComment="Does a hook exist in the local project?"$'\n'"Check if one or more hook exists. All hooks must exist to succeed."$'\n'"Summary: Determine if a hook exists"$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts."$'\n'"Argument: hookName0 - one or more hook names which must exist"$'\n'"Return Code: 0 - If all hooks exist"$'\n'"Test: testHookSystem"$'\n'"Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'""$'\n'""
-return_code="0 - If all hooks exist"$'\n'""
-sourceFile="bin/build/tools/hook.sh"
-sourceHash="0b6650f1dc30eac11ec9a82aa21eaa4aad50e591"
-summary="Determine if a hook exists"$'\n'""
-test="testHookSystem"$'\n'""
-usage="hasHook [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] [ hookName0 ]"
+argument="none"
+base="deprecated.sh"
+deprecated="2026-01"$'\n'""
+description="No documentation for \`hasHook\`."$'\n'""
+file="bin/build/tools/deprecated.sh"
+foundNames=([0]="deprecated")
+rawComment="Deprecated: 2026-01"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/deprecated.sh"
+sourceHash="a3f5a21b0010c338bb9c8f9de17c6aebf2f28ebc"
+summary="undocumented"
+usage="hasHook"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mhasHook'$'\e''[0m '$'\e''[[(blue)]m[ --application applicationHome ]'$'\e''[0m '$'\e''[[(blue)]m[ --extensions extensionList ]'$'\e''[0m '$'\e''[[(blue)]m[ --next scriptName ]'$'\e''[0m '$'\e''[[(blue)]m[ hookName0 ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--application applicationHome  '$'\e''[[(value)]mPath. Optional. Directory of alternate application home. Can be specified more than once to change state.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--extensions extensionList     '$'\e''[[(value)]mColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to '$'\e''[[(code)]mBUILD_HOOK_EXTENSIONS'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--next scriptName              '$'\e''[[(value)]mFile. Optional. Locate the script found '$'\e''[[(cyan)]mafter'$'\e''[[(reset)]m the named script, if any. Allows easy chaining of scripts.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mhookName0                      '$'\e''[[(value)]mone or more hook names which must exist'$'\e''[[(reset)]m'$'\n'''$'\n''Does a hook exist in the local project?'$'\n''Check if one or more hook exists. All hooks must exist to succeed.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - If all hooks exist'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mhasHook'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]mhasHook'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: hasHook [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] [ hookName0 ]'$'\n'''$'\n''    --application applicationHome  Path. Optional. Directory of alternate application home. Can be specified more than once to change state.'$'\n''    --extensions extensionList     ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to BUILD_HOOK_EXTENSIONS.'$'\n''    --next scriptName              File. Optional. Locate the script found after the named script, if any. Allows easy chaining of scripts.'$'\n''    hookName0                      one or more hook names which must exist'$'\n'''$'\n''Does a hook exist in the local project?'$'\n''Check if one or more hook exists. All hooks must exist to succeed.'$'\n'''$'\n''Return codes:'$'\n''- 0 - If all hooks exist'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG'$'\n'''
+helpPlain='Usage: hasHook'$'\n'''$'\n''No documentation for hasHook.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

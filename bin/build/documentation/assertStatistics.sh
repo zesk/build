@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument" [2]="stdout" [3]="example")
 rawComment="Summary: Output assertion counts"$'\n'"Output the total number of assertion failures and assertion successes, separated by a space and terminated with a newline"$'\n'"Argument: --reset - Flag. Optional. Reset statistics to zero."$'\n'"Argument: --total - Flag. Optional. Just output the total."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: UnsignedInteger. 2 lines."$'\n'"Example:     read -r failures successes < <({fn}) || return \$?"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="e9d0646fcae9fb14ad04885092bf5a6df3a02eca"
+sourceHash="a3a58999ef549fd98fb9efa4fed99fc011939c4e"
 stdout="UnsignedInteger. 2 lines."$'\n'""
 summary="Output assertion counts"$'\n'""
 usage="assertStatistics [ --reset ] [ --total ] [ --help ]"

@@ -136,7 +136,7 @@ _assertStatistics() {
 # INTERNAL: Argument: --code1 - Flag. Optional. When passed the first argument to this function is the `returnCode`.
 # INTERNAL: Argument: ... - Arguments. Optional. Additional arguments are passed to `testFunction` or `formatterFunction`.
 # END DOC TEMPLATE: assert-common
-# Examples:     assertExitCode 0 hasHook version-current
+# Examples:     assertExitCode 0 hookExists version-current
 # Reviewed: 2023-11-12
 # Return Code: 0 - If the process exits with the provided exit code
 # Return Code: 1 - If the process exits with a different exit code
@@ -184,7 +184,7 @@ _assertExitCode() {
 # INTERNAL: Argument: --code1 - Flag. Optional. When passed the first argument to this function is the `returnCode`.
 # INTERNAL: Argument: ... - Arguments. Optional. Additional arguments are passed to `testFunction` or `formatterFunction`.
 # END DOC TEMPLATE: assert-common
-# Examples:     {fn} 0 hasHook make-cash-quickly
+# Examples:     {fn} 0 hookExists make-cash-quickly
 # Reviewed: 2023-11-12
 # Return Code: 0 - If the process exits with a different exit code
 # Return Code: 1 - If the process exits with the provided exit code

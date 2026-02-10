@@ -12,7 +12,7 @@ rawComment="Assert \`leftValue >= rightValue\`"$'\n'"Argument: --help - Flag. Op
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 reviewed="2023-11-12"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="e9d0646fcae9fb14ad04885092bf5a6df3a02eca"
+sourceHash="a3a58999ef549fd98fb9efa4fed99fc011939c4e"
 summary="Assert actual value is greater than or equal to expected value"$'\n'""
 usage="assertGreaterThanOrEqual [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] leftValue rightValue [ message ]"
 # shellcheck disable=SC2016

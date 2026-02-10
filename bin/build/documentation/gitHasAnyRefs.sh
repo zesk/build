@@ -10,7 +10,7 @@ foundNames=([0]="summary" [1]="argument" [2]="return_code")
 rawComment="Summary: Does git have any tags?"$'\n'"Do any tags exist at all in \`git\`?"$'\n'"May need to \`git pull --tags\`, or no tags exist."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - At least one tag exists"$'\n'"Return Code: 1 - No tags exist"$'\n'""$'\n'""
 return_code="0 - At least one tag exists"$'\n'"1 - No tags exist"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 summary="Does git have any tags?"$'\n'""
 usage="gitHasAnyRefs [ --help ]"
 # shellcheck disable=SC2016

@@ -388,7 +388,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:gitVersionList}
 - {SEE:grepSafe}
 - {SEE:groupID}
-- {SEE:hasHook}
 - {SEE:hookFind}
 - {SEE:hookRun}
 - {SEE:hookRunOptional}
@@ -435,8 +434,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:isPositiveInteger}
 - {SEE:isPyCharm}
 - {SEE:isS3URL}
-- {SEE:isSubstring}
-- {SEE:isSubstringInsensitive}
+- {SEE:stringFound}
+- {SEE:stringFoundInsensitive}
 - {SEE:isTrue}
 - {SEE:isTTYAvailable}
 - {SEE:isType}

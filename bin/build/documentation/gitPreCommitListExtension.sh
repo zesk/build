@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="List the file(s) of an extension"$'\n'"Argument: extension - String. Optional. Extension to list. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: File. One per line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 stdout="File. One per line."$'\n'""
 summary="List the file(s) of an extension"
 summaryComputed="true"

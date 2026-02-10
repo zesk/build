@@ -425,6 +425,90 @@ _stringContains() {
 }
 
 # Argument: haystack - String. Required. String to search.
+# Argument: needle ... - String. Optional. One or more strings to find as a case-insensitive substring of `haystack`.
+# Return Code: 0 - IFF ANY needle matches as a substring of haystack
+# Return Code: 1 - No needles found in haystack
+# Summary: Find whether a substring exists in one or more strings
+# Does needle exist as a substring of haystack?
+stringContainsInsensitive() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local haystack="${1-}"
+
+  [ -n "$haystack" ] || return 1
+  shift
+  haystack=$(lowercase "$haystack") || :
+  while [ $# -gt 0 ]; do
+    [ -n "$1" ] || continue
+    local needle
+    needle=$(lowercase "$1") || :
+    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
+    shift
+  done
+  return 1
+}
+_stringContainsInsensitive() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Check if one string is a substring of another set of strings (case-sensitive)
+#
+# Argument: needle - String. Required. Thing to search for, not blank.
+# Argument: haystack ... - EmptyString. Optional. One or more array elements to match
+# Return Code: 0 - If element is a substring of any haystack
+# Return Code: 1 - If element is NOT found as a substring of any haystack
+# Tested: No
+#
+stringFound() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local haystack needle=${1-}
+  shift || return 1
+  for haystack; do
+    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
+    shift
+  done
+  return 1
+}
+_stringFound() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Check if one string is a substring of another set of strings (case-insensitive)
+#
+# Argument: needle - String. Required. Thing to search for, not blank.
+# Argument: haystack ... - EmptyString. Optional. One or more array elements to match
+# Return Code: 0 - If element is a substring of any haystack
+# Return Code: 1 - If element is NOT found as a substring of any haystack
+# Tested: No
+#
+stringFoundInsensitive() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
+  local element arrayElement
+
+  element="$(lowercase "${1-}")"
+  [ -n "$element" ] || throwArgument "$handler" "needle is blank" || return $?
+  shift || return 1
+  for arrayElement; do
+    arrayElement=$(lowercase "$arrayElement")
+    if [ "${arrayElement#*"$element"}" != "$arrayElement" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+_stringFoundInsensitive() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
+# Argument: haystack - String. Required. String to search.
 # Argument: needle ... - String. Optional. One or more strings to find as the "start" of `haystack`.
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack
 # Return Code: 1 - No needles found in haystack
@@ -472,89 +556,6 @@ stringBeginsInsensitive() {
   return 1
 }
 _stringBeginsInsensitive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Argument: haystack - String. Required. String to search.
-# Argument: needle ... - String. Optional. One or more strings to find as a case-insensitive substring of `haystack`.
-# Return Code: 0 - IFF ANY needle matches as a substring of haystack
-# Return Code: 1 - No needles found in haystack
-# Summary: Find whether a substring exists in one or more strings
-# Does needle exist as a substring of haystack?
-stringContainsInsensitive() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local haystack="${1-}"
-
-  [ -n "$haystack" ] || return 1
-  shift
-  haystack=$(lowercase "$haystack") || :
-  while [ $# -gt 0 ]; do
-    [ -n "$1" ] || continue
-    local needle
-    needle=$(lowercase "$1") || :
-    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
-    shift
-  done
-  return 1
-}
-_stringContainsInsensitive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Check if one string is a substring of another set of strings (case-sensitive)
-#
-# Argument: needle - String. Required. Thing to search for, not blank.
-# Argument: haystack ... - EmptyString. Optional. One or more array elements to match
-# Return Code: 0 - If element is a substring of any haystack
-# Return Code: 1 - If element is NOT found as a substring of any haystack
-# Tested: No
-#
-isSubstring() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local haystack needle=${1-}
-  shift || return 1
-  for haystack; do
-    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
-    shift
-  done
-  return 1
-}
-_isSubstring() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Check if one string is a substring of another set of strings (case-insensitive)
-#
-# Argument: needle - String. Required. Thing to search for, not blank.
-# Argument: haystack ... - EmptyString. Optional. One or more array elements to match
-# Return Code: 0 - If element is a substring of any haystack
-# Return Code: 1 - If element is NOT found as a substring of any haystack
-# Tested: No
-#
-isSubstringInsensitive() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-
-  local element arrayElement
-
-  element="$(lowercase "${1-}")"
-  [ -n "$element" ] || throwArgument "$handler" "needle is blank" || return $?
-  shift || return 1
-  for arrayElement; do
-    arrayElement=$(lowercase "$arrayElement")
-    if [ "${arrayElement#*"$element"}" != "$arrayElement" ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-_isSubstringInsensitive() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -169,7 +169,7 @@ ___deployBuildEnvironment() {
     statusMessage decorate error "Deployment failed, reverting ..." || :
     "$fail" "$@" || return $?
   fi
-  if hasHook deploy-confirm && ! hookRun deploy-confirm; then
+  if hookExists deploy-confirm && ! hookRun deploy-confirm; then
     statusMessage decorate warning "Deployment confirmation failed, reverting" || :
     "$fail" "$@" || return $?
   fi
@@ -290,7 +290,7 @@ deployRemoteFinish() {
 
   if $cleanupFlag; then
     decorate info "Cleaning up ... "
-    if hasHook --application "$applicationPath" deploy-cleanup; then
+    if hookExists --application "$applicationPath" deploy-cleanup; then
       catchEnvironment "$handler" hookRun --application "$applicationPath" deploy-cleanup || return $?
     else
       printf "No %s hook in %s\n" "$(decorate info "deploy-cleanup")" "$(decorate code "$applicationPath")"

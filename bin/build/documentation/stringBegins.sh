@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="summary")
 rawComment="Argument: haystack - String. Required. String to search."$'\n'"Argument: needle ... - String. Optional. One or more strings to find as the \"start\" of \`haystack\`."$'\n'"Return Code: 0 - IFF ANY needle matches as a substring of haystack"$'\n'"Return Code: 1 - No needles found in haystack"$'\n'"Summary: Find whether a substring exists as teh beginning of one or more strings"$'\n'"Does needle exist as a substring of haystack?"$'\n'""$'\n'""
 return_code="0 - IFF ANY needle matches as a substring of haystack"$'\n'"1 - No needles found in haystack"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
+sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
 summary="Find whether a substring exists as teh beginning of one or more strings"$'\n'""
 usage="stringBegins haystack [ needle ... ]"
 # shellcheck disable=SC2016

@@ -17,7 +17,7 @@ __hookVersionNotes() {
   name=$(buildEnvironmentGet APPLICATION_NAME)
 
   printf "%s\n" "# $name release $newVersion" ""
-  if hasHook version-notes-copyright; then
+  if hookExists version-notes-copyright; then
     execute runHook version-notes-copyright "$@" || return $?
   else
     local year company

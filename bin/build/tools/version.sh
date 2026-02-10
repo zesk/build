@@ -219,10 +219,10 @@ __releaseNew() {
   if [ -z "$newVersion" ]; then
     readLoop=true
   fi
-  hasHook version-current || throwEnvironment "$handler" "Requires hook version-current" || return $?
+  hookExists version-current || throwEnvironment "$handler" "Requires hook version-current" || return $?
   currentVersion=$(catchEnvironment "$handler" hookRun version-current) || return $?
   [ -n "$currentVersion" ] || throwEnvironment "$handler" "version-current hook returned empty string" || return $?
-  if hasHook version-live; then
+  if hookExists version-live; then
     liveVersion=$(catchEnvironment "$handler" hookRun version-live) || return $?
     [ -n "$currentVersion" ] || throwEnvironment "$handler" "version-live hook returned empty string" || return $?
     decorate pair $width "Live:" "$liveVersion"

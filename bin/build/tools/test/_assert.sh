@@ -149,7 +149,6 @@ __assertedFunctions() {
     if [ $# -eq 0 ]; then
       catchEnvironment "$handler" touch "$logFile" || return $?
       if [ "$logFile" -nt "$logFile.clean" ]; then
-        printf "%s\n" "SORTED" 1>&2
         catchEnvironment "$handler" sort -u "$logFile" -o "$logFile" || return $?
         catchEnvironment "$handler" touch "$logFile.clean" || return $?
       fi
@@ -860,7 +859,7 @@ ___assertOutputEqualsFormat() {
 # Argument: arguments - Any arguments to pass to the command to run
 # Argument: --debug - Flag. Optional. Debugging
 # Environment: None.
-# Examples: assertExitCode 0 hasHook version-current
+# Examples: assertExitCode 0 hookExists version-current
 # Reviewed: 2023-11-12
 # Return Code: 0 - If the process exits with the provided exit code
 # Return Code: 1 - If the process exits with a different exit code

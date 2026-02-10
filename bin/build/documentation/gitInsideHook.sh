@@ -11,7 +11,7 @@ foundNames=([0]="environment" [1]="return_code")
 rawComment="Are we currently inside a git hook?"$'\n'"Tests non-blank strings in our environment."$'\n'"Environment: GIT_EXEC_PATH - Must be set to pass"$'\n'"Environment: GIT_INDEX_FILE - Must be set to pass"$'\n'"Return Code: 0 - We are, semantically, inside a git hook"$'\n'"Return Code: 1 - We are NOT, semantically, inside a git hook"$'\n'""$'\n'""
 return_code="0 - We are, semantically, inside a git hook"$'\n'"1 - We are NOT, semantically, inside a git hook"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 summary="Are we currently inside a git hook?"
 summaryComputed="true"
 usage="gitInsideHook"

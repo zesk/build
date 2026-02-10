@@ -10,7 +10,7 @@ foundNames=([0]="stdout" [1]="argument" [2]="stdin")
 rawComment="stdout: UnsignedInteger"$'\n'"Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately."$'\n'"This is essentially a wrapper around \`wc -l\` which strips whitespace and does type checking."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: file - File. Optional. Output line count for each file specified. If no files specified, uses stdin."$'\n'"stdin: Lines are read from standard in and counted"$'\n'"stdout: \`UnsignedInteger\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
+sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
 stdin="Lines are read from standard in and counted"$'\n'""
 stdout="UnsignedInteger"$'\n'"\`UnsignedInteger\`"$'\n'""
 summary="Outputs the number of lines read from stdin (or supplied"

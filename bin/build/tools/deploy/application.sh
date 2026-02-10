@@ -151,7 +151,7 @@ __deployApplication() {
       #
       # Old Application
       #
-      if hasHook --application "$applicationPath" maintenance; then
+      if hookExists --application "$applicationPath" maintenance; then
         printf "%s %s\n" "$(decorate warning "Turning maintenance")" "$(decorate green "$(decorate code " ON ")")"
         if [ -z "$message" ]; then
           message="Upgrading to $newApplicationId"
@@ -162,7 +162,7 @@ __deployApplication() {
       else
         printf "%s\n" "$(decorate info "No maintenance hook")"
       fi
-      if hasHook --application "$applicationPath" deploy-shutdown; then
+      if hookExists --application "$applicationPath" deploy-shutdown; then
         printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-shutdown ")")"
         if ! hookRun --application "$applicationPath" deploy-shutdown; then
           _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-shutdown failed" || return $?
@@ -193,7 +193,7 @@ __deployApplication() {
   #
   # deployedApplicationPath is the new version of the application source code root
   printf "%s %s\n" "$(decorate info "Setting to version")" "$(decorate code "$applicationId")"
-  if hasHook --application "$deployedApplicationPath" deploy-start; then
+  if hookExists --application "$deployedApplicationPath" deploy-start; then
     printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-start ")")"
     if ! hookRun --application "$deployedApplicationPath" deploy-start; then
       _unwindDeploy "${unwindArgs[@]}" "Running hook deploy-start failed" || return $?
@@ -202,7 +202,7 @@ __deployApplication() {
     ! $verboseFlag || statusMessage --last decorate info "No deploy-start hook"
   fi
 
-  if hasHook --application "$deployedApplicationPath" deploy-activate; then
+  if hookExists --application "$deployedApplicationPath" deploy-activate; then
     printf "%s %s\n" "$(decorate warning "Running hook")" "$(decorate green "$(decorate code " deploy-activate ")")" || :
     if ! hookRun --application "$deployedApplicationPath" deploy-activate "$applicationPath"; then
       _unwindDeploy "${unwindArgs[@]}" "hookRun deploy-activate failed" || return $?

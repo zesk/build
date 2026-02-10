@@ -18,6 +18,25 @@
 #             |_|
 #
 
+# Deprecated: 2026-01
+isSubstring() {
+  _deprecated "${FUNCNAME[0]}"
+  stringFound "$@"
+}
+
+# Deprecated: 2026-01
+isSubstringInsensitive() {
+  _deprecated "${FUNCNAME[0]}"
+  stringFoundInsensitive "$@"
+}
+
+# Deprecated: 2026-01
+hasHook() {
+  _deprecated "${FUNCNAME[0]}"
+  hookExists "$@"
+}
+
+
 # Load test tools
 # Deprecated: 2025-01 - just call `testSuite` which does this
 # Deprecated: 2026-01

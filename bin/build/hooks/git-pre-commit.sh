@@ -134,7 +134,7 @@ __hookGitPreCommit() {
       ;;
     esac
     if [ -z "$label" ] || inArray "$extension" "${extensions[@]}"; then
-      if hasHook "pre-commit-$extension"; then
+      if hookExists "pre-commit-$extension"; then
         statusMessage decorate info "Processing $(decorate code "$extension") ..."
         catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
       else

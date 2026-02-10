@@ -62,9 +62,9 @@
 
 {inArray}
 
-{isSubstring}
+{stringFound}
 
-{isSubstringInsensitive}
+{stringFoundInsensitive}
 
 {stringBegins}
 

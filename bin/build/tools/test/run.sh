@@ -106,7 +106,7 @@ __testRun() {
     catchReturn "$handler" environmentValueWrite housekeeper true >>"$stateFile" || return $?
     housekeeperCache=$(catchReturn "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
     runner=(--ignore '.last-run-test' --ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
-    ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flagText;" || runner=(--overhead "${runner[@]}")
+    ! stringFoundInsensitive ";Housekeeper-Overhead:true;" ";$__flagText;" || runner=(--overhead "${runner[@]}")
     runner=(housekeeper --cache "$housekeeperCache" "${runner[@]}")
   else
     catchReturn "$handler" environmentValueWrite housekeeper false >>"$stateFile" || return $?
@@ -161,7 +161,7 @@ __testRun() {
     TMPDIR="$savedTMPDIR"
     printf "\n%s\n" "FAILED [$resultCode] $__test" | tee -a "$error" | tee -a "$quietLog"
     __TEST_SUITE_RESULT="[$resultCode] $__test failed"
-    if ! fileIsEmpty "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flagText;"; then
+    if ! fileIsEmpty "$captureStderr" && stringFoundInsensitive ";stderr-FAILED;" ";$__flagText;"; then
       printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$error" | tee -a "$quietLog"
       dumpPipe <"$captureStderr" | tee -a "$quietLog"
       __TEST_SUITE_RESULT="[$resultCode] $__test failed (found stderr)"

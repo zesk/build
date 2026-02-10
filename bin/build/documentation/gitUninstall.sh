@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="summary")
 rawComment="Uninstalls the \`git\` binary"$'\n'"Argument: package - Additional packages to uninstall"$'\n'"Summary: Uninstall git"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 summary="Uninstall git"$'\n'""
 usage="gitUninstall [ package ]"
 # shellcheck disable=SC2016

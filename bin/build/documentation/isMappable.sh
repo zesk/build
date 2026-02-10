@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Check if text contains mappable tokens"$'\n'"If any text passed contains a token which can be mapped, succeed."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --prefix - String. Optional. Token prefix defaults to \`{\`."$'\n'"Argument: --suffix - String. Optional. Token suffix defaults to \`}\`."$'\n'"Argument: --token - String. Optional. Classes permitted in a token"$'\n'"Argument: text - String. Optional. Text to search for mapping tokens."$'\n'"Return code: - \`0\` - Text contains mapping tokens"$'\n'"Return code: - \`1\` - Text does not contain mapping tokens"$'\n'""$'\n'""
 return_code="- \`0\` - Text contains mapping tokens"$'\n'"- \`1\` - Text does not contain mapping tokens"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="96f2a420975444f1594e37a520f1539ad15bf4f6"
+sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
 summary="Check if text contains mappable tokens"
 summaryComputed="true"
 usage="isMappable [ --help ] [ --prefix ] [ --suffix ] [ --token ] [ text ]"

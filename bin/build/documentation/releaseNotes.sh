@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-10
 # shellcheck disable=SC2034
 argument="--application application - Directory. Optional. Application home directory."$'\n'"version - String. Optional. Version for the release notes path. If not specified uses the current version."$'\n'""
 base="version.sh"
@@ -14,7 +14,7 @@ output="docs/release/version.md"$'\n'""
 rawComment="Summary: Output path to current release notes"$'\n'"Output path to current release notes"$'\n'"If this fails it outputs an error to stderr"$'\n'"When this tool succeeds it outputs the path to the current release notes file"$'\n'"Environment: BUILD_RELEASE_NOTES"$'\n'"Argument: --application application - Directory. Optional. Application home directory."$'\n'"Argument: version - String. Optional. Version for the release notes path. If not specified uses the current version."$'\n'"Output: docs/release/version.md"$'\n'"Hook: version-current"$'\n'"Example:     open \$(bin/build/release-notes.sh)"$'\n'"Example:     vim \$(releaseNotes)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="d77afda1e8e2f6fc82e83a8aab8cb537d29f8c0e"
+sourceHash="7a78765522ff0f6d520a46d13938a5e77aabd972"
 summary="Output path to current release notes"$'\n'""
 usage="releaseNotes [ --application application ] [ version ]"
 # shellcheck disable=SC2016

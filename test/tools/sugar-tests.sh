@@ -99,7 +99,7 @@ testChoose() {
 
   assertEquals "2" "$(booleanChoose falseish A B 2>/dev/null || printf "%d" $?)"
   errors="$(booleanChoose falseish A B 2>&1 || :)" || : && here="${BASH_SOURCE[0]}:$LINENO"
-  assertExitCode 0 isSubstring "$here" "$errors" || return $?
+  assertExitCode 0 stringFound "$here" "$errors" || return $?
 
   assertExitCode 0 booleanChoose true || return $?
   assertExitCode 0 booleanChoose false || return $?

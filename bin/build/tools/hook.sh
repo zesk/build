@@ -226,7 +226,7 @@ _hookSourceOptional() {
 # Return Code: 0 - If all hooks exist
 # Test: testHookSystem
 # Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
-hasHook() {
+hookExists() {
   local handler="_${FUNCNAME[0]}"
 
   local applicationHome="" ww=()
@@ -256,7 +256,7 @@ hasHook() {
     shift
   done
 }
-_hasHook() {
+_hookExists() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

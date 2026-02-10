@@ -249,7 +249,7 @@ phpBuild() {
   local clean=()
 
   clean+=("$dotEnv")
-  if hasHook application-environment; then
+  if hookExists application-environment; then
     catchEnvironment "$handler" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   else
     catchReturn "$handler" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?

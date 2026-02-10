@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="When running git operations on a deployment host, at times it's necessary to"$'\n'"add the current directory (or a directory) to the git \`safe.directory\` directive."$'\n'"This adds the directory passed to that directory in the local user's environment"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: directory - Directory. Required. The directory to add to the \`git\` \`safe.directory\` configuration directive"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument is not a valid directory"$'\n'"Return Code: Other - git config error codes"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Argument is not a valid directory"$'\n'"Other - git config error codes"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="1c51d81ea9e59d2e079d5ba420ada503a43bd31a"
+sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
 summary="When running git operations on a deployment host, at times"
 summaryComputed="true"
 usage="gitEnsureSafeDirectory [ --help ] directory"
