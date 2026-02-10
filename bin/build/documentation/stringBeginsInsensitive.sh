@@ -6,10 +6,10 @@ argument="haystack - String. Required. String to search. (case-insensitive)"$'\n
 base="text.sh"
 description="Does needle exist as a substring of haystack? (case-insensitive)"$'\n'""
 file="bin/build/tools/text.sh"
+foundNames=([0]="argument" [1]="return_code" [2]="summary")
 rawComment="Argument: haystack - String. Required. String to search. (case-insensitive)"$'\n'"Argument: needle ... - String. Optional. One or more strings to find as the \"start\" of \`haystack\` (case-insensitive)"$'\n'"Return Code: 0 - IFF ANY needle matches as a substring of haystack (case-insensitive)"$'\n'"Return Code: 1 - No needles found in haystack (case-insensitive)"$'\n'"Summary: Find whether a substring exists as teh beginning of one or more strings"$'\n'"Does needle exist as a substring of haystack? (case-insensitive)"$'\n'""$'\n'""
 return_code="0 - IFF ANY needle matches as a substring of haystack (case-insensitive)"$'\n'"1 - No needles found in haystack (case-insensitive)"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceHash="fe3f136d59f335809673a5a3a78c67c1bf585bf4"
+sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
 summary="Find whether a substring exists as teh beginning of one or more strings"$'\n'""
 usage="stringBeginsInsensitive haystack [ needle ... ]"
 # shellcheck disable=SC2016
