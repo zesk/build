@@ -175,9 +175,9 @@ _assertFailure() {
   #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
   export __BUILD_SAVED_CACHE_DIRECTORY
   ! __assertTimingSetup || timing=" [$(__assertTimingCalculate)]"
-  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure
+
   #  fi
-  shift && statusMessage --last printf -- "%s %s %s%s" "$failIcon" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
+  shift && statusMessage --last printf -- "%s [#%d] %s %s%s" "$failIcon" "$(incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure)" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
   returnAssert
 }
 
@@ -187,9 +187,9 @@ _assertSuccess() {
   #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
   export __BUILD_SAVED_CACHE_DIRECTORY
   ! __assertTimingSetup || timing=" [$(__assertTimingCalculate)]"
-  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success
+
   #  fi
-  shift && statusMessage printf -- "%s %s %s%s" "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?
+  shift && statusMessage printf -- "%s [#%d] %s %s%s" "$successIcon" "$(incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success)" "$(decorate success "$function")" "$*" "$timing" || return $?
 }
 
 # INTERNAL: To optimize this (or see where it is slow), use
