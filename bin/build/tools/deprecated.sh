@@ -36,7 +36,6 @@ hasHook() {
   hookExists "$@"
 }
 
-
 # Load test tools
 # Deprecated: 2025-01 - just call `testSuite` which does this
 # Deprecated: 2026-01

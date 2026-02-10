@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# test-tools.sh
+# IDENTICAL zeskBuildBashHeader 5
 #
-# Test tools
+# tools.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
 
 # TODO: bashCoverage support
 __testSuite() {

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildBashHeader 5
 #
 # mock.sh
 #
-# Fake conditions to test them
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
+# Fake conditions to test them
 
 # Saved name should not match grep of argument
 __mockEnvironmentGlobal() {

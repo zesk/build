@@ -507,7 +507,6 @@ _stringFoundInsensitive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Argument: haystack - String. Required. String to search.
 # Argument: needle ... - String. Optional. One or more strings to find as the "start" of `haystack`.
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack

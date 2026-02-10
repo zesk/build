@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# test-tools.sh
+# IDENTICAL zeskBuildBashHeader 5
 #
-# Test console output
+# console.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
 
 #
 # Output debugging for terminal issues and colors/CI
