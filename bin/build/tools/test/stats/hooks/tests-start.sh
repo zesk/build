@@ -12,7 +12,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
   # fn: hookRun tests-start
   # Summary: Run when a tests are started (before running)
   # Argument: stateFile - File. Required. State file for test suite.
-  __hookTestsStart() {
+  __hookTestsStartStats() {
     local handler="_${FUNCNAME[0]}"
 
     local statsPath="" statsReportPath="" stateFile=""
@@ -61,9 +61,9 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
     catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
   }
 
-  ___hookTestsStart() {
+  ___hookTestsStartStats() {
     # __IDENTICAL__ usageDocument 1
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
-  __hookTestsStart "$@"
+  __hookTestsStartStats "$@"
 fi
