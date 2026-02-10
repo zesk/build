@@ -64,6 +64,7 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
+                  - mkdir ./test-results/
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --skip-tag package-install-last  --junit "./test-results/0/" --tap "./test-results/0/" --stats "./test-results/0/"
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag +package-install-last --junit "./test-results/1/" --tap "./test-results/1/" --stats "./test-results/1/"
       - step:
@@ -129,6 +130,7 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
+                  - mkdir ./test-results/
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --skip-tag package-install-last --junit "./test-results/0/" --tap "./test-results/0/" --stats "./test-results/0/"
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag +package-install-last --junit "./test-results/1/" --tap "./test-results/1/" --stats "./test-results/1/"
       - step:
