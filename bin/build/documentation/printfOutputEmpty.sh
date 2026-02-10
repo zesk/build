@@ -10,6 +10,7 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="stdout" [4]="example")
 rawComment="Summary: printf when output is blank"$'\n'"Pipes all input to output, if any input exists behaves like \`cat\`. If input is empty then runs and outputs the \`printf\` statement result."$'\n'"Argument: ... - Arguments. Required. printf arguments."$'\n'"Without arguments, displays help."$'\n'"stdin: text (Optional)"$'\n'"stdout: printf output and then the stdin text IFF stdin text is blank"$'\n'"Example:     cat \"\$failedFunctions\" | decorate wrap -- \"- \" | {fn} \"%s\\n\" \"No functions failed.\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/text.sh"
 sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
 stdin="text (Optional)"$'\n'""
 stdout="printf output and then the stdin text IFF stdin text is blank"$'\n'""

@@ -10,6 +10,7 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="argument" [1]="example" [2]="return_code" [3]="tested")
 rawComment="Check if an element exists in an array"$'\n'"Argument: element - EmptyString. Thing to search for"$'\n'"Argument: arrayElement0 ... - Array. Optional. One or more array elements to match"$'\n'"Example:     if inArray \"\$thing\" \"\${things[@]+\"\${things[@]}\"}\"; then"$'\n'"Example:         things+=(\"\$thing\")"$'\n'"Example:     fi"$'\n'"Return Code: 0 - If element is found in array"$'\n'"Return Code: 1 - If element is NOT found in array"$'\n'"Tested: No"$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - If element is found in array"$'\n'"1 - If element is NOT found in array"$'\n'""
+sourceFile="bin/build/tools/text.sh"
 sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
 summary="Check if an element exists in an array"
 summaryComputed="true"

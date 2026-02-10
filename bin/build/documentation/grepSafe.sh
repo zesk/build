@@ -11,6 +11,7 @@ rawComment="\`grep\` but returns 0 when nothing matches"$'\n'"See: grep"$'\n'"Al
 requires="grep returnMap"$'\n'""
 return_code="0 - Normal operation"$'\n'""
 see="grep"$'\n'""
+sourceFile="bin/build/tools/text.sh"
 sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
 summary="\`grep\` but returns 0 when nothing matches"
 summaryComputed="true"

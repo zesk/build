@@ -138,12 +138,16 @@ __bashDocumentationExtractGenerateCache() {
     extras+=("# Generated on $(dateToday)")
     catchReturn "$handler" environmentClean || return $?
     local uncompiled="${definitionFile%.sh}.sh.uncompiled"
-    local clean=("$uncompiled")
+    local clean=("$uncompiled" "$uncompiled.finished")
     bashRecursionDebug || return $?
     __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
     bashRecursionDebug --end || return $?
-    catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "${clean[@]}" || $?
-    buildDebugEnabled "environmentCompile" || catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+    catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" | catchEnvironment "$handler" tee "$uncompiled.finished" || returnClean $? "${clean[@]}" || $?
+    catchEnvironment "$handler" mv -f "$uncompiled.finished" "$definitionFile" || returnClean $? "${clean[@]}" || $?
+    catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+    if ! grep -q '^sourceFile=' "$definitionFile"; then
+      throwEnvironment "$handler" "Final $definitionFile does not contain sourceFile=?" || return $?
+    fi
   ) || return $?
 }
 

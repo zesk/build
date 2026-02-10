@@ -10,6 +10,7 @@ foundNames=([0]="argument" [1]="stdout" [2]="requires")
 rawComment="Convert text to uppercase"$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: text - EmptyString. Required. text to convert to uppercase"$'\n'"stdout: \`String\`. The uppercase version of the \`text\`."$'\n'"Requires: tr"$'\n'""$'\n'""
 requires="tr"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/text.sh"
 sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
 stdout="\`String\`. The uppercase version of the \`text\`."$'\n'""
 summary="Convert text to uppercase"
