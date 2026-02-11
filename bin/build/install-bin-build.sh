@@ -1012,7 +1012,7 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL __usageDocumentCached 24
+# IDENTICAL __usageDocumentCached 25
 
 # Argument: handler - Function. Required.
 # Argument: home - Directory. BUILD_HOME
@@ -1026,6 +1026,7 @@ __usageDocumentCached() {
   local suffix="bin/build/documentation/$functionName.sh"
   local settingsFile="$home/$suffix"
   [ -f "$settingsFile" ] || return 1
+  decorateInitialized || decorate info -- || return $?
   (
     local helpConsole="" helpPlain="no helpPlain in $suffix"
     # shellcheck source=/dev/null

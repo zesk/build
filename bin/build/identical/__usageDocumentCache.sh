@@ -21,6 +21,7 @@ __usageDocumentCached() {
   local suffix="bin/build/documentation/$functionName.sh"
   local settingsFile="$home/$suffix"
   [ -f "$settingsFile" ] || return 1
+  decorateInitialized || decorate info -- || return $?
   (
     local helpConsole="" helpPlain="no helpPlain in $suffix"
     # shellcheck source=/dev/null
