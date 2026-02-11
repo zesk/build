@@ -41,7 +41,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
         junitPath=$(catchReturn "$handler" directoryRequire "$junitPath") || return $?
       fi
       if [ -d "$junitPath" ]; then
-        junitPath="$junitPath/results.xml" || return $?
+        junitPath="$junitPath/junit.xml" || return $?
       fi
       if [ ! -f "$junitPath" ]; then
         catchReturn "$handler" touch "$junitPath" || return $?

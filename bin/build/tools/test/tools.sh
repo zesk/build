@@ -153,6 +153,7 @@ __testSuite() {
 
   local load home testTemporaryHome testTemporaryInternal testTemporaryTest clean=()
 
+  testCacheDirectory=$(catchReturn "$handler" buildCacheDirectory "testSuite/$(buildEnvironmentGet APPLICATION_CODE)") || return $?
   testTemporaryHome=$(catchReturn "$handler" buildCacheDirectory "testSuite.$$") || return $?
 
   clean+=("$testTemporaryHome")
@@ -180,6 +181,8 @@ __testSuite() {
   decorateInitialized || muzzle consoleConfigureDecorate || :
 
   [ "${#testPaths[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || returnClean $? "${clean[@]}" || return $?
+
+  timing --name "Pre-process tests" __testSuiteTestsProcess "$handler" "$testCacheDirectory" "${testPaths[@]}" || return $?
 
   #
   # Intro statement to console
@@ -515,11 +518,6 @@ __testSuite() {
   timingReport "$allTestStart" "Completed $(decorate orange "${stats[*]}") in"
 
   _testExit "$finalReturnCode"
-}
-_testSuite() {
-  local defaultName
-  defaultName=$(buildEnvironmentGet APPLICATION_NAME 2>/dev/null) || defaultName="any product"
-  fn="${fn-"${FUNCNAME[0]#_}"}" name=${name-"$defaultName"} usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

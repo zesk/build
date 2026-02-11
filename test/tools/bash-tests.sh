@@ -46,6 +46,8 @@ testBashCommentFilter() {
 # Requires: A B C
 # Requires: D E F G A a b c d
 # Test-Housekeeper-Overhead: true
+# Tag: a b c
+# Tag: fast
 testBashGetRequires() {
   local handler="returnMessage"
   local temp

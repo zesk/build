@@ -67,7 +67,7 @@ filesAreIdentical() {
         [ "$argument" = "-" ] && source="$argument" || source="$(validate "$handler" File "source" "$argument")" || return $?
       else
         [ "$argument" = "-" ] && target="$argument" || target="$(validate "$handler" File "target" "$argument")" || return $?
-        muzzle diff -q "${dd[@]}" "$source" "$target" || return 1
+        muzzle diff -q "${dd[@]+"${dd[@]}"}" "$source" "$target" || return 1
       fi
       ;;
     esac

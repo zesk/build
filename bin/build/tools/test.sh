@@ -22,6 +22,7 @@ __testLoader() {
 #
 # Supports argument flags in tests:
 # `TAP-Directive` `Test-Skip` `TODO`
+#
 # You can also use `BUILD_TEST_FLAGS` to change the default flags.
 #
 # #### Tag filters
@@ -35,8 +36,29 @@ __testLoader() {
 # - `--tag a --tag +b --tag c --tag +d --tag +e` is `(a and b) or (c and d and e)`
 #
 # Notes: Consider using `--tag a+b --tag c+d+e` instead? TODO
-# Environment: - `BUILD_TEST_FLAGS` - Modify default flags and test behavior.
-# Environment: - `BUILD_DEBUG` - Many settings to debug different systems, comma-delimited.
+#
+# Your test functions can contain tags as follows:
+#
+#     # Tag: tagA tagB
+#     # Tag: tagC
+#     # Test-Platform: !alpine alpine !linux linux !darwin darwin
+#     # Test-Skip: true
+#     # Test-Housekeeper: false
+#     # Test-Plumber: true
+#     # Test-TAP-Directive: Something
+#     # Test-After: testWhichShouldGoBefore
+#     # Test-Before: testWhichShouldGoAfter
+#     # Test-Fail: true
+#     testThingy() {
+#        ...
+#     }
+#
+# Environment variables:
+#
+# - `BUILD_TEST_FLAGS` - SemicolonDelimitedList. Add flags like 'Plumber:false' to disable settings across tests.
+# - `BUILD_DEBUG` - Many settings to debug different systems, comma-delimited.
+#
+# Environment: BUILD_TEST_FLAGS BUILD_DEBUG
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -56,7 +78,7 @@ __testLoader() {
 # Argument: --fail executor - Callable. Optional. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
 # Argument: --cd-away - Flag. Optional. Change directories to a temporary directory before each test.
 # Argument: --tap tapFile - FileDirectory. Optional. Output test results in TAP format to `tapFile`.
-# Argument: --junit junitFile - FileDirectory. Optional. Output test results in junit format to `junitFile`. If a directory is specified the output is to `results.xml`.
+# Argument: --junit junitFile - FileDirectory. Optional. Output test results in junit format to `junitFile`. If a directory is specified the output is to `junit.xml`.
 # Argument: --show - Flag. Optional. List all test suites.
 # Argument: -l - Flag. Optional. List all test suites.
 # Argument: --one testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
@@ -80,8 +102,8 @@ testSuite() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _testSuite() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  local defaultName && defaultName=$(buildEnvironmentGet APPLICATION_NAME 2>/dev/null) || defaultName="any product"
+  fn="${fn-"${FUNCNAME[0]#_}"}" name=${name-"$defaultName"} usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Output assertion counts

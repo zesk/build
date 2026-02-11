@@ -189,7 +189,6 @@ testBuildFunctionsHelpCoverage() {
 
   export BUILD_COLORS BUILD_DEBUG TEST_TRACK_ASSERTIONS
 
-  mockEnvironmentStart BUILD_COLORS
   mockEnvironmentStart BUILD_DEBUG "${BUILD_DEBUG-}"
   mockEnvironmentStart TEST_TRACK_ASSERTIONS
 
@@ -206,7 +205,6 @@ testBuildFunctionsHelpCoverage() {
 
   BUILD_DEBUG=$(listRemove "${BUILD_DEBUG}" ',' "fast-usage")
   BUILD_DEBUG=$(listAppend "${BUILD_DEBUG}" ',' "documentation-cache")
-  BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 
   local verboseFlag=false
@@ -257,7 +255,6 @@ testBuildFunctionsHelpCoverage() {
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 
   mockEnvironmentStop TEST_TRACK_ASSERTIONS
-  mockEnvironmentStop BUILD_COLORS
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
 
@@ -276,6 +273,7 @@ escapeDoubleQuotes
 escapeSingleQuotes
 escapeQuotes
 replaceFirstPattern
+printfOutputEmpty
 printfOutputSuffix
 printfOutputPrefix
 sedReplacePattern
