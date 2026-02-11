@@ -91,7 +91,9 @@ buildUsageCompile() {
     local prefix="#$index/$totalFunctions -"
     local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
-    statusMessage timing --name "$prefix $fun" __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+    (
+      statusMessage timing --name "$prefix $fun" __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+    ) || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   shopt -s expand_aliases || :
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
@@ -263,7 +265,9 @@ __buildUsageCompileFunction() {
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
-  catchReturn "$handler" muzzle bashDocumentationExtract --generate "$fun" "$sourceFile" <"$tempComment" || returnClean $? "${clean[@]}" || return $?
+  (
+    catchReturn "$handler" muzzle bashDocumentationExtract --generate "$fun" "$sourceFile" <"$tempComment" || returnClean $? "${clean[@]}" || return $?
+  ) || return $?
 
   __profileLabel="bashDocumentationExtract"
   # IDENTICAL profileFunctionMarker 3
@@ -342,7 +346,9 @@ __buildUsageIsComplete() {
   [ "${#missing[@]}" -eq 0 ] || for fun in "${missing[@]}"; do
     index=$((index + 1))
     catchReturn "$handler" statusMessage decorate warning "Loading missing: $fun" || return $?
-    __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "Missing #$index/${#missing[@]}" || return $?
+    (
+      __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "Missing #$index/${#missing[@]}" || return $?
+    ) || return $?
   done
   catchReturn "$handler" statusMessage decorate info "No functions missing" || return $?
 }

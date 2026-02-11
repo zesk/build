@@ -104,7 +104,8 @@ __bashDocumentationExtractCheckCache() {
   local handler="$1" source="$2" definitionFile="$3"
   local sourceHash && sourceHash=$(catchReturn "$handler" shaPipe <"$source") || return $?
   if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
-    local savedSourceHash && savedSourceHash=$(
+    local savedSourceHash
+    savedSourceHash=$(
       local sourceHash sourceFile=""
       # shellcheck source=/dev/null
       catchEnvironment "$handler" source "$definitionFile" || return $?
@@ -144,7 +145,10 @@ __bashDocumentationExtractGenerateCache() {
     bashRecursionDebug --end || return $?
     catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" | catchEnvironment "$handler" tee "$uncompiled.finished" || returnClean $? "${clean[@]}" || $?
     if ! grep -q '^sourceFile=' "$uncompiled.finished"; then
-      throwEnvironment "$handler" "Final $definitionFile does not contain sourceFile=?" || returnClean $? "${clean[@]}" || $?
+      consoleLineFill
+      dumpPipe uncompiled < <(grep source <"$uncompiled") || return $?
+      dumpPipe compiled <"$uncompiled.finished" || return $?
+      throwEnvironment "$handler" "Final $definitionFile does not contain sourceFile=?" || returnClean $? "${clean[@]}" || return $?
     fi
     catchEnvironment "$handler" mv -f "$uncompiled.finished" "$definitionFile" || returnClean $? "${clean[@]}" || $?
     catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
