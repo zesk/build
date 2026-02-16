@@ -32,7 +32,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/
+                  - ./test-results/results.xml
+                  - ./test-results/results.tap
+                  - ./test-results/results.stats
                 services:
                   - docker
                 size: 2x
@@ -44,7 +46,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/
+                  - ./test-results/results.xml
+                  - ./test-results/results.tap
+                  - ./test-results/results.stats
                 services:
                   - docker
                 size: 4x
@@ -56,7 +60,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/
+                  - ./test-results/results.xml
+                  - ./test-results/results.tap
+                  - ./test-results/results.stats
                 services:
                   - docker
                 size: 1x
@@ -64,7 +70,6 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
-                  - mkdir ./test-results/
                   - bin/tools.sh buildProductionTest --test-index ./test/tests.index --env-file .build.env --tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
       - step:
           name: Production Deploy (1x)
@@ -97,7 +102,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/
+                  - ./test-results/results.xml
+                  - ./test-results/results.tap
+                  - ./test-results/results.stats
                 services:
                   - docker
                 size: 2x
@@ -121,7 +128,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/
+                  - ./test-results/results.xml
+                  - ./test-results/results.tap
+                  - ./test-results/results.stats
                 services:
                   - docker
                 size: 1x
@@ -129,7 +138,6 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
-                  - mkdir ./test-results/
                   - bin/tools.sh buildStagingTest --test-index ./test/tests.index --env-file .build.env --tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/0/"
       - step:
           name: Staging Deploy (1x)
