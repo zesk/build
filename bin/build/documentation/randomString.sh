@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="none"
 base="text.sh"
@@ -13,11 +13,10 @@ output="cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'""
 rawComment="Depends: sha1sum, /dev/random"$'\n'"Description: Outputs 40 random hexadecimal characters, lowercase."$'\n'"Example:     testPassword=\"\$(randomString)\""$'\n'"Output: cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'"stdout: \`String\`. A random hexadecimal string."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
+sourceHash="313b9bb00d69a2ae5d20033ba8bcb6de4d68d74e"
 stdout="\`String\`. A random hexadecimal string."$'\n'""
 summary="Outputs 40 random hexadecimal characters, lowercase."
 summaryComputed="true"
-testPassword=""
 usage="randomString"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mrandomString'$'\e''[0m'$'\n'''$'\n''Outputs 40 random hexadecimal characters, lowercase.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n'''$'\e''[[(code)]mString'$'\e''[[(reset)]m. A random hexadecimal string.'$'\n'''$'\n''Example:'$'\n''    testPassword="$(randomString)"'$'\n'''

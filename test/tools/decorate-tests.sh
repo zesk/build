@@ -6,6 +6,14 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testDecorateDashDashDisappearing() {
+  assertEquals "a b c -- d" "$(decorate each code a b c -- d | consoleToPlain)" || return $?
+  assertEquals "\"--\" \"a\" \"b\" \"c\" \"--\" \"d\" \"--\" \"eee\" \"--\"" "$(decorate each quote -- a b c -- d -- eee --)" || return $?
+  assertEquals "\"--\"" "$(decorate quote -- --)" || return $?
+  assertEquals "\"Hello\"" "$(decorate quote -- <<<"Hello")" || return $?
+  assertEquals "\"Hello\"" "$(decorate quote <<<"Hello")" || return $?
+}
+
 testConsoleTrimWidth() {
   local handler="returnMessage"
   local testLine

@@ -205,6 +205,8 @@ _escapeQuotes() {
 # Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
+# Argument: searchString - String. Thing to search for.
+# Argument: replaceString - String. Thing to replace search string with.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 replaceFirstPattern() {

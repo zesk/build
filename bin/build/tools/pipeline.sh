@@ -143,7 +143,7 @@ isUpToDate() {
       fi
       ;;
     esac
-    shift || throwArgument "shift $argument" || return $?
+    shift || throwArgument "$handler" "shift $argument" || return $?
   done
   [ -n "$keyDate" ] || throwArgument "$handler" "missing keyDate" || return $?
   [ -n "$upToDateDays" ] || upToDateDays=90

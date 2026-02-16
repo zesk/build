@@ -402,6 +402,7 @@ __bashListFunctions() {
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # Argument: variableName - string. Required. Get this variable value
 # Argument: --prefix - flag. Optional. Find variables with the prefix `variableName`
+# Argument: --i | --insensitive - Flag. Optional. Case-insensitive match.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Gets a list of the variable values from a bash function comment
@@ -420,6 +421,7 @@ bashFunctionCommentVariable() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --prefix) aa+=("$argument") ;;
+    -i | --insensitive) aa+=("$argument") ;;
     *)
       if [ -z "$source" ]; then
         source="$(validate "$handler" File "source" "${1-}")" || return $?
@@ -442,13 +444,14 @@ _bashFunctionCommentVariable() {
 # Gets a list of the variable values from a bash function comment
 # Argument: variableName - String. Required. Get this variable value.
 # stdin: Comment source (`# ` removed)
-# Argument: --prefix - flag. Optional. Find variables with the prefix `variableName`
+# Argument: --prefix - Flag. Optional. Find variables with the prefix `variableName`
+# Argument: --insensitive | -i - Flag. Optional. Match case insensitive.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 bashCommentVariable() {
   local handler="_${FUNCNAME[0]}"
 
-  local variableName="" prefixFlag=false
+  local variableName="" prefixFlag=false caseInsensitive=false
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -458,6 +461,7 @@ bashCommentVariable() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    -i | --insensitive) caseInsensitive=true ;;
     --prefix) prefixFlag=true ;;
     *) variableName="$(validate "$handler" String "variableName" "${1-}")" || return $? ;;
     esac
@@ -465,16 +469,19 @@ bashCommentVariable() {
   done
   [ -n "$variableName" ] || throwArgument "$handler" "variableName is required" || return $?
 
-  local matchLine grepSuffix="" trimSuffix=":"
+  local grepFlags=() && ! $caseInsensitive || grepFlags=(-i)
+  local offset=${#variableName} grepSuffix=""
   if $prefixFlag; then
     grepSuffix="[-_[:alnum:]]*"
-    trimSuffix=""
+  else
+    # Trim trailing :
+    offset=$((offset + 1))
   fi
-  while read -r matchLine; do
-    matchLine="${matchLine#*"$variableName$trimSuffix"}"
+  local matchLine && while read -r matchLine; do
+    matchLine="${matchLine:$offset}"
     matchLine=${matchLine# }
     printf "%s\n" "${matchLine}"
-  done < <(grepSafe -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | trimSpace)
+  done < <(grepSafe "${grepFlags[@]+"${grepFlags[@]}"}" -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | trimSpace)
 }
 _bashCommentVariable() {
   # __IDENTICAL__ usageDocument 1

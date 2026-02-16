@@ -254,7 +254,8 @@ deployRemoteFinish() {
       targetPackage="${1-}"
       ;;
     *)
-      throwArgument "unknown argument: $(decorate value "$argument")" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift || throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?

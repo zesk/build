@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="depends")
 rawComment="Returns whether the shell has the debugging flag set"$'\n'"Useful if you need to temporarily enable or disable it."$'\n'"Depends: -"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="ba51ddf8f11b84c72594f57830f2d1db335f9f42"
+sourceHash="7c2fb2e15e7ef5d41a8e14e60d45970b1d3dacb3"
 summary="Returns whether the shell has the debugging flag set"
 summaryComputed="true"
 usage="isBashDebug"

@@ -51,7 +51,7 @@ __checkFunctionInstallsAndUninstalls() {
 
   local uninstalledAlready=false
 
-  if ! __testFunctionWasTested "$installer" "$uninstaller"; then
+  if ! testSuiteFunctionTested "$installer" "$uninstaller"; then
     if "$checkFunction" "$thing"; then
       __checkFunctionUninstalls "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
       uninstalledAlready=true

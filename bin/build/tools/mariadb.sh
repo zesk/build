@@ -161,7 +161,7 @@ mariadbConnect() {
       printFlag=true
       ;;
     *)
-      urlValid "$argument" || throwArgument "dsn is not valid: ${#argument} chars" || return $?
+      urlValid "$argument" || throwArgument "$handler" "dsn is not valid: ${#argument} chars" || return $?
       dsn="$argument"
       shift
       break

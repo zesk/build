@@ -60,7 +60,8 @@ __awsSecurityGroupIPModify() {
       region=$(validate "$handler" string "$argument" "${1-}") || return $?
       ;;
     *)
-      throwArgument "unknown argument: $argument" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -105,7 +106,7 @@ __awsSecurityGroupIPModify() {
   #
   if [ "$mode" != "--add" ]; then
     tempErrorFile=$(fileTemporaryName "$handler") || return $?
-    catchReturn "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
+    catchReturn "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean $? "$tempErrorFile" || return $?
     foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
 

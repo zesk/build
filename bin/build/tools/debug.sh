@@ -178,6 +178,8 @@ _bashRecursionDebug() {
 # Requires: trap
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: --error - Flag. Add ERR trap.
 # Argument: --interrupt - Flag. Add INT trap.
 bashDebugInterruptFile() {
@@ -193,6 +195,8 @@ bashDebugInterruptFile() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --clear) clearFlag=true ;;
     --interrupt)
       inArray INT "${traps[@]+"${traps[@]}"}" || traps+=("INT")
@@ -215,7 +219,7 @@ bashDebugInterruptFile() {
   fi
   local currentTraps installed=()
   currentTraps=$(fileTemporaryName "$handler") || return $?
-  trap >"$currentTraps" || returnClean "$?" "$currentTraps" || throwEnvironment "trap listing failed" || return $?
+  trap >"$currentTraps" || returnClean $? "$currentTraps" || throwEnvironment "trap listing failed" || return $?
   for trap in "${traps[@]}"; do
     if grep "$name" "$currentTraps" | grep -q " SIG${trap}"; then
       installed+=("$trap")

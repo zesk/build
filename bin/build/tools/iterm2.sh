@@ -805,7 +805,7 @@ iTerm2Notify() {
     shift
   done
 
-  [ -n "$messageText" ] || throwArgument "handler" "Requires a notification message" || return $?
+  [ -n "$messageText" ] || throwArgument "$handler" "Requires a notification message" || return $?
 
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then

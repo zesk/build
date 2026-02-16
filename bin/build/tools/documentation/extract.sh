@@ -146,8 +146,8 @@ __bashDocumentationExtractGenerateCache() {
     catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" | catchEnvironment "$handler" tee "$uncompiled.finished" || returnClean $? "${clean[@]}" || $?
     if ! grep -q '^sourceFile=' "$uncompiled.finished"; then
       consoleLineFill
-      dumpPipe uncompiled < <(grep source <"$uncompiled") || return $?
-      dumpPipe compiled <"$uncompiled.finished" || return $?
+      dumpPipe uncompiled < <(grep source <"$uncompiled") 1>&2 || return $?
+      dumpPipe compiled <"$uncompiled.finished" 1>&2 || return $?
       throwEnvironment "$handler" "Final $definitionFile does not contain sourceFile=?" || returnClean $? "${clean[@]}" || return $?
     fi
     catchEnvironment "$handler" mv -f "$uncompiled.finished" "$definitionFile" || returnClean $? "${clean[@]}" || $?

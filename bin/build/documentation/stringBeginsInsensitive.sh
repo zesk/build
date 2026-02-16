@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="haystack - String. Required. String to search. (case-insensitive)"$'\n'"needle ... - String. Optional. One or more strings to find as the \"start\" of \`haystack\` (case-insensitive)"$'\n'""
 base="text.sh"
 description="Does needle exist as a substring of haystack? (case-insensitive)"$'\n'""
 file="bin/build/tools/text.sh"
+foundNames=([0]="argument" [1]="return_code" [2]="summary")
 rawComment="Argument: haystack - String. Required. String to search. (case-insensitive)"$'\n'"Argument: needle ... - String. Optional. One or more strings to find as the \"start\" of \`haystack\` (case-insensitive)"$'\n'"Return Code: 0 - IFF ANY needle matches as a substring of haystack (case-insensitive)"$'\n'"Return Code: 1 - No needles found in haystack (case-insensitive)"$'\n'"Summary: Find whether a substring exists as teh beginning of one or more strings"$'\n'"Does needle exist as a substring of haystack? (case-insensitive)"$'\n'""$'\n'""
 return_code="0 - IFF ANY needle matches as a substring of haystack (case-insensitive)"$'\n'"1 - No needles found in haystack (case-insensitive)"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
+sourceHash="313b9bb00d69a2ae5d20033ba8bcb6de4d68d74e"
 summary="Find whether a substring exists as teh beginning of one or more strings"$'\n'""
 usage="stringBeginsInsensitive haystack [ needle ... ]"
 # shellcheck disable=SC2016

@@ -40,7 +40,12 @@ testIsBashBuiltin() {
 
 # Test-Housekeeper-Overhead: true
 testBashCommentFilter() {
+  local handler="returnMessage"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
   assertExitCode --stdout-no-match "SSH ""tests" --stdout-match "${FUNCNAME[0]}" 0 bashCommentFilter <"${BASH_SOURCE[0]}" || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 }
 
 # Requires: A B C
@@ -51,9 +56,12 @@ testBashCommentFilter() {
 testBashGetRequires() {
   local handler="returnMessage"
   local temp
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   temp=$(fileTemporaryName "$handler") || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
   catchReturn "$handler" bashGetRequires "${BASH_SOURCE[0]}" >"$temp" || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
   assertFileContains "$temp" A B C D E F G a b c d || return $?
   catchReturn "$handler" rm -f "$temp" || return $?
 }

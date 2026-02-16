@@ -31,6 +31,7 @@ testWrapperShellScripts() {
   catchEnvironment "$handler" muzzle popd || return $?
 }
 
+# Tag: testSuite
 testTestSuite() {
   local home
 

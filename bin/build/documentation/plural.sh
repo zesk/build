@@ -1,20 +1,18 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="number - Number. Required. An integer or floating point number"$'\n'"singular - String. Required. The singular form of a noun"$'\n'"plural - String. Optional. The plural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'""
 base="text.sh"
-count=""
 description="Outputs the \`singular\` value to standard out when the value of \`number\` is one."$'\n'"Otherwise, outputs the \`plural\` value to standard out."$'\n'"Example:"$'\n'""
 example="    count=\$(fileLineCount \"\$foxSightings\") || return \$?"$'\n'"    printf \"We saw %d %s.\\n\" \"\$count\" \"\$(plural \"\$count\" fox foxes)\""$'\n'"    n=\$((\$(date +%s)) - start))"$'\n'"    printf \"That took %d %s\" \"\$n\" \"\$(plural \"\$n\" second seconds)\""$'\n'""
 file="bin/build/tools/text.sh"
 foundNames=([0]="short_description" [1]="argument" [2]="return_code" [3]="example" [4]="stdout")
-n=""
 rawComment="Outputs the \`singular\` value to standard out when the value of \`number\` is one."$'\n'"Otherwise, outputs the \`plural\` value to standard out."$'\n'"Short description: Output numeric messages which are grammatically accurate"$'\n'"Argument: number - Number. Required. An integer or floating point number"$'\n'"Argument: singular - String. Required. The singular form of a noun"$'\n'"Argument: plural - String. Optional. The plural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'"Return Code: 1 - If count is non-numeric"$'\n'"Return Code: 0 - If count is numeric"$'\n'"Example:     count=\$(fileLineCount \"\$foxSightings\") || return \$?"$'\n'"Example:     printf \"We saw %d %s.\\n\" \"\$count\" \"\$(plural \"\$count\" fox foxes)\""$'\n'"Example:"$'\n'"Example:     n=\$((\$(date +%s)) - start))"$'\n'"Example:     printf \"That took %d %s\" \"\$n\" \"\$(plural \"\$n\" second seconds)\""$'\n'"stdout: \`String\`. The plural form for non-1 values. e.g. \`\$(plural 2 potato potatoes)\` = \`potatoes\`"$'\n'""$'\n'""
 return_code="1 - If count is non-numeric"$'\n'"0 - If count is numeric"$'\n'""
 short_description="Output numeric messages which are grammatically accurate"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
+sourceHash="313b9bb00d69a2ae5d20033ba8bcb6de4d68d74e"
 stdout="\`String\`. The plural form for non-1 values. e.g. \`\$(plural 2 potato potatoes)\` = \`potatoes\`"$'\n'""
 summary="Outputs the \`singular\` value to standard out when the value"
 summaryComputed="true"

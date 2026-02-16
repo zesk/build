@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-11
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="summary" [1]="return_code")
 rawComment="Summary: Leak return code"$'\n'"Return code is \`leak\`"$'\n'"Return Code: 108"$'\n'""$'\n'""
 return_code="108"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="2d8f60c87596b2c2e71d89fe7bd5404ed0ef5b98"
+sourceHash="39b60c110010ea2ef0086139009c80b01d6f8f91"
 summary="Leak return code"$'\n'""
 usage="returnLeak"
 # shellcheck disable=SC2016

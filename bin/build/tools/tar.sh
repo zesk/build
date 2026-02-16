@@ -30,7 +30,7 @@ tarExtractPattern() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local pattern="$argument"
-      shift || throwArgument "No pattern supplied" || return $?
+      shift || throwArgument "$handler" "No pattern supplied" || return $?
       # -h means follow symlinks
       if tar --version | grep -q GNU; then
         # GNU
@@ -59,8 +59,9 @@ _tarExtractPattern() {
 #
 # `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
 # Short description: Platform agnostic tar create which keeps user and group as user 0
-# Argument: target - The tar.gz file to create
-# Argument: files - A list of files to include in the tar file
+# Argument: target - FileDirectory. Required.The tar.gz file to create.
+# Argument: files - File. Optional. A list of files to include in the tar file.
+# stdin: A list of files to include in the tar file
 #
 tarCreate() {
   local handler="_${FUNCNAME[0]}"
@@ -80,7 +81,7 @@ tarCreate() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       target="$argument"
-      shift || throwArgument "No files supplied" || return $?
+      shift || throwArgument "$handler" "No files supplied" || return $?
       # -h means follow symlinks
       if tar --version | grep -q GNU; then
         # GNU

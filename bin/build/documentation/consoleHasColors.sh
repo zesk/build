@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="core.sh"
@@ -12,7 +12,7 @@ rawComment="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TE
 requires="isPositiveInteger tput"$'\n'""
 return_code="0 - Console or output supports colors"$'\n'"1 - Colors are likely not supported by console"$'\n'""
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="521cf0103c1cb9bdb4c6e00fb4003cbbda90ca46"
+sourceHash="116229de6c1828f1d1a6e896314c00f489dcf4d1"
 summary="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TERM\`"
 summaryComputed="true"
 usage="consoleHasColors [ --help ]"

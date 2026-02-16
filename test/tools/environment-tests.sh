@@ -38,7 +38,7 @@ testEnvironmentParseVariables() {
   local temp && temp=$(fileTemporaryName "$handler") || return $?
 
   local clean=("$temp")
-  printf "%s\n" "Wonder=RedNow" "Ease=Live" "Fully=Argument" | catchReturn "$handler" environmentParseVariables >"$temp" || returnClean "${clean[@]}" || return $?
+  printf "%s\n" "Wonder=RedNow" "Ease=Live" "Fully=Argument" | catchReturn "$handler" environmentParseVariables >"$temp" || returnClean $? "${clean[@]}" || return $?
 
   assertFileContains "$temp" "Wonder" "Ease" "Fully" || return $?
 

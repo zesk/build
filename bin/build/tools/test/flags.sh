@@ -68,7 +68,7 @@ __testLoadFlags() {
     [ "${#__flags[@]}" -eq 0 ] || for flag in "${__flags[@]}"; do
       [ -z "$flag" ] || values+=("$(trimSpace "${variableLine%%:*}"):$flag")
     done
-  done < <(catchReturn "$handler" bashFunctionCommentVariable --prefix "$source" "$functionName" "Test-") || return $?
+  done < <(catchReturn "$handler" bashFunctionCommentVariable --prefix --insensitive "$source" "$functionName" "Test-") || return $?
   [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
 }
 

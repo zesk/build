@@ -3,7 +3,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 290
+# IDENTICAL decorate 288
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -226,11 +226,10 @@ __decorateExtensionEach() {
       done
     fi
   else
-    [ "${1-}" != "--" ] || shift
     while [ $# -gt 0 ]; do
       ! $addIndex || prefix="$index:"
       item="$1"
-      formatted+=("$prefix$(decorate "${codes[@]}" "$item")")
+      formatted+=("$prefix$(decorate "${codes[@]}" -- "$item")")
       shift
       index=$((index + 1))
     done
@@ -280,7 +279,6 @@ __decorateExtensionQuote() {
       __decorateExtensionQuoteProcessLine "$line" || return $?
     done
   else
-    [ "$1" != "--" ] || shift
     __decorateExtensionQuoteProcessLine "$@" || return $?
   fi
 }

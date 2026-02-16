@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input."$'\n'""
 base="text.sh"
@@ -13,7 +13,7 @@ rawComment="Trim spaces and only spaces from arguments or a pipe"$'\n'"Argument:
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="1423839f48f30fd3607aa05d3ee0b5914066e4ba"
+sourceHash="313b9bb00d69a2ae5d20033ba8bcb6de4d68d74e"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs trimmed lines"$'\n'""
 summary="Trim whitespace of a bash argument"$'\n'""

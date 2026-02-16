@@ -14,6 +14,7 @@ testPythonInstallation() {
 }
 
 # Tag: package-install
+# Test-After: testPythonInstallation
 testPythonStuff() {
   local handler="returnMessage"
 
@@ -59,6 +60,7 @@ testPythonVirtual() {
 }
 
 # Tag: package-install
+# Test-After: testPythonInstallation
 testPythonUninstallation() {
   if executableExists python; then
     python --version

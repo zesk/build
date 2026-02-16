@@ -51,7 +51,7 @@ environmentCompile() {
     environmentFiles+=("$tempEnv.source")
   fi
   if $__parseFlag; then
-    while read -r variable; do variables+=("$variable"); done < <(cat "${environmentFiles[@]}" | environmentParseVariables)
+    while read -r variable; do variables+=("$variable") && aa+=("$variable"); done < <(cat "${environmentFiles[@]}" | environmentParseVariables)
     if $__debugFlag; then printf "%s\n" "${variables[@]}" | dumpPipe "PARSED variables" 1>&2; fi
   fi
   if $__debugFlag; then cat "${environmentFiles[@]}" | dumpPipe SOURCES 1>&2; fi

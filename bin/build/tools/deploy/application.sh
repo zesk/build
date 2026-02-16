@@ -32,38 +32,14 @@ __deployApplication() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --message)
-      shift
-      [ -n "${1-}" ] || throwArgument "blank $argument argument" || return $?
-      message="$1"
-      ;;
-    --first)
-      firstFlag=true
-      ;;
-    --revert)
-      revertFlag=true
-      ;;
-    --home)
-      shift
-      deployHome=$(validate "$handler" Directory deployHome "${1-}") || return $?
-      ;;
-    --id)
-      shift
-      [ -n "${1-}" ] || throwArgument "blank $argument argument" || return $?
-      applicationId="$1"
-      ;;
-    --application)
-      shift
-      applicationPath=$(validate "$handler" FileDirectory applicationPath "${1-}") || return $?
-      ;;
-    --target)
-      shift
-      [ -n "${1-}" ] || throwArgument "blank $argument argument" || return $?
-      targetPackage="$1"
-      ;;
+    --verbose) verboseFlag=true ;;
+    --first) firstFlag=true ;;
+    --revert) revertFlag=true ;;
+    --message) shift && message=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --home) shift && deployHome=$(validate "$handler" Directory deployHome "${1-}") || return $? ;;
+    --id) shift && applicationId=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --application) shift && applicationPath=$(validate "$handler" FileDirectory "$argument" "${1-}") || return $? ;;
+    --target) shift && targetPackage=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

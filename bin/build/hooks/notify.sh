@@ -17,7 +17,7 @@ __hookNotifySoundName() {
     local home original
     home=$(catchReturn "$handler" buildHome) || return $?
     original="$home/etc/$soundName.mp3"
-    [ -f "$original" ] || throwArgument "handler" "No sound installed with name $(decorate code "$soundName")" || return $?
+    [ -f "$original" ] || throwArgument "$handler" "No sound installed with name $(decorate code "$soundName")" || return $?
     catchEnvironment "$handler" darwinSoundInstall --create "$home/etc/$soundName.mp3" || return $?
   fi
   printf "%s\n" "$soundName"

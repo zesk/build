@@ -63,7 +63,7 @@ __testLoader() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --clean - Flag. Optional. Delete test artifact files and exit. (No tests run)
-# Argument: --list - Flag. Optional. List all test names (which match if applicable).
+# Argument: -l | --list - Flag. Optional. List all test names (which match if applicable).
 # Argument: --env-file environmentFile - EnvironmentFile. Optional. Load one ore more environment files prior to running tests
 # Argument: --continue - Flag. Optional. Continue from last successful test.
 # Argument: -c - Flag. Optional. Continue from last successful test.
@@ -79,15 +79,12 @@ __testLoader() {
 # Argument: --cd-away - Flag. Optional. Change directories to a temporary directory before each test.
 # Argument: --tap tapFile - FileDirectory. Optional. Output test results in TAP format to `tapFile`.
 # Argument: --junit junitFile - FileDirectory. Optional. Output test results in junit format to `junitFile`. If a directory is specified the output is to `junit.xml`.
-# Argument: --show - Flag. Optional. List all test suites.
-# Argument: -l - Flag. Optional. List all test suites.
-# Argument: --one testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
-# Argument: --suite testSuite - String. Optional. Add one test suite to run.
-# Argument: -1 testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
+# Argument: --show | --suites - Flag. Optional. List all test suites.
+# Argument: -1 | --suite | --one testSuite - String. Optional. Add one test suite to run.
 # Argument: --tag tagName - String. Optional. Include tests (only) tagged with this name.
-# Argument: --show-tags - Flag. Optional. Of the matched tests, display the tags that they have, if any. Unique list.
+# Argument: --list-tags | --tags | --show-tags - Flag. Optional. Of the matched tests, display the tags that they have, if any. Unique list.
 # Argument: --skip-tag tagName - String. Optional. Skip tests tagged with this name.
-# Argument: testFunctionPattern - String. Optional. Test function (or substring of function name) to run.
+# Argument: testFunctionPattern ... - String. Optional. Test function (or substring of function name) to run.
 # Hook: tests-start
 # Hook: test-start
 # Hook: test-pass
@@ -485,6 +482,31 @@ assertNotContains() {
   __testLoader "_${FUNCNAME[0]}" _assertContainsHelper --success false "$@" || return $?
 }
 _assertNotContains() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Argument: --cache cacheDirectory - Directory. Optional. Cache directory to use for ordering work.
+# Argument: finderFile - File. Required. File to reorder.
+# stdout: Reordered file.
+testSuiteOrdering() {
+  __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_testSuiteOrdering() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --verbose - Flag. Optional. Show list of true results when all arguments pass.
+# Argument: functionName ... - String. Function to look up to see if it has been tested. One or more.
+# Return Code: 0 - This function was tested by the test suite at least once.
+# Return Code: 1 - Not tested
+testSuiteFunctionTested() {
+  __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_testSuiteFunctionTested() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

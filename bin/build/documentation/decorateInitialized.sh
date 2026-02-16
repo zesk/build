@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="core.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument")
 rawComment="Is the decorate color system initialized yet?"$'\n'"Useful to set our global color environment at the top level of a script if it hasn't been initialized already."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="521cf0103c1cb9bdb4c6e00fb4003cbbda90ca46"
+sourceHash="116229de6c1828f1d1a6e896314c00f489dcf4d1"
 summary="Is the decorate color system initialized yet?"
 summaryComputed="true"
 usage="decorateInitialized [ --help ]"

@@ -6,7 +6,8 @@
 # Test-Plumber: false
 
 # Tag: package-install
-# Tag: package-install-last
+# Test-After: testPythonInstallation
+# Test-Before: testPythonUninstallation
 # Leaks PATH PS1 VIRTUAL_ENV VIRTUAL_ENV_PROMPT _OLD_VIRTUAL_PATH _OLD_VIRTUAL_PS1
 testDocumentationMkdocs() {
   local handler="returnMessage"

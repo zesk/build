@@ -53,11 +53,11 @@ _arguments() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    type="$(_commentArgumentType "$spec" "$stateFile" "$__index" "$argument")" || returnClean "$?" "${clean[@]}" || return $?
+    type="$(_commentArgumentType "$spec" "$stateFile" "$__index" "$argument")" || returnClean $? "${clean[@]}" || return $?
     case "$type" in
     Flag)
-      argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean "$?" "${clean[@]}" || return $?
-      catchReturn "$handler" environmentValueWrite "$argumentName" "true" >>"$stateFile" || returnClean "$?" "${clean[@]}" || return $?
+      argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWrite "$argumentName" "true" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
       if ! inArray "$argumentName" "${flags[@]+"${flags[@]}"}"; then
         flags+=("$argumentName")
       fi
@@ -69,24 +69,24 @@ _arguments() {
     *)
       if _commentArgumentTypeValid "${type#!}"; then
         type="${type#!}"
-        argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean "$?" "${clean[@]}" || return $?
+        argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean $? "${clean[@]}" || return $?
       elif _commentArgumentTypeValid "$type"; then
-        argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean "$?" "${clean[@]}" || return $?
+        argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean $? "${clean[@]}" || return $?
         shift
         argument="${1-}"
       else
         find "$spec" -type f 1>&2
         dumpPipe stateFile <"$stateFile" 1>&2
-        throwArgument "$handler" "unhandled argument type \"$type\" #$__index: $argument" || returnClean "$?" "${clean[@]}" || return $?
+        throwArgument "$handler" "unhandled argument type \"$type\" #$__index: $argument" || returnClean $? "${clean[@]}" || return $?
       fi
       checkFunction="handler""Argument${type}"
-      value="$("$checkFunction" "$handler" "$argumentName" "$argument")" || returnClean "$?" || return $?
-      catchReturn "$handler" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || returnClean "$?" || return $?
+      value="$("$checkFunction" "$handler" "$argumentName" "$argument")" || returnClean $? || return $?
+      catchReturn "$handler" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || returnClean $? || return $?
       ;;
     esac
-    shift || throwArgument "$handler" "missing argument #$__index: $argument" || returnClean "$?" "${clean[@]}" || return $?
+    shift || throwArgument "$handler" "missing argument #$__index: $argument" || returnClean $? "${clean[@]}" || return $?
   done
-  stateFile=$(_commentArgumentsRemainder "$handler" "$spec" "$stateFile" "$@") || returnClean "$?" "${clean[@]}" || return $?
+  stateFile=$(_commentArgumentsRemainder "$handler" "$spec" "$stateFile" "$@") || returnClean $? "${clean[@]}" || return $?
 
   if inArray "help" "${flags[@]+"${flags[@]}"}"; then
     # Have to do this as this is run in subprocess - what to do?

@@ -16,7 +16,7 @@ _identicalMapAttributesFile() {
   shift
   temp="$file.$$"
   _identicalMapAttributesFilter "$handler" "${1-}" <"$file" >"$temp" || returnClean $? "$temp" || return $?
-  catchEnvironment "$handler" mv -f "$temp" "$file" || returnClean "$?" "$temp" || return $?
+  catchEnvironment "$handler" mv -f "$temp" "$file" || returnClean $? "$temp" || return $?
 }
 
 # Argument: usageFunction - Function. Required. Error handler.

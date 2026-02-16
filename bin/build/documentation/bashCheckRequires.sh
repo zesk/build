@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--ignore prefix. String. Optional. Ignore exact function names."$'\n'"--ignore-prefix prefix - String. Optional. Ignore function names which match the prefix and do not check them."$'\n'"--report - Flag. Optional. Output a report of various functions and handler after processing is complete."$'\n'"--require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass"$'\n'"--unused - Flag. Optional. Check for unused functions and report on them."$'\n'""
 base="bash.sh"
@@ -11,7 +11,7 @@ rawComment="Checks a bash script to ensure all requirements are met, outputs a l
 requires="token1 token2"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="dbfb96665db1f4eb43c1d8d8c0cd2b8680385220"
+sourceHash="e66246980f40066fe4c09e2727ffc628f6b42f38"
 summary="Checks a bash script to ensure all requirements are met,"
 summaryComputed="true"
 usage="bashCheckRequires [ --help ] [ --ignore prefix. String. Optional. Ignore exact function names. ] [ --ignore-prefix prefix ] [ --report ] [ --require ] [ --unused ]"

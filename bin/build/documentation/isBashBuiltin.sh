@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="builtin - String. Required. String to check if it's a bash builtin."$'\n'""
 base="bash.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Argument: builtin - String. Required. String to check if it's a bash builtin."$'\n'"Return Code: 0 - Yes, this string is a bash builtin command."$'\n'"Return Code: 1 - No, this is not a bash builtin command"$'\n'""$'\n'""
 return_code="0 - Yes, this string is a bash builtin command."$'\n'"1 - No, this is not a bash builtin command"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="dbfb96665db1f4eb43c1d8d8c0cd2b8680385220"
+sourceHash="e66246980f40066fe4c09e2727ffc628f6b42f38"
 summary="undocumented"
 usage="isBashBuiltin builtin"
 # shellcheck disable=SC2016

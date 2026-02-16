@@ -89,8 +89,8 @@ githubURLParse() {
       path="${path%/}"
       local owner repository _
       IFS='/' read -d '' -r owner repository _ <<<"$path" || :
-      [ -n "$owner" ] || throwArgument "handler" "Blank owner" || return $?
-      [ -n "$repository" ] || throwArgument "handler" "Blank repository" || return $?
+      [ -n "$owner" ] || throwArgument "$handler" "Blank owner" || return $?
+      [ -n "$repository" ] || throwArgument "$handler" "Blank repository" || return $?
       printf "%s/%s\n" "$owner" "$repository"
       ;;
     esac

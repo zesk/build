@@ -67,6 +67,7 @@ ___printResultPair() {
 }
 
 __assertTimingSetup() {
+  local handler="$1" && shift
   export __BUILD_SAVED_CACHE_DIRECTORY
   if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
     __BUILD_SAVED_CACHE_DIRECTORY="$(catchReturn "$handler" buildCacheDirectory "${FUNCNAME[0]}")" || return $?
@@ -85,7 +86,7 @@ __assertStatistics() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --reset)
-      export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
+      export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup "$handler" || return $?
       muzzle incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" 0 assert-failure assert-success
       return 0
       ;;
@@ -104,7 +105,7 @@ __assertStatistics() {
     shift
   done
 
-  export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup || return $?
+  export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup "$handler" || return $?
   incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" "?" assert-failure assert-success | tr $'\n' ' ' | trimRightSpace | printfOutputSuffix "\n"
 }
 
@@ -166,27 +167,21 @@ ___assertedFunctions() {
 # Decorations and statistics collection
 #
 _assertFailure() {
-  local function="${1-None}" failIcon="❌"
+  local handler="$1" && shift
+  local function="${1-None}" failIcon="❌" timing=""
   export BUILD_TEST_FLAGS
-  #  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
-  #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
   export __BUILD_SAVED_CACHE_DIRECTORY
-  ! __assertTimingSetup || timing=" [$(__assertTimingCalculate)]"
-
-  #  fi
-  shift && statusMessage --last printf -- "%s [#%d] %s %s%s" "$failIcon" "$(incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure)" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
+  ! __assertTimingSetup "$handler" || timing=" [$(__assertTimingCalculate)]"
+  shift && catchReturn "$handler" statusMessage --last printf -- "%s [#%d] %s %s%s" "$failIcon" "$(incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-failure)" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
   returnAssert
 }
 
 _assertSuccess() {
-  local function="${1-None}" successIcon="✅"
-  #  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
-  #  if [ "${flags#*;"$flag";}" != "$flags" ]; then
+  local handler="$1" && shift
+  local function="${1-None}" successIcon="✅" timing=""
   export __BUILD_SAVED_CACHE_DIRECTORY
-  ! __assertTimingSetup || timing=" [$(__assertTimingCalculate)]"
-
-  #  fi
-  shift && statusMessage printf -- "%s [#%d] %s %s%s" "$successIcon" "$(incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success)" "$(decorate success "$function")" "$*" "$timing" || return $?
+  ! __assertTimingSetup "$handler" || timing=" [$(__assertTimingCalculate)]"
+  shift && catchReturn "$handler" statusMessage printf -- "%s [#%d] %s %s%s" "$successIcon" "$(incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" assert-success)" "$(decorate success "$function")" "$*" "$timing" || return $?
 }
 
 # INTERNAL: To optimize this (or see where it is slow), use
@@ -379,7 +374,7 @@ _assertConditionHelper() {
   local functionName="${handler#_}"
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
     message="$(printf -- "%s - %s\n%s\n" "$message" "$(decorate error "produced stderr")" "$(dumpPipe --tail stderr <"$errorFile")")"
-    _assertFailure "$functionName" "$displayName $message" || return $?
+    _assertFailure "$handler" "$functionName" "$displayName $message" || return $?
   fi
   if $errorsOk && [ ! -s "$errorFile" ]; then
     statusMessage --last printf "%s – %s" "$message" "$(decorate warning "--stderr-ok used but is NOT necessary")"
@@ -406,10 +401,10 @@ _assertConditionHelper() {
   # ********************************************************************************************************************
 
   if $testPassed; then
-    _assertSuccess "$functionName" "$displayName $message" || exitCode=$?
+    _assertSuccess "$handler" "$functionName" "$displayName $message" || exitCode=$?
     exitCode=0
   else
-    _assertFailure "$functionName" "$displayName $message" || exitCode=$?
+    _assertFailure  "$handler" "$functionName" "$displayName $message" || exitCode=$?
     [ "$exitCode" != "0" ] || exitCode=$(returnCode assert)
   fi
   __profileLabel="assert-status"
@@ -549,11 +544,11 @@ __assertFileContainsHelper() {
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
-    _assertFailure "$functionName" "$message" || return $?
+    _assertFailure "$handler" "$functionName" "$message" || return $?
     returnAssert
   fi
   __profileLabel="$__profileLabel success"
-  _assertSuccess "$functionName" "$linePrefix$displayName $verb $(plural "${#successes[@]}" string): \"$(decorate each code "${successes[@]}")\"" || return $?
+  _assertSuccess "$handler"  "$functionName" "$linePrefix$displayName $verb $(plural "${#successes[@]}" string): \"$(decorate each code "${successes[@]}")\"" || return $?
 }
 
 # Generic formatter

@@ -226,7 +226,7 @@ __buildApplicationConfigureEnvironmentFiles() {
       if [ -z "$value" ]; then
         local type
         local envFileSource && envFileSource="$(catchReturn "$handler" buildEnvironmentFiles --application "$home" "$e" | tail -n 1)" || return $?
-        type=$(catchReturn "$handler" bashCommentVariable Type <"$envFileSource") || return $?
+        type=$(catchReturn "$handler" bashCommentVariable --insensitive Type <"$envFileSource") || return $?
         if [ -z "$type" ]; then
           decorate warning "Unable to retrieve type from file $(decorate file "$envFileSource")"
           type="String"

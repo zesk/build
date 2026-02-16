@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-02-14
 # shellcheck disable=SC2034
 argument="-r | --reverse - Reverse the sort order (optional)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="pipeline.sh"
@@ -12,7 +12,7 @@ rawComment="Summary: Sort versions in the format v0.0.0"$'\n'"Sorts semantic ver
 requires="throwArgument sort usageDocument decorate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/pipeline.sh"
-sourceHash="236d41c061fbee87ffcd2c61127468ab3331c832"
+sourceHash="5d8d34bbbb45fe7d70e71ab4557965e0f8a5e959"
 summary="Sort versions in the format v0.0.0"$'\n'""
 usage="versionSort [ -r | --reverse ] [ --help ]"
 # shellcheck disable=SC2016

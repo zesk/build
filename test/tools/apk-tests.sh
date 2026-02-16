@@ -19,7 +19,7 @@ testIsAlpine() {
 testIsApkInstalled() {
   mockEnvironmentStart BUILD_DEBUG
 
-  apkIsInstalled --help || return $?
+  muzzle apkIsInstalled --help || return $?
   assertExitCode 0 apkIsInstalled --help || return $?
   if isAlpine; then
     assertExitCode 0 apkIsInstalled || return $?

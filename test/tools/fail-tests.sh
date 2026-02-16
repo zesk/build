@@ -18,11 +18,13 @@ __leakyThing() {
 
 # Test-Plumber: true
 # Test-Fail: true
+# Tag: testSuite
 testHasPlumberLeaks() {
   __leakyThing || return $?
 }
 
 # Test-Housekeeper: true
+# Tag: testSuite
 testHasHousekeeperLeaks() {
   local handler="returnMessage"
   local dogma
@@ -31,17 +33,20 @@ testHasHousekeeperLeaks() {
 }
 
 # Test-Build-Home: true
+# Tag: testSuite
 testBuildHomeFlag() {
   assertEquals "$(pwd)" "$(buildHome)" || return $?
 }
 
 # Test-Build-Home: false
+# Tag: testSuite
 testBuildHomeFlagNot() {
   assertNotEquals "$(pwd)" "$(buildHome)" || return $?
 }
 
 # Test-Housekeeper: false
 # Test-Plumber: false
+# Tag: testSuite
 testHasLeaks() {
   local handler="returnMessage"
   dogma=$(fileTemporaryName "$handler") || return $?

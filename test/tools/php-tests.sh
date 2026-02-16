@@ -35,7 +35,7 @@ testPHPComposerInstallation() {
 
   oldDir="${BITBUCKET_CLONE_DIR-NONE}"
 
-  if __testFunctionWasTested --verbose phpComposer; then
+  if testSuiteFunctionTested --verbose phpComposer; then
     return 0
   fi
   # requires docker
@@ -62,7 +62,7 @@ testPHPBuild() {
   local handler="returnMessage"
   local here testPath manifest appName home
 
-  if __testFunctionWasTested --verbose phpBuild; then
+  if testSuiteFunctionTested --verbose phpBuild; then
     return 0
   fi
 

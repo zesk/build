@@ -41,3 +41,14 @@ buildTestSuite() {
 _buildTestSuite() {
   name="$(buildEnvironmentGet APPLICATION_NAME)" fn="${FUNCNAME[0]#_}" _testSuite "$@"
 }
+
+buildTestSuiteIndex() {
+  local handler="_${FUNCNAME[0]}"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  catchEnvironment "$handler" "$home/bin/test.sh" --index-file "$home/test/tests.index" --quit || return $?
+}
+_buildTestSuiteIndex() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
