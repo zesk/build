@@ -47,7 +47,7 @@ buildTestSuiteIndex() {
   local handler="_${FUNCNAME[0]}"
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  catchEnvironment "$handler" "$home/bin/test.sh" --make-index || return $?
+  catchEnvironment "$handler" buildTestSuite --make-index || return $?
 }
 _buildTestSuiteIndex() {
   # __IDENTICAL__ usageDocument 1
