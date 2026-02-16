@@ -33,7 +33,7 @@ buildPreRelease() {
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 
   statusMessage decorate info "Test index build"
-  "$home/bin/test.sh" --index-file "$home/test/tests.index" --quit || exitCode=$?
+  buildTestSuiteIndex || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 

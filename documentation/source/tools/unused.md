@@ -7,6 +7,12 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{hasHook}
+
+{isSubstring}
+
+{isSubstringInsensitive}
+
 {darkLight}
 
 {filesOpenStatus}

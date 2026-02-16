@@ -38,6 +38,8 @@
 
 {buildTestSuite}
 
+{buildTestSuiteIndex}
+
 {buildQuickTest}
 
 {buildStagingTest}

@@ -501,11 +501,14 @@ _testSuiteOrdering() {
 }
 
 # DOC TEMPLATE: --help 1
+# Summary: Was a function tested already?
+# `testSuite` and assertion functions track which functions take a function value (for example, `assertExitCode`) and track functions which are run, and stores them in the testing cache directory which accumulate after each test run unless the cache is cleared.
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --verbose - Flag. Optional. Show list of true results when all arguments pass.
 # Argument: functionName ... - String. Function to look up to see if it has been tested. One or more.
-# Return Code: 0 - This function was tested by the test suite at least once.
-# Return Code: 1 - Not tested
+# Return Code: 0 - All functions were tested by the test suite at least once.
+# Return Code: 1 - At least one function was not tested by the test suite at least once.
+# Important: If you test your function's `--help` function then you can ignore it using
 testSuiteFunctionTested() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

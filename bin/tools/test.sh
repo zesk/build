@@ -42,6 +42,7 @@ _buildTestSuite() {
   name="$(buildEnvironmentGet APPLICATION_NAME)" fn="${FUNCNAME[0]#_}" _testSuite "$@"
 }
 
+# Generate `./test/tests.index` for Zesk Build
 buildTestSuiteIndex() {
   local handler="_${FUNCNAME[0]}"
   local home && home=$(catchReturn "$handler" buildHome) || return $?

@@ -10,6 +10,10 @@
 
 {testSuite}
 
+{testSuiteOrdering}
+
+{testSuiteFunctionTested}
+
 {assertStatistics}
 
 ## Code quality tools
