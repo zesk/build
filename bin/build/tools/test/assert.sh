@@ -404,7 +404,7 @@ _assertConditionHelper() {
     _assertSuccess "$handler" "$functionName" "$displayName $message" || exitCode=$?
     exitCode=0
   else
-    _assertFailure  "$handler" "$functionName" "$displayName $message" || exitCode=$?
+    _assertFailure "$handler" "$functionName" "$displayName $message" || exitCode=$?
     [ "$exitCode" != "0" ] || exitCode=$(returnCode assert)
   fi
   __profileLabel="assert-status"
@@ -548,7 +548,7 @@ __assertFileContainsHelper() {
     returnAssert
   fi
   __profileLabel="$__profileLabel success"
-  _assertSuccess "$handler"  "$functionName" "$linePrefix$displayName $verb $(plural "${#successes[@]}" string): \"$(decorate each code "${successes[@]}")\"" || return $?
+  _assertSuccess "$handler" "$functionName" "$linePrefix$displayName $verb $(plural "${#successes[@]}" string): \"$(decorate each code "${successes[@]}")\"" || return $?
 }
 
 # Generic formatter
