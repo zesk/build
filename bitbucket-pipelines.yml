@@ -40,7 +40,7 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
-                  - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
+                  - bin/tools.sh buildProductionTest --test-index ./test/tests.index --env-file .build.env --skip-tag slow --skip-tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
             - step:
                 artifacts:
                   - .interrupt.log
@@ -52,7 +52,7 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
-                  - bin/tools.sh buildProductionTest --env-file .build.env --tag slow --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
+                  - bin/tools.sh buildProductionTest --test-index ./test/tests.index --env-file .build.env --tag slow --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
             - step:
                 artifacts:
                   - .interrupt.log
@@ -65,7 +65,7 @@ pipelines:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - mkdir ./test-results/
-                  - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
+                  - bin/tools.sh buildProductionTest --test-index ./test/tests.index --env-file .build.env --tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
       - step:
           name: Production Deploy (1x)
           size: 1x
@@ -105,7 +105,7 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
-                  - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
+                  - bin/tools.sh buildStagingTest --test-index ./test/tests.index --env-file .build.env --skip-tag slow --skip-tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
             - step:
                 artifacts:
                   - .interrupt.log
@@ -117,7 +117,7 @@ pipelines:
                 script:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
-                  - bin/tools.sh buildStagingTest --env-file .build.env --tag slow --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
+                  - bin/tools.sh buildStagingTest --test-index ./test/tests.index --env-file .build.env --tag slow --junit "./test-results/" --tap "./test-results/" --stats "./test-results/"
             - step:
                 artifacts:
                   - .interrupt.log
@@ -130,7 +130,7 @@ pipelines:
                   - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - mkdir ./test-results/
-                  - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/0/"
+                  - bin/tools.sh buildStagingTest --test-index ./test/tests.index --env-file .build.env --tag package-install --junit "./test-results/" --tap "./test-results/" --stats "./test-results/0/"
       - step:
           name: Staging Deploy (1x)
           size: 1x
