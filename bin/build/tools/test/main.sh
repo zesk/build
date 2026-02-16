@@ -533,6 +533,9 @@ __testSuiteFunctionTested() {
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --verbose) verboseMode=true ;;
     *)
+      if ! assertedFunctions=$(__assertedFunctions); then
+        throwEnvironment "$handler" "TEST_TRACK_ASSERTIONS is not enabled" || return $?
+      fi
       argument="$(validate "$handler" Function function "$argument")" || return $?
       if ! muzzle grep -q -e "^$(quoteGrepPattern "$argument")\$" "$assertedFunctions"; then
         return 1
