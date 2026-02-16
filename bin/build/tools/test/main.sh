@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # IDENTICAL zeskBuildBashHeader 5
 #
-# tools.sh
+# main.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

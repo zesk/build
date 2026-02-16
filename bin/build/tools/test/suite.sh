@@ -8,7 +8,7 @@
 
 __testSuiteCacheDirectory() {
   local handler="$1" && shift
-  catchEnvironment "$handler" buildCacheDirectory "testSuite/$(buildEnvironmentGet APPLICATION_CODE)" || return $?
+  catchReturn "$handler" buildCacheDirectory "testSuite/$(buildEnvironmentGet APPLICATION_CODE)" || return $?
 }
 
 # Compile tests into a cache structure which makes it easy to search after built

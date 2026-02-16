@@ -11,9 +11,6 @@ __testSuiteOrdering() {
   local handler="$1" && shift
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
-
-  local cacheDirectory=""
-
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1

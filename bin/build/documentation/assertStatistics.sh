@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-02-16
 # shellcheck disable=SC2034
 argument="--reset - Flag. Optional. Reset statistics to zero."$'\n'"--total - Flag. Optional. Just output the total."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="test.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument" [2]="stdout" [3]="example")
 rawComment="Summary: Output assertion counts"$'\n'"Output the total number of assertion failures and assertion successes, separated by a space and terminated with a newline"$'\n'"Argument: --reset - Flag. Optional. Reset statistics to zero."$'\n'"Argument: --total - Flag. Optional. Just output the total."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: UnsignedInteger. 2 lines."$'\n'"Example:     read -r failures successes < <({fn}) || return \$?"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="39b60c110010ea2ef0086139009c80b01d6f8f91"
+sourceHash="77b84e73e319fe65cb0a5e4a759e33d70fc9abda"
 stdout="UnsignedInteger. 2 lines."$'\n'""
 summary="Output assertion counts"$'\n'""
 usage="assertStatistics [ --reset ] [ --total ] [ --help ]"

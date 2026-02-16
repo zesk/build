@@ -1,0 +1,388 @@
+testDates suite=api test/tools/api-tests.sh
+testEnvironmentVariables suite=api test/tools/api-tests.sh
+testHooks suite=api test/tools/api-tests.sh
+testAlpineContainer suite=apk test/tools/apk-tests.sh
+testAlpineOnly suite=apk test/tools/apk-tests.sh
+testAlpineOnlyTheOtherWay suite=apk test/tools/apk-tests.sh
+testIsAlpine suite=apk test/tools/apk-tests.sh
+testIsApkInstalled suite=apk test/tools/apk-tests.sh
+testApplicationHome suite=application test/tools/application-tests.sh
+testApplicationHomeAliases suite=application test/tools/application-tests.sh
+testBuildApplicationConfigure suite=application test/tools/application-tests.sh
+testAptIsInstalled suite=apt test/tools/apt-tests.sh
+testAptKeyAdd suite=apt test/tools/apt-tests.sh  tag=slow
+testAptKeyRingDirectory suite=apt test/tools/apt-tests.sh
+testAptNonInteractive suite=apt test/tools/apt-tests.sh
+testAssertComparisons suite=assert test/tools/assert-tests.sh
+testAssertEquality suite=assert test/tools/assert-tests.sh
+testOutputEquals suite=assert test/tools/assert-tests.sh
+testZeroFile suite=assert test/tools/assert-tests.sh
+testAWSCredentialsEdit suite=aws test/tools/aws-tests.sh
+testAwsEnvironmentFromCredentials suite=aws test/tools/aws-tests.sh  tag=slow
+testAWSExpiration suite=aws test/tools/aws-tests.sh
+testAWSInstall suite=aws test/tools/aws-tests.sh
+testAWSIPAccess suite=aws test/tools/aws-tests.sh  tag=slow
+testAWSProfiles suite=aws test/tools/aws-tests.sh
+testAwsRegionValid suite=aws test/tools/aws-tests.sh
+testBashBasics suite=bash test/tools/bash-tests.sh  tag=slow-non-critical
+testBashBuiltins suite=bash test/tools/bash-tests.sh  tag=slow tag=slow-non-critical
+testBashCommentFilter suite=bash test/tools/bash-tests.sh
+testBashGetRequires suite=bash test/tools/bash-tests.sh  tag=a tag=b tag=c tag=fast
+testBashPipeBehavior suite=bash test/tools/bash-tests.sh
+testBashSetScopes suite=bash test/tools/bash-tests.sh  tag=slow-non-critical
+testBashSourcePath suite=bash test/tools/bash-tests.sh
+testBashSourcePathDot suite=bash test/tools/bash-tests.sh
+testBashSourcePathExclude suite=bash test/tools/bash-tests.sh
+testIsBashBuiltin suite=bash test/tools/bash-tests.sh
+testIsType suite=bash test/tools/bash-tests.sh
+testAdditionalBins suite=bin test/tools/bin-tests.sh  tag=slow
+testMapBin suite=bin test/tools/bin-tests.sh
+testMapPortability suite=bin test/tools/bin-tests.sh
+testBitbucketPRNewURL suite=bitbucket test/tools/bitbucket-tests.sh
+testCharacterClasses suite=character test/tools/character-tests.sh
+testCharacterClassReport suite=character test/tools/character-tests.sh  tag=slow tag=slow-non-critical
+testCharacterFromInteger suite=character test/tools/character-tests.sh
+testIsCharacterClass suite=character test/tools/character-tests.sh
+testIsCharacterClasses suite=character test/tools/character-tests.sh
+testStringValidate suite=character test/tools/character-tests.sh
+testValidateCharacterClass suite=character test/tools/character-tests.sh  tag=slow
+testColorFormat suite=colors test/tools/colors-tests.sh
+testColorSampleCodes suite=colors test/tools/colors-tests.sh
+testColorSampleCombinations suite=colors test/tools/colors-tests.sh
+testColorSampleStyles suite=colors test/tools/colors-tests.sh
+testColorScheme suite=colors test/tools/colors-tests.sh
+testSemanticColorSampleStyles suite=colors test/tools/colors-tests.sh
+testSimpleMarkdownToConsole suite=colors test/tools/colors-tests.sh
+testCompletion suite=completion test/tools/completion-tests.sh
+testColorBrightness suite=console test/tools/console-tests.sh
+testConsoleFileLink suite=console test/tools/console-tests.sh
+testStatusMessageLast suite=console test/tools/console-tests.sh
+testBuildFunctionsCoverage suite=coverage test/tools/coverage-tests.sh  tag=slow tag=slow-30-seconds
+testBuildFunctionsHelpCoverage suite=coverage test/tools/coverage-tests.sh  tag=slow tag=slow-non-critical
+testBuildFunctionsHelpOnly suite=coverage test/tools/coverage-tests.sh  tag=slow tag=slow-non-critical
+testCoverageBasics suite=coverage test/tools/coverage-tests.sh
+testCoverageNeedToUpdate suite=coverage test/tools/coverage-tests.sh
+testCoverageReportThing suite=coverage test/tools/coverage-tests.sh
+testSlowTagsWorkCorrectly suite=coverage test/tools/coverage-tests.sh  tag=slow tag=test-tags
+testCrontabApplicationUpdate suite=crontab test/tools/crontab-tests.sh
+testCrontabDeprecatedArgument suite=crontab test/tools/crontab-tests.sh
+testCursorGetSet suite=cursor test/tools/cursor-tests.sh
+testDaemontools suite=daemontools test/tools/daemontools-tests.sh  tag=package-install
+testDarwinDialog suite=darwin test/tools/darwin-tests.sh
+testDarwinNotification suite=darwin test/tools/darwin-tests.sh
+testDarwinSoundInstall suite=darwin test/tools/darwin-tests.sh
+testDateAdd suite=date test/tools/date-tests.sh
+testDateToFormat suite=date test/tools/date-tests.sh
+testDateToTimestamp suite=date test/tools/date-tests.sh
+testDateValid suite=date test/tools/date-tests.sh
+testBashDebugInterruptFile suite=debug test/tools/debug-tests.sh
+testBuildDebugEnabled suite=debug test/tools/debug-tests.sh
+testErrorExit suite=debug test/tools/debug-tests.sh
+testHousekeeper suite=debug test/tools/debug-tests.sh
+testOutputTrigger suite=debug test/tools/debug-tests.sh
+testPlumber suite=debug test/tools/debug-tests.sh
+testConsoleTrimWidth suite=decorate test/tools/decorate-tests.sh
+testDecorateArgs suite=decorate test/tools/decorate-tests.sh
+testDecorateBasics suite=decorate test/tools/decorate-tests.sh
+testDecorateDashDashDisappearing suite=decorate test/tools/decorate-tests.sh
+testDecorateInitialized suite=decorate test/tools/decorate-tests.sh
+testDecoratePath suite=decorate test/tools/decorate-tests.sh
+testDecorateSize suite=decorate test/tools/decorate-tests.sh
+testDecorateStdin suite=decorate test/tools/decorate-tests.sh
+testDecorateStyle suite=decorate test/tools/decorate-tests.sh
+testDecorateThemed suite=decorate test/tools/decorate-tests.sh
+testDecorateWrapNone suite=decorate test/tools/decorate-tests.sh
+testAlignLeft suite=decoration test/tools/decoration-tests.sh
+testAlignRight suite=decoration test/tools/decoration-tests.sh
+testBoxedHeading suite=decoration test/tools/decoration-tests.sh
+testLabeledBigText suite=decoration test/tools/decoration-tests.sh
+testRepeat suite=decoration test/tools/decoration-tests.sh
+testRepeat2 suite=decoration test/tools/decoration-tests.sh
+testDeployApplication suite=deploy test/tools/deploy-tests.sh  tag=deployment tag=php-install tag=slow
+testDeployPackageName suite=deploy test/tools/deploy-tests.sh
+testDeployBuildEnvironment suite=deployment test/tools/deployment-tests.sh  tag=slow
+testDeployRemoteFinish suite=deployment test/tools/deployment-tests.sh  tag=slow
+testDeployToRemote suite=deployment test/tools/deployment-tests.sh  tag=slow
+testDeprecatedCannon suite=deprecated test/tools/deprecated-tests.sh
+testDeprecatedFind suite=deprecated test/tools/deprecated-tests.sh
+testDeprecatedIgnore suite=deprecated test/tools/deprecated-tests.sh
+testFilesAreIdentical suite=diff test/tools/diff-tests.sh
+testDirectoryRelativePath suite=directory test/tools/directory-tests.sh
+testFileDirectoryExists suite=directory test/tools/directory-tests.sh
+testIsAbsolutePath suite=directory test/tools/directory-tests.sh
+testRequireFileDirectory suite=directory test/tools/directory-tests.sh
+testIsDockerComposeRunning suite=docker-compose test/tools/docker-compose-tests.sh  tag=docker
+testAnyEnvToBashEnv suite=docker test/tools/docker-tests.sh
+testCheckDockerEnvFile suite=docker test/tools/docker-tests.sh
+testDockerEnvFromBash suite=docker test/tools/docker-tests.sh
+testDotEnvCommentHandling suite=docker test/tools/docker-tests.sh
+testEnvCommentHandling suite=docker test/tools/docker-tests.sh
+testEnvironmentFileDockerToBashCompatible suite=docker test/tools/docker-tests.sh
+testEnvironmentFileDockerToBashCompatiblePipe suite=docker test/tools/docker-tests.sh
+testEnvironmentFileToDocker suite=docker test/tools/docker-tests.sh
+testBashFunctionComment suite=documentation test/tools/documentation-tests.sh
+testDocumentation suite=documentation test/tools/documentation-tests.sh
+testDocumentationIndexes suite=documentation test/tools/documentation-tests.sh
+testDumpEnvironmentSafe suite=dump test/tools/dump-tests.sh  tag=slow
+testDumpEnvironmentUnsafe suite=dump test/tools/dump-tests.sh  tag=slow tag=slow-non-critical
+testDumpPipe suite=dump test/tools/dump-tests.sh
+testBuildEnvironmentAdd suite=environment test/tools/environment-tests.sh
+testDotEnvConfigure suite=environment test/tools/environment-tests.sh
+testEnvironmentApacheCompile suite=environment test/tools/environment-tests.sh
+testEnvironmentClean suite=environment test/tools/environment-tests.sh
+testEnvironmentCompile suite=environment test/tools/environment-tests.sh  tag=slow
+testEnvironmentFileLoad suite=environment test/tools/environment-tests.sh
+testEnvironmentFileLoadExecute suite=environment test/tools/environment-tests.sh
+testEnvironmentFileMake suite=environment test/tools/environment-tests.sh
+testEnvironmentNameValid suite=environment test/tools/environment-tests.sh
+testEnvironmentOutput suite=environment test/tools/environment-tests.sh
+testEnvironmentParseVariables suite=environment test/tools/environment-tests.sh
+testEnvironmentValueReadDefault suite=environment test/tools/environment-tests.sh
+testEnvironmentValueReadWrite suite=environment test/tools/environment-tests.sh
+testEnvironmentValueWriteArray suite=environment test/tools/environment-tests.sh
+testEnvironmentVariables suite=environment test/tools/environment-tests.sh
+testBuildHomeFlag suite=fail test/tools/fail-tests.sh  tag=testSuite
+testBuildHomeFlagNot suite=fail test/tools/fail-tests.sh  tag=testSuite
+testHasHousekeeperLeaks suite=fail test/tools/fail-tests.sh  tag=testSuite
+testHasLeaks suite=fail test/tools/fail-tests.sh  tag=testSuite
+testHasPlumberLeaks suite=fail test/tools/fail-tests.sh  tag=testSuite
+testBasicFileStuff suite=file test/tools/file-tests.sh
+testBetterType suite=file test/tools/file-tests.sh
+testFileLineCount suite=file test/tools/file-tests.sh
+testFileMatches suite=file test/tools/file-tests.sh  tag=slow
+testFileTeeAtomic suite=file test/tools/file-tests.sh
+testLinkCreate suite=file test/tools/file-tests.sh
+testFingerprint suite=fingerprint test/tools/fingerprint-tests.sh
+testRoundFloat suite=float test/tools/float-tests.sh
+testTruncateFloat suite=float test/tools/float-tests.sh
+testGitCommitFailures suite=git test/tools/git-tests.sh
+testGitInstallation suite=git test/tools/git-tests.sh  tag=package-install
+testGitVersionList suite=git test/tools/git-tests.sh
+testGithubStuff suite=github test/tools/github-tests.sh  tag=remote-dependency
+testGithubURLParse suite=github test/tools/github-tests.sh
+testGroupID suite=group test/tools/group-tests.sh
+testHooksWhichSeemBenign suite=hook test/tools/hook-tests.sh
+testHooksWhichSeemBenignHome suite=hook test/tools/hook-tests.sh
+testHookSystem suite=hook test/tools/hook-tests.sh  tag=slow
+testVersionLive suite=hook test/tools/hook-tests.sh
+testWhichHook suite=hook test/tools/hook-tests.sh
+testHookVersionCurrent suite=hooks test/tools/hooks-tests.sh
+testHookVersionLive suite=hooks test/tools/hooks-tests.sh
+testHostnameFull suite=host test/tools/host-tests.sh
+testIdenticalCheckAndRepairMap suite=identical test/tools/identical-tests.sh  tag=slow
+testIdenticalCheckHelpKeepsWords suite=identical test/tools/identical-tests.sh
+testIdenticalCheckRepairWithEmptyDir suite=identical test/tools/identical-tests.sh
+testIdenticalChecks suite=identical test/tools/identical-tests.sh  tag=slow
+testIdenticalCheckSingles suite=identical test/tools/identical-tests.sh  tag=slow
+testIdenticalEofWithBracket suite=identical test/tools/identical-tests.sh
+testIdenticalLineParsing suite=identical test/tools/identical-tests.sh
+testIdenticalRepair suite=identical test/tools/identical-tests.sh
+testIdenticalThingEOFProblem suite=identical test/tools/identical-tests.sh
+testInteractiveOccasionally suite=interactive test/tools/interactive-tests.sh
+test_iTerm2Attention suite=iterm2 test/tools/iterm2-tests.sh
+test_iTerm2Image suite=iterm2 test/tools/iterm2-tests.sh
+test_iTerm2IsColorName suite=iterm2 test/tools/iterm2-tests.sh
+test_iTerm2IsColorType suite=iterm2 test/tools/iterm2-tests.sh  tag=slow
+test_iTerm2Notify suite=iterm2 test/tools/iterm2-tests.sh
+test_iTerm2SetColors suite=iterm2 test/tools/iterm2-tests.sh
+test_iTerm2Version suite=iterm2 test/tools/iterm2-tests.sh
+testIterm2 suite=iterm2 test/tools/iterm2-tests.sh
+testJSONField suite=json test/tools/json-tests.sh
+testJsonFileGetSet suite=json test/tools/json-tests.sh
+testJSONSetValue suite=json test/tools/json-tests.sh
+test_jUnitBasic suite=junit test/tools/junit-tests.sh
+test_jUnitRemaining suite=junit test/tools/junit-tests.sh
+testListAppend suite=list test/tools/list-tests.sh
+testListAppendSame suite=list test/tools/list-tests.sh
+testListCleanDuplicates suite=list test/tools/list-tests.sh
+testListJoin suite=list test/tools/list-tests.sh
+testLogFileRotate suite=log test/tools/log-tests.sh  tag=slow
+testLogFileRotate1 suite=log test/tools/log-tests.sh  tag=slow
+testMacPorts suite=macports test/tools/macports-tests.sh
+testCannon suite=map test/tools/map-tests.sh
+testConvertValue suite=map test/tools/map-tests.sh
+testIsMappable suite=map test/tools/map-tests.sh
+testMapEnvironmentBadNames suite=map test/tools/map-tests.sh
+testMapPrefixSuffix suite=map test/tools/map-tests.sh
+testMapTokens suite=map test/tools/map-tests.sh
+testMapValue suite=map test/tools/map-tests.sh
+testMariadbConnect suite=mariadb test/tools/mariadb-tests.sh
+testMariaDBDump suite=mariadb test/tools/mariadb-tests.sh
+testMariaDBDumpClean suite=mariadb test/tools/mariadb-tests.sh
+testMariaDBInstallation suite=mariadb test/tools/mariadb-tests.sh  tag=package-install
+testMarkdownFormatList suite=markdown test/tools/markdown-tests.sh
+testMarkdownRemoveSections suite=markdown test/tools/markdown-tests.sh
+testMdoc suite=mdoc test/tools/mdoc-tests.sh  tag=slow-non-critical
+testEverythingElse suite=missing test/tools/missing-tests.sh
+testDocumentationMkdocs suite=mkdocs test/tools/mkdocs-tests.sh  tag=package-install before=testPythonUninstallation after=testPythonInstallation
+testNetworkIPList suite=network test/tools/network-tests.sh
+testNetworkMACAddressList suite=network test/tools/network-tests.sh
+testNodeInstallation suite=node test/tools/node-tests.sh  tag=package-install
+testNPMInstallations suite=npm test/tools/npm-tests.sh
+testOrderingA suite=ordering test/tools/ordering-tests.sh  tag=testSuite before=testOrderingC before=testOrderingE before=testOrderingF
+testOrderingC suite=ordering test/tools/ordering-tests.sh  tag=testSuite before=testOrderingE
+testOrderingE suite=ordering test/tools/ordering-tests.sh  tag=testSuite before=testOrderingF
+testOrderingD suite=ordering test/tools/ordering-tests.sh  tag=testSuite after=testOrderingC
+testOrderingB suite=ordering test/tools/ordering-tests.sh  tag=testSuite before=testOrderingC after=testOrderingA
+testExtensionLists suite=os test/tools/os-tests.sh
+testMemoryRelated suite=os test/tools/os-tests.sh
+testNewestAndOldest suite=os test/tools/os-tests.sh
+testRunCount suite=os test/tools/os-tests.sh
+testServiceToPort suite=os test/tools/os-tests.sh
+testServiceToPortStandard suite=os test/tools/os-tests.sh
+testPackageAPI suite=package test/tools/package-tests.sh  tag=package-install
+testPackageAvailableList suite=package test/tools/package-tests.sh
+testPackageBasics suite=package test/tools/package-tests.sh  tag=package-install
+testPackageDefault suite=package test/tools/package-tests.sh
+testPackageGroupWhich suite=package test/tools/package-tests.sh  tag=package-install
+test_pcregrepBinary suite=pcregrep test/tools/pcregrep-tests.sh
+test_pcregrepInstall suite=pcregrep test/tools/pcregrep-tests.sh  tag=package-install
+testPHPBuild suite=php test/tools/php-tests.sh  tag=php-install tag=simple-php tag=slow
+testPHPComposerInstallation suite=php test/tools/php-tests.sh  tag=package-install
+testPHPComposerSetVersion suite=php test/tools/php-tests.sh
+testPHPInstallation suite=php test/tools/php-tests.sh  tag=package-install
+testIsUpToDate suite=pipeline test/tools/pipeline-tests.sh  tag=slow
+testVersionSort suite=pipeline test/tools/pipeline-tests.sh
+testGroupID suite=platform test/tools/platform-tests.sh
+testLoadAverage suite=platform test/tools/platform-tests.sh
+testPathShow suite=platform test/tools/platform-tests.sh
+testWhichExists suite=platform test/tools/platform-tests.sh
+testProcessWait suite=process test/tools/process-tests.sh  tag=slow
+testBashPrompt suite=prompt test/tools/prompt-tests.sh  tag=slow
+testBashPromptModule_TermColors suite=prompt test/tools/prompt-tests.sh
+testPythonInstallation suite=python test/tools/python-tests.sh  tag=package-install
+testPythonVirtual suite=python test/tools/python-tests.sh  tag=package-install
+testPythonStuff suite=python test/tools/python-tests.sh  tag=package-install after=testPythonInstallation
+testPythonUninstallation suite=python test/tools/python-tests.sh  tag=package-install after=testPythonInstallation
+testEscapeBash suite=quote test/tools/quote-tests.sh
+testEscapeDoubleQuotes suite=quote test/tools/quote-tests.sh
+testEscapeSingleQuotes suite=quote test/tools/quote-tests.sh
+testQuoteBashString suite=quote test/tools/quote-tests.sh
+testQuoteGrepPattern suite=quote test/tools/quote-tests.sh
+testUnquote suite=quote test/tools/quote-tests.sh
+testReadlineConfigurationAdd suite=readline test/tools/readline-tests.sh
+testRsyncInstall suite=rsync test/tools/rsync-tests.sh  tag=package-install
+testAWSS3Upload suite=s3 test/tools/s3-tests.sh  tag=package-install
+testIsS3URL suite=s3 test/tools/s3-tests.sh
+testQuoteSedPattern suite=sed test/tools/sed-tests.sh
+testQuoteSedReplacement suite=sed test/tools/sed-tests.sh
+testBinBuildRequires suite=self test/tools/self-tests.sh
+testBuildApplicationTools suite=self test/tools/self-tests.sh
+testBuildDeprecatedFunctions suite=self test/tools/self-tests.sh
+testBuildEnvironmentFiles suite=self test/tools/self-tests.sh
+testBuildEnvironmentGet suite=self test/tools/self-tests.sh
+testBuildEnvironmentLoad suite=self test/tools/self-tests.sh
+testBuildEnvironmentLoadAll suite=self test/tools/self-tests.sh  tag=slow tag=slow-non-critical
+testBuildEnvironmentNames suite=self test/tools/self-tests.sh
+testBuildFunctions suite=self test/tools/self-tests.sh
+testBuildRunner suite=self test/tools/self-tests.sh
+testInstallBinBuild suite=self test/tools/self-tests.sh
+testInstallBinBuildNetwork suite=self test/tools/self-tests.sh
+testInstallBinBuildVersion suite=self test/tools/self-tests.sh
+testInstallInstallBuildSelf suite=self test/tools/self-tests.sh
+testUnderscoreUnderscoreBuild suite=self test/tools/self-tests.sh  tag=package-install tag=php-install tag=simple-php
+testSSHAddKnownHosts suite=ssh test/tools/ssh-tests.sh
+testSSHRemoveKnownHosts suite=ssh test/tools/ssh-tests.sh
+testArgEnvStuff suite=sugar test/tools/sugar-tests.sh
+testBoolean suite=sugar test/tools/sugar-tests.sh
+testCatchCode suite=sugar test/tools/sugar-tests.sh
+testChoose suite=sugar test/tools/sugar-tests.sh
+testExitCode suite=sugar test/tools/sugar-tests.sh
+testExitCodeCase suite=sugar test/tools/sugar-tests.sh
+testExitString suite=sugar test/tools/sugar-tests.sh
+testMapReturn suite=sugar test/tools/sugar-tests.sh
+testMoreSugar suite=sugar test/tools/sugar-tests.sh
+testMuzzle suite=sugar test/tools/sugar-tests.sh
+testMuzzleReturn suite=sugar test/tools/sugar-tests.sh
+testReturnClean suite=sugar test/tools/sugar-tests.sh
+testReturnMessage suite=sugar test/tools/sugar-tests.sh
+testReturnThrow suite=sugar test/tools/sugar-tests.sh
+testSugar suite=sugar test/tools/sugar-tests.sh
+testUndo suite=sugar test/tools/sugar-tests.sh
+testSysvInitScript suite=sysvinit test/tools/sysvinit-tests.sh
+testTarExtractFilePattern suite=tar test/tools/tar-tests.sh
+testInstallTerraform suite=terraform test/tools/terraform-tests.sh  tag=package-install
+testReturns suite=tests test/tools/tests-tests.sh
+testsAssertStats suite=tests test/tools/tests-tests.sh
+testTestSuite suite=tests test/tools/tests-tests.sh  tag=testSuite
+testWrapperShellScripts suite=tests test/tools/tests-tests.sh  tag=slow
+testAlignRight suite=text test/tools/text-tests.sh
+testBeginsWith suite=text test/tools/text-tests.sh
+testFileEndsWithNewline suite=text test/tools/text-tests.sh
+testIsPlain suite=text test/tools/text-tests.sh
+testIsSubstring suite=text test/tools/text-tests.sh
+testIsSubstringInsensitive suite=text test/tools/text-tests.sh
+testLowercase suite=text test/tools/text-tests.sh
+testMaximumFieldLength suite=text test/tools/text-tests.sh
+testMaximumLineLength suite=text test/tools/text-tests.sh
+testParseBoolean suite=text test/tools/text-tests.sh
+testPlainLength suite=text test/tools/text-tests.sh
+testPlural suite=text test/tools/text-tests.sh
+testPluralWord suite=text test/tools/text-tests.sh
+testPrintfOutputEmpty suite=text test/tools/text-tests.sh
+testPrintfOutputPrefix suite=text test/tools/text-tests.sh
+testPrintfOutputSuffix suite=text test/tools/text-tests.sh
+testShaPipe suite=text test/tools/text-tests.sh
+testSingleBlankLines suite=text test/tools/text-tests.sh
+testStringBegins suite=text test/tools/text-tests.sh
+testStringBeginsInsensitive suite=text test/tools/text-tests.sh
+testStringContains suite=text test/tools/text-tests.sh
+testStringContainsInsensitive suite=text test/tools/text-tests.sh
+testStringOffset suite=text test/tools/text-tests.sh
+testStringOffsetInsensitive suite=text test/tools/text-tests.sh
+testStringReplace suite=text test/tools/text-tests.sh
+testText suite=text test/tools/text-tests.sh
+testTrimBoth suite=text test/tools/text-tests.sh
+testTrimHeadTail suite=text test/tools/text-tests.sh
+testTrimLeftSpace suite=text test/tools/text-tests.sh
+testTrimRightSpace suite=text test/tools/text-tests.sh
+testTrimSpace suite=text test/tools/text-tests.sh
+testTiming suite=timing test/tools/timing-tests.sh
+testTimingElapsed suite=timing test/tools/timing-tests.sh
+testInstallOpenTofu suite=tofu test/tools/tofu-tests.sh  tag=package-install
+testBadNumericSamples suite=type test/tools/type-tests.sh  tag=slow
+testBinaryTypes suite=type test/tools/type-tests.sh
+testExecutableCallable suite=type test/tools/type-tests.sh  tag=slow
+testIsArray suite=type test/tools/type-tests.sh
+testIsTrue suite=type test/tools/type-tests.sh
+testNotExecutable suite=type test/tools/type-tests.sh
+testPositiveIntegers suite=type test/tools/type-tests.sh
+testSignedIntegerSamples suite=type test/tools/type-tests.sh
+testSignedNumberSamples suite=type test/tools/type-tests.sh  tag=slow
+testUnsignedIntegerSamples suite=type test/tools/type-tests.sh  tag=slow
+testUnsignedNumberSamples suite=type test/tools/type-tests.sh  tag=slow
+testFetch suite=url test/tools/url-tests.sh
+testFetchMethods suite=url test/tools/url-tests.sh
+testFetchTimeout suite=url test/tools/url-tests.sh
+testGitUrlParse suite=url test/tools/url-tests.sh
+testUrlFilter suite=url test/tools/url-tests.sh
+testUrlOpen suite=url test/tools/url-tests.sh
+testUrlParse suite=url test/tools/url-tests.sh  tag=slow
+testUrlParseItem suite=url test/tools/url-tests.sh  tag=slow
+testUrlSchemeDefaultPort suite=url test/tools/url-tests.sh
+testUrlToVariables suite=url test/tools/url-tests.sh
+testUrlValid suite=url test/tools/url-tests.sh
+testUserAgentDefault suite=url test/tools/url-tests.sh
+testFunctionNewline suite=usage test/tools/usage-tests.sh
+testUsageArgumentFunctions suite=usage test/tools/usage-tests.sh  tag=slow
+testUsageArguments suite=usage test/tools/usage-tests.sh
+testUsageArguments1 suite=usage test/tools/usage-tests.sh
+testUsageFunctions suite=usage test/tools/usage-tests.sh
+testUsageTemplate suite=usage test/tools/usage-tests.sh
+testUserHome suite=user test/tools/user-tests.sh
+testUserRecord suite=user test/tools/user-tests.sh
+testIncrementor suite=utilities test/tools/utilities-tests.sh
+testValidateFunctions suite=validate test/tools/validate-tests.sh  tag=slow
+testValidateMissing suite=validate test/tools/validate-tests.sh
+testIsVersion suite=version test/tools/version-tests.sh
+testReleaseNew suite=version test/tools/version-tests.sh
+testReleaseNotes suite=version test/tools/version-tests.sh
+testReleaseNotesSimple suite=version test/tools/version-tests.sh
+testVersionNext suite=version test/tools/version-tests.sh
+testWatchDirectory suite=watch test/tools/watch-tests.sh
+testUrlContentLength suite=web test/tools/web-tests.sh
+testUrlFetch suite=web test/tools/web-tests.sh
+testXdebugInstall suite=xdebug test/tools/xdebug-tests.sh  tag=package-install
+test_XMLBasics suite=xml test/tools/xml-tests.sh
+testYarnInstallation suite=yarn test/tools/yarn-tests.sh  tag=package-install
+testIsYum suite=yum test/tools/yum-tests.sh

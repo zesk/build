@@ -388,6 +388,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:gitVersionList}
 - {SEE:grepSafe}
 - {SEE:groupID}
+- {SEE:hookExists}
 - {SEE:hookFind}
 - {SEE:hookRun}
 - {SEE:hookRunOptional}
@@ -434,8 +435,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:isPositiveInteger}
 - {SEE:isPyCharm}
 - {SEE:isS3URL}
-- {SEE:stringFound}
-- {SEE:stringFoundInsensitive}
 - {SEE:isTrue}
 - {SEE:isTTYAvailable}
 - {SEE:isType}
@@ -626,6 +625,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:stringBeginsInsensitive}
 - {SEE:stringContains}
 - {SEE:stringContainsInsensitive}
+- {SEE:stringFound}
+- {SEE:stringFoundInsensitive}
 - {SEE:stringOffset}
 - {SEE:stringOffsetInsensitive}
 - {SEE:stringReplace}
@@ -637,6 +638,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:terraformInstall}
 - {SEE:terraformUninstall}
 - {SEE:testSuite}
+- {SEE:testSuiteFunctionTested}
+- {SEE:testSuiteOrdering}
 - {SEE:textAlignLeft}
 - {SEE:textAlignRight}
 - {SEE:textRepeat}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-02-16
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--verbose - Flag. Optional. Show list of true results when all arguments pass."$'\n'"functionName ... - String. Function to look up to see if it has been tested. One or more."$'\n'""
 base="test.sh"
@@ -10,7 +10,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --verbose - Flag. Optional. Show list of true results when all arguments pass."$'\n'"Argument: functionName ... - String. Function to look up to see if it has been tested. One or more."$'\n'"Return Code: 0 - This function was tested by the test suite at least once."$'\n'"Return Code: 1 - Not tested"$'\n'""$'\n'""
 return_code="0 - This function was tested by the test suite at least once."$'\n'"1 - Not tested"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="39b60c110010ea2ef0086139009c80b01d6f8f91"
+sourceHash="77b84e73e319fe65cb0a5e4a759e33d70fc9abda"
 summary="undocumented"
 usage="testSuiteFunctionTested [ --help ] [ --verbose ] [ functionName ... ]"
 # shellcheck disable=SC2016
