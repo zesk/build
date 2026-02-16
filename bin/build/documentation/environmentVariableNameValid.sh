@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-08
+# Generated on 2026-02-16
 # shellcheck disable=SC2034
 argument="variableName ... - String. Required. Exit status 0 if all variables names are valid ones."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="environment.sh"
 description="Validates zero or more environment variable names."$'\n'"- alpha"$'\n'"- digit"$'\n'"- underscore"$'\n'"First letter MUST NOT be a digit"$'\n'""
 file="bin/build/tools/environment.sh"
+fn="environmentVariableNameValid"
 foundNames=([0]="argument")
 rawComment="Argument: variableName ... - String. Required. Exit status 0 if all variables names are valid ones."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Validates zero or more environment variable names."$'\n'"- alpha"$'\n'"- digit"$'\n'"- underscore"$'\n'"First letter MUST NOT be a digit"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="2c3f0c76084e33e120f499cfbee6c0fd271a043c"
+sourceHash="f4297ea2cbebf568f7423fd672764a88c1753a7e"
 summary="Validates zero or more environment variable names."
 summaryComputed="true"
 usage="environmentVariableNameValid variableName ... [ --help ]"

@@ -67,7 +67,7 @@ __testLoader() {
 # Argument: --env-file environmentFile - EnvironmentFile. Optional. Load one ore more environment files prior to running tests
 # Argument: --index-file indexFile - RealDirectoryFile. Optional. If supplied and exists, uses the index file for tests.
 # Argument: --cache-path cachePath - Directory. Optional.
-# Argument: --quit - Flag. Optional. Generate the index file if supplied.
+# Argument: --make-index - Flag. Optional. Generate the index file if supplied and quit.
 # Argument: --continue - Flag. Optional. Continue from last successful test.
 # Argument: -c - Flag. Optional. Continue from last successful test.
 # Argument: --delete directoryOrFile - FileDirectory. Optional. A file or directory to delete when the test suite terminates.

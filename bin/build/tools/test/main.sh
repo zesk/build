@@ -42,7 +42,7 @@ __testSuite() {
     --tests) shift && testPaths+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $? ;;
 
     --index-file) shift && testIndexFile="$(validate "$handler" RealFileDirectory "$argument" "${1-}")" || return $? ;;
-    --quit) forceCreateIndex=true && action="quit" ;;
+    --make-index) forceCreateIndex=true && action="quit" ;;
     --cache-file) shift && testsCache="$(validate "$handler" RealFileDirectory "$argument" "${1-}")" || return $? ;;
 
     #        ▐        ▐

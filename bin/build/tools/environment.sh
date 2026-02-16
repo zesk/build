@@ -202,7 +202,7 @@ _environmentClean() {
 environmentOutput() {
   local handler="_${FUNCNAME[0]}"
   local __handler="$handler"
-  local __skipSecure=true __skipUnderscore=true __variables=() __skipPrefix=() __debugFlag=false
+  local __skipSecure=true __skipUnderscore=true __variables=() __skipPrefix=() __debugFlag=false __skipNames=()
   local __written=("")
 
   local __saved=("$@") __count=$#
@@ -212,6 +212,7 @@ environmentOutput() {
     case "$__argument" in
     --help) "$handler" 0 && return $? || return $? ;;
     --underscore) __skipUnderscore=false ;;
+    --skip) shift && __skipNames+=("$(validate "$handler" String "$__argument" "${1-}")") || return $? ;;
     --skip-prefix) shift && __skipPrefix+=("$(validate "$handler" String "$__argument" "${1-}")") || return $? ;;
     --secure) __skipSecure=false ;;
     --debug) __debugFlag=true ;;
@@ -230,6 +231,7 @@ environmentOutput() {
   while IFS='=' read -r __name __value; do
     ! $__debugFlag || printf "%s\n" "# ARRAY: $__name"
     [ "${#__skipPrefix[@]}" -eq 0 ] || ! stringBegins "$__name" "${__skipPrefix[@]}" || continue
+    [ "${#__skipNames[@]}" -eq 0 ] || ! inArray "$__name" "${__skipNames[@]}" || continue
     [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
     catchReturn "$__handler" printf "%s=%s\n" "$__name" "$(unquote "'" "$__value")" || return $?
     __written+=("$__name")
@@ -239,6 +241,7 @@ environmentOutput() {
     IFS="=" read -r -d $'\0' __name __value || __finished=true
     [ -n "$__name" ] && [ "${__name%\%}" = "$__name" ] || continue
     [ "${#__skipPrefix[@]}" -eq 0 ] || ! stringBegins "$__name" "${__skipPrefix[@]}" || continue
+    [ "${#__skipNames[@]}" -eq 0 ] || ! inArray "$__name" "${__skipNames[@]}" || continue
     [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
     catchReturn "$__handler" environmentValueWrite "$__name" "$__value" || return $?
     __written+=("$__name")

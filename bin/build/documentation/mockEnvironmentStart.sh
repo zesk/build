@@ -6,11 +6,12 @@ argument="globalName - EnvironmentVariable. Required. Global to change temporari
 base="test.sh"
 description="Fake a value for testing"$'\n'""
 file="bin/build/tools/test.sh"
+fn="mockEnvironmentStart"
 foundNames=([0]="argument")
 rawComment="Fake a value for testing"$'\n'"Argument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value."$'\n'"Argument: value - EmptyString. Optional. Force the value of \`globalName\` to this value temporarily. Saves the original value."$'\n'"Argument: ... - Continue passing pairs of globalName value to mock additional values."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="77b84e73e319fe65cb0a5e4a759e33d70fc9abda"
+sourceHash="4c89640b8a6c21bc7b0a40282c925702479344af"
 summary="Fake a value for testing"
 summaryComputed="true"
 usage="mockEnvironmentStart globalName [ value ] [ ... ] [ --help ]"

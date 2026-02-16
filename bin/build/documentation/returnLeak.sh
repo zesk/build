@@ -6,11 +6,12 @@ argument="none"
 base="test.sh"
 description="Return code is \`leak\`"$'\n'""
 file="bin/build/tools/test.sh"
+fn="returnLeak"
 foundNames=([0]="summary" [1]="return_code")
 rawComment="Summary: Leak return code"$'\n'"Return code is \`leak\`"$'\n'"Return Code: 108"$'\n'""$'\n'""
 return_code="108"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="77b84e73e319fe65cb0a5e4a759e33d70fc9abda"
+sourceHash="4c89640b8a6c21bc7b0a40282c925702479344af"
 summary="Leak return code"$'\n'""
 usage="returnLeak"
 # shellcheck disable=SC2016

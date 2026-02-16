@@ -6,11 +6,12 @@ argument="none"
 base="test.sh"
 description="Return code is \`identical\`"$'\n'""
 file="bin/build/tools/test.sh"
+fn="returnIdentical"
 foundNames=([0]="summary" [1]="return_code")
 rawComment="Summary: Identical return code"$'\n'"Return code is \`identical\`"$'\n'"Return Code: 105"$'\n'""$'\n'""
 return_code="105"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="77b84e73e319fe65cb0a5e4a759e33d70fc9abda"
+sourceHash="4c89640b8a6c21bc7b0a40282c925702479344af"
 summary="Identical return code"$'\n'""
 usage="returnIdentical"
 # shellcheck disable=SC2016

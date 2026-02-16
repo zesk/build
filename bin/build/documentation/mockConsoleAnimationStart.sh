@@ -6,11 +6,12 @@ argument="true | false - Boolean. Force the value of consoleHasAnimation to this
 base="test.sh"
 description="Fake \`consoleHasAnimation\` for testing"$'\n'""
 file="bin/build/tools/test.sh"
+fn="mockConsoleAnimationStart"
 foundNames=([0]="argument")
 rawComment="Fake \`consoleHasAnimation\` for testing"$'\n'"Argument: true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="77b84e73e319fe65cb0a5e4a759e33d70fc9abda"
+sourceHash="4c89640b8a6c21bc7b0a40282c925702479344af"
 summary="Fake \`consoleHasAnimation\` for testing"
 summaryComputed="true"
 usage="mockConsoleAnimationStart [ true | false ] [ --help ]"

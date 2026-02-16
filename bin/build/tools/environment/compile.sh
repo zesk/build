@@ -15,8 +15,8 @@
 environmentCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local environmentFiles=() aa=() __debugFlag=false keepComments=false __parseFlag=false __inplaceFlag=false variables=()
-  local __removeBlankFlag=false
+  local __files=() __v=() __skipVariables=() __debugFlag=false __keepComments=false __parseFlag=false __inplaceFlag=false
+  local __removeBlankFlag=false __item
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -30,40 +30,42 @@ environmentCompile() {
     --in-place) __inplaceFlag=true ;;
     --remove-blank) __removeBlankFlag=true ;;
     --variables)
-      shift && local listText && listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
-      local variableList=() && IFS="," read -r -a variableList <<<"$listText" || :
-      variables+=("${variableList[@]+"${variableList[@]}"}")
-      aa+=("${variableList[@]+"${variableList[@]}"}")
+      shift && local __listText && __listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
+      local __variableList=() && IFS="," read -r -a __variableList <<<"$__listText" || :
+      __v+=("${__variableList[@]+"${__variableList[@]}"}")
       ;;
-    --keep-comments) keepComments=true ;;
-    --underscore | --secure) aa+=("$__argument") ;;
-    *) environmentFiles+=("$(validate "$handler" File "environmentFile" "$__argument")") || return $? ;;
+    --keep-comments) __keepComments=true ;;
+    --underscore | --secure) __v+=("$__argument") ;;
+    *) __files+=("$(validate "$handler" File "environmentFile" "$__argument")") || return $? ;;
     esac
     shift
   done
 
-  [ ${#environmentFiles[@]} -gt 0 ] || ! $__inplaceFlag || throwArgument "$handler" "--in-place requires a file" || return $?
+  [ ${#__files[@]} -gt 0 ] || ! $__inplaceFlag || throwArgument "$handler" "--in-place requires a file" || return $?
 
   local tempEnv && tempEnv=$(fileTemporaryName "$handler") || return $?
   local clean=("$tempEnv" "$tempEnv.after" "$tempEnv.source" "$tempEnv.save")
-  if [ ${#environmentFiles[@]} -eq 0 ]; then
+  if [ ${#__files[@]} -eq 0 ]; then
     catchEnvironment "$handler" cat >"$tempEnv.source" || returnClean $? "${clean[@]}" || return $?
-    environmentFiles+=("$tempEnv.source")
+    __files+=("$tempEnv.source")
   fi
   if $__parseFlag; then
-    while read -r variable; do variables+=("$variable") && aa+=("$variable"); done < <(cat "${environmentFiles[@]}" | environmentParseVariables)
-    if $__debugFlag; then printf "%s\n" "${variables[@]}" | dumpPipe "PARSED variables" 1>&2; fi
+    while read -r variable; do __v+=("$variable"); done < <(cat "${__files[@]}" | environmentParseVariables)
+    if $__debugFlag; then printf "%s\n" "${__v[@]}" | dumpPipe "PARSED variables" 1>&2; fi
   fi
-  if $__debugFlag; then cat "${environmentFiles[@]}" | dumpPipe SOURCES 1>&2; fi
+  if $__debugFlag; then cat "${__files[@]}" | dumpPipe SOURCES 1>&2; fi
   (
     local __handler="$handler"
     catchReturn "$__handler" environmentClean || returnClean $? "${clean[@]}" || return $?
-    if $__debugFlag; then printf "# variables: %s\n" "${variables[*]}" | tee "$tempEnv" >"$tempEnv.after"; fi
-    [ "${#variables[@]}" -eq 0 ] || export "${variables[@]+"${variables[@]}"}"
-    ! $__debugFlag || statusMessage --last decorate info "environmentOutput(BEFORE)" "${aa[@]+"${aa[@]}"}" || :
-    catchReturn "$__handler" environmentOutput "${aa[@]+"${aa[@]}"}" >>"$tempEnv" || returnClean $? "${clean[@]}" || return $?
+    if $__debugFlag; then printf "# variables: %s\n" "${__v[*]}" | tee "$tempEnv" >"$tempEnv.after"; fi
+    if [ "${#__v[@]}" -gt 0 ]; then
+      export "${__v[@]+"${__v[@]}"}"
+      for __item in "${__v[@]}"; do __skipVariables+=("--skip" "$__item"); done
+    fi
+    ! $__debugFlag || statusMessage --last decorate info "environmentOutput(BEFORE)" "${__v[@]+"${__v[@]}"}" || :
+    catchReturn "$__handler" environmentOutput "${__skipVariables[@]+"${__skipVariables[@]}"}" >>"$tempEnv" || returnClean $? "${clean[@]}" || return $?
     # LOAD (source) MUST be here to ensure arrays are preserved - they are not passed back from an exported function
-    local environmentFile && for environmentFile in "${environmentFiles[@]}"; do
+    local environmentFile && for environmentFile in "${__files[@]}"; do
       ! $__debugFlag || statusMessage --last decorate source "$environmentFile" || :
       local __returnCode=0
       set -a # Undo ok
@@ -75,14 +77,14 @@ environmentCompile() {
         declare -x | dumpPipe "declare -x INSIDE" 1>&2
       fi
       [ "$__returnCode" -eq 0 ] || throwEnvironment "$__handler" "source $1 failed with $__returnCode" || returnClean "$__returnCode" "${clean[@]}" || returnUndo $? set +a || return $?
-      ! $keepComments || catchReturn "$handler" bashCommentFilter --only <"$environmentFile" | grepSafe -e '^#' >>"$tempEnv.save" || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
+      ! $__keepComments || catchReturn "$handler" bashCommentFilter --only <"$environmentFile" | grepSafe -e '^#' >>"$tempEnv.save" || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
     done
     if $__debugFlag; then
       declare -ax | dumpPipe "declare -ax OUTSIDE" 1>&2
       declare -x | dumpPipe "declare -x OUTSIDE" 1>&2
     fi
-    ! $__debugFlag || statusMessage --last decorate info "environmentOutput(AFTER)" "${aa[@]+"${aa[@]}"}" "${variables[@]+"${variables[@]}"}" || :
-    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" "${variables[@]+"${variables[@]}"}" >>"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
+    ! $__debugFlag || statusMessage --last decorate info "environmentOutput(AFTER)" "${__v[@]+"${__v[@]}"}" || :
+    catchReturn "$handler" environmentOutput "${__v[@]+"${__v[@]}"}" >>"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
   ) || returnClean $? "${clean[@]}" || return $?
   if $__debugFlag; then
     dumpPipe BEFORE <"$tempEnv" 1>&2
@@ -97,7 +99,7 @@ environmentCompile() {
   # 3 is a copy of 1 (stdout)
   exec 3>&1
   if $__inplaceFlag; then
-    local outputFile="${environmentFiles[0]}"
+    local outputFile="${__files[0]}"
     # 3 is opened to write to `$outputFile`
     exec 3>"$outputFile"
   fi

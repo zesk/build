@@ -6,11 +6,12 @@ argument="none"
 base="test.sh"
 description="Return code is \`assert\`"$'\n'""
 file="bin/build/tools/test.sh"
+fn="returnAssert"
 foundNames=([0]="summary" [1]="return_code")
 rawComment="Return code is \`assert\`"$'\n'"Summary: Assertion return code"$'\n'"Return Code: 97"$'\n'""$'\n'""
 return_code="97"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="77b84e73e319fe65cb0a5e4a759e33d70fc9abda"
+sourceHash="4c89640b8a6c21bc7b0a40282c925702479344af"
 summary="Assertion return code"$'\n'""
 usage="returnAssert"
 # shellcheck disable=SC2016

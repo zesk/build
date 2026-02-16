@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-02-16
 # shellcheck disable=SC2034
 argument="--underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"--secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"--keep-comments - Flag. Keep all comments in the source"$'\n'"--variables - CommaDelimitedList. Optional. Always output the value of these variables."$'\n'"--parse - Flag. Optional. Parse the file for things which look like variables to output (basically \`^foo=\`)"$'\n'"environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible)."$'\n'""
 base="compile.sh"
 description="Load an environment file and evaluate it using bash and output the changed environment variables after running"$'\n'"Do not perform this operation on files which are untrusted."$'\n'""
 file="bin/build/tools/environment/compile.sh"
+fn="environmentCompile"
 foundNames=([0]="argument" [1]="security")
 rawComment="Load an environment file and evaluate it using bash and output the changed environment variables after running"$'\n'"Do not perform this operation on files which are untrusted."$'\n'"Argument: --underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"Argument: --secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"Argument: --keep-comments - Flag. Keep all comments in the source"$'\n'"Argument: --variables - CommaDelimitedList. Optional. Always output the value of these variables."$'\n'"Argument: --parse - Flag. Optional. Parse the file for things which look like variables to output (basically \`^foo=\`)"$'\n'"Argument: environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible)."$'\n'"Security: source"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="source"$'\n'""
 sourceFile="bin/build/tools/environment/compile.sh"
-sourceHash="9a9330cc6da8a9057cbbf9981e4bbcc5c1285153"
+sourceHash="6dceb6eb9e18ef183b8693bb0001efcbd5e90d89"
 summary="Load an environment file and evaluate it using bash and"
 summaryComputed="true"
 usage="environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --variables ] [ --parse ] environmentFile"
