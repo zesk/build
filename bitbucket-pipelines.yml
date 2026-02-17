@@ -32,9 +32,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/results.xml
-                  - ./test-results/results.tap
-                  - ./test-results/results.stats
+                  - test-results/junit.xml
+                  - test-results/results.tap
+                  - test-results/results.stats
                 services:
                   - docker
                 size: 2x
@@ -46,9 +46,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/results.xml
-                  - ./test-results/results.tap
-                  - ./test-results/results.stats
+                  - test-results/junit.xml
+                  - test-results/results.tap
+                  - test-results/results.stats
                 services:
                   - docker
                 size: 4x
@@ -60,9 +60,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/results.xml
-                  - ./test-results/results.tap
-                  - ./test-results/results.stats
+                  - test-results/junit.xml
+                  - test-results/results.tap
+                  - test-results/results.stats
                 services:
                   - docker
                 size: 1x
@@ -102,9 +102,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/results.xml
-                  - ./test-results/results.tap
-                  - ./test-results/results.stats
+                  - test-results/junit.xml
+                  - test-results/results.tap
+                  - test-results/results.stats
                 services:
                   - docker
                 size: 2x
@@ -116,7 +116,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/
+                  - test-results/junit.xml
+                  - test-results/results.tap
+                  - test-results/results.stats
                 services:
                   - docker
                 size: 4x
@@ -128,9 +130,9 @@ pipelines:
             - step:
                 artifacts:
                   - .interrupt.log
-                  - ./test-results/results.xml
-                  - ./test-results/results.tap
-                  - ./test-results/results.stats
+                  - test-results/junit.xml
+                  - test-results/results.tap
+                  - test-results/results.stats
                 services:
                   - docker
                 size: 1x

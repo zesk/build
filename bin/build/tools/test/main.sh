@@ -442,7 +442,7 @@ __testSuite() {
 
     ! $verboseMode || statusMessage --last decorate pair "Raw flags" "$rawFlags"
 
-    if $continueFlag; then
+    if $continueFlag && [ "$finalReturnCode" -eq 0 ]; then
       catchEnvironment "$handler" printf "%s\n" "$item" >"$continueFile" || return $?
     fi
 

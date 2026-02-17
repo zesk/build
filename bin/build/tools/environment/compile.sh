@@ -15,7 +15,7 @@
 environmentCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local __files=() __v=() __skipVariables=() __debugFlag=false __keepComments=false __parseFlag=false __inplaceFlag=false
+  local __files=() __v=() __a=() __skipVariables=() __debugFlag=false __keepComments=false __parseFlag=false __inplaceFlag=false
   local __removeBlankFlag=false __item
 
   local __saved=("$@") __count=$#
@@ -35,7 +35,7 @@ environmentCompile() {
       __v+=("${__variableList[@]+"${__variableList[@]}"}")
       ;;
     --keep-comments) __keepComments=true ;;
-    --underscore | --secure) __v+=("$__argument") ;;
+    --underscore | --secure) __a+=("$__argument") ;;
     *) __files+=("$(validate "$handler" File "environmentFile" "$__argument")") || return $? ;;
     esac
     shift
@@ -63,7 +63,7 @@ environmentCompile() {
       for __item in "${__v[@]}"; do __skipVariables+=("--skip" "$__item"); done
     fi
     ! $__debugFlag || statusMessage --last decorate info "environmentOutput(BEFORE)" "${__v[@]+"${__v[@]}"}" || :
-    catchReturn "$__handler" environmentOutput "${__skipVariables[@]+"${__skipVariables[@]}"}" >>"$tempEnv" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$__handler" environmentOutput "${__a[@]+"${__a[@]}"}" "${__skipVariables[@]+"${__skipVariables[@]}"}" >>"$tempEnv" || returnClean $? "${clean[@]}" || return $?
     # LOAD (source) MUST be here to ensure arrays are preserved - they are not passed back from an exported function
     local environmentFile && for environmentFile in "${__files[@]}"; do
       ! $__debugFlag || statusMessage --last decorate source "$environmentFile" || :
@@ -84,7 +84,7 @@ environmentCompile() {
       declare -x | dumpPipe "declare -x OUTSIDE" 1>&2
     fi
     ! $__debugFlag || statusMessage --last decorate info "environmentOutput(AFTER)" "${__v[@]+"${__v[@]}"}" || :
-    catchReturn "$handler" environmentOutput "${__v[@]+"${__v[@]}"}" >>"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" environmentOutput "${__a[@]+"${__a[@]}"}" "${__v[@]+"${__v[@]}"}" >>"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
   ) || returnClean $? "${clean[@]}" || return $?
   if $__debugFlag; then
     dumpPipe BEFORE <"$tempEnv" 1>&2
