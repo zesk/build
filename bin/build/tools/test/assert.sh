@@ -364,17 +364,18 @@ _assertConditionHelper() {
   # ********************************************************************************************************************
 
   # shellcheck disable=SC2059
-  local message
-  message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
+  local message && message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
+  message="${message# }"
   message="$(printf -- "%s➡️ %s -> %s\n" "$linePrefix" "$message" "$result")"
   if $code1 || [ "$expectedExitCode" -ne 0 ]; then
     message="$message ($exitCode $(booleanChoose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(booleanChoose "$testPassed" correct incorrect)")"
   fi
+  [ -z "$displayName" ] || displayName="$displayName "
   local functionName="${handler#_}"
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
     message="$(printf -- "%s - %s\n%s\n" "$message" "$(decorate error "produced stderr")" "$(dumpPipe --tail stderr <"$errorFile")")"
-    _assertFailure "$handler" "$functionName" "$displayName $message" || return $?
+    _assertFailure "$handler" "$functionName" "$displayName$message" || return $?
   fi
   if $errorsOk && [ ! -s "$errorFile" ]; then
     statusMessage --last printf "%s – %s" "$message" "$(decorate warning "--stderr-ok used but is NOT necessary")"
@@ -401,10 +402,10 @@ _assertConditionHelper() {
   # ********************************************************************************************************************
 
   if $testPassed; then
-    _assertSuccess "$handler" "$functionName" "$displayName $message" || exitCode=$?
+    _assertSuccess "$handler" "$functionName" "$displayName$message" || exitCode=$?
     exitCode=0
   else
-    _assertFailure "$handler" "$functionName" "$displayName $message" || exitCode=$?
+    _assertFailure "$handler" "$functionName" "$displayName$message" || exitCode=$?
     [ "$exitCode" != "0" ] || exitCode=$(returnCode assert)
   fi
   __profileLabel="assert-status"

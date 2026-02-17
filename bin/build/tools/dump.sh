@@ -362,12 +362,33 @@ _dumpEnvironment() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 dumpEnvironmentUnsafe() {
-  local handler="_${FUNCNAME[0]}" argument
-  [ $# -eq 0 ] || for argument in "--secure-match" "--secure-suffix"; do
-    ! inArray "$argument" "$@" || throwArgument "$handler" "Unknown $argument (did you mean dumpEnvironment?)" || return $?
+  local handler="_${FUNCNAME[0]}"
+
+  local aa=()
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --secure-match | --secure-suffix) throwArgument "$handler" "Unknown $argument (did you mean dumpEnvironment?)" || return $? ;;
+    --skip-env | --maximum-length) shift && aa+=("$argument" "$1") ;;
+    --show-skipped) aa+=("$argument" "$1") ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
   done
+
   # Disable the secure features by putting them at the end
-  __internalDumpEnvironment "$handler" "$@" --secure-match - --secure-suffix ""
+  __internalDumpEnvironment "$handler" "${aa[@]+"${aa[@]}"}" --secure-match - --secure-suffix ""
 }
 _dumpEnvironmentUnsafe() {
   # __IDENTICAL__ usageDocument 1

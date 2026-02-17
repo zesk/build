@@ -1012,7 +1012,7 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL __usageDocumentCached 25
+# IDENTICAL __usageDocumentCached 26
 
 # Argument: handler - Function. Required.
 # Argument: home - Directory. BUILD_HOME
@@ -1028,12 +1028,13 @@ __usageDocumentCached() {
   [ -f "$settingsFile" ] || return 1
   decorateInitialized || decorate info -- || return $?
   (
-    local helpConsole="" helpPlain="no helpPlain in $suffix"
+    local helpConsole="" helpPlain=""
     # shellcheck source=/dev/null
     catchEnvironment "$handler" source "$settingsFile" || return $?
     if [ "${BUILD_COLORS-}" != "false" ] && [ -n "$helpConsole" ]; then
       catchEnvironment "$handler" decorateThemed <<<"$helpConsole" || return $?
     else
+      [ -n "$helpPlain" ] || return 1
       catchEnvironment "$handler" printf "%s\n" "$helpPlain" || return $?
     fi
   ) || return $?
