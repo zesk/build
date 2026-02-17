@@ -284,7 +284,7 @@ __testSuite() {
     fi
 
     catchEnvironment "$handler" printf -- "%s\n" "$intro" | consoleToPlain >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
-    printf "%s:%s : Found %s" "Query" "$(printf -- " %s" "${qq[@]+"${qq[@]}"}")" "$(pluralWord "$foundTestCount" "test")" | tee -a "$quietLog" || return $?
+    printf "%s:%s : Found %s\n" "Query" "$(printf -- " %s" "${qq[@]+"${qq[@]}"}")" "$(pluralWord "$foundTestCount" "test")" | tee -a "$quietLog" || return $?
     # QUIET LOG =============== QUIET LOG =============== QUIET LOG =============== QUIET LOG ===============
   fi
 
