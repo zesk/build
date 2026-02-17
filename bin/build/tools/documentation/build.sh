@@ -132,7 +132,7 @@ __documentationBuild() {
 
   export BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
 
-  consoleConfigureDecorate
+  muzzle consoleConfigureDecorate
 
   catchReturn "$handler" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 

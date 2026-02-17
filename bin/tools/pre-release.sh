@@ -4,6 +4,24 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
+__buildPreReleaseStep() {
+  local handler="$1" && shift
+  local interruptCode="$1" && shift
+  local message="$1" && shift
+  local exitCode=0
+
+  statusMessage decorate info "$message ... "
+  catchEnvironment "$handler" "$@" || exitCode=$?
+  [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
+  # shellcheck disable=SC2015
+  [ "$exitCode" = 0 ] && statusMessage --last decorate success "✅ $message" || decorate error "[$exitCode 💣 $(returnCodeString "$exitCode")] failed but continuing with release steps ..."
+  return "$exitCode"
+}
+
+__buildPreReleaseLintFiles() {
+  find "$1" -name '*.sh' ! -path '*/.*/*' | bashLintFiles
+}
+
 buildPreRelease() {
   local handler="_${FUNCNAME[0]}"
   local home
@@ -12,46 +30,36 @@ buildPreRelease() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  statusMessage decorate info "Deprecated cleanup ..."
-  catchEnvironment "$handler" "$home/bin/build/deprecated.sh" || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Deprecated cleanup" "$home/bin/build/deprecated.sh" || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
-  [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 
-  statusMessage decorate info "Identical repair (internal, long) ..."
-  catchEnvironment "$handler" "$home/bin/build/repair.sh" --internal || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Identical repair (internal, long)" "$home/bin/build/repair.sh" --internal || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
-  [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 
-  statusMessage decorate info "Linting"
-  find "$home" -name '*.sh' ! -path '*/.*/*' | bashLintFiles || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Linting" __buildPreReleaseLintFiles "$home" || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
-  [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 
-  statusMessage decorate info "Usage compile"
-  buildUsageCompile || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Usage compile" buildUsageCompile || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
-  [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 
-  statusMessage decorate info "Test index build"
-  buildTestSuiteIndex || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Fingerprint" fingerprint || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
-  [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
+
+  __buildPreReleaseStep "$handler" "$interruptCode" "Test index build" buildTestSuiteIndex || exitCode=$?
+  [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
   # catchEnvironment "$handler"  "$home/bin/documentation.sh" --clean || exitCode=$?
-
+  __buildPreReleaseStep "$handler" "$interruptCode" "Documentation build" "$home/bin/documentation.sh" || exitCode=$?
+  [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
   #
   # Commit changes
   #
-  catchEnvironment "$handler" "$home/bin/documentation.sh" || exitCode=$?
-  [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
-  if [ "$exitCode" -eq 0 ]; then
-    if gitRepositoryChanged; then
-      statusMessage decorate info "Committing changes ..."
-      catchEnvironment "$handler" gitCommit -- "buildPreRelease $(hookVersionCurrent)" || return $?
-      statusMessage --last decorate info "Committed and ready to release."
-    else
-      statusMessage --last decorate info "No changes to commit."
-    fi
+  if [ "$exitCode" -eq 0 ] && gitRepositoryChanged; then
+    statusMessage decorate info "Committing changes ..."
+    catchEnvironment "$handler" gitCommit -- "buildPreRelease $(hookVersionCurrent)" || exitCode=$?
+    statusMessage --last decorate info "Committed and ready to release."
+  else
+    statusMessage --last decorate info "No changes to commit."
   fi
 
   # Completed message

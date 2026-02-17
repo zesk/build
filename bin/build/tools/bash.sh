@@ -223,17 +223,12 @@ bashSourcePath() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --exclude)
-      shift
-      ff+=("!" "-path" "$(validate "$handler" String "$argument" "${1-}")") || return $?
-      ;;
+    --exclude) shift && ff+=("!" "-path" "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     *)
-      local path tool
-
       foundOne=true
-      path=$(validate "$handler" Directory "directory" "$argument") || return $?
+      local path && path=$(validate "$handler" Directory "directory" "$argument") || return $?
       # shellcheck disable=SC2015
-      while read -r tool; do
+      local tool && while read -r tool; do
         local tool="${tool#./}"
         [ -f "$path/$tool" ] || throwEnvironment "$handler" "$path/$tool is not a bash source file" || return $?
         [ -x "$path/$tool" ] || throwEnvironment "$handler" "$path/$tool is not executable" || return $?

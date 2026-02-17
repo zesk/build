@@ -501,7 +501,7 @@ _testSuiteOrdering() {
 }
 
 # DOC TEMPLATE: --help 1
-# Summary: Was a function tested already?
+# Argument: --help - Flag. Optional. Display this help.
 # When environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and assertion functions track which functions take a function value (for example, `assertExitCode`) and track functions which are run, and stores them in the testing cache directory which accumulate after each test run unless the cache is cleared.
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --verbose - Flag. Optional. Show list of true results when all arguments pass.

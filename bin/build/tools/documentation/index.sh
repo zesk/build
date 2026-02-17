@@ -69,12 +69,13 @@ _documentationIndexGenerate() {
     local fullPath
     while read -r fullPath; do
       local shellFile="${fullPath#"$homeSlash"}"
-      if [ "$shellFile" = "$fullPath" ]; then
+      local base && base=$(basename "$shellFile") || return $?
+      if [ -z "$base" ] || [ "$shellFile" = "$fullPath" ]; then
         decorate error "Unable to strip $homeSlash from $fullPath?" 1>&2
         continue
       fi
       foundOne=true
-      printf -- "%s\n" "$shellFile" >>"$indexDirectory/files/$(basename "$shellFile")" || return $?
+      printf -- "%s\n" "$shellFile" >>"$indexDirectory/files/$base" || return $?
 
       local fileCacheMarker="$indexDirectory/code/${shellFile#/}"
       local functionsCache="$fileCacheMarker/.functions"

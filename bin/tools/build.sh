@@ -161,11 +161,11 @@ __buildBuild() {
 
   if $makeDocumentation; then
     ! $debugFlag || statusMessage decorate warning "Updating documentation cache ..."
-    catchReturn "$handler" buildUsageCompile --quick || return $?
+    catchReturn "$handler" buildUsageCompile || return $?
 
-    local path rootShow rootPath="$home/documentation/.site"
-    rootShow=$(decorate file "$rootPath")
-    for path in "$rootPath" "$home/documentation/.docs"; do
+    local rootPath="$home/documentation/.site"
+    local rootShow && rootShow=$(decorate file "$rootPath")
+    local path && for path in "$rootPath" "$home/documentation/.docs"; do
       if [ -d "$path" ]; then
         statusMessage decorate warning "Removing $path for build" || return $?
         catchEnvironment "$handler" rm -rf "$path" || return $?

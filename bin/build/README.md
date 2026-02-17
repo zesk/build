@@ -1,4 +1,7 @@
-# [Zesk Build Tools](https://build.zesk.com/)
+# [Zesk Build Tools](https://build.zesk.com)
+
+Documentation can be found
+at [https://build.zesk.com](https://build.zesk.com). ([Next version](https://stage-build.zesk.com))
 
 Pipeline, build, and operations tools useful for any project written exclusively in `bash` and works across all major
 platforms, devices, and operating systems.
@@ -6,11 +9,13 @@ platforms, devices, and operating systems.
 - System setup, service management, cron, permissions separations
 - Powerful tools for development workflows - automatic documentation for Bash scripts and functions, completions, and
   interactivity
+- Testing and assertion library for Bash which outputs **jUnit**, **TAP** with extensible hooks.
+- Extensive, platform agnostic utilities 
 
 This code toolkit depends solely on [`bash`](https://www.gnu.org/software/bash/manual/bash.html) and a few other
-binaries (`jq`, `sed`) and a conscientious decision has been made to not depend on any other language libraries, as of
-2026
-support for Bash 3 and 4 remains stable.
+binaries (`jq`, `sed`, `find`, `awk`) and a conscientious decision has been made to not depend on any other language
+libraries, as of
+2026 support for Bash 3 and 4 remains stable.
 
 This toolkit assumes:
 
@@ -27,6 +32,9 @@ To use in your project:
 - Run the installer it before you need this code (will be installed at `./bin/build`)
 - `source bin/build/tools.sh` to load the library and use any function defined
 
+Various patterns exist in this code base which make sense to have scripts which fail in a reliable way which reveals the
+source issue and are suggested to be used within your own tools.
+
 To install it in the operating system:
 
 - Copy `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and `sudo /usr/local/bin/build/install-bin-build.sh`
@@ -40,7 +48,7 @@ Directly from the web:
 ## Main entry points
 
 - `bin/build/tools.sh` - The only include required for all build tools functions, also can be used as
-  `tools.sh identicalCheck ...`
+  `bin/build/tools.sh identicalCheck ...`
 
 ## Project structure
 
@@ -64,8 +72,9 @@ Internally Zesk Build is organized:
 
 Requires:
 
-- `jq` - Parsing JSON files, some formatting
+- `jq` - Parsing JSON files, formatting
 - `bc` - Floating-point math
+- `awk` `sed` `find` - POSIX utilities
 - `curl` or `wget` - Remote installation
 
 Optional:
