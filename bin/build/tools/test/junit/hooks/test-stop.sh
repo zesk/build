@@ -45,7 +45,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
     local returnCode=0 && (
       local junitSuiteTemp="" testFile="-testFile-" stderr="" stdout="" error="" output
-
+      local savedTestSuccess="${TEST_SUCCESS-}"
       local buildHomeRequired="-" plumber="-" housekeeper="-" testShouldFail="-"
 
       catchReturn "$handler" source "$stateFile" || return $?
@@ -60,9 +60,13 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
         local testCaseXML="$junitSuiteTemp/$testName.xml"
         {
           junitTestCaseOpen name="$testName" file="$testFile" "assertions=${TEST_ASSERTIONS-0}"
-          junitProperties testShouldFail=$testShouldFail plumber=$plumber housekeeper=$housekeeper buildHomeRequired=$buildHomeRequired
+          junitProperties testShouldFail=$testShouldFail plumber=$plumber housekeeper=$housekeeper buildHomeRequired=$buildHomeRequired "returnCode=${TEST_RETURN_CODE-}" "reason=${TEST_REASON-}" "success=${TEST_SUCCESS-}" "savedSuccess=$savedTestSuccess" skipped="${TEST_SKIPPED-}"
           if [ -n "$failedMessage" ]; then
             junitTestCaseFailureOpen "$failedMessage"
+            [ ! -f "$stdout" ] || consoleToPlain <"$stdout" | __xmlContent
+            [ ! -f "$stderr" ] || consoleToPlain <"$stderr" | __xmlContent | printfOutputPrefix "%s\n" "[stderr]:"
+            [ ! -f "$error" ] || consoleToPlain <"$error" | __xmlContent | printfOutputPrefix "%s\n" "[error]:"
+            [ ! -f "$output" ] || consoleToPlain <"$output" | __xmlContent | printfOutputPrefix "%s\n" "[output]:"
             junitTestCaseFailureClose
           fi
           if "${TEST_SKIPPED-false}"; then

@@ -187,7 +187,9 @@ testHousekeeper() {
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   statusMessage decorate info Copying "${BUILD_HOME-"(blank)"}" to test location
-  catchEnvironment "$handler" cp -r "$BUILD_HOME" "$testDir" || return $?
+  local i && for i in $(seq 1 10); do
+    randomString >"$testDir/$i-$(randomString).txt"
+  done
   catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 
   assertEquals 108 "$leakCode" || return $?
@@ -205,7 +207,7 @@ testHousekeeper() {
   for testFile in "${testFiles[@]}"; do
     matches+=(--stderr-match "$testFile")
   done
-  assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" __writeTo "${testFiles[@]}" || return $?
+  assertNotExitCode "${matches[@]}" 0 housekeeper __writeTo "${testFiles[@]}" || returnUndo $? ls -la "$testDir" | printfOutputPrefix "%s\n" "Test dir:" "$testDir" || return $?
 
   # Change dust
   matches=(

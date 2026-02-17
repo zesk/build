@@ -41,6 +41,7 @@ testColorBrightness() {
 }
 
 testConsoleFileLink() {
+  local handler="returnMessage"
   mockEnvironmentStart BITBUCKET_WORKSPACE
   mockEnvironmentStart CI
   mockEnvironmentStart BUILD_COLORS
@@ -48,13 +49,15 @@ testConsoleFileLink() {
   export BUILD_COLORS=true
   export CI=
 
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
   bigText consoleFileLink
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
   assertExitCode --stderr-match "non-plain" 2 consoleFileLink "$(decorate black "paint it")" || return $?
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
-  assertExitCode --stdout-no-match "🍎" 0 consoleFileLink --no-app "${BASH_SOURCE[0]}" || return $?
-  assertExitCode --stdout-match "🍎" 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
+  assertExitCode --stdout-no-match "🍎" 0 consoleFileLink --no-app "$home/random-file.txt" || return $?
+  assertExitCode --stdout-match "🍎" 0 consoleFileLink "$home/random-file.txt" || return $?
 
   mockEnvironmentStop BITBUCKET_WORKSPACE CI BUILD_COLORS
 }

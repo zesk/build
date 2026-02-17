@@ -379,19 +379,24 @@ _housekeeperAccountant() {
 
 # Run a command and ensure files are not modified
 # Argument: --ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
+# Argument: --temporary temporaryPath - Directory. Optional. Use this as a temporary directory instead of the default.
+# Argument: --cache cacheDirectory - Directory. Optional. Directory used to cache information between calls; if supplied for similar calls saves time in subsequent calls.
+# Argument: --overhead - Flag. Optional. Report on timing used by this function.
 # Argument: --path path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.
 # Argument: path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.
 # Argument: callable - Callable. Optional. Program to run and watch directory before and after.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 housekeeper() {
   local handler="_${FUNCNAME[0]}"
 
   export TMPDIR
 
   local watchPaths path
-  local __before __after __changed __ignore __pattern __cmd __tempDir=$TMPDIR
-  local __result=0 overheadFlag=false __cacheDirectory=""
+  local __before __after __changed __ignore __cmd __tempDir=$TMPDIR
+  local __result=0 __overheadFlag=false __cacheDirectory="" __debugFlag=false
   local __ignore=()
 
   watchPaths=()
@@ -407,13 +412,10 @@ housekeeper() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --temporary) shift && __tempDir=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
-    --ignore)
-      shift
-      __pattern="$(validate "$handler" String "grepPattern" "${1-}")" || return $?
-      __ignore+=(-e "$__pattern")
-      ;;
+    --ignore) shift && __ignore+=(-e "$(validate "$handler" String "grepPattern" "${1-}")") || return $? ;;
     --cache) shift && __cacheDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
-    --overhead) overheadFlag=true ;;
+    --debug) __debugFlag=true ;;
+    --overhead) __overheadFlag=true ;;
     --path)
       shift
       path="$(validate "$handler" Directory "path" "${1-}")" || return $?
@@ -429,7 +431,7 @@ housekeeper() {
     esac
     shift
   done
-
+  ! $__debugFlag || decorate warning "Run command: $(decorate each code "#$#" "$@")"
   if [ "${#watchPaths[@]}" -eq 0 ]; then
     path=$(catchEnvironment "$handler" pwd) || return $?
     watchPaths+=("$path")
@@ -439,18 +441,22 @@ housekeeper() {
 
   __after=$(TMPDIR="$__tempDir" fileTemporaryName "$handler") || return $?
   __before="$__after.before"
-  local start testStart testEnd
-  start=$(timingStart)
+  local start && start=$(timingStart)
   # Cache the before but NOT the after
   _housekeeperAccountant "$__cacheDirectory" "${watchPaths[@]}" >"$__before"
-  testStart=$(timingStart)
-  if "$@"; then
+  local testEnd testStart && testStart=$(timingStart)
+  if executeEcho "$@"; then
     testEnd=$(timingStart)
     _housekeeperAccountant "" "${watchPaths[@]}" >"$__after"
     if [ "${#__ignore[@]}" -gt 0 ]; then
       __changed="$(muzzleReturn diff -U0 "$__before" "$__after" | grepSafe -e '^[-+][^+-]' | grepSafe -v "${__ignore[@]+${__ignore[@]}}")"
     else
-      __changed="$(muzzleReturn diff "$__before" "$__after" | grepSafe -e '^[-+][^+-]')"
+      __changed="$(muzzleReturn diff -U0 "$__before" "$__after" | grepSafe -e '^[-+][^+-]')"
+    fi
+    if $__debugFlag; then
+      dumpPipe --lines 10000 "${FUNCNAME[0]} BEFORE" <"$__before"
+      dumpPipe --lines 10000 "${FUNCNAME[0]} AFTER" <"$__after"
+      dumpPipe --lines 10000 "${FUNCNAME[0]} CHANGED" <<<"$__changed"
     fi
     __cmd=$(decorate each code -- "$@")
     if [ -n "$__changed" ]; then
@@ -466,8 +472,9 @@ housekeeper() {
   else
     __result=$?
   fi
-  rm -rf "$__before" "$__after" || :
-  if $overheadFlag; then
+
+  catchEnvironment "$handler" rm -f "$__before" "$__after" || return $?
+  if $__overheadFlag; then
     local end overhead
     end=$(timingStart)
     overhead=$((end - start - (testEnd - testStart)))

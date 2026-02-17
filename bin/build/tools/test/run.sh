@@ -220,10 +220,8 @@ __testRun() {
   local passed=true hh=()
   if [ "$resultCode" -ne 0 ]; then
     passed=false
-    hh+=(--failed "$__TEST_SUITE_RESULT")
+    hh=(--failed "$__TEST_SUITE_RESULT")
   fi
-
-  $passed || catchReturn "$handler" environmentValueWrite failedMessage "$__TEST_SUITE_RESULT" >>"$stateFile" || return $?
 
   # ============================================================================================================
   # HOOK test-stop
