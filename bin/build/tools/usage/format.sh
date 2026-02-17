@@ -26,7 +26,7 @@
 # Argument: argumentsText - String. Required. The argument definition.
 # Argument: argumentsDelimiter - String. Required. The argument delimiter.
 # Argument: description - String. Required. The function description
-# Argument: exitCode - Integer. Required. The exit code of the function prior to showing handler
+# Argument: returnCode - Integer. Required. The exit code of the function prior to showing handler
 # Argument: ... - String. Any additional description - output directly.
 # Requires: returnCodeString throwArgument trimSpace usageArgumentUnsignedInteger throwArgument decorate printf
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
@@ -36,24 +36,15 @@ __usageTemplate() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   [ $# -ge 5 ] || throwArgument "$handler" "Requires 5 or more arguments" || return $?
 
-  local binName options="$2" delimiter="$3" description="$4" exitCode
+  local binName options="$2" delimiter="$3" description="$4" returnCode
 
   binName="$1"
-  exitCode=$(validate "$handler" UnsignedInteger "exitCode" "$5") || return $?
+  returnCode=$(validate "$handler" UnsignedInteger "returnCode" "$5") || return $?
   shift 5 || throwArgument "$handler" "shift 5" || return $?
 
   local usageColor=label
-  if [ $# -gt 0 ] && [ -n "$*" ]; then
-    if [ "$exitCode" -eq 0 ]; then
-      printf "%s\n\n" "$(decorate success "$@")"
-    elif [ "$exitCode" != 2 ]; then
-      printf "%s %s\n" "$(decorate error "[$(returnCodeString "$exitCode")]")" "$(decorate code "$@")"
-      return "$exitCode"
-    else
-      printf "%s %s\n" "$(decorate warning "[$(returnCodeString "$exitCode")]")" "$(decorate code "$@")"
-      usageColor=red
-    fi
-  fi
+  __usageTemplateMessage "$returnCode" "$@" || return $?
+  [ "$returnCode" -eq 0 ] || usageColor=red
   description=${description:-"No description"}
   nSpaces=$(fileFieldMaximum 1 "$delimiter" <<<"$options")
 
@@ -72,10 +63,10 @@ __usageTemplate() {
       "$(markdownToConsole <<<"$description")" |
       trimBoth
   fi
-  if [ "$exitCode" != "0" ] && buildDebugEnabled handler; then
+  if [ "$returnCode" != "0" ] && buildDebugEnabled handler; then
     debuggingStack
   fi
-  return "$exitCode"
+  return "$returnCode"
 }
 ___usageTemplate() {
   # __IDENTICAL__ usageDocumentSimple 1

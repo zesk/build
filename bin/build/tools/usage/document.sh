@@ -94,7 +94,7 @@ __usageDocument() {
     ;;
   esac
 
-  if buildDebugEnabled usage-cache-skip || ! __usageDocumentCached "$handler" "$home" "$functionName" "$start"; then
+  if buildDebugEnabled usage-cache-skip || ! __usageDocumentCached "$handler" "$home" "$functionName" "$returnCode" "$@"; then
 
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************

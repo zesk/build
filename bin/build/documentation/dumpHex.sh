@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Output to hex"$'\n'"Argument: --size size - Integer. Output at most size bytes of data."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceHash="cbad93d332115968b7f4983bd2f33b00d702f214"
+sourceHash="77a6fe10aeadc8ecf5f23559a9b55e0d1c6490b5"
 summary="Output to hex"
 summaryComputed="true"
 usage="dumpHex [ --size size ]"

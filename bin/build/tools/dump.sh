@@ -378,7 +378,7 @@ dumpEnvironmentUnsafe() {
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --secure-match | --secure-suffix) throwArgument "$handler" "Unknown $argument (did you mean dumpEnvironment?)" || return $? ;;
     --skip-env | --maximum-length) shift && aa+=("$argument" "$1") ;;
-    --show-skipped) aa+=("$argument" "$1") ;;
+    --show-skipped) aa+=("$argument") ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
