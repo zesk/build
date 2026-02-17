@@ -65,6 +65,50 @@ testBashGetRequires() {
   assertFileContains "$temp" A B C D E F G a b c d || return $?
   catchReturn "$handler" rm -f "$temp" || return $?
 }
+__testReturnClean() {
+  export CLEAN_RAN=true
+  return "$1"
+}
+
+testBashUnwrapAssumptions() {
+  local handler="returnMessage"
+
+  export CLEAN_RAN
+
+  assertEquals "" "${CLEAN_RAN-}" || return $?
+  local assertCode
+  returnAssert || assertCode=$?
+
+  local tempFile && tempFile=$(fileTemporaryName "$handler")
+  assertExitCode --stderr-match returnAssert "$assertCode" __runLeaker "$tempFile" || return $?
+  assertEquals "" "${CLEAN_RAN-}" || return $?
+
+  assertExitCode --stderr-match returnAssert "$assertCode" __runLeakerWhichFires "$tempFile" || return $?
+  assertEquals "true" "${CLEAN_RAN-}" || return $?
+
+  catchReturn "$handler" rm -f "$tempFile" || return $?
+  unset CLEAN_RAN
+}
+__runLeaker() {
+  local handler="returnMessage"
+  # Brackets do not offer any error capture scope, basically
+  {
+    catchReturn "$handler" environmentValueWrite a "1" || return $?
+    catchReturn "$handler" environmentValueWrite b "2" || return $?
+    catchReturn "$handler" returnAssert || return $?
+    catchReturn "$handler" environmentValueWrite c "3" || return $?
+  } >>"$1" || __testReturnClean $? "${clean[@]}" || return $?
+}
+__runLeakerWhichFires() {
+  local handler="returnMessage"
+  # Parenthesis (subshell) does offer error capture scope
+  (
+    catchReturn "$handler" environmentValueWrite a "1" || return $?
+    catchReturn "$handler" environmentValueWrite b "2" || return $?
+    catchReturn "$handler" returnAssert || return $?
+    catchReturn "$handler" environmentValueWrite c "3" || return $?
+  ) >>"$1" || __testReturnClean $? "${clean[@]}" || return $?
+}
 
 # Tag: slow slow-non-critical
 # Not really necessary but kind of neat to know
@@ -289,5 +333,4 @@ testBashPipeBehavior() {
   rm -rf "$temp" "$PIPE_RAN_FILE"
 
   unset TEST_PIPE_RAN PIPE_RAN_FILE
-
 }

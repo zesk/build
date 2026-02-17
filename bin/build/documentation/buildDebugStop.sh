@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-02-17
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="debug.sh"
 description="Stop build debugging if it is enabled"$'\n'""
 file="bin/build/tools/debug.sh"
+fn="buildDebugStop"
 foundNames=([0]="see" [1]="requires" [2]="argument")
 rawComment="Stop build debugging if it is enabled"$'\n'"See: buildDebugStart"$'\n'"Requires: buildDebugEnabled"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 requires="buildDebugEnabled"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="buildDebugStart"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="7c2fb2e15e7ef5d41a8e14e60d45970b1d3dacb3"
+sourceHash="2f51c47feaa2c102da41395dd941f16b4a4a179a"
 summary="Stop build debugging if it is enabled"
 summaryComputed="true"
 usage="buildDebugStop [ --help ]"

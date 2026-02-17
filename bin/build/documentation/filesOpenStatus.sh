@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-02-17
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
 description="Output current open files"$'\n'"stdout"$'\n'""
 file="bin/build/tools/debug.sh"
+fn="filesOpenStatus"
 foundNames=()
 rawComment="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="7c2fb2e15e7ef5d41a8e14e60d45970b1d3dacb3"
+sourceHash="2f51c47feaa2c102da41395dd941f16b4a4a179a"
 summary="Output current open files"
 summaryComputed="true"
 usage="filesOpenStatus"

@@ -59,7 +59,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
 
         local testCaseXML="$junitSuiteTemp/$testName.xml"
         {
-          junitTestCaseOpen name="$testName" file="$testFile" "assertions=${TEST_ASSERTIONS-0}"
+          junitTestCaseOpen name="$testName" file="$testFile" "assertions=${TEST_ASSERTIONS-0}" "elapsed=${TEST_ELAPSED-}"
           junitProperties testShouldFail=$testShouldFail plumber=$plumber housekeeper=$housekeeper buildHomeRequired=$buildHomeRequired "returnCode=${TEST_RETURN_CODE-}" "reason=${TEST_REASON-}" "success=${TEST_SUCCESS-}" "savedSuccess=$savedTestSuccess" skipped="${TEST_SKIPPED-}"
           if [ -n "$failedMessage" ]; then
             junitTestCaseFailureOpen "$failedMessage"

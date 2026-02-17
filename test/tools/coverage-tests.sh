@@ -241,7 +241,7 @@ testBuildFunctionsHelpCoverage() {
         helpCall=("$fun")
       fi
       ! $verboseFlag || statusMessage decorate subtle "Attempting: $(decorate code "${helpCall[@]}")"
-      assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
+      BUILD_COLORS=false assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
       catchEnvironment "$handler" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
     fi
     stopAfter=$((stopAfter - 1))

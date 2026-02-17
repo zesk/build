@@ -59,6 +59,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
           "time=$(timingFormat "$(timingElapsed "$start")")"
           "timestamp=$timestamp"
         )
+
         if [ -n "$terminateReason" ]; then
           junit+=("terminated=true" "reason=$terminateReason")
         fi

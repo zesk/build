@@ -40,12 +40,14 @@ __testRun() {
   local captureStdout && captureStdout=$(fileTemporaryName "$handler") || return $?
   local error="$captureStdout.error"
 
+  local clean=("$captureStdout" "$error")
+
   returnLeak || local leakReturnCode=$?
 
   __TEST_SUITE_RESULT="$__test not run yet"
 
   # Renamed to avoid clobbering by tests
-  __testDirectory=$(pwd)
+  __testDirectory=$(catchEnvironment "$handler" pwd) || returnClean $? "${clean[@]}" || return $?
 
   # Test
   __testSection "$__test" || :
@@ -53,41 +55,37 @@ __testRun() {
   __TEST_SUITE_TRACE="$__test"
   __testStart=$(timingStart)
   platform="$(_testPlatform)"
-  [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || return $?
+  [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || returnClean $? "${clean[@]}" || return $?
   if ! __testFlagPlatformMatch "$platform" "$__flagText" 2>>"$quietLog"; then
-    statusMessage --last decorate warning "Skipping $(decorate code "$__test") on $(decorate error "$platform")"
+    catchReturn "$handler" statusMessage --last decorate warning "Skipping $(decorate code "$__test") on $(decorate error "$platform")" || returnClean $? "${clean[@]}" || return $?
     __TEST_SUITE_RESULT="skipped platform $platform"
     # ============================================================================================================
     # HOOK test-skip
     # ============================================================================================================
     # catchReturn "$handler" environmentValueWrite skipped "$TEST_NAME" >>"$stateFile" || return $?
-    TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || return $?
-    __testRunCleanup "$handler" "$stateFile" || return $?
+    TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || returnClean $? "${clean[@]}" || return $?
+    __testRunCleanup "$handler" "$stateFile" || returnClean $? "${clean[@]}" || return $?
     return 0
   fi
 
+  #
+  # Initial run output line
+  #
   printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
   printf "%s\n" "Running $__test" | tee -a "$captureStdout" >>"$quietLog"
-
-  local captureStderr="$captureStdout.stderr"
 
   #     ▖   ▐        ▐
   #  ▄▄▖▝▚▖ ▜▀ ▞▀▖▞▀▘▜▀
   #     ▞▘  ▐ ▖▛▀ ▝▀▖▐ ▖
   #          ▀ ▝▀▘▀▀  ▀
-  local savedTMPDIR
-  export TMPDIR
-  savedTMPDIR=$TMPDIR
-  TMPDIR="$tempDirectory"
+  export TMPDIR && local savedTMPDIR=${TMPDIR-} && TMPDIR="$tempDirectory"
 
-  local doHousekeeper="" doPlumber="" buildHomeRequired="" testActuallyFails=""
-  doHousekeeper=$(__testFlagBoolean "Housekeeper" "$__flagText")
-  doPlumber=$(__testFlagBoolean "Plumber" "$__flagText")
+  local doHousekeeper && doHousekeeper=$(__testFlagBoolean "Housekeeper" "$__flagText")
+  local doPlumber && doPlumber=$(__testFlagBoolean "Plumber" "$__flagText")
   [ -n "$doHousekeeper" ] || doHousekeeper=true
   [ -n "$doPlumber" ] || doPlumber=true
-
-  buildHomeRequired=$(__testFlagBoolean "Build-Home" "$__flagText" false)
-  testActuallyFails=$(__testFlagBoolean "Fail" "$__flagText" false)
+  local buildHomeRequired && buildHomeRequired=$(__testFlagBoolean "Build-Home" "$__flagText" false)
+  local testActuallyFails && testActuallyFails=$(__testFlagBoolean "Fail" "$__flagText" false)
 
   {
     catchReturn "$handler" environmentValueWrite buildHomeRequired "$buildHomeRequired" || return $?
@@ -126,6 +124,7 @@ __testRun() {
 
   local resultCode=0
   local assertions && assertions=$(assertStatistics --total)
+  local captureStderr="$captureStdout.stderr" && clean+=("$captureStderr")
 
   ###########################################
   ###########################################
@@ -146,58 +145,59 @@ __testRun() {
   ###########################################
   ! $verboseMode || decorate each code "${runner[@]}"
   if "${runner[@]}" > >(tee -a "$captureStdout") 2> >(tee -a "$captureStderr"); then
-    catchReturn "$handler" muzzle popd || :
+    catchReturn "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
     TMPDIR="$savedTMPDIR"
     if fileIsEmpty "$captureStderr"; then
-      printf "%s\n" "SUCCESS $__test" | tee -a "$captureStdout" >>"$quietLog"
+      catchReturn "$handler" printf "%s\n" "SUCCESS $__test" | tee -a "$captureStdout" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
       __TEST_SUITE_RESULT=""
     else
       returnAssert || resultCode=$?
-      printf "%s\n" "stderr-SUCCESS $__test has STDERR:" | tee -a "$error" | tee -a "$quietLog"
-      dumpPipe <"$captureStderr" | tee -a "$quietLog"
+      local stderrLines && stderrLines="$(catchReturn "$handler" fileLineCount "$captureStderr")" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" printf "%s\n" "stderr-SUCCESS $__test has STDERR: $(pluralWord "$stderrLines" line)" | catchReturn "$handler" tee -a "$error" "$quietLog" || return $?
+      catchReturn "$handler" dumpPipe <"$captureStderr" | catchReturn "$handler" tee -a "$quietLog" || returnClean $? "${clean[@]}" || return $?
       __TEST_SUITE_RESULT="[$resultCode] $__test failed, found stderr"
     fi
   else
     resultCode=$?
-    catchReturn "$handler" muzzle popd || :
+    catchReturn "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
     TMPDIR="$savedTMPDIR"
-    printf "\n%s\n" "FAILED [$resultCode] $__test" | tee -a "$error" | tee -a "$quietLog"
+    catchReturn "$handler" printf "\n%s\n" "FAILED [$resultCode] $__test" | catchReturn "$handler" tee -a "$error" "$quietLog" || returnClean $? "${clean[@]}" || return $?
     __TEST_SUITE_RESULT="[$resultCode] $__test failed"
     if ! fileIsEmpty "$captureStderr" && stringFoundInsensitive ";stderr-FAILED;" ";$__flagText;"; then
-      printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$error" | tee -a "$quietLog"
-      dumpPipe <"$captureStderr" | tee -a "$quietLog"
+      catchReturn "$handler" printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | catchReturn "$handler" tee -a "$error" "$quietLog" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" dumpPipe <"$captureStderr" | tee -a "$quietLog" || returnClean $? "${clean[@]}" || return $?
       __TEST_SUITE_RESULT="[$resultCode] $__test failed (found stderr)"
     fi
   fi
 
-  ! $doHousekeeper || catchEnvironment "$handler" rm -rf "$housekeeperCache" || return $?
-  catchEnvironment "$handler" rm -rf "$captureStderr" || return $?
+  ! $doHousekeeper || catchEnvironment "$handler" rm -rf "$housekeeperCache" || returnClean $? "${clean[@]}" || return $?
 
   if $testActuallyFails; then
     if [ $resultCode -eq 0 ]; then
-      decorate error "Test supposed to fail but succeeded?" || return $?
-      printf "%s\n" "$__test: Test supposed to fail but succeeded?" >>"$error" || return $?
+      catchReturn "$handler" decorate error "Test supposed to fail but succeeded?" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" printf "%s\n" "$__test: Test supposed to fail but succeeded?" >>"$error" || returnClean $? "${clean[@]}" || return $?
       returnAssert || resultCode=$?
       __TEST_SUITE_RESULT="[$resultCode] $__test didn't fail as intended"
     else
-      decorate success "Test supposed to fail: $resultCode -> 0"
-      printf "%s\n" "$__test: Test supposed to fail: $resultCode -> 0" >>"$captureStdout" || return $?
+      catchReturn "$handler" decorate success "Test supposed to fail: $resultCode -> 0" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" printf "%s\n" "$__test: Test supposed to fail: $resultCode -> 0" >>"$captureStdout" || returnClean $? "${clean[@]}" || return $?
       resultCode=0
     fi
   fi
 
   handler="$__handler"
 
-  {
+  (
     catchReturn "$handler" environmentValueWrite stderr "$captureStderr" || return $?
     catchReturn "$handler" environmentValueWrite stdout "$captureStdout" || return $?
     catchReturn "$handler" environmentValueWrite error "$error" || return $?
-  } >>"$stateFile" || return $?
+  ) >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   # So, `handler` can be overridden if it is made global somehow, declare -r prevents changing here
   # documentation-tests.sh change this apparently
   # Instead of preventing this handler, just work around it
   catchEnvironment "$handler" cd "$__testDirectory" || return $?
+  local elapsed && elapsed="$(timingElapsed "$__testStart")"
   local timingText && timingText="$(timingReport "$__testStart")"
   if [ "$resultCode" = "$leakReturnCode" ]; then
     if [ -f "$captureStderr" ]; then
@@ -226,9 +226,11 @@ __testRun() {
   # ============================================================================================================
   # HOOK test-stop
   # ============================================================================================================
-  TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" return $?
+  TEST_ELAPSED="$elapsed" TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" return $?
 
   __testRunCleanup "$handler" "$stateFile" || return $?
+
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   return "$resultCode"
 }
