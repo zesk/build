@@ -36,23 +36,27 @@ testHookSystem() {
 
   mockEnvironmentStart BUILD_HOOK_EXTENSIONS
   mockEnvironmentStart BUILD_HOOK_DIRS
-  mockEnvironmentStart BUILD_HOME
+  mockEnvironmentStart BUILD_HOME "$savedHome"
 
-  unset BUILD_HOOK_DIRS
+  unset BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS
 
-  catchReturn "$handler" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
+  executeEcho decorate pair BUILD_HOOK_EXTENSIONS "${BUILD_HOOK_EXTENSIONS-}" || return $?
+  executeEcho decorate pair BUILD_HOOK_DIRS "${BUILD_HOOK_DIRS-}" || return $?
 
-  decorate pair BUILD_HOOK_EXTENSIONS "$BUILD_HOOK_EXTENSIONS"
-  decorate pair BUILD_HOOK_DIRS "$BUILD_HOOK_DIRS"
+  catchReturn "$handler" executeEcho buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
+  catchReturn "$handler" executeEcho buildEnvironmentLoad BUILD_HOOK_EXTENSIONS || return $?
+
+  executeEcho decorate pair BUILD_HOOK_EXTENSIONS "${BUILD_HOOK_EXTENSIONS-}" || return $?
+  executeEcho decorate pair BUILD_HOOK_DIRS "${BUILD_HOOK_DIRS-}" || return $?
 
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   randomApp=$(randomString)
   randomDefault=$(randomString)
 
-  cd "$testDir" || return $?
-  mkdir -p "$testDir/bin/hooks"
-  cp -R "$savedHome/bin/build" "$testDir/bin/build"
+  executeEcho cd "$testDir" || return $?
+  executeEcho mkdir -p "$testDir/bin/hooks" || return $?
+  executeEcho cp -R "$savedHome/bin/build" "$testDir/bin/build" || return $?
   BUILD_HOME="$testDir"
 
   for f in test0.sh test1.sh test3.bash noExtension noExtension.bash; do

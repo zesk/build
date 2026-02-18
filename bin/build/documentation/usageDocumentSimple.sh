@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-17
+# Generated on 2026-02-18
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"source - File. Required. File where documentation exists."$'\n'"function - String. Required. Function to document."$'\n'"returnCode - UnsignedInteger. Required. Exit code to return."$'\n'"message ... - String. Optional. Message to display to the user."$'\n'""
 base="usage.sh"
@@ -12,7 +12,7 @@ rawComment="Output a simple error message for a function"$'\n'"Argument: --help 
 requires="bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="a6957213302ad94c0411131afee81b8f3e4c4480"
+sourceHash="1f36072d5d570a92fb59e6a3148fd153c8c00a7e"
 summary="Output a simple error message for a function"
 summaryComputed="true"
 usage="usageDocumentSimple [ --help ] source function returnCode [ message ... ]"

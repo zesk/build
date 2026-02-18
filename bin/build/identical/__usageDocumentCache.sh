@@ -14,16 +14,19 @@
 # Argument: message ... - String. Optional. Display this message which describes why `exitCode` occurred.
 # Requires: decorateThemed catchEnvironment __usageTemplateMessage decorate
 __usageTemplateMessage() {
-  local returnCode="$1" && shift
-  if [ $# -gt 0 ] && [ -n "$*" ]; then
-    if [ "$returnCode" -eq 0 ]; then
-      printf "%s\n\n" "$(decorate success "$@")"
-    elif [ "$returnCode" != 2 ]; then
-      printf "%s %s\n" "$(decorate error "[$(returnCodeString "$returnCode")]")" "$(decorate code "$@")"
-      return "$returnCode"
-    else
-      printf "%s %s\n" "$(decorate warning "[$(returnCodeString "$returnCode")]")" "$(decorate code "$@")"
-    fi
+  local returnCode="${1-0}"
+  [ $# -eq 0 ] || shift
+  local suffix="$*"
+  if [ "$returnCode" -eq 0 ]; then
+    [ -n "$suffix" ] || return 0
+    decorate success "$suffix"
+  elif [ "$returnCode" != 2 ]; then
+    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
+    printf "%s%s\n" "$(decorate error "[$(returnCodeString "$returnCode")]")" "$suffix"
+    return "$returnCode"
+  else
+    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
+    printf "%s%s\n" "$(decorate warning "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 

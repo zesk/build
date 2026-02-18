@@ -157,7 +157,7 @@ _returnClean() {
 # Return Code: Any
 # Requires: printf decorate execute __decorateExtensionQuote __decorateExtensionEach
 executeEcho() {
-  printf -- "➡️ %s\n" "$(decorate each quote -- "$@")" && execute "$@" || return $?
+  printf -- "➡️ %s\n" "$(decorate each quote "$@")" && execute "$@" || return $?
 }
 
 # _IDENTICAL_ execute 7

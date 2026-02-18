@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-02-18
 # shellcheck disable=SC2034
 argument="exitCode - Integer. Required. Exit code to return."$'\n'"item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr."$'\n'""
 base="_sugar.sh"
 description="Delete files or directories and return the same exit code passed in."$'\n'""
 file="bin/build/tools/_sugar.sh"
+fn="returnClean"
 foundNames=([0]="argument" [1]="requires" [2]="group")
 group="Sugar"$'\n'""
 rawComment="Delete files or directories and return the same exit code passed in."$'\n'"Argument: exitCode - Integer. Required. Exit code to return."$'\n'"Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr."$'\n'"Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help"$'\n'"Group: Sugar"$'\n'""$'\n'""
 requires="isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="4bce6d8a22071b1c44a64aadb33672fc47a840f1"
+sourceHash="00f5bf2862b4fee06819afcf6d6db6adc911bcff"
 summary="Delete files or directories and return the same exit code"
 summaryComputed="true"
 usage="returnClean exitCode [ item ]"
