@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-17
+# Generated on 2026-02-19
 # shellcheck disable=SC2034
 argument="--underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"--secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"--keep-comments - Flag. Keep all comments in the source"$'\n'"--variables - CommaDelimitedList. Optional. Always output the value of these variables."$'\n'"--parse - Flag. Optional. Parse the file for things which look like variables to output (basically \`^foo=\`)"$'\n'"environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible)."$'\n'""
 base="compile.sh"
@@ -12,7 +12,7 @@ rawComment="Load an environment file and evaluate it using bash and output the c
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="source"$'\n'""
 sourceFile="bin/build/tools/environment/compile.sh"
-sourceHash="80e487b9e4ae84e6949aafb8c0a5426ce3c3f33c"
+sourceHash="850639d296c635d695c24b1f18376e8fe9feb693"
 summary="Load an environment file and evaluate it using bash and"
 summaryComputed="true"
 usage="environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --variables ] [ --parse ] environmentFile"
