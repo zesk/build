@@ -103,7 +103,7 @@ _documentationIndexGenerate() {
         fi
       done < <(__pcregrep -n -o1 -M '\n\s*([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$fullPath")
       ! $verboseFlag || statusMessage decorate success "Generated $count functions for $shellFile"
-    done < <(find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' || :)
+    done < <(find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' ! -path '*/bin/build/documentation/*' || :)
   done
   if ! $foundOne; then
     throwEnvironment "$handler" "No shell files found in $(decorate each file "${codePaths[@]}")" || return $?
