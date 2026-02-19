@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-08
+# Generated on 2026-02-19
 # shellcheck disable=SC2034
 argument="exitCode - UnsignedInteger. Required. Exit code to return. Default is 1."$'\n'"message ... - String. Optional. Message to output"$'\n'""
 base="example.sh"
 description="Return passed in integer return code and output message to \`stderr\` (non-zero) or \`stdout\` (zero)"$'\n'""
 file="bin/build/tools/example.sh"
+fn="returnMessage"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Return passed in integer return code and output message to \`stderr\` (non-zero) or \`stdout\` (zero)"$'\n'"Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1."$'\n'"Argument: message ... - String. Optional. Message to output"$'\n'"Return Code: exitCode"$'\n'"Requires: isUnsignedInteger printf returnMessage"$'\n'""$'\n'""
 requires="isUnsignedInteger printf returnMessage"$'\n'""
 return_code="exitCode"$'\n'""
 sourceFile="bin/build/tools/example.sh"
-sourceHash="0f8701d8609f673d7df650a54a218e19507655e6"
+sourceHash="9e4e0b6459728fe22941b831964230f2c77fa1de"
 summary="Return passed in integer return code and output message to"
 summaryComputed="true"
 usage="returnMessage exitCode [ message ... ]"
