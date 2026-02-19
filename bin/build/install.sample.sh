@@ -942,28 +942,48 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL __usageDocumentCached 54
+# IDENTICAL __usageMessage 39
 
-# Output the error message for usage consistently
-# Argument: returnCode - UnsignedInteger. Required. Exit code to display
+# Summary: Icon for usage messages
+# - `0` - meaning no error, icon is `🏆`
+# - non-`0` - Error, icon is `❌`
+__usageMessageIcon() {
+  [ "$1" -eq 0 ] && printf -- "%s" "🏆" || printf -- "%s" "❌"
+}
+
+# Summary: Style usage messages
+# Format arguments using the usage message return code to style output.
+# Argument: returnCode - UnsignedInteger. Required. Return code to use as the basis for styling output.
+# - `0` - meaning no error, style is `info`
+# - `1` - Environment error, style is `error`
+# - `2` - Argument error, style is `red`
+# - `*` - All additional errors, style is `orange`
+__usageMessageStyle() {
+  local color="info" && case "$1" in 0) ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac && shift
+  decorate "$color" "$@"
+}
+
+# Output the message for usage consistently
+# Argument: returnCode - UnsignedInteger. Optional. Exit code to possibly display with message.
 # Argument: message ... - String. Optional. Display this message which describes why `exitCode` occurred.
-# Requires: decorateThemed catchEnvironment __usageTemplateMessage decorate
-__usageTemplateMessage() {
+# Requires: decorate returnCodeString
+__usageMessage() {
   local returnCode="${1-0}"
   [ $# -eq 0 ] || shift
   local suffix="$*"
   if [ "$returnCode" -eq 0 ]; then
     [ -n "$suffix" ] || return 0
-    decorate success "$suffix"
+    __usageMessageStyle "$returnCode" "$suffix"
   elif [ "$returnCode" != 2 ]; then
     [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s%s\n" "$(decorate error "[$(returnCodeString "$returnCode")]")" "$suffix"
-    return "$returnCode"
+    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
     [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s%s\n" "$(decorate warning "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
+
+# IDENTICAL __usageDocumentCached 30
 
 # Argument: handler - Function. Required.
 # Argument: home - Directory. BUILD_HOME
@@ -971,28 +991,25 @@ __usageTemplateMessage() {
 # Argument: returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to `0` - no error.
 # Argument: message ... - String. Optional. Display this message which describes why `exitCode` occurred.
 # Environment: BUILD_COLORS
-# Requires: decorateThemed catchEnvironment __usageTemplateMessage decorate
+# Requires: decorateThemed catchEnvironment __usageMessage decorate
 __usageDocumentCached() {
   local handler="$1" && shift
   local home="$1" && shift
   local functionName="$1" && shift
-  local stqrt="$1" && shift
-  local returnCode="${1-0}"
   local suffix="bin/build/documentation/$functionName.sh"
   local settingsFile="$home/$suffix"
   [ -f "$settingsFile" ] || return 1
-  : "$stqrt"
   decorateInitialized || decorate info -- || return $?
   (
     local helpConsole="" helpPlain=""
     # shellcheck source=/dev/null
     catchEnvironment "$handler" source "$settingsFile" || return $?
     if [ "${BUILD_COLORS-}" != "false" ] && [ -n "$helpConsole" ]; then
-      __usageTemplateMessage "$@" || return $?
+      __usageMessage "$@" || return $?
       catchEnvironment "$handler" decorateThemed <<<"$helpConsole" || return $?
     else
       [ -n "$helpPlain" ] || return 1
-      __usageTemplateMessage "$@" || return $?
+      __usageMessage "$@" || return $?
       catchEnvironment "$handler" printf "%s\n" "$helpPlain" || return $?
     fi
   ) || return $?
@@ -1007,25 +1024,25 @@ __usageDocumentCached() {
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - String. Optional. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached
+# Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached __usageMessageStyle __usageMessage
 usageDocumentSimple() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" skip=false && shift 3
+  local source="${1-}" functionName="${2-}" returnCode="${3-}" && shift 3
 
-  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac
-  [ "$returnCode" -eq 0 ] || exec 1>&2
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate BOLD "$color" "$*")"
-  export BUILD_HOME
-  if [ ! -f "$source" ]; then
-    [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
-    source="$BUILD_HOME/$source"
-    [ -f "$source" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
+  [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
+  if ! __usageDocumentCached "$handler" "${BUILD_HOME-}" "${functionName}" "$returnCode" "$@"; then
+    __usageMessage "$returnCode" "$@" || return $?
+    export BUILD_HOME
+    if [ ! -f "$source" ]; then
+      [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (PWD: \"${PWD-}\", BUILD_HOME?: \"${BUILD_HOME-}\")" || return $?
+      source="$BUILD_HOME/$source"
+      [ -f "$source" ] || returnArgument "Unable to locate $source (PWD: \"${PWD-}\", BUILD_HOME: \"${BUILD_HOME-}\")" || return $?
+    fi
+    bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g" | __usageMessageStyle "$returnCode"
   fi
-  if ! __usageDocumentCached "$handler" "${BUILD_HOME-}" "${functionName}"; then
-    bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g" | decorate "$helpColor"
-  fi
+  [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
   return "$returnCode"
 }
 _usageDocumentSimple() {

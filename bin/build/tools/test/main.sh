@@ -280,11 +280,11 @@ __testSuite() {
     fi
 
     if [ ${#suites[@]} -gt 0 ]; then
-      printf "%s %s\n" "$(decorate warning "Adding $(pluralWord "${#suites[@]}" suite):")" "$(decorate BOLD orange "${suites[@]}")"
+      statusMessage printf "%s %s\n" "$(decorate warning "Adding $(pluralWord "${#suites[@]}" suite):")" "$(decorate BOLD orange "${suites[@]}")"
     fi
 
     catchEnvironment "$handler" printf -- "%s\n" "$intro" | consoleToPlain >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
-    printf "%s:%s : Found %s\n" "Query" "$(printf -- " %s" "${qq[@]+"${qq[@]}"}")" "$(pluralWord "$foundTestCount" "test")" | tee -a "$quietLog" || return $?
+    statusMessage printf "%s:%s : Found %s\n" "Query" "$(printf -- " %s" "${qq[@]+"${qq[@]}"}")" "$(pluralWord "$foundTestCount" "test")" | tee -a "$quietLog" || return $?
     # QUIET LOG =============== QUIET LOG =============== QUIET LOG =============== QUIET LOG ===============
   fi
 

@@ -16,13 +16,14 @@
 #
 # Use with __documentationIndexLookup
 #
+# Argument: handler - Function. Required. Error handler.
 # Argument: codePath - Directory. Required. Path where code is stored (should remain identical between invocations)
 # Argument: cacheDirectory - Required. Cache directory where the index will be created.
 # Argument: --verbose - Flag. Optional.
 # See: __documentationIndexLookup
 # Requires: __pcregrep
 _documentationIndexGenerate() {
-  local handler="_${FUNCNAME[0]}"
+  local handler="$1" && shift
 
   local codePaths=() verboseFlag=false
 
@@ -114,10 +115,6 @@ _documentationIndexGenerate() {
   catchEnvironment "$handler" rm -f "$indexFile.unsorted" || return $?
   ! $verboseFlag || statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(timingReport "$start" in)"
 }
-__documentationIndexGenerate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 #
 # List of functions which are not linked to anywhere in the documentation index
@@ -172,8 +169,8 @@ _documentationIndexUnlinkedFunctions() {
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }
 __documentationIndexUnlinkedFunctions() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Compute the documentationPath for all functions defined in documentationPath
@@ -235,8 +232,8 @@ __documentationIndexDocumentation() {
   statusMessage decorate info "$(printf "%s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate cyan "$(pluralWord "$total" "function")")" "for" "$(decorate each file "${sourcePaths[@]}")" "in" "$(timingReport "$start")")"
 }
 ___documentationIndexDocumentation() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Outputs relative path to cacheDirectory for shared handler
@@ -245,6 +242,6 @@ __documentationIndexCache() {
   catchReturn "$handler" documentationBuildCache "index" || return $?
 }
 ___documentationIndexCache() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

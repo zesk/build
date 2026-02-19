@@ -190,7 +190,7 @@ __documentationBuild() {
     local elapsed
     elapsed=$(timingStart)
     statusMessage decorate info "Generating source indexes ..."
-    catchReturn "$handler" _documentationIndexGenerate "${indexArgs[@]+${indexArgs[@]}}" "${sourcePaths[@]}" || return $?
+     _documentationIndexGenerate "$handler" "${indexArgs[@]+${indexArgs[@]}}" "${sourcePaths[@]}" || return $?
     statusMessage --last timingReport "$elapsed" "Indexes took"
     statusMessage timingReport "$start" "Elapsed so far"
   fi

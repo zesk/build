@@ -43,7 +43,7 @@ __usageTemplate() {
   shift 5 || throwArgument "$handler" "shift 5" || return $?
 
   local usageColor=label
-  __usageTemplateMessage "$returnCode" "$@" || return $?
+  __usageMessage "$returnCode" "$@" || return $?
   [ "$returnCode" -eq 0 ] || usageColor=red
   description=${description:-"No description"}
   nSpaces=$(fileFieldMaximum 1 "$delimiter" <<<"$options")
