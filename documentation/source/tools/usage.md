@@ -23,3 +23,11 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 ## Argument validation
 
 For argument validation, use [validate](./validate.md).
+
+## Internal Functions
+
+{__usageDocumentCached}
+
+{__usageMessage}
+
+{__usageMessageStyle}

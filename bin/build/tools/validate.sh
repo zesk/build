@@ -294,7 +294,7 @@ __validateTypeDate() {
 __validateTypeDirectoryList() {
   local value="${1-}"
   local directories=() directory dd=() index=0
-  IFS=":" read -r -a directories <<<"$value" || :
+  IFS=":" read -d $'\n' -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
     [ -d "$directory" ] || _validateThrow "element #$index is not type directory $(decorate code "$directory"): $(decorate value "$value")" || return $?
