@@ -31,7 +31,7 @@ environmentCompile() {
     --remove-blank) __removeBlankFlag=true ;;
     --variables)
       shift && local __listText && __listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
-      local __variableList=() && IFS="," read -r -a __variableList <<<"$__listText" || :
+      local __variableList=() && IFS="," read -d $'\n' -r -a __variableList <<<"$__listText"
       __v+=("${__variableList[@]+"${__variableList[@]}"}")
       ;;
     --keep-comments) __keepComments=true ;;

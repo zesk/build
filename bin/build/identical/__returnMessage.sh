@@ -18,11 +18,14 @@
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
   local handler="_${FUNCNAME[0]}"
-  local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
+  local code="${1:-1}" && shift 2>/dev/null
   if [ "$code" = "--help" ]; then "$handler" 0 && return; fi
   isUnsignedInteger "$code" || returnMessage 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${handler#_} non-integer \"$code\"" "$@" || return $?
-  if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
-  printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
+  if [ "$code" -gt 0 ]; then
+    printf -- "%s %s\n" "❌ [$code]" "${*-§}" 1>&2
+  else
+    printf -- "%s %s\n" "✅" "${*-§}"
+  fi
   return "$code"
 }
 _returnMessage() {

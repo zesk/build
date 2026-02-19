@@ -73,28 +73,15 @@ __usageDocument() {
 
   catchArgument "$handler" isInteger "$returnCode" || catchArgument "$handler" "$(debuggingStack)" || return $?
 
-  local color="success"
   case "$returnCode" in
-  0 | 2)
-    if buildDebugEnabled "fast-usage"; then
-      if [ "$returnCode" -ne 0 ]; then
-        exec 1>&2
-        color="warning"
-      fi
-      printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" -- "$@")"
-      return "$returnCode"
-    fi
-    ;;
-  *)
-    if [ "$returnCode" -ne 0 ]; then
-      exec 1>&2 && color="error"
-    fi
-    printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" -- "$@")"
-    return "$returnCode"
-    ;;
+  0) if buildDebugEnabled "fast-usage"; then __usageMessage "$returnCode" "$@" && return "$returnCode"; fi ;;
+  2) if buildDebugEnabled "fast-usage"; then __usageMessage "$returnCode" "$@" 1>&2 && return "$returnCode"; fi ;;
+  *) __usageMessage "$returnCode" "$(decorate code " $functionName ")" "$@" 1>&2 && return "$returnCode" ;;
   esac
 
+  [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
   if buildDebugEnabled usage-cache-skip || ! __usageDocumentCached "$handler" "$home" "$functionName" "$returnCode" "$@"; then
+    [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
 
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
@@ -144,8 +131,6 @@ __usageDocument() {
     : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
     : "$build_debug"
 
-    [ "$returnCode" -eq 0 ] || exec 1>&2 && color="error"
-
     catchReturn "$__handler" bashRecursionDebug || return $?
     local variable label formatter finished=false suffix=""
     while ! $finished; do
@@ -165,7 +150,10 @@ __usageDocument() {
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
     description=$(trimTail <<<"$description")
+
+    [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
     __usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" name="$name" mapEnvironment
+    [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
 
     __profileLabel="__usageTemplate $fn"
     # IDENTICAL profileFunctionMarker 3
@@ -174,6 +162,8 @@ __usageDocument() {
     # ********************************************************************************************************************
     catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
     catchReturn "$__handler" bashRecursionDebug --end || return $?
+  else
+    [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
   fi
 
   __profileLabel="cleanup"

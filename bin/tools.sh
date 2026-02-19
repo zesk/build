@@ -11,7 +11,7 @@
 # Copyright &copy; 2026, Market Acumen, Inc.
 #
 
-# _IDENTICAL_ application.sh 143
+# _IDENTICAL_ application.sh 146
 
 #
 # This file generically loads all application tools in `./bin/tools` and allows for extensions
@@ -98,7 +98,7 @@ __build() {
   __install "$installerPath/install-bin-build.sh" "bin/build/tools.sh" "$relative" "$@" || return $?
 }
 
-# IDENTICAL returnMessage 39
+# IDENTICAL returnMessage 42
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -107,11 +107,14 @@ __build() {
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
   local handler="_${FUNCNAME[0]}"
-  local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
+  local code="${1:-1}" && shift 2>/dev/null
   if [ "$code" = "--help" ]; then "$handler" 0 && return; fi
   isUnsignedInteger "$code" || returnMessage 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${handler#_} non-integer \"$code\"" "$@" || return $?
-  if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
-  printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
+  if [ "$code" -gt 0 ]; then
+    printf -- "%s %s\n" "❌ [$code]" "${*-§}" 1>&2
+  else
+    printf -- "%s %s\n" "✅" "${*-§}"
+  fi
   return "$code"
 }
 _returnMessage() {
