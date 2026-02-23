@@ -530,20 +530,21 @@ outputTrigger() {
   local tempOutput lineCount=0
 
   tempOutput=$(fileTemporaryName "$handler") || return $?
-  local finished=false
+  local finished=false clean=("$tempOutput")
   while ! $finished; do
-    read -r line || finished=true
+    local line && read -r line || finished=true
     local delim=$'\n' && ! $finished || delim=""
     printf "%s%s" "$line" "$delim" >>"$tempOutput"
     lineCount=$((lineCount + 1))
   done
   if [ ! -s "$tempOutput" ]; then
-    catchEnvironment "$handler" rm -rf "$tempOutput" || return $?
     ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$(pluralWord "$lineCount" line)")" || :
+    catchEnvironment "$handler" rm -rf "$tempOutput" || return $?
     return 0
   fi
-  catchEnvironment "$handler" cat "$tempOutput" || return $?
-  ! $verbose || throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$(pluralWord "$lineCount" line)"): " "$@" || return $?
+  catchEnvironment "$handler" cat "$tempOutput" || returnClean $? "${clean[@]}" || return $?
+  ! $verbose || throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$(pluralWord "$lineCount" line)"): " "$@" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "$tempOutput" || return $?
   return 1
 }
 _outputTrigger() {
