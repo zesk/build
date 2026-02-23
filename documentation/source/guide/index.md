@@ -28,6 +28,7 @@ your systems.
 - [`test` cheatsheet](./test-cheatsheet.md) - Bash `test` and `[ ]` expressions
 - [Trap Manual Page](./trap.md) - Never enjoy digging to find this definition for `trap`.
 - [Bash cheatsheet](./bash-cheatsheet.md) - `shopt` and `set` meanings
+- [strftime cheatsheet](./strftime-cheatsheet.md) - `date` percent formatting codes
 - [Bash FAQ](./bash-FAQ.md) - Raw, original document.
 - [man read](./man-read.md) - Manual page for `read`
 - [man trap](./man-trap.md) - Manual page for `trap`
