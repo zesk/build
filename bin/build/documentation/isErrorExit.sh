@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-17
+# Generated on 2026-02-23
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
@@ -12,7 +12,7 @@ rawComment="Returns whether the shell has the error exit flag set"$'\n'"Useful i
 requires="-"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="2f51c47feaa2c102da41395dd941f16b4a4a179a"
+sourceHash="e63fcc99dec04cd39a71d72e430b7e22a07145ab"
 summary="Returns whether the shell has the error exit flag set"
 summaryComputed="true"
 usage="isErrorExit"

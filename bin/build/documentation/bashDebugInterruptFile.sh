@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-17
+# Generated on 2026-02-23
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--error - Flag. Add ERR trap."$'\n'"--interrupt - Flag. Add INT trap."$'\n'""
 base="debug.sh"
@@ -12,7 +12,7 @@ rawComment="Adds a trap to capture the debugging stack on interrupt"$'\n'"Use th
 requires="trap"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="2f51c47feaa2c102da41395dd941f16b4a4a179a"
+sourceHash="e63fcc99dec04cd39a71d72e430b7e22a07145ab"
 summary="Adds a trap to capture the debugging stack on interrupt"
 summaryComputed="true"
 usage="bashDebugInterruptFile [ --help ] [ --handler handler ] [ --error ] [ --interrupt ]"
