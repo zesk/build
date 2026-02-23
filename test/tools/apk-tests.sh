@@ -35,7 +35,7 @@ testAlpineContainer() {
     mockEnvironmentStart BUILD_DOCKER_IMAGE
     mockEnvironmentStart BUILD_DOCKER_PATH
     mockEnvironmentStart BUILD_DOCKER_PLATFORM
-    mockEnvironmentStart LC_TERMINAL "$LC_TERMINAL-"
+    mockEnvironmentStart LC_TERMINAL "${LC_TERMINAL-}"
 
     local handler="returnMessage" home
 
