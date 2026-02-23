@@ -27,7 +27,7 @@ testConsoleTrimWidth() {
   assertEquals "$testLine" "$(catchReturn "$handler" consoleTrimWidth "$lineWidth" "$testLine")" || return $?
 
   assertExitCode 0 isPositiveInteger "$lineWidth" || return $?
-  index="$lineWidth"
+  local index="$lineWidth"
   while [ "$index" -gt 0 ]; do
     local trimmedLine && trimmedLine=$(catchReturn "$handler" consoleTrimWidth "$index" "$testLine") || return $?
     local trimmedLineWidth && trimmedLineWidth=$(catchReturn "$handler" consolePlainLength "$trimmedLine") || return $?

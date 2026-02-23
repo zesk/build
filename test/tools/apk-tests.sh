@@ -31,10 +31,11 @@ testIsApkInstalled() {
 testAlpineContainer() {
   if executableExists docker; then
 
+    mockEnvironmentStart TERM "${TERM-}"
     mockEnvironmentStart BUILD_DOCKER_IMAGE
     mockEnvironmentStart BUILD_DOCKER_PATH
     mockEnvironmentStart BUILD_DOCKER_PLATFORM
-    mockEnvironmentStart LC_TERMINAL
+    mockEnvironmentStart LC_TERMINAL "$LC_TERMINAL-"
 
     local handler="returnMessage" home
 
@@ -52,6 +53,7 @@ testAlpineContainer() {
 
     catchEnvironment "$handler" muzzle popd || return $?
 
+    mockEnvironmentStop TERM
     mockEnvironmentStop BUILD_DOCKER_IMAGE
     mockEnvironmentStop BUILD_DOCKER_PATH
     mockEnvironmentStop BUILD_DOCKER_PLATFORM
