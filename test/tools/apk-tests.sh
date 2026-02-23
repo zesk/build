@@ -28,6 +28,7 @@ testIsApkInstalled() {
   mockEnvironmentStop BUILD_DEBUG
 }
 
+# Test-Plumber: false
 testAlpineContainer() {
   if executableExists docker; then
 
