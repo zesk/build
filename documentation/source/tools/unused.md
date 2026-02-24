@@ -25,8 +25,6 @@ Hides these from [New and uncategorized functions](./todo.md)
 
 {insideDocker}
 
-{clearLine}
-
 {cachedShaPipe}
 
 {consoleColorMode}
