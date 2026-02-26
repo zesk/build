@@ -19,4 +19,8 @@ main (a pseudo function name), if the script file was invoked directly (e.g., ./
 source (a pseudo function name), if the script file was sourced (e.g. source ./script or . ./script).
 
 > Source: [StackOverflow](https://stackoverflow.com/questions/35006457/choosing-between-0-and-bash-source)
-> 
+>
+
+<!-- TEMPLATE guideFooter 2 -->
+<hr />
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

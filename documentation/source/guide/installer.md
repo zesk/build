@@ -23,3 +23,7 @@ This ensures that all dependent functions are included in the installation file 
 of the installer script to another project).
 
 *this document is a work in progress and needs to be completed*. TODO
+
+<!-- TEMPLATE guideFooter 2 -->
+<hr />
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

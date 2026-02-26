@@ -46,3 +46,7 @@ cannot be trapped or reset.
 Trapped signals that are not being ignored are reset to their original values in a child process when it is created. The
 return status is
 false if any `sigspec` is invalid; otherwise `trap` returns true (Return code: 0)
+
+<!-- TEMPLATE guideFooter 2 -->
+<hr />
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

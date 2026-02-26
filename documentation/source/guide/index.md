@@ -27,7 +27,9 @@ your systems.
 - [`FUNCNAME` and `BASH_SOURCE` notes](./notes.md)
 - [`test` cheatsheet](./test-cheatsheet.md) - Bash `test` and `[ ]` expressions
 - [Trap Manual Page](./trap.md) - Never enjoy digging to find this definition for `trap`.
-- [Bash cheatsheet](./bash-cheatsheet.md) - `shopt` and `set` meanings
+- [Bash cheatsheet](./bash-cheatsheet.md) - `shopt` meanings
+- [Set cheatsheet](./set-cheatsheet.md) - `set` meanings
+- [Bash variable cheatsheet](./bash-variable-cheatsheet.md) - `${var#match}` and `${var%match}`
 - [strftime cheatsheet](./strftime-cheatsheet.md) - `date` percent formatting codes
 - [Bash FAQ](./bash-FAQ.md) - Raw, original document.
 - [man read](./man-read.md) - Manual page for `read`
@@ -36,3 +38,7 @@ your systems.
 ## History
 
 - [Deprecated functionality](./deprecated.md)
+
+<!-- TEMPLATE guideFooter 2 -->
+<hr />
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

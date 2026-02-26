@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-08
+# Generated on 2026-02-26
 # shellcheck disable=SC2034
 argument="none"
 base="platform.sh"
@@ -8,12 +8,13 @@ credits="Eric Pement"$'\n'""
 depends="awk"$'\n'""
 description="Reverses a pipe's input lines to output using an awk trick."$'\n'"Not recommended on big files."$'\n'""
 file="bin/build/tools/platform.sh"
+fn="fileReverseLines"
 foundNames=([0]="summary" [1]="source" [2]="credits" [3]="depends")
 rawComment="Reverses a pipe's input lines to output using an awk trick."$'\n'"Not recommended on big files."$'\n'"Summary: Reverse output lines"$'\n'"Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'"Credits: Eric Pement"$'\n'"Depends: awk"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="2669082839d4462d80f9e37b8fb982dadfecaea2"
+sourceHash="6141b6985f95828e1ff8727449bdd48567afe942"
 summary="Reverse output lines"$'\n'""
 usage="fileReverseLines"
 # shellcheck disable=SC2016

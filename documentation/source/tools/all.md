@@ -174,6 +174,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:contextOpen}
 - {SEE:contextShow}
 - {SEE:convertValue}
+- {SEE:cpuCount}
 - {SEE:crontabApplicationUpdate}
 - {SEE:cursorGet}
 - {SEE:cursorSet}

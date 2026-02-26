@@ -277,7 +277,7 @@ __buildApplicationConfigureShellFiles() {
     file=${files[1]}
     target="$home/$file"
     if [ ! -e "$target" ]; then
-      catchReturn "$handler" mapEnvironment < <(grep -v '[removed]' <"$templateHome/bin/build/developer.sample.sh") >"$target" || return $?
+      catchReturn "$handler" grep -v '\[removed\]' <"$templateHome/bin/build/developer.sample.sh" | mapEnvironment >"$target" || return $?
     fi
 
     # bin/developer.sh

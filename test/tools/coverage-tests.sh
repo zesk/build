@@ -41,11 +41,12 @@ testCoverageReportThing() {
 
   template="$(__bashCoverageReportTemplate "not-covered.html")"
   expected='&nbsp;&nbsp;[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]&nbsp;||&nbsp;<em>return</em>&nbsp;<em>1</em>'
-  assertEquals "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" "$expected" || return $?
+  # expectec='&nbsp;&nbsp;[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]&nbsp;||&nbsp;&quot;"<em>return</em>"&quot;&nbsp;&quot;"<em>1</em>"&quot;'
+  assertEquals "$expected" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" || return $?
 
   codes=$(printf "%s\n" '[ $# -gt 0 ]')
   expected='&nbsp;&nbsp;<em>[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]</em>&nbsp;||&nbsp;return&nbsp;1'
-  assertEquals "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" "$expected" || return $?
+  assertEquals "$expected" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" || return $?
 }
 
 # Tag: test-tags slow

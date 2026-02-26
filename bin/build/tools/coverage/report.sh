@@ -234,7 +234,8 @@ __bashCoveragePartialLine() {
     index=0
     for code in "${codes[@]}"; do
       replace="%%%%$index%%%%"
-      line="${line//"$code"/"$replace"}"
+      # DO NOT QUOTE $replace it adds quotes to the line
+      line="${line//"$code"/$replace}"
       index=$((index + 1))
     done
     line=$(__htmlCode "$line")
@@ -242,14 +243,17 @@ __bashCoveragePartialLine() {
     for code in "${codes[@]}"; do
       replace="$(content="$(__htmlCode "$code")" mapEnvironment content <"$template")"
       search="%%%%$index%%%%"
-      line="${line//"$search"/"$replace"}"
+      # DO NOT QUOTE $replace it adds quotes to the line
+      line="${line//"$search"/$replace}"
       index=$((index + 1))
     done
   fi
   printf -- "%s\n" "$line"
 }
+
 __htmlCode() {
-  printf "%s\n" "$@" | sed -e 's/&/'$'\2''/g' -e 's/"/\&quot;/g' -e 's/ /\&nbsp;/g' -e 's/'$'\2''/\&amp;/g'
+  printf "%s\n" "$@" | __xmlContent | sed -e 's/ /\&nbsp;/g'
+  # printf "%s\n" "$@" | sed -e 's/&/'$'\2''/g' -e 's/"/\&quot;/g' -e 's/ /\&nbsp;/g' -e 's/'$'\2''/\&amp;/g'
 }
 
 __bashCoverageMatch() {

@@ -4,10 +4,24 @@
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
+The most compelling reason for using this toolkit is **simple, readable** consistency across projects and platforms
+using a tool
+which is universally available on nearly every platform on the planet and uses consistent, tested and documented tools
+which are open source.
+
+If you live in your shell, and use **Bash** – we recommend you check out the [functionality](../tools/all.md) which is
+offered and see if it will work for your projects. **Zesk Build** eats its own dog food so this tool is used in
+production environments and configures remote pipelines identically, delivers credentials to developers and keeps our
+credentials synchronized using an add-on library called **Infrastructure**
+which manages infrastructure configuration in the cloud using `Terraform` or `OpenTofu` and deploying of **Development
+Operations** values used for any number of configuration environments.
+
 ## Why build it?
 
-- Littering of shell scripts in every project
-- Rewriting the same shell code in many places
+Here's a bullet list of reasons:
+
+- Littering of shell scripts in every project, many with similar functionality between projects
+- Rewriting the same shell function in many places
 - Patterns in Bash are consistent
 - System tools and flags used across platforms are inconsistent
 - Useful to have a toolkit which operates outside the default application languages (isolation, independence)
@@ -15,7 +29,10 @@
   platform-independent language
 - No assertion libraries available which work well with Bash
 - No validation libraries available which work well with Bash
-- Everyone invents their own decoration libraries so why not us?
+- "Oh yeah, I forgot that timeouts for `read` don't work the same when we switched from `Ubuntu` to `Alpine` distros for our
+  application."
+- `identicalCheck` was written and then became sort of part of the way this toolkit is built. 
+- Everyone invents their own decoration libraries so why not us? Wink.
 
 ## Why `bash`?
 
@@ -36,5 +53,9 @@ The name is sort of like **desk** or **zest** which is a nice association for so
 Honestly our development is primarily on **macOS** which has stubbornly fixed on Bash 3 and since set the default shell
 to `zsh`.
 
-It has **not** been a challenge to remain compatible with **Bash 3** so until that becomes a burden the intent is to maintain
-support of **Bash 3** and greater.
+It has **not** been a challenge to remain compatible with **Bash 3** so until that becomes a burden the intent is to
+maintain support of **Bash 3** and greater until they pry it from my cold, dead fingers. Or I change my mind.
+
+<!-- TEMPLATE guideFooter 2 -->
+<hr />
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

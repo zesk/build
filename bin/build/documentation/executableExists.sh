@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-08
+# Generated on 2026-02-26
 # shellcheck disable=SC2034
 argument="--any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist."$'\n'"binary ... - String. Required. One or more Binaries to find in the system \`PATH\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="platform.sh"
 description="Does a binary exist in the PATH?"$'\n'""
 example="    executableExists cp date aws ls mv stat || throwEnvironment \"\$handler\" \"Need basic environment to work\" || return \$?"$'\n'"    executableExists --any terraform tofu || throwEnvironment \"\$handler\" \"No available infrastructure providers\" || return \$?"$'\n'"    executableExists --any curl wget || throwEnvironment \"\$handler\" \"No way to download URLs easily\" || return \$?"$'\n'""
 file="bin/build/tools/platform.sh"
+fn="executableExists"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="example" [4]="requires")
 rawComment="Summary: Does a binary exist in the PATH?"$'\n'"Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist."$'\n'"Argument: binary ... - String. Required. One or more Binaries to find in the system \`PATH\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - If all values are found (without the \`--any\` flag), or if *any* binary is found with the \`--any\` flag"$'\n'"Return Code: 1 - If any value is not found (without the \`--any\` flag), or if *all* binaries are NOT found with the \`--any\` flag."$'\n'"Example:     executableExists cp date aws ls mv stat || throwEnvironment \"\$handler\" \"Need basic environment to work\" || return \$?"$'\n'"Example:     executableExists --any terraform tofu || throwEnvironment \"\$handler\" \"No available infrastructure providers\" || return \$?"$'\n'"Example:     executableExists --any curl wget || throwEnvironment \"\$handler\" \"No way to download URLs easily\" || return \$?"$'\n'"Requires: throwArgument decorate __decorateExtensionEach command"$'\n'""$'\n'""
 requires="throwArgument decorate __decorateExtensionEach command"$'\n'""
 return_code="0 - If all values are found (without the \`--any\` flag), or if *any* binary is found with the \`--any\` flag"$'\n'"1 - If any value is not found (without the \`--any\` flag), or if *all* binaries are NOT found with the \`--any\` flag."$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="2669082839d4462d80f9e37b8fb982dadfecaea2"
+sourceHash="6141b6985f95828e1ff8727449bdd48567afe942"
 summary="Does a binary exist in the PATH?"$'\n'""
 usage="executableExists [ --any ] binary ... [ --help ]"
 # shellcheck disable=SC2016

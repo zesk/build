@@ -4,9 +4,27 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-The concept of a "usage" function is one that fails, and displays a reasonable error to the user or controlling program.
+Usage refers to displaying an error which shows the proper usage of a program to the user or controlling program.
 
-Essentially a `usage` function is a failure handler. If you need a simple `usage` function use `returnMessage`.
+Essentially a `usage` function is a error handler and should adhere to that interface, which is two arguments:
+
+- `returnCode` - *UnsignedInteger*. **Required.** The return code to handle. Can be 0 or greater,
+- `message` ... - *String*. **Optioal.** Message to display.
+
+The most basic error handler is `{SEE:returnMessage}`, which can be used as a default when you do not want to define
+your own.
+
+Error handlers are internally written as the function name with an underscore prefix:
+
+    myFunction() {
+        ...
+    }   
+    _myFunction() {
+        # You can add custom handling code here if desired.
+        # __IDENTICAL__ usageDocument 1
+        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+        # You can add additional handling code here if desired.
+    }
 
 ## Usage formatting
 

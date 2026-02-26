@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-02-26
 # shellcheck disable=SC2034
 argument="goAlias - String. Alias for \`applicationHome --go\`. Default is \`g\`."$'\n'"setAlias - String. Alias for \`applicationHome\`. Default is \`G\`."$'\n'""
 base="application.sh"
 description="Set aliases \`G\` and \`g\` default for \`applicationHome\`"$'\n'"Localize as you wish for your own shell"$'\n'""
 file="bin/build/tools/application.sh"
+fn="applicationHomeAliases"
 foundNames=([0]="argument")
 rawComment="Set aliases \`G\` and \`g\` default for \`applicationHome\`"$'\n'"Localize as you wish for your own shell"$'\n'"Argument: goAlias - String. Alias for \`applicationHome --go\`. Default is \`g\`."$'\n'"Argument: setAlias - String. Alias for \`applicationHome\`. Default is \`G\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/application.sh"
-sourceHash="4b0e4b7c327a4f6c7b8515d62028c03bb4c0d129"
+sourceHash="fc9132d88a951b357985a3c8db25fbc06556fb7e"
 summary="Set aliases \`G\` and \`g\` default for \`applicationHome\`"
 summaryComputed="true"
 usage="applicationHomeAliases [ goAlias ] [ setAlias ]"

@@ -1,10 +1,10 @@
 # test Cheat Sheet
 
-This guide is the `test` man page nearly verbatim with formatting.
-
 <!-- TEMPLATE guideHeader 2 -->
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
+
+This guide is the `test` man page nearly verbatim with formatting.
 
 An blank `EXPRESSION` is false.
 
@@ -79,3 +79,7 @@ Beware that parentheses need to be escaped (e.g., by backslashes) for shells.
 Binary `-a` and `-o` are ambiguous. Use `test EXPR1 && test EXPR2` or `test EXPR1 || test EXPR2` instead.
 
 [Source](https://github.com/zesk/build/docs/test-cheatsheet.md)
+
+<!-- TEMPLATE guideFooter 2 -->
+<hr />
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
