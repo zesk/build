@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-23
+# Generated on 2026-02-26
 # shellcheck disable=SC2034
 argument="--help - Help"$'\n'"--verbose - Flag. Optional. Verbose messages when no errors exist."$'\n'"--name name - String. Optional. Name for verbose mode."$'\n'"message ... - Optional. Optional. Message for verbose mode."$'\n'""
 base="debug.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="stdin" [3]="stdout" [4]="examp
 rawComment="Check output for content and trigger environment error if found"$'\n'"Argument: --help - Help"$'\n'"Argument: --verbose - Flag. Optional. Verbose messages when no errors exist."$'\n'"Argument: --name name - String. Optional. Name for verbose mode."$'\n'"Argument: message ... - Optional. Optional. Message for verbose mode."$'\n'"Return Code: 0 - If no content is read from \`stdin\`"$'\n'"Return Code: 1 - If any content is read from \`stdin\` (and output to \`stdout\`)"$'\n'"Return Code: 2 - Argument error"$'\n'"stdin: Any content"$'\n'"stdout: Same content"$'\n'"Example:     source \"\$include\" > >(outputTrigger source \"\$include\") || return \$?"$'\n'""$'\n'""
 return_code="0 - If no content is read from \`stdin\`"$'\n'"1 - If any content is read from \`stdin\` (and output to \`stdout\`)"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="e63fcc99dec04cd39a71d72e430b7e22a07145ab"
+sourceHash="9acd9649affd322506feaa454d5bb7495a82cb68"
 stdin="Any content"$'\n'""
 stdout="Same content"$'\n'""
 summary="Check output for content and trigger environment error if found"

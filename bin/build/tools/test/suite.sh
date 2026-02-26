@@ -49,7 +49,10 @@ __testSuiteTestsProcess() {
     stats+=("$(timingElapsed "$statsStart")")
     catchReturn "$handler" rm -f "$cacheDirectory/$checksum/.processMarker" || returnClean $? "${clean[@]}" || return $?
   done < <(sort -k 2 "$manifestNewFile") || returnClean $? "${clean[@]}" || return $?
-  __stats "${stats[@]}" 1>&2
+  (
+    environmentLoad < <(__stats "${stats[@]}")
+    statusMessage decorate info "Loaded {count} files in {total} milliseconds, slowest {max} ms, average {average} ms." | mapEnvironment
+  )
   # Delete any directory which still has a .processMarker
   # shellcheck disable=SC2038
   catchEnvironment "$handler" find "$cacheDirectory" -type f -name ".processMarker" -exec dirname {} \; | catchEnvironment "$handler" xargs rm -rf || return $?

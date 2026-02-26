@@ -181,10 +181,12 @@ _bashRecursionDebug() {
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: --error - Flag. Add ERR trap.
+# Argument: --clear - Flag. Remove all traps.
 # Argument: --interrupt - Flag. Add INT trap.
+# Argument: --already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0.
 bashDebugInterruptFile() {
   local handler="_${FUNCNAME[0]}"
-  local name="__bashDebugInterruptFile" traps=() clearFlag=false
+  local name="__bashDebugInterruptFile" traps=() clearFlag=false errorAlready=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -198,6 +200,7 @@ bashDebugInterruptFile() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --clear) clearFlag=true ;;
+    --already-error) errorAlready=true ;;
     --interrupt)
       inArray INT "${traps[@]+"${traps[@]}"}" || traps+=("INT")
       ;;
@@ -226,7 +229,8 @@ bashDebugInterruptFile() {
     fi
   done
   if [ "${#installed[@]}" -eq "${#traps[@]}" ]; then
-    throwEnvironment "$handler" "Already installed" || returnClean $? "$currentTraps" || return $?
+    ! $errorAlready || throwEnvironment "$handler" "Already installed" || returnClean $? "$currentTraps" || return $?
+    return 0
   fi
   catchEnvironment "$handler" rm -rf "$currentTraps" || return $?
   catchEnvironment "$handler" trap __bashDebugInterruptFile "${traps[@]}" || return $?
