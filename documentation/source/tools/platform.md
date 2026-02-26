@@ -20,6 +20,8 @@
 
 ## CPU
 
+{cpuCount}
+
 {loadAverage}
 
 ## Services

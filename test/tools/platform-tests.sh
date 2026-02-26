@@ -6,9 +6,12 @@
 #
 
 testCPUCount() {
+  local handler="returnMessage"
   assertExitCode 0 cpuCount || return $?
-  assertGreaterThan "$(cpuCount)" 0 || return $?
-  assertLessThan "$(cpuCount)" 128 || return $?
+  local n && n=$(catchReturn "$handler" cpuCount) || return $?
+  assertExitCode 0 isPositiveInteger "$n" || return $?
+  assertGreaterThan "$n" 0 || return $?
+  assertLessThan "$n" 128 || return $?
 }
 
 testWhichExists() {

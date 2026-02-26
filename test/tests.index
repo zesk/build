@@ -244,6 +244,7 @@ testPHPComposerSetVersion suite=php test/tools/php-tests.sh
 testPHPInstallation suite=php test/tools/php-tests.sh  tag=package-install
 testIsUpToDate suite=pipeline test/tools/pipeline-tests.sh  tag=slow
 testVersionSort suite=pipeline test/tools/pipeline-tests.sh
+testCPUCount suite=platform test/tools/platform-tests.sh
 testGroupID suite=platform test/tools/platform-tests.sh
 testLoadAverage suite=platform test/tools/platform-tests.sh
 testPathShow suite=platform test/tools/platform-tests.sh
