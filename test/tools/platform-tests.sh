@@ -5,6 +5,12 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testCPUCount() {
+  assertExitCode 0 cpuCount || return $?
+  assertGreaterThan "$(cpuCount)" 0 || return $?
+  assertLessThan "$(cpuCount)" 128 || return $?
+}
+
 testWhichExists() {
   assertExitCode 0 executableExists ls || return $?
   assertExitCode 0 executableExists cat || return $?

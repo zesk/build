@@ -6,6 +6,9 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
+# Summary: Check bash files for common errors
+# See: shellcheck
+# See: bashSanitize
 # Run `shellcheck` and `bash -n` on a set of bash files.
 #
 # This can be run on any directory tree to test scripts in any application.

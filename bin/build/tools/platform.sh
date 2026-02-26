@@ -5,6 +5,50 @@
 # Docs: o ./documentation/source/tools/platform.md
 # Test: o ./test/tools/platform-tests.sh
 
+# Summary: Return integer count of CPUs on this system
+# stdout: PositiveInteger
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+cpuCount() {
+  local handler="_${FUNCNAME[0]}"
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  if isDarwin; then
+    catchReturn "$handler" sysctl -n hw.ncpu || return $?
+  elif executableExists nproc; then
+    catchReturn "$handler" nproc || return $?
+  elif executableExists lscpu; then
+    catchReturn "$handler" lscpu | grepSafe 'CPU(s):' | cut -f 1 -d ' ' || return $?
+  elif [ -f /proc/cpuinfo ]; then
+    catchReturn "$handler" grep ^processor /proc/cpuinfo | fileLineCount || return $?
+  else
+    throwEnvironment "$handler" "No method of determining CPU count" || return $?
+  fi
+}
+_cpuCount() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Argument: count - The number of times to run the binary
 # Argument: binary - The binary to run
 # Argument: args ... - Any arguments to pass to the binary each run
