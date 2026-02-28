@@ -77,3 +77,20 @@ testDumpEnvironmentUnsafe() {
 
   mockEnvironmentStop PRIVATE_THING
 }
+
+testDumpEnvironmentPrefix() {
+  local handler="returnMessage"
+
+  local tempFile && tempFile=$(fileTemporaryName "$handler") || return $?
+
+  local clean=("$tempFile" "$tempFile.TERM" "$tempFile.EMPTY")
+
+  catchReturn "$handler" dumpEnvironment >"$tempFile" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" dumpEnvironment --prefix "TERM" >"$tempFile.TERM" || returnClean $? "${clean[@]}" || return $?
+  grepSafe -v TERM "$tempFile.TERM" >"$tempFile.EMPTY" || returnClean $? "${clean[@]}" || return $?
+
+  assertGreaterThanOrEqual "$(fileLineCount "$tempFile")" "$(fileLineCount "$tempFile.TERM")" || return $?
+  assertZeroFileSize "$tempFile.EMPTY" || return $?
+
+  rm -f "${clean[@]}" || return $?
+}

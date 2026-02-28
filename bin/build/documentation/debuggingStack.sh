@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-17
+# Generated on 2026-02-28
 # shellcheck disable=SC2034
 argument="-x - Flag. Optional. Show exported variables. (verbose)"$'\n'"--me - Flag. Optional. Show calling function call stack frame."$'\n'"--exit - Flag. Optional. Exit with code 0 after output."$'\n'""
 base="dump.sh"
@@ -14,7 +14,7 @@ rawComment="Dump the function and include stacks and the current environment"$'\
 requires="printf usageDocument"$'\n'"throwArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceHash="77a6fe10aeadc8ecf5f23559a9b55e0d1c6490b5"
+sourceHash="ebbf280b48d70cb3d950440406b4eebef434d1c7"
 summary="Dump the function and include stacks and the current environment"
 summaryComputed="true"
 usage="debuggingStack [ -x ] [ --me ] [ --exit ]"

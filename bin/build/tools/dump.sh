@@ -241,6 +241,7 @@ _dumpFile() {
 # Argument: --maximum-length maximumLength - PositiveInteger. Optional. The maximum number of characters to output for each environment variable.
 # Argument: --secure-suffix secureSuffix  - EmptyString. Optional. Suffix to display after hidden arguments.
 # Argument: --skip-env environmentVariable - EnvironmentVariable. Optional. Skip this environment variable (must match exactly).
+# Argument: --prefix environmentVariablePrefix - EnvironmentVariable. Optional. Skip any environment variable with STARTS with this (case sensitive).
 # Argument: --show-skipped - Flag. Show skipped environment variables.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -248,6 +249,8 @@ __internalDumpEnvironment() {
   local handler="$1" && shift
 
   local maxLen=64 skipEnv=() name matches=() fillMatches=true secureSuffix="- HIDDEN" showSkipped=false
+
+  local filter=()
 
   while read -r name; do
     if ! inArray "$name" PATH HOME OSTYPE PWD TERM; then skipEnv+=("$name"); fi
@@ -262,33 +265,13 @@ __internalDumpEnvironment() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --show-skipped)
-      showSkipped=true
-      ;;
-    --maximum-length)
-      shift
-      maxLen=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
-      ;;
-    --skip-env)
-      shift
-      skipEnv+=("$(validate "$handler" EnvironmentVariable "$argument" "${1-}")") || return $?
-      ;;
-    --secure-match)
-      shift
-      case "${1-}" in
-      "" | "-" | "--")
-        matches=()
-        fillMatches=false
-        ;;
-      *)
-        matches+=("${1-}")
-        ;;
-      esac
-      ;;
-    --secure-suffix)
-      shift
-      secureSuffix="${1-}"
-      ;;
+    --hide-skipped) showSkipped=false ;;
+    --show-skipped) showSkipped=true ;;
+    --maximum-length) shift && maxLen=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
+    --skip-env) shift && skipEnv+=("$(validate "$handler" EnvironmentVariable "$argument" "${1-}")") || return $? ;;
+    --prefix) shift && local match && match=$(validate "$handler" String "$argument" "${1-}") && filter+=(-e "^$(quoteGrepPattern "$match")") || return $? ;;
+    --secure-match) shift && case "${1-}" in "" | "-" | "--") matches=() && fillMatches=false ;; *) matches+=("${1-}") ;; esac ;;
+    --secure-suffix) shift && secureSuffix="${1-}" ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -312,7 +295,9 @@ __internalDumpEnvironment() {
     if [ ${#matches[@]} -gt 0 ] && stringContainsInsensitive "$name" "${matches[@]}"; then
       secures+=("$name")
     else
-      if [ -n "$value" ]; then
+      if [ "${#filter[@]}" -gt 0 ] && ! grep -q "${filter[@]}" <<<"$name"; then
+        skipped+=("$name")
+      elif [ -n "$value" ]; then
         regulars+=("$name")
       else
         blanks+=("$name")
@@ -364,7 +349,7 @@ _dumpEnvironment() {
 dumpEnvironmentUnsafe() {
   local handler="_${FUNCNAME[0]}"
 
-  local aa=()
+  local aa=() filter=()
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -377,7 +362,7 @@ dumpEnvironmentUnsafe() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --secure-match | --secure-suffix) throwArgument "$handler" "Unknown $argument (did you mean dumpEnvironment?)" || return $? ;;
-    --skip-env | --maximum-length) shift && aa+=("$argument" "$1") ;;
+    --prefix | --skip-env | --maximum-length) shift && aa+=("$argument" "$1") ;;
     --show-skipped) aa+=("$argument") ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

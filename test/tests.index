@@ -124,6 +124,7 @@ testEnvironmentFileToDocker suite=docker test/tools/docker-tests.sh
 testBashFunctionComment suite=documentation test/tools/documentation-tests.sh
 testDocumentation suite=documentation test/tools/documentation-tests.sh
 testDocumentationIndexes suite=documentation test/tools/documentation-tests.sh
+testDumpEnvironmentPrefix suite=dump test/tools/dump-tests.sh
 testDumpEnvironmentSafe suite=dump test/tools/dump-tests.sh  tag=slow
 testDumpEnvironmentUnsafe suite=dump test/tools/dump-tests.sh  tag=slow tag=slow-non-critical
 testDumpPipe suite=dump test/tools/dump-tests.sh
