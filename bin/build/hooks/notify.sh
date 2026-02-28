@@ -44,19 +44,19 @@ __hookNotify() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --sound)
-      shift
-      soundName=$(validate "$handler" string "$argument" "${1-}") || return $?
-      ;;
-    --title)
-      shift
-      title=$(validate "$handler" string "$argument" "${1-}") || return $?
-      ;;
-    *)
-      break
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      --sound)
+        shift
+        soundName=$(validate "$handler" string "$argument" "${1-}") || return $?
+        ;;
+      --title)
+        shift
+        title=$(validate "$handler" string "$argument" "${1-}") || return $?
+        ;;
+      *)
+        break
+        ;;
     esac
     shift
   done
@@ -84,6 +84,9 @@ __hookNotify() {
     decorate notice "NOTIFY: $title"
     printf "%s\n" "$*" | decorate info | decorate wrap "$(decorate notice "NOTIFY:")"
   fi
+
+  # IDENTICAL hookRunOptionalNext 1
+  catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
 }
 ___hookNotify() {
   # __IDENTICAL__ usageDocument 1

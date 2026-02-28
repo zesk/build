@@ -44,6 +44,9 @@ __hookProjectActivate() {
   ! buildDebugEnabled approve || rr+=("--report")
   ! buildDebugEnabled approve-verbose || rr+=("--verbose")
   [ ${#items[@]} -eq 0 ] || approveBashSource "${rr[@]+"${rr[@]}"}" --delete --prefix "Activate" "${items[@]}" || return $?
+
+  # IDENTICAL hookSourceOptionalNext 1
+  catchReturn "$handler" hookSourceOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" || return $?
 }
 ___hookProjectActivate() {
   # __IDENTICAL__ usageDocument 1

@@ -282,5 +282,5 @@ __approvedSources() {
   [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate info "Approved:")" "$(printf -- "%s\n" "${approvedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
   [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate warning "Unapproved:")" "$(printf -- "%s\n" "${unapprovedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
 
-  ! $deleteFlag || catchEnvironment "$handler" rm -f "${deleteFiles[@]}" || return $?
+  ! $deleteFlag || [ "${#deleteFiles[@]}" -eq 0 ] || catchEnvironment "$handler" rm -f "${deleteFiles[@]}" || return $?
 }

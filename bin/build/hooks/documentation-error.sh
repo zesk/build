@@ -17,11 +17,20 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # See: documentationBuild
 # See: __errorHandler
 __hookDocumentationError() {
-  local name exitCode="${1-}"
+  local handler="_${FUNCNAME[0]}"
+
+  local name exitCode="${1-}" __saved=("$@")
 
   shift
   name=$(buildEnvironmentGet APPLICATION_NAME) || return $?
   hookRunOptional notify --title "$name Documentation" "Failed with code \"$exitCode\": $*"
+
+  # IDENTICAL hookRunOptionalNext 1
+  catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+}
+___hookDocumentationError() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __hookDocumentationError "$@"

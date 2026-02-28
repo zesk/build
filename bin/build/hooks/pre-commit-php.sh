@@ -34,13 +34,13 @@ __hookPreCommitPHP() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --read-only) readOnly=true ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      --read-only) readOnly=true ;;
+      *)
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        ;;
     esac
     shift
   done
@@ -98,6 +98,9 @@ __hookPreCommitPHP() {
   catchEnvironment "$handler" rm -f "$fixResults" || return $?
 
   statusMessage --last timingReport "$start" "PHP pre-commit finished in"
+
+  # IDENTICAL hookRunOptionalNext 1
+  catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
 }
 ___hookPreCommitPHP() {
   # __IDENTICAL__ usageDocument 1

@@ -49,6 +49,9 @@ __hookProjectDeactivate() {
 
     unset BUILD_PROJECT_DEACTIVATE
   fi
+
+  # IDENTICAL hookSourceOptionalNext 1
+  catchReturn "$handler" hookSourceOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" || return $?
 }
 ___hookProjectDeactivate() {
   # __IDENTICAL__ usageDocument 1

@@ -16,10 +16,18 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Summary: {base} hook
 # See: documentationBuild
 __hookDocumentationComplete() {
-  local name
+  local handler="_${FUNCNAME[0]}"
+  local name __saved=("$@")
 
   name=$(buildEnvironmentGet APPLICATION_NAME) || return $?
   hookRunOptional notify --title "$name Documentation" "Built successfully $*"
+
+  # IDENTICAL hookRunOptionalNext 1
+  catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+}
+___hookDocumentationComplete() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __hookDocumentationComplete "$@"
