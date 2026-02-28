@@ -1004,7 +1004,7 @@ __usageDocumentCached() {
     settingsFile="$home/${path%/}/$functionName.sh"
     [ ! -f "$settingsFile" ] || break
   done
-  [ -n "$settingsFile" ] || return 1
+  [ -f "$settingsFile" ] || return 1
   decorateInitialized || decorate info -- || return $?
   (
     local helpConsole="" helpPlain=""
