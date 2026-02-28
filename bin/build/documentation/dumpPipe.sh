@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Dump a pipe with a title and stats"$'\n'"Argument: --symbol symbol - String. Optional. Symbol to place before each line. (Blank is ok)."$'\n'"Argument: --tail - Flag. Optional. Show the tail of the file and not the head when not enough can be shown."$'\n'"Argument: --head - Flag. Optional. Show the head of the file when not enough can be shown. (default)"$'\n'"Argument: --lines - UnsignedInteger. Optional. Number of lines to show."$'\n'"Argument: --vanish file - UnsignedInteger. Optional. Number of lines to show."$'\n'"Argument: name - String. Optional. The item name or title of this output."$'\n'"stdin: text"$'\n'"stdout: formatted text for debugging"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceHash="ebbf280b48d70cb3d950440406b4eebef434d1c7"
+sourceHash="d7818eb3c4a7d14f246037266640070d3c359f4d"
 stdin="text"$'\n'""
 stdout="formatted text for debugging"$'\n'""
 summary="Dump a pipe with a title and stats"

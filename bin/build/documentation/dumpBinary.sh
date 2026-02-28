@@ -13,7 +13,7 @@ foundNames=([0]="depends" [1]="apt_get" [2]="stdin" [3]="stdout")
 rawComment="Dumps output as hex"$'\n'"Depends: xxd"$'\n'"apt-get: xxd"$'\n'"stdin: binary"$'\n'"stdout: formatted output set to ideal \`consoleColumns\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceHash="ebbf280b48d70cb3d950440406b4eebef434d1c7"
+sourceHash="d7818eb3c4a7d14f246037266640070d3c359f4d"
 stdin="binary"$'\n'""
 stdout="formatted output set to ideal \`consoleColumns\`"$'\n'""
 summary="Dumps output as hex"
