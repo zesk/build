@@ -318,7 +318,7 @@ ___bashPromptModule_reloadChangesCheck() {
     return 1
   fi
 
-  ! $debug || decorate info "$stateModified ($stateNewestFile) -ne $maxModified ($maxNewestFile)"
+  ! $debug || decorate info "OLD STATE $stateModified ($stateNewestFile) -ne $maxModified ($maxNewestFile) NEW MAX STATE"
 
   local prefix=""
   [ -z "$stateNewestFile" ] || prefix="$(decorate file "$stateNewestFile") -> "
