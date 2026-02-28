@@ -31,7 +31,7 @@ _testBuildDebugEnabledExit() {
 }
 
 testBashDebugInterruptFile() {
-  # testSuite uses this so it's installed
+  # testSuite uses bashDebugInterruptFile so it's installed
   assertNotExitCode --stderr-match "Already installed" 0 bashDebugInterruptFile --already-error || return $?
   assertExitCode 0 bashDebugInterruptFile || return $?
 }
