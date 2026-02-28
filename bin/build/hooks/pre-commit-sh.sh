@@ -23,12 +23,12 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       # __IDENTICAL__ __checkBlankArgumentHandler 1
       [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
       case "$argument" in
-        # _IDENTICAL_ helpHandler 1
-        --help) "$handler" 0 && return $? || return $? ;;
-        *)
-          # _IDENTICAL_ argumentUnknownHandler 1
-          throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-          ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      *)
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        ;;
       esac
       shift
     done

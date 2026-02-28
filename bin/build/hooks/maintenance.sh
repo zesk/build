@@ -54,25 +54,25 @@ __hookMaintenance() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ helpHandler 1
-      --help) "$handler" 0 && return $? || return $? ;;
-      on | 1 | true | enable)
-        enable=true
-        ;;
-      off | 0 | false | disabled)
-        enable=false
-        ;;
-      --message)
-        shift || :
-        if [ -z "$messageVariable" ]; then
-          decorate warning "--message is a no-op with blank BUILD_MAINTENANCE_MESSAGE_VARIABLE"
-        fi
-        message="$1"
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknownHandler 1
-        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    on | 1 | true | enable)
+      enable=true
+      ;;
+    off | 0 | false | disabled)
+      enable=false
+      ;;
+    --message)
+      shift || :
+      if [ -z "$messageVariable" ]; then
+        decorate warning "--message is a no-op with blank BUILD_MAINTENANCE_MESSAGE_VARIABLE"
+      fi
+      message="$1"
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
     esac
     shift
   done

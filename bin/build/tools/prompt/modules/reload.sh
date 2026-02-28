@@ -263,10 +263,10 @@ ___bashPromptModule_reloadChangesCheck() {
   local pathStateFile="$1" && shift
   local source="$1" && shift
   local name="$1" && shift
-
+  local newestModified
   local maxModified=0 maxNewestFile=""
   while [ $# -gt 0 ]; do
-    local path="$1" fileNewest newestModified
+    local path="$1" fileNewest
     if [ "$path" = "--" ]; then
       shift
       break
@@ -318,13 +318,13 @@ ___bashPromptModule_reloadChangesCheck() {
     return 1
   fi
 
-  ! $debug || decorate info "$newestModified ($stateNewestFile) -gt $maxModified ($maxNewestFile)"
+  ! $debug || decorate info "$stateModified ($stateNewestFile) -ne $maxModified ($maxNewestFile)"
 
   local prefix=""
   [ -z "$stateNewestFile" ] || prefix="$(decorate file "$stateNewestFile") -> "
   [ "$maxNewestFile" != "$stateNewestFile" ] || prefix="✏️"
   ! $verbose || printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$maxNewestFile")]")"
-  ! $debug || decorate info "Saving new state file $maxModified $maxNewestFile"
+  ! $debug || decorate info "Saving new state file $maxModified $maxNewestFile ($pathStateFile)"
 
   printf "%s\n" "$maxModified" "$maxNewestFile" >"$pathStateFile"
   if ! isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}" || [ "$__BASH_PROMPT_RELOAD_CHANGES" -lt "$maxModified" ]; then
