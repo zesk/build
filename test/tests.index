@@ -18,11 +18,11 @@ testAssertEquality suite=assert test/tools/assert-tests.sh
 testOutputEquals suite=assert test/tools/assert-tests.sh
 testZeroFile suite=assert test/tools/assert-tests.sh
 testAWSCredentialsEdit suite=aws test/tools/aws-tests.sh
-testAwsEnvironmentFromCredentials suite=aws test/tools/aws-tests.sh  tag=slow
 testAWSExpiration suite=aws test/tools/aws-tests.sh
-testAWSInstall suite=aws test/tools/aws-tests.sh
 testAWSIPAccess suite=aws test/tools/aws-tests.sh  tag=slow
+testAWSInstall suite=aws test/tools/aws-tests.sh
 testAWSProfiles suite=aws test/tools/aws-tests.sh
+testAwsEnvironmentFromCredentials suite=aws test/tools/aws-tests.sh  tag=slow
 testAwsRegionValid suite=aws test/tools/aws-tests.sh
 testBashBasics suite=bash test/tools/bash-tests.sh  tag=slow-non-critical
 testBashBuiltins suite=bash test/tools/bash-tests.sh  tag=slow tag=slow-non-critical
@@ -40,8 +40,8 @@ testAdditionalBins suite=bin test/tools/bin-tests.sh  tag=slow
 testMapBin suite=bin test/tools/bin-tests.sh
 testMapPortability suite=bin test/tools/bin-tests.sh
 testBitbucketPRNewURL suite=bitbucket test/tools/bitbucket-tests.sh
-testCharacterClasses suite=character test/tools/character-tests.sh
 testCharacterClassReport suite=character test/tools/character-tests.sh  tag=slow tag=slow-non-critical
+testCharacterClasses suite=character test/tools/character-tests.sh
 testCharacterFromInteger suite=character test/tools/character-tests.sh
 testIsCharacterClass suite=character test/tools/character-tests.sh
 testIsCharacterClasses suite=character test/tools/character-tests.sh
@@ -163,9 +163,9 @@ testGitVersionList suite=git test/tools/git-tests.sh
 testGithubStuff suite=github test/tools/github-tests.sh  tag=remote-dependency
 testGithubURLParse suite=github test/tools/github-tests.sh
 testGroupID suite=group test/tools/group-tests.sh
+testHookSystem suite=hook test/tools/hook-tests.sh  tag=slow
 testHooksWhichSeemBenign suite=hook test/tools/hook-tests.sh
 testHooksWhichSeemBenignHome suite=hook test/tools/hook-tests.sh
-testHookSystem suite=hook test/tools/hook-tests.sh  tag=slow
 testVersionLive suite=hook test/tools/hook-tests.sh
 testWhichHook suite=hook test/tools/hook-tests.sh
 testHookVersionCurrent suite=hooks test/tools/hooks-tests.sh
@@ -174,13 +174,14 @@ testHostnameFull suite=host test/tools/host-tests.sh
 testIdenticalCheckAndRepairMap suite=identical test/tools/identical-tests.sh  tag=slow
 testIdenticalCheckHelpKeepsWords suite=identical test/tools/identical-tests.sh
 testIdenticalCheckRepairWithEmptyDir suite=identical test/tools/identical-tests.sh
-testIdenticalChecks suite=identical test/tools/identical-tests.sh  tag=slow
 testIdenticalCheckSingles suite=identical test/tools/identical-tests.sh  tag=slow
+testIdenticalChecks suite=identical test/tools/identical-tests.sh  tag=slow
 testIdenticalEofWithBracket suite=identical test/tools/identical-tests.sh
 testIdenticalLineParsing suite=identical test/tools/identical-tests.sh
 testIdenticalRepair suite=identical test/tools/identical-tests.sh
 testIdenticalThingEOFProblem suite=identical test/tools/identical-tests.sh
 testInteractiveOccasionally suite=interactive test/tools/interactive-tests.sh
+testIterm2 suite=iterm2 test/tools/iterm2-tests.sh
 test_iTerm2Attention suite=iterm2 test/tools/iterm2-tests.sh
 test_iTerm2Image suite=iterm2 test/tools/iterm2-tests.sh
 test_iTerm2IsColorName suite=iterm2 test/tools/iterm2-tests.sh
@@ -188,10 +189,9 @@ test_iTerm2IsColorType suite=iterm2 test/tools/iterm2-tests.sh  tag=slow
 test_iTerm2Notify suite=iterm2 test/tools/iterm2-tests.sh
 test_iTerm2SetColors suite=iterm2 test/tools/iterm2-tests.sh
 test_iTerm2Version suite=iterm2 test/tools/iterm2-tests.sh
-testIterm2 suite=iterm2 test/tools/iterm2-tests.sh
 testJSONField suite=json test/tools/json-tests.sh
-testJsonFileGetSet suite=json test/tools/json-tests.sh
 testJSONSetValue suite=json test/tools/json-tests.sh
+testJsonFileGetSet suite=json test/tools/json-tests.sh
 test_jUnitBasic suite=junit test/tools/junit-tests.sh
 test_jUnitRemaining suite=junit test/tools/junit-tests.sh
 testListAppend suite=list test/tools/list-tests.sh
@@ -208,10 +208,10 @@ testMapEnvironmentBadNames suite=map test/tools/map-tests.sh
 testMapPrefixSuffix suite=map test/tools/map-tests.sh
 testMapTokens suite=map test/tools/map-tests.sh
 testMapValue suite=map test/tools/map-tests.sh
-testMariadbConnect suite=mariadb test/tools/mariadb-tests.sh
 testMariaDBDump suite=mariadb test/tools/mariadb-tests.sh
 testMariaDBDumpClean suite=mariadb test/tools/mariadb-tests.sh
 testMariaDBInstallation suite=mariadb test/tools/mariadb-tests.sh  tag=package-install
+testMariadbConnect suite=mariadb test/tools/mariadb-tests.sh
 testMarkdownFormatList suite=markdown test/tools/markdown-tests.sh
 testMarkdownRemoveSections suite=markdown test/tools/markdown-tests.sh
 testMdoc suite=mdoc test/tools/mdoc-tests.sh  tag=slow-non-critical
@@ -306,9 +306,9 @@ testSysvInitScript suite=sysvinit test/tools/sysvinit-tests.sh
 testTarExtractFilePattern suite=tar test/tools/tar-tests.sh
 testInstallTerraform suite=terraform test/tools/terraform-tests.sh  tag=package-install
 testReturns suite=tests test/tools/tests-tests.sh
-testsAssertStats suite=tests test/tools/tests-tests.sh
 testTestSuite suite=tests test/tools/tests-tests.sh  tag=testSuite
 testWrapperShellScripts suite=tests test/tools/tests-tests.sh  tag=slow
+testsAssertStats suite=tests test/tools/tests-tests.sh
 testAlignRight suite=text test/tools/text-tests.sh
 testBeginsWith suite=text test/tools/text-tests.sh
 testFileEndsWithNewline suite=text test/tools/text-tests.sh

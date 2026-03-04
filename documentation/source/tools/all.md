@@ -50,6 +50,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:assertStringEmpty}
 - {SEE:assertStringNotEmpty}
 - {SEE:assertZeroFileSize}
+- {SEE:awsCompleterInstall}
 - {SEE:awsCredentialsAdd}
 - {SEE:awsCredentialsFile}
 - {SEE:awsCredentialsFromEnvironment}

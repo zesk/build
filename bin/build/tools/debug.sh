@@ -222,17 +222,18 @@ bashDebugInterruptFile() {
   fi
   local currentTraps installed=()
   currentTraps=$(fileTemporaryName "$handler") || return $?
-  trap >"$currentTraps" || returnClean $? "$currentTraps" || throwEnvironment "trap listing failed" || return $?
+  local clean=("$currentTraps")
+  catchEnvironment "$handler" trap >"$currentTraps" || returnClean $? "${clean[@]}" || return $?
   for trap in "${traps[@]}"; do
     if grep "$name" "$currentTraps" | grep -q " SIG${trap}"; then
       installed+=("$trap")
     fi
   done
+  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   if [ "${#installed[@]}" -eq "${#traps[@]}" ]; then
-    ! $errorAlready || throwEnvironment "$handler" "Already installed" || returnClean $? "$currentTraps" || return $?
+    ! $errorAlready || throwEnvironment "$handler" "Already installed" || return $?
     return 0
   fi
-  catchEnvironment "$handler" rm -rf "$currentTraps" || return $?
   catchEnvironment "$handler" trap __bashDebugInterruptFile "${traps[@]}" || return $?
 }
 _bashDebugInterruptFile() {
