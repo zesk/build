@@ -44,6 +44,8 @@ For argument validation, use [validate](./validate.md).
 
 ## Internal Functions
 
+{__functionSettings}
+
 {__usageDocumentCached}
 
 {__usageMessage}

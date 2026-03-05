@@ -95,53 +95,70 @@ __documentationTemplateCompile() {
       catchEnvironment "$handler" cp "$mappedDocumentTemplate" "$targetFile" || returnClean $? "${clean[@]}" || return $?
     fi
   else
-    local checkTokens=() tokenName checkFiles=() specialTokens=()
-    while read -r tokenName; do
-      if environmentVariableNameValid "$tokenName"; then
-        if inArray "$tokenName" "${checkTokens[@]+"${checkTokens[@]}"}"; then
-          continue
-        fi
-        case "$tokenName" in [^[:alpha:]_]* | *[^[:alnum:]_]]*) continue ;; esac
-        checkTokens+=("$tokenName")
+    local foundTokens=() findTokens=() checkFiles=() specialTokens=() settingsFiles=() settingsFile
+    local tokenName && while read -r tokenName; do
+      if ! environmentVariableNameValid "$tokenName"; then
+        specialTokens+=("$tokenName")
+        continue
+      fi
+      if inArray "$tokenName" "${foundTokens[@]+"${foundTokens[@]}"}"; then
+        continue
+      fi
+      if settingsFile=$(__functionSettings "$tokenName"); then
+        settingsFiles+=("$tokenName" "$settingsFile")
+        foundTokens+=("$tokenName")
+        checkFiles+=("$settingsFile")
+      else
         local sourceCodeFile
         if ! sourceCodeFile=$(__documentationIndexLookup "$handler" --source "$tokenName"); then
           decorate warning "Function definition not found $(decorate code "$tokenName")"
           continue
         fi
+        foundTokens+=("$tokenName")
+        findTokens+=("$tokenName" "$sourceCodeFile")
         checkFiles+=("$sourceCodeFile")
-      else
-        specialTokens+=("$tokenName")
       fi
     done <"$documentTokensFile"
 
     if $forceFlag || fileIsEmpty "$targetFile" || ! fileIsNewest "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$sourceFile"; then
       message="Generated"
       compiledFunctionEnv=$(fileTemporaryName "$handler") || return $?
-      # subshell to hide environment tokens
-      [ "${#checkTokens[@]}" -eq 0 ] || for tokenName in "${checkTokens[@]}"; do
-        compiledFunctionTarget="$compiledTemplateCache/$tokenName"
-        local sourceCodeFile
-        if ! sourceCodeFile=$(__documentationIndexLookup "$handler" --source "$tokenName"); then
-          catchEnvironment "$handler" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
-          continue
-        fi
-        if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && fileIsNewest "$compiledFunctionTarget" "$sourceCodeFile" "$functionTemplate"; then
-          statusMessage decorate info "Skip $tokenName and use cache"
-        else
+      clean+=("$compiledFunctionEnv")
+      if [ "${#settingsFiles[@]}" -gt 0 ]; then
+        set -- "${settingsFiles[@]}"
+        while [ $# -gt 1 ]; do
+          compiledFunctionTarget="$compiledTemplateCache/$tokenName"
+          tokenName="$1" settingsFile="$2" && shift 2
           {
-            catchReturn "$handler" documentationTemplateFunctionCompile "$tokenName" "$functionTemplate" | trimTail || returnClean $? "${clean[@]}" || return $?
-            printf "\n"
-          } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
-        fi
-        environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
-      done
-      IFS=$'\n' read -r -d '' -a tokenNames <"$documentTokensFile"
+            __documentationTemplateSettingsCompile "$handler" "$settingsFile" "$functionTemplate" | trimTail | printfOutputSuffix "\n" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+          } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+          environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv" || returnClean $? "${clean[@]}" || return $?
+        done
+      fi
+      if [ "${#findTokens[@]}" -gt 0 ]; then
+        set -- "${findTokens[@]}"
+        while [ $# -gt 1 ]; do
+          tokenName="$1" sourceCodeFile="$2" && shift 2
+          compiledFunctionTarget="$compiledTemplateCache/$tokenName"
+          if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && fileIsNewest "$compiledFunctionTarget" "$sourceCodeFile" "$functionTemplate"; then
+            statusMessage decorate info "Skip $tokenName and use cache"
+          else
+            {
+              __documentationTemplateFunctionCompile "$handler" "$tokenName" "$functionTemplate" | trimTail || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+              printf "\n"
+            } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+          fi
+          environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+        done
+      fi
+      IFS=$'\n' read -r -d '' -a tokenNames <"$documentTokensFile" || :
       statusMessage decorate success "Writing $targetFile using $sourceFile (mapped) ..."
+      # subshell to hide environment tokens
       (
         set -a # UNDO ok
         #shellcheck source=/dev/null
         source "$compiledFunctionEnv" || throwEnvironment "$handler" "source $compiledFunctionEnv compiled for $targetFile" || return $?
-        mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
+        mapEnvironment "${tokenNames[@]}" returnClean $? "${clean[@]}" <"$mappedDocumentTemplate" >"$targetFile" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
         set +a
       ) || throwEnvironment "$handler" "mapEnvironment $tokenName" || returnClean $? "${clean[@]}" || return $?
     else
@@ -150,6 +167,45 @@ __documentationTemplateCompile() {
   fi
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   statusMessage decorate info "$(timingReport "$start" "$message" "$targetFile" in)"
+}
+
+__documentationTemplateSettingsCompile() {
+  local handler="$1" && shift
+
+  local settingsFile="" functionTemplate="" envFiles=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --env-file) shift && envFiles+=("$(validate "$handler" File "envFile" "${1-}")") || return $? ;;
+    *)
+      # Load arguments one-by-one
+      if [ -z "$settingsFile" ]; then
+        settingsFile="$(validate "$handler" File settingsFile "$argument")" || return $?
+      elif [ -z "$functionTemplate" ]; then
+        functionTemplate="$(validate "$handler" File functionTemplate "$argument")" || return $?
+      else
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      fi
+      ;;
+    esac
+    shift
+  done
+
+  # Validate arguments
+  local argument
+  for argument in settingsFile functionTemplate; do
+    [ -n "${!argument}" ] || throwArgument "$handler" "Requires argument $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
+  done
+
+  _bashDocumentation_Template "$handler" "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 
 __documentationTemplateFunctionCompile() {

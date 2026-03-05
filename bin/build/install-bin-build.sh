@@ -1053,6 +1053,26 @@ __usageMessage() {
   fi
 }
 
+# IDENTICAL __functionSettings 18
+
+# Summary: Load cached function comment values
+# Argument: home - Directory. BUILD_HOME
+# Argument: functionName - String. Function to fetch settings for
+# Environment: BUILD_DOCUMENTATION_PATH
+# Requires:
+__functionSettings() {
+  local home="$1" && shift
+  local functionName="$1" && shift
+  export BUILD_DOCUMENTATION_PATH
+  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
+  local settingsFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
+    settingsFile="$home/${path%/}/$functionName.sh"
+    [ -f "$settingsFile" ] || continue
+    printf "%s\n" "$settingsFile"
+  done
+  return 1
+}
+
 # IDENTICAL __usageDocumentCached 36
 
 # Summary: Display cached usage for a function
