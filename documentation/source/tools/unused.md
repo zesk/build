@@ -146,3 +146,5 @@ Hides these from [New and uncategorized functions](./todo.md)
 {maximumFieldLength}
 
 {maximumLineLength}
+
+{clearLine}

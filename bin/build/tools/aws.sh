@@ -419,23 +419,3 @@ _awsS3DirectoryDelete() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
-# Install `aws_completer`
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-awsCompleterInstall() {
-  local handler="_${FUNCNAME[0]}"
-  local binary="aws_completer"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  if ! executableExists "$binary"; then
-    catchReturn "$handler" pipInstall "$binary" || return $?
-    if ! executableExists aws_completer; then
-      throwEnvironment "$handler" "No $binary in PATH: \"$PATH\"" || return $?
-    fi
-  fi
-  catchReturn "$handler" complete -C "$(command -v "$binary")" aws || return $?
-}
-_awsCompleterInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
