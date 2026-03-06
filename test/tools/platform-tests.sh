@@ -14,7 +14,7 @@ testCPUCount() {
   assertLessThan "$n" 128 || return $?
 }
 
-testWhichExists() {
+testExecutableExists() {
   assertExitCode 0 executableExists ls || return $?
   assertExitCode 0 executableExists cat || return $?
   assertExitCode 0 executableExists ls cat grep awk sed || return $?

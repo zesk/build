@@ -31,7 +31,8 @@ To install directly from the web:
 
 Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **Zesk Build** as needed.
 It's not recommended that you commit `bin/build` to your source repository. You can lock to a version using
-`bin/build/install-bin-build --version "$desiredVersion"`. **Zesk Build** always installs the most recent version.
+`bin/build/install-bin-build --version "$desiredVersion"`. **Zesk Build**'s installer will install the **most recent**
+version without the `--version` argument.
 
 ## Features
 
@@ -62,6 +63,13 @@ It's not recommended that you commit `bin/build` to your source repository. You 
 - [`test` Cheatsheet](./guide/test-cheatsheet.md)
 - [Bash Cheatsheet](./guide/bash-cheatsheet.md)
 - [Code README](./README.md)
+
+## Compatibility
+
+Until this is 1.0 consider the API to be unstable – we provide mapped functions for backwards compatibility each release
+and remove old function stubs after approximately 6 months of non-use, sooner if the tokens are easily updated with our
+`deprecated.sh` script. A best practice is to run this script against your source code on each new update and as a
+pre-commit check if possible.
 
 ## Deprecated
 

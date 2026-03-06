@@ -31,12 +31,11 @@ __bashGetRequires() {
     shift
   done
 
-  while read -r matchLine; do
-    local tokens
+  local matchLine && while read -r matchLine; do
     matchLine="${matchLine#*Requires:}"
     matchLine=${matchLine# }
-    read -r -a tokens <<<"$matchLine"
-    printf "%s\n" "${tokens[@]}"
+    local tokens=() && read -r -a tokens <<<"$matchLine"
+    [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}"
   done < <(grep -e '[[:space:]]*#[[:space:]]*Requires:[[:space:]]*' "${files[@]+"${files[@]}"}" | trimSpace) | sort -u
 }
 

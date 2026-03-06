@@ -1003,7 +1003,7 @@ __functionSettings() {
   return 1
 }
 
-# IDENTICAL __usageDocumentCached 36
+# IDENTICAL __usageDocumentCached 31
 
 # Summary: Display cached usage for a function
 # Argument: handler - Function. Required.
@@ -1013,18 +1013,13 @@ __functionSettings() {
 # Argument: message ... - String. Optional. Display this message which describes why `exitCode` occurred.
 # Environment: BUILD_COLORS
 # Environment: BUILD_DOCUMENTATION_PATH
-# Requires: decorateThemed catchEnvironment __usageMessage decorate
+# Requires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings
 __usageDocumentCached() {
   local handler="$1" && shift
   local home="$1" && shift
   local functionName="$1" && shift
-  export BUILD_DOCUMENTATION_PATH
-  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
-  local settingsFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
-    settingsFile="$home/${path%/}/$functionName.sh"
-    [ ! -f "$settingsFile" ] || break
-  done
-  [ -f "$settingsFile" ] || return 1
+  local settingsFile && settingsFile=$(__functionSettings "$home" "$functionName") || return $?
+
   decorateInitialized || decorate info -- || return $?
   (
     local helpConsole="" helpPlain=""
@@ -1234,7 +1229,7 @@ executableExists() {
       # printf is returned as just printf with no path, same with all builtins
       bin=$(command -v "$1" 2>/dev/null) || return 1
       [ -n "$bin" ] || return 1
-      [ "${bin:0:1}" != "/" ] || [ -e "$bin" ] || return 1
+      [ "${bin:0:1}" != "/" ] && [ -e "$bin" ] || return 1
       ! $anyFlag || return 0
       ;;
     esac
