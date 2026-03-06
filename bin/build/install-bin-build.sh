@@ -1774,7 +1774,6 @@ __decorateExtensionQuoteProcessLine() {
 # <-- END of IDENTICAL decorate
 # <-- END of IDENTICAL decorate
 
-
 # IDENTICAL decorateThemed 71
 
 # Applies the current theme to text rendered using `decorateThemelessMode`

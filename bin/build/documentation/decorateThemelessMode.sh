@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-06
 # shellcheck disable=SC2034
 argument="--end - Flag. Optional. End themeless mode."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="theme.sh"
 description="Converts decoration style to a mode where the theme can be applied later to text which is formatted."$'\n'"All decorate calls made after this call will output with special codes not to be displayed to the user."$'\n'""
 environment="__BUILD_DECORATE"$'\n'""
 file="bin/build/tools/decorate/theme.sh"
+fn="decorateThemelessMode"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Converts decoration style to a mode where the theme can be applied later to text which is formatted."$'\n'"All decorate calls made after this call will output with special codes not to be displayed to the user."$'\n'"Argument: --end - Flag. Optional. End themeless mode."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: __BUILD_DECORATE"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/theme.sh"
-sourceHash="cec9c147aea52bbb59ceaa1d4c8db65022cf93bc"
+sourceHash="e0217b406484ac5cde09dca8d0ab030b26781acc"
 summary="Converts decoration style to a mode where the theme can"
 summaryComputed="true"
 usage="decorateThemelessMode [ --end ] [ --help ]"
