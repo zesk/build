@@ -59,6 +59,8 @@ _decorateThemelessMode() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# IDENTICAL decorateThemed 71
+
 # Applies the current theme to text rendered using `decorateThemelessMode`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -101,14 +103,6 @@ __decorateThemed() {
   catchEnvironment "$handler" sed -f "$sedFile" || return $?
 }
 
-__decorateThemeGenerateSedFile() {
-  local handler="$1" && shift
-  local style colorCode && while IFS="=" read -r -d ':' style colorCode; do
-    # colorCode - Strip space and after "1;33 Info" -> "1;33"
-    [ -z "$style" ] || catchReturn "$handler" sedReplacePattern "[($style)]" "${colorCode%% *}" || return $?
-  done
-}
-
 __decorateThemeSedFile() {
   local handler="$1" && shift
 
@@ -128,4 +122,12 @@ __decorateThemeSedFile() {
     __BUILD_DECORATE_THEME="$sedFile"
   fi
   catchEnvironment "$handler" printf "%s\n" "${__BUILD_DECORATE_THEME-}" || return $?
+}
+
+__decorateThemeGenerateSedFile() {
+  local handler="$1" && shift
+  local style colorCode && while IFS="=" read -r -d ':' style colorCode; do
+    # colorCode - Strip space and after "1;33 Info" -> "1;33"
+    [ -z "$style" ] || catchReturn "$handler" sedReplacePattern "[($style)]" "${colorCode%% *}" || return $?
+  done
 }
