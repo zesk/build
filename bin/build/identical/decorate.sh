@@ -2,10 +2,9 @@
 #
 # Identical template
 #
-# Original of _colors
+# Original of decorate
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
-#
 
 #
 # EDIT THIS FILE - EDIT THIS FILE - EDIT THIS FILE - EDIT THIS FILE
