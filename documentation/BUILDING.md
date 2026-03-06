@@ -13,5 +13,8 @@ See [`../bitbucket-pipelines.yml`](../bitbucket-pipelines.yml) for build steps, 
 2. `buildStagingTest` or `buildProductionTest` running in parallel (using test tags) to reduce total test time
 3. `bin/deploy.sh` - Deploys to GitHub in `production`, deploys documentation
 
-Deployment is currently being added to build and update documentation endpoint for always up-to-date online
-documentation using `mkdocs`.
+Documentation is built and deployed to a web site:
+
+- [Zesk Build](https://build.zesk.com/?crcat=web&crsource=zesk-build&crcpn=BUILDING.md&crkw=Zesk+Build)
+- Upcoming
+  version: [Zesk Build - Development](https://stage-build.zesk.com/?crcat=web&crsource=zesk-build&crcpn=BUILDING.md&crkw=Zesk+Build+-+Development)

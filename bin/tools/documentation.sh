@@ -22,6 +22,15 @@ __buildDocumentationBuildDirectory() {
     fi
   done < <(find "$documentationSource" -name '*.md' ! -path '*/tools/*')
 
+  catchReturn "$handler" cp -f "$home/etc/"*.png "$documentationSource/images/" || return $?
+  catchReturn "$handler" cp -f "$home/etc/"*.svg "$documentationSource/images/" || return $?
+  local asset && for asset in js images; do
+    source="$documentationSource/$asset"
+    target="$home/documentation/.docs/$asset"
+
+    statusMessage --last timingReport "$start" "Copying $asset"
+    catchReturn "$handler" cp -Rf "$source" "$target" || return $?
+  done
   source="$documentationSource/tools"
   target="$home/documentation/.docs/tools"
 
