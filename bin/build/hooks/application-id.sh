@@ -10,8 +10,8 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-# fn: {base}
-# Summary: {base} hook
+# fn: hookRun application-id
+# Summary: `application-id` hook default implementation
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Generate a unique ID for the state of the application files

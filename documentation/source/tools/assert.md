@@ -1,7 +1,7 @@
 # Assert Tools
 
 <!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 These functions are solely available after you call `testSuite`. Check out our [testing guide](../guide/testing.md)

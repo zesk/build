@@ -1,7 +1,7 @@
 # jUnit XML File Generation
 
 <!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 These functions are for generating jUnit XML output files:

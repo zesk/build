@@ -1,5 +1,9 @@
 # Bash Coding Patterns
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 We follow various patterns in our `bash` coding to make life easier. These patterns are adopted to make coding in Bash
 less error prone and more enjoyable.
 
@@ -348,4 +352,7 @@ A simple example to show some standard patterns:
 
 {example}
 
-[⬅ Return to index](index.md)
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

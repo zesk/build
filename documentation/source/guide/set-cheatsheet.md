@@ -122,6 +122,7 @@ options can also be specified as arguments to an invocation of the shell. The cu
     vi             	off
     xtrace         	off
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

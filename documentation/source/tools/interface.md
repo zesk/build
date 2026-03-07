@@ -1,7 +1,7 @@
 # Function signatures for callbacks
 
 <!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 # `errorHandler` signature
@@ -14,7 +14,7 @@ The following function signatures are used prevalently as callbacks:
 
 ## Installation function signatures
 
-These are all used in - [function {fn}]({documentationPath}) - [{summary}]({sourceLink}).
+These are all used in [`_installRemotePackage`](../tools/installer.md#_installremotePackage).
 
 {__packageVersionFunction}
 {__packageUrlFunction}

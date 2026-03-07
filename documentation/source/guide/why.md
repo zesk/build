@@ -56,6 +56,7 @@ to `zsh`.
 It has **not** been a challenge to remain compatible with **Bash 3** so until that becomes a burden the intent is to
 maintain support of **Bash 3** and greater until they pry it from my cold, dead fingers. Or I change my mind.
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

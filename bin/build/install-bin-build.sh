@@ -204,6 +204,7 @@ __installCheck() {
 # Creates the directory `../../bin/build` relative to the installer by default, can be modified.
 #
 # Argument: --local localPackageDirectory - Directory. Optional. Directory of an existing bin/build installation to mock behavior for testing
+# Argument: --version version - String. Optional. Download just **this** version of Zesk Build. Prevents stable breaking with new versions of Zesk Build.
 # Argument: --url url - URL. Optional. URL of a tar.gz. file. Download source code from here.
 # Argument: --debug - Flag. Optional. Debugging is on.
 # Argument: --force - Flag. Optional. Force installation even if file is up to date.

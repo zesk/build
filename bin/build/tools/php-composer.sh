@@ -117,7 +117,7 @@ _phpComposerInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# For any project, ensures the `version` field in `composer.json` matches `runHook version-current`
+# For any project, ensures the `version` field in `composer.json` matches `hookRun version-current`
 #
 # Run as a commit hook for any PHP project or as part of your build or development process
 #

@@ -23,6 +23,7 @@ is likely true) but the function itself actually implements argument handling; a
 thinks it's error [SC2120](https://www.shellcheck.net/wiki/SC2120), "foo references arguments, but none are ever
 passed". Adding this adds a call to the function and eliminates the error. 
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

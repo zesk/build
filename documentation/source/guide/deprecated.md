@@ -1,12 +1,55 @@
 # Deprecated functionality
 
-[⬅ Return to top](index.md)
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
 
 ## Recent changes (most recent changes first)
 
 This document lists functionality which was removed, why, and when.
 
-### Release v0.39.0
+### Release v0.41.0
+
+Continuing naming fixes to be consistent across the library.
+
+#### Function name ordering (noun-verb)
+
+- `isSubstring` -> `stringFound`
+- `hasHook` -> `hookExists`
+- `alignLeft` -> `textAlignLeft`
+- `alignRight` -> `textAlignRight`
+- `clearLine` -> `consoleLineFill`
+- `debugOpenFiles` -> `filesOpenStatus`
+- `findUncaughtAssertions` -> `bashFindUncaughtAssertions`
+- `hasColors` -> `consoleHasColors`
+- `hasConsoleAnimation` -> `consoleHasAnimation`
+- `insideDocker` -> `dockerInside`
+- `isAbsolutePath` -> `pathIsAbsolute`
+- `makeShellFilesExecutable` -> `bashMakeExecutable`
+- `echoBar` -> `consoleLine`
+- `yesterdayDate` -> `dateYesterday`
+- `todayDate` -> `dateToday`
+- `tomorrowDate` -> `dateTomorrow`
+- `beginsWith` -> `stringBegins`
+- `extensionLists` -> `fileExtensionLists`
+- `whichHook` -> `hookFind`
+- `whichExists` -> `executableExists`
+- `lineFill` -> `consoleHeadingLine`
+- `boxedHeading` -> `consoleHeadingBoxed`
+- `plainLength` -> `consolePlainLength`
+- `mapReturn` -> `returnMap`
+- `maximumFieldLength` -> `fileFieldMaximum`
+- `maximumLineLength` -> `fileLineMaximum`
+- `stripAnsi` -> `consoleToPlain`
+
+#### Removed
+
+- `cachedShaPipe` -> `shaPipe --cache`
+- `testTools` -> `testSuite` (just call directly)
+
+#### Renamed
+
+- `junitTestCaseFailed` -> `junitTestCaseFailure`
 
 Many functions were "made first class" by removing the initial underscore:
 
@@ -32,7 +75,62 @@ Using "return code" in our naming:
 
 - `exitString` -> `returnCodeString`
 
-### Release v0.38.3
+### Release v0.40.4
+
+- `usageArgumentFoo "$handler"` -> `validate "$handler" Foo` - `validate` is new system and used universally (old
+  functions are deprecated)
+- `catchEnvironment` -> `catchReturn` for internal functions (maintains return code consistently)
+
+# Release v0.40.0
+
+Removed underscores from external functions:
+
+- `markdown_removeUnfinishedSections` -> `markdownRemoveUnfinishedSections`
+- `markdown_FormatList` -> `markdownFormatList`
+- `simpleMarkdownToConsole` -> `markdownToConsole`
+
+### Release v0.39.0
+
+#### Function name ordering (noun-verb):
+
+- `isAbsolutePath` -> `pathIsAbsolute`
+- `nextMinorVersion` -> `versionNextMinor`
+- `NextMinorVersion` -> `VersionNextMinor`
+- `newRelease` -> `releaseNew`
+- `NewRelease` -> `ReleaseNew`
+
+#### Remove underscores from external API functions
+
+- `bashDocumentation_Extract` -> `bashDocumentationExtract`
+- `__throwEnvironment` -> `throwEnvironment`
+- `__catchEnvironment` -> `catchEnvironment`
+- `__throwArgument ` -> `throwArgument`
+- `__catchArgument ` -> `catchArgument`
+- `__throw` -> `returnThrow`
+- `__catch` -> `catchReturn`
+- `__catchCode` -> `catchCode`
+- `__environment ` -> `catchEnvironment "returnMessage"`
+- `__execute ` -> `execute`
+- `__echo` -> `executeEcho`
+- `_choose` -> `booleanChoose`
+
+#### Internal renaming
+
+Words match the intention of the code block better:
+
+- `IDENTICAL _return ` -> `IDENTICAL returnMessage`
+- `_IDENTICAL_ exitString ` -> `_IDENTICAL_ returnString`
+- `exitString` -> `returnCodeString`
+- `returnCatchEnvironment` -> `catchEnvironment`
+- `returnCatchArgument` -> `catchArgument`
+- `returnThrowEnvironment` -> `throwEnvironment`
+- `returnThrowArgument` -> `throwArgument`
+- `returnCatchCode` -> `catchCode`
+- `returnCatch` -> `catchReturn`
+
+## Release v0.38.3
+
+Argument comments changed from `Exit Code:` to `Return Code:` - to match better semantics of the code.
 
 - `Exit Code:` -> `# Return Code:` - 'return code' is more appropriate for functions
 
@@ -224,4 +322,7 @@ Single decoration function:
 
 - `decorate reset` -> `decorate reset`
 
-[⬅ Return to top](index.md)
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

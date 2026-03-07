@@ -99,6 +99,7 @@ Used in `date` and other programs. Wrote this so I don't have to search to find 
 
 Additionally `%OB` implemented to represent alternative months names (used standalone, without day mentioned).
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

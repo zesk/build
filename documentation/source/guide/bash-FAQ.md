@@ -1,5 +1,9 @@
 # This is the Bash FAQ, version 4.15, for Bash version 5.1.
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 > [This document is no longer maintained.]
 
 This document contains a set of frequently-asked questions concerning
@@ -2402,3 +2406,8 @@ without license or royalty fees, to use, copy, and distribute
 this document for any purpose, provided that the above copyright
 notice appears in all copies of this document and that the
 contents of this document remain unaltered.
+
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

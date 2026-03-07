@@ -59,6 +59,7 @@ our [documentation](./documentation.md). The types available for arguments or an
 - `CommaDelimitedList` - A string which represents a list of items where `,` is used as a separator between items.
 - `List` - 0 or more additional arguments.
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

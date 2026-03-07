@@ -38,7 +38,3 @@ your systems.
 ## History
 
 - [Deprecated functionality](./deprecated.md)
-
-<!-- TEMPLATE guideFooter 2 -->
-<hr />
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

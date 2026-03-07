@@ -58,3 +58,8 @@ If in doubt do:
 ## UFOs `[()]`
 
 - Decoration themed functionality uses `[(name)]` tokens in text which are universally replaced
+
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

@@ -44,3 +44,8 @@ signal.
 
 Someone ran `testSuite --debug`. This is for debugging `testSuite` test state. Delete it freely. See [
 `testSuite --debug`](../tools/test.md#testsuite) This file is an environment file used to pass state to hooks.
+
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

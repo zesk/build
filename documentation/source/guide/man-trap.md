@@ -1,5 +1,9 @@
 # `trap` Manual Page
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 Usage:
 
     trap [-lp] [ [arg] sigspec ...]
@@ -47,6 +51,7 @@ Trapped signals that are not being ignored are reset to their original values in
 return status is
 false if any `sigspec` is invalid; otherwise `trap` returns true (Return code: 0)
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

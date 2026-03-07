@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-06
 # shellcheck disable=SC2034
 argument="--env-file envFile - File. Optional. One (or more) environment files used to map \`documentTemplate\` prior to scanning, as defaults prior to each function generation, and after file generation."$'\n'"cacheDirectory - Required. Cache directory where the indexes live."$'\n'"sourceFile - Required. The document template containing functions to define"$'\n'"functionTemplate - Required. The template for individual functions defined in the \`documentTemplate\`."$'\n'"targetFile - Required. Target file to generate"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
 description="Convert a template which contains bash functions into full-fledged documentation."$'\n'"The process:"$'\n'"1. \`documentTemplate\` is scanned for tokens which are assumed to represent Bash functions"$'\n'"1. \`functionTemplate\` is used to generate the documentation for each function"$'\n'"1. Functions are looked up in \`cacheDirectory\` using indexing functions and"$'\n'"1. Template used to generate documentation and compiled to \`targetFile\`"$'\n'"\`cacheDirectory\` is required - build an index using \`documentationIndexIndex\` prior to using this."$'\n'""
 file="bin/build/tools/documentation.sh"
+fn="documentationTemplateCompile"
 foundNames=([0]="summary" [1]="argument" [2]="see" [3]="return_code" [4]="requires")
 rawComment="Summary: Convert a template file to a documentation file using templates"$'\n'"Argument: --env-file envFile - File. Optional. One (or more) environment files used to map \`documentTemplate\` prior to scanning, as defaults prior to each function generation, and after file generation."$'\n'"Argument: cacheDirectory - Required. Cache directory where the indexes live."$'\n'"Argument: sourceFile - Required. The document template containing functions to define"$'\n'"Argument: functionTemplate - Required. The template for individual functions defined in the \`documentTemplate\`."$'\n'"Argument: targetFile - Required. Target file to generate"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Convert a template which contains bash functions into full-fledged documentation."$'\n'"The process:"$'\n'"1. \`documentTemplate\` is scanned for tokens which are assumed to represent Bash functions"$'\n'"1. \`functionTemplate\` is used to generate the documentation for each function"$'\n'"1. Functions are looked up in \`cacheDirectory\` using indexing functions and"$'\n'"1. Template used to generate documentation and compiled to \`targetFile\`"$'\n'"\`cacheDirectory\` is required - build an index using \`documentationIndexIndex\` prior to using this."$'\n'"See: documentationIndexLookup"$'\n'"See: documentationIndexIndex"$'\n'"Return Code: 0 - If success"$'\n'"Return Code: 1 - Issue with file generation"$'\n'"Return Code: 2 - Argument error"$'\n'"Requires: catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory"$'\n'"Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean"$'\n'"Requires: mapEnvironment shaPipe printf"$'\n'""$'\n'""
 requires="catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory"$'\n'"basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean"$'\n'"mapEnvironment shaPipe printf"$'\n'""
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
 see="documentationIndexLookup"$'\n'"documentationIndexIndex"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="46ab638aa51f9a58ed6d53b666c068deff5385ca"
+sourceHash="d3856e6a810acaa5231751984a6e2a5e372654ee"
 summary="Convert a template file to a documentation file using templates"$'\n'""
 usage="documentationTemplateCompile [ --env-file envFile ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]"
 # shellcheck disable=SC2016

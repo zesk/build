@@ -1,5 +1,9 @@
 # `read` Manual page
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 Usage:
 
     read [-ers] [-u fd] [-t timeout] [-a aname] [-p prompt] [-n nchars] [-d delim] [name ...]
@@ -28,6 +32,7 @@ next character read and for line continuation. Options, if supplied, have the fo
 If no names are supplied, the line read is assigned to the variable `REPLY`. The return code is zero, unless end-of-file
 is encountered, `read` times out, or an invalid file descriptor is supplied as the argument to `-u`.
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

@@ -18,7 +18,7 @@ __hookVersionNotes() {
 
   printf "%s\n" "# $name release $newVersion" ""
   if hookExists version-notes-copyright; then
-    execute runHook version-notes-copyright "$@" || return $?
+    execute hookRun version-notes-copyright "$@" || return $?
   else
     local year company
     year=$(date +%Y)

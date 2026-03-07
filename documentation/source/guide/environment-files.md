@@ -45,3 +45,8 @@ Tested bash versions:
 If you test on another OS or need support on a specific
 platform, [report an issue](https://github.com/zesk/build/issues). We have early platform testing working via
 `bin/tools.sh buildTestPlatforms` but it needs work.
+
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

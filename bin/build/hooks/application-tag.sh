@@ -10,12 +10,11 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-# fn: {base}
-# Summary: {base} hook
+# fn: hookRun application-tag
+# Summary: `application-tag` hook default implementation
 # Get the "tag" (or current display version) for an application
 #
 # The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.
-#
 __hookApplicationTag() {
   local handler="_${FUNCNAME[0]}"
   local home

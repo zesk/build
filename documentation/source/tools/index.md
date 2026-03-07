@@ -88,6 +88,8 @@
 - [Hook API](./hook.md) - Application hooks let you change behavior across applications.
 - [Hooks](./hooks.md) - List of available or known hooks
 - [Identical](./identical.md) - The identical system to keep your code and source in perfect harmony
+- [Installer](./installer.md) - Write your own installer scripts for your own software using Zesk Build installation
+  tools.
 - [Installation](./install.md) - Install other software like `aws` or `python` using package managers or custom
   techniques.
 - [Pipeline](./pipeline.md) - Tools for application deployment in the pipeline

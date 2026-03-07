@@ -1,7 +1,7 @@
 # Defined Hooks
 
 <!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 ## Context hook runners
@@ -36,6 +36,20 @@ These hooks interact with `release-new.sh` and deployment tools but are intended
 {__hookVersionCurrent}
 
 {__hookVersionLive}
+
+## Application Hooks
+
+{__hookApplicationEnvironment}
+
+{__hookApplicationFiles}
+
+{__hookApplicationEnvironment}
+
+{__hookApplicationID}
+
+{__hookApplicationTag}
+
+{__hookMaintenance}
 
 ## Development Hooks
 

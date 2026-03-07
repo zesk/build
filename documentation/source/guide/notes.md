@@ -21,6 +21,7 @@ source (a pseudo function name), if the script file was sourced (e.g. source ./s
 > Source: [StackOverflow](https://stackoverflow.com/questions/35006457/choosing-between-0-and-bash-source)
 >
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

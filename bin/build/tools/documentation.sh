@@ -24,6 +24,8 @@ __documentationLoader() {
 
 # Extract documentation variables from a comment stripped of the '# ' prefixes.
 #
+# Usage: {fn} [ --generate ] [ --no-cache | --cache ] [ --help ] handler function sourceFile
+#
 # A few special values are generated/computed:
 #
 # - `description` - Any line in the comment which is not in variable is appended to the field `description`

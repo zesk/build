@@ -10,8 +10,11 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-# Summary: {base} hook
+# fn: hookRun application-fingerprint
+# Summary: `application-fingerprint` hook default implementation
 # Generate a unique ID for the state of the application code which changes if the code is modified.
+#
+# The default hook generates a fingerprint using `sha1sum` and the contents of each `application-files` file.
 __hookApplicationFingerprint() {
   local handler="_${FUNCNAME[0]}"
   local home

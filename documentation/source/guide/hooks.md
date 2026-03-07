@@ -29,14 +29,19 @@ Most hooks are *optional* unless specified.
 
 ## [Application Hooks](../tools/application.md)
 
-- `application-environment` - Create the environment file. Default calls `environmentFileApplicationMake` with your
-- `application-files` - List all files which are related to `code` or behavior of the application. Should *not* include
-- `application-fingerprint` - Generate a unique ID which represents the code in an application and changes when the code
+- [`application-environment`](../tools/hooks.md#hookrun+application-environment) - Create the environment file. Default
+  calls `environmentFileApplicationMake` with your
+- [`application-files`](../tools/hooks.md#hookrun+application-files) - List all files which are related to `code` or behavior of the application. Should *not* include
+  temporary files or dependency code which is not specific to the application. The `application-fingerprint` uses this
+  file list and their checksums as the primary fingerprint for the application. Default hook uses [
+  `APPLICATION_CODE_EXTENSIONS`](../env/index.md#APPLICATION_CODE_EXTENSIONS) and [
+  `APPLICATION_CODE_IGNORE`](../env/index.md#APPLICATION_CODE_IGNORE) to calculate the list of files.
+- [`application-fingerprint`](../tools/hooks.md#hookrun+application-fingerprint) - Generate a unique ID which represents the code in an application and changes when the code
   changes
-- `application-tag` - The current tagged version of the software (e.g `v1.0.0rc71`)
-- `application-id` - Returns a string checksum of the current application source code (unique checksum for code state)
-- `maintenance` - Turn on or off maintenance
-- `notify` - Notify administrator of something important
+- [`application-tag`](../tools/hooks.md#hookrun+application-tag) - The current tagged version of the software (e.g `v1.0.0rc71`)
+- [`application-id`](../tools/hooks.md#hookrun+application-id) - Returns a string checksum of the current application source code (unique checksum for code state)
+- [`maintenance`](../tools/hooks.md#hookrun+maintenance) - Turn on or off maintenance
+- [`notify`](../tools/hooks.md#hookrun+notify) - Notify administrator of something important
 
 ## Development Hooks
 
@@ -82,4 +87,7 @@ Most hooks are *optional* unless specified.
 - `test-runner` - Run unit and any other tests inside the container (Required for test scripts)
 - `test-cleanup` - Reverse of `test-setup` hook actions
 
-[⬅ Return to top](index.md)
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

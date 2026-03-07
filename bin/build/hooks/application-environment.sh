@@ -10,8 +10,8 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-# fn: {base}
-# Summary: {base} hook
+# fn: hookRun application-environment
+# Summary: `application-environment` hook default implementation
 # Hook to customize the application environment file
 #
 # See: environmentFileApplicationMake

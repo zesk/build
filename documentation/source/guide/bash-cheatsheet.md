@@ -1,10 +1,14 @@
 # bash Cheat Sheet
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 ## Function names and special characters
 
 The following are all permitted in function names in addition to `[A-Z0-9a-z_]`:
 
-- "+", ".", "/", ":", "=", "?", "@", "", "", "^", "_", "{", "}", "~", and even some Unicode symbols
+    - "+", ".", "/", ":", "=", "?", "@", "", "", "^", "_", "{", "}", "~", and even some Unicode symbols
 
 However, for portability with POSIX or other shell implementations it is not recommended.
 
@@ -107,3 +111,8 @@ real user and group ids.
   value of `line` for non-empty values and handle when `$finished` becomes `true`.
   [Source](https://github.com/zesk/build/docs/bash-cheatsheet.md)
 - Problems with `&&` or `||` precedence leads to errors
+
+<!-- TEMPLATE guideFooter 3 -->
+<hr />
+
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

@@ -80,6 +80,7 @@ Binary `-a` and `-o` are ambiguous. Use `test EXPR1 && test EXPR2` or `test EXPR
 
 [Source](https://github.com/zesk/build/docs/test-cheatsheet.md)
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

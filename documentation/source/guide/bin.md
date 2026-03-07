@@ -27,6 +27,7 @@ The other binaries at `bin/build/` are:
 
 Reviewed: 2026-02-26
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

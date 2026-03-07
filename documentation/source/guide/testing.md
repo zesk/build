@@ -123,6 +123,7 @@ Examples:
 
     BUILD_TEST_FLAGS='Plumber:true;Assert-Plumber:true;Housekeeper:false' bin/test.sh 
 
-<!-- TEMPLATE guideFooter 2 -->
+<!-- TEMPLATE guideFooter 3 -->
 <hr />
+
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
