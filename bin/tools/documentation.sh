@@ -64,7 +64,7 @@ __buildDocumentationBuildDirectory() {
 
   # All functions
   local target=$home/documentation/source/tools/all.md
-  catchEnvironment "$handler" cp "$home/documentation/source/templates/all.md" "$target" || return $?
+  catchEnvironment "$handler" cp "$home/documentation/template/all.md" "$target" || return $?
   printf "\n" >>"$target"
   buildFunctions | sort -u | decorate wrap '- {SEE:' '}' >>"$target"
 
