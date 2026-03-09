@@ -23,6 +23,7 @@ __functionSettings() {
     settingsFile="$home/${path%/}/$functionName.sh"
     [ -f "$settingsFile" ] || continue
     printf "%s\n" "$settingsFile"
+    return 0
   done
   return 1
 }

@@ -105,76 +105,84 @@ __usageDocument() {
       throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
     fi
 
+    if [ -n "${rawComment-}" ]; then decorate error "FOUND LEAK AT $LINENO" && debuggingStack 1>&2 && pause; fi
+
     __profileLabel=bashDocumentationExtract
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
-    local fn="$displayName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug="" name="${name-}"
 
-    declare -r __handler variablesFile
-    set -a # UNDO ok
-    base="$(catchEnvironment "$handler" basename "$functionDefinitionFile")" || returnUndo $? set +a || return $?
-    # shellcheck source=/dev/null
-    catchEnvironment "$__handler" source "$variablesFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
-    set +a
-    #    dumpPipe "commentFile" <"$commentFile"
-    #    dumpPipe "sourceVariables" <"$variablesFile"
-    # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
-    catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
+    # subshell to hide globals
+    (
+      local fn="$displayName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug="" name="${name-}"
 
-    __profileLabel="source $variablesFile"
-    # IDENTICAL profileFunctionMarker 3
-    # ********************************************************************************************************************
-    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
-    # ********************************************************************************************************************
-    : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
-    : "$build_debug"
+      declare -r __handler variablesFile
+      set -a # UNDO ok
+      base="$(catchEnvironment "$handler" basename "$functionDefinitionFile")" || returnUndo $? set +a || return $?
+      # shellcheck source=/dev/null
+      catchEnvironment "$__handler" source "$variablesFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
+      set +a
+      #    dumpPipe "commentFile" <"$commentFile"
+      #    dumpPipe "sourceVariables" <"$variablesFile"
+      # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
+      catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
 
-    catchReturn "$__handler" bashRecursionDebug || return $?
-    local variable label formatter finished=false suffix=""
-    while ! $finished; do
-      IFS="|" read -r variable label formatter || finished=true
-      [ -n "$variable" ] || continue
-      local value="${!variable}"
-      if [ -n "$value" ]; then
-        local formatted
-        formatted="$(printf "\n\n%s\n%s\n" "$label:" "$(catchEnvironment "$handler" "$formatter" <<<"$value")")" || return $?
-        suffix="$suffix$formatted"
+      __profileLabel="source $variablesFile"
+      # IDENTICAL profileFunctionMarker 3
+      # ********************************************************************************************************************
+      if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+      # ********************************************************************************************************************
+      : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
+      : "$build_debug"
+
+      catchReturn "$__handler" bashRecursionDebug || return $?
+      local variable label formatter finished=false suffix=""
+      while ! $finished; do
+        IFS="|" read -r variable label formatter || finished=true
+        [ -n "$variable" ] || continue
+        local value="${!variable}"
+        if [ -n "$value" ]; then
+          local formatted
+          formatted="$(printf "\n\n%s\n%s\n" "$label:" "$(catchEnvironment "$handler" "$formatter" <<<"$value")")" || return $?
+          suffix="$suffix$formatted"
+        fi
+      done < <(__usageDocumentSections)
+
+      __profileLabel="__usageDocumentSections formatting"
+      # IDENTICAL profileFunctionMarker 3
+      # ********************************************************************************************************************
+      if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+      # ********************************************************************************************************************
+      description=$(trimTail <<<"$description")
+
+      [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
+      __usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" name="$name" mapEnvironment
+      [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
+
+      __profileLabel="__usageTemplate $fn"
+      # IDENTICAL profileFunctionMarker 3
+      # ********************************************************************************************************************
+      if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+      # ********************************************************************************************************************
+
+      catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+      catchReturn "$__handler" bashRecursionDebug --end || return $?
+
+      __profileLabel="cleanup"
+      # IDENTICAL profileFunctionTail 7
+      # ********************************************************************************************************************
+      if [ "$__profile" != "false" ]; then
+        __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
+        printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
       fi
-    done < <(__usageDocumentSections)
+      # ********************************************************************************************************************
 
-    __profileLabel="__usageDocumentSections formatting"
-    # IDENTICAL profileFunctionMarker 3
-    # ********************************************************************************************************************
-    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
-    # ********************************************************************************************************************
-    description=$(trimTail <<<"$description")
-
-    [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
-    __usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" name="$name" mapEnvironment
-    [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
-
-    __profileLabel="__usageTemplate $fn"
-    # IDENTICAL profileFunctionMarker 3
-    # ********************************************************************************************************************
-    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
-    # ********************************************************************************************************************
-    catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-    catchReturn "$__handler" bashRecursionDebug --end || return $?
+      # Keep blank line above this for profileFunctionTail
+    ) || return $?
   else
     [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
   fi
-
-  __profileLabel="cleanup"
-  # IDENTICAL profileFunctionTail 7
-  # ********************************************************************************************************************
-  if [ "$__profile" != "false" ]; then
-    __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
-    printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
-  fi
-  # ********************************************************************************************************************
-
   ! $bashDebug || __buildDebugEnable
   return "$returnCode"
 }

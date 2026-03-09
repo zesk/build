@@ -1054,7 +1054,7 @@ __usageMessage() {
   fi
 }
 
-# IDENTICAL __functionSettings 18
+# IDENTICAL __functionSettings 19
 
 # Summary: Load cached function comment values
 # Argument: home - Directory. BUILD_HOME
@@ -1070,6 +1070,7 @@ __functionSettings() {
     settingsFile="$home/${path%/}/$functionName.sh"
     [ -f "$settingsFile" ] || continue
     printf "%s\n" "$settingsFile"
+    return 0
   done
   return 1
 }

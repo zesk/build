@@ -343,7 +343,9 @@ _directoryPathSimplify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: file ... - Required. One or more files to get size of.
+# Argument: file ... - Optional. One or more files to get size of.
+# stdin: File. One or more files to get size of.
+# stdout: UnsignedInteger
 # Return Code: 0 - Success
 # Return Code: 1 - Environment error
 # DOC TEMPLATE: --help 1
@@ -352,17 +354,26 @@ fileSize() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local size opts
+  local opts=()
 
   case "$(lowercase "${OSTYPE-}")" in
   *darwin*) opts=("-f" "%z") ;;
   *) opts=('-c%s') ;;
   esac
-  while [ $# -gt 0 ]; do
-    size="$(stat "${opts[@]}" "$1")" || throwEnvironment "$handler" "Unable to stat" "${opts[@]}" "$1" || return $?
-    printf "%s\n" "$size"
-    shift || throwArgument "$handler" shift || return $?
-  done
+
+  local size
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      size="$(stat "${opts[@]}" "$1")" || throwEnvironment "$handler" "Unable to stat" "${opts[@]}" "$1" || return $?
+      printf "%s\n" "$size"
+      shift || throwArgument "$handler" shift || return $?
+    done
+  else
+    local file && while read -r file; do
+      size="$(stat "${opts[@]}" "$1")" || throwEnvironment "$handler" "Unable to stat" "${opts[@]}" "$1" || return $?
+      printf "%s\n" "$size"
+    done
+  fi
 }
 _fileSize() {
   # __IDENTICAL__ usageDocument 1

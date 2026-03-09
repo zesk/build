@@ -160,9 +160,16 @@ _documentationBuildEnvironment() {
 documentationBuildCache() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local code
-  code=$(catchReturn "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
-  catchReturn "$handler" buildCacheDirectory ".documentation/${code-default}/${1-}" || return $?
+  local code && code=$(catchReturn "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
+  local suffix=".documentation/${code-default}/${1-}"
+
+  if [ -n "${DOCUMENTATION_SHM}" ] && parseBoolean "${DOCUMENTATION_SHM-}"; then
+    local shmDir="/dev/shm"
+    [ -d "$shmDir" ] || throwEnvironment "$handler" "DOCUMENTATION_SHM enabled but no $shmDir"
+    directoryRequire "$shmDir/$suffix"
+  else
+    catchReturn "$handler" buildCacheDirectory "$suffix" || return $?
+  fi
 }
 _documentationBuildCache() {
   # __IDENTICAL__ usageDocument 1
