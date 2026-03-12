@@ -248,6 +248,8 @@ __decorateExtensionEach() {
 }
 
 # fn: decorate BOLD
+# Summary: Add bold style to another style
+# Example: decorate BOLD info Info is more important
 # Argument: style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.
 # Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
 __decorateExtensionBOLD() {

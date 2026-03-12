@@ -90,6 +90,9 @@ _bashBuiltins() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Is a token a bash builtin?
+# Useful for introspection or validation - checks if a token is a bash built-in (e.g. `cd`) vs. a binary on the system (`/bin/cd`).
+# Implementation taken directly from the Bash man page.
 # Argument: builtin - String. Required. String to check if it's a bash builtin.
 # Return Code: 0 - Yes, this string is a bash builtin command.
 # Return Code: 1 - No, this is not a bash builtin command
