@@ -3,7 +3,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 288
+# IDENTICAL decorate 290
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -154,7 +154,7 @@ fi
 __decorateStylesBase() {
   local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=48;5;0;37:yellow=48;5;16;38;5;11:"
   styles="$styles:$(printf "%s:" "$@")"
-  styles="$styles:code=1;97;44:warning=1;93;41 Warning:error=1;91 ERROR:"
+  styles="$styles:code=97;44:warning=93;41 Warning:error=91 ERROR:"
   export __BUILD_DECORATE
   __BUILD_DECORATE="$styles"
 }
@@ -163,7 +163,7 @@ __decorateStylesDefaultLight() {
     "info=38;5;20 Info"
     "notice=46;31 Notice"
     "success=42;30 Success"
-    "subtle=1;38;5;252"
+    "subtle=38;5;252"
     "label=34;103"
     "value=30;107"
     "decoration=45;97"
@@ -239,6 +239,8 @@ __decorateExtensionEach() {
 }
 
 # fn: decorate BOLD
+# Summary: Add bold style to another style
+# Example: decorate BOLD info Info is more important
 # Argument: style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.
 # Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
 __decorateExtensionBOLD() {
@@ -291,5 +293,4 @@ __decorateExtensionQuoteProcessLine() {
   printf -- "\"%s\"\n" "$text"
 }
 
-# <-- END of IDENTICAL decorate
 # <-- END of IDENTICAL decorate

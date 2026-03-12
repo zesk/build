@@ -1334,7 +1334,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 288
+# IDENTICAL decorate 290
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1485,7 +1485,7 @@ fi
 __decorateStylesBase() {
   local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=48;5;0;37:yellow=48;5;16;38;5;11:"
   styles="$styles:$(printf "%s:" "$@")"
-  styles="$styles:code=1;97;44:warning=1;93;41 Warning:error=1;91 ERROR:"
+  styles="$styles:code=97;44:warning=93;41 Warning:error=91 ERROR:"
   export __BUILD_DECORATE
   __BUILD_DECORATE="$styles"
 }
@@ -1494,7 +1494,7 @@ __decorateStylesDefaultLight() {
     "info=38;5;20 Info"
     "notice=46;31 Notice"
     "success=42;30 Success"
-    "subtle=1;38;5;252"
+    "subtle=38;5;252"
     "label=34;103"
     "value=30;107"
     "decoration=45;97"
@@ -1570,6 +1570,8 @@ __decorateExtensionEach() {
 }
 
 # fn: decorate BOLD
+# Summary: Add bold style to another style
+# Example: decorate BOLD info Info is more important
 # Argument: style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.
 # Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
 __decorateExtensionBOLD() {
@@ -1623,81 +1625,6 @@ __decorateExtensionQuoteProcessLine() {
 }
 
 # <-- END of IDENTICAL decorate
-# <-- END of IDENTICAL decorate
-# <-- END of IDENTICAL decorate
-
-# IDENTICAL decorateThemed 71
-
-# Applies the current theme to text rendered using `decorateThemelessMode`
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# stdin: Text to apply current theme to
-# stdout: Console-ready text
-decorateThemed() {
-  local handler="_${FUNCNAME[0]}"
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    *) break ;;
-    esac
-    shift
-  done
-
-  if [ $# -gt 0 ]; then
-    catchEnvironment "$handler" printf "%s\n" "$@" | __decorateThemed "$handler" || return $?
-  else
-    __decorateThemed "$handler" || return $?
-  fi
-}
-_decorateThemed() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-__decorateThemed() {
-  local handler="$1" && shift
-  export __BUILD_DECORATE
-  [ -n "${__BUILD_DECORATE-}" ] || throwEnvironment "$handler" "Decorate colors not initialized." || return $?
-
-  local sedFile && sedFile=$(__decorateThemeSedFile "$handler") || return $?
-  catchEnvironment "$handler" sed -f "$sedFile" || return $?
-}
-
-__decorateThemeSedFile() {
-  local handler="$1" && shift
-
-  export __BUILD_DECORATE_THEME
-  case "${1-}" in
-  --delete)
-    [ -f "${__BUILD_DECORATE_THEME-}" ] || return 0
-    catchEnvironment "$handler" rm -f "${__BUILD_DECORATE_THEME-}" || return $?
-    unset __BUILD_DECORATE_THEME
-    return 0
-    ;;
-  esac
-  export __BUILD_DECORATE
-  if [ ! -f "${__BUILD_DECORATE_THEME-}" ]; then
-    local sedFile && sedFile="$(catchReturn "$handler" buildCacheDirectory)/theme.sed" || return $?
-    __decorateThemeGenerateSedFile "$handler" >"$sedFile" <<<"${__BUILD_DECORATE-}" || returnClean $? "$sedFile" || return $?
-    __BUILD_DECORATE_THEME="$sedFile"
-  fi
-  catchEnvironment "$handler" printf "%s\n" "${__BUILD_DECORATE_THEME-}" || return $?
-}
-
-__decorateThemeGenerateSedFile() {
-  local handler="$1" && shift
-  local style colorCode && while IFS="=" read -r -d ':' style colorCode; do
-    # colorCode - Strip space and after "1;33 Info" -> "1;33"
-    [ -z "$style" ] || catchReturn "$handler" sedReplacePattern "[($style)]" "${colorCode%% *}" || return $?
-  done
-}
 
 # IDENTICAL execute 7
 
