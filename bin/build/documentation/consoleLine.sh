@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="alternateChar - String. Optional. Use an alternate character or string output"$'\n'"offset - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is \`0\`)"$'\n'""
 base="line.sh"
 description="Output a bar as wide as the console using the \`=\` symbol."$'\n'""
 example="    decorate success \$(consoleLine =-)"$'\n'"    decorate success \$(consoleLine \"- Success \")"$'\n'"    decorate magenta \$(consoleLine +-)"$'\n'""
 file="bin/build/tools/decorate/line.sh"
+fn="consoleLine"
 foundNames=([0]="summary" [1]="argument" [2]="see" [3]="example")
 rawComment="Summary: Output a bar as wide as the console"$'\n'"Output a bar as wide as the console using the \`=\` symbol."$'\n'"Argument: alternateChar - String. Optional. Use an alternate character or string output"$'\n'"Argument: offset - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is \`0\`)"$'\n'"See: consoleColumns"$'\n'"Example:     decorate success \$(consoleLine =-)"$'\n'"Example:     decorate success \$(consoleLine \"- Success \")"$'\n'"Example:     decorate magenta \$(consoleLine +-)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="path - String. Output a json path separated by dots."$'\n'""
 base="json.sh"
 description="Generate a path for a JSON structure for use in \`jq\` queries"$'\n'"Without arguments, displays help."$'\n'""
 file="bin/build/tools/json.sh"
+fn="jsonPath"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Generate \`jq\` paths"$'\n'"Generate a path for a JSON structure for use in \`jq\` queries"$'\n'"Argument: path - String. Output a json path separated by dots."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

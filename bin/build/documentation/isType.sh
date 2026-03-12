@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="type.sh"
 description="Bash types beyond \`type -t\`"$'\n'""
 file="bin/build/tools/type.sh"
+fn="isType"
 foundNames=()
 rawComment="Bash types beyond \`type -t\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

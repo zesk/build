@@ -74,32 +74,30 @@ _markdownIndentHeading() {
 # Example:     map.sh < $templateFile | markdownRemoveUnfinishedSections
 #
 markdownRemoveUnfinishedSections() {
-  local line section=() foundVar=false blankContent=true
+  local line section=() foundVar=false foundContent=false
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  while IFS='' read -r line; do
+  local lastLine="" line && while IFS='' read -r line; do
+    local trimmed && trimmed=$(trimSpace "$line")
     if [ "${line:0:1}" = "#" ]; then
-      if ! $foundVar && ! $blankContent; then
-        printf '%s\n' "${section[@]+${section[@]}}"
+      # Heading line
+      if ! $foundVar && $foundContent && [ ${#section[@]} -gt 0 ]; then
+        printf "%s\n" "${section[@]+${section[@]}}"
       fi
       foundVar=false
-      blankContent=true
-      if isMappable "$line"; then
-        foundVar=true
-      fi
-      section=("$line")
+      foundContent=false
+      section=()
+      ! isMappable "$trimmed" || foundVar=true
     else
-      temp="$(trimSpace "$line")"
-      if [ -n "$temp" ]; then
-        if isMappable "$temp"; then
-          foundVar=true
-        fi
-        blankContent=false
+      if [ -n "$trimmed" ]; then
+        foundContent=true
+        ! isMappable "$trimmed" || foundVar=true
       fi
-      section+=("$line")
     fi
+    [ -z "$trimmed$lastLine" ] || section+=("$line")
+    lastLine="$trimmed"
   done
-  if ! $foundVar && ! $blankContent; then
-    printf '%s\n' "${section[@]+${section[@]}}"
+  if ! $foundVar && $foundContent && [ ${#section[@]} -gt 0 ]; then
+    printf "%s\n" "${section[@]+${section[@]}}"
   fi
 }
 _markdownRemoveUnfinishedSections() {

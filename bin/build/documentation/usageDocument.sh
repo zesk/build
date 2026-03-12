@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use \`__bashDocumentation_FindFunctionDefinitions\` or \`__bashDocumentation_FindFunctionDefinition\`."$'\n'"functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"exitCode - Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"message - String. Optional. A message."$'\n'""
 base="usage.sh"

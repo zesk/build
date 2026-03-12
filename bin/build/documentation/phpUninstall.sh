@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="package - Additional packages to install"$'\n'""
 base="php.sh"
 description="Uninstall \`php\`"$'\n'"If this fails it will output the installation log."$'\n'"When this tool succeeds the \`php\` binary is no longer available in the local operating system."$'\n'""
 file="bin/build/tools/php.sh"
+fn="phpUninstall"
 foundNames=([0]="argument" [1]="summary" [2]="return_code")
 rawComment="Uninstall \`php\`"$'\n'"If this fails it will output the installation log."$'\n'"Argument: package - Additional packages to install"$'\n'"Summary: Uninstall \`php\`"$'\n'"When this tool succeeds the \`php\` binary is no longer available in the local operating system."$'\n'"Return Code: 1 - If uninstallation fails"$'\n'"Return Code: 0 - If uninstallation succeeds"$'\n'""$'\n'""
 return_code="1 - If uninstallation fails"$'\n'"0 - If uninstallation succeeds"$'\n'""

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"pipPackage [ ... ] - String. Required. Pip package name to install."$'\n'""
 base="python.sh"
 description="Utility to install python dependencies via pip"$'\n'"Installs python if it hasn't been using \`pythonInstall\`."$'\n'""
 file="bin/build/tools/python.sh"
+fn="pipInstall"
 foundNames=([0]="argument")
 rawComment="Utility to install python dependencies via pip"$'\n'"Installs python if it hasn't been using \`pythonInstall\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: pipPackage [ ... ] - String. Required. Pip package name to install."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

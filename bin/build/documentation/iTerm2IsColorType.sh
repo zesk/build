@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="iterm2.sh"
 description="This is faster than inArray etc."$'\n'""
 file="bin/build/tools/iterm2.sh"
+fn="iTerm2IsColorType"
 foundNames=()
 rawComment="This is faster than inArray etc."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

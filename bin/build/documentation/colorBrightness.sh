@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"redValue - Integer. Optional. Red RGB value (0-255)"$'\n'"greenValue - Integer. Optional. Red RGB value (0-255)"$'\n'"blueValue - Integer. Optional. Red RGB value (0-255)"$'\n'""
 base="colors.sh"
 credit="https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11"$'\n'""
 description="Return an integer between 0 and 100"$'\n'"Colors are between 0 and 255"$'\n'""
 file="bin/build/tools/colors.sh"
+fn="colorBrightness"
 foundNames=([0]="credit" [1]="argument" [2]="stdin")
 rawComment="Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11"$'\n'"Return an integer between 0 and 100"$'\n'"Colors are between 0 and 255"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: redValue - Integer. Optional. Red RGB value (0-255)"$'\n'"Argument: greenValue - Integer. Optional. Red RGB value (0-255)"$'\n'"Argument: blueValue - Integer. Optional. Red RGB value (0-255)"$'\n'"stdin: 3 integer values [ Optional ]"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="value - EmptyString. Required. Value to test."$'\n'""
 base="type.sh"
 credits="F. Hauri - Give Up GitHub (isnum_Case)"$'\n'""
 description="Test if an argument is a positive floating point number"$'\n'"(\`1e3\` notation NOT supported)"$'\n'""
 file="bin/build/tools/type.sh"
+fn="isUnsignedNumber"
 foundNames=([0]="argument" [1]="return_code" [2]="credits" [3]="source")
 rawComment="Test if an argument is a positive floating point number"$'\n'"(\`1e3\` notation NOT supported)"$'\n'"Argument: value - EmptyString. Required. Value to test."$'\n'"Return Code: 0 - if it is a number equal to or greater than zero"$'\n'"Return Code: 1 - if it is not a number equal to or greater than zero"$'\n'"Credits: F. Hauri - Give Up GitHub (isnum_Case)"$'\n'"Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""$'\n'""
 return_code="0 - if it is a number equal to or greater than zero"$'\n'"1 - if it is not a number equal to or greater than zero"$'\n'""
+source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
 sourceFile="bin/build/tools/type.sh"
 sourceHash="c60b8f9d9123f5a6eb04a56b93a1ce09d79d8d26"
 summary="Test if an argument is a positive floating point number"

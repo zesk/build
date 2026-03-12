@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"keyStroke - String. Required."$'\n'"action - String. Required."$'\n'""
 base="readline.sh"
 description="Add configuration to \`~/.inputrc\` for a key binding"$'\n'""
 example="readlineConfigurationAdd \"\\ep\" history-search-backward"$'\n'""
 file="bin/build/tools/readline.sh"
+fn="readlineConfigurationAdd"
 foundNames=([0]="argument" [1]="example")
 rawComment="Add configuration to \`~/.inputrc\` for a key binding"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: keyStroke - String. Required."$'\n'"Argument: action - String. Required."$'\n'"Example: readlineConfigurationAdd \"\\ep\" history-search-backward"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
@@ -18,4 +19,4 @@ usage="readlineConfigurationAdd [ --help ] keyStroke action"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreadlineConfigurationAdd'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mkeyStroke'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]maction'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help     '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mkeyStroke  '$'\e''[[(value)]mString. Required.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]maction     '$'\e''[[(value)]mString. Required.'$'\e''[[(reset)]m'$'\n'''$'\n''Add configuration to '$'\e''[[(code)]m~/.inputrc'$'\e''[[(reset)]m for a key binding'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''readlineConfigurationAdd "\ep" history-search-backward'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mreadlineConfigurationAdd [[(blue)]m[ --help ] [[(bold)]m[[(magenta)]mkeyStroke [[(bold)]m[[(magenta)]maction'$'\n'''$'\n''    [[(blue)]m--help     [[(value)]mFlag. Optional. Display this help.'$'\n''    [[(red)]mkeyStroke  [[(value)]mString. Required.'$'\n''    [[(red)]maction     [[(value)]mString. Required.'$'\n'''$'\n''Add configuration to [[(code)]m~/.inputrc for a key binding'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''$'\n''Example:'$'\n''readlineConfigurationAdd "\ep" history-search-backward'$'\n'''
+helpPlain='Usage: readlineConfigurationAdd [ --help ] keyStroke action'$'\n'''$'\n''    --help     Flag. Optional. Display this help.'$'\n''    keyStroke  String. Required.'$'\n''    action     String. Required.'$'\n'''$'\n''Add configuration to ~/.inputrc for a key binding'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''readlineConfigurationAdd "\ep" history-search-backward'$'\n'''

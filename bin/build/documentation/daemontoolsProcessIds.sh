@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="daemontools.sh"
 description="List any processes associated with daemontools supervisors"$'\n'""
 file="bin/build/tools/daemontools.sh"
+fn="daemontoolsProcessIds"
 foundNames=([0]="requires")
 rawComment="List any processes associated with daemontools supervisors"$'\n'"Requires: pgrep read printf"$'\n'""$'\n'""
 requires="pgrep read printf"$'\n'""

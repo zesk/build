@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"value ... - EmptyString. One or more values to test."$'\n'""
 base="type.sh"
 description="True-ish"$'\n'"Succeeds when all arguments are \"true\"-ish"$'\n'""
 file="bin/build/tools/type.sh"
+fn="isTrue"
 foundNames=([0]="argument")
 rawComment="True-ish"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value ... - EmptyString. One or more values to test."$'\n'"Succeeds when all arguments are \"true\"-ish"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

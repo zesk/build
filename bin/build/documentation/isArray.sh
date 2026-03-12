@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="variableName - String. Required. Variable name to check."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="type.sh"
 description="Is a variable declared as an array?"$'\n'""
 file="bin/build/tools/type.sh"
+fn="isArray"
+foundNames=([0]="argument")
 rawComment="Is a variable declared as an array?"$'\n'"Argument: variableName - String. Required. Variable name to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/type.sh"

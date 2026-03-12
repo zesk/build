@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="number - Number. Required. An integer or floating point number"$'\n'"singular - String. Required. The singular form of a noun"$'\n'"plural - String. Optional. The plural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'""
 base="text.sh"
+count=""
 description="Outputs the \`singular\` value to standard out when the value of \`number\` is one."$'\n'"Otherwise, outputs the \`plural\` value to standard out."$'\n'"Example:"$'\n'""
 example="    count=\$(fileLineCount \"\$foxSightings\") || return \$?"$'\n'"    printf \"We saw %d %s.\\n\" \"\$count\" \"\$(plural \"\$count\" fox foxes)\""$'\n'"    n=\$((\$(date +%s)) - start))"$'\n'"    printf \"That took %d %s\" \"\$n\" \"\$(plural \"\$n\" second seconds)\""$'\n'""
 file="bin/build/tools/text.sh"
+fn="plural"
 foundNames=([0]="short_description" [1]="argument" [2]="return_code" [3]="example" [4]="stdout")
+n=""
 rawComment="Outputs the \`singular\` value to standard out when the value of \`number\` is one."$'\n'"Otherwise, outputs the \`plural\` value to standard out."$'\n'"Short description: Output numeric messages which are grammatically accurate"$'\n'"Argument: number - Number. Required. An integer or floating point number"$'\n'"Argument: singular - String. Required. The singular form of a noun"$'\n'"Argument: plural - String. Optional. The plural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'"Return Code: 1 - If count is non-numeric"$'\n'"Return Code: 0 - If count is numeric"$'\n'"Example:     count=\$(fileLineCount \"\$foxSightings\") || return \$?"$'\n'"Example:     printf \"We saw %d %s.\\n\" \"\$count\" \"\$(plural \"\$count\" fox foxes)\""$'\n'"Example:"$'\n'"Example:     n=\$((\$(date +%s)) - start))"$'\n'"Example:     printf \"That took %d %s\" \"\$n\" \"\$(plural \"\$n\" second seconds)\""$'\n'"stdout: \`String\`. The plural form for non-1 values. e.g. \`\$(plural 2 potato potatoes)\` = \`potatoes\`"$'\n'""$'\n'""
 return_code="1 - If count is non-numeric"$'\n'"0 - If count is numeric"$'\n'""
 short_description="Output numeric messages which are grammatically accurate"$'\n'""

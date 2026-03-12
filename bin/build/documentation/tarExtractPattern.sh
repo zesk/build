@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="pattern - The file pattern to extract"$'\n'""
 base="tar.sh"
 description="Platform agnostic tar extract with wildcards"$'\n'"e.g. \`tar -xf '*/file.json'\` or \`tar -xf --wildcards '*/file.json'\` depending on OS"$'\n'"\`tar\` command is not cross-platform so this differentiates between the GNU and BSD command line arguments."$'\n'""
 file="bin/build/tools/tar.sh"
+fn="tarExtractPattern"
 foundNames=([0]="short_description" [1]="argument" [2]="stdin" [3]="stdout")
 rawComment="Platform agnostic tar extract with wildcards"$'\n'"e.g. \`tar -xf '*/file.json'\` or \`tar -xf --wildcards '*/file.json'\` depending on OS"$'\n'"\`tar\` command is not cross-platform so this differentiates between the GNU and BSD command line arguments."$'\n'"Short description: Platform agnostic tar extract"$'\n'"Argument: pattern - The file pattern to extract"$'\n'"stdin: A gzipped-tar file"$'\n'"stdout: The desired file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"--owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'"fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)"$'\n'""
 base="directory.sh"
 description="Given a list of files, ensure their parent directories exist"$'\n'"Creates the directories for all files passed in."$'\n'""
 example="    logFile=./.build/\$me.log"$'\n'"    fileDirectoryRequire \"\$logFile\""$'\n'""
 file="bin/build/tools/directory.sh"
+fn="fileDirectoryRequire"
 foundNames=([0]="example" [1]="argument" [2]="requires")
 logFile=""
 rawComment="Given a list of files, ensure their parent directories exist"$'\n'"Creates the directories for all files passed in."$'\n'"Example:     logFile=./.build/\$me.log"$'\n'"Example:     {fn} \"\$logFile\""$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'"Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)"$'\n'"Requires: chmod throwArgument usageArgumentString decorate catchEnvironment dirname"$'\n'""$'\n'""

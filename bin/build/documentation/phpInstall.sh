@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="package - Additional packages to install"$'\n'""
 base="php.sh"
 description="Install \`php\`"$'\n'"If this fails it will output the installation log."$'\n'"When this tool succeeds the \`php\` binary is available in the local operating system."$'\n'""
 file="bin/build/tools/php.sh"
+fn="phpInstall"
 foundNames=([0]="argument" [1]="summary" [2]="return_code")
 rawComment="Install \`php\`"$'\n'"If this fails it will output the installation log."$'\n'"Argument: package - Additional packages to install"$'\n'"Summary: Install \`php\`"$'\n'"When this tool succeeds the \`php\` binary is available in the local operating system."$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""$'\n'""
 return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""

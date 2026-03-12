@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="installDirectory - Directory. Required. You can pass a single argument which is the directory in your source tree to run composer. It should contain a \`composer.json\` file."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="php-composer.sh"

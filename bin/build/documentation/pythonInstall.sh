@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="python.sh"
 description="Install \`python\`"$'\n'"When this tool succeeds the \`python\` binary is available in the local operating system."$'\n'""
 file="bin/build/tools/python.sh"
+fn="pythonInstall"
 foundNames=([0]="summary" [1]="argument" [2]="return_code")
 rawComment="Install \`python\`"$'\n'"Summary: Install \`python\`"$'\n'"When this tool succeeds the \`python\` binary is available in the local operating system."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""$'\n'""
 return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""

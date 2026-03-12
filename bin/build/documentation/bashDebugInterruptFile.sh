@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--error - Flag. Add ERR trap."$'\n'"--clear - Flag. Remove all traps."$'\n'"--interrupt - Flag. Add INT trap."$'\n'"--already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0."$'\n'""
 base="debug.sh"
@@ -17,6 +17,6 @@ summary="Adds a trap to capture the debugging stack on interrupt"
 summaryComputed="true"
 usage="bashDebugInterruptFile [ --help ] [ --handler handler ] [ --error ] [ --clear ] [ --interrupt ] [ --already-error ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashDebugInterruptFile'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m '$'\e''[[(blue)]m[ --error ]'$'\e''[0m '$'\e''[[(blue)]m[ --clear ]'$'\e''[0m '$'\e''[[(blue)]m[ --interrupt ]'$'\e''[0m '$'\e''[[(blue)]m[ --already-error ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--handler handler  '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--error            '$'\e''[[(value)]mFlag. Add ERR trap.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--clear            '$'\e''[[(value)]mFlag. Remove all traps.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--interrupt        '$'\e''[[(value)]mFlag. Add INT trap.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--already-error    '$'\e''[[(value)]mFlag. If the signals are already installed, then throw an error. Otherwise exits 0.'$'\e''[[(reset)]m'$'\n'''$'\n''Adds a trap to capture the debugging stack on interrupt'$'\n''Use this in a bash script which runs forever or runs in an infinite loop to'$'\n''determine where the problem or loop exists.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashDebugInterruptFile [ --help ] [ --handler handler ] [ --error ] [ --clear ] [ --interrupt ] [ --already-error ]'$'\n'''$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    --error            Flag. Add ERR trap.'$'\n''    --clear            Flag. Remove all traps.'$'\n''    --interrupt        Flag. Add INT trap.'$'\n''    --already-error    Flag. If the signals are already installed, then throw an error. Otherwise exits 0.'$'\n'''$'\n''Adds a trap to capture the debugging stack on interrupt'$'\n''Use this in a bash script which runs forever or runs in an infinite loop to'$'\n''determine where the problem or loop exists.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+helpPlain=''

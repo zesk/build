@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="factor - floatValue. Required. Red RGB value (0-255)"$'\n'"redValue - Integer. Required. Red RGB value (0-255)"$'\n'"greenValue - Integer. Required. Red RGB value (0-255)"$'\n'"blueValue - Integer. Required. Red RGB value (0-255)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="colors.sh"
 description="Multiply color values by a factor and return the new values"$'\n'""
 file="bin/build/tools/colors.sh"
+fn="colorMultiply"
 foundNames=([0]="argument" [1]="requires")
 rawComment="Multiply color values by a factor and return the new values"$'\n'"Argument: factor - floatValue. Required. Red RGB value (0-255)"$'\n'"Argument: redValue - Integer. Required. Red RGB value (0-255)"$'\n'"Argument: greenValue - Integer. Required. Red RGB value (0-255)"$'\n'"Argument: blueValue - Integer. Required. Red RGB value (0-255)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: bc"$'\n'""$'\n'""
 requires="bc"$'\n'""

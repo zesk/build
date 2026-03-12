@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="pipeline.sh"
 description="Get the current IP address of a host"$'\n'""
 environment="IP_URL"$'\n'"IP_URL_FILTER"$'\n'""
 file="bin/build/tools/pipeline.sh"
+fn="ipLookup"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Get the current IP address of a host"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: IP_URL"$'\n'"Environment: IP_URL_FILTER"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

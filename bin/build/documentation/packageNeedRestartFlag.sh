@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="value - Set the restart flag to this value (blank to remove)"$'\n'""
 base="package.sh"
 description="INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some point?"$'\n'""
 file="bin/build/tools/package.sh"
+fn="packageNeedRestartFlag"
 foundNames=([0]="argument")
 rawComment="INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some point?"$'\n'"Argument: value - Set the restart flag to this value (blank to remove)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

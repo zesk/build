@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-28
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--symbol symbol - String. Optional. Symbol to place before each line. (Blank is ok)."$'\n'"--tail - Flag. Optional. Show the tail of the file and not the head when not enough can be shown."$'\n'"--head - Flag. Optional. Show the head of the file when not enough can be shown. (default)"$'\n'"--lines - UnsignedInteger. Optional. Number of lines to show."$'\n'"--vanish file - UnsignedInteger. Optional. Number of lines to show."$'\n'"name - String. Optional. The item name or title of this output."$'\n'""
 base="dump.sh"

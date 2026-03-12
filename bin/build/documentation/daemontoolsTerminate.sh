@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--timeout seconds - Integer. Optional."$'\n'""
 base="daemontools.sh"
 description="Terminate daemontools as gracefully as possible"$'\n'""
 file="bin/build/tools/daemontools.sh"
+fn="daemontoolsTerminate"
 foundNames=([0]="argument" [1]="requires")
 rawComment="Terminate daemontools as gracefully as possible"$'\n'"Argument: --timeout seconds - Integer. Optional."$'\n'"Requires: throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment validate statusMessage"$'\n'"Requires: svscanboot id svc svstat"$'\n'""$'\n'""
 requires="throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment validate statusMessage"$'\n'"svscanboot id svc svstat"$'\n'""

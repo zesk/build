@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="None"$'\n'""
 base="markdown.sh"
@@ -9,11 +9,12 @@ description="Given a file containing Markdown, remove header and any section whi
 environment="None"$'\n'""
 example="    markdownRemoveUnfinishedSections < inputFile > outputFile"$'\n'"    map.sh < \$templateFile | markdownRemoveUnfinishedSections"$'\n'""
 file="bin/build/tools/markdown.sh"
+fn="markdownRemoveUnfinishedSections"
 foundNames=([0]="argument" [1]="depends" [2]="return_code" [3]="environment" [4]="example")
 rawComment="Given a file containing Markdown, remove header and any section which has a variable still"$'\n'"This EXPLICITLY ignores variables with a colon to work with \`{SEE:other}\` syntax"$'\n'"This operates as a filter on a file. A section is any group of contiguous lines beginning with a line"$'\n'"which starts with a \`#\` character and then continuing to but not including the next line which starts with a \`#\`"$'\n'"character or the end of file; which corresponds roughly to headings in Markdown."$'\n'"If a section contains an unused variable in the form \`{variable}\`, the entire section is removed from the output."$'\n'"This can be used to remove sections which have variables or values which are optional."$'\n'"If you need a section to always be displayed; provide default values or blank values for the variables in those sections"$'\n'"to prevent removal."$'\n'"Argument: None"$'\n'"Depends: read printf"$'\n'"Return Code: 0"$'\n'"Environment: None"$'\n'"Example:     markdownRemoveUnfinishedSections < inputFile > outputFile"$'\n'"Example:     map.sh < \$templateFile | markdownRemoveUnfinishedSections"$'\n'""$'\n'""
 return_code="0"$'\n'""
 sourceFile="bin/build/tools/markdown.sh"
-sourceHash="54381ddb863dfa5c768baef2174a69a41e3ccf69"
+sourceHash="f46e242bf7f19063180628eab801ca64f21217c1"
 summary="Given a file containing Markdown, remove header and any section"
 summaryComputed="true"
 usage="markdownRemoveUnfinishedSections [ None ]"

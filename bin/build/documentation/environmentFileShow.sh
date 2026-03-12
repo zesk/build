@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-16
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="environmentName - EnvironmentVariable. Optional. A required environment variable name"$'\n'"-- - Separator. Optional. Separates requires from optional environment variables"$'\n'"optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name."$'\n'""
 base="environment.sh"

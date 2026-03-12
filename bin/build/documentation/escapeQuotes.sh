@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="text - Text to quote"$'\n'""
 base="text.sh"
 description="Quote strings for inclusion in shell quoted strings"$'\n'"Without arguments, displays help."$'\n'""
 example="    escapeQuotes \"Now I can't not include this in a bash string.\""$'\n'""
 file="bin/build/tools/text.sh"
+fn="escapeQuotes"
 foundNames=([0]="argument" [1]="output" [2]="example" [3]="stdout")
 output="Single quotes are prefixed with a backslash"$'\n'""
 rawComment="Quote strings for inclusion in shell quoted strings"$'\n'"Argument: text - Text to quote"$'\n'"Output: Single quotes are prefixed with a backslash"$'\n'"Example:     {fn} \"Now I can't not include this in a bash string.\""$'\n'"Without arguments, displays help."$'\n'"stdout: The input text properly quoted"$'\n'""$'\n'""

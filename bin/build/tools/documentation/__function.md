@@ -8,6 +8,10 @@
 
 {description}
 
+### Arguments
+
+{argument}
+
 ### Reads standard input
 
 {stdin}
@@ -19,10 +23,6 @@
 ### Writes to standard error
 
 {stderr}
-
-### Arguments
-
-{argument}
 
 ### Debugging settings
 

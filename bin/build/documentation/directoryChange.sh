@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="directory - Directory. Required. Directory to change to prior to running command."$'\n'"command - Callable. Required. Thing to do in this directory."$'\n'"... - Arguments. Optional. Arguments to \`command\`."$'\n'""
 base="directory.sh"
 description="Run a command after changing directory to it and then returning to the previous directory afterwards."$'\n'""
 file="bin/build/tools/directory.sh"
+fn="directoryChange"
 foundNames=([0]="argument" [1]="requires")
 rawComment="Argument: directory - Directory. Required. Directory to change to prior to running command."$'\n'"Argument: command - Callable. Required. Thing to do in this directory."$'\n'"Argument: ... - Arguments. Optional. Arguments to \`command\`."$'\n'"Run a command after changing directory to it and then returning to the previous directory afterwards."$'\n'"Requires: pushd popd"$'\n'""$'\n'""
 requires="pushd popd"$'\n'""

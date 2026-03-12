@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="console.sh"
 description="Set the title of the window for the console"$'\n'""
 file="bin/build/tools/console.sh"
+fn="consoleSetTitle"
 foundNames=()
 rawComment="Set the title of the window for the console"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

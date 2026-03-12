@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="tag - String. Optional. The tag to tag again."$'\n'""
 base="git.sh"
 description="Remove a tag everywhere and tag again on the current branch"$'\n'""
 file="bin/build/tools/git.sh"
+fn="gitTagAgain"
 foundNames=([0]="argument")
 rawComment="Remove a tag everywhere and tag again on the current branch"$'\n'"Argument: tag - String. Optional. The tag to tag again."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

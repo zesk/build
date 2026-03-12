@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-26
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--clean - Flag. Optional. Clean directory of all files first."$'\n'"directory - Directory. Required. Directory to create extension lists."$'\n'"file0 ... - String. Optional. List of files to add to the extension list."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="platform.sh"

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"--help - Flag. Optional. Display this help."$'\n'"text - EmptyString. Required. text to convert to uppercase"$'\n'""
 base="text.sh"
 description="Convert text to uppercase"$'\n'""
 file="bin/build/tools/text.sh"
+fn="uppercase"
 foundNames=([0]="argument" [1]="stdout" [2]="requires")
 rawComment="Convert text to uppercase"$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: text - EmptyString. Required. text to convert to uppercase"$'\n'"stdout: \`String\`. The uppercase version of the \`text\`."$'\n'"Requires: tr"$'\n'""$'\n'""
 requires="tr"$'\n'""

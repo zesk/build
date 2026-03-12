@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
 description="Set up a pre-commit hook and create a cache of our files by extension."$'\n'""
 file="bin/build/tools/git.sh"
+fn="gitPreCommitSetup"
 foundNames=([0]="see" [1]="argument" [2]="return_code")
 rawComment="Set up a pre-commit hook and create a cache of our files by extension."$'\n'"See: gitPreCommitCleanup"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return code: 0 - One or more files are available as part of the commit"$'\n'"Return code: 1 - Error, or zero files are available as part of the commit"$'\n'""$'\n'""
 return_code="0 - One or more files are available as part of the commit"$'\n'"1 - Error, or zero files are available as part of the commit"$'\n'""

@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="darwin.sh"
 description="List valid sound names usable for notifications in Darwin"$'\n'""
 file="bin/build/tools/darwin.sh"
+fn="darwinSoundNames"
+foundNames=()
 rawComment="List valid sound names usable for notifications in Darwin"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/darwin.sh"

@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"character ... - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter."$'\n'""
 base="character.sh"
 description="List the classes allowed in \`isCharacterClass\`"$'\n'""
 file="bin/build/tools/character.sh"
+fn="characterClasses"
+foundNames=([0]="argument")
 rawComment="List the classes allowed in \`isCharacterClass\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: character ... - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/character.sh"

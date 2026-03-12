@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="vendor.sh"
 description="Show the current editor being used as a text string"$'\n'""
 environment="EDITOR - Used as a default editor (first)"$'\n'"VISUAL - Used as another default editor (last)"$'\n'""
 file="bin/build/tools/vendor.sh"
+fn="contextShow"
 foundNames=([0]="return_code" [1]="environment")
 rawComment="Show the current editor being used as a text string"$'\n'"Return Code: 1 - If no editor or running program can be determined"$'\n'"Environment: EDITOR - Used as a default editor (first)"$'\n'"Environment: VISUAL - Used as another default editor (last)"$'\n'""$'\n'""
 return_code="1 - If no editor or running program can be determined"$'\n'""

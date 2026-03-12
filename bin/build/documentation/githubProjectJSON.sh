@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="github.sh"
 description="Get a project JSON structure"$'\n'""
 environment="GITHUB_ACCESS_TOKEN"$'\n'""
 file="bin/build/tools/github.sh"
+fn="githubProjectJSON"
 foundNames=([0]="environment")
 rawComment="Get a project JSON structure"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

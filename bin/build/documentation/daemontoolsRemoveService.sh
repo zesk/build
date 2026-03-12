@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="serviceName - String. Required. Service name to remove."$'\n'""
 base="daemontools.sh"
 description="Remove a daemontools service by name"$'\n'""
 file="bin/build/tools/daemontools.sh"
+fn="daemontoolsRemoveService"
 foundNames=([0]="argument")
 rawComment="Remove a daemontools service by name"$'\n'"Argument: serviceName - String. Required. Service name to remove."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

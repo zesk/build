@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--non-interactive - Flag. Optional. If new version is needed, use default version"$'\n'"versionName - Optional. Set the new version name to this - must be after live version in version order"$'\n'""
 base="version.sh"
 description="**New release** - generates files in system for a new release."$'\n'"*Requires* hook \`version-current\`, optionally \`version-live\`"$'\n'"Uses semantic versioning \`MAJOR.MINOR.PATCH\`"$'\n'"Checks the live version versus the version in code and prompts to"$'\n'"generate a new release file if needed."$'\n'"A release notes template file is added at \`./documentation/source/release/\`. This file is"$'\n'"also added to \`git\` the first time."$'\n'""
 file="bin/build/tools/version.sh"
+fn="releaseNew"
 foundNames=([0]="argument" [1]="summary" [2]="hook" [3]="return_code")
 hook="version-current"$'\n'"version-live"$'\n'"version-created"$'\n'"version-already"$'\n'""
 rawComment="Argument: --non-interactive - Flag. Optional. If new version is needed, use default version"$'\n'"Argument: versionName - Optional. Set the new version name to this - must be after live version in version order"$'\n'"Summary: Generate a new release notes and bump the version"$'\n'"Hook: version-current"$'\n'"Hook: version-live"$'\n'"Hook: version-created"$'\n'"Hook: version-already"$'\n'"Return Code: 0 - Release generated or has already been generated"$'\n'"Return Code: 1 - If new version needs to be created and \`--non-interactive\`"$'\n'"**New release** - generates files in system for a new release."$'\n'"*Requires* hook \`version-current\`, optionally \`version-live\`"$'\n'"Uses semantic versioning \`MAJOR.MINOR.PATCH\`"$'\n'"Checks the live version versus the version in code and prompts to"$'\n'"generate a new release file if needed."$'\n'"A release notes template file is added at \`./documentation/source/release/\`. This file is"$'\n'"also added to \`git\` the first time."$'\n'""$'\n'""

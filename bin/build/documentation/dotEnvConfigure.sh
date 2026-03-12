@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="where - Directory. Optional. Where to load the \`.env\` files."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="application.sh"
 deprecated="2024-07-20"$'\n'""
 description="Loads \`.env\` which is the current project configuration file"$'\n'"Also loads \`.env.local\` if it exists"$'\n'"Generally speaking - these are NAME=value files and should be parsable by"$'\n'"bash and other languages."$'\n'"Requires the file \`.env\` to exist and is loaded via bash \`source\` and all variables are \`export\`ed in the current shell context."$'\n'"If \`.env.local\` exists, it is also loaded in a similar manner."$'\n'"Use with caution on trusted content only."$'\n'""
 file="bin/build/tools/environment/application.sh"
+fn="dotEnvConfigure"
 foundNames=([0]="argument" [1]="see" [2]="summary" [3]="return_code" [4]="deprecated")
 rawComment="Argument: where - Directory. Optional. Where to load the \`.env\` files."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Loads \`.env\` which is the current project configuration file"$'\n'"Also loads \`.env.local\` if it exists"$'\n'"Generally speaking - these are NAME=value files and should be parsable by"$'\n'"bash and other languages."$'\n'"See: toDockerEnv"$'\n'"Summary: Load \`.env\` and optional \`.env.local\` into bash context"$'\n'"Requires the file \`.env\` to exist and is loaded via bash \`source\` and all variables are \`export\`ed in the current shell context."$'\n'"If \`.env.local\` exists, it is also loaded in a similar manner."$'\n'"Use with caution on trusted content only."$'\n'"Return Code: 1 - if \`.env\` does not exist; outputs an error"$'\n'"Return Code: 0 - if files are loaded successfully"$'\n'"DEPRECATED: 2024-07-20"$'\n'"See: environmentFileLoad"$'\n'""$'\n'""
 return_code="1 - if \`.env\` does not exist; outputs an error"$'\n'"0 - if files are loaded successfully"$'\n'""

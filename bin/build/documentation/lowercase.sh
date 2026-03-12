@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"--help - Flag. Optional. Display this help."$'\n'"text - EmptyString. Required. Text to convert to lowercase"$'\n'""
 base="text.sh"
 description="Convert text to lowercase"$'\n'""
 file="bin/build/tools/text.sh"
+fn="lowercase"
 foundNames=([0]="argument" [1]="stdout" [2]="requires")
 rawComment="Convert text to lowercase"$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: text - EmptyString. Required. Text to convert to lowercase"$'\n'"stdout: \`String\`. The lowercase version of the \`text\`."$'\n'"Requires: tr"$'\n'""$'\n'""
 requires="tr"$'\n'""

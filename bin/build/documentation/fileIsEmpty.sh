@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="file - File. Optional. One or more files, all of which must be empty."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -16,6 +16,6 @@ summary="Is this an empty (zero-sized) file?"
 summaryComputed="true"
 usage="fileIsEmpty [ file ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='➡️ "__usageDocumentCached" "_usageDocument" "/Users/kent/marketacumen/build" "fileIsEmpty" "0"'$'\n'''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileIsEmpty'$'\e''[0m '$'\e''[[(blue)]m[ file ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mfile    '$'\e''[[(value)]mFile. Optional. One or more files, all of which must be empty.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if all files passed in are empty files'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if any files passed in are non-empty files'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileIsEmpty'$'\e''[0m '$'\e''[[(blue)]m[ file ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mfile    '$'\e''[[(value)]mFile. Optional. One or more files, all of which must be empty.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if all files passed in are empty files'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if any files passed in are non-empty files'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='➡️ "__usageDocumentCached" "_usageDocument" "/Users/kent/marketacumen/build" "fileIsEmpty" "0"'$'\n''Usage: fileIsEmpty [ file ] [ --help ]'$'\n'''$'\n''    file    File. Optional. One or more files, all of which must be empty.'$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- 0 - if all files passed in are empty files'$'\n''- 1 - if any files passed in are non-empty files'$'\n'''
+helpPlain='Usage: fileIsEmpty [ file ] [ --help ]'$'\n'''$'\n''    file    File. Optional. One or more files, all of which must be empty.'$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- 0 - if all files passed in are empty files'$'\n''- 1 - if any files passed in are non-empty files'$'\n'''

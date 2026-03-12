@@ -80,7 +80,6 @@ __buildDocumentationCleanDirectory() {
 
   catchReturn "$handler" muzzle directoryRequire "$target" || return $?
   catchReturn "$handler" documentationBuild "${aa[@]}" "--clean" "$@" || return $?
-  catchReturn "$handler" buildUsageCompile --clean || return $?
   catchEnvironment "$handler" rm -rf "$target" || return $?
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-26
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--non-interactive - Flag. Optional. Do not prompt for input and fail if input is required."$'\n'"--owner ownerName - String. Optional. The \`APPLICATION_OWNER\`."$'\n'"--name applicationName - String. Optional. The \`APPLICATION_NAME\`."$'\n'"--code codeName - String. Optional. The \`APPLICATION_CODE\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="application.sh"

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="package - String. Required. One or more packages to check if they are installed"$'\n'""
 base="package.sh"
 description="Is a package installed?"$'\n'""
 file="bin/build/tools/package.sh"
+fn="packageIsInstalled"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Is a package installed?"$'\n'"Argument: package - String. Required. One or more packages to check if they are installed"$'\n'"Return Code: 1 - If any packages are not installed"$'\n'"Return Code: 0 - All packages are installed"$'\n'""$'\n'""
 return_code="1 - If any packages are not installed"$'\n'"0 - All packages are installed"$'\n'""

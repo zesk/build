@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="extension - String. Optional. Extension to display"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
 description="Output a display for pre-commit files changed"$'\n'""
 file="bin/build/tools/git.sh"
+fn="gitPreCommitHeader"
 foundNames=([0]="argument")
 rawComment="Output a display for pre-commit files changed"$'\n'"Argument: extension - String. Optional. Extension to display"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

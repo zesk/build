@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source."$'\n'""
 base="hook.sh"
@@ -9,6 +9,7 @@ description="Run a hook in the project located at \`./bin/hooks/\`"$'\n'"See (Ho
 environment="BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'""
 example="    version=\"\$(hookSource version-current)\""$'\n'""
 file="bin/build/tools/hook.sh"
+fn="hookSource"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="example" [4]="see" [5]="test" [6]="environment" [7]="build_debug")
 rawComment="Run a hook in the project located at \`./bin/hooks/\`"$'\n'"See (Hooks documentation)[../hooks/index.md] for standard hooks."$'\n'"Summary: Run a project hook"$'\n'"Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at \`./bin/hooks/\` and are named \`hookName\` with a \`.sh\` extension added."$'\n'"So the hook for \`version-current\` would be a file at:"$'\n'"    bin/hooks/version-current.sh"$'\n'"Sample hooks (scripts) can be found in the build source code at \`./bin/hooks/\`."$'\n'"Default hooks (scripts) can be found in the current build version at \`bin/build/hooks/\`"$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: hookName ... - String. Required. Hook to source."$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 1 - is returned if the hook is not found"$'\n'"Example:     version=\"\$({fn} version-current)\""$'\n'"See: hooks.md hookRunOptional"$'\n'"Test: testHookSystem"$'\n'"Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'"BUILD_DEBUG: hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""$'\n'""
 return_code="Any - The hook exit code is returned if it is run"$'\n'"1 - is returned if the hook is not found"$'\n'""

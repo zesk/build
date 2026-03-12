@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="filename ... - File. Optional. One or more files to convert."$'\n'""
 base="convert.sh"
 description="Takes any environment file and makes it bash-compatible"$'\n'"Outputs the compatible env to stdout"$'\n'""
 file="bin/build/tools/environment/convert.sh"
+fn="environmentFileToBashCompatible"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Takes any environment file and makes it bash-compatible"$'\n'"Outputs the compatible env to stdout"$'\n'"Argument: filename ... - File. Optional. One or more files to convert."$'\n'"stdin: environment file"$'\n'"stdout: bash-compatible environment statements"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

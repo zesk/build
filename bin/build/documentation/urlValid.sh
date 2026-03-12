@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"url ... - String. URL. Required. A Uniform Resource Locator"$'\n'""
 base="url.sh"
 description="Checks if a URL is valid"$'\n'""
 file="bin/build/tools/url.sh"
+fn="urlValid"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Checks if a URL is valid"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url ... - String. URL. Required. A Uniform Resource Locator"$'\n'"Return Code: 0 - all URLs passed in are valid"$'\n'"Return Code: 1 - at least one URL passed in is not a valid URL"$'\n'""$'\n'""
 return_code="0 - all URLs passed in are valid"$'\n'"1 - at least one URL passed in is not a valid URL"$'\n'""

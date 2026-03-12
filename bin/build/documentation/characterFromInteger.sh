@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="character.sh"
 credit="dsmsk80"$'\n'""
 description="Given a list of integers, output the character codes associated with them (e.g. \`chr\` in other languages)"$'\n'""
 file="bin/build/tools/character.sh"
+fn="characterFromInteger"
 foundNames=([0]="credit" [1]="source" [2]="argument")
 rawComment="Given a list of integers, output the character codes associated with them (e.g. \`chr\` in other languages)"$'\n'"Credit: dsmsk80"$'\n'"Source: https://mywiki.wooledge.org/BashFAQ/071"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

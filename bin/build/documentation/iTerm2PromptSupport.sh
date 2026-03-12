@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="iterm2.sh"
 description="Add support for iTerm2 to bashPrompt"$'\n'"If you are wondering what this does - it delimits the prompt, your command, and the output in the console so iTerm2 can be nice and let you"$'\n'"select it."$'\n'"It also reports the host, user and current directory back to iTerm2 on every prompt command."$'\n'""
 environment="__ITERM2_HOST"$'\n'"__ITERM2_HOST_TIME"$'\n'""
 file="bin/build/tools/iterm2.sh"
+fn="iTerm2PromptSupport"
 foundNames=([0]="argument" [1]="see" [2]="requires" [3]="environment")
 rawComment="Add support for iTerm2 to bashPrompt"$'\n'"If you are wondering what this does - it delimits the prompt, your command, and the output in the console so iTerm2 can be nice and let you"$'\n'"select it."$'\n'"It also reports the host, user and current directory back to iTerm2 on every prompt command."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: bashPrompt"$'\n'"Requires: catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState"$'\n'"Requires: __iTerm2_mark __iTerm2_suffix __iTerm2UpdateState"$'\n'"Environment: __ITERM2_HOST"$'\n'"Environment: __ITERM2_HOST_TIME"$'\n'""$'\n'""
 requires="catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState"$'\n'"__iTerm2_mark __iTerm2_suffix __iTerm2UpdateState"$'\n'""

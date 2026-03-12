@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="url - URL. Required. URL to parse."$'\n'""
 base="github.sh"
 description="Parse a GitHub URL and return the owner and project name"$'\n'""
 file="bin/build/tools/github.sh"
+fn="githubURLParse"
 foundNames=([0]="argument")
 rawComment="Parse a GitHub URL and return the owner and project name"$'\n'"Argument: url - URL. Required. URL to parse."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

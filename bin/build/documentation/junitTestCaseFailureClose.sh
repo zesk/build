@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="junit.sh"
 description="Close tag for \`failure\` - test failed"$'\n'""
 file="bin/build/tools/junit.sh"
+fn="junitTestCaseFailureClose"
+foundNames=([0]="argument")
 rawComment="Close tag for \`failure\` - test failed"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/junit.sh"

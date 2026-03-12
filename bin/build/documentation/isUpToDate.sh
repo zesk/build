@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="keyDate - Date. Required. Formatted like \`YYYY-MM-DD\`. Truncated at 10 characters as well."$'\n'"upToDateDays - Integer. Required. Days that key expires after \`keyDate\`."$'\n'"--name name - String. Optional. Name of the expiring item for error messages."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="pipeline.sh"
 description="For security one should update keys every N days"$'\n'"This value would be better encrypted and tied to the key itself so developers"$'\n'"can not just update the value to avoid the security issue."$'\n'"This tool checks the value and checks if it is \`upToDateDays\` of today; if not this fails."$'\n'"It will also fail if:"$'\n'"- \`upToDateDays\` is less than zero or greater than 366"$'\n'"- \`keyDate\` is empty or has an invalid value"$'\n'"Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the \`keyDate\` has not exceeded the number of days."$'\n'""
 example="    if !isUpToDate \"\$AWS_ACCESS_KEY_DATE\" 90; then"$'\n'"      bigText Failed, update key and reset date"$'\n'"      exit 99"$'\n'"    fi"$'\n'""
 file="bin/build/tools/pipeline.sh"
+fn="isUpToDate"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 rawComment="For security one should update keys every N days"$'\n'"This value would be better encrypted and tied to the key itself so developers"$'\n'"can not just update the value to avoid the security issue."$'\n'"This tool checks the value and checks if it is \`upToDateDays\` of today; if not this fails."$'\n'"It will also fail if:"$'\n'"- \`upToDateDays\` is less than zero or greater than 366"$'\n'"- \`keyDate\` is empty or has an invalid value"$'\n'"Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the \`keyDate\` has not exceeded the number of days."$'\n'"Summary: Test whether the key needs to be updated"$'\n'"Argument: keyDate - Date. Required. Formatted like \`YYYY-MM-DD\`. Truncated at 10 characters as well."$'\n'"Argument: upToDateDays - Integer. Required. Days that key expires after \`keyDate\`."$'\n'"Argument: --name name - String. Optional. Name of the expiring item for error messages."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     if !isUpToDate \"\$AWS_ACCESS_KEY_DATE\" 90; then"$'\n'"Example:       bigText Failed, update key and reset date"$'\n'"Example:       exit 99"$'\n'"Example:     fi"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

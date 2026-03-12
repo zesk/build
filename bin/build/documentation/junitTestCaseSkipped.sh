@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="message - Why test was skipped."$'\n'""
 base="junit.sh"
 description="Output test skipped XML"$'\n'""
 file="bin/build/tools/junit.sh"
+fn="junitTestCaseSkipped"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Output test skipped XML"$'\n'"Argument: message - Why test was skipped."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

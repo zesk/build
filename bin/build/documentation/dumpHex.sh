@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-28
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--size size - Integer. Output at most size bytes of data."$'\n'""
 base="dump.sh"

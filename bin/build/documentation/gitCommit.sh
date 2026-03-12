@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--last - Flag. Optional. Append last comment"$'\n'"-- - Flag. Optional. Skip updating release notes with comment."$'\n'"--help - Flag. Optional. I need somebody."$'\n'"comment - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message."$'\n'""
 base="git.sh"
 description="Commits all files added to git and also update release notes with comment"$'\n'"Comment wisely. Does not duplicate comments. Check your release notes."$'\n'"Example:"$'\n'""
 example="    c last"$'\n'"    c --last"$'\n'"    c --"$'\n'"... are all equivalent."$'\n'""
 file="bin/build/tools/git.sh"
+fn="gitCommit"
 foundNames=([0]="argument" [1]="example")
 rawComment="Argument: --last - Flag. Optional. Append last comment"$'\n'"Argument: -- - Flag. Optional. Skip updating release notes with comment."$'\n'"Argument: --help - Flag. Optional. I need somebody."$'\n'"Argument: comment - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message."$'\n'"Commits all files added to git and also update release notes with comment"$'\n'"Comment wisely. Does not duplicate comments. Check your release notes."$'\n'"Example:     c last"$'\n'"Example:     c --last"$'\n'"Example:     c --"$'\n'"Example:"$'\n'"Example: ... are all equivalent."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

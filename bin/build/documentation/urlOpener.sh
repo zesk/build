@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--exec - Executable. Optional. If not supplied uses \`urlOpen\`."$'\n'""
 base="url.sh"
 description="Open URLs which appear in a stream"$'\n'"(but continue to output the stream)"$'\n'""
 file="bin/build/tools/url.sh"
+fn="urlOpener"
+foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Open URLs which appear in a stream"$'\n'"(but continue to output the stream)"$'\n'"Argument: --exec - Executable. Optional. If not supplied uses \`urlOpen\`."$'\n'"stdin: text"$'\n'"stdout: text"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="text - EmptyString. Required. Text to quote"$'\n'"separatorChar - The character used to separate the sed pattern and replacement. Defaults to \`/\`."$'\n'""
 base="sed.sh"
 description="Quote sed replacement strings for shell use"$'\n'""
 example="    sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedReplacement \"\$2\")/g\""$'\n'"    needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'""
 file="bin/build/tools/sed.sh"
+fn="quoteSedReplacement"
 foundNames=([0]="summary" [1]="argument" [2]="output" [3]="example" [4]="requires")
 needSlash=""
 output="string quoted and appropriate to insert in a \`sed\` replacement phrase"$'\n'""

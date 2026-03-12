@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--dry-run - Flag. Optional. Do not change anything."$'\n'"logPath - Required. Path where log files exist."$'\n'"count - Required. Integer of log files to maintain."$'\n'""
 base="log.sh"
 description="For all log files in logPath with extension \`.log\`, rotate them safely"$'\n'""
 file="bin/build/tools/log.sh"
+fn="rotateLogs"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Rotate log files"$'\n'"For all log files in logPath with extension \`.log\`, rotate them safely"$'\n'"Argument: --dry-run - Flag. Optional. Do not change anything."$'\n'"Argument: logPath - Required. Path where log files exist."$'\n'"Argument: count - Required. Integer of log files to maintain."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

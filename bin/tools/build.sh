@@ -129,21 +129,12 @@ __buildBuild() {
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  local size
-
-  if ! executableExists yq; then
-    size=$(grep -E '(deployment|size):' bitbucket-pipelines.yml | grep -A 1 "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}" | grep 'size:' | awk '{ print $2 }') || :
-  else
-    size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\") | .size" <"$home/bitbucket-pipelines.yml") || :
-  fi
-  [ -n "$size" ] || size="1x"
-
   catchReturn "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
   consoleLine "."
   decorate pair Branch "${BITBUCKET_BRANCH-}"
   decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
   decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
-  decorate pair "Hardware Size" "${size}"
+  decorate pair "CPUs" "$(cpuCount)"
   consoleLine "."
   dumpEnvironment
   consoleLine "#"

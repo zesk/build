@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-17
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--cache cacheDirectory - Directory. Optional. Cache directory to use for ordering work."$'\n'"finderFile - File. Required. File to reorder."$'\n'""
 base="test.sh"

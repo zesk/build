@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--application - Directory. Optional. Path to application home."$'\n'"--copy - Flag. Optional. Do not execute the hook if it has changed."$'\n'"hook - A hook to install. Maps to \`git-hook\` internally. Will be executed in-place if it has changed from the original."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
 description="Install the most recent version of this hook and RUN IT in place if it has changed."$'\n'"You should ONLY run this from within your hook, or provide the \`--copy\` flag to just copy."$'\n'"When running within your hook, pass additional arguments so they can be preserved:"$'\n'"    gitInstallHook --application \"\$myHome\" pre-commit \"\$@\" || return \$?"$'\n'""
 environment="BUILD-HOME - The default application home directory used for \`.git\` and build hooks."$'\n'""
 file="bin/build/tools/git.sh"
+fn="gitInstallHook"
 foundNames=([0]="argument" [1]="return_code" [2]="environment")
 rawComment="Argument: --application - Directory. Optional. Path to application home."$'\n'"Argument: --copy - Flag. Optional. Do not execute the hook if it has changed."$'\n'"Argument: hook - A hook to install. Maps to \`git-hook\` internally. Will be executed in-place if it has changed from the original."$'\n'"Install the most recent version of this hook and RUN IT in place if it has changed."$'\n'"You should ONLY run this from within your hook, or provide the \`--copy\` flag to just copy."$'\n'"When running within your hook, pass additional arguments so they can be preserved:"$'\n'"    gitInstallHook --application \"\$myHome\" pre-commit \"\$@\" || return \$?"$'\n'"Return Code: 0 - the file was not updated"$'\n'"Return Code: 1 - Environment error"$'\n'"Return Code: 2 - Argument error"$'\n'"Environment: BUILD-HOME - The default application home directory used for \`.git\` and build hooks."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - the file was not updated"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

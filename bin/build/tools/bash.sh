@@ -498,7 +498,7 @@ _bashCommentVariable() {
 bashFileComment() {
   local source="${1-}" lineNumber="${2-}"
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  isUnsignedInteger "$lineNumber" || throwArgument "$handler" "lineNumber is not an unsigned integer: $lineNumber" || return $?
+  isUnsignedInteger "$lineNumber" || throwArgument "$handler" "lineNumber is not an unsigned integer: \"$source\" [$lineNumber]" || return $?
   head -n "$((lineNumber + 1))" "$source" | bashFinalComment
 }
 _bashFileComment() {

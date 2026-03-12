@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--debug - Flag. Optional. Show additional debugging information."$'\n'""
 base="colors.sh"
 description="Set the terminal color scheme to the specification"$'\n'""
 file="bin/build/tools/colors.sh"
+fn="colorScheme"
 foundNames=([0]="argument" [1]="stdin")
 rawComment="Set the terminal color scheme to the specification"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --debug - Flag. Optional. Show additional debugging information."$'\n'"stdin: Scheme definition with \`colorName=colorValue\` on each line"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

@@ -221,7 +221,7 @@ _bashDocumentation_Template() {
         formatter="_bashDocumentationFormatter_${token}"
         if isFunction "$formatter"; then
           : # printf "%s\n" "Running $formatter on $token" 1>&2
-          declare "$token"="$(printf "%s\n" "${!token}" | "$formatter")"
+          declare -x "$token"="$(printf "%s\n" "${!token}" | "$formatter")"
         else
           : # printf "%s\n" "NOT Running $formatter on $token" 1>&2
         fi

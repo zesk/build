@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="colors.sh"
 description="Outputs sample sentences for the \`consoleAction\` commands to see what they look like."$'\n'""
 file="bin/build/tools/colors.sh"
+fn="colorSampleStyles"
 foundNames=([0]="summary")
 rawComment="Summary: Output colors"$'\n'"Outputs sample sentences for the \`consoleAction\` commands to see what they look like."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

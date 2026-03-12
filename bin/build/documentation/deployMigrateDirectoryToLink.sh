@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="deployHome - Directory. Required. Deployment database home."$'\n'"applicationPath - Directory. Required. Application target path."$'\n'""
 base="deploy.sh"
 description="Automatically convert application deployments using non-links to links."$'\n'""
 file="bin/build/tools/deploy.sh"
+fn="deployMigrateDirectoryToLink"
 foundNames=([0]="argument")
 rawComment="Argument: deployHome - Directory. Required. Deployment database home."$'\n'"Argument: applicationPath - Directory. Required. Application target path."$'\n'"Automatically convert application deployments using non-links to links."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

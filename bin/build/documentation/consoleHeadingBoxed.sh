@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--outside outsideStyle - String. Optional. Style to apply to the outside border. (Default \`decoration\`)"$'\n'"--inside insideStyle - String. Optional. Style to apply to the inside spacing. (Default blank)"$'\n'"--shrink characterCount - UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)"$'\n'"--size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)"$'\n'"text ... - Text to put in the box"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="box.sh"
 description="Heading for section output"$'\n'""
 example="    consoleHeadingBoxed Moving ..."$'\n'""
 file="bin/build/tools/decorate/box.sh"
+fn="consoleHeadingBoxed"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="output")
 output="+==========================================================================+"$'\n'"|                                                                          |"$'\n'"| Moving ...                                                               |"$'\n'"|                                                                          |"$'\n'"+==========================================================================+"$'\n'""
 rawComment="Heading for section output"$'\n'"Summary: Text heading decoration"$'\n'"Argument: --outside outsideStyle - String. Optional. Style to apply to the outside border. (Default \`decoration\`)"$'\n'"Argument: --inside insideStyle - String. Optional. Style to apply to the inside spacing. (Default blank)"$'\n'"Argument: --shrink characterCount - UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)"$'\n'"Argument: --size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)"$'\n'"Argument: text ... - Text to put in the box"$'\n'"Example:     consoleHeadingBoxed Moving ..."$'\n'"Output: +==========================================================================+"$'\n'"Output: |                                                                          |"$'\n'"Output: | Moving ...                                                               |"$'\n'"Output: |                                                                          |"$'\n'"Output: +==========================================================================+"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""

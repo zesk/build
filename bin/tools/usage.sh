@@ -289,7 +289,7 @@ __buildUsageCompileFunction() {
       helpCode=${helpCode//$'\n'/"$replace"}
       catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpConsole" "$helpCode" || returnClean $? "${clean[@]}" || return $?
 
-      helpCode="$(decorateThemed <"$tempHelp" | consoleToPlain | escapeBash)"
+      helpCode="$(decorateThemed <"$tempHelp" | consoleToPlain | escapeBash)" || throwEnvironment "$handler" "Theme failed" || returnClean $? "${clean[@]}" || return $?
       replace="'\$'\n''"
       helpCode=${helpCode//$'\n'/"$replace"}
       catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpPlain" "$helpCode" || returnClean $? "${clean[@]}" || return $?

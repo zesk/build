@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="rsync.sh"
 description="Install \`rsync\`."$'\n'"\`rsync\` is a tool which easily keeps file directories synchronized between"$'\n'"file systems, remote systems, and locations."$'\n'""
 file="bin/build/tools/rsync.sh"
+fn="rsyncInstall"
 foundNames=([0]="argument")
 rawComment="Install \`rsync\`."$'\n'"\`rsync\` is a tool which easily keeps file directories synchronized between"$'\n'"file systems, remote systems, and locations."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

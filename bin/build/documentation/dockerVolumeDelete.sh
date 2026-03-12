@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-04
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="name - String. Required. Volume name to delete."$'\n'""
 base="docker.sh"
 description="Delete a docker volume"$'\n'""
 file="bin/build/tools/docker.sh"
+fn="dockerVolumeDelete"
 foundNames=([0]="argument")
 rawComment="Delete a docker volume"$'\n'"Argument: name - String. Required. Volume name to delete."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

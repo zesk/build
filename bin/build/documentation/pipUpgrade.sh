@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-09
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--bin binary - Executable. Optional. Binary for \`pip\`."$'\n'""
 base="python.sh"
 description="Utility to upgrade pip correctly"$'\n'""
 file="bin/build/tools/python.sh"
+fn="pipUpgrade"
 foundNames=([0]="argument")
 rawComment="Utility to upgrade pip correctly"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --bin binary - Executable. Optional. Binary for \`pip\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

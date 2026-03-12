@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-31
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--local - Flag. Optional. Local yesterday"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="date.sh"
 description="Returns yesterday's date, in YYYY-MM-DD format. (same as \`%F\`)"$'\n'""
 example="    rotated=\"\$log.\$(dateYesterday --local)\""$'\n'""
 file="bin/build/tools/date.sh"
+fn="dateYesterday"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 rawComment="Returns yesterday's date, in YYYY-MM-DD format. (same as \`%F\`)"$'\n'"Summary: Yesterday's date (UTC time)"$'\n'"Argument: --local - Flag. Optional. Local yesterday"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     rotated=\"\$log.\$({fn} --local)\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

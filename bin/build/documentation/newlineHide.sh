@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-14
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"text - String. Required. Text to replace."$'\n'"replace - String. Optional. Replacement string for newlines."$'\n'""
 base="text.sh"
 description="Hide newlines in text (to ensure single-line output or other manipulation)"$'\n'"Without arguments, displays help."$'\n'""
 file="bin/build/tools/text.sh"
+fn="newlineHide"
 foundNames=([0]="argument" [1]="stdout")
 rawComment="Hide newlines in text (to ensure single-line output or other manipulation)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: text - String. Required. Text to replace."$'\n'"Argument: replace - String. Optional. Replacement string for newlines."$'\n'"Without arguments, displays help."$'\n'"stdout: The text with the newline replaced with another character, suitable typically for single-line output"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="daemontools.sh"
 description="Install daemontools and dependencies"$'\n'""
 file="bin/build/tools/daemontools.sh"
+fn="daemontoolsInstall"
 foundNames=([0]="platform")
 platform="\`docker\` containers will not install \`daemontools-run\` as it kills the container"$'\n'""
 rawComment="Install daemontools and dependencies"$'\n'"Platform: \`docker\` containers will not install \`daemontools-run\` as it kills the container"$'\n'""$'\n'""

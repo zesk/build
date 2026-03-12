@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-06
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="none"
 base="daemontools.sh"
 description="Print the daemontools service home path"$'\n'""
 file="bin/build/tools/daemontools.sh"
+fn="daemontoolsHome"
 foundNames=([0]="return_code")
 rawComment="Print the daemontools service home path"$'\n'"Return Code: 0 - success"$'\n'"Return Code: 1 - No environment file found"$'\n'""$'\n'""
 return_code="0 - success"$'\n'"1 - No environment file found"$'\n'""

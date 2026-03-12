@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-02-10
+# Generated on 2026-03-12
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"directory - Directory. Required. The directory to add to the \`git\` \`safe.directory\` configuration directive"$'\n'""
 base="git.sh"
 description="When running git operations on a deployment host, at times it's necessary to"$'\n'"add the current directory (or a directory) to the git \`safe.directory\` directive."$'\n'"This adds the directory passed to that directory in the local user's environment"$'\n'""
 file="bin/build/tools/git.sh"
+fn="gitEnsureSafeDirectory"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="When running git operations on a deployment host, at times it's necessary to"$'\n'"add the current directory (or a directory) to the git \`safe.directory\` directive."$'\n'"This adds the directory passed to that directory in the local user's environment"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: directory - Directory. Required. The directory to add to the \`git\` \`safe.directory\` configuration directive"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument is not a valid directory"$'\n'"Return Code: Other - git config error codes"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Argument is not a valid directory"$'\n'"Other - git config error codes"$'\n'""
