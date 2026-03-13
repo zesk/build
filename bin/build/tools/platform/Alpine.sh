@@ -30,7 +30,7 @@ __packageManagerDefault() {
   fi
 }
 
-__bigTextBinary() {
+__decorateBigBinary() {
   printf -- "%s\n" "figlet"
 }
 

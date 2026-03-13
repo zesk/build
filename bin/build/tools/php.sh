@@ -447,6 +447,6 @@ _phpTestResult() {
   local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"
   local gap="    "
   textRepeat "$thick" "$(printf "%s" "$(textRepeat "$width" "$top")")"$'\n'
-  bigText "$message" | decorate "$color" | decorate wrap "$top$gap" "$gap$bottom"
+  decorate big "$message" | decorate "$color" | decorate wrap "$top$gap" "$gap$bottom"
   textRepeat "$thick" "$(printf "%s" "$(textRepeat "$width" "$bottom")")"$'\n'
 }

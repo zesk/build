@@ -64,9 +64,9 @@ __testLoadFlags() {
   local values=()
   while read -r variableLine; do
     local __flags=() flag
-    IFS=" " read -r -a __flags <<<"$(trimSpace "${variableLine#*:}")"
+    IFS=" " read -r -a __flags <<<"$(textTrim "${variableLine#*:}")"
     [ "${#__flags[@]}" -eq 0 ] || for flag in "${__flags[@]}"; do
-      [ -z "$flag" ] || values+=("$(trimSpace "${variableLine%%:*}"):$flag")
+      [ -z "$flag" ] || values+=("$(textTrim "${variableLine%%:*}"):$flag")
     done
   done < <(catchReturn "$handler" bashFunctionCommentVariable --prefix --insensitive "$source" "$functionName" "Test-") || return $?
   [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
@@ -99,10 +99,10 @@ ___testPlatforms() {
 __testMatches() {
   local testPattern match
 
-  testPattern=$(lowercase "$1")
+  testPattern=$(stringLowercase "$1")
   shift
   while [ "$#" -gt 0 ]; do
-    match=$(lowercase "$1")
+    match=$(stringLowercase "$1")
     if [ "${testPattern#*"$match"}" != "$testPattern" ]; then
       return 0
     fi

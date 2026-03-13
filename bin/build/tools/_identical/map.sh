@@ -28,7 +28,7 @@ _identicalMapAttributesFilter() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
   home="${home%/}/"
-  full=$(catchEnvironment "$handler" realPath "$file") || return $?
+  full=$(catchEnvironment "$handler" fileRealPath "$file") || return $?
   aa+=(-e 's/__FULL__/'"$(quoteSedReplacement "$full")"'/g')
 
   base=$(catchEnvironment "$handler" basename "$full") || return $?

@@ -8,7 +8,7 @@
 # Test: o ./test/tools/decoration-tests.sh
 
 # Display large text in the console for banners and important messages
-#
+# fn: decorate big
 # `BUILD_TEXT_BINARY` can be `figlet` or `toilet`
 #
 # Argument: text - String. Required. Text to output
@@ -52,7 +52,7 @@
 #     ▝▘▀▘ ▝▀▀▀▘ ▞▀▐▌  ▀   ▝▀▀ ▝▀ ▀▘  ▀▀
 #                ▜█▛▘
 # Environment: BUILD_TEXT_BINARY
-bigText() {
+__decorateExtensionBig() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -60,7 +60,7 @@ bigText() {
   local fonts binary index=0
 
   binary=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
-  [ -n "$binary" ] || binary="$(catchReturn "$handler" __bigTextBinary)" || return $?
+  [ -n "$binary" ] || binary="$(catchReturn "$handler" __decorateBigBinary)" || return $?
   [ -n "$binary" ] || throwEnvironment "$handler" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
   figlet) fonts=("standard" "big") ;;
@@ -79,16 +79,20 @@ bigText() {
   fi
   "$binary" -w "$(consoleColumns)" -f "${fonts[index]}" "$@"
 }
-_bigText() {
+___decorateExtensionBig() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Experimental
-# Place bigText at a position on the console
-bigTextAt() {
+# fn: decorate at
+# Place text at a position on the console.
+# Argument: x - Integer. Console X offset
+# Argument: y - Integer. Console Y offset
+# Argument: text ... - EmptyString. Text line to output at the x,y console location. Additional lines are placed below the previous line.
+__decorateExtensionAt.Pure() {
   local handler="_${FUNCNAME[0]}"
-  local message="" x="" y=""
+  local x="" y=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -104,14 +108,16 @@ bigTextAt() {
         x=$(validate "$handler" Integer "xOffset" "$argument") || return $?
       elif [ -z "$y" ]; then
         y=$(validate "$handler" Integer "yOffset" "$argument") || return $?
-      else
-        message=$(catchEnvironment "$handler" bigText "$@") || return $?
+        break
       fi
       ;;
     esac
     shift
   done
 
+  if [ $# -eq 1 ] && [ "$1" = "--" ]; then
+    shift
+  fi
   [ -n "$x" ] || throwArgument "$handler" "Missing x" || return $?
   [ -n "$y" ] || throwArgument "$handler" "Missing y" || return $?
   local maxX maxY theX="$x" theY="$y" saveX saveY
@@ -124,16 +130,24 @@ bigTextAt() {
   IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
   [ "$theX" -ge 0 ] || theX=$((maxX + theX))
   [ "$theY" -ge 0 ] || theY=$((maxY + theY))
-  local outputLine
-  while read -r outputLine; do
+  if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+      catchEnvironment "$handler" cursorSet "$theX" "$theY" || return $?
+      printf -- "%s" "$1"
+      theY=$((theY + 1))
+      [ "$theY" -le "$maxY" ] || break
+      shift
+    done
+  fi
+  local outputLine && while read -r outputLine; do
     catchEnvironment "$handler" cursorSet "$theX" "$theY" || return $?
     printf -- "%s" "$outputLine"
     theY=$((theY + 1))
     [ "$theY" -le "$maxY" ] || break
-  done < <(printf "%s\n" "$message")
+  done
   catchEnvironment "$handler" cursorSet "$saveX" "$saveY" || return $?
 }
-_bigTextAt() {
+___decorateExtensionAt.Pure() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -141,12 +155,12 @@ _bigTextAt() {
 # Argument: --top - Flag. Optional. Place label at the top.
 # Argument: --bottom - Flag. Optional. Place label at the bottom.
 # Argument: --prefix prefixText - String. Optional. Optional prefix on each line.
-# Argument: --tween tweenText - String. Optional. Optional between text after label and before `bigText` on each line (allows coloring or other decorations).
+# Argument: --tween tweenText - String. Optional. Optional between text after label and before `decorate big` on each line (allows coloring or other decorations).
 # Argument: --suffix suffixText - String. Optional. Optional suffix on each line.
 # Argument: label - String. Required. Label to place on the left of big text.
-# Argument: text - String. Required. Text for `bigText`.
+# Argument: text - String. Required. Text for `decorate big`.
 #
-# Outputs a label before a bigText for output.
+# Outputs a label before a decorate big for output.
 #
 # This function will strip any ANSI from the label to calculate correct string sizes.
 #
@@ -208,7 +222,7 @@ labeledBigText() {
   done
 
   local banner nLines
-  banner="$(bigText "$@")"
+  banner="$(decorate big "$@")"
   nLines=$(printf -- "%s\n" "$banner" | fileLineCount)
   plainLabel="$(printf -- "%s\n" "$label" | consoleToPlain)"
   tweenNonLabel="$(textRepeat "$((${#plainLabel}))" " ")$tweenNonLabel"

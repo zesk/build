@@ -94,7 +94,7 @@ __testLoader() {
 # Hook: test-fail
 # Hook: tests-stop
 # Requires: head tee printf trap
-# Requires: decorate loadAverage consoleConfigureColorMode
+# Requires: decorate cpuLoadAverage consoleConfigureColorMode
 # Requires: buildEnvironmentLoad usageArgumentString catchEnvironment
 # Requires: bashCoverage
 # BUILD_DEBUG: test-dump-environment - When set tests will dump the environment at the end.

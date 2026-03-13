@@ -39,7 +39,7 @@ testConsoleTrimWidth() {
 testDecorateThemed() {
   local handler="returnMessage"
 
-  local testString && testString=$(catchReturn "$handler" randomString) || return $?
+  local testString && testString=$(catchReturn "$handler" stringRandom) || return $?
   testString=${testString:0:6}
   local style && while read -r style; do
     local expected && expected=$(catchReturn "$handler" decorate "$style" "$testString") || return $?

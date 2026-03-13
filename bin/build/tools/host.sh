@@ -7,7 +7,7 @@
 # host in this context means system host
 
 # Get the full hostname
-# Requires: __help __hostname usageRequireBinary catchEnvironment
+# Requires: __help __hostname executableRequire catchEnvironment
 hostnameFull() {
   local handler="_${FUNCNAME[0]}"
 

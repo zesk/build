@@ -151,7 +151,7 @@ __testSuiteTestFunctionProcess() {
     done
   fi
   local name value after=() before=() values=() && while IFS=":" read -r name value; do
-    name=$(lowercase "${name//-/_}") || return $?
+    name=$(stringLowercase "${name//-/_}") || return $?
     value="${value# }"
     # catchReturn "$handler" environmentValueWrite "$name" "${value# }" >>"$settingsFile" || return $?
     case "$name" in

@@ -17,7 +17,7 @@
 # Argument: --state stateFile - File. Optional. Output of `fileModificationTimes` will be saved here (and modified)
 # Argument: directory - Directory. Required. Directory to watch
 # Argument: findArguments ... - Arguments. Optional. Passed to find to filter the files examined.
-watchDirectory() {
+directoryWatch() {
   local handler="_${FUNCNAME[0]}"
 
   local rootDir="" lastTimestamp="" lastFile="" secondsToRun="" stateFile="" verboseFlag=false
@@ -53,25 +53,22 @@ watchDirectory() {
     stateFile=$(fileTemporaryName "$handler") || return $?
     clean+=("$stateFile")
   fi
-  local init start stop elapsed
 
-  init=$(timingStart)
+  local init && init=$(timingStart)
   while true; do
     printf -- "" >"$stateFile"
-    start=$(timingStart)
+    local start && start=$(timingStart)
     catchEnvironment "$handler" fileModificationTimes "$rootDir" "$@" | sort -rn >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-    stop=$(timingStart)
-    elapsed=$((stop - start))
+    local stop && stop=$(timingStart)
+    local elapsed=$((stop - start))
+    elapsed=$(((elapsed + 999) / 1000))
 
-    local newTimestamp newFile
-    read -r newTimestamp newFile <"$stateFile" || :
-
+    local newTimestamp newFile && read -r newTimestamp newFile <"$stateFile" || :
     if [ "$newTimestamp" != "$lastTimestamp" ] || [ "$newFile" != "$lastFile" ]; then
       returnClean 0 "${clean[@]}"
       return $?
     fi
 
-    elapsed=$(((elapsed + 999) / 1000))
     [ -z "$secondsToRun" ] || [ $(((stop - init) / 1000)) -lt "$secondsToRun" ] || break
     ! $verboseFlag || statusMessage decorate info "$(decorate subtle "$(date +%T)"): Sleeping for $elapsed $(plural $elapsed second seconds) $(decorate file "$lastFile") modified $(decorate magenta "$lastTimestamp") ..."
     catchEnvironment "$handler" sleep "$elapsed" || returnClean $? "${clean[@]}" || return $?
@@ -79,7 +76,7 @@ watchDirectory() {
   ! $verboseFlag || statusMessage --last timingReport "$init" "Watch stopped after"
   returnClean 0 "${clean[@]}"
 }
-_watchDirectory() {
+_directoryWatch() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -43,7 +43,7 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
     export TEST_SUCCESS
 
     local passed=true
-    parseBoolean "${TEST_SUCCESS-}" || passed=false
+    booleanParse "${TEST_SUCCESS-}" || passed=false
 
     local symbol="✅" && $passed || symbol="❌"
 

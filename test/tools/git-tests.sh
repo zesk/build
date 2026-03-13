@@ -41,7 +41,7 @@ testGitVersionList() {
     git pull --tags >/dev/null 2>&1 || returnEnvironment "Unable to pull git tags ... failed" || return $?
     decorate success " done"
   fi
-  assertGreaterThan $(($(gitVersionList | wc -l | trimSpace) + 0)) 0 || return $?
+  assertGreaterThan $(($(gitVersionList | wc -l | textTrim) + 0)) 0 || return $?
 }
 
 testGitCommitFailures() {

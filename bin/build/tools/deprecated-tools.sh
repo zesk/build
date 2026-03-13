@@ -126,7 +126,7 @@ deprecatedTokensFile() {
   while read -r line; do
     comment="${line#\#}"
     if [ "$comment" != "$line" ]; then
-      comment=$(trimSpace "$comment")
+      comment=$(textTrim "$comment")
       commentText="$(decorate info "$(buildEnvironmentGet APPLICATION_NAME)") $(decorate label "$comment")"
       statusMessage printf "%s\n" "$commentText ..."
       continue
@@ -207,10 +207,10 @@ deprecatedCannonFile() {
 
   while read -r line; do
     local IFS tokens=() trimmed
-    trimmed=$(catchEnvironment "$handler" trimSpace "$line") || return $?
+    trimmed=$(catchEnvironment "$handler" textTrim "$line") || return $?
     [ -n "$trimmed" ] || continue
     if [ "${trimmed:0:1}" = "#" ]; then
-      version="$(catchEnvironment "$handler" trimSpace "${trimmed:1}")" || return $?
+      version="$(catchEnvironment "$handler" textTrim "${trimmed:1}")" || return $?
       continue
     fi
     IFS="|" read -r -a tokens <<<"$line" || :

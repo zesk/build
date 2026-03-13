@@ -68,7 +68,7 @@ __packageUpFunction() {
 
   local manager="" forceFlag=false verboseFlag=false start lastModified showLog=false
 
-  verb=$(lowercase "$suffix")
+  verb=$(stringLowercase "$suffix")
   shift 2
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

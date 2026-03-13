@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1"$'\n'"Argument: lastVersion - String. Required. Version to calculate the next minor version."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="7a78765522ff0f6d520a46d13938a5e77aabd972"
+sourceHash="de7ebae16588cd61de57776400cb3a592c4c008a"
 summary="Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1"
 summaryComputed="true"
 usage="versionNextMinor lastVersion"

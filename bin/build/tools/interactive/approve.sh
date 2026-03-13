@@ -155,7 +155,7 @@ __interactiveApproveCacheFile() {
   local handler="$1" approvedHome="$2" sourceFile="$3" cacheFile
 
   [ -f "$sourceFile" ] || throwArgument "$handler" "File does not exist: $sourceFile" || return $?
-  cacheFile="$approvedHome/$(catchReturn "$handler" shaPipe <"$sourceFile")" || return $?
+  cacheFile="$approvedHome/$(catchReturn "$handler" textSHA <"$sourceFile")" || return $?
   printf "%s\n" "$cacheFile"
 }
 

@@ -12,7 +12,7 @@ foundNames=([0]="example" [1]="summary" [2]="argument")
 rawComment="Removes packages using the current package manager."$'\n'"Example:     {fn} shellcheck"$'\n'"Summary: Removes packages using package manager"$'\n'"Argument: package - String. Required. One or more packages to uninstall"$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="9446d27b896551a886e9f28cfed65cfe5e5451bf"
+sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
 summary="Removes packages using package manager"$'\n'""
 usage="packageUninstall package [ --manager packageManager ]"
 # shellcheck disable=SC2016

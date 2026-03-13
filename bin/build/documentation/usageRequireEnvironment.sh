@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-13
 # shellcheck disable=SC2034
-argument="usageFunction - Required. \`bash\` function already defined to output handler"$'\n'"environmentVariable - String. Optional. One or more environment variables which should be set and non-empty."$'\n'""
+argument="none"
 base="usage.sh"
-deprecated="2024-01-01"$'\n'""
-description="Requires environment variables to be set and non-blank"$'\n'""
+description="No documentation for \`usageRequireEnvironment\`."$'\n'""
 file="bin/build/tools/usage.sh"
 fn="usageRequireEnvironment"
-foundNames=([0]="argument" [1]="return_code" [2]="deprecated")
-rawComment="Requires environment variables to be set and non-blank"$'\n'"Argument: usageFunction - Required. \`bash\` function already defined to output handler"$'\n'"Argument: environmentVariable - String. Optional. One or more environment variables which should be set and non-empty."$'\n'"Return Code: 0 - All environment variables are set and non-empty"$'\n'"Return Code: 1 - If any \`environmentVariable\` variables are not set or are empty."$'\n'"Deprecated: 2024-01-01"$'\n'""$'\n'""
-return_code="0 - All environment variables are set and non-empty"$'\n'"1 - If any \`environmentVariable\` variables are not set or are empty."$'\n'""
+foundNames=()
+rawComment=""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="ba03c4762dca22ec26eca081a814526c676c3381"
-summary="Requires environment variables to be set and non-blank"
-summaryComputed="true"
-usage="usageRequireEnvironment usageFunction [ environmentVariable ]"
+sourceHash="149ac6b252931cd54cda69223411637bb1af3c10"
+summary="undocumented"
+usage="usageRequireEnvironment"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]musageRequireEnvironment'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]musageFunction'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ environmentVariable ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]musageFunction        '$'\e''[[(value)]mRequired. '$'\e''[[(code)]mbash'$'\e''[[(reset)]m function already defined to output handler'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]menvironmentVariable  '$'\e''[[(value)]mString. Optional. One or more environment variables which should be set and non-empty.'$'\e''[[(reset)]m'$'\n'''$'\n''Requires environment variables to be set and non-blank'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All environment variables are set and non-empty'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If any '$'\e''[[(code)]menvironmentVariable'$'\e''[[(reset)]m variables are not set or are empty.'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]musageRequireEnvironment'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]musageRequireEnvironment'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: usageRequireEnvironment usageFunction [ environmentVariable ]'$'\n'''$'\n''    usageFunction        Required. bash function already defined to output handler'$'\n''    environmentVariable  String. Optional. One or more environment variables which should be set and non-empty.'$'\n'''$'\n''Requires environment variables to be set and non-blank'$'\n'''$'\n''Return codes:'$'\n''- 0 - All environment variables are set and non-empty'$'\n''- 1 - If any environmentVariable variables are not set or are empty.'$'\n'''
+helpPlain='Usage: usageRequireEnvironment'$'\n'''$'\n''No documentation for usageRequireEnvironment.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

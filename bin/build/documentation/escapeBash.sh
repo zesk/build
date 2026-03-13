@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Converts strings to shell escaped strings"$'\n'"Argument: string - String. Optional. String to convert to a bash-compatible string."$'\n'"stdin: text - Optional."$'\n'"stdout: bash-compatible string"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
-sourceHash="4a4dd20eec875783f639ec3aa86d72a8482d5ab0"
+sourceHash="59057e40f593606f5718006f60642e3eeda2fff0"
 stdin="text - Optional."$'\n'""
 stdout="bash-compatible string"$'\n'""
 summary="Converts strings to shell escaped strings"

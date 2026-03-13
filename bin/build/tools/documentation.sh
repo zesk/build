@@ -163,7 +163,7 @@ documentationBuildCache() {
   local code && code=$(catchReturn "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
   local suffix=".documentation/${code-default}/${1-}"
 
-  if [ -n "${DOCUMENTATION_SHM}" ] && parseBoolean "${DOCUMENTATION_SHM-}"; then
+  if [ -n "${DOCUMENTATION_SHM}" ] && booleanParse "${DOCUMENTATION_SHM-}"; then
     local shmDir="/dev/shm"
     [ -d "$shmDir" ] || throwEnvironment "$handler" "DOCUMENTATION_SHM enabled but no $shmDir"
     directoryRequire "$shmDir/$suffix"
@@ -216,7 +216,7 @@ _documentationTemplateUpdate() {
 # Return Code: 2 - Argument error
 # Requires: catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
 # Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
-# Requires: mapEnvironment shaPipe printf
+# Requires: mapEnvironment textSHA printf
 documentationTemplateCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -316,7 +316,7 @@ __documentationFormatArguments() {
       lineTokens=("${lineTokens[@]+${lineTokens[@]}}")
       local __description
       # printf "lineTokens-2: %s\n" "${lineTokens[@]}"
-      __description=$(lowercase "${lineTokens[*]-}")
+      __description=$(stringLowercase "${lineTokens[*]-}")
       # Looks for `Required.` in the description
       if [ "${__description%*required.*}" = "$__description" ]; then
         __value="[ $__value ]"

@@ -106,13 +106,13 @@ EOF
 testTrimBoth() {
   local expected test
   while IFS="|" read -d ';' -r expected test; do
-    assertEquals "$expected" "$(trimBoth <<<"$test")" || return $?
+    assertEquals "$expected" "$(textTrimBoth <<<"$test")" || return $?
   done < <(__dataTrimBoth)
 }
 
 __dataTrimSpace() {
   cat <<'EOF'
-trimSpace| trimSpace   |
+textTrim| textTrim   |
 |     |
 a b c|  a b c        |
 EOF
@@ -120,7 +120,7 @@ EOF
 
 __dataTrimLeftSpace() {
   cat <<'EOF'
-trimSpace   | trimSpace   |
+textTrim   | textTrim   |
 |     |
 a b c        |  a b c        |
 EOF
@@ -128,7 +128,7 @@ EOF
 
 __dataTrimRightSpace() {
   cat <<'EOF'
- trimSpace| trimSpace   |
+ textTrim| textTrim   |
 |     |
   a b c|  a b c        |
 EOF
@@ -137,8 +137,8 @@ EOF
 testTrimSpace() {
   local expected test remainder
   while IFS="|" read -r expected test remainder; do
-    assertEquals "$expected" "$(trimSpace "$test")" || return $?
-    assertEquals "$expected" "$(trimSpace <<<"$test")" || return $?
+    assertEquals "$expected" "$(textTrim "$test")" || return $?
+    assertEquals "$expected" "$(textTrim <<<"$test")" || return $?
     : "$remainder"
   done < <(__dataTrimSpace)
 }
@@ -146,8 +146,8 @@ testTrimSpace() {
 testTrimRightSpace() {
   local expected test remainder
   while IFS="|" read -r expected test remainder; do
-    assertEquals "$expected" "$(trimRightSpace "$test")" || return $?
-    assertEquals "$expected" "$(trimRightSpace <<<"$test")" || return $?
+    assertEquals "$expected" "$(textTrimRight "$test")" || return $?
+    assertEquals "$expected" "$(textTrimRight <<<"$test")" || return $?
     : "$remainder"
   done < <(__dataTrimRightSpace)
 }
@@ -155,8 +155,8 @@ testTrimRightSpace() {
 testTrimLeftSpace() {
   local expected test remainder
   while IFS="|" read -r expected test remainder; do
-    assertEquals "$expected" "$(trimLeftSpace "$test")" || return $?
-    assertEquals "$expected" "$(trimLeftSpace <<<"$test")" || return $?
+    assertEquals "$expected" "$(textTrimLeft "$test")" || return $?
+    assertEquals "$expected" "$(textTrimLeft <<<"$test")" || return $?
     : "$remainder"
   done < <(__dataTrimLeftSpace)
 }
@@ -172,7 +172,7 @@ EOF
 testStringReplace() {
   local expected needle replacement haystack
   while IFS="|" read -r expected needle replacement haystack; do
-    assertEquals "$expected" "$(stringReplace "$needle" "$replacement" "$haystack")" || return $?
+    assertEquals "$expected" "$(textReplace "$needle" "$replacement" "$haystack")" || return $?
   done < <(__dataStringReplace)
 }
 
@@ -357,7 +357,7 @@ EOF
 testParseBoolean() {
   local expected value
   while IFS="|" read -r expected value; do
-    assertExitCode "$expected" parseBoolean "$value" || return $?
+    assertExitCode "$expected" booleanParse "$value" || return $?
   done < <(__dataParseBoolean)
 }
 
@@ -372,7 +372,7 @@ EOF
 testShaPipe() {
   local expected content
   while IFS="|" read -r expected content; do
-    assertEquals --display "${content:-blank}" "$expected" "$(shaPipe <<<"$content")" || return $?
+    assertEquals --display "${content:-blank}" "$expected" "$(textSHA <<<"$content")" || return $?
   done < <(__dataShaPipe)
 }
 
@@ -416,10 +416,10 @@ testTrimHeadTail() {
   topSpace=$(printf "\n\n\n\n\n\n\nip")
   bottomSpace=$(printf "ip\n\n\n\n\n\n\n")
 
-  assertEquals "$(printf "%s" "$topSpace" | trimHead)" "ip" || return $?
-  assertEquals "$(printf "%s" "$topSpace" | trimTail)" "$topSpace" || return $?
-  assertEquals "$(printf "%s" "$bottomSpace" | trimHead)" "$bottomSpace" || return $?
-  assertEquals "$(printf "%s" "$bottomSpace" | trimTail)" "ip" || return $?
+  assertEquals "$(printf "%s" "$topSpace" | textTrimHead)" "ip" || return $?
+  assertEquals "$(printf "%s" "$topSpace" | textTrimTail)" "$topSpace" || return $?
+  assertEquals "$(printf "%s" "$bottomSpace" | textTrimHead)" "$bottomSpace" || return $?
+  assertEquals "$(printf "%s" "$bottomSpace" | textTrimTail)" "ip" || return $?
 }
 
 testSingleBlankLines() {
@@ -429,9 +429,9 @@ testSingleBlankLines() {
   bottomSpace=$(printf "ip\n\n\n\n\n\n\n")
   middleSpace=$(printf "\n\n\nip\n\n\n\n\n\n\n")
 
-  assertEquals "$(printf "\nip")" "$(printf "%s\n" "$topSpace" | singleBlankLines)" || return $?
-  assertEquals "$(printf "ip\n")" "$(printf "%s\n" "$bottomSpace" | singleBlankLines)" || return $?
-  assertEquals "$(printf "\nip\n")" "$(printf "%s\n" "$middleSpace" | singleBlankLines)" || return $?
+  assertEquals "$(printf "\nip")" "$(printf "%s\n" "$topSpace" | textSingleBlankLines)" || return $?
+  assertEquals "$(printf "ip\n")" "$(printf "%s\n" "$bottomSpace" | textSingleBlankLines)" || return $?
+  assertEquals "$(printf "\nip\n")" "$(printf "%s\n" "$middleSpace" | textSingleBlankLines)" || return $?
 }
 
 testText() {
@@ -439,7 +439,7 @@ testText() {
 }
 
 testLowercase() {
-  assertOutputEquals lowercase lowercase LoWerCaSe || return $?
+  assertOutputEquals stringLowercase stringLowercase LoWerCaSe || return $?
 }
 
 testPrintfOutputPrefix() {
@@ -472,7 +472,7 @@ testPrintfOutputEmpty() {
 
 __maxLineLengthFile() {
   textRepeat "$1" _
-  printf "\n%s\n" "$(randomString)"
+  printf "\n%s\n" "$(stringRandom)"
 }
 
 testMaximumLineLength() {

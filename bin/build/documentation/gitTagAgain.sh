@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Remove a tag everywhere and tag again on the current branch"$'\n'"Argument: tag - String. Optional. The tag to tag again."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
+sourceHash="45b6673cbbcdf6c9e5146a922f9b837146aa0ed8"
 summary="Remove a tag everywhere and tag again on the current"
 summaryComputed="true"
 usage="gitTagAgain [ tag ]"

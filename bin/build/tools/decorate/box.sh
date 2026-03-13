@@ -3,26 +3,52 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# Heading for section output
-#
-# Summary: Text heading decoration
+__decorateExtensionBoxLineStyle() {
+  case "$1" in
+  ascii) lineStyleCodes="++++-|" ;;
+  line) lineStyleCodes="┌┐└┘─│" ;;
+  double-line) lineStyleCodes="╔╗╚╝═║" ;;
+  *) return 1 ;;
+  esac
+}
+
+# TODO: Plenty, see who else does this better
+#      ─	━	│	┃	┄	┅	┆	┇	┈	┉	┊	┋
+#      ┌	┍	┎	┏      ┐	┑	┒	┓      └	┕	┖	┗      ┘	┙	┚	┛
+#      ├	┝	┞	┟      ┠	┡	┢	┣      ┤	┥	┦	┧      ┨	┩	┪	┫
+#      ┬	┭	┮	┯ ┰ ┱	┲	┳	┴	┵	┶	┷	┸	┹	┺	┻
+#      ┼	┽	┾	┿	╀	╁	╂	╃	╄	╅	╆	╇	╈	╉	╊	╋
+#      ╌	╍	╎	╏ ═	║
+#      ╒	╓	╔	╕	╖	╗	╘	╙	╚	╛	╜	╝
+#      ╞	╟ ╠	╡	╢	╣
+#      ╤	╥	╦	╧	╨	╩
+#      ╪	╫	╬
+#      ╭	╮	╯ ╰
+#      ╱	╲	╳
+#      ╴	╵	╶	╷	╸	╹	╺	╻	╼	╽	╾	╿
+
+# fn: decorate box
+# Summary: Box around content
+# The `.Pure` extension means this function knows how to deal with standard input.
+# Argument: --type (ascii|line|double-line) - String. Optional. Line style. Default `line`
 # Argument: --outside outsideStyle - String. Optional. Style to apply to the outside border. (Default `decoration`)
-# Argument: --inside insideStyle - String. Optional. Style to apply to the inside spacing. (Default blank)
-# Argument: --shrink characterCount - UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)
-# Argument: --size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)
-# Argument: text ... - Text to put in the box
-# Example:     consoleHeadingBoxed Moving ...
-# Output: +==========================================================================+
-# Output: |                                                                          |
-# Output: | Moving ...                                                               |
-# Output: |                                                                          |
-# Output: +==========================================================================+
+# Argument: --inside insideStyle - String. Optional. Style to apply to the inside content. (Default `decoration`)
+# Argument: --width characterCount - UnsignedInteger|String. Optional. Box width. Specify "auto" to make size of content, or "console" for `consoleWidth`. Defaults to `console`.
+# Argument: --size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default none)
+# Argument: --fill fileCharacter - String. Optional. Use this character to fill empty space in the box.
+# Argument: text ... - String. Optional. Text to put in the box, one per line.
+# Example:     {fn} Moving ...
+# Output:     +==========================================================================+
+# Output:     |                                                                          |
+# Output:     | Moving ...                                                               |
+# Output:     |                                                                          |
+# Output:     +==========================================================================+
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-consoleHeadingBoxed() {
+__decorateExtensionBox.Pure() {
   local handler="_${FUNCNAME[0]}"
 
-  local textLines=() outside="decoration" inside="" shrink=0 nLines=1
+  local textLines=() outside="decoration" inside="decoration" nLines=0 lineStyleCodes="" lineStyle="line" fill=" " argumentWidth="console" maxWidth=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -33,50 +59,73 @@ consoleHeadingBoxed() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --style) shift && lineStyle="${1-}" && __decorateExtensionBoxLineStyle "$lineStyle" || throwArgument "$handler" "Invalid style: ${1-}" || return $? ;;
+    --width) shift && argumentWidth="$1" && case "$argumentWidth" in "terminal" | "auto") ;; *) isPositiveInteger "$argumentWidth" || throwArgument "$handler" "Invalid width: $argumentWidth" || return $? ;; esac ;;
     --outside) shift && outside=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
     --inside) shift && inside=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
-    --shrink) shift && shrink=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
     --size) shift && nLines=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
-    *) textLines+=("$argument") ;;
+    --fill) shift && fill=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    *)
+      if [ "$argument" = "--" ] && [ $# -eq 1 ]; then
+        break
+      fi
+      textLines+=("$argument")
+      if [ -z "$maxWidth" ]; then
+        maxWidth="${#argument}"
+      elif [ ${#argument} -gt "$maxWidth" ]; then
+        maxWidth="${#argument}"
+      fi
+      ;;
     esac
     shift
   done
-
-  # Default is -2
-  shrink=$((-(shrink + 2)))
-
-  local bar && bar="+$(consoleLine '' "$shrink")+"
-  local width=${#bar}
-  local endBar && endBar="|"
-  local emptyBar
-
-  if [ -n "$inside" ]; then
-    emptyBar="$endBar$(decorate "$inside" "$(consoleLine ' ' "$shrink")")$endBar"
-  else
-    emptyBar="|$(consoleLine ' ' $shrink)|"
+  if [ -z "$lineStyleCodes" ]; then
+    __decorateExtensionBoxLineStyle "$lineStyle" || throwArgument "$handler" "Invalid --style $lineStyle" || return $?
   fi
+
+  if [ "$argumentWidth" = "auto" ]; then
+    width="$((maxWidth + 2))"
+  elif [ "$argumentWidth" = "console" ]; then
+    width=$(($(consoleColumns) - 2))
+  elif isUnsignedInteger "$argumentWidth"; then
+    width=$argumentWidth
+  else
+    throwArgument "$handler" "argumentWidth is invalid: $argumentWidth" || return $?
+  fi
+
+  local header && header="${lineStyleCodes:0:1}$(textRepeat "$width" "${lineStyleCodes:4:1}")${lineStyleCodes:1:1}"
+  local footer && footer="${lineStyleCodes:2:1}$(textRepeat "$width" "${lineStyleCodes:4:1}")${lineStyleCodes:3:1}"
+  local sideBar && sideBar="${lineStyleCodes:5:1}"
 
   local run=(printf "%s\n")
-  [ -z "$outside" ] || run=(decorate "$outside")
+  [ -z "$outside" ] || run=(decorate "$outside" --)
+  sideBar="$("${run[@]}" "$sideBar")"
+  local emptyBar
+  if [ -n "$inside" ]; then
+    emptyBar="$sideBar$(decorate "$inside" "$(textRepeat "$width" "${fill:0:1}")")$sideBar"
+  else
+    emptyBar="$sideBar$(textRepeat "$width" "${fill:0:1}")$sideBar"
+  fi
   local head && head=$(
-    [ "$nLines" -eq 0 ] || catchReturn "$handler" runCount "$nLines" "${run[@]}" "$emptyBar" || return $?
+    [ "$nLines" -eq 0 ] || catchReturn "$handler" executeCount "$nLines" "${run[@]}" "$emptyBar" || return $?
   ) || return $?
-  catchReturn "$handler" "${run[@]}" "$bar" || return $?
-  catchReturn "$handler" printf "%s" "$head" || return $?
-  endBar="$("${run[@]}" "$endBar")"
+  catchReturn "$handler" "${run[@]}" "$header" || return $?
+  [ -z "$head" ] || catchReturn "$handler" printf "%s\n" "$head" || return $?
   if [ "${#textLines[@]}" -eq 0 ]; then
     local finished=false && while ! $finished; do
-      local textLine && read -r textLine || finished=true
+      local textLine && IFS="" read -r textLine || finished=true
       [ -n "$textLine" ] || ! $finished || continue
-      __boxLine "$handler" "$width" "$textLine" "$endBar" || return $?
+      __boxLine "$handler" "$width" "$textLine" "$sideBar" || return $?
     done
   else
-    __boxLine "$handler" "$width" "${textLines[*]}" "$endBar" || return $?
+    local textLine && for textLine in "${textLines[@]}"; do
+      __boxLine "$handler" "$width" "$textLine" "$sideBar" || return $?
+    done
   fi
-  catchReturn "$handler" printf "%s" "$head" || return $?
-  catchReturn "$handler" "${run[@]}" "$bar" || return $?
+  [ -z "$head" ] || catchReturn "$handler" printf "%s\n" "$head" || return $?
+  catchReturn "$handler" "${run[@]}" "$footer" || return $?
 }
-_consoleHeadingBoxed() {
+___decorateExtensionBox.Pure() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -85,14 +134,14 @@ __boxLine() {
   local handler="$1" && shift
   local width="$1" && shift
   local textLine="$1" && shift
-  local endBar="$1" && shift
+  local sideBar="$1" && shift
   local allSpaces && allSpaces=$(textRepeat "$width" " ")
 
-  textLine=$(consoleTrimWidth "$((width - 4))" "$textLine$allSpaces")
+  textLine=$(consoleTrimWidth "$((width - 2))" "$textLine$allSpaces")
   if [ -n "$inside" ]; then
     textLine="$(decorate "$inside" " $textLine ")" || return $?
   else
     textLine=" $textLine "
   fi
-  catchReturn "$handler" printf -- "%s\n" "$endBar$textLine$endBar" || return $?
+  catchReturn "$handler" printf -- "%s\n" "$sideBar$textLine$sideBar" || return $?
 }

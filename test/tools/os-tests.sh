@@ -65,12 +65,12 @@ testMemoryRelated() {
 }
 
 testRunCount() {
-  assertEquals "$(runCount 10 echo -n .)" ".........." || return $?
-  assertEquals "$(runCount 20 echo -n .)" "...................." || return $?
-  assertExitCode --stderr-match 'positive integer' 2 runCount -4923 echo busted || return $?
-  assertExitCode --stderr-match 'positive integer' 2 runCount 33.3 echo busted || return $?
-  assertExitCode --stderr-match 'positive integer' 2 runCount 4.0 echo busted || return $?
-  assertExitCode --stderr-match 'positive integer' 2 runCount thirty echo busted || return $?
+  assertEquals "$(executeCount 10 echo -n .)" ".........." || return $?
+  assertEquals "$(executeCount 20 echo -n .)" "...................." || return $?
+  assertExitCode --stderr-match 'positive integer' 2 executeCount -4923 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 executeCount 33.3 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 executeCount 4.0 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 executeCount thirty echo busted || return $?
 }
 
 testServiceToPortStandard() {
@@ -116,7 +116,7 @@ testExtensionLists() {
   local handler="returnMessage"
   local target me
 
-  me=$(catchEnvironment "$handler" realPath "${BASH_SOURCE[0]}") || return $?
+  me=$(catchEnvironment "$handler" fileRealPath "${BASH_SOURCE[0]}") || return $?
 
   export BUILD_HOME
   assertExitCode 0 buildEnvironmentLoad BUILD_HOME || return $?

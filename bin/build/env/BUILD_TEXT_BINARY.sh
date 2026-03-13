@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Binary used to generate `bigText`
-# See: bigText
+# Binary used to generate `decorate big`
+# See: decorate big
 # See: __aptStandardPackages
 # See: __apkStandardPackages
 # See: __brewStandardPackages

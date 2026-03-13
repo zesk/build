@@ -23,7 +23,7 @@ __interactiveCountdown() {
       prefix="$(validate "$handler" EmptyString "$argument" "${1-}")" || return $?
       ;;
     --badge)
-      runner=(bigTextAt "-5" "5")
+      runner=(decorate at "-5" "5")
       ;;
     *)
       if [ -z "$counter" ]; then

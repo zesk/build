@@ -11,7 +11,7 @@ foundNames=([0]="stdin")
 rawComment="Undo a set of developer functions or aliases"$'\n'"stdin: List of functions and aliases to remove from the current environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/developer.sh"
-sourceHash="9b663aeeac627697b3309e4051a0dc54db32c9ed"
+sourceHash="fa87e29b8420fca35c825c744db0d1532036f8cc"
 stdin="List of functions and aliases to remove from the current environment"$'\n'""
 summary="Undo a set of developer functions or aliases"
 summaryComputed="true"

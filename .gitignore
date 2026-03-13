@@ -7,7 +7,7 @@
 /.idea/*.xml
 /.idea/*.iml
 /.build-docs/
-/shaPipe.log
+/textSHA.log
 /.pipeline-key*
 /test/example/simple-php/vendor/
 /test/example/simple-php/cache/

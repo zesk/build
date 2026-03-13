@@ -114,9 +114,10 @@ _escapeSingleQuotes() {
 }
 
 # Unquote a string
+# Summary: Unquote a string
 # Argument: quote - String. Required. Must match beginning and end of string.
 # Argument: value - String. Required. Value to unquote.
-unquote() {
+stringUnquote() {
   [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local quote="$1" value="$2"
   if [ "$value" != "${value#"$quote"}" ] && [ "$value" != "${value%"$quote"}" ]; then
@@ -125,17 +126,17 @@ unquote() {
   fi
   printf "%s\n" "$value"
 }
-_unquote() {
+_stringUnquote() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Primary case to unquote quoted things "" ''
-__unquote() {
+# Primary case to stringUnquote quoted things "" ''
+__stringUnquote() {
   local value="${1-}"
   case "${value:0:1}" in
-  "'") value="$(unquote "'" "$value")" ;;
-  '"') value="$(unquote '"' "$value")" ;;
+  "'") value="$(stringUnquote "'" "$value")" ;;
+  '"') value="$(stringUnquote '"' "$value")" ;;
   *) ;;
   esac
   printf "%s\n" "$value"

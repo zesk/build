@@ -371,7 +371,7 @@ __commentArgumentSpecificationParseLine() {
 _commentArgumentParseRequired() {
   while [ $# -gt 0 ]; do
     local text
-    text="$(lowercase "${1-}")"
+    text="$(stringLowercase "${1-}")"
     if [ "${text#required}" != "$text" ]; then
       printf "%s\n" "required"
       return 0

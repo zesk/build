@@ -68,7 +68,7 @@ __documentationSeeTokenGenerate() {
         local variable lowerVariable
         variable="$(basename "$settingsFile")"
         variable="${variable%.sh}"
-        lowerVariable=$(lowercase "$variable")
+        lowerVariable=$(stringLowercase "$variable")
         __dumpSimpleValue "variable" "$variable"
         __dumpSimpleValue "lowerVariable" "$lowerVariable"
         __dumpSimpleValue "line" ""
@@ -88,7 +88,7 @@ __documentationSeeTokenGenerate() {
     fi
     __dumpSimpleValue "linkType" "$linkType"
     __dumpSimpleValue "fn" "$matchingToken"
-    __dumpSimpleValue "lowerFn" "$(lowercase "$matchingToken")"
+    __dumpSimpleValue "lowerFn" "$(stringLowercase "$matchingToken")"
   } >"$linkPatternFile"
 
   local vv=(

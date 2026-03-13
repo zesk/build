@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Run \`handler\` with an argument error"$'\n'"Argument: handler - Function. Required. Failure command"$'\n'"Argument: message ... - String. Optional. Error message to display."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="00f5bf2862b4fee06819afcf6d6db6adc911bcff"
+sourceHash="1ff9bebad70c8fea8d82a17d32a3d8b9fd324874"
 summary="Run \`handler\` with an argument error"
 summaryComputed="true"
 usage="throwArgument handler [ message ... ]"

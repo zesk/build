@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Application deployed version"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --application application - Directory. Optional. Application home directory."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/hooks.sh"
-sourceHash="e55e19a4ccb52eba046eab717a33086ae218bf14"
+sourceHash="7d315e46c46ffd9aaf307c9d42c19a2fe3f7dfd0"
 summary="Application deployed version"
 summaryComputed="true"
 usage="hookVersionLive [ --help ] [ --application application ]"

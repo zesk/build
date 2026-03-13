@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# loopExecute
+# executeLoop
 #
 # Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Run checks interactively until errors are all fixed.
-__loopExecute() {
+__executeLoop() {
   local handler="$1" && shift
 
   local loopCallable="" sleepDelay=10 title="" until=()
@@ -98,7 +98,7 @@ __loopExecute() {
       printf "%s\n" "$statusLine" | plasterLines || return $?
       catchEnvironment "$handler" plasterLines <"$outputBuffer" || return $?
       cursorSet 1 "$((rowCount - 1))"
-      bigText "Success"
+      decorate big "Success"
       done=true
     else
       catchReturn "$handler" consoleHeadingBoxed --size 0 --outside "$outsideColor" --inside "" "$title $(decorate orange "(looping)")" && printf -- "%s\n" "$statusLine" | plasterLines || echo "EXIT CODE: $?"

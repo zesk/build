@@ -18,6 +18,181 @@
 #             |_|
 #
 
+# Heading for section output
+#
+# Summary: Text heading decoration
+# Argument: --outside outsideStyle - String. Optional. Style to apply to the outside border. (Default `decoration`)
+# Argument: --inside insideStyle - String. Optional. Style to apply to the inside spacing. (Default blank)
+# Argument: --shrink characterCount - UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)
+# Argument: --size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)
+# Argument: text ... - Text to put in the box
+# Example:     consoleHeadingBoxed Moving ...
+# Output:     +==========================================================================+
+# Output:     |                                                                          |
+# Output:     | Moving ...                                                               |
+# Output:     |                                                                          |
+# Output:     +==========================================================================+
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Deprecated: 2026-03
+consoleHeadingBoxed() {
+  _deprecated "${FUNCNAME[0]}"
+  decorate box "$@"
+}
+_consoleHeadingBoxed() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Deprecated: 2026-03
+loopExecute() {
+  _deprecated "${FUNCNAME[0]}"
+  executeLoop "$@" || return $?
+}
+
+# Deprecated: 2026-03
+randomString() {
+  _deprecated "${FUNCNAME[0]}"
+  stringRandom "$@"
+}
+
+# Deprecated: 2026-03
+usageRequireBinary() {
+  _deprecated "${FUNCNAME[0]}"
+  executableRequire "$@"
+}
+
+# Deprecated: 2026-03
+usageRequireEnvironment() {
+  _deprecated "${FUNCNAME[0]}"
+  environmentRequire "$@"
+}
+
+# Deprecated: 2026-03
+veeGitTag() {
+  _deprecated "${FUNCNAME[0]}"
+  gitTagVee "$@"
+}
+
+# Deprecated: 2026-03
+watchDirectory() {
+  _deprecated "${FUNCNAME[0]}"
+  directoryWatch "$@"
+}
+
+# Deprecated: 2026-03
+shaPipe() {
+  _deprecated "${FUNCNAME[0]}"
+  textSHA "$@"
+}
+
+# Deprecated: 2026-03
+rotateLog() {
+  _deprecated "${FUNCNAME[0]}"
+  logRotate "$@"
+}
+
+# Deprecated: 2026-03
+rotateLogs() {
+  _deprecated "${FUNCNAME[0]}"
+  logsRotate "$@"
+}
+
+# Deprecated: 2026-03
+uppercase() {
+  _deprecated "${FUNCNAME[0]}"
+  stringUppercase "$@"
+}
+
+# Deprecated: 2026-03
+lowercase() {
+  _deprecated "${FUNCNAME[0]}"
+  stringLowercase "$@"
+}
+
+# Deprecated: 2026-03
+unquote() {
+  _deprecated "${FUNCNAME[0]}"
+  stringUnquote "$@"
+}
+
+# Deprecated: 2026-03
+loadAverage() {
+  _deprecated "${FUNCNAME[0]}"
+  cpuLoadAverage "$@"
+}
+
+# Deprecated: 2026-03
+parseBoolean() {
+  _deprecated "${FUNCNAME[0]}"
+  booleanParse "$@"
+}
+
+# Deprecated: 2026-03
+clampDigits() {
+  _deprecated "${FUNCNAME[0]}"
+  integerClamp "$@"
+}
+
+# Deprecated: 2026-03
+replaceFirstPattern() {
+  _deprecated "${FUNCNAME[0]}"
+}
+
+# Deprecated: 2026-03
+stringReplace() {
+  _deprecated "${FUNCNAME[0]}"
+  textReplace "$@"
+}
+
+# Deprecated: 2026-03
+trimBoth() {
+  _deprecated "${FUNCNAME[0]}"
+  textTrimBoth "$@"
+}
+
+# Deprecated: 2026-03
+trimHead() {
+  _deprecated "${FUNCNAME[0]}"
+  textTrimHead "$@"
+}
+
+# Deprecated: 2026-03
+trimTail() {
+  _deprecated "${FUNCNAME[0]}"
+  textTrimTail "$@"
+}
+
+# Deprecated: 2026-03
+singleBlankLines() {
+  _deprecated "${FUNCNAME[0]}"
+  textSingleBlankLines "$@"
+}
+
+# Deprecated: 2026-03
+trimRightSpace() {
+  _deprecated "${FUNCNAME[0]}"
+  textTrimRight "$@"
+}
+
+# Deprecated: 2026-03
+trimLeftSpace() {
+  _deprecated "${FUNCNAME[0]}"
+  textTrimLeft "$@"
+}
+
+# Deprecated: 2026-03
+trimSpace() {
+  _deprecated "${FUNCNAME[0]}"
+  textTrim "$@"
+}
+
+# Deprecated: 2026-03
+removeFields() {
+  _deprecated "${FUNCNAME[0]}"
+  textRemoveFields "$@"
+}
+
 # Deprecated: 2026-01
 isSubstring() {
   _deprecated "${FUNCNAME[0]}"
@@ -229,12 +404,12 @@ clearLine() {
 }
 
 # Deprecated: 2026-01
-# See: shaPipe
-# Use `shaPipe --cache cacheDirectory` instead
+# See: textSHA
+# Use `textSHA --cache cacheDirectory` instead
 #
 # Argument: cacheDirectory - Directory. Optional. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
 # Argument: filename - File. Optional. File determine the sha value for.
-# Depends: sha1sum shaPipe
+# Depends: sha1sum textSHA
 # Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
 # Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
@@ -245,9 +420,9 @@ cachedShaPipe() {
   local cacheDirectory="${1-}"
   _deprecated "${FUNCNAME[0]}"
   if [ "${cacheDirectory#-}" != "${cacheDirectory}" ]; then
-    shaPipe "$@"
+    textSHA "$@"
   else
-    shaPipe --cache "$@"
+    textSHA --cache "$@"
   fi
 }
 
@@ -379,16 +554,4 @@ __environment() {
 __argument() {
   _deprecated "${FUNCNAME[0]}"
   __catchArgument "returnMessage" "$@"
-}
-
-# DEPRECATED 2025-10-03
-isAbsolutePath() {
-  _deprecated "${FUNCNAME[0]}"
-  pathIsAbsolute "$@"
-}
-
-# DEPRECATED 2025-07-29
-interactiveBashSource() {
-  _deprecated "${FUNCNAME[0]}"
-  approveBashSource "$@"
 }

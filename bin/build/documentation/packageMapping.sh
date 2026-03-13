@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names"$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="9446d27b896551a886e9f28cfed65cfe5e5451bf"
+sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
 summary="undocumented"
 usage="packageMapping [ packageName ] [ --manager packageManager ]"
 # shellcheck disable=SC2016

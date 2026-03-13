@@ -67,13 +67,13 @@ __installInstallBinary() {
   [ -n "$installBinName" ] || throwArgument "$handler" "--bin is required" || return $?
   [ -n "$source" ] || throwArgument "$handler" "--local-path is required" || return $?
 
-  # Validate paths and force realPath
+  # Validate paths and force fileRealPath
   # default application home is $(pwd)
   [ -n "$applicationHome" ] || applicationHome="$(catchEnvironment "$handler" pwd)" || return $?
   # default installation path home is $(pwd)/bin
   [ -n "$path" ] || path="$applicationHome/bin"
-  path=$(catchEnvironment "$handler" realPath "$path") || return $?
-  applicationHome="$(catchEnvironment "$handler" realPath "$applicationHome")" || return $?
+  path=$(catchEnvironment "$handler" fileRealPath "$path") || return $?
+  applicationHome="$(catchEnvironment "$handler" fileRealPath "$applicationHome")" || return $?
 
   # Custom target binary?
   if [ "${path%.sh}" != "$path" ]; then
@@ -88,7 +88,7 @@ __installInstallBinary() {
   # Compute relTop
   relTop="${path#"$applicationHome"}"
   if [ "$relTop" = "$path" ]; then
-    throwArgument "$handler" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
+    throwArgument "$handler" "Path ($path) ($(fileRealPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
   relTop=$(catchReturn "$handler" directoryRelativePath "$relTop") || return $?
 

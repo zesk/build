@@ -5,12 +5,15 @@
 # Completion tools
 #
 
-# Add completion handler for Zesk Build to Bash
+# Add completion handler for Zesk Build to Bash (EXPERIMENTAL)
+# Summary: Completion for Zesk Build (EXPERIMENTAL)
 # Argument: --quiet - Flag. Optional. Do not output any messages to stdout.
 # Argument: --alias name - String. Optional. The name of the alias to create.
 # Argument: --reload-alias name - String. Optional. The name of the alias which reloads Zesk Build. (source)
 # This has the side effect of turning on the shell option `expand_aliases`
 # Shell Option: +expand_aliases
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 buildCompletion() {
   local handler="_${FUNCNAME[0]}"
   local aliasName="build" reloadAliasName="" quietFlag=false
@@ -252,7 +255,7 @@ __completionTypeFunction() {
   else
     pattern="."
   fi
-  declare -F | removeFields 2 | grep -e "^$pattern"
+  declare -F | textRemoveFields 2 | grep -e "^$pattern"
 }
 
 __completionTypeCallable() {

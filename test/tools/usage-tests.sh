@@ -24,7 +24,7 @@ testUsageTemplate() {
 testUsageFunctions() {
   local match
 
-  match=$(randomString)
+  match=$(stringRandom)
   assertExitCode --stderr-match "$match" 1 returnEnvironment "$match" || return $?
   assertExitCode --stderr-match "$match" 2 returnArgument "$match" || return $?
   assertExitCode --stderr-match "$match" 1 throwEnvironment returnMessage "$match" || return $?

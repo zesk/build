@@ -83,7 +83,7 @@ _awsCredentialsFile() {
 # Summary: Test whether the AWS keys do not need to be updated
 # Argument: upToDateDays - PositiveInteger.
 # Example:     if ! {fn} 90; then
-# Example:         bigText Failed, update key and reset date
+# Example:         decorate big Failed, update key and reset date
 # Example:         exit 99
 # Example:     fi
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.

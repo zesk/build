@@ -287,7 +287,7 @@ _isErrorExit() {
 # Run command and detect any global or local leaks
 # Requires: declare diff grep
 # Requires: throwArgument decorate usageArgumentString isCallable
-# Requires: fileTemporaryName removeFields
+# Requires: fileTemporaryName textRemoveFields
 # Argument: command ... - Callable. Command to run
 # Argument: --temporary tempPath - Directory. Optional. Use this for the temporary path.
 # Argument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak.
@@ -335,7 +335,7 @@ plumber() {
     declare -p >"$__after"
     ! $__verboseFlag || dumpPipe "AFTER $__before $__after" <"$__after"
     __pattern="^\($(quoteGrepPattern "$(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}")")\)="
-    __changed="$(muzzleReturn diff -U0 "$__before" "$__after" | grepSafe -e '^[-+][^-+]' | cut -c 2- | grepSafe -e '^declare' | grepSafe '=' | grepSafe -v -e '^declare -[-a-z]*r ' | removeFields 2 | grepSafe -v -e "$__pattern" || :)"
+    __changed="$(muzzleReturn diff -U0 "$__before" "$__after" | grepSafe -e '^[-+][^-+]' | cut -c 2- | grepSafe -e '^declare' | grepSafe '=' | grepSafe -v -e '^declare -[-a-z]*r ' | textRemoveFields 2 | grepSafe -v -e "$__pattern" || :)"
     __rawChanged=$__changed
     __cmd="$(decorate each code -- "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
@@ -370,7 +370,7 @@ _housekeeperAccountant() {
   for path in "$@"; do
     if [ -d "$cacheDirectory" ]; then
       local saved
-      saved=$(shaPipe <<<"$path")
+      saved=$(textSHA <<<"$path")
       if [ -f "$cacheDirectory/$saved" ]; then
         cat "$cacheDirectory/$saved"
       else

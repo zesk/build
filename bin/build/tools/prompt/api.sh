@@ -144,7 +144,7 @@ __bashPrompt() {
     IFS=";" read -r -a commands <<<"${PROMPT_COMMAND-}"
     updated=("$theCommand")
     for command in "${commands[@]}"; do
-      command=$(trimSpace "$command")
+      command=$(textTrim "$command")
       if [ "$command" = "$theCommand" ]; then
         continue
       fi
@@ -274,7 +274,7 @@ __bashPromptFormat() {
 
   if [ -n "$formatString" ]; then
     while read -r token replacement && [ "${formatString#*{}" != "$formatString" ]; do
-      formatString=$(stringReplace "{${token}}" "$replacement" "$formatString")
+      formatString=$(textReplace "{${token}}" "$replacement" "$formatString")
     done < <(__bashPromptCode "$colorsTextFormatted")
   fi
   printf -- "%s%s%s" "\[\${__BASH_PROMPT_MARKERS[0]-}\]" "$formatString" "\[\${__BASH_PROMPT_MARKERS[1]-}\]"

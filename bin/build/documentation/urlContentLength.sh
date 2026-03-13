@@ -12,7 +12,7 @@ foundNames=([0]="depends" [1]="argument")
 rawComment="Get the size of a remote URL"$'\n'"Depends: curl"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: url - URL. Required. URL to fetch the Content-Length."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/web.sh"
-sourceHash="1fcdcd2f89593d5b69e5f6e898f0f7281cff2e61"
+sourceHash="51e1573ca2c7c20f95b3413475f7afb24c7c0807"
 summary="Get the size of a remote URL"
 summaryComputed="true"
 usage="urlContentLength [ --help ] [ --handler handler ] url"

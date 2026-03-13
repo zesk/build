@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="example")
 rawComment="Argument: --last - Flag. Optional. Append last comment"$'\n'"Argument: -- - Flag. Optional. Skip updating release notes with comment."$'\n'"Argument: --help - Flag. Optional. I need somebody."$'\n'"Argument: comment - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message."$'\n'"Commits all files added to git and also update release notes with comment"$'\n'"Comment wisely. Does not duplicate comments. Check your release notes."$'\n'"Example:     c last"$'\n'"Example:     c --last"$'\n'"Example:     c --"$'\n'"Example:"$'\n'"Example: ... are all equivalent."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
+sourceHash="45b6673cbbcdf6c9e5146a922f9b837146aa0ed8"
 summary="Commits all files added to git and also update release"
 summaryComputed="true"
 usage="gitCommit [ --last ] [ -- ] [ --help ] [ comment ]"

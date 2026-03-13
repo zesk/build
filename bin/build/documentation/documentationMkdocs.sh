@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Build documentation using mkdocs and a template"$'\n'"Argument: --path documentationPath - Directory. Optional. Directory where documentation root exists."$'\n'"Argument: --template yamlTemplate - File. Optional. Name of mkdocs.yml template file to generate final file. Default is \`mkdocs.template.yml\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/mkdocs.sh"
-sourceHash="53300ab9f97270a337014b2a06c3024a4ad0b3f5"
+sourceHash="54f3a11c4b7388e6402fff9260902dcfd65f2915"
 summary="Build documentation using mkdocs and a template"
 summaryComputed="true"
 usage="documentationMkdocs [ --path documentationPath ] [ --template yamlTemplate ]"

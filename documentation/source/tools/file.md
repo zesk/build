@@ -42,7 +42,7 @@
 
 ## Platform
 
-{realPath}
+{fileRealPath}
 
 ## Utilities
 

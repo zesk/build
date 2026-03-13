@@ -11,17 +11,17 @@
 # If this fails it will output the installation log.
 # Notes: `yarn` is part of node, I think, so no clean uninstall.
 # When this tool succeeds the `yarn` binary is available in the local operating system.
-# Environment: - `BUILD_YARN_VERSION
+# Environment: - BUILD_YARN_VERSION
 # Return Code: 1 - If installation of yarn fails
 # Return Code: 0 - If yarn is already installed or installed without error
 # Test: testYarnInstallation
-# Argument: --version versionCode - String. Optional. Install this version of yarn.
+# Argument: --version versionCode - String. Optional. Install this version of yarn. Defaults to `stable` if `BUILD_YARN_VERSION` is blank or unset.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 yarnInstall() {
   local handler="_${FUNCNAME[0]}"
 
-  local version quietLog
+  local version=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -51,10 +51,12 @@ yarnInstall() {
 
   start=$(timingStart) || return $?
   home=$(catchReturn "$handler" buildHome) || return $?
-  catchReturn "$handler" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
+  if [ -z "$version" ]; then
+    catchReturn "$handler" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 
-  version="${1-${BUILD_YARN_VERSION:-stable}}"
-  quietLog=$(buildQuietLog "$handler") || throwEnvironment "buildQuietLog $handler"
+    version="${BUILD_YARN_VERSION:-stable}"
+  fi
+  local quietLog && quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   catchReturn "$handler" fileDirectoryRequire "$quietLog" || return $?
   quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   statusMessage --first decorate info "Installing node ... " || return $?
@@ -72,9 +74,9 @@ _yarnInstall() {
 }
 
 __nodePackageManagerArguments_yarn() {
-  local handler="$1" action
+  local handler="$1"
 
-  action=$(validate "$handler" String "action" "${2-}") || return $?
+  local action && action=$(validate "$handler" String "action" "${2-}") || return $?
   shift 2
 
   local globalFlag=false

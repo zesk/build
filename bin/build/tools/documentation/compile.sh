@@ -130,7 +130,7 @@ __documentationTemplateCompile() {
           compiledFunctionTarget="$compiledTemplateCache/$tokenName"
           tokenName="$1" settingsFile="$2" && shift 2
           {
-            __documentationTemplateSettingsCompile "$handler" "$settingsFile" "$functionTemplate" | trimTail | printfOutputSuffix "\n" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+            __documentationTemplateSettingsCompile "$handler" "$settingsFile" "$functionTemplate" | textTrimTail | printfOutputSuffix "\n" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
           } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
           environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv" || returnClean $? "${clean[@]}" || return $?
         done
@@ -144,7 +144,7 @@ __documentationTemplateCompile() {
             statusMessage decorate info "Skip $tokenName and use cache"
           else
             {
-              __documentationTemplateFunctionCompile "$handler" "$tokenName" "$functionTemplate" | trimTail || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+              __documentationTemplateFunctionCompile "$handler" "$tokenName" "$functionTemplate" | textTrimTail || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
               printf "\n"
             } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
           fi

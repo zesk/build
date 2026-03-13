@@ -124,7 +124,7 @@ usageArgumentFile() {
   __catchArgumentHelper "file" "${args[@]}" test -f || return $?
 }
 
-# Validates a value is not blank and is a file and does `realPath` on it.
+# Validates a value is not blank and is a file and does `fileRealPath` on it.
 # Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Value to test.
@@ -140,7 +140,7 @@ usageArgumentRealFile() {
   fi
 
   value="$(__catchArgumentHelper "file" "${args[@]}" test -f)" || return $?
-  catchEnvironment "$handler" realPath "$value" || return $?
+  catchEnvironment "$handler" fileRealPath "$value" || return $?
 }
 
 # Validates a value is not blank and exists in the file system
@@ -312,7 +312,7 @@ usageArgumentApplicationFile() {
   printf "%s\n" "$file"
 }
 
-# Validates a value is not blank and is a directory and does `realPath` on it.
+# Validates a value is not blank and is a directory and does `fileRealPath` on it.
 # Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
@@ -327,7 +327,7 @@ usageArgumentRealDirectory() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
-  args[2]=$(realPath "${args[2]}") || throwArgument "$handler" "realPath" "${args[2]}" || return $?
+  args[2]=$(fileRealPath "${args[2]}") || throwArgument "$handler" "fileRealPath" "${args[2]}" || return $?
   directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   printf "%s\n" "${directory%/}"
 }

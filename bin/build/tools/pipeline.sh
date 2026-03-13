@@ -112,7 +112,7 @@ _ipLookup() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
-# Example:       bigText Failed, update key and reset date
+# Example:       decorate big Failed, update key and reset date
 # Example:       exit 99
 # Example:     fi
 isUpToDate() {

@@ -3,7 +3,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 290
+# IDENTICAL decorate 293
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -93,7 +93,10 @@ decorate() {
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
-    if isFunction "$extend"; then
+    if isFunction "${extend}.Pure"; then
+      catchReturn "$handler" "${extend}.Pure" "$@" || return $?
+      return 0
+    elif isFunction "$extend"; then
       executeInputSupport "$handler" "$extend" -- "$@" || return $?
       return 0
     else

@@ -100,7 +100,7 @@ gitTagDelete() {
     *)
       export GIT_REMOTE
       catchReturn "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
-      usageRequireEnvironment "$handler" GIT_REMOTE || return $?
+      environmentRequire "$handler" GIT_REMOTE || return $?
       # Deleting local tag
       catchArgument "$handler" git tag -d "$argument" || exitCode=$?
       # Deleting remote tag
@@ -182,7 +182,7 @@ _gitVersionLast() {
 # Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
 # Delete the old tag as well
 #
-veeGitTag() {
+gitTagVee() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
@@ -195,7 +195,7 @@ veeGitTag() {
   catchEnvironment "$handler" git push origin "v$tagName" ":$tagName" || return $?
   catchEnvironment "$handler" git fetch -q --prune --prune-tags || return $?
 }
-_veeGitTag() {
+_gitTagVee() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -407,7 +407,7 @@ gitTagVersion() {
   # rc is for release candidate
   versionSuffix=${versionSuffix:-${BUILD_VERSION_SUFFIX:-rc}}
   tagPrefix="${currentVersion}${versionSuffix}"
-  catchEnvironment "$handler" git show-ref --tags | removeFields 1 | catchEnvironment "$handler" muzzle tee -a "$tagFile" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" git show-ref --tags | textRemoveFields 1 | catchEnvironment "$handler" muzzle tee -a "$tagFile" || returnClean $? "${clean[@]}" || return $?
   index=0
   while true; do
     tryVersion="$tagPrefix$index"

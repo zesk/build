@@ -21,7 +21,7 @@ __testInstallInstallBuild() {
   testBinary="$targetDir/install-bin-build.sh"
   assertExitCode --line "$LINENO" 0 installInstallBuild --local "$targetDir" "$topDir" || return $?
   assertFileExists "$testBinary" || return $?
-  marker=$(randomString)
+  marker=$(stringRandom)
   echo " # changed $marker" >>"$testBinary"
   if ! grep -q "$marker" "$testBinary"; then
     decorate error "binary $testBinary does not contain marker?"

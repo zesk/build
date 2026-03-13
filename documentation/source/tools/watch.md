@@ -6,4 +6,4 @@
 
 
 
-{watchDirectory}
+{directoryWatch}

@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Show combinations of foreground and background colors in the console."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="9f54e9ae3d6bd1960826e3412b3edfd9c241f895"
+sourceHash="bdf073eb6d0e0790651cc6c692be3c1964cf5e39"
 summary="Show combinations of foreground and background colors in the console."
 summaryComputed="true"
 usage="colorSampleCombinations [ --help ]"

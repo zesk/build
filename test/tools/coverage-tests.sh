@@ -63,7 +63,7 @@ testSlowTagsWorkCorrectly() {
 
 __deprecatedFunctions() {
   local handler="$1" home="$2"
-  catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | trimSpace | grep -v ' ' | grep -v '/' | sort -u || return $?
+  catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | textTrim | grep -v ' ' | grep -v '/' | sort -u || return $?
 }
 
 #__testBuildFunctionsCoverageFaster() {
@@ -127,7 +127,7 @@ testBuildFunctionsCoverage() {
 
     # grep returns 1 when nothing matches
 
-    matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || returnMap $? 1 0 123 0 | trimBoth) || return $?
+    matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || returnMap $? 1 0 123 0 | textTrimBoth) || return $?
     [ -z "$matchingTests" ] || foundCount=$(catchReturn "$handler" fileLineCount <<<"$matchingTests") || return $?
     # statusMessage decorate error "Matches $foundCount: $matchingTests"
 
@@ -273,14 +273,14 @@ isS3URL
 escapeDoubleQuotes
 escapeSingleQuotes
 escapeQuotes
-replaceFirstPattern
+textReplaceFirst
 printfOutputEmpty
 printfOutputSuffix
 printfOutputPrefix
 sedReplacePattern
-parseBoolean
+booleanParse
 newlineHide
-realPath
+fileRealPath
 isPlain
 EOF
 }
@@ -384,7 +384,7 @@ nodePackageManagerUninstall
 npmUninstall
 pathCleanDuplicates
 json
-loadAverage
+cpuLoadAverage
 packageManagerDefault
 phpComposerInstall
 phpInstall
@@ -397,12 +397,12 @@ returnIdentical
 returnLeak
 rsyncInstall
 buildHome
-trimBoth
-trimHead
-trimTail
-singleBlankLines
+textTrimBoth
+textTrimHead
+textTrimTail
+textSingleBlankLines
 consoleToPlain
-randomString
+stringRandom
 timingStart
 validateTypeList
 xdebugInstall

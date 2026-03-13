@@ -5,11 +5,11 @@
 <hr />
 
 
-## User interaction
+# User interaction
 
 {bashUserInput}
 
-## Loading
+# Loading
 
 {bashLibrary}
 
@@ -17,7 +17,7 @@
 
 {bashSourcePath}
 
-## Code analysis
+# Code analysis
 
 {bashFileComment}
 
@@ -43,13 +43,13 @@
 
 {bashCommentFilter}
 
-## Builtins
+# Builtins
 
 {isBashBuiltin}
 
 {bashBuiltins}
 
-## Linting
+# Linting
 
 {bashSanitize}
 

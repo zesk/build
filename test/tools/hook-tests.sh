@@ -51,8 +51,8 @@ testHookSystem() {
 
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
-  randomApp=$(randomString)
-  randomDefault=$(randomString)
+  randomApp=$(stringRandom)
+  randomDefault=$(stringRandom)
 
   executeEcho cd "$testDir" || return $?
   executeEcho mkdir -p "$testDir/bin/hooks" || return $?

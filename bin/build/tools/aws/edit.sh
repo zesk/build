@@ -65,7 +65,7 @@ __awsCredentialsAdd() {
     _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "$(printf -- "%s\n" "${lines[@]}")" || return $?
   else
     ! "$addComments" || lines+=("# $name added $profileName on $(date -u)") || throwEnvironment "$handler" "Generating comment line failed" || return $?
-    catchEnvironment "$handler" printf -- "%s\n" "${lines[@]}" | trimHead >>"$credentials" || return $?
+    catchEnvironment "$handler" printf -- "%s\n" "${lines[@]}" | textTrimHead >>"$credentials" || return $?
   fi
 }
 
@@ -127,11 +127,11 @@ _awsCredentialsRemoveSection() {
   local pattern="\[\s*$profileName\s*\]" lines total
   total=$((0 + $(catchReturn "$handler" fileLineCount "$credentials"))) || return $?
   exec 3>&1
-  lines=$(catchEnvironment "$handler" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | catchEnvironment "$handler" grepSafe -v -e "$pattern" | catchEnvironment "$handler" trimTail | tee >(cat >&3) | fileLineCount) || return $?
-  [ -z "$newCredentials" ] || printf -- "\n%s\n" "$newCredentials" | catchEnvironment "$handler" trimTail || return $?
+  lines=$(catchEnvironment "$handler" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | catchEnvironment "$handler" grepSafe -v -e "$pattern" | catchEnvironment "$handler" textTrimTail | tee >(cat >&3) | fileLineCount) || return $?
+  [ -z "$newCredentials" ] || printf -- "\n%s\n" "$newCredentials" | catchEnvironment "$handler" textTrimTail || return $?
   local remain=$((total - lines - 2))
   printf -- "\n"
-  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | catchEnvironment "$handler" trimTail || return $?
+  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | catchEnvironment "$handler" textTrimTail || return $?
 }
 
 _awsCredentialsRemoveSectionInPlace() {
@@ -139,7 +139,7 @@ _awsCredentialsRemoveSectionInPlace() {
 
   local temp
   temp=$(fileTemporaryName "$handler") || return $?
-  _awsCredentialsRemoveSection "$handler" "$credentials" "$profileName" "$newCredentials" | trimBoth >"$temp" || returnClean $? "$temp" || return $?
+  _awsCredentialsRemoveSection "$handler" "$credentials" "$profileName" "$newCredentials" | textTrimBoth >"$temp" || returnClean $? "$temp" || return $?
   catchEnvironment "$handler" cp "$temp" "$credentials" || returnClean $? "$temp" || return $?
   catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

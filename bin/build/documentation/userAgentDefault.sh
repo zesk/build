@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="stdout" [2]="argument")
 rawComment="Summary: Default user agent string for web agents"$'\n'"A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)"$'\n'"stdout: String"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="5c17cd3be5908f799dcf52a229b158e5866260c8"
+sourceHash="c50fa195093aa14ef2053e1e5b7f154a2346e3a7"
 stdout="String"$'\n'""
 summary="Default user agent string for web agents"$'\n'""
 usage="userAgentDefault [ --help ]"

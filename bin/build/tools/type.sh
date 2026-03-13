@@ -75,7 +75,7 @@ isTrue() {
   while [ $# -gt 0 ]; do
     local value
     # -- removes special meaning from `--help
-    value=$(lowercase -- "$1")
+    value=$(stringLowercase -- "$1")
     case "$value" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

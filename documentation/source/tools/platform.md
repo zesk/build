@@ -8,7 +8,7 @@
 
 {executableExists}
 
-{runCount}
+{executeCount}
 
 {bashMakeExecutable}
 
@@ -22,7 +22,7 @@
 
 {cpuCount}
 
-{loadAverage}
+{cpuLoadAverage}
 
 ## Services
 

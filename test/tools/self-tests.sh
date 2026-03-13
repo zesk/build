@@ -96,7 +96,7 @@ testBuildEnvironmentLoadAll() {
         assertFileExists "$envFile" || throwEnvironment "$handler" "envFile missing loading $loadIt" || return $?
         assertFileContains "$envFile" "# Type:" "# Category:" || return $?
 
-        local type && type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
+        local type && type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | textTrim)
 
         isValidateType "$type" || returnEnvironment "$type is not a known type in $(decorate file "$envFile")" || return $?
       done < <(catchReturn "$handler" buildEnvironmentFiles "$loadIt") || return $?
@@ -212,7 +212,7 @@ testInstallBinBuild() {
   consoleHeadingBoxed "No .gitignore, was updated, same name"
   #
   section=$((section + 1))
-  bigText "Section #$section"
+  decorate big "Section #$section"
 
   #  ▞▀▖      ▐  ▗           ▗▌
   #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖ ▌
@@ -243,7 +243,7 @@ testInstallBinBuild() {
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   consoleHeadingBoxed "Has gitignore (missing), missing, different name"
   section=$((section + 1))
-  bigText "Section #$section"
+  decorate big "Section #$section"
 
   #  ▞▀▖      ▐  ▗           ▞▀▖
   #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖ ▗▘
@@ -276,7 +276,7 @@ testInstallBinBuild() {
   consoleLineFill
   consoleHeadingBoxed "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
-  bigText "Section #$section"
+  decorate big "Section #$section"
 
   #  ▞▀▖      ▐  ▗           ▞▀▖
   #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖ ▄▘
@@ -308,7 +308,7 @@ testInstallBinBuild() {
   #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝   ▘
 
   section=$((section + 1))
-  bigText "Section #$section"
+  decorate big "Section #$section"
 
   # Change
   echo "/bin/build/" >>.gitignore

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-13
 # shellcheck disable=SC2034
 argument="... - Arguments. Required. printf arguments."$'\n'""
 base="text.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Pipe to output some text after any output, otherwise, nothing is output."$'\n'"Argument: ... - Arguments. Required. printf arguments."$'\n'"Without arguments, displays help."$'\n'"stdin: text (Optional)"$'\n'"stdout: stdin text and then printf output IFF stdin text is non-blank"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="313b9bb00d69a2ae5d20033ba8bcb6de4d68d74e"
+sourceHash="f0c5212f3e402f51e272ac32015e5e0be9f2581c"
 stdin="text (Optional)"$'\n'""
 stdout="stdin text and then printf output IFF stdin text is non-blank"$'\n'""
 summary="Pipe to output some text after any output, otherwise, nothing"

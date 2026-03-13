@@ -6,5 +6,5 @@
 
 ## Rotation
 
-{rotateLog}
-{rotateLogs}
+{logRotate}
+{logRotates}

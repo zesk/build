@@ -75,14 +75,14 @@ __awsIPAccess() {
   fi
 
   if [ ${#pp[@]} -eq 0 ]; then
-    usageRequireEnvironment "$handler" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
+    environmentRequire "$handler" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
   fi
 
   if $verboseFlag; then
     if $optionRevoke; then
-      bigText "Closing ..." | decorate magenta
+      decorate big "Closing ..." | decorate magenta
     else
-      bigText "Opening ..." | decorate blue
+      decorate big "Opening ..." | decorate blue
     fi
     local width=40
 

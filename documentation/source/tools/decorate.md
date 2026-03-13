@@ -1,4 +1,4 @@
-# Color Tools
+# Decoration and Console Colors
 
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
@@ -12,9 +12,7 @@ Examples:
     decorate green < "$file"
     decorate info Starting to deploy ...
 
-## Color Mode
-
-Zesk Build supports customizations of all decoration colors to custom values.
+Zesk Build allows for customizations of all decoration colors to custom values allowing themes to be created.
 
 {decorate}
 
@@ -25,16 +23,6 @@ Zesk Build supports customizations of all decoration colors to custom values.
 {decorateStyle}
 
 {colorScheme}
-
-{__decorateExtensionBOLD}
-
-{__decorateExtensionEach}
-
-{__decorateExtensionPair}
-
-{__decorateExtensionWrap}
-
-{__decorateExtensionQuote}
 
 # Semantic color commands
 
@@ -54,7 +42,7 @@ Color commands intended to convey status of messages. Try `colorSampleSemanticSt
 
 Colors vary depending on the console and the terminal. Try `colorSampleStyles` to see all colors.
 
-## Standard ANSI Colors
+# Standard ANSI Colors
 
 - `decorate red`
 - `decorate green`
@@ -65,23 +53,51 @@ Colors vary depending on the console and the terminal. Try `colorSampleStyles` t
 - `decorate black`
 - `decorate white`
 
-## Text decoration
+# Text decoration
 
 - `decorate underline`
 - `decorate bold`
 
-## Extensions
+# Decorate extensions
+
+Examples:
 
 - `decorate BOLD` `style` `text` ...
 - `decorate` `pair` `[` `width` `]` `name` `value` ...
 - `decorate` `each` `[ ``--count` `]` `[` `--index` `]` `style` `item1` `item2` ...
 - `decorate` `size` `value`
+- `decorate big "Welcome to Zesk" | decorate box | decorate at 1 1`
+
+{__decorateExtensionBOLD}
+
+{__decorateExtensionEach}
+
+{__decorateExtensionPair}
+
+{__decorateExtensionWrap}
+
+{__decorateExtensionQuote}
+
+{__decorateExtensionBox}
+
+{__decorateExtensionBig.Pure}
+
+{__decorateExtensionAt.Pure}
 
 ### Creating extensions
 
 You can add your own decoration extension to your code by creating a function named:
 
-- `__decorateExtensionFoo` - where `foo` (lowercase first letter) is the decoration name
+- `__decorateExtensionFoo` - where `foo` (stringLowercase first letter) is the decoration name
+
+Your function will be called by [`executeInputSupport`](../sugar.md#executeinputsupport) which handles converting
+arguments from `stdin` into multiple calls to your function.
+
+If you want to handle input from `stdin` on your own, create a function instead named:
+
+- `__decorateExtensionFoo.Pure` - where `foo` (stringLowercase first letter) is the decoration name
+
+This should handle reading from `stdin` or arguments and handle either appropriately.
 
 # Additional commands
 

@@ -106,7 +106,7 @@ __assertStatistics() {
   done
 
   export __BUILD_SAVED_CACHE_DIRECTORY && __assertTimingSetup "$handler" || return $?
-  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" "?" assert-failure assert-success | tr $'\n' ' ' | trimRightSpace | printfOutputSuffix "\n"
+  incrementor --path "$__BUILD_SAVED_CACHE_DIRECTORY" "?" assert-failure assert-success | tr $'\n' ' ' | textTrimRight | printfOutputSuffix "\n"
 }
 
 # Save and report the timing since the last call

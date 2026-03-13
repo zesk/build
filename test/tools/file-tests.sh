@@ -13,7 +13,7 @@ testBasicFileStuff() {
 
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
-  testFile="$testDir/$(randomString).$$"
+  testFile="$testDir/$(stringRandom).$$"
   catchEnvironment "$handler" touch "$testFile" || return $?
   assertExitCode 0 fileModificationTime "$testFile" || return $?
   assertExitCode 0 fileModificationSeconds "$testFile" || return $?
@@ -260,7 +260,7 @@ testFileLineCount() {
   assertEquals 0 "$(fileLineCount "$temp")" || return $?
   assertEquals 0 "$(fileLineCount <"$temp")" || return $?
 
-  catchEnvironment "$handler" printf "%s\n" "$(randomString)" >>"$temp" || return $?
+  catchEnvironment "$handler" printf "%s\n" "$(stringRandom)" >>"$temp" || return $?
 
   assertEquals 1 "$(fileLineCount "$temp")" || return $?
   assertEquals 1 "$(fileLineCount <"$temp")" || return $?
@@ -271,7 +271,7 @@ testFileLineCount() {
     r=$((RANDOM % 10))
     total=$((total + r))
     while [ "$r" -gt 0 ]; do
-      catchEnvironment "$handler" printf "%d: %s\n" "$i" "$(randomString)" >>"$temp" || return $?
+      catchEnvironment "$handler" printf "%d: %s\n" "$i" "$(stringRandom)" >>"$temp" || return $?
       r=$((r - 1))
     done
     assertEquals "$total" "$(fileLineCount "$temp")" || return $?

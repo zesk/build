@@ -11,7 +11,7 @@ foundNames=([0]="return_code")
 rawComment="Does the console support animation?"$'\n'"Return Code: 0 - Supports console animation"$'\n'"Return Code: 1 - Does not support console animation"$'\n'""$'\n'""
 return_code="0 - Supports console animation"$'\n'"1 - Does not support console animation"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="9f54e9ae3d6bd1960826e3412b3edfd9c241f895"
+sourceHash="bdf073eb6d0e0790651cc6c692be3c1964cf5e39"
 summary="Does the console support animation?"
 summaryComputed="true"
 usage="consoleHasAnimation"

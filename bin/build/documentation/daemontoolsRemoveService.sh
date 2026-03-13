@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Remove a daemontools service by name"$'\n'"Argument: serviceName - String. Required. Service name to remove."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/daemontools.sh"
-sourceHash="857f204c053a784dde5252c1bff78b826a67097e"
+sourceHash="5472561dbf886107f26337a49882ca81874269ca"
 summary="Remove a daemontools service by name"
 summaryComputed="true"
 usage="daemontoolsRemoveService serviceName"

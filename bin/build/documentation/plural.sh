@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-13
 # shellcheck disable=SC2034
 argument="number - Number. Required. An integer or floating point number"$'\n'"singular - String. Required. The singular form of a noun"$'\n'"plural - String. Optional. The plural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'""
 base="text.sh"
@@ -15,7 +15,7 @@ rawComment="Outputs the \`singular\` value to standard out when the value of \`n
 return_code="1 - If count is non-numeric"$'\n'"0 - If count is numeric"$'\n'""
 short_description="Output numeric messages which are grammatically accurate"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="313b9bb00d69a2ae5d20033ba8bcb6de4d68d74e"
+sourceHash="f0c5212f3e402f51e272ac32015e5e0be9f2581c"
 stdout="\`String\`. The plural form for non-1 values. e.g. \`\$(plural 2 potato potatoes)\` = \`potatoes\`"$'\n'""
 summary="Outputs the \`singular\` value to standard out when the value"
 summaryComputed="true"

@@ -154,7 +154,7 @@ deployBuildEnvironment() {
     printf "\n%s %s\b" ___deployBuildEnvironment "$(printf "\"%s\" " "${deployArgs[@]}")"
   else
     ___deployBuildEnvironment "${deployArgs[@]}" || return $?
-    printf "\n%s\n" "$(bigText --bigger Success)" | decorate wrap --fill " " | decorate success
+    printf "\n%s\n" "$(decorate big --bigger Success)" | decorate wrap --fill " " | decorate success
   fi
 }
 
@@ -410,7 +410,7 @@ __deployedHostArtifact() {
 
 _deploySuccessful() {
 
-  bigText Deployed AOK | decorate green
+  decorate big Deployed AOK | decorate green
   echo
   decorate warning "No $(__deployedHostArtifact) file found ..."
   decorate success "Nothing deployed or clean exit."
@@ -653,7 +653,7 @@ deployToRemote() {
     fi
 
     verb="Deploy"
-    bigText "$verb" | decorate green
+    decorate big "$verb" | decorate green
 
     local nameWidth=50
     {
@@ -702,7 +702,7 @@ deployToRemote() {
     rm -rf "$temporaryCommandsFile" || :
     return 0
   fi
-  bigText "$verb" | decorate BOLD "$color"
+  decorate big "$verb" | decorate BOLD "$color"
   if [ ! -f "$artifactFile" ]; then
     if $revertFlag; then
       _deploySuccessful

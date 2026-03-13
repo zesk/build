@@ -145,7 +145,7 @@ _isDockerComposeCommand() {
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: --production - Flag. Production container build. Shortcut for `--deployment production` (uses `.PRODUCTION.env`)
 # Argument: --staging - Flag. Staging container build. Shortcut for `--deployment staging` (uses `.STAGING.env`)
-# Argument: --deployment deploymentName - String. Deployment name to use. (uses `.$(uppercase "$deploymentName").env`)
+# Argument: --deployment deploymentName - String. Deployment name to use. (uses `.$(stringUppercase "$deploymentName").env`)
 # Argument: --volume - String. Name of the volume associated with the container to preserve or delete.
 # Argument: --build - Flag. `build` command with volume management
 # Argument: --clean - Flag. Delete the volume prior to building.
@@ -155,7 +155,7 @@ _isDockerComposeCommand() {
 # Argument: --arg environmentNameValue - EnvironmentNameValue. Passed as an ARG to the build environment – a variable name and value (in the form `NAME=value` to require in the `.env` file. If set already in the file or in the environment then has no effect.
 # Argument: composeCommand - You can send any compose command and arguments thereafter are passed to `docker compose`
 # Environment files are managed automatically by this function (with backups).
-# Environment files are named in uppercase after the deployment as `.DEPLOYMENT.env` in the home directory
+# Environment files are named in stringUppercase after the deployment as `.DEPLOYMENT.env` in the home directory
 #
 # So, `.STAGING.env` and `.PRODUCTION.env` are the default environments. They are copied into `.env` with any additional required
 # default environment variables (including `DEPLOYMENT=`), and then this `.env` file serves as the basis for both the
@@ -195,7 +195,7 @@ dockerCompose() {
     --deployment)
       shift
       deployment="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      deployment="$(uppercase "$deployment")"
+      deployment="$(stringUppercase "$deployment")"
       ! $debugFlag || decorate info "Deployment set to $deployment"
       ;;
     --volume)
@@ -335,7 +335,7 @@ __dockerComposeEnvironmentSetup() {
 
   local deploymentEnv envFile
 
-  deploymentEnv=".$(uppercase "$deployment").env"
+  deploymentEnv=".$(stringUppercase "$deployment").env"
   [ -f "$home/$deploymentEnv" ] || throwEnvironment "$handler" "Missing $deploymentEnv" || return $?
 
   envFile="$home/.env"

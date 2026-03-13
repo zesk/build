@@ -61,7 +61,7 @@ __bashBuild() {
   local home
   if home=$(userHome); then
     rcFile="$home/.bashrc"
-    tools="$(realPath "$tools")" || return $?
+    tools="$(fileRealPath "$tools")" || return $?
     __bashProfileConfiguration "$handler" "$rcFile" "$tools" "${extraCommands[@]+"${extraCommands[@]}"}" || return $?
   fi
   local start

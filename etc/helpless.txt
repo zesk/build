@@ -16,6 +16,6 @@ returnEnvironment
 returnThrow
 throwArgument
 throwEnvironment
-trimLeftSpace
-trimRightSpace
-trimSpace
+textTrimLeft
+textTrimRight
+textTrim

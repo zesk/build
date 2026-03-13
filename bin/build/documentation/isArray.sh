@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Is a variable declared as an array?"$'\n'"Argument: variableName - String. Required. Variable name to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="c60b8f9d9123f5a6eb04a56b93a1ce09d79d8d26"
+sourceHash="cf046d7ea9b582a95b5cf64eaaa0310238a19003"
 summary="Is a variable declared as an array?"
 summaryComputed="true"
 usage="isArray variableName [ --help ]"

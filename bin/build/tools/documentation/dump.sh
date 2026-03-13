@@ -16,7 +16,7 @@ __dumpSimpleValue() {
   local handler="returnMessage"
   local name="${1-}"
   case "${name:0:1}" in [[:alpha:]_]) ;; *) throwArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
-  printf -- "export %s\n" "$(catchReturn "$handler" environmentValueWrite "$name" "$(trimSpace "${2-}")")" || return $?
+  printf -- "export %s\n" "$(catchReturn "$handler" environmentValueWrite "$name" "$(textTrim "${2-}")")" || return $?
 }
 
 __dumpArrayValue() {

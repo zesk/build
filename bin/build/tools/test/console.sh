@@ -37,7 +37,7 @@ __testHeading() {
 
   consoleLineFill
   printf -- "%s\n" "$bar"
-  bigText "$@" | decorate wrap --fill " " "    " | decorate code
+  decorate big "$@" | decorate wrap --fill " " "    " | decorate code
   printf -- "%s\n" "$bar"
 }
 

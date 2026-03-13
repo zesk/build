@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Is daemontools running?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/daemontools.sh"
-sourceHash="857f204c053a784dde5252c1bff78b826a67097e"
+sourceHash="5472561dbf886107f26337a49882ca81874269ca"
 summary="Is daemontools running?"
 summaryComputed="true"
 usage="daemontoolsIsRunning [ --help ]"

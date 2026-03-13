@@ -11,7 +11,7 @@ __buildTestRequirements() {
   local handler="$1" && shift
 
   local bigBinary
-  bigBinary=$(catchReturn "$handler" __bigTextBinary) || return $?
+  bigBinary=$(catchReturn "$handler" __decorateBigBinary) || return $?
   [ -n "$bigBinary" ] || bigBinary="toilet"
   catchReturn "$handler" packageWhich "$bigBinary" "$bigBinary" || return $?
   catchReturn "$handler" packageWhich shellcheck shellcheck || return $?

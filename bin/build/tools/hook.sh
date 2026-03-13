@@ -300,7 +300,7 @@ hookFind() {
     --next)
       shift
       nextSource=$(validate "$handler" File "$argument" "${1-}") || return $?
-      nextSource=$(catchEnvironment "$handler" realPath "$nextSource") || return $?
+      nextSource=$(catchEnvironment "$handler" fileRealPath "$nextSource") || return $?
       ;;
     --debug) debugFlag=true ;;
     *)

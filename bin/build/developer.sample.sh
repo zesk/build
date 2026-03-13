@@ -34,7 +34,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     local title
     title="$name $(catchReturn "$handler" hookVersionCurrent)" || return $?
-    bigText --bigger "$title"
+    decorate big --bigger "$title"
     # Logo for iTerm2
     iTerm2Image -i "$home/etc/zesk-build-icon.png"
 

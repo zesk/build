@@ -56,7 +56,7 @@ _cpuCount() {
 # Return Code: 2 - `count` is not an unsigned number
 # Return Code: Any - If `binary` fails, the exit code is returned
 # Summary: Run a binary count times
-runCount() {
+executeCount() {
   local handler="_${FUNCNAME[0]}"
 
   local total=""
@@ -88,7 +88,7 @@ runCount() {
   done
 
 }
-_runCount() {
+_executeCount() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -229,7 +229,7 @@ serviceToStandardPort() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    argument=$(catchReturn "$handler" trimSpace "$argument") || return $?
+    argument=$(catchReturn "$handler" textTrim "$argument") || return $?
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
@@ -285,7 +285,7 @@ serviceToPort() {
       if [ ! -f "$servicesFile" ]; then
         catchEnvironment "$handler" serviceToStandardPort "$@" || return $?
       else
-        service="$(trimSpace "$argument")"
+        service="$(textTrim "$argument")"
         [ -n "$service" ] || throwArgument "$handler" "whitespace argument: $(decorate quote "$argument") #$__index/$__count" || return $?
         if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
           isInteger "$port" || throwEnvironment "$handler" "Port found in $servicesFile is not an integer: $port" || return $?
@@ -391,7 +391,7 @@ _fileExtensionLists() {
 # stdout: lines:Number
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-loadAverage() {
+cpuLoadAverage() {
   local handler="_${FUNCNAME[0]}"
   local text
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -409,7 +409,7 @@ loadAverage() {
   read -r -a averages <<<"$text" || :
   printf "%s\n" "${averages[0]}" "${averages[1]-}" "${averages[2]-}"
 }
-_loadAverage() {
+_cpuLoadAverage() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

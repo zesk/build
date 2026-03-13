@@ -19,7 +19,7 @@ __applicationHomeGo() {
   local file home label uHome oldHome=""
 
   file=$(catchReturn "$handler" __applicationHomeFile) || return $?
-  home=$(trimSpace "$(catchEnvironment "$handler" head -n 1 "$file")") || return $?
+  home=$(textTrim "$(catchEnvironment "$handler" head -n 1 "$file")") || return $?
   if [ -z "$home" ]; then
     throwEnvironment "$handler" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi

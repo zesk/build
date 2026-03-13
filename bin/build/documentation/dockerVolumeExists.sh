@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Does a docker volume exist with name?"$'\n'"Argument: name - String. Required."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
-sourceHash="40691740f89ab0014548483a77411acc673dbe12"
+sourceHash="51657edc2c4ddde3087728a205decf35b61fd7b4"
 summary="Does a docker volume exist with name?"
 summaryComputed="true"
 usage="dockerVolumeExists name"

@@ -7,6 +7,30 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{parseBoolean}
+
+{clampDigits}
+
+{replaceFirstPattern}
+
+{stringReplace}
+
+{trimBoth}
+
+{trimHead}
+
+{trimTail}
+
+{singleBlankLines}
+
+{trimRightSpace}
+
+{trimLeftSpace}
+
+{trimSpace}
+
+{removeFields}
+
 {hasHook}
 
 {isSubstring}
@@ -44,8 +68,6 @@ Hides these from [New and uncategorized functions](./todo.md)
 {processOpenPipes}
 
 {bashPromptModule_binBuild}
-
-{interactiveBashSource}
 
 {mapEnvironmentSed}
 

@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Generate the documentation index (e.g. functions defined in the documentation)"$'\n'"Argument: cacheDirectory - Required. Cache directory where the index will be created."$'\n'"Argument: documentationSource ... - OneOrMore. Documentation source path to find tokens and their definitions."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - If success"$'\n'"Return Code: 1 - Issue with file generation"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ac6911d0adf876a80a8dadee36af8e18f039de50"
+sourceHash="228e0b83b7cd3287b298d8706e246b8c65126c5f"
 summary="Generate the documentation index (e.g. functions defined in the documentation)"
 summaryComputed="true"
 usage="documentationIndexDocumentation cacheDirectory [ documentationSource ... ] [ --help ]"

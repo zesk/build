@@ -263,14 +263,14 @@ _bashLintInteractiveCheck() {
     scriptPassed=false
   fi
   if $scriptPassed; then
-    bigText "SUCCESS $(basename "$script")" | decorate green
+    decorate big "SUCCESS $(basename "$script")" | decorate green
     consoleHeadingBoxed "$script now passes" | decorate BOLD green
     decorate orange "$(consoleLine "*")"
     return 0
   fi
 
   shift 2
-  bigText "FAIL $(basename "$script")" | decorate BOLD red | decorate wrap "$(decorate subtle "bashLint ")"
+  decorate big "FAIL $(basename "$script")" | decorate BOLD red | decorate wrap "$(decorate subtle "bashLint ")"
   printf -- "%s\n%s\n%s\n" "$(decorate red "$failedReason")" \
     "$(decorate label "Queue")" \
     "$(decorate subtle "$(printf -- "- %s\n" "$@")")"

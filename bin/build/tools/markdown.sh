@@ -77,7 +77,7 @@ markdownRemoveUnfinishedSections() {
   local line section=() foundVar=false foundContent=false
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local lastLine="" line && while IFS='' read -r line; do
-    local trimmed && trimmed=$(trimSpace "$line")
+    local trimmed && trimmed=$(textTrim "$line")
     if [ "${line:0:1}" = "#" ]; then
       # Heading line
       if ! $foundVar && $foundContent && [ ${#section[@]} -gt 0 ]; then

@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Write a value to a state file as NAME=\"value\""$'\n'"Argument: name - String. Required. Name to write."$'\n'"Argument: value - EmptyString. Optional. Value to write."$'\n'"Argument: ... - EmptyString. Optional. Additional values, when supplied, write this value as an array."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/io.sh"
-sourceHash="ab40396c0bbaf04b90ac18495770691379efbd1a"
+sourceHash="0f1011676755f0412e216127710dc6f43e456014"
 summary="Write a value to a state file as NAME=\"value\""
 summaryComputed="true"
 usage="environmentValueWrite name [ value ] [ ... ] [ --help ]"

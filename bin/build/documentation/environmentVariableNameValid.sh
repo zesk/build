@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Argument: variableName ... - String. Required. Exit status 0 if all variables names are valid ones."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Validates zero or more environment variable names."$'\n'"- alpha"$'\n'"- digit"$'\n'"- underscore"$'\n'"First letter MUST NOT be a digit"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="f4297ea2cbebf568f7423fd672764a88c1753a7e"
+sourceHash="2f72a01d82f7aedcc93caeb95898a759bf73cf9c"
 summary="Validates zero or more environment variable names."
 summaryComputed="true"
 usage="environmentVariableNameValid variableName ... [ --help ]"

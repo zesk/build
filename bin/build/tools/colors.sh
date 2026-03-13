@@ -534,7 +534,7 @@ _colorBrightness() {
 # Credit: Mark Ransom
 # URL: https://stackoverflow.com/questions/141855/programmatically-lighten-a-color
 # Originally written in Python
-# Requires: bc printf tee cut clampDigits
+# Requires: bc printf tee cut integerClamp
 __colorNormalize() {
   local red=$1 green=$2 blue=$3 threshold=255
 
@@ -551,7 +551,7 @@ __colorNormalize() {
     return
   fi
   local fThreshold=255.999
-  printf "%s\n" "f=(3*$fThreshold-$total)/(3*$maxColor-$total)" "gray=$fThreshold-f*$maxColor" "m=gray*f" "$red+m" "$green+m" "$blue+m" | tee bc.log | bc --scale=2 | cut -f 1 -d . | clampDigits 0 255
+  printf "%s\n" "f=(3*$fThreshold-$total)/(3*$maxColor-$total)" "gray=$fThreshold-f*$maxColor" "m=gray*f" "$red+m" "$green+m" "$blue+m" | tee bc.log | bc --scale=2 | cut -f 1 -d . | integerClamp 0 255
 }
 
 # Redistribute color values to make brightness adjustments more balanced
@@ -594,7 +594,7 @@ _colorNormalize() {
 # Argument: maximum - Integer|Empty. Maximum integer value to output.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-clampDigits() {
+integerClamp() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   local min="${1-}" max="${2-}" number
@@ -611,7 +611,7 @@ clampDigits() {
     shift
   done
 }
-_clampDigits() {
+_integerClamp() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -842,7 +842,7 @@ colorScheme() {
   colorsFile=$(fileTemporaryName "$handler") || return 0
   catchEnvironment "$handler" grepSafe -v -e '^#' | catchEnvironment "$handler" sed '/^$/d' | catchEnvironment "$handler" muzzle tee "$colorsFile" || return $?
   local hash
-  hash="$(shaPipe <"$colorsFile")" || :
+  hash="$(textSHA <"$colorsFile")" || :
 
   [ "$hash" != "$home:${__BUILD_TERM_COLORS-}" ] || return 0
 

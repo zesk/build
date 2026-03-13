@@ -6,6 +6,25 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+__dataTestTimingDuration() {
+  cat <<EOF
+0 0ms
+1 1ms
+1000 1 second
+2000 2 seconds
+60000 1 minute
+3600000 1 hour
+86400000 1 day
+604800000 1 week
+EOF
+}
+
+testTimingDuration() {
+  local test expected && while IFS=" " read -r test expected; do
+    assertEquals "$expected" "$(timingDuration "$test")" || return $?
+  done < <(__dataTestTimingDuration)
+}
+
 testTimingElapsed() {
   local foo
 

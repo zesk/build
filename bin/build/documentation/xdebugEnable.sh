@@ -12,7 +12,7 @@ foundNames=([0]="environment" [1]="argument")
 rawComment="Enable Xdebug on systems that have it"$'\n'"Environment: XDEBUG_ENABLED"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/xdebug.sh"
-sourceHash="fe6ae7580979930084fb1503b37ee54f23a6b6ef"
+sourceHash="6d0fa6432704e0a7dd9f9cf4e3129eb4bec0a5ee"
 summary="Enable Xdebug on systems that have it"
 summaryComputed="true"
 usage="xdebugEnable [ --help ]"

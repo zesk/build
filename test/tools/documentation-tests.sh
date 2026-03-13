@@ -70,7 +70,7 @@ testDocumentation() {
     assertEquals $'Assert two strings are equal.\nIf this fails it will output an error and exit.\n' "${description}" || return $?
     consoleLine -
     desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
-    assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
+    assertEquals "Well, Assert two strings are equal." "$(stringTrimWords 10 "${desc[0]}")" || return $?
     consoleLine '='
     assertEquals "Assert two strings are equal." "${summary}" || return $?
   ) || return $?
@@ -107,7 +107,7 @@ __isolateTest() {
   assertEquals $'Assert two strings are equal.\n\nIf this fails it will output an error and exit.\n\n\n' "${description}" || return $?
   consoleLine -
   desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
-  assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
+  assertEquals "Well, Assert two strings are equal." "$(stringTrimWords 10 "${desc[0]}")" || return $?
   consoleLine '='
   assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
 }

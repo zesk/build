@@ -67,7 +67,7 @@ __documentationIndexLookup() {
     if [ ! -f "$indexRoot" ]; then
       throwEnvironment "$handler" "No documentation index exists" || return $?
     fi
-    grep -e "^$(quoteGrepPattern "$1") " "$indexRoot" | removeFields 1 || return 1
+    grep -e "^$(quoteGrepPattern "$1") " "$indexRoot" | textRemoveFields 1 || return 1
     return 0
   fi
   indexRoot="$cacheDirectory/code.index"
@@ -77,8 +77,7 @@ __documentationIndexLookup() {
   if [ $# -eq 0 ]; then
     throwArgument "$handler" "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?
   fi
-  local functionName filePath lineNumber
-  read -r functionName filePath lineNumber < <(grepSafe -m 1 -e "^$1 " <"$indexRoot")
+  local functionName filePath lineNumber && read -r functionName filePath lineNumber < <(grepSafe -m 1 -e "^$1 " <"$indexRoot")
   if [ -z "$functionName" ] || [ -z "$filePath" ] || ! isUnsignedInteger "$lineNumber"; then
     return 1
   fi
@@ -88,10 +87,10 @@ __documentationIndexLookup() {
   source) printf -- "%s\n" "$sourceFile" ;;
   line) printf -- "%d\n" "$lineNumber" ;;
   combined) printf -- "%s:%d\n" "$sourceFile" "$lineNumber" ;;
-  comment) __documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" bashFileComment "$sourceFile" "$lineNumber" ;;
+  comment) __documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" "$sourceFile" "$lineNumber" ;;
   settings)
     local commentFile
-    commentFile=$(__documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" bashFileComment "$sourceFile" "$lineNumber") || return $?
+    commentFile=$(__documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" "$sourceFile" "$lineNumber") || return $?
     local settingsFile="$indexDirectory/comment/$functionName.settings"
     if [ ! -f "$settingsFile" ] || ! fileIsNewest "$settingsFile" "$commentFile"; then
       __bashDocumentationExtract "$handler" "$functionName" "$sourceFile" <"$commentFile" >"$settingsFile" || return $?

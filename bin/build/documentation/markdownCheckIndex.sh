@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Argument: indexFile ... - File. Required. One or more index files to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Displays any markdown files next to the given index file which are not found within the index file as links."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/markdown.sh"
-sourceHash="f46e242bf7f19063180628eab801ca64f21217c1"
+sourceHash="7a1158bea472d7a4646324cc4a044fd6ac9ad611"
 summary="Displays any markdown files next to the given index file"
 summaryComputed="true"
 usage="markdownCheckIndex indexFile ... [ --help ] [ --handler handler ]"

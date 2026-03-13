@@ -35,7 +35,7 @@ __confirmYesNo() {
     --default)
       shift
       default="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      parseBoolean "$default" || [ $? -ne 2 ] || throwArgument "$handler" "Can not parse $(decorate code "$1") as a boolean" || return $?
+      booleanParse "$default" || [ $? -ne 2 ] || throwArgument "$handler" "Can not parse $(decorate code "$1") as a boolean" || return $?
       ;;
     *)
       message="$*"
@@ -78,7 +78,7 @@ __confirmYesNoParse() {
 
   [ -z "$prefix" ] || prefix="$(decorate error "$prefix") "
 
-  parseBoolean "${1-}" || exitCode=$?
+  booleanParse "${1-}" || exitCode=$?
   case "$exitCode" in
   0) statusMessage printf -- "%s%s" "$prefix" "$(decorate success "Yes") $exitCode" ;;
   1) statusMessage printf -- "%s%s" "$prefix" "$(decorate warning "[ ** NO ** ]") $exitCode" ;;
@@ -109,7 +109,7 @@ __interactiveCountdownReadBoolean() {
 __confirmYesNoValidate() {
   local value="$1" result="$2" && shift 2
   local exitCode=0
-  parseBoolean "$value" || exitCode=$?
+  booleanParse "$value" || exitCode=$?
   case "$exitCode" in
   0)
     printf "%s\n" true >"$result"

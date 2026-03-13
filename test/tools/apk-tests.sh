@@ -48,7 +48,7 @@ testAlpineContainer() {
     assertExitCode 0 alpineContainer echo "FOO=\"foo\"" || return $?
     local value
 
-    value=$(trimSpace "$(alpineContainer echo "FOO=\"foo\"")")
+    value=$(textTrim "$(alpineContainer echo "FOO=\"foo\"")")
 
     assertEquals "$value" "FOO=\"foo\"" || return $?
 

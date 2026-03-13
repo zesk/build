@@ -14,7 +14,7 @@ testFilesAreIdentical() {
   catchEnvironment "$handler" printf "%s\n" "abc " "def " "ghi " "jkl " "mno " "pqr " "tuv" "wxy " "z   " >"$temp" || return $?
 
   catchEnvironment "$handler" cp "$temp" "$temp.same" || return $?
-  catchEnvironment "$handler" trimSpace <"$temp" >"$temp.trim" || return $?
+  catchEnvironment "$handler" textTrim <"$temp" >"$temp.trim" || return $?
 
   # shellcheck disable=SC2094
   assertExitCode 0 filesAreIdentical "$temp" - <"$temp" || return $?

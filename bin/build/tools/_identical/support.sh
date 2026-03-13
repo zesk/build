@@ -31,7 +31,7 @@ __identicalLineParse() {
   # Remove token identifier
   identicalLine="${identicalLine/"$prefix"/}"
   # And whitespace
-  identicalLine="$(trimSpace "$identicalLine")"
+  identicalLine="$(textTrim "$identicalLine")"
 
   local token line0 line1 _extras
   read -r token line0 line1 _extras <<<"$identicalLine" || :

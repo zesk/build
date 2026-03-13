@@ -113,7 +113,7 @@ __identicalCheck() {
   local start && start=$(timingStart) || return $?
   failureCode="$(returnCode identical)"
 
-  rootDir=$(catchEnvironment "$handler" realPath "$rootDir") || return $?
+  rootDir=$(catchEnvironment "$handler" fileRealPath "$rootDir") || return $?
   local resultsFile searchFileList clean=()
 
   if [ -z "$tempDirectory" ]; then

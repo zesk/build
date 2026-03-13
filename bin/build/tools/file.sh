@@ -287,7 +287,7 @@ _fileModifiedDays() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _realPath 20
+# IDENTICAL _fileRealPath 20
 
 # Find the full, actual path of a file avoiding symlinks or redirection.
 # See: readlink realpath
@@ -295,7 +295,7 @@ _fileModifiedDays() {
 # Without arguments, displays help.
 # Argument: file ... - File. Required. One or more files to `realpath`.
 # Requires: executableExists realpath __help usageDocument returnArgument
-realPath() {
+fileRealPath() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   if executableExists realpath; then
@@ -304,13 +304,13 @@ realPath() {
     readlink -f -n "$@"
   fi
 }
-_realPath() {
+_fileRealPath() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: path ... - File. Required. One or more paths to simplify
-# Normalizes segments of `/./` and `/../` in a path without using `realPath`
+# Normalizes segments of `/./` and `/../` in a path without using `fileRealPath`
 # Removes dot and dot-dot paths from a path correctly
 directoryPathSimplify() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -356,7 +356,7 @@ fileSize() {
 
   local opts=()
 
-  case "$(lowercase "${OSTYPE-}")" in
+  case "$(stringLowercase "${OSTYPE-}")" in
   *darwin*) opts=("-f" "%z") ;;
   *) opts=('-c%s') ;;
   esac

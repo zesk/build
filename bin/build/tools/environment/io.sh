@@ -57,7 +57,7 @@ environmentValueWriteArray() {
     value=("$@")
     result="$(__environmentValueClean "$(declare -pa value)")" || return $?
     if [ "${result:0:1}" = "'" ]; then
-      result="$(unquote \' "$result")"
+      result="$(stringUnquote \' "$result")"
       printf "%s=%s\n" "$name" "${result//"$replace"/$search}"
     else
       printf "%s=%s\n" "$name" "$result"
@@ -100,7 +100,7 @@ environmentValueRead() {
     printf -- "%s\n" "$default"
   else
     declare "$name=$default"
-    declare "$name=$(__unquote "$value")"
+    declare "$name=$(__stringUnquote "$value")"
     printf -- "%s\n" "${!name-}"
   fi
 }
@@ -119,7 +119,7 @@ environmentValueConvertArray() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local value prefix='([0]="' suffix='")'
 
-  value=$(__unquote "${1-}")
+  value=$(__stringUnquote "${1-}")
   [ "$value" != "()" ] || return 0 # Empty array
   if [ "${value#*=}" != "$value" ]; then
     [ "${value#"$prefix"}" != "$value" ] || throwArgument "$handler" "Not an array value (prefix: \"${value:0:4}\")" || return $?
@@ -288,8 +288,8 @@ environmentLoad() {
       ! $debugMode || decorate warning "$(decorate code "$name") is ignored ($context:$line)"
       continue
     fi
-    # Load and unquote value
-    value="$(__unquote "${environmentLine#*=}")"
+    # Load and stringUnquote value
+    value="$(__stringUnquote "${environmentLine#*=}")"
     # SECURITY CHECK
     toExport+=("$name=$value")
     ! $debugMode || printf "toExport: %s=%s\n" "$name" "$value"

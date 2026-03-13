@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="stdout" [2]="argument")
 rawComment="Summary: Return integer count of CPUs on this system"$'\n'"stdout: PositiveInteger"$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="6141b6985f95828e1ff8727449bdd48567afe942"
+sourceHash="0e65d7e92bc21e3de71f94e056e6f6cd24b198b0"
 stdout="PositiveInteger"$'\n'""
 summary="Return integer count of CPUs on this system"$'\n'""
 usage="cpuCount [ --handler handler ] [ --help ]"

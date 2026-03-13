@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-13
 # shellcheck disable=SC2034
-argument="--outside outsideStyle - String. Optional. Style to apply to the outside border. (Default \`decoration\`)"$'\n'"--inside insideStyle - String. Optional. Style to apply to the inside spacing. (Default blank)"$'\n'"--shrink characterCount - UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)"$'\n'"--size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)"$'\n'"text ... - Text to put in the box"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument="none"
 base="box.sh"
-description="Heading for section output"$'\n'""
-example="    consoleHeadingBoxed Moving ..."$'\n'""
+description="No documentation for \`consoleHeadingBoxed\`."$'\n'""
 file="bin/build/tools/decorate/box.sh"
 fn="consoleHeadingBoxed"
-foundNames=([0]="summary" [1]="argument" [2]="example" [3]="output")
-output="+==========================================================================+"$'\n'"|                                                                          |"$'\n'"| Moving ...                                                               |"$'\n'"|                                                                          |"$'\n'"+==========================================================================+"$'\n'""
-rawComment="Heading for section output"$'\n'"Summary: Text heading decoration"$'\n'"Argument: --outside outsideStyle - String. Optional. Style to apply to the outside border. (Default \`decoration\`)"$'\n'"Argument: --inside insideStyle - String. Optional. Style to apply to the inside spacing. (Default blank)"$'\n'"Argument: --shrink characterCount - UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)"$'\n'"Argument: --size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)"$'\n'"Argument: text ... - Text to put in the box"$'\n'"Example:     consoleHeadingBoxed Moving ..."$'\n'"Output: +==========================================================================+"$'\n'"Output: |                                                                          |"$'\n'"Output: | Moving ...                                                               |"$'\n'"Output: |                                                                          |"$'\n'"Output: +==========================================================================+"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+foundNames=()
+rawComment=""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/box.sh"
-sourceHash="4b7f3a76aa3c9657517db2297da8ebd29c5632ac"
-summary="Text heading decoration"$'\n'""
-usage="consoleHeadingBoxed [ --outside outsideStyle ] [ --inside insideStyle ] [ --shrink characterCount ] [ --size lineCount ] [ text ... ] [ --help ]"
+sourceHash="a0e0636d70b0867e1ad5f74d452bc7c15d434dff"
+summary="undocumented"
+usage="consoleHeadingBoxed"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleHeadingBoxed'$'\e''[0m '$'\e''[[(blue)]m[ --outside outsideStyle ]'$'\e''[0m '$'\e''[[(blue)]m[ --inside insideStyle ]'$'\e''[0m '$'\e''[[(blue)]m[ --shrink characterCount ]'$'\e''[0m '$'\e''[[(blue)]m[ --size lineCount ]'$'\e''[0m '$'\e''[[(blue)]m[ text ... ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--outside outsideStyle   '$'\e''[[(value)]mString. Optional. Style to apply to the outside border. (Default '$'\e''[[(code)]mdecoration'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--inside insideStyle     '$'\e''[[(value)]mString. Optional. Style to apply to the inside spacing. (Default blank)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--shrink characterCount  '$'\e''[[(value)]mUnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--size lineCount         '$'\e''[[(value)]mUnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mtext ...                 '$'\e''[[(value)]mText to put in the box'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help                   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Heading for section output'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    consoleHeadingBoxed Moving ...'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleHeadingBoxed'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]mconsoleHeadingBoxed'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: consoleHeadingBoxed [ --outside outsideStyle ] [ --inside insideStyle ] [ --shrink characterCount ] [ --size lineCount ] [ text ... ] [ --help ]'$'\n'''$'\n''    --outside outsideStyle   String. Optional. Style to apply to the outside border. (Default decoration)'$'\n''    --inside insideStyle     String. Optional. Style to apply to the inside spacing. (Default blank)'$'\n''    --shrink characterCount  UnsignedInteger. Optional. Reduce the box by this many characters wide. (Default 0)'$'\n''    --size lineCount         UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default 1)'$'\n''    text ...                 Text to put in the box'$'\n''    --help                   Flag. Optional. Display this help.'$'\n'''$'\n''Heading for section output'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    consoleHeadingBoxed Moving ...'$'\n'''
+helpPlain='Usage: consoleHeadingBoxed'$'\n'''$'\n''No documentation for consoleHeadingBoxed.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

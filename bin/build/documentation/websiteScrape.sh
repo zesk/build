@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="untested")
 rawComment="Scrape a website."$'\n'"Untested, and in progress. Do not use seriously."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url - URL. Required. Url to scrape recursively."$'\n'"Untested: true"$'\n'"Uses \`wget\` to fetch a site, convert it to HTML nad rewrite it for local consumption."$'\n'"Site is stored in a directory called \`host\` for the URL requested."$'\n'"This is not final yet and may not work properly."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/web.sh"
-sourceHash="1fcdcd2f89593d5b69e5f6e898f0f7281cff2e61"
+sourceHash="51e1573ca2c7c20f95b3413475f7afb24c7c0807"
 summary="Scrape a website."
 summaryComputed="true"
 untested="true"$'\n'""

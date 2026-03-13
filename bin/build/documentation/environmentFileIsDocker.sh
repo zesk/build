@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Ensure an environment file is compatible with non-quoted docker environment files"$'\n'"Argument: filename - Docker environment file to check for common issues"$'\n'"Return Code: 1 - if errors occur"$'\n'"Return Code: 0 - if file is valid"$'\n'""$'\n'""
 return_code="1 - if errors occur"$'\n'"0 - if file is valid"$'\n'""
 sourceFile="bin/build/tools/environment/convert.sh"
-sourceHash="84c434e3d773478cd2e8301530ba662623f81c49"
+sourceHash="4d007136f1e2261f58b857b7e3d2025f2416dafd"
 summary="Ensure an environment file is compatible with non-quoted docker environment"
 summaryComputed="true"
 usage="environmentFileIsDocker [ filename ]"

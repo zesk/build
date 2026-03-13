@@ -36,7 +36,7 @@ __hookApplicationFingerprint() {
     shift
   done
   home=$(catchReturn "$handler" buildHome) || return $?
-  catchReturn "$handler" hookRun --application "$home" application-files -print0 | xargs -0 -n 1 sha1sum | sort | shaPipe || return $?
+  catchReturn "$handler" hookRun --application "$home" application-files -print0 | xargs -0 -n 1 sha1sum | sort | textSHA || return $?
 }
 ___hookApplicationFingerprint() {
   # __IDENTICAL__ usageDocument 1

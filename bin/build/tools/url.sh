@@ -84,7 +84,7 @@ _urlSchemeDefaultPort() {
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: url - a Uniform Resource Locator
 # Argument: --prefix prefix - String. Optional. Prefix variable names with this string.
-# Argument: --uppercase - Flag. Optional. Output variable names in uppercase, not lowercase (the default).
+# Argument: --stringUppercase - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default).
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
 # Example:     echo $name
 urlParse() {
@@ -161,7 +161,7 @@ urlParse() {
       local variable part
       for part in url path name scheme user password host port portDefault error; do
         variable="$part"
-        ! $upperCase || variable=$(uppercase "$part")
+        ! $upperCase || variable=$(stringUppercase "$part")
         printf "%s%s=%s\n" "$prefix" "$variable" "$(quoteBashString "${!part}")"
       done
       : "$path" # handler warning
@@ -492,6 +492,27 @@ __urlOpenInnerLoop() {
   fi
 }
 
+__urlOpen() {
+  local handler="${FUNCNAME[0]#_}"
+
+  local binary && binary=$(catchReturn "$handler" buildEnvironmentGet BUILD_URL_BINARY) || return $?
+  if [ -z "$binary" ]; then
+    while IFS='' read -d$'\n' -r binary; do
+      if executableExists "$binary"; then
+        break
+      fi
+    done < <(catchReturn "$handler" __urlBinary) || return $?
+    if [ -z "$binary" ]; then
+      printf "%s %s\n" "OPEN: " "$(consoleLink "$url")"
+      return 0
+    fi
+  else
+    binary=$(validate "$handler" Executable "BUILD_URL_BINARY" "$binary") || return $?
+  fi
+  [ $# -gt 0 ] || catchArgument "$handler" "Require at least one URL" || return $?
+  catchEnvironment "$handler" "$binary" "$@" || return $?
+}
+
 # Summary: Default user agent string for web agents
 # A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)
 # stdout: String
@@ -674,25 +695,4 @@ urlFetch() {
 _urlFetch() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-__urlOpen() {
-  local handler="${FUNCNAME[0]#_}" binary
-
-  binary=$(catchReturn "$handler" buildEnvironmentGet BUILD_URL_BINARY) || return $?
-  if [ -z "$binary" ]; then
-    while IFS='' read -d$'\n' -r binary; do
-      if executableExists "$binary"; then
-        break
-      fi
-    done < <(catchReturn "$handler" __urlBinary) || return $?
-    if [ -z "$binary" ]; then
-      printf "%s %s\n" "OPEN: " "$(consoleLink "$url")"
-      return 0
-    fi
-  else
-    binary=$(validate "$handler" Executable "BUILD_URL_BINARY" "$binary") || return $?
-  fi
-  [ $# -gt 0 ] || catchArgument "$handler" "Require at least one URL" || return $?
-  catchEnvironment "$handler" "$binary" "$@" || return $?
 }

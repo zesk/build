@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Prints days (integer) since modified"$'\n'"Argument: file ... - File. Required. One or more files to examine"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Can not get modification time"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Can not get modification time"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="91d537b691b9a05e675b0b8e8fc9b5d80f144523"
+sourceHash="267159b8d14477b8207f311382f9bb4af7398472"
 summary="Prints days (integer) since modified"
 summaryComputed="true"
 usage="fileModifiedDays file ... [ --help ]"

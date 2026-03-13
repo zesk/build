@@ -1,4 +1,34 @@
 # v0.41.3
+parseBoolean|booleanParse|
+clampDigits|integerClamp|
+replaceFirstPattern|textReplaceFirst|
+stringReplace|textReplace|
+trimBoth|textTrimBoth|
+trimHead|textTrimHead|
+trimTail|textTrimTail|
+singleBlankLines|textSingleBlankLines|
+trimRightSpace|textTrimRight|
+trimLeftSpace|textTrimLeft|
+trimSpace|textTrim|
+removeFields|textRemoveFields|
+loadAverage|cpuLoadAverage|
+realPath|fileRealPath|
+runCount|executeCount|
+trimWords|stringTrimWords|
+unquote |stringUnquote |
+uppercase |stringUppercase |
+lowercase |stringLowercase |
+usageRequireBinary|executableRequire|
+usageRequireEnvironment|environmentRequire|
+veeGitTag|gitTagVee|
+watchDirectory|directoryWatch|
+shaPipe|textSHA|
+rotateLog|logRotate|
+rotateLogs|logsRotate|
+randomString|stringRandom|
+loopExecute|executeLoop|
+bigTextAt|decorate at|
+bigText|decorate big|
 
 # v0.41.2
 
@@ -21,7 +51,7 @@ decorate bold-white|decorate BOLD white|
 decorate bold-yellow|decorate BOLD yellow|
 alignLeft|textAlignLeft|
 alignRight|textAlignRight|
-cachedShaPipe | shaPipe --cache|
+cachedShaPipe | textSHA --cache|
 clearLine|consoleLineFill|
 debugOpenFiles|filesOpenStatus
 findUncaughtAssertions|bashFindUncaughtAssertions|

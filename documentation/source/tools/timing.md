@@ -14,4 +14,6 @@ Millisecond timing support when the underlying operating system supports it.
 
 {timingFormat}
 
+{timingDuration}
+
 {timingReport}

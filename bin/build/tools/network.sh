@@ -33,9 +33,9 @@ __networkConfigurationFiltered() {
 
   executableExists ifconfig || throwEnvironment "$handler" "Need ifconfig (net-tools) installed. not available in PATH: $PATH" || return $?
 
-  case "$(lowercase "${OSTYPE-}")" in
-  linux) ifconfig | grep "$patternNotGNU" | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
-  linux-gnu | darwin* | freebsd*) ifconfig | grep "$patternGNU " | trimSpace | cut -f 2 -d ' ' ;;
+  case "$(stringLowercase "${OSTYPE-}")" in
+  linux) ifconfig | grep "$patternNotGNU" | cut -f 2 -d : | textTrim | cut -f 1 -d ' ' ;;
+  linux-gnu | darwin* | freebsd*) ifconfig | grep "$patternGNU " | textTrim | cut -f 2 -d ' ' ;;
   *) throwEnvironment "$handler" "networkIPList Unsupported OSTYPE \"${OSTYPE-}\"" || return $? ;;
   esac
 }

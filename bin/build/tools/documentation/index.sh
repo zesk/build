@@ -92,7 +92,7 @@ _documentationIndexGenerate() {
       catchReturn "$handler" printf "%s" "" >"$functionsCache" || return $?
       while read -r functionName; do
         local lineNumber="${functionName%%:*}" comment
-        functionName=$(trimSpace "${functionName#*:}")
+        functionName=$(textTrim "${functionName#*:}")
         printf "%s %s %s\n" "$functionName" "$shellFile" "$lineNumber" | tee -a "$functionsCache" >>"$indexFile.unsorted"
         count=$((count + 1))
         comment=$(catchReturn "$handler" bashFileComment "$fullPath" "$lineNumber") || return $?

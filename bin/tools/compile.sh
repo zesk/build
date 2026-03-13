@@ -6,9 +6,9 @@
 #
 
 # Experimental - resulting file ends up being around 1MB
-# Example:     timing runCount 100 source bin/build/tools.sh ; timing runCount 100 source bin/build/tools-compiled.sh
-# Example:     runCount 100 source bin/build/tools.sh 8.628 seconds
-# Example:     runCount 100 source bin/build/tools-compiled.sh 7.728 seconds
+# Example:     timing executeCount 100 source bin/build/tools.sh ; timing executeCount 100 source bin/build/tools-compiled.sh
+# Example:     executeCount 100 source bin/build/tools.sh 8.628 seconds
+# Example:     executeCount 100 source bin/build/tools-compiled.sh 7.728 seconds
 buildToolsCompile() {
   local handler="_${FUNCNAME[0]}"
   local destroyFlag=false

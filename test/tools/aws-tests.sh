@@ -13,7 +13,7 @@ _testAWSIPAccessErrorHandler() {
 
 __awsTestSetup() {
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE HOME
-  usageRequireEnvironment returnMessage AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY HOME || return $?
+  environmentRequire returnMessage AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY HOME || return $?
   mockEnvironmentStart HOME "" AWS_PROFILE "" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" AWS_SECRET_ACCESS_KEY "$AWS_SECRET_ACCESS_KEY"
 }
 
@@ -49,7 +49,7 @@ testAWSIPAccess() {
 
   tempHome=$(fileTemporaryName "$handler" -d) || return $?
   HOME="$tempHome"
-  usageRequireEnvironment returnMessage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
+  environmentRequire returnMessage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -d "$HOME/.aws" ]; then
     returnEnvironment "No .aws directory should exist already" || return $?

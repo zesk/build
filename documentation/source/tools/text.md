@@ -4,19 +4,15 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-## Patterns
-
-{isPlain}
-
-## Filters
+# Filters
 
 {grepSafe}
 
-{replaceFirstPattern}
+{textReplaceFirst}
 
-{removeFields}
+{textRemoveFields}
 
-{clampDigits}
+{integerClamp}
 
 {printfOutputPrefix}
 
@@ -26,13 +22,15 @@
 
 {newlineHide}
 
-## Formatting
+# Formatting
 
 {textAlignLeft}
 
 {textAlignRight}
 
-## Cleanup ANSI text
+# ANSI text
+
+{isPlain}
 
 {consoleToPlain}
 
@@ -40,25 +38,25 @@
 
 {consolePlainLength}
 
-### Space trimming
+# Space
 
-{trimWords}
+{stringTrimWords}
 
-{trimSpace}
+{textTrim}
 
-{trimLeftSpace}
+{textTrimLeft}
 
-{trimRightSpace}
+{textTrimRight}
 
-{trimHead}
+{textTrimHead}
 
-{trimTail}
+{textTrimTail}
 
-{trimBoth}
+{textTrimBoth}
 
-{singleBlankLines}
+{textSingleBlankLines}
 
-## Finding or Calculating
+# Finding or Calculating
 
 {inArray}
 
@@ -86,26 +84,26 @@
 
 {fileEndsWithNewline}
 
-## Language-related
+# Language-related
 
 {plural}
 
 {pluralWord}
 
-{parseBoolean}
+{booleanParse}
 
-## Transformation
+# Transformation
 
-{lowercase}
+{stringLowercase}
 
-{uppercase}
+{stringUppercase}
 
-{shaPipe}
+{textSHA}
 
 {cannon}
 
-{stringReplace}
+{textReplace}
 
-## Random
+# Random
 
-{randomString}
+{stringRandom}

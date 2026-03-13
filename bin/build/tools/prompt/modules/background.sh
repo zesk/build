@@ -78,7 +78,7 @@ __backgroundProcess() {
     return 0
     ;;
   "monitor")
-    loopExecute --title "Background Process Monitor" --until 1 --delay 5 "$home/bin/build/tools.sh" backgroundProcess --report
+    executeLoop --title "Background Process Monitor" --until 1 --delay 5 "$home/bin/build/tools.sh" backgroundProcess --report || return $?
     return 0
     ;;
   "watch")
@@ -157,7 +157,7 @@ __backgroundProcess() {
   [ ${#command[@]} -gt 0 ] || throwArgument "$handler" "Requires a command" || return $?
 
   local id
-  id=$(catchReturn "$handler" shaPipe <<<"${condition[*]} ${command[*]}") || return $?
+  id=$(catchReturn "$handler" textSHA <<<"${condition[*]} ${command[*]}") || return $?
 
   local stateFile="$cache/process/$id/state" exists=true
   [ -f "$stateFile" ] || exists=false

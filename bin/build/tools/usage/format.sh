@@ -28,7 +28,7 @@
 # Argument: description - String. Required. The function description
 # Argument: returnCode - Integer. Required. The exit code of the function prior to showing handler
 # Argument: ... - String. Any additional description - output directly.
-# Requires: returnCodeString throwArgument trimSpace usageArgumentUnsignedInteger throwArgument decorate printf
+# Requires: returnCodeString throwArgument textTrim usageArgumentUnsignedInteger throwArgument decorate printf
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 __usageTemplate() {
   local handler="_${FUNCNAME[0]}" __saved=("$@")
@@ -53,15 +53,15 @@ __usageTemplate() {
       "$(decorate "$usageColor" Usage)" \
       "$(decorate info "$binName")" \
       "$(__documentationFormatArguments "$delimiter" <<<"$options")" \
-      "$(__usageGenerator "$((nSpaces + 2))" "$delimiter" <<<"$options" | markdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
+      "$(__usageGenerator "$((nSpaces + 2))" "$delimiter" <<<"$options" | markdownToConsole | textTrimTail | decorate wrap "    " "$(decorate reset --)")" \
       "$(markdownToConsole <<<"$description")" |
-      trimBoth
+      textTrimBoth
   else
     printf "%s: %s\n\n%s\n\n" \
       "$(decorate "$usageColor" Usage)" \
       "$(decorate info "$binName")" \
       "$(markdownToConsole <<<"$description")" |
-      trimBoth
+      textTrimBoth
   fi
   if [ "$returnCode" != "0" ] && buildDebugEnabled handler; then
     debuggingStack
@@ -101,10 +101,10 @@ __usageGenerator() {
     if ! IFS= read -r line; then
       lastLine=1
     fi
-    if [ -z "$(trimSpace "$line")" ]; then
+    if [ -z "$(textTrim "$line")" ]; then
       blankLine=true
     else
-      capsLine="$(lowercase -- "$line")"
+      capsLine="$(stringLowercase -- "$line")"
       if [ "${capsLine##*required}" != "$capsLine" ]; then
         labelPrefix=$labelRequiredPrefix
       else

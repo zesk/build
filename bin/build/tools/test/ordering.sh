@@ -91,7 +91,7 @@ ___testSuiteOrderingDefer() {
   done
   if [ "${#defer[@]}" -gt 0 ]; then
     if [ -n "$removePattern" ]; then
-      testLine="$(replaceFirstPattern "$removePattern" "" <<<"$testLine")"
+      testLine="$(textReplaceFirst "$removePattern" "" <<<"$testLine")"
     fi
     local item && for item in "${defer[@]}"; do
       catchEnvironment "$handler" printf "%s\n" "$testLine" >>"$deferDirectory/$item" || returnClean $? "${clean[@]}" || return $?

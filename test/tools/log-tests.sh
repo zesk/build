@@ -21,20 +21,20 @@ testLogFileRotate() {
 
   assertFileDoesNotExist "$tempDir/test.log" || return $?
 
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" "$count" || return $?
 
   decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
   # Not a file
   mkdir "$tempDir/test.log" || :
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" "$count" || return $?
   rm -rf "$tempDir/test.log/" || :
 
   decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
   # File now exists
   touch "$tempDir/test.log"
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" NOTINT || return $?
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" -423 || return $?
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" 0 || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" NOTINT || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" -423 || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" 0 || return $?
 
   # Remove for next test which should be clean
   rm "$tempDir/test.log" || return $?
@@ -53,7 +53,7 @@ testLogFileRotate() {
   #-----------------------------------------------------------------------------------------
   decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  logRotate "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
   assertFileExists "$tempDir/test.log.1" || return $?
   assertFileDoesNotExist "$tempDir/test.log.2" || return $?
@@ -65,7 +65,7 @@ testLogFileRotate() {
   #-----------------------------------------------------------------------------------------
   decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  logRotate "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
   assertFileExists "$tempDir/test.log.1" || return $?
   assertFileExists "$tempDir/test.log.2" || return $?
@@ -77,7 +77,7 @@ testLogFileRotate() {
   #-----------------------------------------------------------------------------------------
   decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  logRotate "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
   assertFileExists "$tempDir/test.log.1" || return $?
   assertFileExists "$tempDir/test.log.2" || return $?
@@ -89,7 +89,7 @@ testLogFileRotate() {
   #-----------------------------------------------------------------------------------------
   decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  logRotate "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
   assertFileExists "$tempDir/test.log.1" || return $?
   assertFileExists "$tempDir/test.log.2" || return $?
@@ -101,7 +101,7 @@ testLogFileRotate() {
   #-----------------------------------------------------------------------------------------
   decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  logRotate "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
   assertFileExists "$tempDir/test.log.1" || return $?
   assertFileExists "$tempDir/test.log.2" || return $?
@@ -115,7 +115,7 @@ testLogFileRotate() {
   rm -rf "$tempDir" || return $?
 
   printf "\n"
-  bigText "$name OK"
+  decorate big "$name OK"
 }
 
 # Tag: slow
@@ -135,22 +135,22 @@ testLogFileRotate1() {
   printf "%s %s\n" "${FUNCNAME[0]}" "$i"
   i=$((i + 1))
 
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" "$count" || return $?
 
   printf "%s %s\n" "${FUNCNAME[0]}" "$i"
   i=$((i + 1))
 
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" NOTINT || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" NOTINT || return $?
 
   printf "%s %s\n" "${FUNCNAME[0]}" "$i"
   i=$((i + 1))
 
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" -423 || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" -423 || return $?
 
   printf "%s %s\n" "${FUNCNAME[0]}" "$i"
   i=$((i + 1))
 
-  assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" 0 || return $?
+  assertNotExitCode --stderr-ok 0 logRotate "$tempDir/test.log" 0 || return $?
 
   printf "%s %s\n" "${FUNCNAME[0]}" "$i"
   i=$((i + 1))
@@ -163,7 +163,7 @@ testLogFileRotate1() {
   assertFileDoesNotExist "$tempDir/test.log.5" || return $?
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
-  rotateLog "$tempDir/test.log" "$count" || return $?
+  logRotate "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
   assertFileExists "$tempDir/test.log.1" || return $?
   assertEquals "$(fileSize "$tempDir/test.log")" 0 "log 0 was original log after $count rotations" || return $?
@@ -176,7 +176,7 @@ testLogFileRotate1() {
       decorate error "$tempDir got deleted i=$i" 1>&2
       return 1
     fi
-    rotateLog "$tempDir/test.log" "$count" || return $?
+    logRotate "$tempDir/test.log" "$count" || return $?
     assertFileExists "$tempDir/test.log" || return $?
     assertFileExists "$tempDir/test.log.1" || return $?
     assertEquals "$(fileSize "$tempDir/test.log")" 0 || return $?

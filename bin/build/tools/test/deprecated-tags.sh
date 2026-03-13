@@ -62,11 +62,11 @@ __testSuiteFilterTags() {
 
       [ ${#tags[@]} -eq 0 ] || defaultKeepIt=false
       catchEnvironment "$handler" bashFunctionComment "$sectionFile" "$item" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
-      IFS=$'\n' read -r -d "" -a testTags < <(grepSafe "Tag:" <"$tempComment" | removeFields 1 | tr ' ' '\n' | printfOutputSuffix "\n") || :
+      IFS=$'\n' read -r -d "" -a testTags < <(grepSafe "Tag:" <"$tempComment" | textRemoveFields 1 | tr ' ' '\n' | printfOutputSuffix "\n") || :
       ! $debugMode || printf "%s\n" "$(date "+%F %T"): $item" >>"$filtersFile"
       if [ "${#testTags[@]}" -gt 0 ]; then
         ! $debugMode || printf "%s\n" "bashFunctionComment \"$sectionFile\" \"$item\" > tempFile" >>"$filtersFile"
-        ! $debugMode || printf "%s: %s\n" "$(date "+%F %T")" "read -r -a testTags < <(grepSafe \"Tag:\" <\"tempFile\" | removeFields 1 | tr ' ' '\n' | printfOutputSuffix \"\n\") || :" >>"$filtersFile"
+        ! $debugMode || printf "%s: %s\n" "$(date "+%F %T")" "read -r -a testTags < <(grepSafe \"Tag:\" <\"tempFile\" | textRemoveFields 1 | tr ' ' '\n' | printfOutputSuffix \"\n\") || :" >>"$filtersFile"
       fi
       if [ "${testTags[0]-}" = "Stack:" ]; then
         statusMessage --last decorate error "Failed in function $item"

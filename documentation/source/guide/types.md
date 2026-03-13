@@ -41,8 +41,8 @@ our [documentation](./documentation.md). The types available for arguments or an
 - `File` - A file which which must exist in the file system.
 - `FileDirectory` - A file whose parent directory must exist in the file system.
 - `Link` - A link which must exist in the file system.
-- `RealDirectory` - A directory which is transformed via `realPath` to an absolute directory path which must exist.
-- `RealFile` - A file which is transformed via `realPath` to an absolute file path which must exist.
+- `RealDirectory` - A directory which is transformed via `fileRealPath` to an absolute directory path which must exist.
+- `RealFile` - A file which is transformed via `fileRealPath` to an absolute file path which must exist.
 - `RemoteDirectory` - A directory on a remote system.
 
 ### Application-relative Types

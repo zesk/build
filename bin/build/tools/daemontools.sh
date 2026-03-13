@@ -132,7 +132,7 @@ daemontoolsInstallService() {
   [ -n "$appUser" ] || throwEnvironment "$handler" "fileOwner $serviceFile returned blank" || return $?
 
   local binaryPath
-  binaryPath=$(realPath "$serviceFile") || throwEnvironment "$handler" "realPath $serviceFile" || return $?
+  binaryPath=$(fileRealPath "$serviceFile") || throwEnvironment "$handler" "fileRealPath $serviceFile" || return $?
 
   local target="$serviceHome/$serviceName" logTarget="$serviceHome/$serviceName/log"
 

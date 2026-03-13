@@ -14,7 +14,7 @@ __buildTestPlatformOutput() {
   if [ "$success" != true ]; then
     color="error" && verb="failed"
   fi
-  bigText "Test: $image" | decorate "$color"
+  decorate big "Test: $image" | decorate "$color"
   printf "%s %s %s\n" "$(decorate "$color" "$image")" "$verb" "$(decorate magenta "$(timingFormat "$elapsed") seconds")"
 }
 
@@ -101,7 +101,7 @@ buildTestPlatforms() {
     [ "${#ee[@]}" -eq 0 ] || for f in "${ee[@]}"; do
       catchEnvironment "$handler" cat "$f" >>"$testEnv" || return $?
     done
-    bigText "Test: $image" | decorate subtle
+    decorate big "Test: $image" | decorate subtle
 
     local start exitCode=0 elapsed logFile="$safeTestFiles/$pathName.log"
     start=$(timingStart)

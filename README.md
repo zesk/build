@@ -96,7 +96,7 @@ To load all functions:
     # shellcheck source=/dev/null
     if source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh"; then 
         decorate orange "The code is working."
-        bigText "Hooray."
+        decorate big "Hooray."
     else
         printf -- "%s\n" "No tools.sh" 1>&2 && false
     fi

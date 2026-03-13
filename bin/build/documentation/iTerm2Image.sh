@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="Output an image to the console"$'\n'"Argument: --width width - PositiveInteger. Width in columns to display image."$'\n'"Argument: --height height - PositiveInteger. Height in rows to display image."$'\n'"Argument: --preserve-aspect-ratio - Flag. Preserve the aspect ratio."$'\n'"Argument: --scale - Flag. Do not preserve the aspect ratio, scale the image."$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"stdout: No output, however, if in an iTerm2 terminal it will display an image in the console at the cursor position"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="ffdea6c44121242f377e23dddf0bd4cc7a3b1244"
+sourceHash="2d803e17fc57d89a3fbb35b7f034c946cc05c65a"
 stdout="No output, however, if in an iTerm2 terminal it will display an image in the console at the cursor position"$'\n'""
 summary="Output an image to the console"
 summaryComputed="true"

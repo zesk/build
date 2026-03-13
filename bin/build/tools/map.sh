@@ -49,8 +49,8 @@ _mapTokens() {
 # Argument: value - String. Optional. One or more values to map using said environment file
 # Argument: --prefix - String. Optional. Token prefix defaults to `{`.
 # Argument: --suffix - String. Optional. Token suffix defaults to `}`.
-# Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
-# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
+# Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `stringLowercase`)
+# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
 mapValue() {
   local handler="_${FUNCNAME[0]}"
 
@@ -129,7 +129,7 @@ _mapValue() {
 # Argument: value - String. Optional. One or more values to map using said environment file.
 #
 mapValueTrim() {
-  mapValue --handler "_${FUNCNAME[0]}" --replace-filter trimSpace "$@"
+  mapValue --handler "_${FUNCNAME[0]}" --replace-filter textTrim "$@"
 }
 _mapValueTrim() {
   # __IDENTICAL__ usageDocument 1
@@ -150,7 +150,7 @@ _mapValueTrim() {
 # Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
-# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
+# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE

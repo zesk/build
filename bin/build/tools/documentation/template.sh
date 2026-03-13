@@ -185,7 +185,7 @@ __documentationUnlinked() {
 # See: bashDocumentFunction
 # Document a function and generate a function template (markdown). To custom format any
 # of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}` such that
-# name matches the variable name (lowercase alphanumeric characters and underscores).
+# name matches the variable name (stringLowercase alphanumeric characters and underscores).
 #
 # Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
 # sample function `_bashDocumentationFormatter_return_code`.

@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Update packages lists and sources"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --verbose - Flag. Optional. Display progress to the terminal."$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: --force - Flag. Optional. Force even if it was updated recently."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="9446d27b896551a886e9f28cfed65cfe5e5451bf"
+sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
 summary="Update packages lists and sources"
 summaryComputed="true"
 usage="packageUpdate [ --help ] [ --verbose ] [ --manager packageManager ] [ --force ]"

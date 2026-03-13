@@ -94,7 +94,7 @@ ___aptStandardPackages() {
   local handler="$1" && shift
   printf "%s\n" apt-utils toilet toilet-fonts jq
   export BUILD_TEXT_BINARY
-  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="$(__bigTextBinary)"
+  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="$(__decorateBigBinary)"
 }
 
 # See: brew.sh apk.sh apt.sh macports.sh

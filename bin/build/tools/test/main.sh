@@ -163,7 +163,7 @@ __testSuite() {
     return 0
   fi
 
-  local prettyLoad && prettyLoad=$(decorate value "(Load $(loadAverage | head -n 1))")
+  local prettyLoad && prettyLoad=$(decorate value "(Load $(cpuLoadAverage | head -n 1))")
 
   catchReturn "$handler" buildEnvironmentLoad BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
@@ -487,12 +487,12 @@ __testSuite() {
 
   consoleLineFill
   if [ $finalReturnCode -eq 0 ]; then
-    bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
+    decorate big --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
     if $continueFlag; then
       printf "%s\n" "PASSED" >"$continueFile"
     fi
   else
-    bigText --bigger FAILED | decorate wrap "" "    " | decorate error | decorate wrap --fill "." "    "
+    decorate big --bigger FAILED | decorate wrap "" "    " | decorate error | decorate wrap --fill "." "    "
   fi
 
   local as=() && read -r -a as < <(catchReturn "$handler" assertStatistics) || return $?
@@ -513,7 +513,7 @@ __testSuite() {
 
 # Display the tags
 __testSuiteShowTags() {
-  local label="tag=" && removeFields 3 | tr ' ' $'\n' | grepSafe "$label" | sort -u | cut -c $((${#label} + 1))-
+  local label="tag=" && textRemoveFields 3 | tr ' ' $'\n' | grepSafe "$label" | sort -u | cut -c $((${#label} + 1))-
 }
 
 __testSuiteFunctionTested() {

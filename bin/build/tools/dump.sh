@@ -63,7 +63,7 @@ debuggingStack() {
   __debuggingStackCodeList "${sources[@]}" || :
   if $showExports; then
     printf -- "EXPORTS:\n"
-    declare -px | removeFields 2
+    declare -px | textRemoveFields 2
   fi
   ! $exitFlag || exit 0
 }
@@ -404,7 +404,7 @@ dumpLoadAverages() {
   done
 
   local averages=()
-  IFS=$'\n' read -d '' -r -a averages < <(catchEnvironment "$handler" loadAverage) || :
+  IFS=$'\n' read -d '' -r -a averages < <(catchEnvironment "$handler" cpuLoadAverage) || :
   catchEnvironment "$handler" decorate pair "Load averages:" "$(decorate each code "${averages[@]+"${averages[@]}"}")" || return $?
 }
 _dumpLoadAverages() {

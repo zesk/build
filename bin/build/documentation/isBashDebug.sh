@@ -12,7 +12,7 @@ foundNames=([0]="depends")
 rawComment="Returns whether the shell has the debugging flag set"$'\n'"Useful if you need to temporarily enable or disable it."$'\n'"Depends: -"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="456ef1cd03391bca402951a815d37ccf1ed2ab88"
+sourceHash="20ebc0aea7e5c7babe365d244e8c5a7c63f0c674"
 summary="Returns whether the shell has the debugging flag set"
 summaryComputed="true"
 usage="isBashDebug"

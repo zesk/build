@@ -14,7 +14,7 @@
 #
 
 __textLoader() {
-  __buildFunctionLoader __shaPipe text "$@"
+  __buildFunctionLoader __textSHA text "$@"
 }
 
 # Extract a range of lines from a file
@@ -59,14 +59,18 @@ _fileExtractLines() {
 }
 
 # `grep` but returns 0 when nothing matches
-# See: grep
-# Allow blank files or no matches -
+#
+# Allow blank files or no matches:
+#
 # - `grep` - returns 1 - no lines selected
 # - `grep` - returns 0 - lines selected
+#
 # Return Code: 0 - Normal operation
+#
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Passed directly to `grep`.
+# See: grep
 # Requires: grep returnMap
 grepSafe() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -77,7 +81,7 @@ _grepSafe() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Check if text contains plaintext only.
+# Check if text contains plain text only (no ANSI escape codes, etc.)
 # Argument: text - String. Required. Text to search for mapping tokens.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
@@ -143,14 +147,14 @@ _isMappable() {
 # Return Code: 0 - true
 # Return Code: 1 - false
 # Return Code: 2 - Neither
-# Requires: lowercase __help
+# Requires: stringLowercase __help
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Return code: - `0` - Text is plain
 # Return code: - `1` - Text contains non-plain characters
-parseBoolean() {
+booleanParse() {
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-  case "$(lowercase "${1-}")" in
+  case "$(stringLowercase "${1-}")" in
   y | yes | 1 | true)
     return 0
     ;;
@@ -160,16 +164,17 @@ parseBoolean() {
   esac
   return 2
 }
-_parseBoolean() {
+_booleanParse() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Hide newlines in text (to ensure single-line output or other manipulation)
+# Summary: Replace newlines in text with a replacement token for single-line output
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: text - String. Required. Text to replace.
-# Argument: replace - String. Optional. Replacement string for newlines.
+# Argument: replace - String. Optional. Replacement string for newlines. Default is `␤`
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # stdout: The text with the newline replaced with another character, suitable typically for single-line output
@@ -184,7 +189,6 @@ _newlineHide() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Quote strings for inclusion in shell quoted strings
 # Argument: text - Text to quote
 # Output: Single quotes are prefixed with a backslash
@@ -209,12 +213,12 @@ _escapeQuotes() {
 # Argument: replaceString - String. Thing to replace search string with.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
-replaceFirstPattern() {
+textReplaceFirst() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/1"
 }
-_replaceFirstPattern() {
+_textReplaceFirst() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -228,11 +232,11 @@ _replaceFirstPattern() {
 # INTERNAL: 1. `-e :a`: Creates a label `a` for looping
 # INTERNAL: 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
 # INTERNAL: 3. `/./!{N;ba}`: For blank lines at the end, it appends lines to the pattern space (`N`) until a non-blank line is found, then loops back to label `a`.
-trimBoth() {
+textTrimBoth() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
 }
-_trimBoth() {
+_textTrimBoth() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -242,11 +246,11 @@ _trimBoth() {
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
-trimHead() {
+textTrimHead() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e "/./!d" -e :r -e n -e br
 }
-_trimHead() {
+_textTrimHead() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -256,11 +260,11 @@ _trimHead() {
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
-trimTail() {
+textTrimTail() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
 }
-_trimTail() {
+_textTrimTail() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -272,11 +276,11 @@ _trimTail() {
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines where any blank lines are replaced with a single blank line.
-singleBlankLines() {
+textSingleBlankLines() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed '/^$/N;/^\n$/D'
 }
-_singleBlankLines() {
+_textSingleBlankLines() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -288,7 +292,7 @@ _singleBlankLines() {
 # Example:     {fn} "$token"
 # Example:     grep "$tokenPattern" | {fn} > "$tokensFound"
 # Summary: Trim whitespace of a bash argument
-trimRightSpace() {
+textTrimRight() {
   local handler="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
@@ -304,8 +308,8 @@ trimRightSpace() {
     catchEnvironment "$handler" sed 's/[[:blank:]]*$//' || return $?
   fi
 }
-_trimRightSpace() {
-  true || trimSpace "" # SC2120 fix
+_textTrimRight() {
+  true || textTrim "" # SC2120 fix
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -317,7 +321,7 @@ _trimRightSpace() {
 # Example:     {fn} "$token"
 # Example:     grep "$tokenPattern" | {fn} > "$tokensFound"
 # Summary: Trim whitespace of a bash argument
-trimLeftSpace() {
+textTrimLeft() {
   local handler="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
@@ -333,8 +337,8 @@ trimLeftSpace() {
     catchEnvironment "$handler" sed 's/^[[:blank:]]*//' || return $?
   fi
 }
-_trimLeftSpace() {
-  true || trimSpace "" # SC2120 fix
+_textTrimLeft() {
+  true || textTrim "" # SC2120 fix
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -344,11 +348,11 @@ _trimLeftSpace() {
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs trimmed lines
 # Example:     {fn} "$token"
-# Example:     grep "$tokenPattern" | trimSpace > "$tokensFound"
+# Example:     grep "$tokenPattern" | textTrim > "$tokensFound"
 # Summary: Trim whitespace of a bash argument
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
-trimSpace() {
+textTrim() {
   local handler="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
@@ -366,8 +370,8 @@ trimSpace() {
     catchEnvironment "$handler" awk "{\$1=\$1};NF" || return $?
   fi
 }
-_trimSpace() {
-  true || trimSpace "" # SC2120 fix
+_textTrim() {
+  true || textTrim "" # SC2120 fix
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -438,11 +442,11 @@ stringContainsInsensitive() {
 
   [ -n "$haystack" ] || return 1
   shift
-  haystack=$(lowercase "$haystack") || :
+  haystack=$(stringLowercase "$haystack") || :
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || continue
     local needle
-    needle=$(lowercase "$1") || :
+    needle=$(stringLowercase "$1") || :
     [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
     shift
   done
@@ -493,11 +497,11 @@ stringFoundInsensitive() {
 
   local element arrayElement
 
-  element="$(lowercase "${1-}")"
+  element="$(stringLowercase "${1-}")"
   [ -n "$element" ] || throwArgument "$handler" "needle is blank" || return $?
   shift || return 1
   for arrayElement; do
-    arrayElement=$(lowercase "$arrayElement")
+    arrayElement=$(stringLowercase "$arrayElement")
     if [ "${arrayElement#*"$element"}" != "$arrayElement" ]; then
       return 0
     fi
@@ -546,11 +550,11 @@ stringBeginsInsensitive() {
 
   [ -n "$haystack" ] || return 1
   shift
-  haystack=$(lowercase "$haystack") || :
+  haystack=$(stringLowercase "$haystack") || :
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || continue
     local needle
-    needle=$(lowercase "$1") || :
+    needle=$(stringLowercase "$1") || :
     [ "${haystack#"$needle"}" = "$haystack" ] || return 0
     shift
   done
@@ -566,10 +570,10 @@ _stringBeginsInsensitive() {
 #
 # Argument: wordCount - PositiveInteger. Words to output
 # Argument: word0 ... - EmptyString. One or more words to output
-# Example:     printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
+# Example:     printf "%s: %s\n" "Summary:" "$(stringTrimWords 10 $description)"
 # Tested: No
 #
-trimWords() {
+stringTrimWords() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -589,7 +593,7 @@ trimWords() {
   result=$(printf '%s ' "${words[@]+${words[@]}}")
   printf %s "${result%% }"
 }
-_trimWords() {
+_stringTrimWords() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -705,7 +709,7 @@ fileLineCount() {
     *)
       local file total
       file="$(validate "$handler" File "$argument" "${1-}")" || return $?
-      total=$(catchEnvironment "$handler" wc -l <"$file" | trimSpace) || return $?
+      total=$(catchEnvironment "$handler" wc -l <"$file" | textTrim) || return $?
       if $newlineCheck; then
         if [ -s "$file" ]; then
           # File is not empty
@@ -735,7 +739,7 @@ fileLineCount() {
       fileLineCount --newline --handler "$handler" "$temp" || return $?
       catchReturn "$handler" rm -f "$temp" || return $?
     else
-      printf "%d\n" "$(catchEnvironment "$handler" wc -l | trimSpace)" || return $?
+      printf "%d\n" "$(catchEnvironment "$handler" wc -l | textTrim)" || return $?
     fi
   fi
 }
@@ -805,16 +809,16 @@ _plural() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Convert text to lowercase
+# Convert text to stringLowercase
 #
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
 # Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: text - EmptyString. Required. Text to convert to lowercase
-# stdout: `String`. The lowercase version of the `text`.
+# Argument: text - EmptyString. Required. Text to convert to stringLowercase
+# stdout: `String`. The stringLowercase version of the `text`.
 # Requires: tr
-lowercase() {
+stringLowercase() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
@@ -824,7 +828,7 @@ lowercase() {
     shift
   done
 }
-_lowercase() {
+_stringLowercase() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -836,9 +840,9 @@ _lowercase() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: text - EmptyString. Required. text to convert to uppercase
-# stdout: `String`. The uppercase version of the `text`.
+# stdout: `String`. The stringUppercase version of the `text`.
 # Requires: tr
-uppercase() {
+stringUppercase() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
@@ -848,7 +852,7 @@ uppercase() {
     shift
   done
 }
-_uppercase() {
+_stringUppercase() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -886,7 +890,7 @@ consolePlainLength() {
     local text && text="$(consoleToPlain <<<"$*")"
     printf "%d\n" "${#text}"
   else
-    local count && count=$(trimSpace "$(consoleToPlain | wc -c)")
+    local count && count=$(textTrim "$(consoleToPlain | wc -c)")
     # wc -c ALWAYS counts an added newline so remove it from results
     printf "%d\n" "$((count - 1))"
   fi
@@ -978,31 +982,31 @@ __consoleTrimWidth() {
 # Argument: --cache cacheDirectory - Directory. Cache file cache values here for speed optimization.
 # Depends: sha1sum
 # Summary: SHA1 checksum of standard input
-# Example:     shaPipe < "$fileName"
-# Example:     shaPipe "$fileName0" "$fileName1"
+# Example:     textSHA < "$fileName"
+# Example:     textSHA "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
-# BUILD_DEBUG: shaPipe - Outputs all requested shaPipe calls to log called `shaPipe.log`.
+# BUILD_DEBUG: textSHA - Outputs all requested textSHA calls to log called `textSHA.log`.
 # stdin: any file
 # stdout: `String`. A hexadecimal string which uniquely represents the data in `stdin`.
-shaPipe() {
+textSHA() {
   __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_shaPipe() {
+_textSHA() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Depends: sha1sum, /dev/random
-# Description: Outputs 40 random hexadecimal characters, lowercase.
-# Example:     testPassword="$(randomString)"
+# Description: Outputs 40 random hexadecimal characters, stringLowercase.
+# Example:     testPassword="$(stringRandom)"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 # stdout: `String`. A random hexadecimal string.
-randomString() {
+stringRandom() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
 }
-_randomString() {
+_stringRandom() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1038,8 +1042,8 @@ stringOffsetInsensitive() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local length=${#2}
   local needle haystack
-  needle=$(lowercase "${1-}")
-  haystack=$(lowercase "${2-}")
+  needle=$(stringLowercase "${1-}")
+  haystack=$(stringLowercase "${2-}")
   local substring="${haystack/$needle*/}"
   local offset="${#substring}"
   if [ "$offset" -eq "$length" ]; then
@@ -1057,7 +1061,7 @@ _stringOffsetInsensitive() {
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 # stdin: A file with fields separated by spaces
 # stdout: The same file with the first `fieldCount` fields removed from each line.
-removeFields() {
+textRemoveFields() {
   local handler="_${FUNCNAME[0]}"
   local fieldCount=""
 
@@ -1080,7 +1084,7 @@ removeFields() {
   fieldCount=${fieldCount:-1}
   sed -r 's/^([^ ]+ +){'"$fieldCount"'}//'
 }
-_removeFields() {
+_textRemoveFields() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1158,7 +1162,7 @@ _printfOutputSuffix() {
 # Argument: haystack - EmptyString. Optional. String to modify. If not supplied, reads from standard input.
 # stdin: If no haystack supplied reads from standard input and replaces the string on each line read.
 # stdout: New string with needle replaced
-stringReplace() {
+textReplace() {
   local handler="_${FUNCNAME[0]}"
 
   local needle="" replacement="" sedCommand="" hasTextArguments=false
@@ -1193,7 +1197,7 @@ stringReplace() {
   [ -n "$sedCommand" ] || throwArgument "$handler" "Missing replacement" || return $?
   sed -e "$sedCommand"
 }
-_stringReplace() {
+_textReplace() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

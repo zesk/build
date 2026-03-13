@@ -12,7 +12,7 @@ __testSuiteCacheInitialize() {
   local testsCache="$1" && shift
 
   # Note this uses the FILE path, not the file contents
-  local cacheMarker && cacheMarker=$(shaPipe <<<"$testsCache") || return $?
+  local cacheMarker && cacheMarker=$(textSHA <<<"$testsCache") || return $?
   if [ ! -f "$testCacheDirectory/.loaded.$cacheMarker" ]; then
     catchReturn "$handler" tar zxf --cd "$testCacheDirectory" "$testsCache" || return $?
     catchReturn "$handler" find "$testCacheDirectory/" -type f -name ".loaded.*" -delete || return $?
@@ -26,7 +26,7 @@ __testSuiteCacheGenerate() {
   local testsCache="$1" && shift
 
   # Note this uses the FILE path, not the file contents
-  local cacheMarker && cacheMarker=$(shaPipe <<<"$testsCache") || return $?
+  local cacheMarker && cacheMarker=$(textSHA <<<"$testsCache") || return $?
   catchReturn "$handler" muzzle pushd "$testCacheDirectory" || return $?
   local undo=(muzzle popd)
   catchReturn "$handler" tarCreate "$testsCache" -T - < <(find . -type f ! -path '*/\.*/*') || returnUndo $? "${undo[@]}" || return $?

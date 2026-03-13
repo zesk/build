@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin")
 rawComment="Download an file from remote to terminal host"$'\n'"Argument: file - File. Optional. File to download."$'\n'"Argument: --name name - String. Optional. Target name of the file once downloaded."$'\n'"Argument:"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"stdin: file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="ffdea6c44121242f377e23dddf0bd4cc7a3b1244"
+sourceHash="2d803e17fc57d89a3fbb35b7f034c946cc05c65a"
 stdin="file"$'\n'""
 summary="Download an file from remote to terminal host"
 summaryComputed="true"

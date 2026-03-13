@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Install a sound file for notifications"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: soundFile ... - File. Required. Sound file(s) to install in user library."$'\n'"Argument: --create - Flag. Optional. Create sound directory if it does not exist."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/darwin.sh"
-sourceHash="17fa598a8b0e744def5b310cbfb745211e708bdd"
+sourceHash="6e18b1e362bd75e1e63eeefba41b20b891294878"
 summary="Install a sound file for notifications"
 summaryComputed="true"
 usage="darwinSoundInstall [ --help ] soundFile ... [ --create ]"

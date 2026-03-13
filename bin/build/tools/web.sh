@@ -38,9 +38,8 @@ urlMatchesLocalFileSize() {
     shift
   done
 
-  local remoteSize localSize
-  localSize=$(catchReturn "$handler" fileSize "$file") || return $?
-  remoteSize=$(catchReturn "$handler" urlContentLength "$url") || return $?
+  local localSize && localSize=$(catchReturn "$handler" fileSize "$file") || return $?
+  local remoteSize && remoteSize=$(catchReturn "$handler" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
   isPositiveInteger "$remoteSize" || throwEnvironment "$handler" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
 
@@ -73,13 +72,12 @@ urlContentLength() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
-      local tempFile url remoteSize
-      tempFile=$(fileTemporaryName "$handler") || return $?
-      url=$(validate "$handler" URL "url" "$1") || return $?
+      local tempFile && tempFile=$(fileTemporaryName "$handler") || return $?
+      local url && url=$(validate "$handler" URL "url" "$1") || return $?
       catchEnvironment "$handler" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
-      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || throwEnvironment "$handler" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
+      local remoteSize && remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || throwEnvironment "$handler" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
       catchReturn "$handler" rm -f "$tempFile" || return $?
-      remoteSize="$(trimSpace "$remoteSize")"
+      remoteSize="$(textTrim "$remoteSize")"
       isUnsignedInteger "$remoteSize" || throwEnvironment "$handler" "Remote content length was non-integer: $remoteSize" || return $?
       printf "%d\n" $((remoteSize + 0))
       ;;
@@ -107,10 +105,9 @@ _hostTTFB() {
 
 _watchFile() {
   decorate info "Watching $1"
-  local line
-  while IFS='' read -r line; do
+  local line && while IFS='' read -r line; do
     if [ "${line}" != "${line#--}" ]; then
-      line=$(trimSpace "${line##.*--}")
+      line=$(textTrim "${line##.*--}")
       statusMessage --last decorate green "$line"
     fi
   done
@@ -149,9 +146,8 @@ websiteScrape() {
   done
   [ -z "$url" ] || throwArgument "$handler" "Need URL" || return $?
 
-  local logFile progressFile
-  logFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.log") || return $?
-  progressFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.progress.log") || return $?
+  local logFile && logFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.log") || return $?
+  local progressFile && progressFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.progress.log") || return $?
 
   catchReturn "$handler" packageWhich wget wget || return $?
 
@@ -162,11 +158,13 @@ websiteScrape() {
   aa+=(--user-agent="Mozilla/4.0 (compatible; MSIE 10.0; Windows NT 5.1)")
   aa+=(-r --level=5 -t 10 --random-wait --force-directories --html-extension)
   aa+=(--no-parent --convert-links --backup-converted --page-requisites)
-  local pid
-  pid=$(
+  local pid && pid=$(
     wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!
   ) || returnClean $? "$logFile" || return $?
+  if ! isUnsignedInteger "$pid"; then
+    throwEnvironment "$handler" "Unable to run wget in the background: $(decorate each code wget "${aa[@]}" "$url")" || return $?
+  fi
   statusMessage decorate success "Launched scraping process $(decorate code "$pid") ($progressFile)"
   _watchFile "$progressFile"
 }

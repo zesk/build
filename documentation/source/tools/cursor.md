@@ -10,4 +10,4 @@
 
 {plasterLines}
 
-{bigTextAt}
+{decorate at}

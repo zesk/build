@@ -154,7 +154,7 @@ __usageDocument() {
       # ********************************************************************************************************************
       if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
       # ********************************************************************************************************************
-      description=$(trimTail <<<"$description")
+      description=$(textTrimTail <<<"$description")
 
       [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
       __usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" name="$name" mapEnvironment

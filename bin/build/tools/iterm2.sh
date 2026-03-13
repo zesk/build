@@ -489,7 +489,7 @@ iTerm2SetColors() {
   if [ 0 -eq "${#colorSettings[@]}" ]; then
     ! $verboseFlag || statusMessage decorate info "Reading colors from stdin"
     while read -r colorSetting; do
-      colorSetting=$(trimSpace "$colorSetting")
+      colorSetting=$(textTrim "$colorSetting")
       [ -n "$colorSetting" ] || continue
       [ "$colorSetting" = "${colorSetting#\#}" ] || continue
       colorSettings+=("$colorSetting")
@@ -563,7 +563,7 @@ __iTerm2SetColors() {
     srgb | rgb | p3) ;; *) throwArgument "$handler" "Invalid color space $(decorate error "$colorSpace") in $(decorate code "$colorValue")" || return $? ;;
     esac
   fi
-  colorCode=$(uppercase "$colorCode")
+  colorCode=$(stringUppercase "$colorCode")
   case "$colorCode" in
   [[:xdigit:]]*) ;;
   *) throwArgument "$handler" "Invalid hexadecimal color: $(decorate error "$colorCode") in $(decorate code "$colorValue")" || return $? ;;
@@ -614,7 +614,7 @@ iTerm2Attention() {
 
       local result=0
 
-      parseBoolean "$argument" || result=$?
+      booleanParse "$argument" || result=$?
       case "$result" in 0 | 1)
         ! $verboseFlag || statusMessage decorate info "Requesting attention: $result"
         # Success (exit code 0) sends 1 to start attraction

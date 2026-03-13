@@ -31,8 +31,7 @@ timing() {
   done
 
   [ -n "$name" ] || name="$*"
-  local start exitCode=0
-  start=$(timingStart)
+  local start exitCode=0 && start=$(timingStart)
   isCallable "${1-}" || throwArgument "$handler" "${1-} must be callable" || return $?
   catchReturn "$handler" "$@" || exitCode="$?"
   timingReport "$start" "$name"
@@ -55,8 +54,7 @@ _timing() {
 timingElapsed() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local start
-  start=$(validate "$handler" UnsignedInteger timingOffset "${1-}") && shift || return $?
+  local start && start=$(validate "$handler" UnsignedInteger timingOffset "${1-}") && shift || return $?
   printf "%d\n" "$(($(__timestamp) - start))"
 }
 _timingElapsed() {
@@ -94,11 +92,9 @@ timingFormat() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
-    local delta="$1" seconds remainder text
+    local delta="$1"
     if isUnsignedInteger "$delta"; then
-      seconds=$((delta / 1000))
-      remainder=$((delta % 1000))
-      text=$(printf -- "%d.%03d\n" "$seconds" "$remainder")
+      local seconds=$((delta / 1000)) remainder=$((delta % 1000)) text && text=$(printf -- "%d.%03d\n" "$seconds" "$remainder")
       # Lazy but works
       text=${text%0} && text=${text%0} && text=${text%0} && text=${text%.}
       printf "%s\n" "$text"
@@ -153,23 +149,80 @@ timingReport() {
 
   if isUnsignedInteger "$start"; then
     local prefix=""
-    if [ $# -gt 0 ]; then
-      prefix="$(decorate "$color" "$@") "
-    fi
-    local value end delta
-    end=$(timingStart)
-    delta=$((end - start))
+    [ $# -eq 0 ] || prefix="$(decorate "$color" "$@") "
+    local end && end=$(timingStart)
+    local delta=$((end - start))
     if [ "$delta" -lt 0 ]; then
       printf "%s%s\n" "$prefix" "$(decorate BOLD red "$end - $start => $delta NEGATIVE")"
     else
-      value=$(timingFormat "$delta") || :
-      printf "%s%s\n" "$prefix" "$(decorate BOLD magenta "$value $(plural "$value" second seconds)")"
+      local value && value=$(timingDuration "$delta") || :
+      printf "%s%s\n" "$prefix" "$(decorate BOLD magenta "$value") $(decorate subtle "[$delta]")"
     fi
   else
     printf "%s %s %s\n" "$*" "$(decorate BOLD red "$start")" "$(decorate warning "(not integer)")"
   fi
 }
 _timingReport() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Output timing like "1 day, 2 hours, 3 minutes, 4 seconds, 5 ms"
+# Argument: duration - UnsignedInteger. Optional. Timing to output
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+timingDuration() {
+  local handler="_${FUNCNAME[0]}"
+
+  local durations=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *) durations+=("$(validate "$handler" Number duration "$argument")") ;;
+    esac
+    shift
+  done
+
+  local unitNames=("second" "minute" "hour" "day" "week")
+  local unitTotals=(60 60 24 7)
+  local duration && for duration in "${durations[@]}"; do
+    if [ "$duration" -lt 1000 ]; then
+      printf "%sms\n" "$duration"
+    else
+      local found=() fraction=$((duration % 1000))
+      duration=$((duration / 1000))
+      local index unitName unitTotal && for index in "${!unitNames[@]}"; do
+        unitName=${unitNames[index]} unitTotal=${unitTotals[index]}
+        if [ "$duration" -ge "$unitTotal" ]; then
+          unitCount=$((duration % unitTotal))
+          if [ $unitCount -gt 0 ]; then
+            found=("$(pluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")
+          fi
+          duration=$((duration / unitTotal))
+        else
+          unitCount=$duration
+          found=("$(pluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")
+          break
+        fi
+      done
+      [ "$fraction" -eq 0 ] || found=("${found[@]+"${found[@]}"}" "${fraction}ms")
+      local output && output=$(printf "%s, " "${found[@]}") || return $?
+      printf "%s\n" "${output%, }"
+    fi
+  done
+}
+_timingDuration() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

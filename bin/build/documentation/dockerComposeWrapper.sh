@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Wrapper for \`docker-compose\` or \`docker compose\`"$'\n'"Argument: ... - Arguments. Passed to \`docker compose\` command or equivalent"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="2b8b33a878ab55849ee3b515c1d66630e3b166aa"
+sourceHash="783c382a3fdcc281bcdc87ece102744a5053324f"
 summary="Wrapper for \`docker-compose\` or \`docker compose\`"
 summaryComputed="true"
 usage="dockerComposeWrapper [ ... ]"

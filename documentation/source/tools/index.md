@@ -140,7 +140,7 @@ Wrappers for these are in [package tools](./package.md).
 - [MacPorts](./macports.md)
 - [Yum](./yum.md) (Future)
 
-We have added platform-generic installation names (see {link:packageGroupInstall}).
+We have added platform-generic installation names (see [packageGroupInstall](../tools/package.md#packagegroupinstall)).
 
 # How to include in your scripts
 

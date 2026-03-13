@@ -18,9 +18,9 @@ __documentationEnvironmentFileParse() {
   description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
   descriptionLineCount=$(printf "%s\n" "$description" | catchReturn "$handler" fileLineCount) || return $?
 
-  category="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Category:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
+  category="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Category:" "$envFile" | cut -f 2 -d ":" | textTrim)"
   [ -n "$category" ] || category="Uncategorized"
-  type="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Type:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
+  type="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Type:" "$envFile" | cut -f 2 -d ":" | textTrim)"
 
   if [ "$descriptionLineCount" -le 2 ]; then
     shortDesc="${description//$'\n'/ }"
@@ -31,7 +31,7 @@ __documentationEnvironmentFileParse() {
   environmentValueWrite description "$description"
   environmentValueWrite descriptionLineCount "$descriptionLineCount"
   environmentValueWrite category "$category"
-  environmentValueWrite categoryId "$(lowercase "${category// /-}")"
+  environmentValueWrite categoryId "$(stringLowercase "${category// /-}")"
   environmentValueWrite type "$type"
   environmentValueWrite summary "$shortDesc"
 }

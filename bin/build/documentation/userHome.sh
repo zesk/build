@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="The current user HOME (must exist)"$'\n'"Argument: pathSegment - String. Optional. Add these path segments to the HOME directory returned. Does not create them."$'\n'"No directories *should* be created by calling this, nor should any assumptions be made about the ability to read or write files in this directory."$'\n'"Return Code: 1 - Issue with \`buildEnvironmentGet HOME\` or \$HOME is not a directory (say, it's a file)"$'\n'"Return Code: 0 - Home directory exists."$'\n'""$'\n'""
 return_code="1 - Issue with \`buildEnvironmentGet HOME\` or \$HOME is not a directory (say, it's a file)"$'\n'"0 - Home directory exists."$'\n'""
 sourceFile="bin/build/tools/user.sh"
-sourceHash="3e129c267173e6702926193e8e7d4f847f1f0619"
+sourceHash="3afe5553f0bdff164dee304b54ad4be4444f7c32"
 summary="The current user HOME (must exist)"
 summaryComputed="true"
 usage="userHome [ pathSegment ]"

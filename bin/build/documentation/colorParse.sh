@@ -11,7 +11,7 @@ foundNames=([0]="stdin" [1]="argument")
 rawComment="Parse a color and output R G B decimal values"$'\n'"stdin: list:colors"$'\n'"Argument: color - String. Optional. Color to parse."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Takes arguments or stdin."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="9f54e9ae3d6bd1960826e3412b3edfd9c241f895"
+sourceHash="bdf073eb6d0e0790651cc6c692be3c1964cf5e39"
 stdin="list:colors"$'\n'""
 summary="Parse a color and output R G B decimal values"
 summaryComputed="true"

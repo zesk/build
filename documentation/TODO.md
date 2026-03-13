@@ -1,18 +1,18 @@
 # Current plans
 
-- Ensure all functions have all code paths executed (Added: July 2025)
-- `usage.sh` and related `usageArgument` will be moved to a less verbose type-checking interface modeled after the
-  `decorate` pattern which seemed to work well. Called `valdiate` - tests have been added - need to migrate and
-  deprecate. (Added: 2025 - April)
-- Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling) (Added: 2025 -
-  January)
-    - Check all files for any occurrences of this and list here.
-- Move `docs` generation to a `mkdocs` [plugin](https://www.mkdocs.org/dev-guide/plugins/) perhaps (Added: 2025 -
-  January)
-- Start writing some tutorials on how to get it set up and working (video?) (Added: 2025 - January)
+- Heading towards a 1.0 release
 
 ## Done
 
+- 2026 - March - Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling) (Added: 2025 -
+  January)
+- 2025 - September - `usage.sh` and related `usageArgument` will be moved to a less verbose type-checking interface modeled after the
+  `decorate` pattern which seemed to work well. Called `valdiate` - tests have been added - need to migrate and
+  deprecate. (Added: 2025 - April)
+- 2025 - April - Coverage - Ensure all functions have all code paths executed (Added: July 2025)
+- 2025 - February - Start writing some tutorials on how to get it set up and working (Added: 2025 - January)
+- 2025 - February - Move `docs` generation to a `mkdocs` [plugin](https://www.mkdocs.org/dev-guide/plugins/) perhaps (Added: 2025 -
+  January)
 - 2025 - September - Add loading functions for code sections which are used less frequently.
 - 2025 - August - Ensure all temporary files are cleaned up by all functions (Added: July 2025)
 - 2025 - February - "Work on 30-minute build timing or make it faster somehow" - Added `--tag` to `testSuite` to skip
@@ -75,7 +75,7 @@
 - bashPromptModule_dotFilesWatcher
 - bashPromptModule_reloadChanges
 
-- bigTextAt
+- decorate at
 
 # Docker
 
@@ -90,7 +90,7 @@
 - cachedShaPipe
 - characterClassReport
 - characterClasses
-- clampDigits
+- integerClamp
 - colorMultiply
 - colorNormalize
 - colorParse
@@ -229,7 +229,7 @@
 - consoleHeadingLine
 - linkRename
 - listCleanDuplicates
-- loopExecute
+- executeLoop
 - manPathCleanDuplicates
 - manPathConfigure
 - manPathRemove
@@ -247,7 +247,7 @@
 - packageMapping
 - packageUninstall
 - packageUpgrade
-- parseBoolean
+- booleanParse
 - pathConfigure
 - pathRemove
 - phpTailLog
@@ -260,8 +260,8 @@
 - processOpenPipes
 - pythonPackageInstalled
 - returnClean
-- rotateLogs
-- shaPipe
+- logRotates
+- textSHA
 - sshSetup
 - stringContainsInsensitive
 - stringOffset
@@ -270,9 +270,9 @@
 - usageArgumentUnknown
 - usageDocumentSimple
 - usageGenerator
-- usageRequireBinary
+- executableRequire
 - validateFileContents
-- veeGitTag
+- gitTagVee
 - websiteScrape
 
 ## Slowest tests 2025
@@ -383,7 +383,7 @@ On a "2x" machine:
 - bashStripComments
 - bashUserInput
 - stringBegins
-- bigTextAt
+- decorate at
 - bitbucketContainer
 - brewInstall
 - buildDevelopmentLink
@@ -392,7 +392,7 @@ On a "2x" machine:
 - cachedShaPipe
 - characterClassReport
 - characterClasses
-- clampDigits
+- integerClamp
 - colorMultiply
 - colorNormalize
 - colorParse
@@ -556,8 +556,8 @@ On a "2x" machine:
 - consoleHeadingLine
 - linkRename
 - listCleanDuplicates
-- loadAverage
-- loopExecute
+- cpuLoadAverage
+- executeLoop
 - manPathCleanDuplicates
 - manPathConfigure
 - manPathRemove
@@ -580,7 +580,7 @@ On a "2x" machine:
 - packageMapping
 - packageUninstall
 - packageUpgrade
-- parseBoolean
+- booleanParse
 - pathCleanDuplicates
 - pathConfigure
 - pathRemove
@@ -594,10 +594,10 @@ On a "2x" machine:
 - plasterLines
 - processOpenPipes
 - quoteBashString
-- replaceFirstPattern
-- rotateLogs
+- textReplaceFirst
+- logRotates
 - sedReplacePattern
-- shaPipe
+- textSHA
 - contextShow
 - sshSetup
 - stringContainsInsensitive
@@ -608,9 +608,9 @@ On a "2x" machine:
 - usageDocumentComplex
 - usageDocumentSimple
 - usageGenerator
-- usageRequireBinary
+- executableRequire
 - validateFileContents
-- veeGitTag
+- gitTagVee
 - websiteScrape
 - hookFind
 

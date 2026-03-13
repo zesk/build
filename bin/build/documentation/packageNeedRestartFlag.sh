@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some point?"$'\n'"Argument: value - Set the restart flag to this value (blank to remove)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="9446d27b896551a886e9f28cfed65cfe5e5451bf"
+sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
 summary="INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some"
 summaryComputed="true"
 usage="packageNeedRestartFlag [ value ]"

@@ -46,7 +46,7 @@ __linkRename() {
 }
 
 # Requires: readlink
-__realPath() {
+__fileRealPath() {
   readlink -f -n "$@"
 }
 
@@ -64,7 +64,7 @@ __testPlatformName() {
   printf -- "%s\n" "darwin"
 }
 
-__bigTextBinary() {
+__decorateBigBinary() {
   printf "%s\n" "figlet"
 }
 

@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Install a package group"$'\n'"Argument: group - String. Required. Currently allowed: \"python\""$'\n'"Any unrecognized groups are installed using the name as-is."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="9446d27b896551a886e9f28cfed65cfe5e5451bf"
+sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
 summary="Install a package group"
 summaryComputed="true"
 usage="packageGroupInstall group"

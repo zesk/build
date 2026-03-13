@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Create a link"$'\n'"Argument: target - Exists. File. Source file name or path."$'\n'"Argument: linkName - String. Required. Link short name, created next to \`target\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="91d537b691b9a05e675b0b8e8fc9b5d80f144523"
+sourceHash="267159b8d14477b8207f311382f9bb4af7398472"
 summary="Create a link"
 summaryComputed="true"
 usage="linkCreate [ target ] linkName"

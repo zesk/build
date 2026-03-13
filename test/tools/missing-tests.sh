@@ -38,14 +38,14 @@ testEverythingElse() {
   #  bashRecursionDebug
   #  bashShowUsage
   #  bashUserInput
-  #  bigTextAt
+  #  decorate at
   #  bitbucketContainer
   #  bitbucketGetVariable
   #  buildDevelopmentLink
   #  buildEnvironmentContext
   #  buildEnvironmentGetDirectory
   #  cachedShaPipe
-  #  clampDigits
+  #  integerClamp
 
   ## COLORS
   #  colorMultiply
@@ -127,7 +127,7 @@ testEverythingElse() {
   #  isVisualStudioCode
   #  consoleHeadingLine
   #  linkRename
-  #  loopExecute
+  #  executeLoop
   #  manPathCleanDuplicates
   #  mapValueTrim
   #  markdownIndentHeading
@@ -135,10 +135,10 @@ testEverythingElse() {
   #  phpTailLog
   #  phpTest
   #  pipeRunner
-  #  rotateLogs
+  #  logRotates
   #  sshSetup
   #  usageDocumentSimple
-  #  usageRequireBinary
+  #  executableRequire
   #  validateFileContents
 
   # VALIDATE
@@ -148,7 +148,7 @@ testEverythingElse() {
 
   # Likely do not need tests or are harder to test
   #  processOpenPipes
-  #  veeGitTag
+  #  gitTagVee
   #  websiteScrape
   #  backgroundProcess
 

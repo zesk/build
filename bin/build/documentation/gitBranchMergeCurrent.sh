@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Merge the current branch with another, push to remote, and then return to the original branch."$'\n'"Argument: branch - String. Required. Branch to merge the current branch with."$'\n'"Argument: --skip-ip - Boolean. Optional. Do not add the IP address to the comment."$'\n'"Argument: --comment - String. Optional. Comment for merge commit."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="d861975b11d1fbf7234ff66f942c86779f09fac7"
+sourceHash="45b6673cbbcdf6c9e5146a922f9b837146aa0ed8"
 summary="Merge the current branch with another, push to remote, and"
 summaryComputed="true"
 usage="gitBranchMergeCurrent branch [ --skip-ip ] [ --comment ] [ --help ]"

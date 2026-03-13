@@ -171,7 +171,7 @@ testPlumber() {
 
 __writeTo() {
   while [ $# -gt 0 ]; do
-    printf "%s\n" "$(randomString)" >"$1"
+    printf "%s\n" "$(stringRandom)" >"$1"
     shift
   done
 }
@@ -190,7 +190,7 @@ testHousekeeper() {
 
   statusMessage decorate info Copying "${BUILD_HOME-"(blank)"}" to test location
   local i && for i in $(seq 1 10); do
-    randomString >"$testDir/$i-$(randomString).txt"
+    stringRandom >"$testDir/$i-$(stringRandom).txt"
   done
   catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 

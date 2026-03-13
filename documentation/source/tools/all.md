@@ -6,20 +6,6 @@ All functions in Zesk Build, alphabetically.
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-<!-- TEMPLATE toolFooter 3 -->
-<hr />
-
-[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
-
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
-<hr />
-
-<!-- TEMPLATE guideFooter 3 -->
-<hr />
-
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
-
 - {SEE:alpineContainer}
 - {SEE:apkIsInstalled}
 - {SEE:applicationHome}
@@ -117,12 +103,11 @@ All functions in Zesk Build, alphabetically.
 - {SEE:bashSourcePath}
 - {SEE:bashStripComments}
 - {SEE:bashUserInput}
-- {SEE:bigText}
-- {SEE:bigTextAt}
 - {SEE:bitbucketContainer}
 - {SEE:bitbucketGetVariable}
 - {SEE:bitbucketPRNewURL}
 - {SEE:booleanChoose}
+- {SEE:booleanParse}
 - {SEE:brewInstall}
 - {SEE:buildApplicationConfigure}
 - {SEE:buildCacheDirectory}
@@ -152,7 +137,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:characterClassReport}
 - {SEE:characterFromInteger}
 - {SEE:characterToInteger}
-- {SEE:clampDigits}
 - {SEE:colorBrightness}
 - {SEE:colorFormat}
 - {SEE:colorMultiply}
@@ -174,7 +158,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:consoleGetColor}
 - {SEE:consoleHasAnimation}
 - {SEE:consoleHasColors}
-- {SEE:consoleHeadingBoxed}
 - {SEE:consoleHeadingLine}
 - {SEE:consoleLine}
 - {SEE:consoleLineFill}
@@ -189,6 +172,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:contextShow}
 - {SEE:convertValue}
 - {SEE:cpuCount}
+- {SEE:cpuLoadAverage}
 - {SEE:crontabApplicationUpdate}
 - {SEE:cursorGet}
 - {SEE:cursorSet}
@@ -255,6 +239,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:directoryPathSimplify}
 - {SEE:directoryRelativePath}
 - {SEE:directoryRequire}
+- {SEE:directoryWatch}
 - {SEE:dockerCompose}
 - {SEE:dockerComposeCommandList}
 - {SEE:dockerComposeInstall}
@@ -308,6 +293,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:environmentNames}
 - {SEE:environmentOutput}
 - {SEE:environmentParseVariables}
+- {SEE:environmentRequire}
 - {SEE:environmentSecureVariables}
 - {SEE:environmentValueConvertArray}
 - {SEE:environmentValueRead}
@@ -322,9 +308,12 @@ All functions in Zesk Build, alphabetically.
 - {SEE:escapeSingleQuotes}
 - {SEE:evalCheck}
 - {SEE:executableExists}
+- {SEE:executableRequire}
 - {SEE:execute}
+- {SEE:executeCount}
 - {SEE:executeEcho}
 - {SEE:executeInputSupport}
+- {SEE:executeLoop}
 - {SEE:fileCopy}
 - {SEE:fileCopyWouldChange}
 - {SEE:fileDirectoryExists}
@@ -350,6 +339,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:fileNotMatches}
 - {SEE:fileOldest}
 - {SEE:fileOwner}
+- {SEE:fileRealPath}
 - {SEE:fileReverseLines}
 - {SEE:filesAreIdentical}
 - {SEE:fileSize}
@@ -397,6 +387,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:gitShowStatus}
 - {SEE:gitTagAgain}
 - {SEE:gitTagDelete}
+- {SEE:gitTagVee}
 - {SEE:gitTagVersion}
 - {SEE:gitUninstall}
 - {SEE:gitVersionLast}
@@ -423,6 +414,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:incrementor}
 - {SEE:installInstallBinary}
 - {SEE:installInstallBuild}
+- {SEE:integerClamp}
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:interactiveOccasionally}
@@ -503,9 +495,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:listCleanDuplicates}
 - {SEE:listJoin}
 - {SEE:listRemove}
-- {SEE:loadAverage}
-- {SEE:loopExecute}
-- {SEE:lowercase}
+- {SEE:logRotate}
+- {SEE:logRotates}
 - {SEE:manPathCleanDuplicates}
 - {SEE:manPathConfigure}
 - {SEE:manPathRemove}
@@ -559,7 +550,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:packageUpgrade}
 - {SEE:packageWhich}
 - {SEE:packageWhichUninstall}
-- {SEE:parseBoolean}
 - {SEE:pathCleanDuplicates}
 - {SEE:pathConfigure}
 - {SEE:pathIsAbsolute}
@@ -602,14 +592,10 @@ All functions in Zesk Build, alphabetically.
 - {SEE:quoteGrepPattern}
 - {SEE:quoteSedPattern}
 - {SEE:quoteSedReplacement}
-- {SEE:randomString}
 - {SEE:readlineConfigurationAdd}
-- {SEE:realPath}
 - {SEE:releaseNew}
 - {SEE:releaseNotes}
 - {SEE:reloadChanges}
-- {SEE:removeFields}
-- {SEE:replaceFirstPattern}
 - {SEE:returnArgument}
 - {SEE:returnAssert}
 - {SEE:returnClean}
@@ -622,15 +608,10 @@ All functions in Zesk Build, alphabetically.
 - {SEE:returnMessage}
 - {SEE:returnThrow}
 - {SEE:returnUndo}
-- {SEE:rotateLog}
-- {SEE:rotateLogs}
 - {SEE:rsyncInstall}
-- {SEE:runCount}
 - {SEE:sedReplacePattern}
 - {SEE:serviceToPort}
 - {SEE:serviceToStandardPort}
-- {SEE:shaPipe}
-- {SEE:singleBlankLines}
 - {SEE:sshKnownHostAdd}
 - {SEE:sshKnownHostRemove}
 - {SEE:sshKnownHostsFile}
@@ -642,9 +623,13 @@ All functions in Zesk Build, alphabetically.
 - {SEE:stringContainsInsensitive}
 - {SEE:stringFound}
 - {SEE:stringFoundInsensitive}
+- {SEE:stringLowercase}
 - {SEE:stringOffset}
 - {SEE:stringOffsetInsensitive}
-- {SEE:stringReplace}
+- {SEE:stringRandom}
+- {SEE:stringTrimWords}
+- {SEE:stringUnquote}
+- {SEE:stringUppercase}
 - {SEE:stringValidate}
 - {SEE:sysvInitScriptInstall}
 - {SEE:sysvInitScriptUninstall}
@@ -657,10 +642,22 @@ All functions in Zesk Build, alphabetically.
 - {SEE:testSuiteOrdering}
 - {SEE:textAlignLeft}
 - {SEE:textAlignRight}
+- {SEE:textRemoveFields}
 - {SEE:textRepeat}
+- {SEE:textReplace}
+- {SEE:textReplaceFirst}
+- {SEE:textSHA}
+- {SEE:textSingleBlankLines}
+- {SEE:textTrim}
+- {SEE:textTrimBoth}
+- {SEE:textTrimHead}
+- {SEE:textTrimLeft}
+- {SEE:textTrimRight}
+- {SEE:textTrimTail}
 - {SEE:throwArgument}
 - {SEE:throwEnvironment}
 - {SEE:timing}
+- {SEE:timingDuration}
 - {SEE:timingElapsed}
 - {SEE:timingFormat}
 - {SEE:timingReport}
@@ -668,15 +665,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:tofuInstall}
 - {SEE:tofuUninstall}
 - {SEE:tools}
-- {SEE:trimBoth}
-- {SEE:trimHead}
-- {SEE:trimLeftSpace}
-- {SEE:trimRightSpace}
-- {SEE:trimSpace}
-- {SEE:trimTail}
-- {SEE:trimWords}
-- {SEE:unquote}
-- {SEE:uppercase}
 - {SEE:urlContentLength}
 - {SEE:urlFetch}
 - {SEE:urlFilter}
@@ -689,8 +677,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:urlValid}
 - {SEE:usageDocument}
 - {SEE:usageDocumentSimple}
-- {SEE:usageRequireBinary}
-- {SEE:usageRequireEnvironment}
 - {SEE:userAgentDefault}
 - {SEE:userHome}
 - {SEE:userRecord}
@@ -698,11 +684,9 @@ All functions in Zesk Build, alphabetically.
 - {SEE:userRecordName}
 - {SEE:validate}
 - {SEE:validateTypeList}
-- {SEE:veeGitTag}
 - {SEE:versionNextMinor}
 - {SEE:versionNoVee}
 - {SEE:versionSort}
-- {SEE:watchDirectory}
 - {SEE:websiteScrape}
 - {SEE:xdebugDisable}
 - {SEE:xdebugEnable}

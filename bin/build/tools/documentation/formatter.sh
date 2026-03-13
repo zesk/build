@@ -9,7 +9,7 @@
 # Format Return Code: blocks as a list
 #
 _bashDocumentationFormatter_return_code() {
-  trimBoth | markdownFormatList
+  textTrimBoth | markdownFormatList
 }
 
 #
@@ -122,7 +122,7 @@ _bashDocumentationFormatter_see2() {
   local seeItem seeItems
   while IFS=" " read -r -a seeItems; do
     for seeItem in "${seeItems[@]+${seeItems[@]}}"; do
-      seeItem="$(trimSpace "$seeItem")"
+      seeItem="$(textTrim "$seeItem")"
       if [ -n "$seeItem" ]; then
         printf "{SEE:%s}\n" "$seeItem"
       fi

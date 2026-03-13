@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Is yum installed?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/yum.sh"
-sourceHash="352407cee92702c97823cf1787c65342a2456fd4"
+sourceHash="39a7929f941f0603a9b99717a74978a284fbb59d"
 summary="Is yum installed?"
 summaryComputed="true"
 usage="yumIsInstalled [ --help ]"

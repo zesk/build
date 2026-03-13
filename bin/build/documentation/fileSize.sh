@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="return_code")
 rawComment="Argument: file ... - Optional. One or more files to get size of."$'\n'"stdin: File. One or more files to get size of."$'\n'"stdout: UnsignedInteger"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Environment error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="91d537b691b9a05e675b0b8e8fc9b5d80f144523"
+sourceHash="267159b8d14477b8207f311382f9bb4af7398472"
 stdin="File. One or more files to get size of."$'\n'""
 stdout="UnsignedInteger"$'\n'""
 summary="undocumented"

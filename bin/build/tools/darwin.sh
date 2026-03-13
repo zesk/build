@@ -292,7 +292,7 @@ darwinDialog() {
         done=true
       fi
       name="${name# }"
-      value="$(trimSpace "$value")"
+      value="$(textTrim "$value")"
       ! $debugFlag || decorate pair "$name" "$value"
       case "$name" in
       "button returned")

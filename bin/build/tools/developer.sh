@@ -161,7 +161,7 @@ __developerTrackEnvironment() {
 }
 __developerTrackAliases() {
   local path="$1"
-  alias -p | sort -u | tee "$path/alias.source" | removeFields 1 | cut -d = -f 1 >"$path/alias" || return $?
+  alias -p | sort -u | tee "$path/alias.source" | textRemoveFields 1 | cut -d = -f 1 >"$path/alias" || return $?
 }
 _developerTrack() {
   # __IDENTICAL__ usageDocument 1
@@ -280,7 +280,7 @@ developerDevelopmentLink() {
 
   local home target
   home=$(catchReturn "$handler" buildHome) || return $?
-  home=$(catchEnvironment "$handler" realPath "${home%/}") || return $?
+  home=$(catchEnvironment "$handler" fileRealPath "${home%/}") || return $?
 
   if [ -z "$composerPackage" ]; then
     [ "${#runBinary[@]}" -gt 0 ] || throwArgument "$handler" "--binary or --composer is required" || return $?
@@ -307,7 +307,7 @@ developerDevelopmentLink() {
   # developmentHome
   developmentHome=$(catchReturn "$handler" buildEnvironmentGet "$variable") || return $?
   if [ -n "$developmentHome" ]; then
-    developmentHome=$(catchEnvironment "$handler" realPath "${developmentHome%/}") || return $?
+    developmentHome=$(catchEnvironment "$handler" fileRealPath "${developmentHome%/}") || return $?
   fi
 
   local source="$developmentHome/$developmentPath"
@@ -345,9 +345,9 @@ developerDevelopmentLink() {
         catchEnvironment "$handler" cp -R "$source/" "$target" || return $?
         catchEnvironment find "$target" -name .git -type d -delete || return $?
       fi
-      printf -- "%s %s %s %s %s (%s)\n" "$aok" "$(decorate info "$verb")" "$(decorate file "$developmentHome")" "$arrowIcon" "$showName" "$(decorate file "$(realPath "$target")")"
+      printf -- "%s %s %s %s %s (%s)\n" "$aok" "$(decorate info "$verb")" "$(decorate file "$developmentHome")" "$arrowIcon" "$showName" "$(decorate file "$(fileRealPath "$target")")"
     elif [ -L "$target" ]; then
-      printf -- "%s %s %s %s\n" "$aok" "$(decorate file "$target")" "$arrowIcon" "$(decorate file "$(realPath "$target")")"
+      printf -- "%s %s %s %s\n" "$aok" "$(decorate file "$target")" "$arrowIcon" "$(decorate file "$(fileRealPath "$target")")"
     elif [ -f "$home/$versionJSON" ]; then
       if confirmYesNo --timeout 30 --default false "$(decorate warning "Removing $(decorate file "$target") in project $showName"?)"; then
         catchEnvironment "$handler" rm -rf "$target" || return $?

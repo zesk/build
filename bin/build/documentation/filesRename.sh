@@ -12,7 +12,7 @@ foundNames=([0]="summary" [1]="argument" [2]="example")
 rawComment="Renames \"\$file0\$oldSuffix\" to \"\$file0\$newSuffix\" if file exists and outputs a message using the actionVerb"$'\n'"If files do not exist, does nothing"$'\n'"Used to move files, temporarily, sometimes and then move back easily."$'\n'"Renames files which have \`oldSuffix\` to then have \`newSuffix\` and output a message using \`actionVerb\`:"$'\n'"Summary: Rename a list of files usually to back them up temporarily"$'\n'"Argument: oldSuffix - String. Required. Old suffix to look rename from."$'\n'"Argument: newSuffix - String. Required. New suffix to rename to."$'\n'"Argument: actionVerb - String. Required. Description to output for found files."$'\n'"Argument: file ... - String. Required. One or more files to rename, if found, renaming occurs."$'\n'"Example:     {fn} \"\" \".\$\$.backup\" hiding etc/app.json etc/config.json"$'\n'"Example:     ..."$'\n'"Example:     {fn} \".\$\$.backup\" \"\" restoring etc/app.json etc/config.json"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="91d537b691b9a05e675b0b8e8fc9b5d80f144523"
+sourceHash="267159b8d14477b8207f311382f9bb4af7398472"
 summary="Rename a list of files usually to back them up temporarily"$'\n'""
 usage="filesRename oldSuffix newSuffix actionVerb file ..."
 # shellcheck disable=SC2016

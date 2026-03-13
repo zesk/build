@@ -49,7 +49,7 @@ testDotEnvConfigure() {
   local tempDir tempEnv magic
   export TESTENVWORKS TESTENVLOCALWORKS
 
-  magic=$(randomString)
+  magic=$(stringRandom)
   tempDir="$(catchReturn "$handler" buildCacheDirectory)/$$.dotEnvConfig" || return $?
 
   catchReturn "$handler" directoryRequire "$tempDir" || return $?

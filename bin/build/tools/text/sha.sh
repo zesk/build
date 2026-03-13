@@ -7,7 +7,7 @@
 #  ▐ ▖▛▀ ▗▚ ▐ ▖▗▖ ▖ ▌▌ ▌▌ ▌
 #   ▀ ▝▀▘▘ ▘ ▀ ▝▘ ▝▀ ▘ ▘▘ ▘
 
-__shaPipe() {
+__textSHA() {
   local handler="$1" && shift
   local debugFlag=false files=() cachePath=""
 
@@ -37,38 +37,38 @@ __shaPipe() {
   executableExists sha1sum || throwEnvironment "$handler" "Need packageGroupInstall sha1sum" || return $?
 
   local debugLog=""
-  if $debugFlag || buildDebugEnabled shaPipe; then
-    debugLog="$(catchReturn "$handler" buildCacheDirectory)/shaPipe.log" || return $?
+  if $debugFlag || buildDebugEnabled textSHA; then
+    debugLog="$(catchReturn "$handler" buildCacheDirectory)/textSHA.log" || return $?
   fi
 
   if [ "${#files[@]}" -eq 0 ]; then
-    [ -z "$debugLog" ] || printf "%s: stdin\n" "$(date +"%FT%T")" >>shaPipe.log
-    ___shaPipe "$handler" || throwEnvironment "$handler" "sha1sum" || return $?
+    [ -z "$debugLog" ] || printf "%s: stdin\n" "$(date +"%FT%T")" >>textSHA.log
+    ___textSHA "$handler" || throwEnvironment "$handler" "sha1sum" || return $?
   elif "$cachedFlag"; then
-    __shaPipeCached "$handler" "$cachePath" "${files[@]}" || return $?
+    __textSHACached "$handler" "$cachePath" "${files[@]}" || return $?
   else
     set -- "${files[@]}"
     while [ $# -gt 0 ]; do
-      [ -z "$debugLog" ] || printf "%s: %s\n" "$(date +"%FT%T")" "$1" >>shaPipe.log
-      ___shaPipe "$handler" <"$1"
+      [ -z "$debugLog" ] || printf "%s: %s\n" "$(date +"%FT%T")" "$1" >>textSHA.log
+      ___textSHA "$handler" <"$1"
       shift
     done
   fi
 }
 
-___shaPipe() {
+___textSHA() {
   local handler="$1" && shift
   catchReturn "$handler" sha1sum "$@" | catchReturn "$handler" cut -f 1 -d ' ' || return $?
 }
 
-__shaPipeCached() {
+__textSHACached() {
   local handler="$1" && shift
   local cacheDirectory="" files=()
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     case "$1" in
-    "") shift && ___shaPipe "$handler" "$@" && return $? || return $? ;;
+    "") shift && ___textSHA "$handler" "$@" && return $? || return $? ;;
     *)
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory="$(validate "$handler" Directory "cacheDirectory" "$1")" || return $?
@@ -87,11 +87,11 @@ __shaPipeCached() {
       if [ -f "$cacheFile" ] && [ "$cacheFile" -nt "$1" ]; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        ___shaPipe "$handler" "$argument" | catchEnvironment "$handler" tee "$cacheFile" || return $?
+        ___textSHA "$handler" "$argument" | catchEnvironment "$handler" tee "$cacheFile" || return $?
       fi
       shift
     done
   else
-    ___shaPipe "$handler" || return $?
+    ___textSHA "$handler" || return $?
   fi
 }

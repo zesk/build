@@ -11,7 +11,7 @@ foundNames=([0]="return_code" [1]="argument")
 rawComment="Display and validate application variables."$'\n'"Return Code: 1 - If any required application variables are blank, the function fails with an environment error"$'\n'"Return Code: 0 - All required application variables are non-blank"$'\n'"Argument: environmentName - EnvironmentVariable. Optional. A required environment variable name"$'\n'"Argument: -- - Separator. Optional. Separates requires from optional environment variables"$'\n'"Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name."$'\n'""$'\n'""
 return_code="1 - If any required application variables are blank, the function fails with an environment error"$'\n'"0 - All required application variables are non-blank"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="f4297ea2cbebf568f7423fd672764a88c1753a7e"
+sourceHash="2f72a01d82f7aedcc93caeb95898a759bf73cf9c"
 summary="Display and validate application variables."
 summaryComputed="true"
 usage="environmentFileShow [ environmentName ] [ -- ] [ optionalEnvironmentName ]"

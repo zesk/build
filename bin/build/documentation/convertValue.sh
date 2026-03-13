@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="map a value from one value to another given from-to pairs"$'\n'"Prints the mapped value to stdout"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value - String. A value."$'\n'"Argument: from - String. When value matches \`from\`, instead print \`to\`"$'\n'"Argument: to - String. The value to print when \`from\` matches \`value\`"$'\n'"Argument: ... - String. Optional. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="00f5bf2862b4fee06819afcf6d6db6adc911bcff"
+sourceHash="1ff9bebad70c8fea8d82a17d32a3d8b9fd324874"
 summary="map a value from one value to another given from-to"
 summaryComputed="true"
 usage="convertValue [ --help ] [ value ] [ from ] [ to ] [ ... ]"

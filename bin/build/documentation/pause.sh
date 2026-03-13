@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Pause for user input"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: message ... - Display this message while pausing"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="e17f0ea69f1c6cf5eceec027dffd3be9d099fb75"
+sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
 summary="Pause for user input"
 summaryComputed="true"
 usage="pause [ --help ] [ -- ] [ message ... ]"

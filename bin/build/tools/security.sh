@@ -39,7 +39,7 @@ __doEvalCheck() {
         if [ "$checkLine" = "$line" ]; then
           checkLineFailed=true
         else
-          checkLine="$(trimSpace "$checkLine")" || :
+          checkLine="$(textTrim "$checkLine")" || :
         fi
         firstLine=false
       else

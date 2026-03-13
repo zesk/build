@@ -70,7 +70,7 @@ _returnCodeString() {
 # Is this a boolean? (`true` or `false`)
 # Return Code: 0 - if value is a boolean
 # Return Code: 1 - if value is not a boolean
-# See: isTrue parseBoolean
+# See: isTrue booleanParse
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: value - String. Optional. Value to check if it is a boolean.

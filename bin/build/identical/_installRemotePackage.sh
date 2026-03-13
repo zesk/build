@@ -116,7 +116,7 @@ __packageCheckFunction() {
 # Argument: --diff - Flag. Optional. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Requires: cp rm cat printf realPath executableExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
+# Requires: cp rm cat printf fileRealPath executableExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -144,7 +144,7 @@ _installRemotePackage() {
     --name) shift && name=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --mock | --local)
       [ -z "$localPath" ] || throwArgument "$handler" "$argument already" || return $?
-      shift && localPath="$(catchArgument "$handler" realPath "${1%/}")" || return $?
+      shift && localPath="$(catchArgument "$handler" fileRealPath "${1%/}")" || return $?
       ;;
     --user | --header | --password) shift && fetchArguments+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     --url)
@@ -206,9 +206,9 @@ _installRemotePackage() {
   local installFlag=false
   local myBinary myPath applicationHome installPath packagePath
   # Move to starting point
-  myBinary=$(catchEnvironment "$handler" realPath "${BASH_SOURCE[0]}") || return $?
+  myBinary=$(catchEnvironment "$handler" fileRealPath "${BASH_SOURCE[0]}") || return $?
   myPath="${myBinary%/*}" || return $?
-  applicationHome=$(catchEnvironment "$handler" realPath "$myPath/$relative") || return $?
+  applicationHome=$(catchEnvironment "$handler" fileRealPath "$myPath/$relative") || return $?
   applicationHome="${applicationHome%/}"
   [ -n "$installPath" ] || installPath="$applicationHome/$defaultPackagePath"
   installPath="${installPath%/}"

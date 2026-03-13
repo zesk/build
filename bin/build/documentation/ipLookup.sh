@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Get the current IP address of a host"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: IP_URL"$'\n'"Environment: IP_URL_FILTER"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/pipeline.sh"
-sourceHash="5d8d34bbbb45fe7d70e71ab4557965e0f8a5e959"
+sourceHash="c579f58f0c66552b6f42e1671a6a5534209b0977"
 summary="Get the current IP address of a host"
 summaryComputed="true"
 usage="ipLookup [ --help ]"

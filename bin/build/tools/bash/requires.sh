@@ -36,7 +36,7 @@ __bashGetRequires() {
     matchLine=${matchLine# }
     local tokens=() && read -r -a tokens <<<"$matchLine"
     [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}"
-  done < <(grep -e '[[:space:]]*#[[:space:]]*Requires:[[:space:]]*' "${files[@]+"${files[@]}"}" | trimSpace) | sort -u
+  done < <(grep -e '[[:space:]]*#[[:space:]]*Requires:[[:space:]]*' "${files[@]+"${files[@]}"}" | textTrim) | sort -u
 }
 
 __bashCheckRequires() {

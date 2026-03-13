@@ -194,10 +194,10 @@ _confirmMenu() {
 # Argument: --title title - String. Optional. Display this title instead of the command.
 # Argument: arguments ... - Optional. Arguments. Arguments to `loopCallable`
 # Run checks interactively until errors are all fixed.
-loopExecute() {
+executeLoop() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_loopExecute() {
+_executeLoop() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -219,7 +219,7 @@ _interactiveManager() {
 # Display a message and count down display
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: --badge text - String. Display this text as bigTextAt
+# Argument: --badge text - String. Display this text as decorate at
 # Argument: --prefix prefix - String.
 # Argument: counter - Integer. Required. Count down from.
 # Argument: binary - Callable. Required. Run this with any additional arguments when the countdown is completed.

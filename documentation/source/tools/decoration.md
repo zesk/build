@@ -8,13 +8,9 @@ Typically used to output text to the console using pretty colors and ANSI art.
 
 {consoleLine}
 
-{bigText}
-
 {labeledBigText}
 
 {consoleHeadingLine}
-
-{consoleHeadingBoxed}
 
 {decoratePath}
 

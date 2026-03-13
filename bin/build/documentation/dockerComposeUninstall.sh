@@ -11,7 +11,7 @@ foundNames=([0]="stderr" [1]="summary" [2]="return_code")
 rawComment="Uninstalls \`docker-compose\`"$'\n'"stderr: Upon failure error log is output"$'\n'"Summary: Uninstall \`docker-compose\`"$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""$'\n'""
 return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="2b8b33a878ab55849ee3b515c1d66630e3b166aa"
+sourceHash="783c382a3fdcc281bcdc87ece102744a5053324f"
 stderr="Upon failure error log is output"$'\n'""
 summary="Uninstall \`docker-compose\`"$'\n'""
 usage="dockerComposeUninstall"

@@ -125,7 +125,7 @@ buildBuildTiming() {
   local index=1
   for production in false true; do
     for colors in false true; do
-      bigText "Test #$index"
+      decorate big "Test #$index"
       decorate pair "PRODUCTION" "$production"
       decorate pair "BUILD_COLORS" "$colors"
       catchReturn "$handler" env -i BUILD_DEBUG=handler HOME="$HOME" PATH="$PATH" PRODUCTION=$production BUILD_COLORS=$colors time "$home/bin/build.sh" || return $?

@@ -148,7 +148,7 @@ __applicationTools() {
   set --
   __build .. bin >/dev/null || return $?
 
-  bashSourcePath "$(realPath "$here/tools/")" || return $?
+  bashSourcePath "$(fileRealPath "$here/tools/")" || return $?
 
   "${__saved[@]+"${__saved[@]}"}" || return $?
 }

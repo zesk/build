@@ -90,7 +90,7 @@ __yumAvailableList() {
 __yumStandardPackages() {
   printf "%s\n" which toilet jq shellcheck pcre2-tools diffutils
   export BUILD_TEXT_BINARY
-  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="$(__bigTextBinary)"
+  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="$(__decorateBigBinary)"
 }
 
 # See: brew.sh apk.sh yum.sh macports.sh

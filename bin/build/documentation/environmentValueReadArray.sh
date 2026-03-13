@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Read an array value from a state file"$'\n'"Argument: stateFile - File. Required. File to access, must exist."$'\n'"Argument: name - EnvironmentVariable. Required. Name to read."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Outputs array elements, one per line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/io.sh"
-sourceHash="ab40396c0bbaf04b90ac18495770691379efbd1a"
+sourceHash="0f1011676755f0412e216127710dc6f43e456014"
 summary="Read an array value from a state file"
 summaryComputed="true"
 usage="environmentValueReadArray stateFile name [ --help ]"

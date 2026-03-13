@@ -172,7 +172,7 @@ sshKnownHostRemove() {
         backupName="$sshKnown.$(dateToday)"
         if $backupFlag && [ -f "$backupName" ]; then
           ! $verbose || decorate info "Rotating $(decorate file "$backupName")"
-          catchEnvironment "$handler" rotateLog "$backupName" 9 || return $?
+          catchEnvironment "$handler" logRotate "$backupName" 9 || return $?
         fi
         catchEnvironment "$handler" cp "$sshKnown" "$backupName" || return $?
         catchEnvironment "$handler" grepSafe -v -e "$(quoteGrepPattern "$remoteHost")" <"$backupName" >"$sshKnown" || return $?

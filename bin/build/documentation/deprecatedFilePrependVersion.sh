@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Take a deprecated.txt file and add a comment with the current version number to the top"$'\n'"Argument: target - File. Required. File to update."$'\n'"Argument: version - String. Required. Version to place at the top of the file."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deprecated-tools.sh"
-sourceHash="f6ff1d0254473f216c6361ebc735edfbb7a60b50"
+sourceHash="9256a843a8ba88183c94f082fa320c352500fe8c"
 summary="Take a deprecated.txt file and add a comment with the"
 summaryComputed="true"
 usage="deprecatedFilePrependVersion target version"

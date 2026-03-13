@@ -43,7 +43,7 @@ _hookContextWrapper() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
   start="$(pwd -P 2>/dev/null)" || throwEnvironment "$handler" "Failed to get pwd" || return $?
-  start=$(catchEnvironment "$handler" realPath "$start") || return $?
+  start=$(catchEnvironment "$handler" fileRealPath "$start") || return $?
 
   if [ -z "$application" ]; then
     if [ "${start#"$home"}" = "$start" ]; then

@@ -196,8 +196,8 @@ environmentFileBashCompatibleToDocker() {
   done
   while IFS='' read -r envLine; do
     local name="${envLine%%=*}" value="${envLine#*=}"
-    printf -- "%s=%s\n" "$name" "$(unquote "\"" "$value")"
-  done < <(removeFields 2 <"$tempFile" | grepSafe -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)')
+    printf -- "%s=%s\n" "$name" "$(stringUnquote "\"" "$value")"
+  done < <(textRemoveFields 2 <"$tempFile" | grepSafe -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)')
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 _environmentFileBashCompatibleToDocker() {

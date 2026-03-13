@@ -33,7 +33,7 @@ __bashDocumentationSettingsFileDetails() {
   local file="${definitionFile#"${home%/}"/}"
   catchReturn "$handler" __dumpSimpleValue "file" "$file" || return $?
   catchReturn "$handler" __dumpSimpleValue "sourceFile" "$file" || return $?
-  catchReturn "$handler" __dumpSimpleValue "sourceHash" "$(shaPipe <"$definitionFile")" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceHash" "$(textSHA <"$definitionFile")" || return $?
   catchReturn "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
   [ -z "$lineNumber" ] || catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
 }
@@ -102,7 +102,7 @@ __bashDocumentationExtract() {
 }
 __bashDocumentationExtractCheckCache() {
   local handler="$1" source="$2" definitionFile="$3"
-  local sourceHash && sourceHash=$(catchReturn "$handler" shaPipe <"$source") || return $?
+  local sourceHash && sourceHash=$(catchReturn "$handler" textSHA <"$source") || return $?
   if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
     local savedSourceHash
     savedSourceHash=$(
@@ -203,7 +203,7 @@ __bashDocumentationExtractDirect() {
       # no colon or ends with colon *or* starts with :
       # strip starting colon (end colon STAYS)
       value="${line##:}"
-      if [ "${#desc[@]}" -gt 0 ] || [ "$(trimSpace "$value")" != "" ]; then
+      if [ "${#desc[@]}" -gt 0 ] || [ "$(textTrim "$value")" != "" ]; then
         desc+=("$value")
       fi
     else
@@ -217,7 +217,7 @@ __bashDocumentationExtractDirect() {
       case "$name" in
       "shellcheck") continue ;;
       "description")
-        value="$(catchReturn "$handler" trimSpace "$value")" || return $?
+        value="$(catchReturn "$handler" textTrim "$value")" || return $?
         [ -z "$value" ] || desc+=("$value")
         continue
         ;;
@@ -256,7 +256,7 @@ __bashDocumentationExtractDirect() {
     catchReturn "$handler" __dumpNameValue "description" "${desc[@]}" || return $?
     if ! inArray "summary" "${foundNames[@]+"${foundNames[@]}"}"; then
       local summary
-      summary="$(trimWords 10 "${desc[0]}")"
+      summary="$(stringTrimWords 10 "${desc[0]}")"
       [ -n "$summary" ] || summary="undocumented"
       catchReturn "$handler" __dumpSimpleValue "summary" "$summary" || return $?
       catchReturn "$handler" __dumpSimpleValue "summaryComputed" "true" || return $?

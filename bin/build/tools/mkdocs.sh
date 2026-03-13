@@ -70,7 +70,7 @@ __mkdocsConfiguration() {
     local token
     while IFS="" read -r token; do
       # skip lowercase
-      [ "$token" != "$(lowercase "$token")" ] || continue
+      [ "$token" != "$(stringLowercase "$token")" ] || continue
       catchReturn "$handler" buildEnvironmentLoad "$token" || return $?
       export "${token?}"
     done < <(mapTokens <"$source")

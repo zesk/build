@@ -46,7 +46,7 @@ __dumpDockerTestFile() {
   local proc1File=/proc/1/sched
 
   if [ -f "$proc1File" ]; then
-    bigText $proc1File
+    decorate big $proc1File
     decorate magenta <"$proc1File"
   else
     decorate warning "Missing $proc1File"

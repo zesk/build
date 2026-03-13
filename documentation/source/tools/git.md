@@ -22,7 +22,7 @@
 
 {gitVersionLast}
 
-{veeGitTag}
+{gitTagVee}
 
 ## git Branches
 

@@ -10,7 +10,7 @@
 
 ## Interactive utilities
 
-{loopExecute}
+{executeLoop}
 
 {interactiveCountdown}
 

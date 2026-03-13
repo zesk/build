@@ -65,9 +65,9 @@ buildPreRelease() {
   # Completed message
   local text && text="$(catchEnvironment "$handler" hookVersionCurrent)" || return $?
   if [ "$exitCode" != 0 ]; then
-    bigText "$text Failed" | decorate error
+    decorate big "$text Failed" | decorate error
   else
-    bigText "$text Built" | decorate success
+    decorate big "$text Built" | decorate success
   fi
   return "$exitCode"
 }

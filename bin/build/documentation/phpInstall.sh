@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="summary" [2]="return_code")
 rawComment="Install \`php\`"$'\n'"If this fails it will output the installation log."$'\n'"Argument: package - Additional packages to install"$'\n'"Summary: Install \`php\`"$'\n'"When this tool succeeds the \`php\` binary is available in the local operating system."$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""$'\n'""
 return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""
 sourceFile="bin/build/tools/php.sh"
-sourceHash="2d72dda73e985905549ab74ca69280f337782b27"
+sourceHash="912609aca14f069dd1c36f27415c9d01ecbf6288"
 summary="Install \`php\`"$'\n'""
 usage="phpInstall [ package ]"
 # shellcheck disable=SC2016

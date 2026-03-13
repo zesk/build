@@ -97,7 +97,7 @@ __awsEnvironmentFromCredentials() {
 
   credentials="$(catchReturn "$handler" awsCredentialsFile)" || return $?
   while read -r name value; do
-    catchReturn "$handler" environmentValueWrite "$(uppercase "$name")" "$value" || return $?
+    catchReturn "$handler" environmentValueWrite "$(stringUppercase "$name")" "$value" || return $?
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
 }
 
@@ -113,7 +113,7 @@ __awsCredentialsHasProfile() {
   [ -n "$profileName" ] || throwArgument "$handler" "profileName is somehow blank" || return $?
   credentials="$(catchReturn "$handler" awsCredentialsFile)" || return $?
   while read -r name value; do
-    foundValues+=("$(uppercase "$name")")
+    foundValues+=("$(stringUppercase "$name")")
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
   [ "${#foundValues[@]}" -gt 0 ] || return 1
   if [ "${#foundValues[@]}" -lt 2 ]; then

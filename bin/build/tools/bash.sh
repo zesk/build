@@ -479,7 +479,7 @@ bashCommentVariable() {
     matchLine="${matchLine:$offset}"
     matchLine=${matchLine# }
     printf "%s\n" "${matchLine}"
-  done < <(grepSafe "${grepFlags[@]+"${grepFlags[@]}"}" -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | trimSpace)
+  done < <(grepSafe "${grepFlags[@]+"${grepFlags[@]}"}" -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | textTrim)
 }
 _bashCommentVariable() {
   # __IDENTICAL__ usageDocument 1

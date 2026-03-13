@@ -341,6 +341,7 @@ testTrimLeftSpace suite=text test/tools/text-tests.sh
 testTrimRightSpace suite=text test/tools/text-tests.sh
 testTrimSpace suite=text test/tools/text-tests.sh
 testTiming suite=timing test/tools/timing-tests.sh
+testTimingDuration suite=timing test/tools/timing-tests.sh
 testTimingElapsed suite=timing test/tools/timing-tests.sh
 testInstallOpenTofu suite=tofu test/tools/tofu-tests.sh  tag=package-install
 testBadNumericSamples suite=type test/tools/type-tests.sh  tag=slow

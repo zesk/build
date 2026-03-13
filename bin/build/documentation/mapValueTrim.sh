@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Maps a string using an environment file"$'\n'"Argument: mapFile - File. Required. a file containing bash environment definitions"$'\n'"Argument: value - String. Optional. One or more values to map using said environment file."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/map.sh"
-sourceHash="a7cb4a2fdf3c2f53d21728d9eb83f09f9a4fa154"
+sourceHash="9279ce02c4d1ffc6fc2f2c7afa193faf3a8158f6"
 summary="Maps a string using an environment file"
 summaryComputed="true"
 usage="mapValueTrim mapFile [ value ]"

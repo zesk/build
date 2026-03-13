@@ -11,7 +11,7 @@ foundNames=([0]="stdin" [1]="stdout" [2]="argument")
 rawComment="Parse variables from an environment variable stream"$'\n'"Extracts lines with \`NAME=value\`"$'\n'"Details:"$'\n'"- Remove \`export \` from lines"$'\n'"- Skip lines containing \`read -r\`"$'\n'"- Anything before a \`=\` is considered a variable name"$'\n'"- Returns a sorted, unique list"$'\n'"stdin: Environment File"$'\n'"stdout: EnvironmentVariable. One per line."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="f4297ea2cbebf568f7423fd672764a88c1753a7e"
+sourceHash="2f72a01d82f7aedcc93caeb95898a759bf73cf9c"
 stdin="Environment File"$'\n'""
 stdout="EnvironmentVariable. One per line."$'\n'""
 summary="Parse variables from an environment variable stream"

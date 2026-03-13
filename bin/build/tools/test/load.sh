@@ -37,7 +37,7 @@ __testLoad() {
     fi
     local extraFunctions=()
     # diff outputs ("-" and "+") prefixes or ("< " and "> ")
-    declare -pF | awk '{ print $3 }' | sort -u | muzzleReturn diff -U 0 "$__beforeFunctions" - | grep -e '^[-+][^+-]' | cut -c 2- | trimSpace >"$__testFunctions" || :
+    declare -pF | awk '{ print $3 }' | sort -u | muzzleReturn diff -U 0 "$__beforeFunctions" - | grep -e '^[-+][^+-]' | cut -c 2- | textTrim >"$__testFunctions" || :
     local __test && while read -r __test; do
       if [ "$__test" != "${__test#_}" ]; then
         extraFunctions+=("$__test")

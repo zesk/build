@@ -194,7 +194,7 @@ _environmentClean() {
 # Any values which contain a newline are also skipped.
 #
 # See: environmentSecureVariables
-# Requires: throwArgument decorate environmentSecureVariables grepSafe env removeFields
+# Requires: throwArgument decorate environmentSecureVariables grepSafe env textRemoveFields
 # Argument: --underscore - Flag. Optional. Include environment variables which begin with underscore `_`.
 # Argument: --skip-prefix prefixString - String. Optional. Skip environment variables which begin with this exact prefix (case-sensitive).
 # Argument: --secure - Flag. Optional. Include environment variables which are in `environmentSecureVariables`
@@ -233,9 +233,9 @@ environmentOutput() {
     [ "${#__skipPrefix[@]}" -eq 0 ] || ! stringBegins "$__name" "${__skipPrefix[@]}" || continue
     [ "${#__skipNames[@]}" -eq 0 ] || ! inArray "$__name" "${__skipNames[@]}" || continue
     [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
-    catchReturn "$__handler" printf "%s=%s\n" "$__name" "$(unquote "'" "$__value")" || return $?
+    catchReturn "$__handler" printf "%s=%s\n" "$__name" "$(stringUnquote "'" "$__value")" || return $?
     __written+=("$__name")
-  done < <(declare -ax | removeFields 2)
+  done < <(declare -ax | textRemoveFields 2)
   ! $__debugFlag || printf "%s\n" "# above is arrays"
   while ! $__finished; do
     IFS="=" read -r -d $'\0' __name __value || __finished=true

@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Is docker compose currently running?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - Not running"$'\n'"Return Code: 0 - Running"$'\n'""$'\n'""
 return_code="1 - Not running"$'\n'"0 - Running"$'\n'""
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="2b8b33a878ab55849ee3b515c1d66630e3b166aa"
+sourceHash="783c382a3fdcc281bcdc87ece102744a5053324f"
 summary="Is docker compose currently running?"
 summaryComputed="true"
 usage="dockerComposeIsRunning [ --help ]"

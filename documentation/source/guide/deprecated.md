@@ -4,9 +4,51 @@
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
+Bash function naming:
+
+- `nounVerb` and also
+- `{to be form}Noub` or `{to be form}Adjective}` (e.g. `isNoun`, `isAdjective`, `wasLoaded` are acceptable for
+  readability)
+- `preposititionNoun` is also acceptable, (`inArray`)
+
 ## Recent changes (most recent changes first)
 
 This document lists functionality which was removed, why, and when.
+
+### Release v0.41.3
+
+Continuing naming fixes to be consistent across the library. `noun-verb`
+
+- `clampDigits` -> `integerClamp`
+- `parseBoolean` -> `booleanParse`
+- `replaceFirstPattern` -> `textReplaceFirst`
+- `stringReplace` -> `textReplace`
+- `trimBoth` -> `textTrimBoth`
+- `trimHead` -> `textTrimHead`
+- `trimTail` -> `textTrimTail`
+- `singleBlankLines` -> `textSingleBlankLines`
+- `trimRightSpace` -> `textTrimRight`
+- `trimLeftSpace` -> `textTrimLeft`
+- `trimSpace` -> `textTrim`
+- `removeFields` -> `textRemoveFields`
+- `loadAverage` -> `cpuLoadAverage`
+- `realPath` -> `fileRealPath`
+- `runCount` -> `executeCount`
+- `trimWords` -> `stringTrimWords`
+- `unquote ` -> `stringUnquote `
+- `uppercase ` -> `stringUppercase `
+- `lowercase ` -> `stringLowercase `
+- `usageRequireBinary` -> `executableRequire`
+- `usageRequireEnvironment` -> `environmentRequire`
+- `veeGitTag` -> `gitTagVee`
+- `watchDirectory` -> `directoryWatch`
+- `shaPipe` -> `textSHA`
+- `rotateLog` -> `logRotate`
+- `rotateLogs` -> `logsRotate`
+- `randomString` -> `stringRandom`
+- `loopExecute` -> `executeLoop`
+- `bigTextAt` -> `decorate at`
+- `bitText` -> `decorate big`
 
 ### Release v0.41.0
 
@@ -44,7 +86,7 @@ Continuing naming fixes to be consistent across the library.
 
 #### Removed
 
-- `cachedShaPipe` -> `shaPipe --cache`
+- `cachedShaPipe` -> `textSHA --cache`
 - `testTools` -> `testSuite` (just call directly)
 
 #### Renamed

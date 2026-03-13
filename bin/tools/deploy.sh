@@ -54,7 +54,7 @@ __buildDeploy() {
   name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
   currentVersion="$(catchReturn "$handler" hookRun version-current)" || return $?
   [ -n "$currentVersion" ] || throwEnvironment "$handler" "Blank version-current" || return $?
-  bigText "Deploy $name $currentVersion" | decorate success
+  decorate big "Deploy $name $currentVersion" | decorate success
 
   local start
   start=$(timingStart)
@@ -87,7 +87,7 @@ __buildDeploy() {
   statusMessage --last decorate pair "Application Name" "$name" || :
   statusMessage --last decorate pair "Application ID" "$appId" || :
   statusMessage --last decorate pair "Application Version" "$currentVersion" || :
-  bigText "$currentVersion" | decorate magenta | decorate wrap "$(decorate green "$name    🛠️️ ")" "$(decorate green " ⚒️ ")"
+  decorate big "$currentVersion" | decorate magenta | decorate wrap "$(decorate green "$name    🛠️️ ")" "$(decorate green " ⚒️ ")"
 
   if $makeDocumentation; then
     local rootShow rootPath="$home/documentation/.site"

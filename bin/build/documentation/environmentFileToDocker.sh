@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Takes any environment file and makes it docker-compatible"$'\n'"Outputs the compatible env to stdout"$'\n'"Argument: envFile ... - File. Required. One or more files to convert."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/convert.sh"
-sourceHash="84c434e3d773478cd2e8301530ba662623f81c49"
+sourceHash="4d007136f1e2261f58b857b7e3d2025f2416dafd"
 summary="Takes any environment file and makes it docker-compatible"
 summaryComputed="true"
 usage="environmentFileToDocker envFile ..."

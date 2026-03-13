@@ -235,12 +235,12 @@ testIdenticalThingEOFProblem() {
   catchReturn "$handler" mkdir -p "$temp/identical/" || return $?
 
   printf "%s\n" "# IDENTICAL foo 1" "HELLO, WORLD" "" "" >"$temp/identical/master.txt"
-  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "" "# IDENTICAL foo 1" "Hello, WORLD" "" "" >"$temp/$(incrementor 0 "$name").txt"
-  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" "" >"$temp/$(incrementor "$name").txt"
-  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" >"$temp/$(incrementor "$name").txt"
-  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" >"$temp/$(incrementor "$name").txt"
+  printf "%s\n" "$(stringRandom)" "$(stringRandom)" "$(stringRandom)" "" "# IDENTICAL foo 1" "Hello, WORLD" "" "" >"$temp/$(incrementor 0 "$name").txt"
+  printf "%s\n" "$(stringRandom)" "$(stringRandom)" "$(stringRandom)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" "" >"$temp/$(incrementor "$name").txt"
+  printf "%s\n" "$(stringRandom)" "$(stringRandom)" "$(stringRandom)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" >"$temp/$(incrementor "$name").txt"
+  printf "%s\n" "$(stringRandom)" "$(stringRandom)" "$(stringRandom)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" >"$temp/$(incrementor "$name").txt"
   local newline=$'\n'
-  printf "%s" "$(randomString)$newline" "$(randomString)$newline" "$(randomString)$newline" "{$newline" "    # IDENTICAL foo 1$newline" "    HELLO, WORLD$newline" "}" >"$temp/$(incrementor "$name").txt"
+  printf "%s" "$(stringRandom)$newline" "$(stringRandom)$newline" "$(stringRandom)$newline" "{$newline" "    # IDENTICAL foo 1$newline" "    HELLO, WORLD$newline" "}" >"$temp/$(incrementor "$name").txt"
 
   catchReturn "$handler" identicalCheck --cd "$temp" --repair "$temp/identical" --extension 'txt' --prefix '# IDENTICAL' || return $?
 

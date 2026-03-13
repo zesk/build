@@ -170,7 +170,7 @@ _bashSanitizeCheckDebugging() {
     local file line remain debugHash found=false
     while IFS=":" read -r file line remain; do
       [ -f "$file" ] || throwEnvironment "$handler" "returned line \"$file $line $remain\" - not a file" || return $?
-      debugHash="$(sed -e "${line}p" -e d <"$file" | shaPipe)"
+      debugHash="$(sed -e "${line}p" -e d <"$file" | textSHA)"
       if grep -q -e "Debugging: $debugHash" "$file"; then
         continue
       fi

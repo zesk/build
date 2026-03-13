@@ -81,7 +81,7 @@ __bashCoverageReportProcessStats() {
     file="${fileLine%:*}"
     line="${fileLine##*:}"
     dataPath=$(catchReturn "$handler" directoryRequire "$reportCache/$file/$line/") || return $?
-    commandFile="$(printf -- "%s\n" "$command" | shaPipe)"
+    commandFile="$(printf -- "%s\n" "$command" | textSHA)"
     printf -- "%s\n" "$command" >"$dataPath/$commandFile" || throwEnvironment "$handler" "Writing $commandFile" || return $?
     targetFile="$reportBase/$file.html"
     targetFile=$(catchReturn "$handler" fileDirectoryRequire "$targetFile") || return $?
@@ -275,7 +275,7 @@ __bashCoverageCanIgnore() {
     "|" | "||" | ";;") ;;
     "if" | "fi" | "case" | "esac") ;;
     *)
-      case "$(unquote "\"" "$1")" in
+      case "$(stringUnquote "\"" "$1")" in
       "\$()") ;;
       *) printf "%s\n" "$1" ;;
       esac
@@ -292,7 +292,7 @@ __bashCoverageLineIsCoverable() {
   local trimmedLine
 
   while [ $# -gt 0 ]; do
-    trimmedLine=$(trimSpace "$1")
+    trimmedLine=$(textTrim "$1")
     case "$trimmedLine" in
     "" | "}" | "{" | "done" | "fi" | "else" | "then")
       return 1

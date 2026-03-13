@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument")
 rawComment="Clears current line of text in the console"$'\n'"Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces."$'\n'"Intended to be run on an interactive console. Should support \$(tput cols)."$'\n'"Summary: Clear a line in the console"$'\n'"Argument: textToOutput - String. Optional. Text to display on the new cleared line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="9f54e9ae3d6bd1960826e3412b3edfd9c241f895"
+sourceHash="bdf073eb6d0e0790651cc6c692be3c1964cf5e39"
 summary="Clear a line in the console"$'\n'""
 usage="consoleLineFill [ textToOutput ]"
 # shellcheck disable=SC2016

@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="stdin" [3]="stdout" [4]="examp
 rawComment="Check output for content and trigger environment error if found"$'\n'"Argument: --help - Help"$'\n'"Argument: --verbose - Flag. Optional. Verbose messages when no errors exist."$'\n'"Argument: --name name - String. Optional. Name for verbose mode."$'\n'"Argument: message ... - Optional. Optional. Message for verbose mode."$'\n'"Return Code: 0 - If no content is read from \`stdin\`"$'\n'"Return Code: 1 - If any content is read from \`stdin\` (and output to \`stdout\`)"$'\n'"Return Code: 2 - Argument error"$'\n'"stdin: Any content"$'\n'"stdout: Same content"$'\n'"Example:     source \"\$include\" > >(outputTrigger source \"\$include\") || return \$?"$'\n'""$'\n'""
 return_code="0 - If no content is read from \`stdin\`"$'\n'"1 - If any content is read from \`stdin\` (and output to \`stdout\`)"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="456ef1cd03391bca402951a815d37ccf1ed2ab88"
+sourceHash="20ebc0aea7e5c7babe365d244e8c5a7c63f0c674"
 stdin="Any content"$'\n'""
 stdout="Same content"$'\n'""
 summary="Check output for content and trigger environment error if found"

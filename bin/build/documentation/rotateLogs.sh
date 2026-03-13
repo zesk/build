@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-13
 # shellcheck disable=SC2034
-argument="--dry-run - Flag. Optional. Do not change anything."$'\n'"logPath - Required. Path where log files exist."$'\n'"count - Required. Integer of log files to maintain."$'\n'""
+argument="none"
 base="log.sh"
-description="For all log files in logPath with extension \`.log\`, rotate them safely"$'\n'""
+description="No documentation for \`rotateLogs\`."$'\n'""
 file="bin/build/tools/log.sh"
 fn="rotateLogs"
-foundNames=([0]="summary" [1]="argument")
-rawComment="Summary: Rotate log files"$'\n'"For all log files in logPath with extension \`.log\`, rotate them safely"$'\n'"Argument: --dry-run - Flag. Optional. Do not change anything."$'\n'"Argument: logPath - Required. Path where log files exist."$'\n'"Argument: count - Required. Integer of log files to maintain."$'\n'""$'\n'""
+foundNames=()
+rawComment=""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/log.sh"
-sourceHash="3606f540cf533f62d3096ca88ba8fc584e5ac93c"
-summary="Rotate log files"$'\n'""
-usage="rotateLogs [ --dry-run ] logPath count"
+sourceHash="16ac355e760e19b7d727d407d116b070e44e4ac3"
+summary="undocumented"
+usage="rotateLogs"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mrotateLogs'$'\e''[0m '$'\e''[[(blue)]m[ --dry-run ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mlogPath'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mcount'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--dry-run  '$'\e''[[(value)]mFlag. Optional. Do not change anything.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mlogPath    '$'\e''[[(value)]mRequired. Path where log files exist.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mcount      '$'\e''[[(value)]mRequired. Integer of log files to maintain.'$'\e''[[(reset)]m'$'\n'''$'\n''For all log files in logPath with extension '$'\e''[[(code)]m.log'$'\e''[[(reset)]m, rotate them safely'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mrotateLogs'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]mrotateLogs'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: rotateLogs [ --dry-run ] logPath count'$'\n'''$'\n''    --dry-run  Flag. Optional. Do not change anything.'$'\n''    logPath    Required. Path where log files exist.'$'\n''    count      Required. Integer of log files to maintain.'$'\n'''$'\n''For all log files in logPath with extension .log, rotate them safely'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+helpPlain='Usage: rotateLogs'$'\n'''$'\n''No documentation for rotateLogs.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

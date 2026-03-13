@@ -17,14 +17,12 @@ xdebugInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
-  local iniFile
-
   catchEnvironment "$handler" phpInstall || return $?
   catchReturn "$handler" packageWhich pear php-pear || return $?
   catchReturn "$handler" packageWhich phpize php-dev || return $?
   muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" pear Executable "${FUNCNAME[0]} requirements" pecl || return $?
 
-  iniFile=$(catchEnvironment "$handler" phpIniFile) || return $?
+  local iniFile && iniFile=$(catchEnvironment "$handler" phpIniFile) || return $?
   [ -f "$iniFile" ] || throwEnvironment "$handler" "php.ini not found $(decorate file "$iniFile")" || return $?
 
   statusMessage decorate info "Setting php ini path to $(decorate file "$iniFile")"
@@ -36,8 +34,7 @@ xdebugInstall() {
     muzzle catchEnvironment "$handler" pecl install xdebug || return $?
   fi
 
-  local artifact
-  artifact=$(__xdebugInstallationArtifact)
+  local artifact && artifact=$(__xdebugInstallationArtifact)
   date | muzzle catchEnvironment "$handler" tee "$artifact" || return $?
 }
 _xdebugInstall() {
@@ -46,8 +43,7 @@ _xdebugInstall() {
 }
 
 __xdebug_Require() {
-  local artifact
-  artifact=$(__xdebugInstallationArtifact)
+  local artifact && artifact=$(__xdebugInstallationArtifact) || :
   [ -f "$artifact" ] || throwArgument "$1" "xdebug is not installed on this system" || return $?
 }
 

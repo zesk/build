@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Output the port for the given scheme"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: scheme ... - String. Required. Scheme to look up the default port used for that scheme."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="5c17cd3be5908f799dcf52a229b158e5866260c8"
+sourceHash="c50fa195093aa14ef2053e1e5b7f154a2346e3a7"
 summary="Output the port for the given scheme"
 summaryComputed="true"
 usage="urlSchemeDefaultPort [ --help ] [ --handler handler ] scheme ..."

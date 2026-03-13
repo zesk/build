@@ -8,7 +8,7 @@
 
 _usageArgumentTypeList() {
   local prefix="usageArgument"
-  declare -F | removeFields 2 | grepSafe -e "^$prefix" | cut -c "$((${#prefix} + 1))"- | sort
+  declare -F | textRemoveFields 2 | grepSafe -e "^$prefix" | cut -c "$((${#prefix} + 1))"- | sort
 }
 
 testValidateMissing() {
@@ -65,6 +65,9 @@ testValidateFunctions() {
   d=$(fileTemporaryName "$handler" -d) || return $?
 
   export _TEST_VALIDATE_HANDLER="$d/artifact"
+
+  _testValidateArgumentHelperSuccess Type Integer Type Callable Executable Integer UnsignedInteger ColonDelimitedList "string?" env Boolean || return $?
+  _testValidateArgumentHelperFail Type "$d/foo" notType uncallable Integral Numberlike || return $?
 
   _testValidateArgumentHelperSuccess FileDirectory "$d" "$(pwd)" "/" "$d/inside" "NOT-a-dir-but-works-as-it-resolves-to-dot" "../../../../../ha-ends-at-root" || return $?
 

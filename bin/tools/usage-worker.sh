@@ -282,7 +282,7 @@ __buildUsageCompileWorker() {
       break
     fi
     catchReturn "$handler" flock -u 4 || return $? # release lock
-    ! $debugFlag || decorate pair "$prefix line (${#recordLine})" "$(trimSpace "$recordLine")" 1>&2
+    ! $debugFlag || decorate pair "$prefix line (${#recordLine})" "$(textTrim "$recordLine")" 1>&2
     IFS=" " read -r functionName fileModificationTime sourceFile <<<"$recordLine"
     [ -n "$functionName" ] || continue
     [ "$functionName" != "-" ] || break

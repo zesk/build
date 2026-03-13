@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-13
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"delta - Integer. Milliseconds"$'\n'""
 base="timing.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Format a timing output (milliseconds) as seconds using a decimal"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: delta - Integer. Milliseconds"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/timing.sh"
-sourceHash="8cfb9a50fadfff4b381ff34068eab3136b206319"
+sourceHash="5581b63036fc9da1d491ccedd9fa5ebf5e1a3173"
 summary="Format a timing output (milliseconds) as seconds using a decimal"
 summaryComputed="true"
 usage="timingFormat [ --help ] [ delta ]"

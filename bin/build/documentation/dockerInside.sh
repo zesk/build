@@ -12,7 +12,7 @@ foundNames=([0]="return_code" [1]="todo" [2]="checked")
 rawComment="Are we inside a docker container right now?"$'\n'"Return Code: 0 - Yes"$'\n'"Return Code: 1 - No"$'\n'"TODO: This changed 2023 ..."$'\n'"Checked: 2025-07-09"$'\n'"TODO: Write a test to check this date every oh, say, 3 months"$'\n'""$'\n'""
 return_code="0 - Yes"$'\n'"1 - No"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
-sourceHash="40691740f89ab0014548483a77411acc673dbe12"
+sourceHash="51657edc2c4ddde3087728a205decf35b61fd7b4"
 summary="Are we inside a docker container right now?"
 summaryComputed="true"
 todo="This changed 2023 ..."$'\n'"Write a test to check this date every oh, say, 3 months"$'\n'""

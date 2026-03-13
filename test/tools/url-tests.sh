@@ -225,7 +225,7 @@ testUrlToVariables() {
     --stdout-match "DSN_NAME=theDude"
     --stdout-match "DSN_PASSWORD=who-would-guess-this"
   )
-  assertExitCode "${matches[@]}" 0 urlParse --uppercase --prefix DSN_ "https://user:who-would-guess-this@localhost/theDude" || return $?
+  assertExitCode "${matches[@]}" 0 urlParse --stringUppercase --prefix DSN_ "https://user:who-would-guess-this@localhost/theDude" || return $?
   local matches=(
     --stdout-match "DSN_user=user"
     --stdout-match "DSN_host=localhost"

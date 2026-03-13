@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="Argument: --cache cacheDirectory - Directory. Optional. Cache directory to use for ordering work."$'\n'"Argument: finderFile - File. Required. File to reorder."$'\n'"stdout: Reordered file."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="3dc9153efc63a64f4b122dfeb5c5c0343dd405ee"
+sourceHash="1d0eb4bb6d7f51be955f3ceed30194b66406006f"
 stdout="Reordered file."$'\n'""
 summary="undocumented"
 usage="testSuiteOrdering [ --cache cacheDirectory ] finderFile"

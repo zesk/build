@@ -23,7 +23,7 @@
 #     logFile.3
 #
 # But maintains file descriptors for `logFile`.
-rotateLog() {
+logRotate() {
   local this="${FUNCNAME[0]}"
   local handler="_$this"
 
@@ -92,7 +92,7 @@ rotateLog() {
     printf "" >"$logFile" || throwEnvironment "$handler" "$this Failed to truncate $logFile" || return $?
   fi
 }
-_rotateLog() {
+_logRotate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -102,7 +102,7 @@ _rotateLog() {
 # Argument: --dry-run - Flag. Optional. Do not change anything.
 # Argument: logPath - Required. Path where log files exist.
 # Argument: count - Required. Integer of log files to maintain.
-rotateLogs() {
+logRotates() {
   local handler="_${FUNCNAME[0]}"
 
   local logPath="" count="" dryRunArgs=()
@@ -137,11 +137,11 @@ rotateLogs() {
   statusMessage decorate info "Rotating log files in path $(decorate file "$logPath")"
   find "$logPath" -type f -name '*.log' ! -path "*/.*/*" | while IFS= read -r logFile; do
     statusMessage decorate info "Rotating log file $logFile" || :
-    catchEnvironment "$handler" rotateLog "${dryRunArgs[@]+${dryRunArgs[@]}}" "$logFile" "$count" || return $?
+    catchEnvironment "$handler" logRotate "${dryRunArgs[@]+${dryRunArgs[@]}}" "$logFile" "$count" || return $?
   done
   statusMessage --last decorate info "Rotated log files in path $(decorate file "$logPath")"
 }
-_rotateLogs() {
+_logRotates() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

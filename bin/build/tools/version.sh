@@ -14,13 +14,12 @@
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: binary - String. Required. The binary to look for.
 isVersion() {
-  local part parts
   [ $# -gt 0 ] || return 1
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || return 1
-    IFS=. read -r -a parts < <(printf "%s\n" "$1") || :
-    for part in "${parts[@]}"; do
+    local parts=() && IFS=. read -r -a parts < <(printf "%s\n" "$1") || :
+    local part && for part in "${parts[@]}"; do
       isUnsignedInteger "$part" || return 1
     done
     shift
@@ -128,11 +127,8 @@ versionNextMinor() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      local last prefix
-
-      last="${1##*.}"
+      local last="${1##*.}" prefix="${1%.*}"
       catchArgument "$handler" isInteger "$last" || return $?
-      prefix="${1%.*}"
       prefix="${prefix#v*}"
       if [ "$prefix" != "${1-}" ]; then
         prefix="$prefix."
@@ -187,10 +183,7 @@ releaseNew() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --non-interactive)
-      isInteractive=false
-      decorate warning "Non-interactive mode set"
-      ;;
+    --non-interactive) isInteractive=false && decorate warning "Non-interactive mode set" ;;
     --application) shift && application=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       if [ -n "$newVersion" ]; then
@@ -211,16 +204,15 @@ releaseNew() {
 
 __releaseNew() {
   local handler="$1" isInteractive="$2" newVersion="$3"
-  local newVersion readLoop=false currentVersion liveVersion nextVersion notes isInteractive
-  local versionOrdering
   local width=40
 
   # No version on command-line *potentially* ask (interactive only)
+  local readLoop=false
   if [ -z "$newVersion" ]; then
     readLoop=true
   fi
   hookExists version-current || throwEnvironment "$handler" "Requires hook version-current" || return $?
-  currentVersion=$(catchEnvironment "$handler" hookRun version-current) || return $?
+  local liveVersion currentVersion && currentVersion=$(catchEnvironment "$handler" hookRun version-current) || return $?
   [ -n "$currentVersion" ] || throwEnvironment "$handler" "version-current hook returned empty string" || return $?
   if hookExists version-live; then
     liveVersion=$(catchEnvironment "$handler" hookRun version-live) || return $?
@@ -229,8 +221,8 @@ __releaseNew() {
   else
     liveVersion=$currentVersion
   fi
-  notes="$(catchEnvironment "$handler" releaseNotes "$currentVersion")" || return $?
-  nextVersion=$(versionNextMinor "$liveVersion")
+  local notes && notes="$(catchEnvironment "$handler" releaseNotes "$currentVersion")" || return $?
+  local nextVersion && nextVersion=$(versionNextMinor "$liveVersion")
   decorate pair $width "Current:" "$currentVersion"
 
   if [ -n "$newVersion" ] && [ "$currentVersion" != "$newVersion" ]; then
@@ -259,7 +251,7 @@ __releaseNew() {
       catchEnvironment "$handler" hookRun version-created "$currentVersion" "$notes" || return $?
     fi
   fi
-  versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
+  local versionOrdering && versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
   if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
     decorate pair $width "Ready to deploy:" "$currentVersion"
     decorate pair $width "Release notes:" "$notes"

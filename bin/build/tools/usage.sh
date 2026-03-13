@@ -178,7 +178,7 @@ _usageDocumentSimple() {
 #
 # Runs `handler` on failure
 #
-usageRequireBinary() {
+executableRequire() {
   # IDENTICAL usageFunctionHeader 6
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -191,7 +191,7 @@ usageRequireBinary() {
     executableExists "$binary" || throwEnvironment "$handler" "$binary is not available in path, not found: $(decorate code "$PATH")"
   done
 }
-_usageRequireBinary() {
+_executableRequire() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -204,7 +204,7 @@ _usageRequireBinary() {
 # Return Code: 1 - If any `environmentVariable` variables are not set or are empty.
 # Deprecated: 2024-01-01
 #
-usageRequireEnvironment() {
+environmentRequire() {
   # IDENTICAL usageFunctionHeader 6
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -219,7 +219,7 @@ usageRequireEnvironment() {
     fi
   done
 }
-_usageRequireEnvironment() {
+_environmentRequire() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

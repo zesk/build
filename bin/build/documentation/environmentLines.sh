@@ -12,7 +12,7 @@ foundNames=([0]="example" [1]="argument")
 rawComment="Example:     {fn} < \"\$stateFile\""$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"List lines of environment values set in a bash state file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/io.sh"
-sourceHash="ab40396c0bbaf04b90ac18495770691379efbd1a"
+sourceHash="0f1011676755f0412e216127710dc6f43e456014"
 summary="List lines of environment values set in a bash state"
 summaryComputed="true"
 usage="environmentLines [ --help ]"

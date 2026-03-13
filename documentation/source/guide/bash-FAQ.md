@@ -106,7 +106,7 @@ is (http://cnswww.cns.cwru.edu/~chet/bash/bashtop.html)[http://cnswww.cns.cwru.e
   /usr/bin/time?
 - G5) How do I get the current directory into my prompt?
 - G6) How can I rename "*.foo" to "*.bar"?
-- G7) How can I translate a filename from uppercase to lowercase?
+- G7) How can I translate a filename from stringUppercase to lowercase?
 - G8) How can I write a filename expansion (globbing) pattern that will match all files in the current directory
   except "." and ".."?
 
@@ -798,8 +798,8 @@ Bash-4.0 contained the following new features:
   retain only that number of trailing pathname components and replace
   the intervening characters with `...`.
 
-- There are new case-modifying word expansions: uppercase (^[^]) and
-  lowercase (,[,]). They can work on either the first character or
+- There are new case-modifying word expansions: stringUppercase (^[^]) and
+  stringLowercase (,[,]). They can work on either the first character or
   array element, or globally. They accept an optional shell pattern
   that determines which characters to modify. There is an optionally-
   configured feature to include capitalization operators.
@@ -807,8 +807,8 @@ Bash-4.0 contained the following new features:
 - The shell provides associative array variables, with the appropriate
   support to create, delete, assign values to, and expand them.
 
-- The `declare` builtin now has new -l (convert value to lowercase upon
-  assignment) and -u (convert value to uppercase upon assignment) options.
+- The `declare` builtin now has new -l (convert value to stringLowercase upon
+  assignment) and -u (convert value to stringUppercase upon assignment) options.
   There is an optionally-configurable -c option to capitalize a value at
   assignment.
 
@@ -1800,7 +1800,7 @@ This is what POSIX.2 and SUSv3/XPG6 specify.
 
 The behavior of the matcher in bash-2.05 and later versions depends on the
 current LC_COLLATE setting. Setting this variable to `C` or `POSIX` will
-result in the traditional behavior ([A-Z] matches all uppercase ASCII
+result in the traditional behavior ([A-Z] matches all stringUppercase ASCII
 characters). Many other locales, including the en_US locale (the default
 on many US versions of Linux) collate the upper and lower case letters like
 this:
@@ -2293,7 +2293,7 @@ loop will do the trick:
 		mv $f ${f%foo}bar
 	done
 
-### G7) How can I translate a filename from uppercase to lowercase?
+### G7) How can I translate a filename from stringUppercase to lowercase?
 
 The script examples/functions/lowercase, originally written by John DuBois,
 will do the trick. The converse is left as an exercise.

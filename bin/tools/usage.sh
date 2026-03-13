@@ -69,9 +69,9 @@ buildUsageCompile() {
       while read -r filePath; do
         # If prefixed with a docPath, then skip it
         [ "${filePath#"$docPath"}" = "$filePath" ] || continue
-        grep "$docPath" | removeFields 1 | cut -d . -f 1 | cut "-c$((2 + ${#docPath}))-" >"$tempFunctions"
+        grep "$docPath" | textRemoveFields 1 | cut -d . -f 1 | cut "-c$((2 + ${#docPath}))-" >"$tempFunctions"
         break
-      done < <(removeFields 1 <"$allModificationTimes")
+      done < <(textRemoveFields 1 <"$allModificationTimes")
       catchEnvironment "$handler" rm -f "$allModificationTimes" || return $?
       totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
       catchReturn "$handler" statusMessage decorate info "Optimized function count to check is $totalFunctions (Actual is $actualTotalFunctions)" || return $?
@@ -232,7 +232,7 @@ __buildUsageCompileFunction() {
   fi
 
   if [ -n "$sourceHash" ]; then
-    local computedHash && computedHash=$(catchEnvironment "$handler" shaPipe <"$sourceFile") || return $?
+    local computedHash && computedHash=$(catchEnvironment "$handler" textSHA <"$sourceFile") || return $?
 
     if [ "$computedHash" = "$sourceHash" ]; then
       __profileLabel="cache match - no action"

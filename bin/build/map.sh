@@ -515,7 +515,7 @@ _returnCodeString() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL validate 132
+# IDENTICAL validate 168
 
 # Summary: Validate a value by type
 # Argument: handler - Function. Required. Error handler.
@@ -566,6 +566,7 @@ _returnCodeString() {
 #
 # #### Functional
 #
+# - `Type` - (no aliases) - A type which can be validated by `validate`
 # - `Function` - (alias `function`) - A defined function
 # - `Callable` - (alias `callable`) - A function or executable
 # - `Executable` - (alias `bin`) - Any binary available within the `PATH`
@@ -578,13 +579,27 @@ _returnCodeString() {
 # - `CommaDelimitedList` - (alias `list,`) - A comma-delimited list `,`
 #
 # You can repeat the `type` `name` `value` more than once in the arguments and each will be checked until one fails
+#
+# `validate` is intended to be extensible as well as reducible to smaller sizes by limiting type validation to used
+# types only. The core validation types can be used **CASE-SENSITIVE ONLY** in smaller scripts using the core `validate`
+# {IDENTICAL} document which includes:
+#
+# - `String`
+# - `PositiveInteger`
+# - `Function`
+# - `Callable`
+#
+# The function `_validateTypeMapper` is defined and can map types to internal types. If not present, then no conversion
+# is done. For a type to be considered valid, the corresponding `__validateType` prefixed function **MUST** exist.
+#
+# Internally the function `_validateTypeMapperDefault` is the default type mapper and does the lowercase and alias lookups.
+#
 # Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Return Code: 2 - Valid is invalid, output reason to stderr
-# Requires: __validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable
+# Requires: __validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable __validateTypeType
 # Requires: isFunction throwArgument __help decorate
 validate() {
   local handler="_${FUNCNAME[0]}"
-  local prefix="__validateType"
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code -- "$@"))" || return $?
@@ -594,19 +609,17 @@ validate() {
   local name="" index=0
   while [ $# -ge 3 ]; do
     index=$((index + 1))
-    local type="$1" value="$3"
+    # name is carried between groups if blank
     name="${2:-"$name"}"
-    [ -n "$name" ] || throwArgument "$handler" "name required" || return $?
-    if isFunction _validateTypeMapper; then
-      type=$(_validateTypeMapper "$type")
-    fi
-    local typeFunction="$prefix$type"
-    isFunction "$typeFunction" || throwArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
+    [ -n "$name" ] || throwArgument "$handler" "[#$index] name required" || return $?
+    local type="$1" value="$3" typeFunction=""
+    __validateMapper "$type"
+    isFunction "$typeFunction" || throwArgument "$handler" "[#$index $name] validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
     # Outputs stdout value if successful
     if ! "$typeFunction" "$value"; then
       local suffix="" ess="s" && [ "${#value}" -ne 1 ] || ess=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
-      throwArgument "$handler" "$name (#$index \"$(decorate code "$value")\" [${#value} char$ess]) is not type $(decorate label "$type")$suffix" || return $?
+      throwArgument "$handler" "[#$index $name] \"$(decorate code "$value")\" [${#value} char$ess]) is not type $(decorate label "$type")$suffix" || return $?
     fi
     shift 3
   done
@@ -616,12 +629,35 @@ _validate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Handles extension via `_validateTypeMapper`
+# Internal
+# Locals Modified: type typeFunction
+# Argument: type - String. Type to optionally map.
+# Requires: isFunction
+__validateMapper() {
+  local prefix="__validateType"
+  if isFunction _validateTypeMapper; then
+    type=$(_validateTypeMapper "$1")
+  fi
+  typeFunction="$prefix$type"
+}
+
 # output arguments to stderr and return the argument error
 # Return: 2
 # Return Code: 2 - Argument error
 _validateThrow() {
   printf -- "%s\n" "$@" 1>&2
   return 2
+}
+
+# Valid validate type
+# Requires: _validateThrow
+__validateTypeType() {
+  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  local type="${1-:__NOT__}" typeFunction=""
+  __validateMapper "$type"
+  isFunction "$typeFunction" || _validateThrow "Invalid type $1 -> $type" || return $?
+  printf "%s\n" "$type"
 }
 
 # Non-empty string
@@ -649,7 +685,7 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL decorate 290
+# IDENTICAL decorate 293
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -739,7 +775,10 @@ decorate() {
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
-    if isFunction "$extend"; then
+    if isFunction "${extend}.Pure"; then
+      catchReturn "$handler" "${extend}.Pure" "$@" || return $?
+      return 0
+    elif isFunction "$extend"; then
       executeInputSupport "$handler" "$extend" -- "$@" || return $?
       return 0
     else
@@ -1073,7 +1112,7 @@ _environmentVariables() {
 # Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
-# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
+# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE

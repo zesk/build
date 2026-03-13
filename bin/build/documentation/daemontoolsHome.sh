@@ -11,7 +11,7 @@ foundNames=([0]="return_code")
 rawComment="Print the daemontools service home path"$'\n'"Return Code: 0 - success"$'\n'"Return Code: 1 - No environment file found"$'\n'""$'\n'""
 return_code="0 - success"$'\n'"1 - No environment file found"$'\n'""
 sourceFile="bin/build/tools/daemontools.sh"
-sourceHash="857f204c053a784dde5252c1bff78b826a67097e"
+sourceHash="5472561dbf886107f26337a49882ca81874269ca"
 summary="Print the daemontools service home path"
 summaryComputed="true"
 usage="daemontoolsHome"

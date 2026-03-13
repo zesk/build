@@ -43,8 +43,6 @@ To run commands directly; note this is slower for larger scripts and can be used
 
 {__buildIdenticalRepair}
 
-## `install-bin-build.sh`
-
 {_installRemotePackage}
 
 Modify the last line of this file when installing at a different project depth:

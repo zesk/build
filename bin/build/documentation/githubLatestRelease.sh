@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Get the latest release version"$'\n'"Argument: projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/github.sh"
-sourceHash="7962d8fef2f900b93920c38d2ca4a10b9665956d"
+sourceHash="a6d97f4e2d055b5e7abf444332e9d411afe7a742"
 summary="Get the latest release version"
 summaryComputed="true"
 usage="githubLatestRelease projectName"

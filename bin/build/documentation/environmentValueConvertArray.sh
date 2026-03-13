@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="Convert an array value which was loaded already"$'\n'"Argument: encodedValue - String. Required. Value to convert to tokens, one per line"$'\n'"stdout: Array values separated by newlines"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/io.sh"
-sourceHash="ab40396c0bbaf04b90ac18495770691379efbd1a"
+sourceHash="0f1011676755f0412e216127710dc6f43e456014"
 stdout="Array values separated by newlines"$'\n'""
 summary="Convert an array value which was loaded already"
 summaryComputed="true"

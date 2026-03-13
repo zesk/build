@@ -32,7 +32,7 @@ EOF
 
 testUnquote() {
   __testUnquoteData | while read -r quote quoted unquoted; do
-    assertEquals "$(unquote "$quote" "$quoted")" "$unquoted" --message "unquote \"$quote\" \"$quoted\"" || return $?
+    assertEquals "$(stringUnquote "$quote" "$quoted")" "$unquoted" --message "stringUnquote \"$quote\" \"$quoted\"" || return $?
   done
 }
 

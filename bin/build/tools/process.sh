@@ -58,7 +58,7 @@ processWait() {
       ;;
     --signals)
       shift || throwArgument "$handler" "missing $argument argument" || return $?
-      IFS=',' read -r -a signals < <(uppercase "$1")
+      IFS=',' read -r -a signals < <(stringUppercase "$1")
       for signal in "${signals[@]}"; do
         case "$signal" in
         STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
@@ -175,7 +175,7 @@ processMemoryUsage() {
       local pid="$argument"
       catchArgument "$handler" isInteger "$pid" || return $?
       # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
-      value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || throwEnvironment "$handler" "Failed to get process status for $pid" || return $?
+      value="$(ps -o rss -p "$pid" | tail -n 1 | textTrim)" || throwEnvironment "$handler" "Failed to get process status for $pid" || return $?
       isInteger "$value" || throwEnvironment "$handler" "Bad memory value for $pid: $value" || return $?
       printf %d $((value * 1))
       ;;
@@ -212,7 +212,7 @@ processVirtualMemoryAllocation() {
     *)
       local pid="$argument" value
       catchArgument "$handler" isInteger "$pid" || return $?
-      value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
+      value="$(ps -o vsz -p "$pid" | tail -n 1 | textTrim)"
       isInteger "$value" || throwEnvironment "$handler" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
       printf %d $((value * 1))
       ;;

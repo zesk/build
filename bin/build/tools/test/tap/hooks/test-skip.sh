@@ -49,7 +49,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
           if ! directive=$(__testSuiteTAP_ParseFlags "${TEST_FLAGS}"); then
             directive="$TEST_REASON"
           else
-            directive=$(trimSpace "$directive $TEST_REASON")
+            directive=$(textTrim "$directive $TEST_REASON")
           fi
           catchReturn "$handler" __testSuiteTAP_skip "$tapCachePath" "$TEST_SUITE_NAME" "$TEST_NAME" "$TEST_FILE" "$TEST_LINE" "$directive" || return $?
         } >>"$tapPath" || return $?

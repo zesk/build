@@ -35,7 +35,7 @@ __linkRename() {
 }
 
 # Requires: realpath
-__realPath() {
+__fileRealPath() {
   realpath "$@"
 }
 

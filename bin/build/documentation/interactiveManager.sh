@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails."$'\n'"Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"Argument: fileToCheck ... - File. Optional. Shell file to validate. May also supply file names via stdin."$'\n'"Run checks interactively until errors are all fixed."$'\n'"Not ready for prime time yet - written not tested."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="e17f0ea69f1c6cf5eceec027dffd3be9d099fb75"
+sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
 summary="Run checks interactively until errors are all fixed."
 summaryComputed="true"
 usage="interactiveManager loopCallable [ --exec binary ] [ --delay delaySeconds ] [ fileToCheck ... ]"

@@ -51,7 +51,7 @@ testConsoleFileLink() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  bigText consoleFileLink
+  decorate big consoleFileLink
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
   assertExitCode --stderr-match "non-plain" 2 consoleFileLink "$(decorate black "paint it")" || return $?
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?

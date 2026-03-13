@@ -72,7 +72,7 @@ testPHPBuild() {
   #
   # This MUST be inside the source tree root to run docker in pipelines
   #
-  testPath="$(randomString)"
+  testPath="$(stringRandom)"
   testPath="${testPath:0:8}"
   appName="sublimeApplication"
   testPath="$here/.test.PHPBuild.$testPath/$appName"
