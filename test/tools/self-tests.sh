@@ -209,7 +209,7 @@ testInstallBinBuild() {
   # --------------------------------------------------------------------------------
   #
   consoleLineFill
-  consoleHeadingBoxed "No .gitignore, was updated, same name"
+  decorate box "No .gitignore, was updated, same name"
   #
   section=$((section + 1))
   decorate big "Section #$section"
@@ -241,7 +241,7 @@ testInstallBinBuild() {
   #
   consoleLineFill
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  consoleHeadingBoxed "Has gitignore (missing), missing, different name"
+  decorate box "Has gitignore (missing), missing, different name"
   section=$((section + 1))
   decorate big "Section #$section"
 
@@ -274,7 +274,7 @@ testInstallBinBuild() {
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   consoleLineFill
-  consoleHeadingBoxed "Has gitignore (missing), bin/build exists, different name"
+  decorate box "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
   decorate big "Section #$section"
 
@@ -300,7 +300,7 @@ testInstallBinBuild() {
   assertDirectoryExists bin/build || return $?
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  consoleHeadingBoxed "Has gitignore (correct), bin/build exists, different name"
+  decorate box "Has gitignore (correct), bin/build exists, different name"
 
   #  ▞▀▖      ▐  ▗           ▌ ▌
   #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖▚▄▌

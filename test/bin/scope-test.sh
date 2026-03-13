@@ -99,7 +99,7 @@ unset TESTING
 set +a
 
 testName="Undeclared"
-consoleHeadingBoxed "$testName"
+decorate box "$testName"
 for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
@@ -136,7 +136,7 @@ done
 export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 
 testName="export TESTING first"
-consoleHeadingBoxed "$testName"
+decorate box "$testName"
 for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
@@ -177,7 +177,7 @@ export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 
 testName="set -a"
 
-consoleHeadingBoxed "$testName"
+decorate box "$testName"
 for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
@@ -220,7 +220,7 @@ function testLocalScope() {
   local TESTING
 
   testName="local scope"
-  consoleHeadingBoxed "$testName"
+  decorate box "$testName"
   for func in $(testsWhichReturnBlank); do
     fullName="$testName $func"
     # -- precondition --

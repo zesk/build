@@ -592,7 +592,7 @@ _returnCodeString() {
 # The function `_validateTypeMapper` is defined and can map types to internal types. If not present, then no conversion
 # is done. For a type to be considered valid, the corresponding `__validateType` prefixed function **MUST** exist.
 #
-# Internally the function `_validateTypeMapperDefault` is the default type mapper and does the lowercase and alias lookups.
+# Internally the function `_validateTypeMapperDefault` is the default type mapper and does the stringLowercase and alias lookups.
 #
 # Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Return Code: 2 - Valid is invalid, output reason to stderr

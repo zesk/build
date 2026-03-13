@@ -66,18 +66,18 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
     local targetFile="$1" && shift
     catchEnvironment "$handler" sort -rn <"$statsFile" >"$targetFile" || return $?
     catchEnvironment "$handler" rm -rf "$statsFile" || return $?
-    catchReturn "$handler" consoleHeadingBoxed "Slowest tests" || return $?
+    catchReturn "$handler" decorate box "Slowest tests" || return $?
     catchReturn "$handler" head -n 50 <"$targetFile" | catchReturn "$handler" __testStatsFormat | printfOutputEmpty "%s\n" "None." || return $?
-    catchReturn "$handler" consoleHeadingBoxed "Fastest tests" || return $?
+    catchReturn "$handler" decorate box "Fastest tests" || return $?
     catchReturn "$handler" grepSafe -v -e '^0 ' "$targetFile" | catchReturn "$handler" tail -n 20 | catchReturn "$handler" __testStatsFormat | printfOutputEmpty "%s\n" "None." || return $?
-    catchReturn "$handler" consoleHeadingBoxed "Zero-second tests" || return $?
+    catchReturn "$handler" decorate box "Zero-second tests" || return $?
     local zeroTests=()
     IFS=$'\n' read -d '' -r -a zeroTests < <(grepSafe -e '^0 ' "$targetFile" | awk '{ print $2 }') || :
     catchReturn "$handler" printf -- "%s " "${zeroTests[@]+"${zeroTests[@]}"}" | printfOutputEmpty "%s\n" "None." || return $?
     catchReturn "$handler" printf -- "\n" || return $?
     __testLoader "$handler" : || return $?
     local afFile && if afFile=$(__assertedFunctions); then
-      catchReturn "$handler" consoleHeadingBoxed "Functions asserted (cumulative)" || return $?
+      catchReturn "$handler" decorate box "Functions asserted (cumulative)" || return $?
       catchReturn "$handler" cat "$afFile" || return $?
       lines=$(catchReturn "$handler" fileLineCount <"$afFile") || return $?
       catchReturn "$handler" decorate info "$lines $(plural "$lines" "function" "functions")" || return $?

@@ -519,7 +519,7 @@ gitCommit() {
     catchReturn "$handler" __gitCommitReleaseNotesUpdate "$handler" "$notes" "$comment" || return $?
   elif [ -z "$comment" ]; then
     comment=$(__gitCommitReleaseNotesGetLastComment "$handler" "$notes") || return $?
-    [ -z "$comment" ] || printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(consoleHeadingBoxed "$comment")"
+    [ -z "$comment" ] || printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(decorate box "$comment")"
   fi
   outputHandler="cat"
   ! $openLinks || outputHandler="urlOpener"
@@ -544,7 +544,7 @@ __gitCommitReleaseNotesUpdate() {
     local prefix=""
     fileEndsWithNewline "$notes" || prefix=$'\n'
     catchEnvironment "$handler" printf -- "%s%s %s\n" "$prefix" "-" "$comment" >>"$notes" || return $?
-    printf -- "%s %s:\n%s\n" "$(decorate info "Adding comment to")" "$(decorate file "$notes")" "$(consoleHeadingBoxed "$comment")"
+    printf -- "%s %s:\n%s\n" "$(decorate info "Adding comment to")" "$(decorate file "$notes")" "$(decorate box "$comment")"
     catchEnvironment "$handler" git add "$notes" || return $?
     catchEnvironment "$handler" grep -B 10 -e "$pattern" "$notes" | decorate code || return $?
   else

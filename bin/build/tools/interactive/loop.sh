@@ -66,7 +66,7 @@ __executeLoop() {
       suffix=$(decorate warning "(loading)")
     fi
 
-    catchReturn "$handler" consoleHeadingBoxed --size 0 --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" && printf -- "%s\n" "$statusLine" | plasterLines || return $?
+    catchReturn "$handler" decorate box --size 0 --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" && printf -- "%s\n" "$statusLine" | plasterLines || return $?
     IFS=$'\n' read -r -d '' _ saveY < <(cursorGet)
 
     local start showRows
@@ -94,14 +94,14 @@ __executeLoop() {
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then
-      catchReturn "$handler" consoleHeadingBoxed --size 0 --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
+      catchReturn "$handler" decorate box --size 0 --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
       printf "%s\n" "$statusLine" | plasterLines || return $?
       catchEnvironment "$handler" plasterLines <"$outputBuffer" || return $?
       cursorSet 1 "$((rowCount - 1))"
       decorate big "Success"
       done=true
     else
-      catchReturn "$handler" consoleHeadingBoxed --size 0 --outside "$outsideColor" --inside "" "$title $(decorate orange "(looping)")" && printf -- "%s\n" "$statusLine" | plasterLines || echo "EXIT CODE: $?"
+      catchReturn "$handler" decorate box --size 0 --outside "$outsideColor" --inside "" "$title $(decorate orange "(looping)")" && printf -- "%s\n" "$statusLine" | plasterLines || echo "EXIT CODE: $?"
       (
         tail -n "$showRows" <"$outputBuffer"
         [ "$showRows" -lt "$nLines" ] || textRepeat "$((showRows - nLines))" "\n"

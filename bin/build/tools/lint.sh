@@ -264,7 +264,7 @@ _bashLintInteractiveCheck() {
   fi
   if $scriptPassed; then
     decorate big "SUCCESS $(basename "$script")" | decorate green
-    consoleHeadingBoxed "$script now passes" | decorate BOLD green
+    decorate box "$script now passes" | decorate BOLD green
     decorate orange "$(consoleLine "*")"
     return 0
   fi

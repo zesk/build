@@ -5,7 +5,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL _fileRealPath EOF
+# IDENTICAL fileRealPath EOF
 
 # Find the full, actual path of a file avoiding symlinks or redirection.
 # See: readlink realpath

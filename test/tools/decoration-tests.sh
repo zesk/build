@@ -44,7 +44,7 @@ testLabeledBigText() {
 
 testBoxedHeading() {
   local header="A really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, long string which should likely be longer than any console or testing window that would likely be available at any point in the near or potential future which may have longer text widths perhaps even more than a few hundred. Waldo"
-  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 consoleHeadingBoxed "$header" || return $?
-  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 consoleHeadingBoxed --size 10 "$header" || return $?
-  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 consoleHeadingBoxed --shrink 20 "$header" || return $?
+  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 decorate box "$header" || return $?
+  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 decorate box --size 10 "$header" || return $?
+  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 decorate box --shrink 20 "$header" || return $?
 }

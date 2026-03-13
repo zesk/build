@@ -287,7 +287,7 @@ _fileModifiedDays() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _fileRealPath 20
+# IDENTICAL fileRealPath 20
 
 # Find the full, actual path of a file avoiding symlinks or redirection.
 # See: readlink realpath

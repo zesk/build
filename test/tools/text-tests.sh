@@ -435,7 +435,7 @@ testSingleBlankLines() {
 }
 
 testText() {
-  assertOutputContains Hello consoleHeadingBoxed Hello || return $?
+  assertOutputContains Hello decorate box Hello || return $?
 }
 
 testLowercase() {

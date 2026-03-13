@@ -29,6 +29,7 @@ randomString|stringRandom|
 loopExecute|executeLoop|
 bigTextAt|decorate at|
 bigText|decorate big|
+consoleHeadingBoxed|decorate box|
 
 # v0.41.2
 

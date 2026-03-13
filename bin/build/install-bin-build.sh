@@ -723,7 +723,7 @@ _versionSort() {
 # The function `_validateTypeMapper` is defined and can map types to internal types. If not present, then no conversion
 # is done. For a type to be considered valid, the corresponding `__validateType` prefixed function **MUST** exist.
 #
-# Internally the function `_validateTypeMapperDefault` is the default type mapper and does the lowercase and alias lookups.
+# Internally the function `_validateTypeMapperDefault` is the default type mapper and does the stringLowercase and alias lookups.
 #
 # Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Return Code: 2 - Valid is invalid, output reason to stderr
@@ -1387,7 +1387,7 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL executableExists 40
+# IDENTICAL executableExists 39
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
@@ -1409,7 +1409,6 @@ executableExists() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --any) anyFlag=true ;;
     *)

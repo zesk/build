@@ -24,7 +24,7 @@ __testDebugTermDisplay() {
 __testSection() {
   [ -n "$*" ] || returnArgument "Blank argument $(debuggingStack)"
   consoleLineFill
-  consoleHeadingBoxed --size 0 "$@"
+  decorate box --size 0 "$@"
 }
 
 #
