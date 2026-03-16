@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="--any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist."$'\n'"binary ... - String. Required. One or more Binaries to find in the system \`PATH\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="platform.sh"
@@ -13,7 +13,7 @@ rawComment="Summary: Does a binary exist in the PATH?"$'\n'"Argument: --any - Fl
 requires="throwArgument decorate __decorateExtensionEach command"$'\n'""
 return_code="0 - If all values are found (without the \`--any\` flag), or if *any* binary is found with the \`--any\` flag"$'\n'"1 - If any value is not found (without the \`--any\` flag), or if *all* binaries are NOT found with the \`--any\` flag."$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="0e65d7e92bc21e3de71f94e056e6f6cd24b198b0"
+sourceHash="b4c54f540449e223464e1989991f354a44bba06c"
 summary="Does a binary exist in the PATH?"$'\n'""
 usage="executableExists [ --any ] binary ... [ --help ]"
 # shellcheck disable=SC2016

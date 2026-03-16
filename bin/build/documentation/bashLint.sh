@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--fix - Flag. Optional. Fix files when possible."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"script - File. Optional. Shell script to validate"$'\n'""
 base="lint.sh"
@@ -15,7 +15,7 @@ return_code="0 - All found files pass \`shellcheck\` and \`bash -n\` and shell c
 see="shellcheck"$'\n'"bashSanitize"$'\n'""
 side_effect="Status written to stdout, errors written to stderr"$'\n'""
 sourceFile="bin/build/tools/lint.sh"
-sourceHash="1a44d7360afade4fe674cdc43d2c7efbec58e7ef"
+sourceHash="2f1b8f2260afa319a8fdf5b39b33c58df87fda00"
 summary="Check bash files for common errors"$'\n'""
 usage="bashLint [ --help ] [ --fix ] [ --verbose ] [ script ]"
 # shellcheck disable=SC2016

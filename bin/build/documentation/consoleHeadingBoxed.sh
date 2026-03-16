@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-13
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="none"
 base="box.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment=""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/box.sh"
-sourceHash="a0e0636d70b0867e1ad5f74d452bc7c15d434dff"
+sourceHash="83473eb6ccc0c1e5a351835d58b39be75d9348f1"
 summary="undocumented"
 usage="consoleHeadingBoxed"
 # shellcheck disable=SC2016

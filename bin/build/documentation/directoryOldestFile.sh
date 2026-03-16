@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="directory - Directory. Required. Directory to search for the oldest file."$'\n'"--find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""
 base="file.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Find the oldest modified file in a directory"$'\n'"Argument: directory - Directory. Required. Directory to search for the oldest file."$'\n'"Argument: --find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="267159b8d14477b8207f311382f9bb4af7398472"
+sourceHash="4c703f3426449dd0f9b510eb709d61a9f87e17cb"
 summary="Find the oldest modified file in a directory"
 summaryComputed="true"
 usage="directoryOldestFile directory [ --find findArgs ... -- ]"

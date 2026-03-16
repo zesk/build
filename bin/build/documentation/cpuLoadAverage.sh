@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="platform.sh"
@@ -12,7 +12,7 @@ rawComment="Get the load average using uptime"$'\n'"Requires: uptime"$'\n'"Uptim
 requires="uptime"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="0e65d7e92bc21e3de71f94e056e6f6cd24b198b0"
+sourceHash="b4c54f540449e223464e1989991f354a44bba06c"
 stdout="lines:Number"$'\n'""
 summary="Get the load average using uptime"
 summaryComputed="true"
