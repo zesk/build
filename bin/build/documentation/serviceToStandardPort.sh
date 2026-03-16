@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"service ... - String. Optional. A unix service typically found in \`/etc/services\`"$'\n'""
 base="platform.sh"
@@ -13,7 +13,7 @@ rawComment="Hard-coded services for:"$'\n'"- \`ssh\` -> 22"$'\n'"- \`http\`-> 80
 return_code="1 - service not found"$'\n'"0 - service found and output is an integer"$'\n'""
 see="serviceToPort"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="0e65d7e92bc21e3de71f94e056e6f6cd24b198b0"
+sourceHash="b4c54f540449e223464e1989991f354a44bba06c"
 summary="Hard-coded services for:"
 summaryComputed="true"
 usage="serviceToStandardPort [ --help ] [ service ... ]"

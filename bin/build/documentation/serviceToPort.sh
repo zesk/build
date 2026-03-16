@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="service - String. Required. A unix service typically found in \`/etc/services\`"$'\n'"--services servicesFile - File. Optional. File like '/etc/services\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="platform.sh"
@@ -12,7 +12,7 @@ output="Port number of associated service (integer) one per line"$'\n'""
 rawComment="Get the port number associated with a service"$'\n'"Argument: service - String. Required. A unix service typically found in \`/etc/services\`"$'\n'"Argument: --services servicesFile - File. Optional. File like '/etc/services\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Output: Port number of associated service (integer) one per line"$'\n'"Return Code: 1 - service not found"$'\n'"Return Code: 2 - bad argument or invalid port"$'\n'"Return Code: 0 - service found and output is an integer"$'\n'""$'\n'""
 return_code="1 - service not found"$'\n'"2 - bad argument or invalid port"$'\n'"0 - service found and output is an integer"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="0e65d7e92bc21e3de71f94e056e6f6cd24b198b0"
+sourceHash="b4c54f540449e223464e1989991f354a44bba06c"
 summary="Get the port number associated with a service"
 summaryComputed="true"
 usage="serviceToPort service [ --services servicesFile ] [ --help ]"

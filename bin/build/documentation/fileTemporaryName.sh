@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-16
 # shellcheck disable=SC2034
 argument="handler - Function. Required. Function to call on failure. Function Type: returnMessage"$'\n'"--help - Flag. Optional. Display this help."$'\n'"... - Arguments. Optional. Any additional arguments are passed through."$'\n'""
 base="file.sh"
@@ -14,7 +14,7 @@ rawComment="Wrapper for \`mktemp\`. Generate a temporary file name, and fail usi
 requires="mktemp __help catchEnvironment usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="267159b8d14477b8207f311382f9bb4af7398472"
+sourceHash="4c703f3426449dd0f9b510eb709d61a9f87e17cb"
 summary="Wrapper for \`mktemp\`. Generate a temporary file name, and fail"
 summaryComputed="true"
 usage="fileTemporaryName handler [ --help ] [ ... ]"
