@@ -14,11 +14,13 @@ __testLoad() {
 
   export DEBUGGING_TEST_LOAD
 
+  local __home && __home=$(catchReturn "$handler" buildHome) || return $?
   local __beforeFunctions && __beforeFunctions=$(fileTemporaryName "$handler") || return $?
   local __testFunctions && __testFunctions="$__beforeFunctions.after"
   local __errors && __errors="$__beforeFunctions.error"
   local __testFunctions && __testFunctions="$__beforeFunctions.after"
   local __tests=()
+
   while [ "$#" -gt 0 ]; do
     catchEnvironment "$handler" isExecutable "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
@@ -26,8 +28,8 @@ __testLoad() {
     local tests=()
     set -a # UNDO ok
     # shellcheck source=/dev/null
-    source "$1" >"$__errors" 2>&1 || throwEnvironment source "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || returnUndo $? set +a || return $?
-    fileIsEmpty "$__errors" || throwEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
+    source "$__home/$1" >"$__errors" 2>&1 || throwEnvironment source "$__home/$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || returnUndo $? set +a || return $?
+    fileIsEmpty "$__errors" || throwEnvironment "produced output: $(dumpPipe "source $__home/$1" <"$__errors")"
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then
       local __test && for __test in "${tests[@]}"; do
