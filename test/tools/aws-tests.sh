@@ -41,15 +41,18 @@ testAWSIPAccess() {
 
   export HOME AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 
+  environmentRequire returnMessage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
+
   # copy env to locals
-  id=$AWS_ACCESS_KEY_ID
-  key=$AWS_SECRET_ACCESS_KEY
+  id=${AWS_ACCESS_KEY_ID-}
+  key=${AWS_SECRET_ACCESS_KEY-}
 
   __awsTestSetup || return $?
 
   tempHome=$(fileTemporaryName "$handler" -d) || return $?
+  mockEnvironmentStart HOME "${HOME-}"
+
   HOME="$tempHome"
-  environmentRequire returnMessage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -d "$HOME/.aws" ]; then
     returnEnvironment "No .aws directory should exist already" || return $?
@@ -92,6 +95,8 @@ testAWSIPAccess() {
   assertExitCode 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   rm -rf "$tempHome"
+
+  mockEnvironmentStop HOME
 
   # restore all set for other tests
   __awsTestCleanup
