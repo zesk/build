@@ -1,10 +1,10 @@
 {
   "deprecated": "35c357eca402a8d358d3f1a602ade8f6fc056f6f",
   "fingerprint": "35c357eca402a8d358d3f1a602ade8f6fc056f6f",
-  "id": "c3f7e2fff",
+  "id": "6f423466b",
   "identical": {
     "--internal": "35c357eca402a8d358d3f1a602ade8f6fc056f6f",
     "default": "35c357eca402a8d358d3f1a602ade8f6fc056f6f"
   },
-  "version": "v0.41.3"
+  "version": "v0.41.4"
 }
