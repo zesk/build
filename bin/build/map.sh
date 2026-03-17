@@ -515,7 +515,7 @@ _returnCodeString() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL validate 168
+# IDENTICAL validate 169
 
 # Summary: Validate a value by type
 # Argument: handler - Function. Required. Error handler.
@@ -582,12 +582,13 @@ _returnCodeString() {
 #
 # `validate` is intended to be extensible as well as reducible to smaller sizes by limiting type validation to used
 # types only. The core validation types can be used **CASE-SENSITIVE ONLY** in smaller scripts using the core `validate`
-# {IDENTICAL} document which includes:
+# identical document which includes:
 #
 # - `String`
 # - `PositiveInteger`
 # - `Function`
 # - `Callable`
+# - `Type`
 #
 # The function `_validateTypeMapper` is defined and can map types to internal types. If not present, then no conversion
 # is done. For a type to be considered valid, the corresponding `__validateType` prefixed function **MUST** exist.
