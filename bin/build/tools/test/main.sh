@@ -372,6 +372,7 @@ __testSuite() {
   __TEST_SUITE_TRACE=options
   local suiteName="" sectionFile="" _remainder terminated=() currentSuiteName=""
   while read -r item suiteName sectionFile _remainder; do
+    local theTestFile="$home/$sectionFile"
     suiteName="${suiteName#suite=}"
     if [ -n "$startTest" ]; then
       if [ "$item" = "$startTest" ]; then
@@ -402,7 +403,7 @@ __testSuite() {
       # ============================================================================================================
       TEST_FILE=$sectionFile TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-start "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-start failed" || return $?
 
-      catchReturn "$handler" source "$sectionFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "Loading $(decorate file "$sectionFile")" || return $?
+      catchReturn "$handler" source "$theTestFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "Loading $(decorate file "$theTestFile")" || return $?
     fi
 
     local __testStart && __testStart=$(timingStart)
@@ -412,8 +413,8 @@ __testSuite() {
     #  ▌▚ ▌ ▌▌ ▌▌ ▌▛▀ ▌
     #  ▘ ▘▝▀▘▘ ▘▘ ▘▝▀▘▘
 
-    local testLine && testLine=$(muzzleReturn __testGetLine "$item" <"$sectionFile")
-    local __flags && __flags=$(__testLoadFlags "$handler" "$sectionFile" "$item") || return $?
+    local testLine && testLine=$(muzzleReturn __testGetLine "$item" <"$theTestFile")
+    local __flags && __flags=$(__testLoadFlags "$handler" "$theTestFile" "$item") || return $?
     local rawFlags="$__flags;$globalFlags"
 
     ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
@@ -456,7 +457,7 @@ __testSuite() {
       passed=true
     else
       passed=false
-      __testSuiteExecutor "$item" "$sectionFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || throwEnvironment "$handler" "failure executors failed" || :
+      __testSuiteExecutor "$item" "$theTestFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || throwEnvironment "$handler" "failure executors failed" || :
       catchEnvironment "$handler" cd "$saveHome" || :
       __testFailed "$handler" "$testReturnCode" "$stateFile" "$suiteName" "$item" || finalReturnCode=$?
     fi
