@@ -163,7 +163,7 @@ documentationBuildCache() {
   local code && code=$(catchReturn "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
   local suffix=".documentation/${code-default}/${1-}"
 
-  if [ -n "${DOCUMENTATION_SHM}" ] && booleanParse "${DOCUMENTATION_SHM-}"; then
+  if [ -n "${DOCUMENTATION_SHM-}" ] && booleanParse "${DOCUMENTATION_SHM-}"; then
     local shmDir="/dev/shm"
     [ -d "$shmDir" ] || throwEnvironment "$handler" "DOCUMENTATION_SHM enabled but no $shmDir"
     directoryRequire "$shmDir/$suffix"
