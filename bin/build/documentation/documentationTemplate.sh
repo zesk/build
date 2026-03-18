@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-18
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Get an internal template name"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="228e0b83b7cd3287b298d8706e246b8c65126c5f"
+sourceHash="9e5f6407174e696fb3655c338ee45f2d69aeccf2"
 summary="Get an internal template name"
 summaryComputed="true"
 usage="documentationTemplate [ --help ]"
