@@ -7,8 +7,9 @@
 
 __awsCredentialsAdd() {
   local handler="$1" && shift
-
-  local forceFlag=false profileName="" key="" secret="" addComments=false
+  # IDENTICAL profileNameArgumentLocal 1
+  local pp=() profileName=""
+  local forceFlag=false key="" secret="" addComments=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

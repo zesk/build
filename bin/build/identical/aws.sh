@@ -17,10 +17,10 @@ __awsFunction() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # IDENTICAL profileNameArgumentHandler 1
-    --profile) shift && profileName="$(validate "$handler" string "$argument" "$1")" && pp=("$argument" "$profileName") || return $? ;;
-    # IDENTICAL regionArgumentHandler 1
-    --region) shift && region=$(validate "$handler" string "$argument" "${1-}") || return $? ;;
+      # IDENTICAL profileNameArgumentHandler 1
+      --profile) shift && profileName="$(validate "$handler" string "$argument" "$1")" && pp=("$argument" "$profileName") || return $? ;;
+      # IDENTICAL regionArgumentHandler 1
+      --region) shift && region=$(validate "$handler" AWSRegion "$argument" "${1-}") || return $? ;;
     esac
     shift
   done
@@ -40,8 +40,8 @@ __awsFunction() {
   if [ -z "$region" ]; then
     export AWS_REGION && catchReturn "$handler" buildEnvironmentLoad --quiet AWS_REGION || return $?
     region="${AWS_REGION-}" && [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
+    awsRegionValid "$region" || throwArgument "$handler" "AWS_REGION $region is not a valid region" || return $?
   fi
-  awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   : "${pp[@]}"
 }
