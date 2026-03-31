@@ -8,7 +8,7 @@
 __awsSecurityGroupIPModify() {
   local handler="$1" && shift
 
-  local group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile region=""
+  local group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" region=""
   # IDENTICAL profileNameArgumentLocal 1
   local pp=() profileName=""
 
@@ -21,7 +21,7 @@ __awsSecurityGroupIPModify() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL profileNameArgumentHandler 1
-    --profile) shift && pp=("$argument" "$(validate "$handler" string "$argument" "$1")") || return $? ;;
+    --profile) shift && profileName="$(validate "$handler" string "$argument" "$1")" && pp=("$argument" "$profileName") || return $? ;;
     --group)
       shift
       group=$(validate "$handler" String "$argument" "${1-}") || return $?
@@ -50,8 +50,11 @@ __awsSecurityGroupIPModify() {
       verb="Registering"
       mode="$argument"
       ;;
+    --install)
+      ! executableExists aws || catchReturn "$handler" awsInstall || return $?
+      ;;
     # IDENTICAL regionArgumentHandler 1
-    --region) shift && region=$(validate "$handler" string "$argument" "${1-}") || return $? ;;
+    --region) shift && region=$(validate "$handler" AWSRegion "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -62,14 +65,14 @@ __awsSecurityGroupIPModify() {
 
   [ -n "$profileName" ] || awsHasEnvironment || throwEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
 
-  ! executableExists aws || catchReturn "$handler" awsInstall || return $?
+  ! executableRequire "$handler" jq aws || return $?
 
   # IDENTICAL regionArgumentValidation 5
   if [ -z "$region" ]; then
     export AWS_REGION && catchReturn "$handler" buildEnvironmentLoad --quiet AWS_REGION || return $?
     region="${AWS_REGION-}" && [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
+    awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
   fi
-  awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   [ -n "$mode" ] || throwArgument "$handler" "--add, --remove, or --register is required" || return $?
 
@@ -95,8 +98,9 @@ __awsSecurityGroupIPModify() {
   #
   # Fetch our current IP registered with this description
   #
+
   if [ "$mode" != "--add" ]; then
-    tempErrorFile=$(fileTemporaryName "$handler") || return $?
+    local tempErrorFile && tempErrorFile=$(fileTemporaryName "$handler") || return $?
     catchReturn "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean $? "$tempErrorFile" || return $?
     foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
@@ -117,11 +121,10 @@ __awsSecurityGroupIPModify() {
     fi
   fi
   if [ "$mode" != "--remove" ]; then
-    local json
-    json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port" ""
 
-    tempErrorFile=$(fileTemporaryName "$handler") || return $?
+    local json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
+    local tempErrorFile && tempErrorFile=$(fileTemporaryName "$handler") || return $?
     if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile" | __awsReturnTrue; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         printf " (%s)\n" "$(decorate yellow "duplicate")"

@@ -44,13 +44,11 @@ __awsCredentialsAdd() {
     esac
     shift
   done
-  # IDENTICAL profileNameArgumentEnvironment 4
-  if [ -z "$profileName" ]; then
-    profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
-    [ -n "$profileName" ] || profileName="default"
-  fi
-  # IDENTICAL profileNameArgumentDefault 1
+  # IDENTICAL profileNameArgumentEnvironment 1
+  [ -n "$profileName" ] || profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
+  # IDENTICAL profileNameArgumentDefault 2
   [ -n "$profileName" ] || profileName="default"
+  pp=(--profile "$profileName")
 
   [ -n "$key" ] || throwArgument "$handler" "key is required" || return $?
   [ -n "$secret" ] || throwArgument "$handler" "secret is required" || return $?
@@ -105,11 +103,8 @@ __awsCredentialsRemove() {
     shift
   done
 
-  # IDENTICAL profileNameArgumentEnvironment 4
-  if [ -z "$profileName" ]; then
-    profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
-    [ -n "$profileName" ] || profileName="default"
-  fi
+  # IDENTICAL profileNameArgumentEnvironment 1
+  [ -n "$profileName" ] || profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
   # IDENTICAL profileNameArgumentDefault 2
   [ -n "$profileName" ] || profileName="default"
   pp=(--profile "$profileName")

@@ -293,9 +293,9 @@ __deprecatedConfiguration() {
 # IDENTICAL returnMessage 42
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: returnCode - UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
 # Argument: message ... - String. Optional. Message to output
-# Return Code: returnCode
+# Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
   local handler="_${FUNCNAME[0]}"

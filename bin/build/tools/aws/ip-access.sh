@@ -29,7 +29,7 @@ __awsIPAccess() {
       IFS=', ' read -r -a services <<<"$1" || :
       ;;
     # IDENTICAL profileNameArgumentHandler 1
-    --profile) shift && pp=("$argument" "$(validate "$handler" string "$argument" "$1")") || return $? ;;
+    --profile) shift && profileName="$(validate "$handler" string "$argument" "$1")" && pp=("$argument" "$profileName") || return $? ;;
     --revoke) optionRevoke=true ;;
     --verbose) verboseFlag=true ;;
     --group) shift && securityGroups+=("$1") ;;
@@ -57,13 +57,11 @@ __awsIPAccess() {
   catchReturn "$handler" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    # IDENTICAL profileNameArgumentEnvironment 4
-    if [ -z "$profileName" ]; then
-      profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
-      [ -n "$profileName" ] || profileName="default"
-    fi
-    # IDENTICAL profileNameArgumentDefault 1
+    # IDENTICAL profileNameArgumentEnvironment 1
+    [ -n "$profileName" ] || profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
+    # IDENTICAL profileNameArgumentDefault 2
     [ -n "$profileName" ] || profileName="default"
+    pp=(--profile "$profileName")
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
     if awsCredentialsHasProfile "$profileName"; then
       # catchEnvironment "$handler" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
