@@ -71,7 +71,7 @@
 - bashPromptMarkers
 - bashPromptModule_ApplicationPath
 - bashPromptModule_TermColors
-- bashPromptModule_binBuild
+- bashPromptModule_BuildProject
 - bashPromptModule_dotFilesWatcher
 - bashPromptModule_reloadChanges
 
@@ -374,7 +374,7 @@ On a "2x" machine:
 - bashPromptMarkers
 - bashPromptModule_ApplicationPath
 - bashPromptModule_TermColors
-- bashPromptModule_binBuild
+- bashPromptModule_BuildProject
 - bashPromptModule_dotFilesWatcher
 - bashPromptModule_reloadChanges
 - bashRecursionDebug

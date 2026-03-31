@@ -18,6 +18,12 @@
 #             |_|
 #
 
+bashPromptModule_binBuild() {
+  _deprecated "${FUNCNAME[0]}"
+  bashPromptModule_BuildProject "$@"
+}
+
+
 # Heading for section output
 #
 # Summary: Text heading decoration

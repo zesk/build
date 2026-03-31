@@ -4,10 +4,6 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-bashPromptModule_binBuild() {
-  bashPromptModule_BuildProject "$@"
-}
-
 # Check which bin/build we are running and keep local to current project. Activates when we switch between projects.
 #
 # - Re-sources `bin/build` so versions do not conflict.
@@ -18,21 +14,26 @@ bashPromptModule_binBuild() {
 # Run-Hook: project-activate
 # Run-Hook: project-deactivate
 bashPromptModule_BuildProject() {
-  local handler="returnMessage"
-  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showGitHome
+  local handler="_${FUNCNAME[0]}"
+
+  local home here tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion
   export HOME
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  catchReturn "$handler" buildEnvironmentLoad HOME || return $?
-  home=$(catchReturn "$handler" buildHome) || return $?
-  gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
-  [ "$home" != "$gitHome" ] || return 0
-  showGitHome="${gitHome//$HOME/~}"
-  [ -x "$gitHome/$tools" ] || return 0
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local here && here=$(catchReturn "$handler" pwd) || return $?
+
+  if [ "${here#"$home"}" != "$here" ]; then
+    return 0
+  fi
+
+  local otherHome && otherHome=$(bashLibraryHome "$tools" "$here") || return 0
+
+  [ -x "$home/$tools" ] || return 0
   local oldVersion newVersion newestVersion
   oldVersion="$(jq -r .version "$home/$version")"
-  newVersion="$(jq -r .version "$gitHome/$version")"
+  newVersion="$(jq -r .version "$otherHome/$version")"
   newestVersion="$(printf -- "%s\n" "$oldVersion" "$newVersion" | versionSort | tail -n 1)"
   if [ "$oldVersion" != "$newVersion" ]; then
     if [ "$oldVersion" = "$newestVersion" ]; then
@@ -44,13 +45,13 @@ bashPromptModule_BuildProject() {
 
   local exitCode=0
   # After deactivate we should assume Zesk Build has been unloaded
-  hookSourceOptional --application "$home" project-deactivate "$gitHome" || exitCode=1
+  hookSourceOptional --application "$home" project-deactivate "$home" || exitCode=1
 
   # Assume nothing defined here
 
   # shellcheck source=/dev/null
-  if ! source "$gitHome/$tools"; then
-    printf "%s\n" "Failed to load $showGitHome/$tools" 1>&2
+  if ! source "$otherHome/$tools"; then
+    printf "%s\n" "Failed to load $(decorate file "$otherHome")/$tools" 1>&2
     return 1
   fi
 
@@ -58,8 +59,8 @@ bashPromptModule_BuildProject() {
 
   # buildHome will be changed here
 
-  hookSourceOptional --application "$gitHome" project-activate "$home" || returnEnvironment "project-activate failed" || :
-  currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
+  catchReturn "$handler" hookSourceOptional --application "$otherHome" project-activate "$home" || returnMessage "project-activate failed in $(decorate file "$otherHome")" || :
+  currentVersion="$(hookRunOptional --application "$otherHome" version-current)"
 
   printf -- "%s %s %s@ %s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")"
 }

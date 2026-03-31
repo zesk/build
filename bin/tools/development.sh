@@ -51,7 +51,7 @@ buildContainer() {
   local image="${1-ubuntu:latest}"
   local name="${image%:latest}"
   local ee=(
-    "bashPrompt --label \"$name\" bashPromptModule_binBuild bashPromptModule_ApplicationPath bashPromptModule_dotFilesWatcher --order 80 bashPromptModule_TermColors"
+    "bashPrompt --label \"$name\" bashPromptModule_BuildProject bashPromptModule_ApplicationPath bashPromptModule_dotFilesWatcher --order 80 bashPromptModule_TermColors"
     "approved=\$(dotFilesApprovedFile)"
     "[ -f \"\$approved\" ] || dotFilesApproved bash mysql >>\$approved"
     "packageWhich --verbose sha1sum apt-rdepends"

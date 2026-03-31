@@ -1,4 +1,5 @@
 # v0.41.4
+bashPromptModule_binBuild|bashPromptModule_BuildProject|
 
 # v0.41.3
 parseBoolean|booleanParse|

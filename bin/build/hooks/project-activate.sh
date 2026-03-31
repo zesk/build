@@ -12,7 +12,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # The `project-activate` hook runs when this project is activated in the console (and another project was previously active)
 # Implementations MUST overwrite environment variables which MUST change here or MUST be active here to work, etc.
 # This is NOT like other hooks in that it is run as `hookSource`
-# See: bashPromptModule_binBuild
+# See: bashPromptModule_BuildProject
 # Argument: otherHomeDirectory - The old home directory of the project
 # BUILD_DEBUG: approve - Report on all approvals during project activation
 # BUILD_DEBUG: approve-verbose - Display verbose approval messages

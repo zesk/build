@@ -12,24 +12,30 @@ The prompt supports a few things:
 
 Tools to work with the shell prompt `PS1`
 
-- `bashPromptModule_binBuild` is a module for `bashPrompt` which sets the Zesk Build home depending on your current
+- `bashPromptModule_BuildProject` is a module for `bashPrompt` which deactivates and activates your Zesk Build project
+  depending on your current
   directory
 - `bashPromptModule_ApplicationPath` is a module for `bashPrompt` which displays the current application/path as a badge
   in iTerm
+- `bashPromptModule_dotFilesWatcher` is a module for `bashPrompt` which monitors your home directory for files which
+  start with `.` and lets you know when new ones have been added, and manages an approved list of files allowed.
 - `consoleDefaultTitle` can be used as a module to set the current title
 
 Examples:
 
-    bashPrompt bashPromptModule_binBuild consoleDefaultTitle
+    bashPrompt bashPromptModule_BuildProject consoleDefaultTitle
     bashPrompt --colors "$(bashPromptColorScheme forest)"
-
 
 # Functions
 
 {bashPrompt}
+
 {bashPromptColorScheme}
+
 {bashPromptColorsFormat}
+
 {bashPromptMarkers}
+
 {bashUserInput}
 
 # Bash Prompt Modules
@@ -41,7 +47,7 @@ Examples:
 
 To enable:
 
-    bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
+    bashPrompt bashPromptModule_BuildProject bashPromptModule_ApplicationPath
 
 {bashPromptModule_BuildProject}
 
