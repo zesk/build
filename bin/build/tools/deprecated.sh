@@ -23,7 +23,6 @@ bashPromptModule_binBuild() {
   bashPromptModule_BuildProject "$@"
 }
 
-
 # Heading for section output
 #
 # Summary: Text heading decoration
