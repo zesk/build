@@ -21,7 +21,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
   # fn: {base}
   __buildIdenticalRepair() {
     local handler="_${FUNCNAME[0]}"
-    local item aa home checkFlag=false doFingerprint=true
+    local item aa=() home checkFlag=false doFingerprint=true
 
     local cleaned=()
     while [ $# -gt 0 ]; do
@@ -46,13 +46,16 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       esac
       shift
     done
+    if [ "$(buildEnvironmentGet --quiet APPLICATION_CODE)" != "build.zesk.com" ]; then
+      aa+=(--exclude "bin/build/tools" --exclude "bin/build/documentation")
+    fi
     if $checkFlag && ! $doFingerprint; then
       throwArgument "$handler" "Invalid --check with --token" || return $?
     fi
     set -- "${cleaned[@]+"${cleaned[@]}"}"
     home=$(catchReturn "$handler" buildHome) || return $?
     catchEnvironment "$handler" muzzle cd "$home" || return $?
-    local done=false aa=()
+    local done=false
     while ! $done; do
       read -r item || done=true
       [ -z "$item" ] || aa+=(--singles "$item")
@@ -105,7 +108,6 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       catchReturn "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
       printf "%s %s\n" "$(decorate success "Fingerprint updated:")" "$(decorate green "$fingerprint")"
     fi
-
   }
   ___buildIdenticalRepair() {
     # __IDENTICAL__ usageDocument 1

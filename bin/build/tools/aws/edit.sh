@@ -44,11 +44,14 @@ __awsCredentialsAdd() {
     esac
     shift
   done
-  # IDENTICAL profileNameArgumentValidation 4
+  # IDENTICAL profileNameArgumentEnvironment 4
   if [ -z "$profileName" ]; then
-    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
+  # IDENTICAL profileNameArgumentDefault 1
+  [ -n "$profileName" ] || profileName="default"
+
   [ -n "$key" ] || throwArgument "$handler" "key is required" || return $?
   [ -n "$secret" ] || throwArgument "$handler" "secret is required" || return $?
 
@@ -72,7 +75,9 @@ __awsCredentialsAdd() {
 __awsCredentialsRemove() {
   local handler="$1" && shift
 
-  local forceFlag=false profileName="" key="" secret="" addComments=false
+  local forceFlag=false key="" secret="" addComments=false
+  # IDENTICAL profileNameArgumentLocal 1
+  local pp=() profileName=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -83,12 +88,8 @@ __awsCredentialsRemove() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL --profileHandler 5
-    --profile)
-      shift
-      [ -z "$profileName" ] || throwArgument "$handler" "--profile already specified" || return $?
-      profileName="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
+    # IDENTICAL profileNameArgumentHandler 1
+    --profile) shift && profileName="$(validate "$handler" string "$argument" "$1")" && pp=("$argument" "$profileName") || return $? ;;
     --comments)
       addComments=true
       ;;
@@ -104,21 +105,19 @@ __awsCredentialsRemove() {
     shift
   done
 
-  # IDENTICAL profileNameArgumentValidation 4
+  # IDENTICAL profileNameArgumentEnvironment 4
   if [ -z "$profileName" ]; then
-    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
+  # IDENTICAL profileNameArgumentDefault 2
+  [ -n "$profileName" ] || profileName="default"
+  pp=(--profile "$profileName")
 
-  export AWS_PROFILE
-
-  catchReturn "$handler" buildEnvironmentLoad AWS_PROFILE || return $?
-
-  local credentials
-  credentials="$(catchReturn "$handler" awsCredentialsFile --path)" || return $?
+  local credentials && credentials="$(catchReturn "$handler" awsCredentialsFile --path)" || return $?
   [ -f "$credentials" ] || return 0
   if awsCredentialsHasProfile "$profileName"; then
-    _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "" || return $?
+    _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "${pp[1]}" "" || return $?
   fi
 }
 

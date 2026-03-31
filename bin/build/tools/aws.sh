@@ -419,3 +419,11 @@ _awsS3DirectoryDelete() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# IDENTICAL __validateTypeAWSRegion 6
+
+# Requires: awsRegionValid _validateThrow
+__validateTypeAWSRegion() {
+  awsRegionValid "${1-}" || _validateThrow "Not a valid AWS Region: \"${1-}\"" || return $?
+  printf "%s\n" "${1#+}"
+}

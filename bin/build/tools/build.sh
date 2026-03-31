@@ -372,6 +372,9 @@ _buildEnvironmentAdd() {
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: --all - Flag. Optional. Load all environment variables defined in BUILD_ENVIRONMENT_DIRS.
 # Argument: --print - Flag. Print the environment file loaded first.
+# Argument: --quiet - Flag. Optional. No error is displayed when an environment variable does not exist, but return code 1 is returned.
+# Return Code: 1 - The environment variable is not found.
+# Return Code: 0 - The environment variable is found and the file was loaded (which *should* set to the global environment variable named)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
@@ -381,7 +384,7 @@ _buildEnvironmentAdd() {
 # Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentLoad() {
-  local handler="_${FUNCNAME[0]}" applicationHome="" printFlag=false tempFiles="" envNames=() allFlag=false
+  local handler="_${FUNCNAME[0]}" applicationHome="" printFlag=false tempFiles="" envNames=() allFlag=false quietFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -396,6 +399,7 @@ buildEnvironmentLoad() {
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --print) printFlag=true ;;
     --all) allFlag=true ;;
+    --quiet) quietFlag=true ;;
     --application) shift && applicationHome=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       envNames+=("$(validate "$handler" EnvironmentVariable "environmentVariable" "$1")") || return $?
@@ -414,9 +418,14 @@ buildEnvironmentLoad() {
 
   [ -f "$tempFiles" ] || tempFiles=$(fileTemporaryName "$handler") || return $?
 
+  local returnCode=0
   for envName in "${envNames[@]}"; do
     if ! buildEnvironmentFiles --application "$applicationHome" "$envName" >"$tempFiles"; then
-      throwEnvironment "$handler" "Failed to find any files for $envName" || returnClean $? "$tempFiles" || return $?
+      if $quietFlag; then
+        returnCode=1
+      else
+        throwEnvironment "$handler" "Failed to find any files for $envName" || returnClean $? "$tempFiles" || return $?
+      fi
     fi
     export "${envName?}" || throwEnvironment "$handler" "export $envName failed" || returnClean $? "$tempFiles" || return $?
     # See testBashSetScopes - must undo this
@@ -433,10 +442,17 @@ buildEnvironmentLoad() {
     done <"$tempFiles"
 
     set +a
-    [ -n "$firstFile" ] || throwEnvironment "$handler" "No files loaded for $argument" || return $?
+    if [ -z "$firstFile" ]; then
+      if $quietFlag; then
+        returnCode=1
+      else
+        throwEnvironment "$handler" "No files loaded for $argument" || return $?
+      fi
+    fi
     ! $printFlag || catchEnvironment "$handler" printf -- "%s\n" "$firstFile" || returnClean $? "$tempFiles" || return $?
   done
   [ -z "$tempFiles" ] || catchEnvironment "$handler" rm -f "$tempFiles" || return $?
+  return "$returnCode"
 }
 _buildEnvironmentLoad() {
   # __IDENTICAL__ usageDocument 1
@@ -505,9 +521,12 @@ _tools() {
 #
 # Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+# Argument: --quiet - Flag. Optional. No error is displayed when an environment variable does not exist, but return code 1 is returned.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
-#
+# Return Code: 1 - The environment variable is not found.
+# Return Code: 0 - The environment variable is found and the value was output to `stdout`
+# stdout: The environment variable(s) requested, one per line
 # Modifies local environment. Not usually run within a subshell.
 #
 # Environment: $envName
@@ -529,6 +548,7 @@ buildEnvironmentGet() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --application) shift && ll+=("$argument" "${1-}") ;;
+    --quiet) ll+=("$argument") ;;
     *)
       catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
       printf "%s\n" "${!argument-}"

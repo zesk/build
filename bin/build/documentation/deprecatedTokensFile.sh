@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-30
 # shellcheck disable=SC2034
 argument="none"
 base="deprecated-tools.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="Run deprecated tokens file search"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deprecated-tools.sh"
-sourceHash="9256a843a8ba88183c94f082fa320c352500fe8c"
+sourceHash="e84a0fd5aa707a66afb3e6bc5aeb546936d7f5a6"
 summary="Run deprecated tokens file search"
 summaryComputed="true"
 usage="deprecatedTokensFile"

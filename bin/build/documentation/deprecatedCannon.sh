@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-30
 # shellcheck disable=SC2034
 argument="--path cannonPath - Directory. Optional. Run cannon operation starting in this directory."$'\n'"findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"search - String. Required. String to search for"$'\n'"replace - EmptyString. Required. Replacement string."$'\n'"extraCannonArguments - Arguments. Optional. Any additional arguments are passed to \`cannon\`."$'\n'""
 base="deprecated-tools.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory."$'\n'"Argument: findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"Argument: search - String. Required. String to search for"$'\n'"Argument: replace - EmptyString. Required. Replacement string."$'\n'"Argument: extraCannonArguments - Arguments. Optional. Any additional arguments are passed to \`cannon\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deprecated-tools.sh"
-sourceHash="9256a843a8ba88183c94f082fa320c352500fe8c"
+sourceHash="e84a0fd5aa707a66afb3e6bc5aeb546936d7f5a6"
 summary="undocumented"
 usage="deprecatedCannon [ --path cannonPath ] findArgumentFunction search replace [ extraCannonArguments ]"
 # shellcheck disable=SC2016

@@ -77,7 +77,7 @@ deprecatedIgnore() {
     ! -name 'deprecated*.md' \
     ! -name 'unused.md' \
     ! -path "*$notes/*" \
-    ! -path "*/.*/*" \
+    ! -path "*/\.*/*" \
     "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
 }
 _deprecatedIgnore() {

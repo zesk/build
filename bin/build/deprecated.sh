@@ -21,6 +21,7 @@ set -eou pipefail
 # There are three flags to control the three processes, you can set them using arguments (all three cleanups are by default enabled)
 #
 # Argument: --prefix jsonPrefix - EmptyString. Optional. Use this JSON prefix to update cached values in `APPLICATION_JSON`.
+# Argument: --no-fingerprint - Flag. Optional. Skip the fingerprint computation and caching.
 # Argument: --no-configuration - Flag. Optional. Do not fix any configuration issues from past versions.
 # Argument: --just-configuration - Flag. Optional. Just fix any configuration issues from past versions. (Sets all other flags to false)
 # Argument: --configuration - Flag. Optional. Do the fix any configuration issues from past versions. (other flags remain unchanged)
@@ -39,8 +40,8 @@ set -eou pipefail
 # Environment: APPLICATION_JSON_PREFIX
 __deprecatedCleanup() {
   local handler="_${FUNCNAME[0]}"
-  local doCannon=true doTokens=true doSpelling=true doConfiguration=true ignoreExtras=()
-  local justCheck=false prefix=""
+  local doCannon=true doTokens=true doSpelling=true doConfiguration=true ignoreExtras=() ignoreFlag=false
+  local justCheck=false prefix="" doFingerprint=true
 
   prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
 
@@ -61,6 +62,7 @@ __deprecatedCleanup() {
       doSpelling=false
       doTokens=false
       ;;
+    --no-fingerprint) justCheck=false && doFingerprint=false ;;
     --cannon) doCannon=true ;;
     --no-cannon) doCannon=false ;;
     --just-cannon)
@@ -96,9 +98,9 @@ __deprecatedCleanup() {
       done
       [ $# -eq 0 ] || shift
       ;;
-    --check) justCheck=true ;;
+    --check) justCheck=true && doFingerprint=true ;;
     --prefix) shift && prefix=$(validate "$argument" "$handler" "${1-}") || return $? ;;
-
+    --ignore) ignoreFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -110,22 +112,27 @@ __deprecatedCleanup() {
   export __BUILD_DEPRECATED_EXTRAS
   __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
+  if [ "$(buildEnvironmentGet --quiet APPLICATION_CODE)" != "build.zesk.com" ]; then
+    __BUILD_DEPRECATED_EXTRAS+=(! -path "*/bin/build/tools/*" ! -path "*/bin/build/documentation/*" ! -path "*/bin/build/hooks/*")
+  fi
   __BUILD_DEPRECATED_EXTRAS+=(
     ! -path '*/bin/build/main.sh'
     ! -path '*/bin/build/documentation/*'
     ! -path '*/documentation/*/release/*'
-    ! -path '*/documentation/.site/*'
-    ! -path '*/documentation/.docs/*'
+    ! -path '*/documentation/\.*/*'
     \(
     -name '*.sh' -or
     -name '*.md' -or
     -name '*.txt' -or
-    -name '*.json' -or
     -name '*.yml' -or
     -name '*.conf'
     \)
   )
 
+  if $ignoreFlag; then
+    deprecatedIgnore
+    return 0
+  fi
   start=$(__catch "$handler" timingStart) || return $?
   local home
 
@@ -133,9 +140,9 @@ __deprecatedCleanup() {
 
   local fingerprint="" jsonFile="" prefix=""
 
-  if [ $__count -eq 0 ] || $justCheck; then
+  if [ $__count -eq 0 ] && $doFingerprint; then
     fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-    if jsonFile="$home/$(buildEnvironmentGet APPLICATION_JSON 2>/dev/null)"; then
+    if jsonFile="$home/$(buildEnvironmentGet --quiet APPLICATION_JSON 2>/dev/null)"; then
       local prefix
       prefix=$(buildEnvironmentGet APPLICATION_JSON_PREFIX 2>/dev/null) || :
       prefix="${prefix#.}"
@@ -163,26 +170,26 @@ __deprecatedCleanup() {
       return 1
     fi
   fi
-  local exitCode=0
+  local returnCode=0
 
   if $doCannon; then
     statusMessage --last decorate info "Deprecated cannon ..."
-    __deprecatedCannonsByVersion "$home" || exitCode=$?
+    __deprecatedCannonsByVersion "$home" || returnCode=$?
   fi
   if $doSpelling; then
     statusMessage --last decorate info "Spelling cannon ..."
-    __misspellingCannonByVersion "$home" || exitCode=$?
+    __misspellingCannonByVersion "$home" || returnCode=$?
   fi
   if $doTokens; then
     statusMessage --last decorate info "Finding deprecated tokens ..."
-    __deprecatedTokensByVersion "$home" || exitCode=$?
+    __deprecatedTokensByVersion "$home" || returnCode=$?
   fi
   if $doConfiguration; then
     statusMessage --last decorate info "Cleaning up configuration ..."
-    __deprecatedConfiguration || exitCode=$?
+    __deprecatedConfiguration || returnCode=$?
   fi
   if [ -f "$jsonFile" ]; then
-    if [ $exitCode -eq 0 ]; then
+    if [ $returnCode -eq 0 ]; then
       fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
       statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
       catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
@@ -191,7 +198,7 @@ __deprecatedCleanup() {
     fi
   fi
   statusMessage --last timingReport "$start" "Deprecated process took"
-  return "$exitCode"
+  return "$returnCode"
 }
 ___deprecatedCleanup() {
   # __IDENTICAL__ usageDocument 1
@@ -272,23 +279,23 @@ __deprecatedConfiguration() {
   done < <(find "$home" -name '.env.STAGING.*' -or -name '.env.PRODUCTION.*' -name '.env.staging.*' -or -name '.env.production.*')
 
   # Flag deprecated files
-  local exitCode=0
-  find "$home" -name '.check-assertions' | outputTrigger "$(decorate error ".check-assertions is deprecated")" || exitCode=$?
-  find "$home" -name '.debugging' | outputTrigger "$(decorate error ".debugging is deprecated")" || exitCode=$?
+  local returnCode=0
+  find "$home" -name '.check-assertions' | outputTrigger "$(decorate error ".check-assertions is deprecated")" || returnCode=$?
+  find "$home" -name '.debugging' | outputTrigger "$(decorate error ".debugging is deprecated")" || returnCode=$?
 
   # .skip-copyright was renamed to bashSanitize.conf
   while read -r fileName; do
     printf "git mv %s %s\n" "$fileName" "$(dirname "$fileName")/bashSanitize.conf"
   done < <(find "$home" -name ".skip-copyright" -type f) | outputTrigger "$(decorate error "Found old config files:")"
-  return "$exitCode"
+  return "$returnCode"
 }
 
 # IDENTICAL returnMessage 42
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: returnCode - UnsignedInteger. Required. Exit code to return. Default is 1.
 # Argument: message ... - String. Optional. Message to output
-# Return Code: exitCode
+# Return Code: returnCode
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
   local handler="_${FUNCNAME[0]}"

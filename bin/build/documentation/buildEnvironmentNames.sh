@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-24
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="build.sh"
@@ -12,7 +12,7 @@ rawComment="Output the list of environment variable names which can be loaded vi
 requires="convertValue _buildEnvironmentPath find sort read __help catchEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceHash="4b8b06dd0c9fada8badf71838b7067390a6bff08"
+sourceHash="f9982331c658f68e95214ae1a17280db7348110f"
 summary="Output the list of environment variable names which can be"
 summaryComputed="true"
 usage="buildEnvironmentNames [ --help ]"

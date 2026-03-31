@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-24
 # shellcheck disable=SC2034
 argument="envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and \`export\`ed."$'\n'"--subdirectory subdirectory - String. Optional. Name of a subdirectory to return \"beneath\" the value of environment variable. Created if the flag is set."$'\n'"--mode fileMode - String. Optional. Enforce the mode for \`mkdir --mode\` and \`chmod\`. Use special mode \`-\` to mean no mode enforcement."$'\n'"--owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName \`-\` to mean no owner enforcement."$'\n'"--no-create - Flag. Optional. Do not create the subdirectory if it does not exist."$'\n'""
 base="build.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Load and print one or more environment settings which represents a directory which should be created."$'\n'"Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and \`export\`ed."$'\n'"Argument: --subdirectory subdirectory - String. Optional. Name of a subdirectory to return \"beneath\" the value of environment variable. Created if the flag is set."$'\n'"Argument: --mode fileMode - String. Optional. Enforce the mode for \`mkdir --mode\` and \`chmod\`. Use special mode \`-\` to mean no mode enforcement."$'\n'"Argument: --owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName \`-\` to mean no owner enforcement."$'\n'"Argument: --no-create - Flag. Optional. Do not create the subdirectory if it does not exist."$'\n'"If BOTH files exist, both are sourced, so application environments should anticipate values"$'\n'"created by build's default."$'\n'"Modifies local environment. Not usually run within a subshell."$'\n'"Environment: \$envName"$'\n'"Environment: BUILD_ENVIRONMENT_DIRS - \`:\` separated list of paths to load env files"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceHash="4b8b06dd0c9fada8badf71838b7067390a6bff08"
+sourceHash="f9982331c658f68e95214ae1a17280db7348110f"
 summary="Load and print one or more environment settings which represents"
 summaryComputed="true"
 usage="buildEnvironmentGetDirectory [ envName ] [ --subdirectory subdirectory ] [ --mode fileMode ] [ --owner ownerName ] [ --no-create ]"

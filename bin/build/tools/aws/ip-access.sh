@@ -11,7 +11,9 @@ __awsIPAccess() {
   export AWS_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY
 
-  local services=() optionRevoke=false currentIP="" developerId="" securityGroups=() verboseFlag=false profileName="" pp=()
+  local services=() optionRevoke=false currentIP="" developerId="" securityGroups=() verboseFlag=false
+  # IDENTICAL profileNameArgumentLocal 1
+  local pp=() profileName=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -26,13 +28,8 @@ __awsIPAccess() {
       shift || throwArgument "$handler" "missing $argument argument" || return $?
       IFS=', ' read -r -a services <<<"$1" || :
       ;;
-    # IDENTICAL profileNameArgumentHandlerCase 6
-    --profile)
-      shift
-      [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(validate "$handler" string "$argument" "$1")" || return $?
-      pp=("$argument" "$profileName")
-      ;;
+    # IDENTICAL profileNameArgumentHandler 1
+    --profile) shift && pp=("$argument" "$(validate "$handler" string "$argument" "$1")") || return $? ;;
     --revoke) optionRevoke=true ;;
     --verbose) verboseFlag=true ;;
     --group) shift && securityGroups+=("$1") ;;
@@ -60,11 +57,13 @@ __awsIPAccess() {
   catchReturn "$handler" awsInstall || return $?
 
   if ! awsHasEnvironment; then
-    # IDENTICAL profileNameArgumentValidation 4
+    # IDENTICAL profileNameArgumentEnvironment 4
     if [ -z "$profileName" ]; then
-      profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+      profileName="$(catchReturn "$handler" buildEnvironmentGet --quiet AWS_PROFILE)" || return $?
       [ -n "$profileName" ] || profileName="default"
     fi
+    # IDENTICAL profileNameArgumentDefault 1
+    [ -n "$profileName" ] || profileName="default"
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
     if awsCredentialsHasProfile "$profileName"; then
       # catchEnvironment "$handler" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?

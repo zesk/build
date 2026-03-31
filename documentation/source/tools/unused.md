@@ -7,6 +7,28 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{consoleHeadingBoxed}
+
+{loadAverage}
+
+{loopExecute}
+
+{randomString}
+
+{rotateLog}
+
+{rotateLogs}
+
+{shaPipe}
+
+{usageRequireBinary}
+
+{usageRequireEnvironment}
+
+{veeGitTag}
+
+{watchDirectory}
+
 {parseBoolean}
 
 {clampDigits}

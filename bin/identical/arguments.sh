@@ -75,19 +75,6 @@ __documentTemplateFunction() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    # IDENTICAL profileNameArgumentHandlerCase 6
-    --profile)
-      shift
-      [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(validate "$handler" string "$argument" "$1")" || return $?
-      pp=("$argument" "$profileName")
-      ;;
-    # IDENTICAL regionArgumentHandler 5
-    --region)
-      shift
-      [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
-      region=$(validate "$handler" string "$argument" "${1-}") || return $?
-      ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -98,21 +85,6 @@ __documentTemplateFunction() {
 
   # IDENTICAL startBeginTiming 1
   local start && start=$(timingStart) || return $?
-
-  # IDENTICAL profileNameArgumentValidation 4
-  if [ -z "$profileName" ]; then
-    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
-    [ -n "$profileName" ] || profileName="default"
-  fi
-
-  # IDENTICAL regionArgumentValidation 7
-  if [ -z "$region" ]; then
-    export AWS_REGION
-    catchReturn "$handler" buildEnvironmentLoad AWS_REGION || return $?
-    region="${AWS_REGION-}"
-    [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
-  fi
-  awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }
@@ -127,19 +99,6 @@ ___documentTemplateFunction() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL profileNameArgumentHandlerCase 6
-    --profile)
-      shift
-      [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(validate "$handler" string "$argument" "$1")" || return $?
-      pp=("$argument" "$profileName")
-      ;;
-    # IDENTICAL regionArgumentHandler 5
-    --region)
-      shift
-      [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
-      region=$(validate "$handler" string "$argument" "${1-}") || return $?
-      ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -150,21 +109,6 @@ ___documentTemplateFunction() {
 
   # IDENTICAL startBeginTiming 1
   local start && start=$(timingStart) || return $?
-
-  # IDENTICAL profileNameArgumentValidation 4
-  if [ -z "$profileName" ]; then
-    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
-    [ -n "$profileName" ] || profileName="default"
-  fi
-
-  # IDENTICAL regionArgumentValidation 7
-  if [ -z "$region" ]; then
-    export AWS_REGION
-    catchReturn "$handler" buildEnvironmentLoad AWS_REGION || return $?
-    region="${AWS_REGION-}"
-    [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
-  fi
-  awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }

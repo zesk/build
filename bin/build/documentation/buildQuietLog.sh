@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-24
 # shellcheck disable=SC2034
 argument="name - String. Required. The log file name to create. Trims leading \`_\` if present."$'\n'"--no-create - Flag. Optional. Do not require creation of the directory where the log file will appear."$'\n'""
 base="build.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Generate the path for a quiet log in the build cache directory, creating it if necessary."$'\n'"Argument: name - String. Required. The log file name to create. Trims leading \`_\` if present."$'\n'"Argument: --no-create - Flag. Optional. Do not require creation of the directory where the log file will appear."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceHash="4b8b06dd0c9fada8badf71838b7067390a6bff08"
+sourceHash="f9982331c658f68e95214ae1a17280db7348110f"
 summary="Generate the path for a quiet log in the build"
 summaryComputed="true"
 usage="buildQuietLog name [ --no-create ]"

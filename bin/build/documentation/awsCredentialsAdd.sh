@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-03-30
 # shellcheck disable=SC2034
 argument="--profile profileName - String. Optional. The credentials profile to write (default value is \`default\`)"$'\n'"--force - Flag. Optional. Write the credentials file even if the profile already exists"$'\n'"--comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record)."$'\n'"--help - Flag. Optional. Display this help."$'\n'"key - The AWS_ACCESS_KEY_ID to write"$'\n'"secret - The AWS_SECRET_ACCESS_KEY to write"$'\n'""
 base="aws.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument")
 rawComment="Write the credentials to the AWS credentials file."$'\n'"If the AWS credentials file is not found, it is created"$'\n'"Summary: Write an AWS profile to the AWS credentials file"$'\n'"Argument: --profile profileName - String. Optional. The credentials profile to write (default value is \`default\`)"$'\n'"Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists"$'\n'"Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record)."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: key - The AWS_ACCESS_KEY_ID to write"$'\n'"Argument: secret - The AWS_SECRET_ACCESS_KEY to write"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
-sourceHash="111fcdfe06aedb88153c34e76bd3943c0bea9a6f"
+sourceHash="0bb8ad1e144f99436ce0ae63227b8eccf2ae71a0"
 summary="Write an AWS profile to the AWS credentials file"$'\n'""
 usage="awsCredentialsAdd [ --profile profileName ] [ --force ] [ --comments ] [ --help ] [ key ] [ secret ]"
 # shellcheck disable=SC2016
