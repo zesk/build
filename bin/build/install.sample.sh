@@ -1179,7 +1179,7 @@ _fileReverseLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileRealPath 20
+# IDENTICAL fileRealPath 32
 
 # Find the full, actual path of a file avoiding symlinks or redirection.
 # See: readlink realpath
@@ -1188,12 +1188,24 @@ _fileReverseLines() {
 # Argument: file ... - File. Required. One or more files to `realpath`.
 # Requires: executableExists realpath __help usageDocument returnArgument
 fileRealPath() {
-  # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __help "$handler" --help || return 0
   if executableExists realpath; then
     realpath "$@"
   else
-    readlink -f -n "$@"
+    local here && here=$(catchReturn "$handler" pwd) && here="${here%/}/" || return $?
+    while [ $# -gt 0 ]; do
+      if [ -L "$1" ]; then
+        readlink "$1"
+      elif [ -e "$1" ]; then
+        local prefix=""
+        [ "${1#/}" != "$1" ] || prefix="$here"
+        printf "%s%s\n" "$prefix" "$1"
+      else
+        throwEnvironment "$handler" "$1 does not exist" || return $?
+      fi
+      shift
+    done
   fi
 }
 _fileRealPath() {

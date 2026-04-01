@@ -1082,7 +1082,8 @@ textRemoveFields() {
     shift
   done
   fieldCount=${fieldCount:-1}
-  sed -r 's/^([^ ]+ +){'"$fieldCount"'}//'
+  # `sed -r` === `sed -E` but `sed -E` is more compatible
+  sed -E 's/^([^ ]+ +){'"$fieldCount"'}//'
 }
 _textRemoveFields() {
   # __IDENTICAL__ usageDocument 1

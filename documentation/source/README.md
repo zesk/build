@@ -10,7 +10,7 @@ platforms, devices, and operating systems.
 - Powerful tools for development workflows - automatic documentation for Bash scripts and functions, completions, and
   interactivity
 - Testing and assertion library for Bash which outputs **jUnit**, **TAP** with extensible hooks.
-- Extensive, platform agnostic utilities 
+- Extensive, platform agnostic utilities
 
 This code toolkit depends solely on [`bash`](https://www.gnu.org/software/bash/manual/bash.html) and a few other
 binaries (`jq`, `sed`, `find`, `awk`) and a conscientious decision has been made to not depend on any other language
@@ -37,6 +37,8 @@ source issue and are suggested to be used within your own tools.
 
 To install it in the operating system:
 
+- Mac OS X: Requires [`port`](https://www.macports.org/install.php) or [`brew`](https://brew.sh/), install `jq`
+- Windows: Requires Windows Subsystem for Linux
 - Copy `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and `sudo /usr/local/bin/build/install-bin-build.sh`
 - Source `/usr/local/bin/build/tools.sh` in your scripts to get access to all functions
 
