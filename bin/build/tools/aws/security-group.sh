@@ -65,7 +65,7 @@ __awsSecurityGroupIPModify() {
 
   [ -n "$profileName" ] || awsHasEnvironment || throwEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
 
-  ! executableRequire "$handler" jq aws || return $?
+  executableRequire "$handler" jq aws || return $?
 
   # IDENTICAL regionArgumentValidation 5
   if [ -z "$region" ]; then
