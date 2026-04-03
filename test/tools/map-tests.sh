@@ -117,16 +117,16 @@ testCannon() {
 
   assertFileContains "$testHome/two.sh" "lizard" || return $?
 
-  assertExitCode --stderr-match "Directory" 2 cannon --path "$testHome/not-a-path" dog friend || return $?
-  assertExitCode --stderr-match "blank" 2 cannon --path "$testHome" "" friend || return $?
-  assertExitCode 3 cannon --path "$testHome" dog friend || return $?
-  assertExitCode 3 cannon --path "$testHome" cat hairball || return $?
-  assertExitCode 0 cannon --path "$testHome" lizard "" ! -name '*.sh' || return $?
+  assertExitCode --stderr-match "Directory" 2 textCannon --path "$testHome/not-a-path" dog friend || return $?
+  assertExitCode --stderr-match "blank" 2 textCannon --path "$testHome" "" friend || return $?
+  assertExitCode 3 textCannon --path "$testHome" dog friend || return $?
+  assertExitCode 3 textCannon --path "$testHome" cat hairball || return $?
+  assertExitCode 0 textCannon --path "$testHome" lizard "" ! -name '*.sh' || return $?
   assertFileContains "$testHome/two.sh" "lizard" "owl" "newt" "rat" "hairball" || return $?
-  assertExitCode 3 cannon --path "$testHome" lizard "" || return $?
+  assertExitCode 3 textCannon --path "$testHome" lizard "" || return $?
   assertFileDoesNotContain "$testHome/two.sh" "lizard" || return $?
   assertFileContains "$testHome/two.sh" "owl" "newt" "rat" "hairball" || return $?
-  assertExitCode 3 cannon --path "$testHome" newt "" || return $?
+  assertExitCode 3 textCannon --path "$testHome" newt "" || return $?
   assertFileDoesNotContain "$testHome/two.sh" "newt" "lizard" || return $?
   assertFileContains "$testHome/three.md" "when" "what" "where" "why" || return $?
   catchEnvironment "$handler" rm -rf "$testHome" || return $?

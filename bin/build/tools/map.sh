@@ -236,7 +236,7 @@ _mapEnvironment() {
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
-# Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory.
+# Argument: --path cannonPath - Directory. Optional. Run textCannon operation starting in this directory.
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
 # Argument: findArgs ... - Arguments. Optional. Any additional arguments are meant to filter files.

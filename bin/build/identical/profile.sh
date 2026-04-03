@@ -39,7 +39,7 @@ __testFunction() {
   # ********************************************************************************************************************
 
   __profileLabel="describe what happened between this and prior profile call"
-  # IDENTICAL profileFunctionTail 7
+  # IDENTICAL profileFunctionTail 6
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then
     __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2

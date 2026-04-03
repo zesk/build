@@ -152,7 +152,7 @@ _deprecatedTokensFile() {
 
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: cannonFile - File. Required. One or more files delimited with `|` characters, one per line `search|replace|findArguments|...`. If not files are supplied then pipe file via stdin.
-# Run cannon using a configuration file or files.
+# Run textCannon using a configuration file or files.
 # Comment lines (First character is `#`) are considered the current "state" (e.g. version) and are displayed during processing.
 #
 # Sample file:
@@ -225,7 +225,7 @@ deprecatedCannonFile() {
       exitCode=1
     fi
   done < <(cat "${files[@]+"${files[@]}"}")
-  statusMessage --last timingReport "$start" "Deprecated cannon took"
+  statusMessage --last timingReport "$start" "Deprecated textCannon took"
   return "$exitCode"
 }
 _deprecatedCannonFile() {
@@ -238,7 +238,7 @@ _deprecatedCannonFile() {
 # Return Code: 1 - Search tokens were not found in any file (which matches find arguments)
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: search - String. Required. String to search for (one or more)
-# Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory.
+# Argument: --path cannonPath - Directory. Optional. Run textCannon operation starting in this directory.
 # See: buildHome
 deprecatedFind() {
   local handler="_${FUNCNAME[0]}"
@@ -281,7 +281,7 @@ _deprecatedFind() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory.
+# Argument: --path cannonPath - Directory. Optional. Run textCannon operation starting in this directory.
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: search - String. Required. String to search for
 # Argument: replace - EmptyString. Required. Replacement string.
@@ -322,7 +322,7 @@ deprecatedCannon() {
   local aa=()
   read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
   # ignore should go at the end so it has priority over previous entries
-  cannon --path "$cannonPath" "$search" "$@" "${aa[@]}"
+  textCannon --path "$cannonPath" "$search" "$@" "${aa[@]}"
 }
 _deprecatedCannon() {
   # __IDENTICAL__ bashDocumentation 1

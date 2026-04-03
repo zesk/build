@@ -91,44 +91,6 @@ booleanChoose() {
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 
-# _IDENTICAL_ _errors 36
-
-# Return `argument` error code. Outputs `message ...` to `stderr`.
-# Argument: message ... - String. Optional. Message to output.
-# Return Code: 2
-# Requires: returnMessage
-returnArgument() {
-  returnMessage 2 "$@" || return $?
-}
-
-# Return `environment` error code. Outputs `message ...` to `stderr`.
-# Argument: message ... - String. Optional. Message to output.
-# Return Code: 1
-# Requires: returnMessage
-returnEnvironment() {
-  returnMessage 1 "$@" || return $?
-}
-
-# Run `handler` with a passed return code
-# Argument: returnCode - Integer. Required. Return code.
-# Argument: handler - Function. Required. Error handler.
-# Argument: message ... - String. Optional. Error message
-# Requires: returnArgument
-returnThrow() {
-  local returnCode="${1-}" && shift || returnArgument "Missing return code" || return $?
-  local handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
-  "$handler" "$returnCode" "$@" || return $?
-}
-
-# Run binary and catch errors with handler
-# Argument: handler - Function. Required. Error handler.
-# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
-# Requires: returnArgument
-catchReturn() {
-  local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
-  "$@" || "$handler" "$?" "$@" || return $?
-}
-
 # _IDENTICAL_ returnClean 21
 
 # Delete files or directories and return the same exit code passed in.
@@ -212,6 +174,7 @@ _convertValue() {
 # Argument: code - UnsignedInteger. Required. Exit code to return
 # Argument: handler - Function. Required. Failure command, passed remaining arguments and error code.
 # Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
 # Requires: isUnsignedInteger returnArgument isFunction isCallable
 catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
@@ -230,23 +193,21 @@ _catchCode() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run `command`, upon failure run `handler` with an environment error
+# Run `handler` with an argument error
 # Argument: handler - Function. Required. Failure command
-# Argument: command ... - Callable. Required. Command to run.
-catchEnvironment() {
-  catchCode 1 "$@" || return $?
-}
-
-# Run `command`, upon failure run `handler` with an argument error
-# Argument: handler - Function. Required. Failure command
-# Argument: command ... - Callable. Required. Command to run.
-catchArgument() {
-  catchCode 2 "$@" || return $?
+# Argument: message ... - String. Optional. Error message to display.
+# Requires: isFunction returnArgument decorate debuggingStack
+throwArgument() {
+  local __handler="${1-}"
+  # __IDENTICAL__ __checkHandler 1
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
+  shift && "$__handler" 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
-# Argument: handler - Function. Required. Failure command
-# Argument: message ... - String. Optional. Error message to display.
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
+# Requires: isFunction returnArgument decorate debuggingStack
 throwEnvironment() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
@@ -254,14 +215,60 @@ throwEnvironment() {
   shift && "$__handler" 1 "$@" || return $?
 }
 
-# Run `handler` with an argument error
-# Argument: handler - Function. Required. Failure command
-# Argument: message ... - String. Optional. Error message to display.
-throwArgument() {
-  local __handler="${1-}"
-  # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
-  shift && "$__handler" 2 "$@" || return $?
+# Run `command`, upon failure run `handler` with an argument error
+# Argument: handler - String. Required. Failure command
+# Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
+# Requires: catchCode
+catchArgument() {
+  catchCode 2 "$@" || return $?
+}
+
+# Run `command`, upon failure run `handler` with an environment error
+# Argument: handler - String. Required. Failure command
+# Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
+# Requires: catchCode
+catchEnvironment() {
+  catchCode 1 "$@" || return $?
+}
+
+# _IDENTICAL_ _errors 36
+
+# Return `argument` error code. Outputs `message ...` to `stderr`.
+# Argument: message ... - String. Optional. Message to output.
+# Return Code: 2
+# Requires: returnMessage
+returnArgument() {
+  returnMessage 2 "$@" || return $?
+}
+
+# Return `environment` error code. Outputs `message ...` to `stderr`.
+# Argument: message ... - String. Optional. Message to output.
+# Return Code: 1
+# Requires: returnMessage
+returnEnvironment() {
+  returnMessage 1 "$@" || return $?
+}
+
+# Run `handler` with a passed return code
+# Argument: returnCode - Integer. Required. Return code.
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
+# Requires: returnArgument
+returnThrow() {
+  local returnCode="${1-}" && shift || returnArgument "Missing return code" || return $?
+  local handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
+  "$handler" "$returnCode" "$@" || return $?
+}
+
+# Run binary and catch errors with handler
+# Argument: handler - Function. Required. Error handler.
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
+# Requires: returnArgument
+catchReturn() {
+  local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
+  "$@" || "$handler" "$?" "$@" || return $?
 }
 
 # <-- END of IDENTICAL _sugar

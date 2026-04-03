@@ -140,14 +140,16 @@ _isArray() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _type 42
+# IDENTICAL _type 46
 
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: catchArgument isUnsignedInteger bashDocumentation
+# Requires: catchArgument isUnsignedInteger bashDocumentation __help
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
@@ -165,11 +167,13 @@ _isPositiveInteger() {
 }
 
 # Test if argument are bash functions
-# Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
+# Argument: string - String. Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: catchArgument isUnsignedInteger bashDocumentation type
+# Requires: catchArgument isUnsignedInteger bashDocumentation type __help
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"

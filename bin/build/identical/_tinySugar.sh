@@ -15,6 +15,7 @@
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
+# Requires: returnThrow
 throwArgument() {
   returnThrow 2 "$@" || return $?
 }
@@ -22,13 +23,15 @@ throwArgument() {
 # Run `handler` with an environment error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
+# Requires: returnThrow
 throwEnvironment() {
   returnThrow 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
 # Argument: handler - String. Required. Failure command
-# Argument: command ... - Required. Command to run.
+# Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
 # Requires: throwArgument
 catchArgument() {
   local handler="${1-}"
@@ -37,7 +40,8 @@ catchArgument() {
 
 # Run `command`, upon failure run `handler` with an environment error
 # Argument: handler - String. Required. Failure command
-# Argument: command ... - Required. Command to run.
+# Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
 # Requires: throwEnvironment
 catchEnvironment() {
   local handler="${1-}"
@@ -73,9 +77,10 @@ returnThrow() {
   "$handler" "$returnCode" "$@" || return $?
 }
 
-# Run binary and catch errors with handler
+# Run command and catch errors with handler
 # Argument: handler - Function. Required. Error handler.
-# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
+# Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?

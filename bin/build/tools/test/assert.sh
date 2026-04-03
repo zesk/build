@@ -426,14 +426,13 @@ _assertConditionHelper() {
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 
   __profileLabel="cleanup -> return $exitCode"
-  # IDENTICAL profileFunctionTail 7
+  # IDENTICAL profileFunctionTail 6
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then
     __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
     printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
   fi
   # ********************************************************************************************************************
-
   return "$exitCode"
 }
 

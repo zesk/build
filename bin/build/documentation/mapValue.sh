@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Maps a string using an environment file"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: mapFile - File. Required. a file containing bash environment definitions"$'\n'"Argument: value - String. Optional. One or more values to map using said environment file"$'\n'"Argument: --prefix - String. Optional. Token prefix defaults to \`{\`."$'\n'"Argument: --suffix - String. Optional. Token suffix defaults to \`}\`."$'\n'"Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. \`stringLowercase\`)"$'\n'"Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. \`textTrim\`)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/map.sh"
-sourceHash="4c91deb7564d353356e6832445db742dc8a696de"
+sourceHash="e092d159b9e29d9155b3f70df0a0dd6d4f34d940"
 summary="Maps a string using an environment file"
 summaryComputed="true"
 usage="mapValue [ --help ] [ --handler handler ] mapFile [ value ] [ --prefix ] [ --suffix ] [ --search-filter ] [ --replace-filter ]"

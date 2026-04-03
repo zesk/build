@@ -1,1 +1,0 @@
-[deprecatedCannonFile]({rel}tools/deprecated.md#deprecatedcannonfile) - Run cannon using a configuration file or files. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L170))

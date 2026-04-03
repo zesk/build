@@ -605,7 +605,7 @@ On a "2x" machine:
 - urlMatchesLocalFileSize
 - urlOpener
 - bashDocumentation
-- usageDocumentComplex
+- bashDocumentationComplex
 - bashSimpleDocumentation
 - usageGenerator
 - executableRequire

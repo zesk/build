@@ -147,7 +147,7 @@ buildUsageRemoveDeprecated() {
     [ "${#deprecatedFiles[@]}" -eq 0 ] && statusMessage --last printf -- "%s\n" "# No deprecated files." || printf -- "git rm -f %s\n" "${deprecatedFiles[@]}" || return $?
   else
     [ "${#deprecatedFiles[@]}" -eq 0 ] || local f && for f in "${deprecatedFiles[@]}"; do
-      catchEnvironment "$handler" git rm -f "$f" || catchReturn "$handler" rm -f "$f" || return $?
+      catchEnvironment "$handler" git rm -f "$f" 2>/dev/null || catchReturn "$handler" rm -f "$f" || return $?
     done
   fi
 }
@@ -248,14 +248,13 @@ __buildUsageCompileFunction() {
 
     if [ "$computedHash" = "$sourceHash" ]; then
       __profileLabel="cache match - no action"
-      # IDENTICAL profileFunctionTail 7
-      # ********************************************************************************************************************
-      if [ "$__profile" != "false" ]; then
-        __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
-        printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
-      fi
-      # ********************************************************************************************************************
-      catchReturn "$handler" touch "$documentationSettingsFile" || return $?
+  # IDENTICAL profileFunctionTail 6
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then
+    __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
+    printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
+  fi
+  # ********************************************************************************************************************
       return 0
     fi
   fi
@@ -290,7 +289,7 @@ __buildUsageCompileFunction() {
   else
     # local init && init=$(timingStart)
     catchReturn "$handler" decorateThemelessMode || return $?
-    fn="" BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" bashDocumentation "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
+    fn="" BUILD_DEBUG="" BUILD_COLORS=true catchReturn "$handler" bashDocumentation "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
     catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?
     {
       local replace helpCode && helpCode="$(escapeBash <"$tempHelp")"
@@ -319,14 +318,13 @@ __buildUsageCompileFunction() {
     # ********************************************************************************************************************
   fi
 
-  # IDENTICAL profileFunctionTail 7
+  # IDENTICAL profileFunctionTail 6
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then
     __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
     printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
   fi
   # ********************************************************************************************************************
-
   return 0
 }
 
