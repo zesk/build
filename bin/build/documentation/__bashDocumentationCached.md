@@ -1,10 +1,10 @@
-## `__usageDocumentCached`
+## `__bashDocumentationCached`
 
 > Display cached usage for a function
 
 ### Usage
 
-    __usageDocumentCached handler [ home ] [ functionName ] [ returnCode ] [ message ... ]
+    __bashDocumentationCached handler [ home ] [ functionName ] [ returnCode ] [ message ... ]
 
 Display cached usage for a function
 

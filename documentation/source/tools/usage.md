@@ -46,7 +46,7 @@ For argument validation, use [validate](./validate.md).
 
 {__functionSettings}
 
-{__usageDocumentCached}
+{__bashDocumentationCached}
 
 {__usageMessage}
 

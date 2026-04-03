@@ -89,7 +89,8 @@ __documentationIndexSeeLinker() {
       local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
       local markdownCacheFile="$markdownCache/SEE_$cleanToken.md"
-      if fileNewest "$markdownCacheFile" "$documentationSource"; then
+      local settingsCacheFile="$markdownCache/$cleanToken.sh"
+      if [ -f "$settingsCacheFile" ] && [ -f "$markdownCacheFile" ] && fileIsNewest "$markdownCacheFile" "$settingsCacheFile"; then
         tokenValue="$(cat "$markdownCacheFile")"
       else
         tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken" | tee "$markdownCacheFile") || return $?

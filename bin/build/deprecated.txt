@@ -4,6 +4,7 @@ newlineHide|stringHideNewlines|
 plural |localePlural |
 pluralWord |localePluralWord |
 cannon |textCannon |
+__usageDocumentCached|__bashDocumentationCached|
 usageDocument|bashDocumentation|
 usageDocumentSimple|bashSimpleDocumentation|
 
