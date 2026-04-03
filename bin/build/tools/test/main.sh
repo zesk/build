@@ -455,7 +455,9 @@ __testSuite() {
     TEST_START="$__testStart" TEST_FILE=$sectionFile TEST_VERBOSE=$verboseMode TEST_LINE=$testLine TEST_FLAGS=$rawFlags TEST_SUITE_NAME="$suiteName" TEST_NAME=$item "${runner[@]+"${runner[@]}"}" __testRun "$handler" "$stateFile" "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || testReturnCode=$?
     if [ $testReturnCode -eq 0 ]; then
       passed=true
+      printf -- "%s: %s\n" "PASS" "$item" >>"$quietLog"
     else
+      printf -- "%s: %s\n" "FAIL" "$item" >>"$quietLog"
       passed=false
       __testSuiteExecutor "$item" "$theTestFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || throwEnvironment "$handler" "failure executors failed" || :
       catchEnvironment "$handler" cd "$saveHome" || :
@@ -494,6 +496,8 @@ __testSuite() {
     fi
   else
     decorate big --bigger FAILED | decorate wrap "" "    " | decorate error | decorate wrap --fill "." "    "
+    decorate info "Failed tests:"
+    grep "^FAIL:" "$quietLog" | textRemoveFields 1 | decorate error | decorate wrap "- " ""
   fi
 
   local as=() && read -r -a as < <(catchReturn "$handler" assertStatistics) || return $?
