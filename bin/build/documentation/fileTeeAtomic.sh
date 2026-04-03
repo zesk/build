@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-16
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="-a - Flag. Optional. Append target (atomically as well)."$'\n'"target - File. Required. File to target"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="summary")
 rawComment="Write to a file in a single operation to avoid invalid files"$'\n'"Argument: -a - Flag. Optional. Append target (atomically as well)."$'\n'"Argument: target - File. Required. File to target"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Piped to a temporary file until EOF and then moved to target"$'\n'"stdout: A copy of stdin"$'\n'"Summary: tee but atomic (EXPERIMENTAL)"$'\n'"EXPERIMENTAL not a lot of testing of this don't use quite yet."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="4c703f3426449dd0f9b510eb709d61a9f87e17cb"
+sourceHash="c3e7e8b447b49ef6c60b5bfa7abaccf84b3ca4c6"
 stdin="Piped to a temporary file until EOF and then moved to target"$'\n'""
 stdout="A copy of stdin"$'\n'""
 summary="tee but atomic (EXPERIMENTAL)"$'\n'""

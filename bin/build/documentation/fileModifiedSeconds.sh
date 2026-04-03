@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-16
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="file ... - File. Required. One or more files to examine"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Prints seconds since modified"$'\n'"Argument: file ... - File. Required. One or more files to examine"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Can not get modification time"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Can not get modification time"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="4c703f3426449dd0f9b510eb709d61a9f87e17cb"
+sourceHash="c3e7e8b447b49ef6c60b5bfa7abaccf84b3ca4c6"
 summary="Prints seconds since modified"
 summaryComputed="true"
 usage="fileModifiedSeconds file ... [ --help ]"

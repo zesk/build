@@ -856,19 +856,16 @@ iTerm2Init() {
     throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
-  local home
-  catchReturn "$handler" buildEnvironmentLoad TERM || return $?
-  home=$(catchReturn "$handler" userHome) || return $?
-
   # iTerm2 customizations
   local ii=()
   ! $ignoreErrors || ii=(--ignore)
   catchEnvironment "$handler" iTerm2PromptSupport "${ii[@]+"${ii[@]}"}" || return $?
+
   export BUILD_HOOK_DIRS
   buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
   # Intercept notify
-  BUILD_HOOK_DIRS=$(listAppend "${BUILD_HOOK_DIRS[@]}" ":" --first "bin/build/tools/iterm2/hooks")
-  [ ! -d "$home/.iterm2" ] || catchEnvironment "$handler" iTerm2Aliases || return $?
+  local newHookPath="bin/build/tools/iterm2/hooks"
+  listContains "$BUILD_HOOK_DIRS" ":" "$newHookPath" || BUILD_HOOK_DIRS=$(listAppend "${BUILD_HOOK_DIRS[@]}" ":" --first "$newHookPath")
 }
 _iTerm2Init() {
   # __IDENTICAL__ usageDocument 1

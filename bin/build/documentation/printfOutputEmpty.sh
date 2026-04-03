@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-13
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="... - Arguments. Required. printf arguments."$'\n'""
 base="text.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="stdout" [4]="example")
 rawComment="Summary: printf when output is blank"$'\n'"Pipes all input to output, if any input exists behaves like \`cat\`. If input is empty then runs and outputs the \`printf\` statement result."$'\n'"Argument: ... - Arguments. Required. printf arguments."$'\n'"Without arguments, displays help."$'\n'"stdin: text (Optional)"$'\n'"stdout: printf output and then the stdin text IFF stdin text is blank"$'\n'"Example:     cat \"\$failedFunctions\" | decorate wrap -- \"- \" | {fn} \"%s\\n\" \"No functions failed.\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="f0c5212f3e402f51e272ac32015e5e0be9f2581c"
+sourceHash="80ad24738a32b8002bafa685f78fc47389363a7d"
 stdin="text (Optional)"$'\n'""
 stdout="printf output and then the stdin text IFF stdin text is blank"$'\n'""
 summary="printf when output is blank"$'\n'""

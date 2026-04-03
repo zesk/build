@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-13
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"... - Arguments. Passed directly to \`grep\`."$'\n'""
 base="text.sh"
@@ -13,7 +13,7 @@ requires="grep returnMap"$'\n'""
 return_code="0 - Normal operation"$'\n'""
 see="grep"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="f0c5212f3e402f51e272ac32015e5e0be9f2581c"
+sourceHash="80ad24738a32b8002bafa685f78fc47389363a7d"
 summary="\`grep\` but returns 0 when nothing matches"
 summaryComputed="true"
 usage="grepSafe [ --help ] [ ... ]"
