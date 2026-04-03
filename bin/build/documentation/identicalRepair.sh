@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. \`# {identical}}\`) (may specify more than one)"$'\n'"token - String. Required. The token to repair."$'\n'"source - File. Required. The token file source. First occurrence is used."$'\n'"destination - File. Required. The token file to repair. Can be same as \`source\`."$'\n'"--stdout - Flag. Optional. Output changed file to \`stdout\`"$'\n'""
 base="identical.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Repair an identical \`token\` in \`destination\` from \`source\`"$'\n'"Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. \`# {identical}}\`) (may specify more than one)"$'\n'"Argument: token - String. Required. The token to repair."$'\n'"Argument: source - File. Required. The token file source. First occurrence is used."$'\n'"Argument: destination - File. Required. The token file to repair. Can be same as \`source\`."$'\n'"Argument: --stdout - Flag. Optional. Output changed file to \`stdout\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/identical.sh"
-sourceHash="3d17e0e52d21bf0984ad94f99e9132c29a6aaed3"
+sourceHash="9b062c3d858b37e9d0bb2c6dc51ad89ca20e549b"
 summary="Repair an identical \`token\` in \`destination\` from \`source\`"
 summaryComputed="true"
 usage="identicalRepair --prefix prefix token source destination [ --stdout ]"

@@ -35,8 +35,8 @@ environmentVariableNameValid() {
   done
 }
 _environmentVariableNameValid() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List environment variables related to security
@@ -48,8 +48,8 @@ environmentSecureVariables() {
 }
 _environmentSecureVariables() {
   true || environmentSecureVariables --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Display and validate application variables.
@@ -120,8 +120,8 @@ environmentFileShow() {
   [ ${#missing[@]} -eq 0 ] || throwEnvironment "$handler" "Missing environment $(decorate each code "${missing[@]}")" || return $?
 }
 _environmentFileShow() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL environmentVariables 19
@@ -131,7 +131,7 @@ _environmentFileShow() {
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Requires: declare grep cut usageDocument __help
+# Requires: declare grep cut bashDocumentation __help
 environmentVariables() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -141,8 +141,8 @@ environmentVariables() {
 }
 _environmentVariables() {
   true || environmentVariables --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Parse variables from an environment variable stream
@@ -164,8 +164,8 @@ environmentParseVariables() {
 }
 _environmentParseVariables() {
   true || environmentParseVariables --help || return $?
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Clean *most* exported variables from the current context except a few important ones:
@@ -186,8 +186,8 @@ environmentClean() {
 }
 _environmentClean() {
   true || environmentClean --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output all exported environment variables, hiding secure ones and ones prefixed with underscore.
@@ -257,6 +257,6 @@ environmentOutput() {
   ! $__debugFlag || printf "%s\n" "# above is argument variables"
 }
 _environmentOutput() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

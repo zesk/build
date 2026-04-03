@@ -50,7 +50,7 @@ networkIPList() {
   __networkConfigurationFiltered "$handler" 'inet addr:' 'inet' "$@" || return $?
 }
 _networkIPList() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List MAC addresses associated with this system using `ifconfig`
@@ -63,5 +63,5 @@ networkMACAddressList() {
   __networkConfigurationFiltered "$handler" 'ether:' 'ether' "$@" || return $?
 }
 _networkMACAddressList() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

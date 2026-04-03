@@ -26,8 +26,8 @@ returnMessage() {
   return "$code"
 }
 _returnMessage() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Is value an unsigned integer?
@@ -41,11 +41,11 @@ _returnMessage() {
 # Requires: returnMessage
 isUnsignedInteger() {
   [ $# -eq 1 ] || returnMessage 2 "Single argument only: $*" || return $?
-  case "${1#+}" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
+  case "${1#+}" in --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
 _isUnsignedInteger() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL returnMessage
@@ -68,7 +68,7 @@ throwEnvironment() {
 
 # Run `command`, upon failure run `handler` with an argument error
 # Argument: handler - String. Required. Failure command
-# Argument: command ... - Required. Command to run.
+# Argument: command ... - Arguments. Required. Command to run.
 # Requires: throwArgument
 catchArgument() {
   local handler="${1-}"
@@ -77,7 +77,7 @@ catchArgument() {
 
 # Run `command`, upon failure run `handler` with an environment error
 # Argument: handler - String. Required. Failure command
-# Argument: command ... - Required. Command to run.
+# Argument: command ... - Arguments. Required. Command to run.
 # Requires: throwEnvironment
 catchEnvironment() {
   local handler="${1-}"
@@ -124,8 +124,8 @@ catchReturn() {
 
 # <-- END of IDENTICAL _tinySugar
 
-usageDocument() {
-  usageDocumentSimple "$@"
+bashDocumentation() {
+  bashSimpleDocumentation "$@"
 }
 
 # IDENTICAL __usageMessage 39
@@ -190,7 +190,7 @@ __functionSettings() {
   return 1
 }
 
-# IDENTICAL __usageDocumentCached 31
+# IDENTICAL __bashDocumentationCached 31
 
 # Summary: Display cached usage for a function
 # Argument: handler - Function. Required.
@@ -201,7 +201,7 @@ __functionSettings() {
 # Environment: BUILD_COLORS
 # Environment: BUILD_DOCUMENTATION_PATH
 # Requires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings
-__usageDocumentCached() {
+__bashDocumentationCached() {
   local handler="$1" && shift
   local home="$1" && shift
   local functionName="$1" && shift
@@ -223,7 +223,7 @@ __usageDocumentCached() {
   ) || return $?
 }
 
-# IDENTICAL usageDocumentSimple 33
+# IDENTICAL bashSimpleDocumentation 33
 
 # Output a simple error message for a function
 # DOC TEMPLATE: --help 1
@@ -232,15 +232,15 @@ __usageDocumentCached() {
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - String. Optional. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached __usageMessageStyle __usageMessage
-usageDocumentSimple() {
+# Requires: bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached __usageMessageStyle __usageMessage
+bashSimpleDocumentation() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" && shift 3
 
   [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
-  if ! __usageDocumentCached "$handler" "${BUILD_HOME-}" "${functionName}" "$returnCode" "$@"; then
+  if ! __bashDocumentationCached "$handler" "${BUILD_HOME-}" "${functionName}" "$returnCode" "$@"; then
     __usageMessage "$returnCode" "$@" || return $?
     export BUILD_HOME
     if [ ! -f "$source" ]; then
@@ -253,9 +253,9 @@ usageDocumentSimple() {
   [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
   return "$returnCode"
 }
-_usageDocumentSimple() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_bashSimpleDocumentation() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL bashFunctionComment 48
@@ -279,8 +279,8 @@ bashFinalComment() {
 }
 _bashFinalComment() {
   ! false || bashFinalComment --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Extract a bash comment from a file. Excludes lines containing the following tokens:
@@ -294,7 +294,7 @@ _bashFinalComment() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: grep cut fileReverseLines __help
-# Requires: usageDocument
+# Requires: bashDocumentation
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
@@ -304,8 +304,8 @@ bashFunctionComment() {
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)
 }
 _bashFunctionComment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # _IDENTICAL_ convertValue 37
@@ -343,8 +343,8 @@ convertValue() {
   printf "%s\n" "${value:-0}"
 }
 _convertValue() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL __help 57
@@ -385,7 +385,7 @@ _convertValue() {
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
 #
-# Requires: throwArgument usageDocument ___help
+# Requires: throwArgument bashDocumentation ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
   local flag="--help"
@@ -402,8 +402,8 @@ __help() {
   return 0
 }
 ___help() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL isCallable 46
@@ -423,8 +423,8 @@ isCallable() {
   fi
 }
 _isCallable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Test if all arguments are executable binaries
@@ -450,8 +450,8 @@ isExecutable() {
   fi
 }
 _isExecutable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL _type 42
@@ -461,7 +461,7 @@ _isExecutable() {
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: catchArgument isUnsignedInteger usageDocument
+# Requires: catchArgument isUnsignedInteger bashDocumentation
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
@@ -474,8 +474,8 @@ isPositiveInteger() {
   return 1
 }
 _isPositiveInteger() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Test if argument are bash functions
@@ -483,7 +483,7 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: catchArgument isUnsignedInteger usageDocument type
+# Requires: catchArgument isUnsignedInteger bashDocumentation type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
@@ -494,8 +494,8 @@ isFunction() {
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
 }
 _isFunction() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # _IDENTICAL_ returnCodeString 15
@@ -511,8 +511,8 @@ returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 _returnCodeString() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL validate 169
@@ -626,8 +626,8 @@ validate() {
   done
 }
 _validate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Handles extension via `_validateTypeMapper`
@@ -719,8 +719,8 @@ consoleHasColors() {
 }
 _consoleHasColors() {
   true || consoleHasColors --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -754,8 +754,8 @@ decorations() {
 }
 _decorations() {
   ! false || decorations --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Singular decoration function
@@ -765,7 +765,7 @@ _decorations() {
 # stdout: Decorated text
 # Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
-# Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
+# Requires: isFunction returnArgument awk catchEnvironment bashDocumentation executeInputSupport __help
 decorate() {
   local handler="_${FUNCNAME[0]}" what="${1-}"
   [ "$what" != "--help" ] || __help "$handler" "$@" || return 0
@@ -791,8 +791,8 @@ decorate() {
   executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is the decorate color system initialized yet?
@@ -806,8 +806,8 @@ decorateInitialized() {
   [ -n "${__BUILD_DECORATE-}" ]
 }
 _decorateInitialized() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _decorateInitialize() {
@@ -1029,7 +1029,7 @@ executeInputSupport() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Optional. Any additional arguments are passed through.
-# Requires: mktemp __help catchEnvironment usageDocument
+# Requires: mktemp __help catchEnvironment bashDocumentation
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
 fileTemporaryName() {
@@ -1052,8 +1052,8 @@ fileTemporaryName() {
   fi
 }
 _fileTemporaryName() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL fileTemporaryName
@@ -1074,8 +1074,8 @@ fileReverseLines() {
 }
 _fileReverseLines() {
   true || fileReverseLines --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL environmentVariables 19
@@ -1085,7 +1085,7 @@ _fileReverseLines() {
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Requires: declare grep cut usageDocument __help
+# Requires: declare grep cut bashDocumentation __help
 environmentVariables() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -1095,8 +1095,8 @@ environmentVariables() {
 }
 _environmentVariables() {
   true || environmentVariables --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL mapEnvironment 88
@@ -1185,8 +1185,8 @@ mapEnvironment() {
 }
 _mapEnvironment() {
   decorateInitialized || decorate info --
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # fn: {base}

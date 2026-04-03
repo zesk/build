@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="example" [2]="tested")
 rawComment="Remove words from the end of a phrase"$'\n'"Argument: wordCount - PositiveInteger. Words to output"$'\n'"Argument: word0 ... - EmptyString. One or more words to output"$'\n'"Example:     printf \"%s: %s\\n\" \"Summary:\" \"\$(stringTrimWords 10 \$description)\""$'\n'"Tested: No"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="80ad24738a32b8002bafa685f78fc47389363a7d"
+sourceHash="5f35ac6dcf31b9c284706fdda354d1d8408dde2c"
 summary="Remove words from the end of a phrase"
 summaryComputed="true"
 tested="No"$'\n'""

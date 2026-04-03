@@ -40,8 +40,8 @@ isiTerm2() {
 }
 _isiTerm2() {
   true || isiTerm2 --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Internal
@@ -135,8 +135,8 @@ iTerm2PromptSupport() {
   catchEnvironment "$handler" bashPrompt --skip-prompt --last __iTerm2UpdateState || return $?
 }
 _iTerm2PromptSupport() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installs iTerm2 aliases which are:
@@ -184,8 +184,8 @@ iTerm2Aliases() {
 }
 _iTerm2Aliases() {
   true || iTerm2Aliases --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Solely the color names (e.g blue), not anything else
@@ -197,8 +197,8 @@ iTerm2ColorNames() {
 }
 _iTerm2ColorNames() {
   true || iTerm2ColorNames --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is it a color name?
@@ -214,8 +214,8 @@ iTerm2IsColorName() {
 }
 _iTerm2IsColorName() {
   true || iTerm2ColorNames --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # This is faster than inArray etc.
@@ -233,8 +233,8 @@ iTerm2IsColorType() {
   esac
 }
 _iTerm2IsColorType() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Colors for various UI elements
@@ -251,8 +251,8 @@ iTerm2ColorTypes() {
 }
 _iTerm2ColorTypes() {
   true || iTerm2ColorTypes --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output an image to the console
@@ -326,8 +326,8 @@ iTerm2Image() {
   fi
 }
 _iTerm2Image() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __iTerm2ImageExtras() {
@@ -415,8 +415,8 @@ iTerm2Download() {
   fi
 }
 _iTerm2Download() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set terminal colors
@@ -572,8 +572,8 @@ __iTerm2SetColors() {
   _iTerm2_setValue SetColors "$colorType=$colorCode"
 }
 _iTerm2SetColors() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Attract the operator
@@ -652,8 +652,8 @@ iTerm2Attention() {
   $didSomething || throwArgument "$handler" "Requires at least one argument" || return $?
 }
 _iTerm2Attention() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set the badge for the iTerm2 console
@@ -693,8 +693,8 @@ iTerm2Badge() {
   _iTerm2_setBase64Value "SetBadgeFormat" "${message[@]+"${message[@]}"}"
 }
 _iTerm2Badge() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _readBytes() {
@@ -772,8 +772,8 @@ iTerm2Version() {
   printf "%s\n" "$version"
 }
 _iTerm2Version() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Sends a notification message via Mac OS X from iTerm2
@@ -816,8 +816,8 @@ iTerm2Notify() {
   printf "\e]9;%s\007" "$messageText"
 }
 _iTerm2Notify() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Add iTerm2 support to console
@@ -868,6 +868,6 @@ iTerm2Init() {
   listContains "$BUILD_HOOK_DIRS" ":" "$newHookPath" || BUILD_HOOK_DIRS=$(listAppend "${BUILD_HOOK_DIRS[@]}" ":" --first "$newHookPath")
 }
 _iTerm2Init() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

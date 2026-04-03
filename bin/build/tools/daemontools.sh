@@ -33,8 +33,8 @@ daemontoolsInstall() {
   fi
 }
 _daemontoolsInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install a daemontools service which runs a binary as the file owner.
@@ -152,8 +152,8 @@ daemontoolsInstallService() {
   fi
 }
 _daemontoolsInstallService() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Copy run file to a service target
@@ -233,8 +233,8 @@ daemontoolsRemoveService() {
   catchEnvironment "$handler" popd >/dev/null || return $?
 }
 _daemontoolsRemoveService() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is daemontools running?
@@ -256,8 +256,8 @@ daemontoolsIsRunning() {
   return 1
 }
 _daemontoolsIsRunning() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Print the daemontools service home path
@@ -269,8 +269,8 @@ daemontoolsHome() {
   catchReturn "$handler" buildEnvironmentGet DAEMONTOOLS_HOME || return $?
 }
 _daemontoolsHome() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __daemontoolsRequirements() {
@@ -301,8 +301,8 @@ daemontoolsExecute() {
   catchEnvironment "$handler" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List any processes associated with daemontools supervisors
@@ -320,8 +320,8 @@ daemontoolsProcessIds() {
 }
 _daemontoolsProcessIds() {
   ! false || daemontoolsProcessIds --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -384,8 +384,8 @@ daemontoolsTerminate() {
   fi
 }
 _daemontoolsTerminate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Restart the daemontools processes from scratch.
@@ -452,8 +452,8 @@ daemontoolsRestart() {
   statusMessage --last decorate success "Successfully restarted daemontools [$bootPid]"
 }
 _daemontoolsRestart() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Runs a daemon which monitors files and operates on services.
@@ -544,7 +544,7 @@ daemontoolsManager() {
 
   start=$(catchEnvironment "$handler" date +%s) || return $?
   lastChirp=$start
-  printf "%s: pid %d: (every %d %s)\n" "$(basename "${BASH_SOURCE[0]}")" "$$" "$intervalSeconds" "$(plural "$intervalSeconds" second seconds)"
+  printf "%s: pid %d: (every %d %s)\n" "$(basename "${BASH_SOURCE[0]}")" "$$" "$intervalSeconds" "$(localePlural "$intervalSeconds" second seconds)"
 
   local index=0
   while [ $index -lt ${#files[@]} ]; do
@@ -606,6 +606,6 @@ daemontoolsManager() {
   done
 }
 _daemontoolsManager() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

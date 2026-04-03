@@ -44,8 +44,8 @@ bashDebug() {
   bashDebuggerDisable
 }
 _bashDebug() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Enables the debugger immediately
@@ -78,8 +78,8 @@ bashDebuggerEnable() {
 }
 _bashDebuggerEnable() {
   true || bashDebuggerEnable --help
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Disables the debugger immediately
@@ -105,8 +105,8 @@ bashDebuggerDisable() {
   exec 20<&- 21>&- 22>&-
 }
 _bashDebuggerDisable() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Display the watch variables, if any

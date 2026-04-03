@@ -87,8 +87,8 @@ __testPlatforms() {
   find "$home/bin/build/tools/platform/" -type f -name '*.sh' -print0 | xargs -0 grep -A 1 '__testPlatformName()' | grep printf | awk '{ print $5 }' | sed 's/"//g'
 }
 ___testPlatforms() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: testPattern - String. Required. Test string to match.

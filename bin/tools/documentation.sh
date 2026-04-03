@@ -56,6 +56,7 @@ __buildDocumentationBuildDirectory() {
   aa+=(--target "$target")
 
   aa+=(--template "$source")
+  aa+=(--md-cache "$home/bin/build/documentation")
   aa+=(--unlinked-source "$documentationSource")
   aa+=(--unlinked-template "$source/todo.md" --unlinked-target "$target/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
@@ -68,7 +69,18 @@ __buildDocumentationBuildDirectory() {
   printf "\n" >>"$target"
   buildFunctions | sort -u | decorate wrap '- {SEE:' '}' >>"$target"
 
+  #       _                                       _        _   _             ____        _ _     _
+  #    __| | ___   ___ _   _ _ __ ___   ___ _ __ | |_ __ _| |_(_) ___  _ __ | __ ) _   _(_) | __| |
+  #   / _` |/ _ \ / __| | | | '_ ` _ \ / _ \ '_ \| __/ _` | __| |/ _ \| '_ \|  _ \| | | | | |/ _` |
+  #  | (_| | (_) | (__| |_| | | | | | |  __/ | | | || (_| | |_| | (_) | | | | |_) | |_| | | | (_| |
+  #   \__,_|\___/ \___|\__,_|_| |_| |_|\___|_| |_|\__\__,_|\__|_|\___/|_| |_|____/ \__,_|_|_|\__,_|
+  #
   catchReturn "$handler" documentationBuild "${aa[@]}" "$@" || return $?
+  #
+  #
+  #
+  #
+  #
 }
 
 __buildDocumentationCleanDirectory() {
@@ -112,7 +124,6 @@ __buildDocumentationBuildRelease() {
 }
 
 # Build the build documentation
-# fn: {base}
 # Argument: --none - Flag. Turn off all updates.
 # Argument: --templates-only - Flag. Just template identical updates.
 # Argument: --templates - Flag. Enable template updates.
@@ -288,6 +299,6 @@ buildDocumentationBuild() {
   statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
 }
 _buildDocumentationBuild() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

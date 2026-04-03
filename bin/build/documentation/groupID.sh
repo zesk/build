@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="groupName - String. Required. Group name to convert to a group ID"$'\n'""
 base="group.sh"
@@ -8,11 +8,11 @@ description="Convert a group name to a group ID"$'\n'""
 file="bin/build/tools/group.sh"
 fn="groupID"
 foundNames=([0]="argument" [1]="stdout" [2]="return_code" [3]="requires")
-rawComment="Convert a group name to a group ID"$'\n'"Argument: groupName - String. Required. Group name to convert to a group ID"$'\n'"stdout: \`Integer\`. One line for each group name passed as an argument."$'\n'"Return Code: 0 - All groups were found in the database and IDs were output successfully"$'\n'"Return Code: 1 - Any group is not found in the database."$'\n'"Return Code: 2 - Argument errors (blank argument)"$'\n'"Requires: throwArgument getent cut printf usageDocument decorate grep  quoteGrepPattern"$'\n'""$'\n'""
-requires="throwArgument getent cut printf usageDocument decorate grep  quoteGrepPattern"$'\n'""
+rawComment="Convert a group name to a group ID"$'\n'"Argument: groupName - String. Required. Group name to convert to a group ID"$'\n'"stdout: \`Integer\`. One line for each group name passed as an argument."$'\n'"Return Code: 0 - All groups were found in the database and IDs were output successfully"$'\n'"Return Code: 1 - Any group is not found in the database."$'\n'"Return Code: 2 - Argument errors (blank argument)"$'\n'"Requires: throwArgument getent cut printf bashDocumentation decorate grep  quoteGrepPattern"$'\n'""$'\n'""
+requires="throwArgument getent cut printf bashDocumentation decorate grep  quoteGrepPattern"$'\n'""
 return_code="0 - All groups were found in the database and IDs were output successfully"$'\n'"1 - Any group is not found in the database."$'\n'"2 - Argument errors (blank argument)"$'\n'""
 sourceFile="bin/build/tools/group.sh"
-sourceHash="6dc790bd970c3b4bca3fcf206791b6596315d404"
+sourceHash="4f05a0c0130285531cbb39213039a1bb8deca045"
 stdout="\`Integer\`. One line for each group name passed as an argument."$'\n'""
 summary="Convert a group name to a group ID"
 summaryComputed="true"

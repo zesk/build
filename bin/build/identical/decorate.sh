@@ -45,8 +45,8 @@ consoleHasColors() {
 }
 _consoleHasColors() {
   true || consoleHasColors --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -80,8 +80,8 @@ decorations() {
 }
 _decorations() {
   ! false || decorations --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Singular decoration function
@@ -91,7 +91,7 @@ _decorations() {
 # stdout: Decorated text
 # Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
-# Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
+# Requires: isFunction returnArgument awk catchEnvironment bashDocumentation executeInputSupport __help
 decorate() {
   local handler="_${FUNCNAME[0]}" what="${1-}"
   [ "$what" != "--help" ] || __help "$handler" "$@" || return 0
@@ -117,8 +117,8 @@ decorate() {
   executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is the decorate color system initialized yet?
@@ -132,8 +132,8 @@ decorateInitialized() {
   [ -n "${__BUILD_DECORATE-}" ]
 }
 _decorateInitialized() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _decorateInitialize() {

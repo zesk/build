@@ -7,4 +7,5 @@
 ## Rotation
 
 {logRotate}
+
 {logRotates}

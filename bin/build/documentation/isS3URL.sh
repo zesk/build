@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-30
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="value - EmptyString. Value to check."$'\n'""
 base="aws.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Is the URL passed in a S3 URL?"$'\n'"Argument: value - EmptyString. Value to check."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
-sourceHash="0bb8ad1e144f99436ce0ae63227b8eccf2ae71a0"
+sourceHash="2868917a7f9f34a65d23270409e9b1504ab860f0"
 summary="Is the URL passed in a S3 URL?"
 summaryComputed="true"
 usage="isS3URL [ value ]"

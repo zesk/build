@@ -46,10 +46,10 @@ __bashPromptModule_dotFilesWatcher() {
 
   [ $((${#askFiles[@]} + ${#askDirectories[@]})) -gt 0 ] || return 0
 
-  [ ${#askFiles[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate error "New $(plural ${#askFiles[@]} file files)") found" "$(decorate each file "${askFiles[@]}")"
-  [ ${#askDirectories[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate error "New $(plural ${#askDirectories[@]} directory directories)") found" "$(decorate each file "${askDirectories[@]}")"
-  [ ${#foundFiles[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(plural ${#foundFiles[@]} file files)")" "$(decorate each file "${foundFiles[@]}")"
-  [ ${#foundDirectories[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(plural ${#foundDirectories[@]} directory directories)")" "$(decorate each quote "${foundDirectories[@]}")"
+  [ ${#askFiles[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate error "New $(localePlural ${#askFiles[@]} file files)") found" "$(decorate each file "${askFiles[@]}")"
+  [ ${#askDirectories[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate error "New $(localePlural ${#askDirectories[@]} directory directories)") found" "$(decorate each file "${askDirectories[@]}")"
+  [ ${#foundFiles[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(localePlural ${#foundFiles[@]} file files)")" "$(decorate each file "${foundFiles[@]}")"
+  [ ${#foundDirectories[@]} -eq 0 ] || printf "%s: %s\n" "$(decorate warning "Unknown $(localePlural ${#foundDirectories[@]} directory directories)")" "$(decorate each quote "${foundDirectories[@]}")"
 
   set -o pipefail
   if confirmYesNo --no --timeout 3 "Approve?" | tee "$askFile.$$"; then

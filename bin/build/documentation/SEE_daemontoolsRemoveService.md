@@ -1,0 +1,1 @@
+[daemontoolsRemoveService]({rel}tools/daemontools.md#daemontoolsremoveservice) - Remove a daemontools service by name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L194))

@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Remove one or more items from a text-delimited list"$'\n'"Argument: listValue - Required. List value to modify."$'\n'"Argument: separator - Required. Separator string for item values (typically \`:\`)"$'\n'"Argument: item - the item to be removed from the \`listValue\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/list.sh"
-sourceHash="87314fd289f273788acd3fd9e6c5a11b2aa05b47"
+sourceHash="41d98a302feb190799f47d4570b57b5beb5b3303"
 summary="Remove one or more items from a text-delimited list"
 summaryComputed="true"
 usage="listRemove listValue separator [ item ] [ --help ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="where - Directory. Optional. Where to load the \`.env\` files."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="application.sh"
@@ -13,7 +13,7 @@ rawComment="Argument: where - Directory. Optional. Where to load the \`.env\` fi
 return_code="1 - if \`.env\` does not exist; outputs an error"$'\n'"0 - if files are loaded successfully"$'\n'""
 see="toDockerEnv"$'\n'"environmentFileLoad"$'\n'""
 sourceFile="bin/build/tools/environment/application.sh"
-sourceHash="098b7608780123a2e21e2a57911d53cdd9997acc"
+sourceHash="32ee14baef36b8e3c5a1074b2e2bece8f38e5f16"
 summary="Load \`.env\` and optional \`.env.local\` into bash context"$'\n'""
 usage="dotEnvConfigure [ where ] [ --help ]"
 # shellcheck disable=SC2016

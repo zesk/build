@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="process.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="todo" [1]="argument")
 rawComment="TODO: This is in progress"$'\n'"Output the number of open files for a process ID or group"$'\n'"Not completed yet"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/process.sh"
-sourceHash="014ba77f9205a3d4e9437278df62669cfe2287a9"
+sourceHash="b6a9cfd5fce10dfb5d863a90e72c35d40b170092"
 summary="Output the number of open files for a process ID"
 summaryComputed="true"
 todo="This is in progress"$'\n'""

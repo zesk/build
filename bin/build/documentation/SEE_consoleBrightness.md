@@ -1,0 +1,2 @@
+[consoleBrightness]({rel}tools/console.md#consolebrightness) - Output the brightness of the background color of the console as a number between 0 and 100
+ ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L94))

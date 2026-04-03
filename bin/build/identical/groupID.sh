@@ -13,7 +13,7 @@
 # Return Code: 0 - All groups were found in the database and IDs were output successfully
 # Return Code: 1 - Any group is not found in the database.
 # Return Code: 2 - Argument errors (blank argument)
-# Requires: throwArgument getent cut printf usageDocument decorate grep  quoteGrepPattern
+# Requires: throwArgument getent cut printf bashDocumentation decorate grep  quoteGrepPattern
 groupID() {
   local handler="_${FUNCNAME[0]}"
 
@@ -45,6 +45,6 @@ groupID() {
   fi
 }
 _groupID() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

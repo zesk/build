@@ -190,8 +190,8 @@ __deployBuildEnvironment() {
   throwEnvironment "$handler" deployToRemote --deploy "$@" failed || return $?
 }
 _deployBuildEnvironment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -324,8 +324,8 @@ deployRemoteFinish() {
   statusMessage --last timingReport "$start" "Remote deployment finished in"
 }
 _deployRemoteFinish() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Revert a deployed application from a deployment repository
@@ -400,8 +400,8 @@ _deployRevertApplication() {
   return 0
 }
 __deployRevertApplication() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __deployedHostArtifact() {
@@ -734,12 +734,12 @@ deployToRemote() {
     timingReport "$start" "$verb $(decorate value "$host") in"
   done
   buildDebugStop deployment || :
-  statusMessage --last timingReport "$initTime" "All ${#userHosts[@]} $(plural ${#userHosts[@]} host hosts) completed" || :
+  statusMessage --last timingReport "$initTime" "All ${#userHosts[@]} $(localePlural ${#userHosts[@]} host hosts) completed" || :
   return "$exitCode"
 }
 _deployToRemote() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

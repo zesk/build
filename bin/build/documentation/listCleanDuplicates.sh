@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Removes duplicates from a list and maintains ordering."$'\n'"Argument: separator - String. Required. List separator character."$'\n'"Argument: listText - String. Required. List to clean duplicates."$'\n'"Argument: --removed - Flag. Optional. Show removed items instead of the new list."$'\n'"Argument: --test testFunction - Function. Optional. Run this function on each item in the list and if the return code is non-zero, then remove it from the list."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/list.sh"
-sourceHash="87314fd289f273788acd3fd9e6c5a11b2aa05b47"
+sourceHash="41d98a302feb190799f47d4570b57b5beb5b3303"
 summary="Removes duplicates from a list and maintains ordering."
 summaryComputed="true"
 usage="listCleanDuplicates separator listText [ --removed ] [ --test testFunction ] [ --help ]"

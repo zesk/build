@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'""
 base="github.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Get the latest JSON structure"$'\n'"Argument: projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/github.sh"
-sourceHash="a6d97f4e2d055b5e7abf444332e9d411afe7a742"
+sourceHash="b139e9ff26ace596d539eac776741adccae51061"
 summary="Get the latest JSON structure"
 summaryComputed="true"
 usage="githubLatest projectName"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-16
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--top - Flag. Optional. Place label at the top."$'\n'"--bottom - Flag. Optional. Place label at the bottom."$'\n'"--prefix prefixText - String. Optional. Optional prefix on each line."$'\n'"--tween tweenText - String. Optional. Optional between text after label and before \`decorate big\` on each line (allows coloring or other decorations)."$'\n'"--suffix suffixText - String. Optional. Optional suffix on each line."$'\n'"label - String. Required. Label to place on the left of big text."$'\n'"text - String. Required. Text for \`decorate big\`."$'\n'""
 base="big.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="example")
 rawComment="Argument: --top - Flag. Optional. Place label at the top."$'\n'"Argument: --bottom - Flag. Optional. Place label at the bottom."$'\n'"Argument: --prefix prefixText - String. Optional. Optional prefix on each line."$'\n'"Argument: --tween tweenText - String. Optional. Optional between text after label and before \`decorate big\` on each line (allows coloring or other decorations)."$'\n'"Argument: --suffix suffixText - String. Optional. Optional suffix on each line."$'\n'"Argument: label - String. Required. Label to place on the left of big text."$'\n'"Argument: text - String. Required. Text for \`decorate big\`."$'\n'"Outputs a label before a decorate big for output."$'\n'"This function will strip any ANSI from the label to calculate correct string sizes."$'\n'"Example:     > bin/build/tools.sh labeledBigText --top \"Neat: \" Done"$'\n'"Example:     Neat: ▛▀▖"$'\n'"Example:           ▌ ▌▞▀▖▛▀▖▞▀▖"$'\n'"Example:           ▌ ▌▌ ▌▌ ▌▛▀"$'\n'"Example:           ▀▀ ▝▀ ▘ ▘▝▀▘"$'\n'"Example:     > bin/build/tools.sh labeledBigText --bottom \"Neat: \" Done"$'\n'"Example:           ▛▀▖"$'\n'"Example:           ▌ ▌▞▀▖▛▀▖▞▀▖"$'\n'"Example:           ▌ ▌▌ ▌▌ ▌▛▀"$'\n'"Example:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/big.sh"
-sourceHash="060c508bd6da393181219c1feb6ec69245ed0c65"
+sourceHash="39732a51c99863f89d2cf72027aa8cb6cc703c08"
 summary="Outputs a label before a decorate big for output."
 summaryComputed="true"
 usage="labeledBigText [ --top ] [ --bottom ] [ --prefix prefixText ] [ --tween tweenText ] [ --suffix suffixText ] label text"

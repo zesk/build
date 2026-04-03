@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--foreground - Flag. Optional. Get the console text color."$'\n'"--background - Flag. Optional. Get the console background color."$'\n'""
 base="console.sh"
@@ -13,7 +13,7 @@ rawComment="Summary: Output the brightness of the background color of the consol
 return_code="0 - Success"$'\n'"1 - A problem occurred with \`consoleGetColor\`"$'\n'""
 see="consoleGetColor"$'\n'""
 sourceFile="bin/build/tools/console.sh"
-sourceHash="91c4bb28f83e34c39b4dcef4774e2addc1f37c12"
+sourceHash="1eccb7f32254d9dddecdf43da8654cc9ad7cdbc1"
 summary="Output the brightness of the background color of the console as a number between 0 and 100"$'\n'""
 usage="consoleBrightness [ --foreground ] [ --background ]"
 # shellcheck disable=SC2016

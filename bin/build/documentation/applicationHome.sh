@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"directory - Directory. Optional. Set the application home to this directory."$'\n'"--go - Flag. Optional. Change to the current saved application home directory."$'\n'""
 base="application.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Set, or cd to current application home directory."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: directory - Directory. Optional. Set the application home to this directory."$'\n'"Argument: --go - Flag. Optional. Change to the current saved application home directory."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/application.sh"
-sourceHash="fd524b49df17bcca15d1669e4d967e9eaca5109b"
+sourceHash="f46a4ce2b342df3d29dc1c07fd60dc7d725b26ab"
 summary="Set, or cd to current application home directory."
 summaryComputed="true"
 usage="applicationHome [ --help ] [ directory ] [ --go ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--env-file environmentFile - Top-level environment file to pass variables into the user \`crontab\` template"$'\n'"--show - Show the crontab instead of installing it"$'\n'"--user user - Scan for crontab files in the form \`user.crontab\` and then install as this user. If not specified, uses current user name."$'\n'"--mapper envMapper - Binary. Optional. The binary use to map environment values to the file. (Uses \`mapEnvironment\` by default)"$'\n'""
 base="crontab.sh"
@@ -13,7 +13,7 @@ rawComment="Summary: Application-specific crontab management"$'\n'"Keep crontab 
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="whoami"$'\n'""
 sourceFile="bin/build/tools/crontab.sh"
-sourceHash="bc691192ac9ecd1184033b59625a729f8ee2440c"
+sourceHash="180cc1e11f4c23c69b95f9931da901e02bbab24b"
 summary="Application-specific crontab management"$'\n'""
 usage="crontabApplicationUpdate [ --env-file environmentFile ] [ --show ] [ --user user ] [ --mapper envMapper ]"
 # shellcheck disable=SC2016

@@ -15,7 +15,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Hook to return the current version
 #
 # Defaults to the last version numerically found in `docs/release` directory.
-# Requires: catchReturn catchEnvironment muzzle pushd cd printf versionSort popd usageDocument
+# Requires: catchReturn catchEnvironment muzzle pushd cd printf versionSort popd bashDocumentation
 # Summary: {base} hook
 __hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
@@ -32,8 +32,8 @@ __hookVersionCurrent() {
   catchEnvironment "$handler" muzzle popd || return $?
 }
 ___hookVersionCurrent() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __hookVersionCurrent

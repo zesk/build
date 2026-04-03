@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--install - Flag. Optional. Install any packages required to get \`ifconfig\` installed first."$'\n'"--help - Flag. Optional. This help."$'\n'""
 base="network.sh"
@@ -12,7 +12,7 @@ output="lines:IPv4"$'\n'""
 rawComment="List IPv4 Addresses associated with this system using \`ifconfig\`"$'\n'"Output: lines:IPv4"$'\n'"Argument: --install - Flag. Optional. Install any packages required to get \`ifconfig\` installed first."$'\n'"Argument: --help - Flag. Optional. This help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/network.sh"
-sourceHash="cbb67389343d6d3da5f99665e977443b3659b913"
+sourceHash="361a0718e74e7719f6068031577a5f3aef8cb1f6"
 summary="List IPv4 Addresses associated with this system using \`ifconfig\`"
 summaryComputed="true"
 usage="networkIPList [ --install ] [ --help ]"

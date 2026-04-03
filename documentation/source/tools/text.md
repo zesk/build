@@ -12,15 +12,11 @@
 
 {textRemoveFields}
 
-{integerClamp}
-
 {printfOutputPrefix}
 
 {printfOutputSuffix}
 
 {printfOutputEmpty}
-
-{newlineHide}
 
 # Formatting
 
@@ -86,9 +82,9 @@
 
 # Language-related
 
-{plural}
+{localePlural}
 
-{pluralWord}
+{localePluralWord}
 
 {booleanParse}
 
@@ -98,12 +94,20 @@
 
 {stringUppercase}
 
+{stringUnquote}
+
+{stringHideNewlines}
+
 {textSHA}
 
-{cannon}
+{textCannon}
 
 {textReplace}
 
 # Random
 
 {stringRandom}
+
+# Numeric
+
+{integerClamp}

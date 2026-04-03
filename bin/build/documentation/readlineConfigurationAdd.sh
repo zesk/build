@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"keyStroke - String. Required."$'\n'"action - String. Required."$'\n'""
 base="readline.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="example")
 rawComment="Add configuration to \`~/.inputrc\` for a key binding"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: keyStroke - String. Required."$'\n'"Argument: action - String. Required."$'\n'"Example: readlineConfigurationAdd \"\\ep\" history-search-backward"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/readline.sh"
-sourceHash="4a1bfe4dda009453b217dd57d698bd72c66a1b79"
+sourceHash="9a102907243adfa2e5007bf8f2378e1aad0dc816"
 summary="Add configuration to \`~/.inputrc\` for a key binding"
 summaryComputed="true"
 usage="readlineConfigurationAdd [ --help ] keyStroke action"

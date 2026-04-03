@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="-x - Flag. Optional. Show exported variables. (verbose)"$'\n'"--me - Flag. Optional. Show calling function call stack frame."$'\n'"--exit - Flag. Optional. Exit with code 0 after output."$'\n'""
 base="dump.sh"
@@ -10,11 +10,11 @@ environment="BUILD_DEBUG"$'\n'""
 file="bin/build/tools/dump.sh"
 fn="debuggingStack"
 foundNames=([0]="argument" [1]="requires" [2]="environment" [3]="build_debug")
-rawComment="Dump the function and include stacks and the current environment"$'\n'"Argument: -x - Flag. Optional. Show exported variables. (verbose)"$'\n'"Argument: --me - Flag. Optional. Show calling function call stack frame."$'\n'"Argument: --exit - Flag. Optional. Exit with code 0 after output."$'\n'"Requires: printf usageDocument"$'\n'"Environment: BUILD_DEBUG"$'\n'"BUILD_DEBUG: debuggingStack - \`debuggingStack\` shows arguments passed (extra) and exports (optional flag) ALWAYS"$'\n'"Requires: throwArgument"$'\n'""$'\n'""
-requires="printf usageDocument"$'\n'"throwArgument"$'\n'""
+rawComment="Dump the function and include stacks and the current environment"$'\n'"Argument: -x - Flag. Optional. Show exported variables. (verbose)"$'\n'"Argument: --me - Flag. Optional. Show calling function call stack frame."$'\n'"Argument: --exit - Flag. Optional. Exit with code 0 after output."$'\n'"Requires: printf bashDocumentation"$'\n'"Environment: BUILD_DEBUG"$'\n'"BUILD_DEBUG: debuggingStack - \`debuggingStack\` shows arguments passed (extra) and exports (optional flag) ALWAYS"$'\n'"Requires: throwArgument"$'\n'""$'\n'""
+requires="printf bashDocumentation"$'\n'"throwArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceHash="d1f1440d27d8d45467255c497abe436e95108c9f"
+sourceHash="cf4b6700737aff4b802883d3a622b71bd7afb70d"
 summary="Dump the function and include stacks and the current environment"
 summaryComputed="true"
 usage="debuggingStack [ -x ] [ --me ] [ --exit ]"

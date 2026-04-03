@@ -26,8 +26,8 @@ bashFinalComment() {
 }
 _bashFinalComment() {
   ! false || bashFinalComment --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Extract a bash comment from a file. Excludes lines containing the following tokens:
@@ -41,7 +41,7 @@ _bashFinalComment() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: grep cut fileReverseLines __help
-# Requires: usageDocument
+# Requires: bashDocumentation
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
@@ -51,6 +51,6 @@ bashFunctionComment() {
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)
 }
 _bashFunctionComment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

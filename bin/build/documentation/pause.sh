@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"message ... - Display this message while pausing"$'\n'""
 base="interactive.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Pause for user input"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: message ... - Display this message while pausing"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="Pause for user input"
 summaryComputed="true"
 usage="pause [ --help ] [ -- ] [ message ... ]"

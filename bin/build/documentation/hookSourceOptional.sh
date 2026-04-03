@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source (if it exists)."$'\n'""
 base="hook.sh"
@@ -15,7 +15,7 @@ rawComment="Identical to \`hookRun\` but returns exit code zero if the hook does
 return_code="Any - The hook exit code is returned if it is run"$'\n'"0 - is returned if the hook is not found"$'\n'""
 see="hooks.md hookRun"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
-sourceHash="6dcc36e920a0262a8805e86deb8ff3240dca1a68"
+sourceHash="d73ad55665973abb9a6ef49bd10909b83e0cc3a0"
 summary="Identical to \`hookRun\` but returns exit code zero if the"
 summaryComputed="true"
 test="testHookSystem"$'\n'""

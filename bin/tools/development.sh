@@ -11,8 +11,8 @@ buildPR() {
   open "$(catchEnvironment "$handler" bitbucketPRNewURL "marketacumen" "build")" || return $?
 }
 _buildPR() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: name - String. Optional. Name of tool to add.
@@ -71,8 +71,8 @@ buildQuickTest() {
   BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' "$home/bin/test.sh" -c --skip-tag slow --skip-tag package-install "$@"
 }
 _buildQuickTest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run tests (and continue from last failure point)
@@ -91,8 +91,8 @@ buildStagingTest() {
   BUILD_TEST_FLAGS="Housekeeper:false;Plumber:false;Assert-Statistics:true;${BUILD_TEST_FLAGS-}" "$home/bin/test.sh" -c "$@"
 }
 _buildStagingTest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run production tests
@@ -110,8 +110,8 @@ buildProductionTest() {
   BUILD_TEST_FLAGS='Housekeeper:true;Plumber:true;Assert-Statistics:true' "$home/bin/test.sh" --skip-tag slow-non-critical "$@"
 }
 _buildProductionTest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Test build timings with different settings
@@ -134,8 +134,8 @@ buildBuildTiming() {
   done
 }
 _buildBuildTiming() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -158,9 +158,9 @@ __buildFingerUpdate() {
       u+=("$path")
     fi
   done
-  [ "${#u[@]}" -eq 0 ] || statusMessage --last decorate success "Updated $(decorate each red "${u[@]}") [$(pluralWord "${#u[@]}" field)] in $(decorate file "$jf")"
+  [ "${#u[@]}" -eq 0 ] || statusMessage --last decorate success "Updated $(decorate each red "${u[@]}") [$(localePluralWord "${#u[@]}" field)] in $(decorate file "$jf")"
 }
 ___buildFingerUpdate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

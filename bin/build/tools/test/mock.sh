@@ -72,7 +72,7 @@ __mockVariableStop() {
   else
     local value="${!saveGlobal-}"
     export "$argument"="$value"
-    statusMessage --last decorate notice "MOCK: Restoring $argument ($(pluralWord "${#value}" character))"
+    statusMessage --last decorate notice "MOCK: Restoring $argument ($(localePluralWord "${#value}" character))"
   fi
   unset "$saveGlobal"
 }

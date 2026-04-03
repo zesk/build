@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"value - String. Optional. Value to check if it is a boolean."$'\n'""
 base="_sugar.sh"
@@ -8,12 +8,12 @@ description="Boolean test"$'\n'"If you want \"true-ish\" use \`isTrue\`."$'\n'"R
 file="bin/build/tools/_sugar.sh"
 fn="isBoolean"
 foundNames=([0]="return_code" [1]="see" [2]="argument" [3]="requires")
-rawComment="Boolean test"$'\n'"If you want \"true-ish\" use \`isTrue\`."$'\n'"Returns 0 if \`value\` is boolean \`false\` or \`true\`."$'\n'"Is this a boolean? (\`true\` or \`false\`)"$'\n'"Return Code: 0 - if value is a boolean"$'\n'"Return Code: 1 - if value is not a boolean"$'\n'"See: isTrue booleanParse"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value - String. Optional. Value to check if it is a boolean."$'\n'"Requires: usageDocument printf"$'\n'""$'\n'""
-requires="usageDocument printf"$'\n'""
+rawComment="Boolean test"$'\n'"If you want \"true-ish\" use \`isTrue\`."$'\n'"Returns 0 if \`value\` is boolean \`false\` or \`true\`."$'\n'"Is this a boolean? (\`true\` or \`false\`)"$'\n'"Return Code: 0 - if value is a boolean"$'\n'"Return Code: 1 - if value is not a boolean"$'\n'"See: isTrue booleanParse"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value - String. Optional. Value to check if it is a boolean."$'\n'"Requires: bashDocumentation printf"$'\n'""$'\n'""
+requires="bashDocumentation printf"$'\n'""
 return_code="0 - if value is a boolean"$'\n'"1 - if value is not a boolean"$'\n'""
 see="isTrue booleanParse"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="1ff9bebad70c8fea8d82a17d32a3d8b9fd324874"
+sourceHash="ffd716b7922cb0074e135ce841a832b800ed594b"
 summary="Boolean test"
 summaryComputed="true"
 usage="isBoolean [ --help ] [ value ]"

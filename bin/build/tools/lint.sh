@@ -82,8 +82,8 @@ bashLint() {
   exec 3>&- 4>&1
 }
 _bashLint() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run `bashLint` on a set of bash files.
@@ -164,7 +164,7 @@ bashLintFiles() {
   fi
   if [ "${#failedFiles[@]}" -gt 0 ]; then
     {
-      statusMessage --last printf -- "%s\n" "$(decorate warning "$(pluralWord ${#failedFiles[@]} file) failed:")"
+      statusMessage --last printf -- "%s\n" "$(decorate warning "$(localePluralWord ${#failedFiles[@]} file) failed:")"
       for failedFile in "${failedFiles[@]}"; do
         bashLint "${ff[@]+"${ff[@]}"}" --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(consoleHeadingLine "•" "••[ $(decorate file "$failedFile") ]")")"
       done
@@ -182,8 +182,8 @@ bashLintFiles() {
   printf -- "\n"
 }
 _bashLintFiles() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Handle check consistently
@@ -239,7 +239,7 @@ bashLintFilesInteractive() {
     else
       local countdown=$sleepDelay
       while [ "$countdown" -gt 0 ]; do
-        statusMessage decorate warning "Refresh in $(decorate value " $countdown ") $(plural "$countdown" second seconds)"
+        statusMessage decorate warning "Refresh in $(decorate value " $countdown ") $(localePlural "$countdown" second seconds)"
         countdown=$((countdown - 1))
         sleep 1 || throwEnvironment "$handler" "Interrupt ..." || return $?
       done
@@ -248,8 +248,8 @@ bashLintFilesInteractive() {
   done
 }
 _bashLintFilesInteractive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _bashLintInteractiveCheck() {
@@ -275,7 +275,7 @@ _bashLintInteractiveCheck() {
     "$(decorate label "Queue")" \
     "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
   decorate blue "$(consoleLine "+-")"
-  decorate info "$# $(plural $# item files) remain"
+  decorate info "$# $(localePlural $# item files) remain"
   return 1
 }
 
@@ -367,6 +367,6 @@ bashFindUncaughtAssertions() {
   [ ${#problemFiles[@]} -eq 0 ]
 }
 _bashFindUncaughtAssertions() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

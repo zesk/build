@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--skip-tag | --no-tag - Flag. Optional. Do not tag the release."$'\n'"--name tarFileName - String. Optional. Set BUILD_TARGET via command line (wins)"$'\n'"--composer arg - Argument. Optional. Supply one or more arguments to \`phpComposer\` command. (Use multiple times)"$'\n'"--help - Flag. Optional. Display this help."$'\n'"environmentVariable ... - EnvironmentVariable. Optional. Environment variables to build into the deployed .env file"$'\n'"-- - Separator. Required. Separates environment variables to file list"$'\n'"file1 file2 dir3 ... - File|Directory. Required. List of files and directories to build into the application package."$'\n'""
 base="php.sh"
@@ -12,7 +12,7 @@ rawComment="Build deployment using composer, adding environment values to .env a
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="BUILD_TARGET.sh"$'\n'""
 sourceFile="bin/build/tools/php.sh"
-sourceHash="912609aca14f069dd1c36f27415c9d01ecbf6288"
+sourceHash="64d4aa53cd146a2f3f4e58bf69e8a5d68ffd3e73"
 summary="Build deployment using composer, adding environment values to .env and"
 summaryComputed="true"
 usage="phpBuild [ --skip-tag | --no-tag ] [ --name tarFileName ] [ --composer arg ] [ --help ] [ environmentVariable ... ] -- file1 file2 dir3 ..."

@@ -224,8 +224,8 @@ __bashPromptModule_Background() {
   )
 }
 ___bashPromptModule_Background() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Daemon which runs the other background processes
@@ -488,7 +488,7 @@ __nowRelative() {
   else
     prefix="" && suffix=" ago"
   fi
-  printf -- "%s (%s%s %s%s)\n" "$(dateFromTimestamp "$((time / 1000))")" "$prefix" "$delta" "$(plural "$delta" sec secs)" "$suffix"
+  printf -- "%s (%s%s %s%s)\n" "$(dateFromTimestamp "$((time / 1000))")" "$prefix" "$delta" "$(localePlural "$delta" sec secs)" "$suffix"
 }
 
 __backgroundMainReport() {
@@ -502,7 +502,7 @@ __backgroundMainReport() {
   local alive="" elapsed=""
   [ ! -f "$cache/main.alive" ] || alive=" $(__nowRelative "$now" "$(cat "$cache/main.alive")")"
   [ ! -f "$cache/main.elapsed" ] || elapsed="$(cat "$cache/main.elapsed")"
-  [ -z "$elapsed" ] || elapsed=" $(decorate BOLD blue "(loop elapsed: $elapsed $(plural "$elapsed" second seconds))")"
+  [ -z "$elapsed" ] || elapsed=" $(decorate BOLD blue "(loop elapsed: $elapsed $(localePlural "$elapsed" second seconds))")"
   decorate pair "Main PID" "$(__pidStatus "$pid")$alive$elapsed"
   __backgroundReportFile "Main output" "$cache/main.out" 3
   __backgroundReportFile "Main error" "$cache/main.err" 3
@@ -532,9 +532,9 @@ __backgroundProcessReport() {
   [ ! -f "$d/condition" ] || decorate pair "Condition Value" "$(tail -n 1 "$d/condition")"
 
   local config=()
-  config+=("frequency $frequency $(plural "$frequency" sec secs),")
-  config+=("stop check $stopSeconds $(plural "$stopSeconds" sec secs),")
-  config+=("wait after stop $waitSeconds $(plural "$waitSeconds" sec secs)")
+  config+=("frequency $frequency $(localePlural "$frequency" sec secs),")
+  config+=("stop check $stopSeconds $(localePlural "$stopSeconds" sec secs),")
+  config+=("wait after stop $waitSeconds $(localePlural "$waitSeconds" sec secs)")
   decorate pair Configuration "$(decorate each code -- "${config[@]}")"
 
   local status=()

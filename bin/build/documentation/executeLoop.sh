@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails."$'\n'"--delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"--until exitCode - Integer. Optional. Check until exit code matches this."$'\n'"--title title - String. Optional. Display this title instead of the command."$'\n'"arguments ... - Optional. Arguments. Arguments to \`loopCallable\`"$'\n'""
 base="interactive.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails."$'\n'"Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"Argument: --until exitCode - Integer. Optional. Check until exit code matches this."$'\n'"Argument: --title title - String. Optional. Display this title instead of the command."$'\n'"Argument: arguments ... - Optional. Arguments. Arguments to \`loopCallable\`"$'\n'"Run checks interactively until errors are all fixed."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="Run checks interactively until errors are all fixed."
 summaryComputed="true"
 usage="executeLoop loopCallable [ --delay delaySeconds ] [ --until exitCode ] [ --title title ] [ arguments ... ]"

@@ -5,7 +5,7 @@
 #
 # Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 
-__usageDocumentSections() {
+__bashDocumentationSections() {
   cat <<'EOF'
 return_code|Return codes|__consoleFormatList
 environment|Environment variables|__consoleFormatList
@@ -22,7 +22,7 @@ __consoleFormatList() {
 
 # BUILD_DEBUG: usage-cache-skip
 # BUILD_DEBUG: usage-cache-dump
-__usageDocument() {
+__bashDocumentation() {
   local __count=$# __saved=("$@")
   local handler="$1" __handler="$1" && shift
 
@@ -80,7 +80,7 @@ __usageDocument() {
   esac
 
   [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
-  if buildDebugEnabled usage-cache-skip || ! __usageDocumentCached "$handler" "$home" "$functionName" "$returnCode" "$@"; then
+  if buildDebugEnabled usage-cache-skip || ! __bashDocumentationCached "$handler" "$home" "$functionName" "$returnCode" "$@"; then
     [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
 
     # IDENTICAL profileFunctionMarker 3
@@ -147,9 +147,9 @@ __usageDocument() {
           formatted="$(printf "\n\n%s\n%s\n" "$label:" "$(catchEnvironment "$handler" "$formatter" <<<"$value")")" || return $?
           suffix="$suffix$formatted"
         fi
-      done < <(__usageDocumentSections)
+      done < <(__bashDocumentationSections)
 
-      __profileLabel="__usageDocumentSections formatting"
+      __profileLabel="__bashDocumentationSections formatting"
       # IDENTICAL profileFunctionMarker 3
       # ********************************************************************************************************************
       if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi

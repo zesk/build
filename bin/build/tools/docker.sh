@@ -32,8 +32,8 @@ dockerPlatformDefault() {
 }
 _dockerPlatformDefault() {
   true || dockerPlatformDefault --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -54,8 +54,8 @@ __dumpDockerTestFile() {
 }
 ___dumpDockerTestFile() {
   true || dumpDockerTestFile --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Are we inside a docker container right now?
@@ -81,8 +81,8 @@ dockerInside() {
 }
 _dockerInside() {
   true || dockerInside --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List the files which would be included in the docker image
@@ -91,8 +91,8 @@ dockerListContext() {
   printf 'FROM scratch\nCOPY . /\n' | DOCKER_BUILDKIT=1 docker build -q -f- -o- . | tar t
 }
 _dockerListContext() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run a build container using given docker image.
@@ -209,8 +209,8 @@ dockerLocalContainer() {
   return $exitCode
 }
 _dockerLocalContainer() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List docker images which are currently pulled
@@ -248,8 +248,8 @@ dockerImages() {
   docker images "${filter[@]+"${filter[@]}"}" | awk '{ print $1 ":" $2 }' | grep -v 'REPOSITORY:'
 }
 _dockerImages() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Old versions of docker or hosted:
@@ -301,8 +301,8 @@ dockerVolumeExists() {
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeExists() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Delete a docker volume
@@ -314,8 +314,8 @@ dockerVolumeDelete() {
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeDelete() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __dockerVolumeDeleteInteractive() {

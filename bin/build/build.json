@@ -1,10 +1,10 @@
 {
-  "deprecated": "d43a899b450e3adfb9d393f276e3b8eefb6804db",
-  "fingerprint": "d43a899b450e3adfb9d393f276e3b8eefb6804db",
-  "id": "eca5674be",
+  "deprecated": "70d59d93d00f7f4811e85788735887ae83ac63a5",
+  "fingerprint": "c4319a7b3d9a668805322214f81fb491e9d11dc2",
+  "id": "b93bbf7a6",
   "identical": {
-    "--internal": "d43a899b450e3adfb9d393f276e3b8eefb6804db",
+    "--internal": "4114a7e90e7a958a457fd52c6371409e06af274e",
     "default": "d43a899b450e3adfb9d393f276e3b8eefb6804db"
   },
-  "version": "v0.41.4"
+  "version": "v0.42.0"
 }

@@ -202,5 +202,5 @@ _fileCopyShowNew() {
   _fileCopyPrompt "$displaySource" "$destination" "Created"
   head -10 "$source" | decorate code
   lines=$(catchReturn "$handler" fileLineCount "$source") || lines="0" || :
-  decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
+  decorate info "$(printf "%d %s total" "$lines" "$(localePlural "$lines" line lines)")"
 }

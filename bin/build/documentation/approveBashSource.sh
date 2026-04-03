@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="directoryOrFile - Exists. Required. Directory or file to \`source\` \`.sh\` files found."$'\n'"--info - Flag. Optional. Show user what they should do (press a key)."$'\n'"--no-info - Flag. Optional. Hide user info (what they should do ... press a key)"$'\n'"--verbose - Flag. Optional. Show what is done as status messages."$'\n'"--clear - Flag. Optional. Clear the approval status for file given."$'\n'"--prefix - String. Optional. Display this text before each status messages."$'\n'""
 base="interactive.sh"
@@ -14,7 +14,7 @@ return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'
 security="Loads bash files"$'\n'""
 see="XDG_STATE_HOME.sh"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="Loads files or a directory of \`.sh\` files using \`source\`"
 summaryComputed="true"
 usage="approveBashSource directoryOrFile [ --info ] [ --no-info ] [ --verbose ] [ --clear ] [ --prefix ]"

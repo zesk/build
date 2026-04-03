@@ -1,0 +1,1 @@
+[characterFromInteger]({rel}tools/character.md#characterfrominteger) - Given a list of integers, output the character codes associated ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L119))

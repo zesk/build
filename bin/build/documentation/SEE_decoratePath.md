@@ -1,0 +1,2 @@
+[decoratePath]({rel}tools/decoration.md#decoratepath) - Display file paths and replace prefixes with icons
+ ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/path.sh#L20))

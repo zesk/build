@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-16
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="validate.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="List types which can be validated"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="a644991d5aa98bab2d7a97de2503fdd007c60253"
+sourceHash="7c91a42150f5f8dcf374df4c0d78f51f31c16f04"
 summary="List types which can be validated"
 summaryComputed="true"
 usage="validateTypeList"

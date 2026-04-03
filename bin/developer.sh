@@ -57,8 +57,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
   }
   ___buildHelp() {
-    # __IDENTICAL__ usageDocument 1
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ bashDocumentation 1
+    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   __buildConfigure() {
@@ -95,8 +95,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___buildConfigure() {
-    # __IDENTICAL__ usageDocument 1
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ bashDocumentation 1
+    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   # Show dark and light mode

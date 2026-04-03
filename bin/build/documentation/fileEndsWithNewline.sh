@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="test")
 rawComment="Does a file end with a newline or is empty?"$'\n'"Typically used to determine if a newline is needed before appending a file."$'\n'"Argument: file ... - File. Required. File to check if the last character is a newline."$'\n'"Return Code: 0 - All files ends with a newline"$'\n'"Return Code: 1 - One or more files ends with a non-newline"$'\n'"Test: testFileEndsWithNewline"$'\n'""$'\n'""
 return_code="0 - All files ends with a newline"$'\n'"1 - One or more files ends with a non-newline"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="80ad24738a32b8002bafa685f78fc47389363a7d"
+sourceHash="5f35ac6dcf31b9c284706fdda354d1d8408dde2c"
 summary="Does a file end with a newline or is empty?"
 summaryComputed="true"
 test="testFileEndsWithNewline"$'\n'""

@@ -86,11 +86,11 @@ __executeLoop() {
     nLines=$(catchReturn "$handler" fileLineCount "$outputBuffer") || return $?
     elapsed=$(($(catchReturn "$handler" timingStart) - start)) || return $?
     seconds=$(timingFormat "$elapsed")
-    seconds="$seconds $(plural "$seconds" second seconds)"
+    seconds="$seconds $(localePlural "$seconds" second seconds)"
     stamp=$(date "+%F %T")
     local returnCodeString
     returnCodeString="$(decorate value "$exitCode") $(decorate label "[$(returnCodeString "$exitCode")]")"
-    statusLine="$(decorate blue "[#$iterations]") $(decorate yellow "$stamp") $returnCodeString, $nLines $(plural "$nLines" line lines), $seconds"
+    statusLine="$(decorate blue "[#$iterations]") $(decorate yellow "$stamp") $returnCodeString, $nLines $(localePlural "$nLines" line lines), $seconds"
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then

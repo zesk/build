@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="index - PositiveInteger. Required. Index (1-based) of field to select."$'\n'"user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""
 base="user.sh"
@@ -12,7 +12,7 @@ rawComment="Argument: index - PositiveInteger. Required. Index (1-based) of fiel
 requires="grep cut returnMessage printf /etc/passwd whoami"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/user.sh"
-sourceHash="3afe5553f0bdff164dee304b54ad4be4444f7c32"
+sourceHash="97b162de483a7271940c92af88d7646f5e426e66"
 stdout="String. Associated record with \`index\` and \`user\`."$'\n'""
 summary="Quick user database look up"$'\n'""
 usage="userRecord index [ user ] [ database ]"

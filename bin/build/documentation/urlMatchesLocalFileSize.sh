@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"url - URL. Required. URL to check."$'\n'"file - File. Required. File to compare."$'\n'""
 base="web.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Compare a remote file size with a local file size"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url - URL. Required. URL to check."$'\n'"Argument: file - File. Required. File to compare."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/web.sh"
-sourceHash="51e1573ca2c7c20f95b3413475f7afb24c7c0807"
+sourceHash="16f3842ec6f5892421429c63fdf08ae46e06eed8"
 summary="Compare a remote file size with a local file size"
 summaryComputed="true"
 usage="urlMatchesLocalFileSize [ --help ] url file"

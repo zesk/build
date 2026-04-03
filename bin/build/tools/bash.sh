@@ -34,8 +34,8 @@ bashSanitize() {
   __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashSanitize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: script - File. Required. Bash script to fetch requires tokens from.
@@ -45,8 +45,8 @@ bashGetRequires() {
   __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashGetRequires() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
@@ -73,8 +73,8 @@ bashCheckRequires() {
   __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashCheckRequires() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List bash buildin functions, one per line
@@ -86,8 +86,8 @@ bashBuiltins() {
     "ulimit" "umask" "unalias" "unset" "until" "wait" "while"
 }
 _bashBuiltins() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Is a token a bash builtin?
@@ -116,8 +116,8 @@ isBashBuiltin() {
   esac
 }
 _isBashBuiltin() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Output the home for a library in the parent path
@@ -145,8 +145,8 @@ bashLibraryHome() {
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Run or source a library
@@ -197,8 +197,8 @@ bashLibrary() {
   return 0
 }
 _bashLibrary() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Load a directory of bash scripts
@@ -245,8 +245,8 @@ bashSourcePath() {
   $foundOne || throwArgument "$handler" "Requires a directory" || return $?
 }
 _bashSourcePath() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Is a function defined in a bash source file?
@@ -284,8 +284,8 @@ bashFunctionDefined() {
   grep -q -e "^\s*$(quoteGrepPattern "$function")() {" "${files[@]}"
 }
 _bashFunctionDefined() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Pipe to strip comments from a bash file
@@ -299,8 +299,8 @@ bashStripComments() {
 }
 _bashStripComments() {
   true || bashStripComments --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Show function handler in files
@@ -346,8 +346,8 @@ bashShowUsage() {
   cat "${files[@]+"${files[@]}"}" | bashStripComments | grep -v "^${quoted}()" | grep "${checkFlags[@]+"${checkFlags[@]}"}" -e "\b${quoted}\b"
 }
 _bashShowUsage() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List functions in a given shell file
@@ -382,8 +382,8 @@ bashListFunctions() {
   done
 }
 _bashListFunctions() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Actually lists bash functions in a file
@@ -435,8 +435,8 @@ bashFunctionCommentVariable() {
   catchReturn "$handler" bashCommentVariable "${aa[@]}" "$variableName" < <(catchReturn "$handler" bashFunctionComment "$source" "$functionName") || return $?
 }
 _bashFunctionCommentVariable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Gets a list of the variable values from a bash function comment
@@ -482,8 +482,8 @@ bashCommentVariable() {
   done < <(grepSafe "${grepFlags[@]+"${grepFlags[@]}"}" -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | textTrim)
 }
 _bashCommentVariable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Extract a bash comment from a file. Excludes lines containing the following tokens:
@@ -497,7 +497,7 @@ _bashCommentVariable() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: head bashFinalComment
-# Requires: __help usageDocument
+# Requires: __help bashDocumentation
 bashFileComment() {
   local source="${1-}" lineNumber="${2-}"
   __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -505,8 +505,8 @@ bashFileComment() {
   head -n "$((lineNumber + 1))" "$source" | bashFinalComment
 }
 _bashFileComment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Filter comments from a bash stream
@@ -542,8 +542,8 @@ bashCommentFilter() {
   grepSafe "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}"
 }
 _bashCommentFilter() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL bashFunctionComment 48
@@ -567,8 +567,8 @@ bashFinalComment() {
 }
 _bashFinalComment() {
   ! false || bashFinalComment --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Extract a bash comment from a file. Excludes lines containing the following tokens:
@@ -582,7 +582,7 @@ _bashFinalComment() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: grep cut fileReverseLines __help
-# Requires: usageDocument
+# Requires: bashDocumentation
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
@@ -592,6 +592,6 @@ bashFunctionComment() {
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)
 }
 _bashFunctionComment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

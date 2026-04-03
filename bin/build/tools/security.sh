@@ -53,7 +53,7 @@ __doEvalCheck() {
     done <"$tempResults"
   done
   catchEnvironment "$handler" rm -rf "$tempResults" || return $?
-  [ "$failed" -eq 0 ] || throwEnvironment "$handler" "evalCheck failed for $failed $(plural "$failed" file files)" || return $?
+  [ "$failed" -eq 0 ] || throwEnvironment "$handler" "evalCheck failed for $failed $(localePlural "$failed" file files)" || return $?
 }
 
 # Check files to ensure `eval`s in code have been checked
@@ -71,6 +71,6 @@ evalCheck() {
   fi
 }
 _evalCheck() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -103,7 +103,7 @@ testSuite() {
 }
 _testSuite() {
   local defaultName && defaultName=$(buildEnvironmentGet APPLICATION_NAME 2>/dev/null) || defaultName="any product"
-  fn="${fn-"${FUNCNAME[0]#_}"}" name=${name-"$defaultName"} usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  fn="${fn-"${FUNCNAME[0]#_}"}" name=${name-"$defaultName"} bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Output assertion counts
@@ -119,8 +119,8 @@ assertStatistics() {
 }
 _assertStatistics() {
   true || assertStatistics --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a process runs and exits with the correct exit code.
@@ -167,8 +167,8 @@ assertExitCode() {
   __testLoader "_${FUNCNAME[0]}" _assertExitCodeHelper --success true "$@" || return $?
 }
 _assertExitCode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a process runs and exits with an exit code which does not match the passed in exit code.
@@ -215,8 +215,8 @@ assertNotExitCode() {
   __testLoader "_${FUNCNAME[0]}" _assertExitCodeHelper --success false "$@" || return $?
 }
 _assertNotExitCode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert two strings are equal.
@@ -261,8 +261,8 @@ assertEquals() {
   __testLoader "_${FUNCNAME[0]}" _assertEqualsHelper --success true "$@" || return $?
 }
 _assertEquals() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert two strings are not equal.
@@ -307,8 +307,8 @@ assertNotEquals() {
   __testLoader "_${FUNCNAME[0]}" _assertEqualsHelper --success false "$@" || return $?
 }
 _assertNotEquals() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a string is non-empty.
@@ -351,8 +351,8 @@ assertStringNotEmpty() {
   __testLoader "_${FUNCNAME[0]}" _assertStringEmptyHelper --success false "$@" || return $?
 }
 _assertStringNotEmpty() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -396,8 +396,8 @@ assertStringEmpty() {
   __testLoader "_${FUNCNAME[0]}" _assertStringEmptyHelper --success true "$@" || return $?
 }
 _assertStringEmpty() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert one string contains another (case-sensitive)
@@ -440,8 +440,8 @@ assertContains() {
   __testLoader "_${FUNCNAME[0]}" _assertContainsHelper --success true "$@" || return $?
 }
 _assertContains() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -485,8 +485,8 @@ assertNotContains() {
   __testLoader "_${FUNCNAME[0]}" _assertContainsHelper --success false "$@" || return $?
 }
 _assertNotContains() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --cache cacheDirectory - Directory. Optional. Cache directory to use for ordering work.
@@ -496,8 +496,8 @@ testSuiteOrdering() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _testSuiteOrdering() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # DOC TEMPLATE: --help 1
@@ -514,8 +514,8 @@ testSuiteFunctionTested() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _testSuiteFunctionTested() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -565,8 +565,8 @@ assertDirectoryExists() {
   __testLoader "_${FUNCNAME[0]}" _assertDirectoryExistsHelper "$@" || return $?
 }
 _assertDirectoryExists() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: directory - Directory. Required. Directory that should NOT exist
@@ -610,8 +610,8 @@ assertDirectoryDoesNotExist() {
   __testLoader "_${FUNCNAME[0]}" _assertDirectoryExistsHelper --success false "$@" || return $?
 }
 _assertDirectoryDoesNotExist() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: directory - Directory. Directory that should exist and be empty
@@ -657,8 +657,8 @@ assertDirectoryEmpty() {
   __testLoader "$handler" _assertDirectoryEmptyHelper "$@" || return $?
 }
 _assertDirectoryEmpty() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: directory - Directory. Directory that should exist and not be empty
@@ -703,8 +703,8 @@ assertDirectoryNotEmpty() {
   __testLoader "$handler" _assertDirectoryEmptyHelper --success false "$@" || return $?
 }
 _assertDirectoryNotEmpty() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -755,8 +755,8 @@ assertFileExists() {
   __testLoader "_${FUNCNAME[0]}" _assertFileExistsHelper "$@" || return $?
 }
 _assertFileExists() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: item - String. Required. File that should NOT exist
@@ -800,8 +800,8 @@ assertFileDoesNotExist() {
   __testLoader "_${FUNCNAME[0]}" _assertFileExistsHelper --success false "$@" || return $?
 }
 _assertFileDoesNotExist() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -854,8 +854,8 @@ assertOutputEquals() {
   __testLoader "_${FUNCNAME[0]}" _assertOutputEqualsHelper "$@" || return $?
 }
 _assertOutputEquals() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -904,8 +904,8 @@ assertOutputContains() {
   __testLoader "_${FUNCNAME[0]}" _assertOutputContainsHelper --success true "$@" || return $?
 }
 _assertOutputContains() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -955,8 +955,8 @@ assertOutputDoesNotContain() {
   __testLoader "_${FUNCNAME[0]}" _assertOutputContainsHelper --success false "$@" || return $?
 }
 _assertOutputDoesNotContain() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a file contains one or more strings
@@ -1001,8 +1001,8 @@ assertFileContains() {
   __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper true false --line-depth 5 "$@" || return $?
 }
 _assertFileContains() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a file does not contains any occurrence of one or more strings
@@ -1046,8 +1046,8 @@ assertFileDoesNotContain() {
   __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper false false --line-depth 5 "$@" || return $?
 }
 _assertFileDoesNotContain() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a file has an expected size in bytes
@@ -1092,8 +1092,8 @@ assertFileSize() {
   __testLoader "_${FUNCNAME[0]}" _assertFileSizeHelper "$@" || return $?
 }
 _assertFileSize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a file does NOT have an expected size in bytes
@@ -1138,8 +1138,8 @@ assertNotFileSize() {
   __testLoader "_${FUNCNAME[0]}" _assertFileSizeHelper --success false "$@" || return $?
 }
 _assertNotFileSize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a file is empty (zero sized)
@@ -1188,8 +1188,8 @@ assertZeroFileSize() {
   __testLoader "_${FUNCNAME[0]}" _assertFileSizeHelper "${fa[@]+"${fa[@]}"}" 0 "$@" || return $?
 }
 _assertZeroFileSize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert a file is non-empty (non-zero sized)
@@ -1238,8 +1238,8 @@ assertNotZeroFileSize() {
   __testLoader "_${FUNCNAME[0]}" _assertFileSizeHelper --success false "${fa[@]+"${fa[@]}"}" 0 "$@" || return $?
 }
 _assertNotZeroFileSize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################
@@ -1291,8 +1291,8 @@ assertGreaterThan() {
   __testLoader "_${FUNCNAME[0]}" _assertNumericHelper "$@" -gt || return $?
 }
 _assertGreaterThan() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert `leftValue >= rightValue`
@@ -1335,8 +1335,8 @@ assertGreaterThanOrEqual() {
   __testLoader "_${FUNCNAME[0]}" _assertNumericHelper "$@" -ge || return $?
 }
 _assertGreaterThanOrEqual() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -1381,8 +1381,8 @@ assertLessThan() {
   __testLoader "_${FUNCNAME[0]}" _assertNumericHelper "$@" -lt || return $?
 }
 _assertLessThan() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Assert `leftValue <= rightValue`
@@ -1427,8 +1427,8 @@ assertLessThanOrEqual() {
   __testLoader "_${FUNCNAME[0]}" _assertNumericHelper "$@" -le || return $?
 }
 _assertLessThanOrEqual() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fake a value for testing
@@ -1441,8 +1441,8 @@ mockEnvironmentStart() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _mockEnvironmentStart() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).
@@ -1453,8 +1453,8 @@ mockEnvironmentStop() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _mockEnvironmentStop() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fake `consoleHasAnimation` for testing
@@ -1465,8 +1465,8 @@ mockConsoleAnimationStart() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _mockConsoleAnimationStart() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Stop faking `consoleHasAnimation` for testing
@@ -1476,8 +1476,8 @@ mockConsoleAnimationStop() {
   __testLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _mockConsoleAnimationStop() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL returnAssert 13
@@ -1491,8 +1491,8 @@ returnAssert() {
   return 97 # "$(returnCode assert)"
 }
 _returnAssert() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL returnIdentical 13
@@ -1506,8 +1506,8 @@ returnIdentical() {
   return 105 # "$(returnCode identical)"
 }
 _returnIdentical() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL returnLeak 13
@@ -1521,6 +1521,6 @@ returnLeak() {
   return 108 # "$(returnCode leak)"
 }
 _returnLeak() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

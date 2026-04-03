@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="textToOutput - String. Optional. Text to display on the new cleared line."$'\n'""
 base="colors.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument")
 rawComment="Clears current line of text in the console"$'\n'"Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces."$'\n'"Intended to be run on an interactive console. Should support \$(tput cols)."$'\n'"Summary: Clear a line in the console"$'\n'"Argument: textToOutput - String. Optional. Text to display on the new cleared line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="bdf073eb6d0e0790651cc6c692be3c1964cf5e39"
+sourceHash="3770972335552cd2776a277b8b4765f0d98baf44"
 summary="Clear a line in the console"$'\n'""
 usage="consoleLineFill [ textToOutput ]"
 # shellcheck disable=SC2016

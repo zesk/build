@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="link - EmptyString. Required. Link to output."$'\n'"text - String. Optional. Text to display, if none then uses \`link\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="console.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: console hyperlinks"$'\n'"Output a hyperlink to the console"$'\n'"OSC 8 standard for terminals"$'\n'"No way to test ability, I think. Maybe \`tput\`."$'\n'"Argument: link - EmptyString. Required. Link to output."$'\n'"Argument: text - String. Optional. Text to display, if none then uses \`link\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/console.sh"
-sourceHash="91c4bb28f83e34c39b4dcef4774e2addc1f37c12"
+sourceHash="1eccb7f32254d9dddecdf43da8654cc9ad7cdbc1"
 summary="console hyperlinks"$'\n'""
 usage="consoleLink link [ text ] [ --help ]"
 # shellcheck disable=SC2016

@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="example")
 rawComment="Fetch the modification time of a file as a timestamp"$'\n'"Argument: filename ... - File to fetch modification time"$'\n'"Return Code: 2 - If file does not exist"$'\n'"Return Code: 0 - If file exists and modification times are output, one per line"$'\n'"Example:     fileModificationTime ~/.bash_profile"$'\n'""$'\n'""
 return_code="2 - If file does not exist"$'\n'"0 - If file exists and modification times are output, one per line"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="c3e7e8b447b49ef6c60b5bfa7abaccf84b3ca4c6"
+sourceHash="738fcd1771dc6ce03a870787b6db46f942c7ff09"
 summary="Fetch the modification time of a file as a timestamp"
 summaryComputed="true"
 usage="fileModificationTime [ filename ... ]"

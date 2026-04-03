@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="path - String. Optional. Path to check."$'\n'""
 base="directory.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Is a path an absolute path?"$'\n'"Argument: path - String. Optional. Path to check."$'\n'"Return Code: 0 - if all paths passed in are absolute paths (begin with \`/\`)."$'\n'"Return Code: 1 - one ore more paths are not absolute paths"$'\n'""$'\n'""
 return_code="0 - if all paths passed in are absolute paths (begin with \`/\`)."$'\n'"1 - one ore more paths are not absolute paths"$'\n'""
 sourceFile="bin/build/tools/directory.sh"
-sourceHash="48944c2d998ec4950146d3ca4b1eba7cb335709c"
+sourceHash="e3a8c59981053233f360475ab67f48cb580f1f5c"
 summary="Is a path an absolute path?"
 summaryComputed="true"
 usage="pathIsAbsolute [ path ]"

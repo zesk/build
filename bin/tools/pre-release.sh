@@ -40,6 +40,9 @@ buildPreRelease() {
   __buildPreReleaseStep "$handler" "$interruptCode" "Linting" __buildPreReleaseLintFiles "$home" || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
+  __buildPreReleaseStep "$handler" "$interruptCode" "Usage remove deprecated" buildUsageRemoveDeprecated || exitCode=$?
+  [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
+
   __buildPreReleaseStep "$handler" "$interruptCode" "Usage compile" buildUsageCompile || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
@@ -73,6 +76,6 @@ buildPreRelease() {
   return "$exitCode"
 }
 _buildPreRelease() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

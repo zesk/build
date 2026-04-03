@@ -99,13 +99,13 @@ buildUsageCompile() {
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   if $gitActions; then
     buildUsageRemoveDeprecated --handler "$handler" || return $?
-    catchEnvironment "$handler" git add "$home/bin/build/documentation/"*.sh || return $?
+    find "$home/bin/build/documentation/" -type -f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
   fi
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
 }
 _buildUsageCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 buildUsageRemoveDeprecated() {
@@ -135,10 +135,12 @@ buildUsageRemoveDeprecated() {
 
   local deprecatedFiles=()
   local fun && while read -r fun; do
-    local target="$home/bin/build/documentation/$fun.sh"
-    if [ -f "$target" ]; then
-      deprecatedFiles+=("$target")
-    fi
+    local extension && for extension in sh md; do
+      local target="$home/bin/build/documentation/$fun.$extension"
+      if [ -f "$target" ]; then
+        deprecatedFiles+=("$target")
+      fi
+    done
   done < <(catchReturn "$handler" buildDeprecatedFunctions) || return $?
   if $dryRun; then
     [ "${#deprecatedFiles[@]}" -eq 0 ] && statusMessage --last printf -- "%s\n" "# No deprecated files." || printf -- "git rm -f %s\n" "${deprecatedFiles[@]}" || return $?
@@ -179,7 +181,9 @@ __buildUsageCompileFunction() {
   local prettyFun && prettyFun=$(catchReturn "$handler" decorate code "$fun") || return $?
 
   __profilePrefix="${__profilePrefix}[$fun] "
-  local documentationSettingsFile="$docPath/$fun.sh"
+  local documentationSettingsFile="$docPath/$fun.sh" seeFile="$docPath/SEE_$fun.md" mdFile="$docPath/$fun.md"
+  local ff=("$documentationSettingsFile" "$seeFile" "$mdFile")
+
   if [ -z "$sourceFile" ] && [ -f "$documentationSettingsFile" ]; then
     __profileLabel="settings exists"
     # IDENTICAL profileFunctionMarker 3
@@ -194,11 +198,11 @@ __buildUsageCompileFunction() {
     ) || :
     if [ -z "$sourceFile" ]; then
       statusMessage decorate error "Corrupt $documentationSettingsFile (sourceFile) - removing"
-      catchEnvironment "$handler" rm -f "$documentationSettingsFile" || return $?
+      catchEnvironment "$handler" rm -f "${ff[@]}" || return $?
       __profileLabel="settings sourceFile missing"
     elif [ -z "$sourceHash" ] || [ "$sourceHash" = "none" ]; then
       statusMessage decorate error "Corrupt $documentationSettingsFile (sourceHash) - removing"
-      catchEnvironment "$handler" rm -f "$documentationSettingsFile" || return $?
+      catchEnvironment "$handler" rm -f "${ff[@]}" || return $?
       __profileLabel="settings sourceHash missing"
     else
       __profileLabel="Settings source non-empty"
@@ -243,7 +247,6 @@ __buildUsageCompileFunction() {
         printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
       fi
       # ********************************************************************************************************************
-
       catchReturn "$handler" touch "$documentationSettingsFile" || return $?
       return 0
     fi
@@ -259,7 +262,7 @@ __buildUsageCompileFunction() {
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
   catchReturn "$handler" bashFunctionComment "$sourceFile" "$fun" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
-  catchReturn "$handler" rm -f "$documentationSettingsFile" || return $?
+  catchReturn "$handler" rm -f "${ff[@]}" || return $?
   __profileLabel="bashFunctionComment"
   # IDENTICAL profileFunctionMarker 3
   # ********************************************************************************************************************
@@ -279,7 +282,7 @@ __buildUsageCompileFunction() {
   else
     # local init && init=$(timingStart)
     catchReturn "$handler" decorateThemelessMode || return $?
-    fn="" BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
+    fn="" BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" bashDocumentation "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
     catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?
     {
       local replace helpCode && helpCode="$(escapeBash <"$tempHelp")"

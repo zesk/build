@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"binary - String. Required. The binary to look for"$'\n'"packageName ... - String. Optional. The package name to install if the binary is not found in the \`\$PATH\`. If not supplied uses the same name as the binary."$'\n'""
 base="package.sh"
@@ -13,7 +13,7 @@ foundNames=([0]="summary" [1]="example" [2]="argument" [3]="environment")
 rawComment="Installs an apt package if a binary does not exist in the which path."$'\n'"The assumption here is that \`packageInstallPackage\` will install the desired \`binary\`."$'\n'"Confirms that \`binary\` is installed after installation succeeds."$'\n'"Summary: Install tools using \`apt-get\` if they are not found"$'\n'"Example:     packageWhich mariadb mariadb-client"$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: binary - String. Required. The binary to look for"$'\n'"Argument: packageName ... - String. Optional. The package name to install if the binary is not found in the \`\$PATH\`. If not supplied uses the same name as the binary."$'\n'"Environment: Technically this will install the binary and any related files as a package."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
+sourceHash="06e25fa25995eb0e6d2d2931f09e11b0a6055bee"
 summary="Install tools using \`apt-get\` if they are not found"$'\n'""
 usage="packageWhich [ --manager packageManager ] binary [ packageName ... ]"
 # shellcheck disable=SC2016

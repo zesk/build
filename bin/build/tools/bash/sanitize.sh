@@ -42,7 +42,7 @@ __bashSanitize() {
       exceptions+=("$line")
       cax+=(--exclude "$line")
     done <"$file"
-    ! $debugFlag || statusMessage decorate info "Loaded $(pluralWord ${#exceptions} pattern) [$(decorate file "$file")]"
+    ! $debugFlag || statusMessage decorate info "Loaded $(localePluralWord ${#exceptions} pattern) [$(decorate file "$file")]"
   done < <(find "$home" -name "bashSanitize.conf" -type f ! -path "*/.*/*")
 
   local fileList && fileList=$(fileTemporaryName "$handler") || return $?

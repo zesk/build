@@ -245,7 +245,7 @@ __testSuite() {
       fi
       catchReturn "$handler" printf -- "%s\n" "$testName" || return $?
     done <"$foundTests"
-    catchEnvironment "$handler" printf -- "# %s\n" "$(pluralWord "$foundTestCount" "test")" || return $?
+    catchEnvironment "$handler" printf -- "# %s\n" "$(localePluralWord "$foundTestCount" "test")" || return $?
     catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
     _testExit 0
     return 0
@@ -280,11 +280,11 @@ __testSuite() {
     fi
 
     if [ ${#suites[@]} -gt 0 ]; then
-      statusMessage printf "%s %s\n" "$(decorate warning "Adding $(pluralWord "${#suites[@]}" suite):")" "$(decorate BOLD orange "${suites[@]}")"
+      statusMessage printf "%s %s\n" "$(decorate warning "Adding $(localePluralWord "${#suites[@]}" suite):")" "$(decorate BOLD orange "${suites[@]}")"
     fi
 
     catchEnvironment "$handler" printf -- "%s\n" "$intro" | consoleToPlain >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
-    statusMessage printf "%s:%s : Found %s\n" "Query" "$(printf -- " %s" "${qq[@]+"${qq[@]}"}")" "$(pluralWord "$foundTestCount" "test")" | tee -a "$quietLog" || return $?
+    statusMessage printf "%s:%s : Found %s\n" "Query" "$(printf -- " %s" "${qq[@]+"${qq[@]}"}")" "$(localePluralWord "$foundTestCount" "test")" | tee -a "$quietLog" || return $?
     # QUIET LOG =============== QUIET LOG =============== QUIET LOG =============== QUIET LOG ===============
   fi
 
@@ -507,7 +507,7 @@ __testSuite() {
   local failColor="error"
   [ "${as[0]}" -ne 0 ] || failColor="info"
 
-  local stats=() && stats+=("$(decorate "$failColor" "$(pluralWord "${as[0]}" "failed assertion")")," "$(decorate success "$(pluralWord "${as[1]}" "successful assertion")")")
+  local stats=() && stats+=("$(decorate "$failColor" "$(localePluralWord "${as[0]}" "failed assertion")")," "$(decorate success "$(localePluralWord "${as[1]}" "successful assertion")")")
 
   [ ${#clean[@]} -eq 0 ] || $debugFlag || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
@@ -550,7 +550,7 @@ __testSuiteFunctionTested() {
     esac
     shift
   done
-  ! $verboseMode || statusMessage decorate info "$(plural "${#__fns[@]}" "Function" "Functions") were tested: $(decorate code "${__fns[@]}")"
+  ! $verboseMode || statusMessage decorate info "$(localePlural "${#__fns[@]}" "Function" "Functions") were tested: $(decorate code "${__fns[@]}")"
 }
 
 # Find our suite code in a list of test file paths

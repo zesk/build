@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-30
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="target - File. Required. File to update."$'\n'"version - String. Required. Version to place at the top of the file."$'\n'""
 base="deprecated-tools.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Take a deprecated.txt file and add a comment with the current version number to the top"$'\n'"Argument: target - File. Required. File to update."$'\n'"Argument: version - String. Required. Version to place at the top of the file."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deprecated-tools.sh"
-sourceHash="e84a0fd5aa707a66afb3e6bc5aeb546936d7f5a6"
+sourceHash="3f2d1f9a8abea83d5b32d3f18633451536da487a"
 summary="Take a deprecated.txt file and add a comment with the"
 summaryComputed="true"
 usage="deprecatedFilePrependVersion target version"

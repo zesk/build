@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--badge text - String. Display this text as decorate at"$'\n'"--prefix prefix - String."$'\n'"counter - Integer. Required. Count down from."$'\n'"binary - Callable. Required. Run this with any additional arguments when the countdown is completed."$'\n'"... - Arguments. Optional. Passed to binary."$'\n'""
 base="interactive.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Display a message and count down display"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --badge text - String. Display this text as decorate at"$'\n'"Argument: --prefix prefix - String."$'\n'"Argument: counter - Integer. Required. Count down from."$'\n'"Argument: binary - Callable. Required. Run this with any additional arguments when the countdown is completed."$'\n'"Argument: ... - Arguments. Optional. Passed to binary."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="Display a message and count down display"
 summaryComputed="true"
 usage="interactiveCountdown [ --help ] [ --badge text ] [ --prefix prefix ] counter binary [ ... ]"

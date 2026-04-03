@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="ownerRepository - String. Github \`owner/repository\` string"$'\n'""
 base="github.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Output the publish date for the latest release of ownerRepository"$'\n'"Argument: ownerRepository - String. Github \`owner/repository\` string"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/github.sh"
-sourceHash="a6d97f4e2d055b5e7abf444332e9d411afe7a742"
+sourceHash="b139e9ff26ace596d539eac776741adccae51061"
 summary="Output the publish date for the latest release of ownerRepository"
 summaryComputed="true"
 usage="githubPublishDate [ ownerRepository ]"

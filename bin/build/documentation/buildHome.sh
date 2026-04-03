@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-24
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="build.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="environment" [1]="argument")
 rawComment="Environment: BUILD_HOME"$'\n'"Prints the build home directory (usually same as the application root)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceHash="f9982331c658f68e95214ae1a17280db7348110f"
+sourceHash="36d6620f5e7ef50da4732294ca63c0ba7d07b1f4"
 summary="Prints the build home directory (usually same as the application"
 summaryComputed="true"
 usage="buildHome [ --help ]"

@@ -38,8 +38,8 @@ xdebugInstall() {
   date | muzzle catchEnvironment "$handler" tee "$artifact" || return $?
 }
 _xdebugInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __xdebug_Require() {
@@ -59,8 +59,8 @@ xdebugEnable() {
   decorate success "xdebug debugging $(decorate value "[ENABLED]")"
 }
 _xdebugEnable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Disable Xdebug on systems that have it
@@ -77,6 +77,6 @@ xdebugDisable() {
   decorate info "xdebug debugging $(decorate value "(disabled)")"
 }
 _xdebugDisable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

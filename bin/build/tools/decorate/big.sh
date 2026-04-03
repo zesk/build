@@ -80,8 +80,8 @@ __decorateExtensionBig() {
   "$binary" -w "$(consoleColumns)" -f "${fonts[index]}" "$@"
 }
 ___decorateExtensionBig() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Experimental
@@ -148,8 +148,8 @@ __decorateExtensionAt.Pure() {
   catchEnvironment "$handler" cursorSet "$saveX" "$saveY" || return $?
 }
 ___decorateExtensionAt.Pure() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --top - Flag. Optional. Place label at the top.
@@ -237,6 +237,6 @@ labeledBigText() {
   fi
 }
 _labeledBigText() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

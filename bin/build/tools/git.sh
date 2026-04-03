@@ -30,8 +30,8 @@ gitInstall() {
   packageWhich git git "$@"
 }
 _gitInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -43,8 +43,8 @@ gitUninstall() {
   packageWhichUninstall git git "$@"
 }
 _gitUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -72,8 +72,8 @@ gitEnsureSafeDirectory() {
   done
 }
 _gitEnsureSafeDirectory() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -112,8 +112,8 @@ gitTagDelete() {
   return "$exitCode"
 }
 _gitTagDelete() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Remove a tag everywhere and tag again on the current branch
@@ -134,8 +134,8 @@ gitTagAgain() {
   statusMessage --last decorate info "All tags completed" "$(decorate orange "${a[@]}")"
 }
 _gitTagAgain() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -153,8 +153,8 @@ gitVersionList() {
   catchEnvironment "$handler" git tag | grep -e '^v[0-9.]*$' | versionSort "$@" || return $?
 }
 _gitVersionList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the last reported version.
@@ -174,8 +174,8 @@ gitVersionLast() {
   fi
 }
 _gitVersionLast() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -196,8 +196,8 @@ gitTagVee() {
   catchEnvironment "$handler" git fetch -q --prune --prune-tags || return $?
 }
 _gitTagVee() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -212,8 +212,8 @@ gitRemoveFileFromHistory() {
   git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
 }
 _gitRemoveFileFromHistory() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -230,8 +230,8 @@ gitRepositoryChanged() {
 }
 _gitRepositoryChanged() {
   true || gitRepositoryChanged --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # DOC TEMPLATE: --help 1
@@ -248,8 +248,8 @@ gitShowChanges() {
   git diff-index --name-only HEAD
 }
 _gitShowChanges() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -278,8 +278,8 @@ gitShowStatus() {
   git diff-index --name-status "$@" HEAD
 }
 _gitShowStatus() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -297,8 +297,8 @@ gitInsideHook() {
   [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
 }
 _gitInsideHook() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -314,8 +314,8 @@ gitRemoteHosts() {
   done < <(git remote -v | awk '{ print $2 }')
 }
 _gitRemoteHosts() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Generates a git tag for a build version, so `v1.0d1`, `v1.0d2`, for version `v1.0`.
@@ -428,8 +428,8 @@ gitTagVersion() {
   statusMessage --last timingReport "$init" "Tagged version completed in" || return $?
 }
 _gitTagVersion() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Finds `.git` directory above or at `startingDirectory`
@@ -441,8 +441,8 @@ gitFindHome() {
   __directoryParent "$handler" --pattern ".git" "$@"
 }
 _gitFindHome() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -557,8 +557,8 @@ __gitCommitReleaseNotesGetLastComment() {
   grep -e '^- ' "$notes" | tail -n 1 | cut -c 3-
 }
 _gitCommit() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Return Code: 1 - Already in main, staging, or HEAD, or git merge failed
@@ -652,8 +652,8 @@ gitMainly() {
   esac
 }
 _gitMainly() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the commit hash
@@ -663,8 +663,8 @@ gitCommitHash() {
   catchEnvironment "$handler" git rev-parse --short HEAD || return $?
 }
 _gitCommitHash() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Get the current branch name
@@ -677,8 +677,8 @@ gitCurrentBranch() {
   catchEnvironment "$handler" git symbolic-ref --short HEAD || return $?
 }
 _gitCurrentBranch() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Does git have any tags?
@@ -698,8 +698,8 @@ gitHasAnyRefs() {
 }
 _gitHasAnyRefs() {
   true || gitHasAnyRefs --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List current valid git hook types
@@ -721,8 +721,8 @@ gitHookTypes() {
 }
 _gitHookTypes() {
   true || gitHookTypes --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install one or more git hooks from Zesk Build hooks.
@@ -796,8 +796,8 @@ gitInstallHooks() {
   done
 }
 _gitInstallHooks() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --application - Directory. Optional. Path to application home.
@@ -867,8 +867,8 @@ gitInstallHook() {
   done
 }
 _gitInstallHook() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __gitPreCommitCache() {
@@ -900,8 +900,8 @@ gitPreCommitSetup() {
   fi
 }
 _gitPreCommitSetup() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output a display for pre-commit files changed
@@ -917,7 +917,7 @@ gitPreCommitHeader() {
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   [ -f "$directory/@" ] || throwEnvironment "$handler" "$directory/@ missing" || return $?
   total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
-  statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(textAlignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
+  statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(textAlignRight "$width" "all")")" "$(decorate info "$total $(localePlural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     local extension="$1" label="$1"
     case "$extension" in
@@ -933,13 +933,13 @@ gitPreCommitHeader() {
       color="success"
     fi
     # shellcheck disable=SC2015
-    printf "%s: %s\n" "$(decorate "$color" "$(textAlignRight "$width" "$label")")" "$(decorate info "$total $(plural "$total" file files) changed")"
+    printf "%s: %s\n" "$(decorate "$color" "$(textAlignRight "$width" "$label")")" "$(decorate info "$total $(localePlural "$total" file files) changed")"
     shift
   done
 }
 _gitPreCommitHeader() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Does this commit have the following file extensions?
@@ -959,8 +959,8 @@ gitPreCommitHasExtension() {
   done
 }
 _gitPreCommitHasExtension() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List the extensions available
@@ -975,8 +975,8 @@ gitPreCommitExtensionList() {
   find "$directory" -maxdepth 1 -type f -exec basename {} \; | sort || return $?
 }
 _gitPreCommitExtensionList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List the file(s) of an extension
@@ -996,8 +996,8 @@ gitPreCommitListExtension() {
   done | sort
 }
 _gitPreCommitListExtension() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Clean up after our pre-commit (deletes cache directory)
@@ -1011,8 +1011,8 @@ gitPreCommitCleanup() {
   [ ! -d "$directory" ] || catchEnvironment "$handler" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Does a branch exist locally or remotely?
@@ -1034,8 +1034,8 @@ gitBranchExists() {
   done
 }
 _gitBranchExists() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Does a branch exist locally?
@@ -1057,8 +1057,8 @@ gitBranchExistsLocal() {
   done
 }
 _gitBranchExistsLocal() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Does a branch exist remotely?
@@ -1085,8 +1085,8 @@ gitBranchExistsRemote() {
   done
 }
 _gitBranchExistsRemote() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check out a branch with the current version and optional formatting
@@ -1135,8 +1135,8 @@ gitBranchify() {
 
 }
 _gitBranchify() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Merge the current branch with another, push to remote, and then return to the original branch.
@@ -1192,8 +1192,8 @@ gitBranchMergeCurrent() {
   catchEnvironment "$handler" git checkout "$branch" || return $?
 }
 _gitBranchMergeCurrent() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # ----------------------------------------------------------------------------------------------------

@@ -1,5 +1,11 @@
-# v0.41.4
+# v0.42.0
 bashPromptModule_binBuild|bashPromptModule_BuildProject|
+newlineHide|stringHideNewlines|
+plural |localePlural |
+pluralWord |localePluralWord |
+cannon |textCannon |
+usageDocument|bashDocumentation|
+usageDocumentSimple|bashSimpleDocumentation|
 
 # v0.41.3
 parseBoolean|booleanParse|
@@ -247,8 +253,8 @@ semanticColorTest|colorSampleSemanticStyles
 SemanticColorTest|ColorSampleSemanticStyles
 colorComboTest|colorSampleCombinations
 ColorComboTest|ColorSampleCombinations
-IDENTICAL usageDocument |__IDENTICAL__ usageDocument |
-_IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument|
+IDENTICAL bashDocumentation |__IDENTICAL__ bashDocumentation |
+_IDENTICAL_ bashDocumentation|__IDENTICAL__ bashDocumentation|
 semanticColorSampleStyles|colorSampleSemanticStyles
 anyEnvToDockerEnv|environmentFileToDocker
 AnyEnvToDockerEnv|EnvironmentFileToDocker

@@ -1,0 +1,2 @@
+[deployApplication]({rel}tools/deploy.md#deployapplication) - Deploy an application from a deployment repository
+ ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L42))

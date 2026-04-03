@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--size size - Integer. Output at most size bytes of data."$'\n'""
 base="dump.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Output to hex"$'\n'"Argument: --size size - Integer. Output at most size bytes of data."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceHash="d1f1440d27d8d45467255c497abe436e95108c9f"
+sourceHash="cf4b6700737aff4b802883d3a622b71bd7afb70d"
 summary="Output to hex"
 summaryComputed="true"
 usage="dumpHex [ --size size ]"

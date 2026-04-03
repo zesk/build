@@ -24,8 +24,8 @@ phpInstall() {
   catchReturn "$handler" packageWhich php php-common php-cli "$@" || return $?
 }
 _phpInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Uninstall `php`
@@ -43,8 +43,8 @@ phpUninstall() {
   catchReturn "$handler" packageWhichUninstall php php-common php-cli "$@" || return $?
 }
 _phpUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Tail the PHP log
@@ -66,8 +66,8 @@ phpTailLog() {
   tail "$@" "$logFile"
 }
 _phpTailLog() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -80,8 +80,8 @@ phpLog() {
   php -r "echo ini_get('error_log');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }
 _phpLog() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -94,8 +94,8 @@ phpIniFile() {
   php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }
 _phpIniFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -310,8 +310,8 @@ phpBuild() {
   statusMessage --last timingReport "$initTime" "PHP built $(decorate code "$targetName") in"
 }
 _phpBuild() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _phpBuildBanner() {
   local label="$1"
@@ -426,8 +426,8 @@ phpTest() {
   statusMessage timingReport "$init" "PHP Test completed in" || return $?
 }
 _phpTest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _phpTestSetup() {
   local handler="$1" home="$2"

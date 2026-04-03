@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. \`# IDENTICAL\`) (may specify more than one)"$'\n'"file ... - File. Required. A file to search for identical tokens."$'\n'""
 base="identical.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. \`# IDENTICAL\`) (may specify more than one)"$'\n'"Argument: file ... - File. Required. A file to search for identical tokens."$'\n'"stdout: tokens, one per line"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/identical.sh"
-sourceHash="3d17e0e52d21bf0984ad94f99e9132c29a6aaed3"
+sourceHash="9b062c3d858b37e9d0bb2c6dc51ad89ca20e549b"
 stdout="tokens, one per line"$'\n'""
 summary="undocumented"
 usage="identicalFindTokens --prefix prefix file ..."

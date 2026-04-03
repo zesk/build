@@ -22,8 +22,8 @@ sedReplacePattern() {
   printf "s/%s/%s/g\n" "$(quoteSedPattern "$1")" "$(quoteSedReplacement "${2-}")"
 }
 _sedReplacePattern() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL quoteSedPattern 38
@@ -34,7 +34,7 @@ _sedReplacePattern() {
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed usageDocument __help
+# Requires: printf sed bashDocumentation __help
 quoteSedPattern() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local value="${1-}"
@@ -43,8 +43,8 @@ quoteSedPattern() {
   printf -- "%s\n" "$value"
 }
 _quoteSedPattern() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Quote sed replacement strings for shell use
@@ -53,7 +53,7 @@ _quoteSedPattern() {
 # Output: string quoted and appropriate to insert in a `sed` replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed usageDocument __help
+# Requires: printf sed bashDocumentation __help
 quoteSedReplacement() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local value="${1-}" separator="${2-/}"
@@ -62,6 +62,6 @@ quoteSedReplacement() {
   printf -- "%s\n" "$value"
 }
 _quoteSedReplacement() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

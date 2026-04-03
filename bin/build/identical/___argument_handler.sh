@@ -36,8 +36,8 @@ __argumentsWithNonBlanksHandler() {
   done
 }
 ___argumentsWithNonBlanksHandler() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __argumentsWithBlanksHandler() {
@@ -61,8 +61,8 @@ __argumentsWithBlanksHandler() {
   done
 }
 ___argumentsWithBlanksHandler() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __argumentsTrimNonBlanksHandler() {

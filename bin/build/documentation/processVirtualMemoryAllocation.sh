@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"pid - Process ID of running process"$'\n'""
 base="process.sh"
@@ -13,7 +13,7 @@ output="423"$'\n'""
 rawComment="Outputs value of virtual memory allocated for a process, value is in kilobytes"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pid - Process ID of running process"$'\n'"Example:     {fn} 23"$'\n'"Output: 423"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/process.sh"
-sourceHash="014ba77f9205a3d4e9437278df62669cfe2287a9"
+sourceHash="b6a9cfd5fce10dfb5d863a90e72c35d40b170092"
 summary="Outputs value of virtual memory allocated for a process, value"
 summaryComputed="true"
 usage="processVirtualMemoryAllocation [ --help ] [ pid ]"

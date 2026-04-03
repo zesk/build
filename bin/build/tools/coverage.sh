@@ -43,8 +43,8 @@ bashCoverage() {
   ! $verbose || timingReport "$start" "Coverage completed in"
 }
 _bashCoverage() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Generate a coverage report using the coverage statistics file
@@ -59,8 +59,8 @@ bashCoverageReport() {
   __coverageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashCoverageReport() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Internal: true
@@ -75,7 +75,7 @@ __bashCoverageMarker() {
 }
 ___bashCoverageMarker() {
   __bashCoverageEnd
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

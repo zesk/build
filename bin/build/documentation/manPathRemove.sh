@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"path - Directory. Required. The path to be removed from the \`MANPATH\` environment"$'\n'""
 base="manpath.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Remove a path from the MANPATH environment variable"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: path - Directory. Required. The path to be removed from the \`MANPATH\` environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/manpath.sh"
-sourceHash="8a6b17740b41a6485576efda52769baec3f7ddd4"
+sourceHash="73a3214fffa3f8f5065133619f130ecf4bdcb5bb"
 summary="Remove a path from the MANPATH environment variable"
 summaryComputed="true"
 usage="manPathRemove [ --help ] path"

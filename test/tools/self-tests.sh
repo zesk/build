@@ -330,7 +330,7 @@ testInstallBinBuild() {
   catchReturn "$handler" rm -rf "$testDir" || return $?
 }
 _testInstallBinBuild() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 testBuildEnvironmentNames() {

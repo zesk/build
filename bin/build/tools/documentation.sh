@@ -59,8 +59,8 @@ bashDocumentationExtract() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashDocumentationExtract() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Build documentation for Bash functions
@@ -101,8 +101,8 @@ documentationBuild() {
 }
 _documentationBuild() {
   case "${1-}" in 0 | 2 | "") ;; *) hookRunOptional documentation-error "$@" || : ;; esac
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List unlinked functions in documentation index
@@ -112,8 +112,8 @@ documentationUnlinked() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationUnlinked() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get an internal template name
@@ -128,8 +128,8 @@ documentationTemplate() {
   printf "%s\n" "$template"
 }
 _documentationTemplate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Build documentation for ./bin/env (or bin/build/env) directory.
@@ -149,8 +149,8 @@ documentationBuildEnvironment() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationBuildEnvironment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the cache directory for the documentation
@@ -172,8 +172,8 @@ documentationBuildCache() {
   fi
 }
 _documentationBuildCache() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Map template files using our identical functionality
@@ -185,17 +185,18 @@ documentationTemplateUpdate() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationTemplateUpdate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Convert a template file to a documentation file using templates
 #
 # Argument: --env-file envFile - File. Optional. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
-# Argument: cacheDirectory - Required. Cache directory where the indexes live.
-# Argument: sourceFile - Required. The document template containing functions to define
-# Argument: functionTemplate - Required. The template for individual functions defined in the `documentTemplate`.
-# Argument: targetFile - Required. Target file to generate
+# Argument: --md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored.
+# Argument: cacheDirectory - Directory. Required. Cache directory where the indexes live.
+# Argument: sourceFile - File. Directory. Required. The document template containing functions to define
+# Argument: functionTemplate - File. Required. The template for individual functions defined in the `documentTemplate`.
+# Argument: targetFile - FileDirectory. Required. Target file to generate
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Convert a template which contains bash functions into full-fledged documentation.
@@ -221,14 +222,15 @@ documentationTemplateCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationTemplateCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --filter filterArgs ... --  - Arguments. Optional. Passed to `find` and allows filtering list.
 # Argument: --force - Flag. Optional. Force generation of files.
 # Argument: --verbose - Flag. Optional. Output more messages.
 # Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of `functionTemplate`
+# Argument: --md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored.
 # Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
 # Argument: templateDirectory - Required. Directory containing documentation templates
 # Argument: functionTemplate - Required. Function template file to generate documentation for functions
@@ -255,8 +257,8 @@ documentationTemplateDirectoryCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationTemplateDirectoryCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Generate a function documentation block using `functionTemplate` for `functionName`
@@ -279,8 +281,8 @@ documentationTemplateFunctionCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationTemplateFunctionCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Formats arguments for markdown
@@ -332,8 +334,8 @@ __documentationFormatArguments() {
   done
 }
 ___documentationFormatArguments() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Looks up information in the function index
@@ -349,8 +351,8 @@ documentationIndexLookup() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationIndexLookup() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Generate the documentation index (e.g. functions defined in the documentation)
@@ -365,8 +367,8 @@ documentationIndexDocumentation() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationIndexDocumentation() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -406,6 +408,6 @@ __bashDocumentation_FindFunctionDefinitions() {
   [ "$phraseCount" -eq "$foundCount" ]
 }
 ___bashDocumentation_FindFunctionDefinitions() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

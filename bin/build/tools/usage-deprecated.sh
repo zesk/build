@@ -2,6 +2,8 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
+# Deprecated: 2026-02-24
+# Obsolete: 2026-08-24
 
 # Argument: defaultNoun - String. Required. Default noun if user noun is empty
 # Argument: usageFunction - Function. Required. Error handler

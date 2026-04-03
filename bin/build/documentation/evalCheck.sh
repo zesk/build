@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="security.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="Check files to ensure \`eval\`s in code have been checked"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/security.sh"
-sourceHash="71e8f697d718333ee5ef0b2af684716fb8afda0f"
+sourceHash="b474798424b5621a9b9a6c37271a50ffba450b77"
 summary="Check files to ensure \`eval\`s in code have been checked"
 summaryComputed="true"
 usage="evalCheck"

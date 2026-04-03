@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--singles singlesFiles - File. Optional. One or more files which contain a list of allowed \`{identical}\` singles, one per line."$'\n'"--single singleToken - String. Optional. One or more tokens which cam be singles."$'\n'"--repair directory - Directory. Optional. Any files in onr or more directories can be used to repair other files."$'\n'"--internal-only - Flag. Optional. Just do \`--internal\` repairs."$'\n'"--interactive - Flag. Optional. Interactive mode on fixing errors."$'\n'"... - Arguments. Optional. Additional arguments are passed directly to \`identicalCheck\`."$'\n'""
 base="identical.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Identical check for shell files"$'\n'"Looks for up to three tokens in code:"$'\n'"- \`# \`\`{identical} tokenName 1\`"$'\n'"- \`# \`\`_{identical}_ tokenName 1\`, and"$'\n'"- \`# \`\`DOC\`\` TEMPLATE: tokenName 1\`"$'\n'"This allows for overlapping identical sections within templates with the intent:"$'\n'"- \`{identical}\` - used in most cases (not internal)"$'\n'"- \`_{identical}_\` - used in templates which must be included in {identical} templates"$'\n'"- \`__{identical}__\` - used in templates which must be included in _{identical}_ templates"$'\n'"- \`DOC\`\` TEMPLATE:\` - used in documentation templates for functions - is handled by internal document generator"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --singles singlesFiles - File. Optional. One or more files which contain a list of allowed \`{identical}\` singles, one per line."$'\n'"Argument: --single singleToken - String. Optional. One or more tokens which cam be singles."$'\n'"Argument: --repair directory - Directory. Optional. Any files in onr or more directories can be used to repair other files."$'\n'"Argument: --internal-only - Flag. Optional. Just do \`--internal\` repairs."$'\n'"Argument: --interactive - Flag. Optional. Interactive mode on fixing errors."$'\n'"Argument: ... - Arguments. Optional. Additional arguments are passed directly to \`identicalCheck\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/identical.sh"
-sourceHash="3d17e0e52d21bf0984ad94f99e9132c29a6aaed3"
+sourceHash="9b062c3d858b37e9d0bb2c6dc51ad89ca20e549b"
 summary="Identical check for shell files"
 summaryComputed="true"
 usage="identicalCheckShell [ --help ] [ --singles singlesFiles ] [ --single singleToken ] [ --repair directory ] [ --internal-only ] [ --interactive ] [ ... ]"

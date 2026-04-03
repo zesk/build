@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Add an item to a character-delimited list."$'\n'"Add an item to a list IFF it does not exist in the list already"$'\n'"Argument: listValue - Required. List value to modify."$'\n'"Argument: separator - Required. Separator string for item values (typically \`:\`)"$'\n'"Argument: --first - Flag. Optional. Place any items after this flag first in the list"$'\n'"Argument: --last - Flag. Optional. Place any items after this flag last in the list. Default."$'\n'"Argument: item - the value to be added to the \`listValue\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Add an item to the beginning or end of a text-delimited list"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/list.sh"
-sourceHash="87314fd289f273788acd3fd9e6c5a11b2aa05b47"
+sourceHash="41d98a302feb190799f47d4570b57b5beb5b3303"
 summary="Add an item to a character-delimited list."$'\n'""
 usage="listAppend listValue separator [ --first ] [ --last ] [ item ] [ --help ]"
 # shellcheck disable=SC2016

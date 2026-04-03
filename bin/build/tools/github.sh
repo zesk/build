@@ -98,8 +98,8 @@ githubURLParse() {
   done
 }
 _githubURLParse() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output the publish date for the latest release of ownerRepository
@@ -109,8 +109,8 @@ githubPublishDate() {
   __githubLatestVariable "$handler" ".published_at" "$@"
 }
 _githubPublishDate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -124,8 +124,8 @@ githubLatestRelease() {
   __githubLatestVariable "$handler" ".name" "$@"
 }
 _githubLatestRelease() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get a project JSON structure
@@ -135,8 +135,8 @@ githubProjectJSON() {
   __githubLatestVariable "$handler" "." "$@"
 }
 _githubProjectJSON() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the latest JSON structure
@@ -149,8 +149,8 @@ githubLatest() {
   __githubAPI "$handler" "." "" "$@"
 }
 _githubLatest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Generate a release on GitHub using API
@@ -312,6 +312,6 @@ githubRelease() {
   rm "$resultsFile" || :
 }
 _githubRelease() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

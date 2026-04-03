@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="searchPattern - String. Required. The string to search for."$'\n'"replacePattern - String. Required. The replacement to replace with."$'\n'""
 base="sed.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Quote a sed command for search and replace"$'\n'"Argument: searchPattern - String. Required. The string to search for."$'\n'"Argument: replacePattern - String. Required. The replacement to replace with."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sed.sh"
-sourceHash="3d4ba5c523c9cedaf6e07ff31fc317123b86e880"
+sourceHash="ad287eee2b6c711c3cfcf76167b59132a0602088"
 summary="Quote a sed command for search and replace"
 summaryComputed="true"
 usage="sedReplacePattern searchPattern replacePattern"

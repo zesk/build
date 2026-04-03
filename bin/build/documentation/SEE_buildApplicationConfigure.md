@@ -1,0 +1,1 @@
+[buildApplicationConfigure]({rel}tools/build.md#buildapplicationconfigure) - Set up a new project for Zesk Build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L144))

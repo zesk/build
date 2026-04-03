@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="host.sh"
@@ -12,7 +12,7 @@ rawComment="Get the full hostname"$'\n'"Requires: __help __hostname executableRe
 requires="__help __hostname executableRequire catchEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/host.sh"
-sourceHash="4483780f98d1495c0dab6f46e1f295c6a66f017a"
+sourceHash="f40d24f8851cefe84507bde9d1b46d3f6cc6e976"
 summary="Get the full hostname"
 summaryComputed="true"
 usage="hostnameFull"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="developer.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="stdin")
 rawComment="Undo a set of developer functions or aliases"$'\n'"stdin: List of functions and aliases to remove from the current environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/developer.sh"
-sourceHash="fa87e29b8420fca35c825c744db0d1532036f8cc"
+sourceHash="330aa9921ba19526d3791ad22fc685712858f6b7"
 stdin="List of functions and aliases to remove from the current environment"$'\n'""
 summary="Undo a set of developer functions or aliases"
 summaryComputed="true"

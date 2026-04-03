@@ -137,7 +137,7 @@ testEverythingElse() {
   #  pipeRunner
   #  logRotates
   #  sshSetup
-  #  usageDocumentSimple
+  #  bashSimpleDocumentation
   #  executableRequire
   #  validateFileContents
 

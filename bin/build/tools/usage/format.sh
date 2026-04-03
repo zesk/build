@@ -19,7 +19,7 @@
 # Output handler messages to console
 #
 # Should look into an actual file template, probably
-# See: usageDocument
+# See: bashDocumentation
 #
 # Do not call handler functions here to avoid recursion
 # Argument: binaryName - String. Required. The function name
@@ -69,8 +69,8 @@ __usageTemplate() {
   return "$returnCode"
 }
 ___usageTemplate() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Formats name value pairs separated by separatorChar (default " ") and uses
@@ -122,6 +122,6 @@ __usageGenerator() {
   done
 }
 ___usageGenerator() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

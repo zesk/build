@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="path.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Cleans the path and removes non-directory entries and duplicates"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Maintains ordering."$'\n'"Environment: PATH"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/path.sh"
-sourceHash="8a081a9a1154d0671a3f695f37287f54f605e380"
+sourceHash="ef619ed0883f30842aea5824d3041921d03f400f"
 summary="Cleans the path and removes non-directory entries and duplicates"
 summaryComputed="true"
 usage="pathCleanDuplicates [ --help ]"

@@ -26,8 +26,8 @@ environmentFileIsDocker() {
   return "$result"
 }
 _environmentFileIsDocker() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -79,8 +79,8 @@ environmentFileToDocker() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter environmentFileBashCompatibleToDocker "$@" || return $?
 }
 _environmentFileToDocker() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -95,8 +95,8 @@ environmentFileToBashCompatible() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" environmentFileDockerToBashCompatible cat "$@" || return $?
 }
 _environmentFileToBashCompatible() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -130,8 +130,8 @@ environmentFileDockerToBashCompatible() {
   fi
 }
 _environmentFileDockerToBashCompatible() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -201,6 +201,6 @@ environmentFileBashCompatibleToDocker() {
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 _environmentFileBashCompatibleToDocker() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

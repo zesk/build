@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="value - EmptyString. Required. Value to test."$'\n'""
 base="type.sh"
@@ -13,7 +13,7 @@ rawComment="Test if an argument is a floating point number"$'\n'"(\`1e3\` notati
 return_code="0 - if it is a floating point number"$'\n'"1 - if it is not a floating point number"$'\n'""
 source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="cf046d7ea9b582a95b5cf64eaaa0310238a19003"
+sourceHash="31b62907df0050b8df8d06ec27701b9721bf81aa"
 summary="Test if an argument is a floating point number"
 summaryComputed="true"
 usage="isNumber value"

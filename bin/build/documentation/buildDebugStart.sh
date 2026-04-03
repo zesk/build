@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="moduleName - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules."$'\n'""
 base="debug.sh"
@@ -14,7 +14,7 @@ rawComment="Start build debugging if it is enabled."$'\n'"This does \`set -x\` w
 requires="buildDebugEnabled"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="20ebc0aea7e5c7babe365d244e8c5a7c63f0c674"
+sourceHash="766b96facdb9f70d17525f35cb15859c7fcc6c00"
 summary="Start build debugging if it is enabled."
 summaryComputed="true"
 usage="buildDebugStart [ moduleName ]"

@@ -27,8 +27,8 @@ aptIsInstalled() {
   executableExists apt apt-get dpkg 2>/dev/null && [ -f /etc/debian_version ]
 }
 _aptIsInstalled() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run apt-get non-interactively
@@ -39,8 +39,8 @@ aptNonInteractive() {
   __aptLoader "$handler" "_$handler" "$@"
 }
 _aptNonInteractive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get key ring directory path
@@ -49,8 +49,8 @@ aptKeyRingDirectory() {
   printf "%s\n" "/etc/apt/keyrings"
 }
 _aptKeyRingDirectory() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get APT source list path
@@ -59,8 +59,8 @@ aptSourcesDirectory() {
   printf "%s\n" "/etc/apt/sources.list.d"
 }
 _aptSourcesDirectory() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -78,8 +78,8 @@ aptKeyAdd() {
   __aptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _aptKeyAdd() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -96,8 +96,8 @@ aptKeyRemove() {
   __aptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _aptKeyRemove() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Update the global database

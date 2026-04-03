@@ -83,8 +83,8 @@ applicationHome() {
   __applicationHomeGo "$handler" "Application home set to" || return $?
 }
 _applicationHome() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -127,8 +127,8 @@ applicationHomeAliases() {
   alias "$setAlias"=applicationHome || throwEnvironment "$handler" "alias $setAlias failed" || return $?
 }
 _applicationHomeAliases() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set up a new project for Zesk Build
@@ -190,8 +190,8 @@ buildApplicationConfigure() {
   year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$interactive" || return $?
 }
 _buildApplicationConfigure() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __buildApplicationConfigurePaths() {

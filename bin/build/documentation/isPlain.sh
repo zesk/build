@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Check if text contains plain text only (no ANSI escape codes, etc.)"$'\n'"Argument: text - String. Required. Text to search for mapping tokens."$'\n'"Without arguments, displays help."$'\n'"Return code: - \`0\` - Text is plain"$'\n'"Return code: - \`1\` - Text contains non-plain characters"$'\n'""$'\n'""
 return_code="- \`0\` - Text is plain"$'\n'"- \`1\` - Text contains non-plain characters"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="80ad24738a32b8002bafa685f78fc47389363a7d"
+sourceHash="5f35ac6dcf31b9c284706fdda354d1d8408dde2c"
 summary="Check if text contains plain text only (no ANSI escape"
 summaryComputed="true"
 usage="isPlain text"

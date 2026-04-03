@@ -13,7 +13,7 @@ testUsageTemplate() {
   home="$(catchReturn "$handler" buildHome)" || return $?
 
   # Loads __usageTemplate
-  assertExitCode 0 usageDocument --help || return $?
+  assertExitCode 0 bashDocumentation --help || return $?
 
   # Now test internals
   local output

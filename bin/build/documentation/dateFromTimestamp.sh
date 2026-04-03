@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="integerTimestamp - Integer. Required. Integer timestamp offset (unix timestamp, same as \`\$(date +%s)\`)"$'\n'"format - String. Optional. How to output the date (e.g. \`%F\` - no \`+\` is required)"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--local - Flag. Optional. Show the local time, not UTC."$'\n'""
 base="date.sh"
@@ -14,7 +14,7 @@ foundNames=([0]="argument" [1]="environment" [2]="return_code" [3]="example")
 rawComment="Converts an integer date to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)"$'\n'"dateFromTimestamp 1681966800 %F"$'\n'"Argument: integerTimestamp - Integer. Required. Integer timestamp offset (unix timestamp, same as \`\$(date +%s)\`)"$'\n'"Argument: format - String. Optional. How to output the date (e.g. \`%F\` - no \`+\` is required)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --local - Flag. Optional. Show the local time, not UTC."$'\n'"Environment: Compatible with BSD and GNU date."$'\n'"Return Code: 0 - If parsing is successful"$'\n'"Return Code: 1 - If parsing fails"$'\n'"Example:     dateField=\$(dateFromTimestamp \$init %Y)"$'\n'""$'\n'""
 return_code="0 - If parsing is successful"$'\n'"1 - If parsing fails"$'\n'""
 sourceFile="bin/build/tools/date.sh"
-sourceHash="9a217a468b4498cc58a48e05ea655c248a77d8c1"
+sourceHash="65743f6a9828806f273bb3379367926eeeb56a06"
 summary="Converts an integer date to a date formatted timestamp (e.g."
 summaryComputed="true"
 usage="dateFromTimestamp integerTimestamp [ format ] [ --help ] [ --local ]"

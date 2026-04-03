@@ -20,8 +20,8 @@ dockerComposeWrapper() {
   fi
 }
 _dockerComposeWrapper() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install `docker-compose`
@@ -48,8 +48,8 @@ dockerComposeInstall() {
   pipInstall --handler "$handler" "$name" "$@"
 }
 _dockerComposeInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Uninstalls `docker-compose`
@@ -72,8 +72,8 @@ dockerComposeUninstall() {
   pipUninstall --handler "$handler" "$name" || return $?
 }
 _dockerComposeUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is docker compose currently running?
@@ -95,8 +95,8 @@ dockerComposeIsRunning() {
   return $exitCode
 }
 _dockerComposeIsRunning() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List of docker compose commands
@@ -111,8 +111,8 @@ dockerComposeCommandList() {
 }
 _dockerComposeCommandList() {
   ! false || dockerComposeCommandList --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is this a docker compose command?
@@ -133,8 +133,8 @@ isDockerComposeCommand() {
   grep -q -e "$(quoteGrepPattern "$command")" < <(dockerComposeCommandList)
 }
 _isDockerComposeCommand() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # docker compose wrapper with automatic .env support
@@ -310,8 +310,8 @@ dockerCompose() {
   statusMessage --last timingReport "$start" "Completed $name in"
 }
 _dockerCompose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __dockerCompose() {

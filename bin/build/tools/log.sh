@@ -11,8 +11,8 @@
 
 #
 # Argument: --dry-run - Flag. Optional. Do not change anything.
-# Argument: logFile - Required. A log file which exists.
-# Argument: count - Required. Integer of log files to maintain.
+# Argument: logFile - File. Required. A log file which exists.
+# Argument: count - PositiveInteger. Required. Integer of log files to maintain.
 # Rotate a log file
 #
 # Backs up files as:
@@ -38,14 +38,12 @@ logRotate() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --dry-run)
-      dryRun=true
-      ;;
+    --dry-run) dryRun=true ;;
     *)
       if [ -z "$logFile" ]; then
-        logFile="$argument"
+        logFile="$(validate "$handler" File logFile "$logFile")" || return $?
       elif [ -z "$count" ]; then
-        count="$argument"
+        count=$(validate "$handler" "PositiveInteger" "count" "$argument")
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -55,10 +53,8 @@ logRotate() {
     shift
   done
 
-  logFile="$(validate "$handler" File logFile "$logFile")" || return $?
-
-  isInteger "$count" || throwArgument "$handler" "$this count $(decorate value "$count") must be a positive integer" || return $?
-  [ "$count" -gt 0 ] || throwArgument "$handler" "$this count $(decorate value "$count") must be a positive integer greater than zero" || return $?
+  [ -n "$logFile" ] || throwArgument "$handler" "logFile required" || return $?
+  [ -n "$count" ] || throwArgument "$handler" "count required" || return $?
 
   local index="$count"
   if [ "$count" -gt 1 ]; then
@@ -93,15 +89,15 @@ logRotate() {
   fi
 }
 _logRotate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Rotate log files
 # For all log files in logPath with extension `.log`, rotate them safely
 # Argument: --dry-run - Flag. Optional. Do not change anything.
-# Argument: logPath - Required. Path where log files exist.
-# Argument: count - Required. Integer of log files to maintain.
+# Argument: logPath - Directory. Required. Path where log files exist.
+# Argument: count - PositiveInteger. Required. Integer of log files to maintain.
 logRotates() {
   local handler="_${FUNCNAME[0]}"
 
@@ -116,9 +112,7 @@ logRotates() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --dry-run)
-      dryRunArgs=(--dry-run)
-      ;;
+    --dry-run) dryRunArgs=(--dry-run) ;;
     *)
       if [ -z "$logPath" ]; then
         logPath="$(validate "$handler" Directory logPath "$logPath") || return $?"
@@ -142,6 +136,6 @@ logRotates() {
   statusMessage --last decorate info "Rotated log files in path $(decorate file "$logPath")"
 }
 _logRotates() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

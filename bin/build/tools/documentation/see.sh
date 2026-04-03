@@ -24,7 +24,7 @@ __documentationIndexSeeLinker() {
   start=$(timingStart)
 
   # Argument parsing
-  local cacheDirectory="" documentationSource="" documentationTarget=""
+  local cacheDirectory="" documentationSource="" documentationTarget="" markdownCache=""
   local debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -37,6 +37,7 @@ __documentationIndexSeeLinker() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) debugFlag=true ;;
+    --md-cache) shift && markdownCache="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
     *)
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$argument") || return $?
@@ -53,8 +54,9 @@ __documentationIndexSeeLinker() {
     shift
   done
 
-  local arg
-  for arg in cacheDirectory documentationSource documentationTarget; do
+  [ -n "$markdownCache" ] || markdownCache="$cacheDirectory/see/tokens"
+
+  local arg && for arg in cacheDirectory documentationSource documentationTarget markdownCache; do
     [ -n "${!arg}" ] || throwArgument "$handler" "$arg is required" || return $?
   done
 
@@ -83,12 +85,16 @@ __documentationIndexSeeLinker() {
     local matchingToken
     while read -r matchingToken; do
       ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
-      local cleanToken
-      cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
+      local cleanToken && cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
-      tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken") || return $?
-      ! $debugFlag || statusMessage decorate pair "$tokenName" "$(newlineHide "$tokenValue")"
+      local markdownCacheFile="$markdownCache/SEE_$cleanToken.md"
+      if fileNewest "$markdownCacheFile" "$documentationSource"; then
+        tokenValue="$(cat "$markdownCacheFile")"
+      else
+        tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken" | tee "$markdownCacheFile") || return $?
+      fi
+      ! $debugFlag || statusMessage decorate pair "$tokenName" "$(stringHideNewlines "$tokenValue")"
       local rel="{rel}"
       if [ "$tokenValue" != "${tokenValue#*"$rel"}" ]; then
         tokenValue="$(rel="$matchingPrefix" mapEnvironment rel <<<"$tokenValue")"
@@ -118,6 +124,6 @@ __documentationIndexSeeLinker() {
 }
 
 ___documentationIndexSeeLinker() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -113,7 +113,7 @@ __bashDocumentationExtractCheckCache() {
         catchEnvironment "$handler" printf -- "%s\n" "${sourceHash-}" || return $?
       fi
     ) || :
-    if [ "$savedSourceHash" -eq "$sourceHash" ]; then
+    if [ "$savedSourceHash" = "$sourceHash" ]; then
       catchEnvironment "$handler" touch "$definitionFile" || return $?
       catchEnvironment "$handler" cat "$definitionFile" || return $?
       return 0

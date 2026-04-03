@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--bin binary - Executable. Optional. Binary for \`pip\`."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--debug - Flag. Optional. Show outputs to \`which\` and \`command -v\` for \`pip\`"$'\n'"... - Arguments. Optional. Arguments passed to \`pip\`"$'\n'""
 base="python.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Run pip whether it is installed as a module or as a binary"$'\n'"Argument: --bin binary - Executable. Optional. Binary for \`pip\`."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --debug - Flag. Optional. Show outputs to \`which\` and \`command -v\` for \`pip\`"$'\n'"Argument: ... - Arguments. Optional. Arguments passed to \`pip\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/python.sh"
-sourceHash="8be9b4b3859644fbd9f55b631f27ecd75d04e018"
+sourceHash="76ef1bab7d4e571a0f70f466c3650c365d9ea30f"
 summary="Run pip whether it is installed as a module or"
 summaryComputed="true"
 usage="pipWrapper [ --bin binary ] [ --handler handler ] [ --help ] [ --debug ] [ ... ]"

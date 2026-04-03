@@ -106,11 +106,11 @@ buildUsageCompileParallel() {
   __buildUsageCompileParallel "$cachePath" || return $?
 
   trap - EXIT INT || :
-  statusMessage timingReport "$start" "Ran $(pluralWord "$totalWorkers" "worker")" || return $?
+  statusMessage timingReport "$start" "Ran $(localePluralWord "$totalWorkers" "worker")" || return $?
 }
 _buildUsageCompileParallel() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Cleanup function

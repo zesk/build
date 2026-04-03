@@ -34,8 +34,8 @@ __buildTestSuite() {
   catchEnvironment "$handler" testSuite --tests "$testHome/test/tests/" "$@" || return $?
 }
 ___buildTestSuite() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __buildTestSuite "$@"

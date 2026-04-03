@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-13
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration"$'\n'"text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for \`style\`."$'\n'""
 base="core.sh"
@@ -9,11 +9,11 @@ environment="__BUILD_DECORATE - String. Cached color lookup."$'\n'"BUILD_COLORS 
 file="bin/build/tools/decorate/core.sh"
 fn="decorate"
 foundNames=([0]="argument" [1]="stdout" [2]="environment" [3]="requires")
-rawComment="Singular decoration function"$'\n'"Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration"$'\n'"Argument: text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for \`style\`."$'\n'"You can extend this function by writing a your own extension \`__decorationExtensionCustom\` is called for \`decorate custom\`."$'\n'"stdout: Decorated text"$'\n'"Environment: __BUILD_DECORATE - String. Cached color lookup."$'\n'"Environment: BUILD_COLORS - Boolean. Colors enabled (\`true\` or \`false\`)."$'\n'"Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help"$'\n'""$'\n'""
-requires="isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help"$'\n'""
+rawComment="Singular decoration function"$'\n'"Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration"$'\n'"Argument: text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for \`style\`."$'\n'"You can extend this function by writing a your own extension \`__decorationExtensionCustom\` is called for \`decorate custom\`."$'\n'"stdout: Decorated text"$'\n'"Environment: __BUILD_DECORATE - String. Cached color lookup."$'\n'"Environment: BUILD_COLORS - Boolean. Colors enabled (\`true\` or \`false\`)."$'\n'"Requires: isFunction returnArgument awk catchEnvironment bashDocumentation executeInputSupport __help"$'\n'""$'\n'""
+requires="isFunction returnArgument awk catchEnvironment bashDocumentation executeInputSupport __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="79144cbb7b8ada591c002cc9fd6f323a3d3e4612"
+sourceHash="86495b068ec6825b53932ad3b632552a3bd7259d"
 stdout="Decorated text"$'\n'""
 summary="Singular decoration function"
 summaryComputed="true"

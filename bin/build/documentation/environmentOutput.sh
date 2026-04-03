@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"--skip-prefix prefixString - String. Optional. Skip environment variables which begin with this exact prefix (case-sensitive)."$'\n'"--secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"variable ... - String. Optional. Output these variables explicitly."$'\n'""
 base="environment.sh"
@@ -13,7 +13,7 @@ requires="throwArgument decorate environmentSecureVariables grepSafe env textRem
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="environmentSecureVariables"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="2f72a01d82f7aedcc93caeb95898a759bf73cf9c"
+sourceHash="5c883706d148f55f1c9ad4eb2c95662b00943bc9"
 summary="Output all exported environment variables, hiding secure ones and ones"
 summaryComputed="true"
 usage="environmentOutput [ --underscore ] [ --skip-prefix prefixString ] [ --secure ] [ variable ... ]"

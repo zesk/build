@@ -31,8 +31,8 @@ awsInstall() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -60,8 +60,8 @@ awsCredentialsFile() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -96,8 +96,8 @@ awsIsKeyUpToDate() {
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 _awsIsKeyUpToDate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
@@ -124,8 +124,8 @@ awsHasEnvironment() {
 }
 _awsHasEnvironment() {
   true || awsHasEnvironment --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List AWS profiles available in the credentials file
@@ -142,8 +142,8 @@ awsProfilesList() {
   grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :
 }
 _awsProfilesList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
@@ -170,8 +170,8 @@ awsEnvironmentFromCredentials() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsEnvironmentFromCredentials() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -196,8 +196,8 @@ awsCredentialsHasProfile() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsHasProfile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Write the credentials to the AWS credentials file.
@@ -216,8 +216,8 @@ awsCredentialsAdd() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsAdd() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Remove credentials from the AWS credentials file
@@ -235,8 +235,8 @@ awsCredentialsRemove() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsRemove() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Write the credentials to the AWS credentials file.
@@ -259,8 +259,8 @@ awsCredentialsFromEnvironment() {
   catchReturn "$handler" awsCredentialsAdd "$@" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 }
 _awsCredentialsFromEnvironment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usages can be
@@ -284,8 +284,8 @@ awsSecurityGroupIPModify() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsSecurityGroupIPModify() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
@@ -312,8 +312,8 @@ awsIPAccess() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsIPAccess() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Check an AWS region code for validity
@@ -355,8 +355,8 @@ awsRegionValid() {
   return 0
 }
 _awsRegionValid() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # ========================================================================================================================
@@ -379,8 +379,8 @@ isS3URL() {
   done
 }
 _isS3URL() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Upload a set of files or directories to S3.
@@ -401,8 +401,8 @@ awsS3Upload() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsS3Upload() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Delete a directory remotely on S3
@@ -416,8 +416,8 @@ awsS3DirectoryDelete() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsS3DirectoryDelete() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL __validateTypeAWSRegion 6

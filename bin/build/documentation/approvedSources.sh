@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--debug - Flag. Optional. Show a lot of information about the approved cache."$'\n'"--no-delete - Flag. Optional. Do not delete stale approval files."$'\n'"--delete - Flag. Optional. Delete stale approval files."$'\n'""
 base="interactive.sh"
@@ -13,7 +13,7 @@ rawComment="List approved Bash script sources which can be loaded automatically 
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="XDG_STATE_HOME.sh"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="List approved Bash script sources which can be loaded automatically"
 summaryComputed="true"
 usage="approvedSources [ --debug ] [ --no-delete ] [ --delete ]"

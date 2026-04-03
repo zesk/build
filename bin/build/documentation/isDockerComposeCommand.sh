@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="command - String. Required. The command to test."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="docker-compose.sh"
@@ -12,7 +12,7 @@ rawComment="Is this a docker compose command?"$'\n'"Argument: command - String. 
 return_code="0 - Yes, it is."$'\n'"1 - No, it is not."$'\n'""
 see="dockerComposeCommandList"$'\n'""
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="783c382a3fdcc281bcdc87ece102744a5053324f"
+sourceHash="a21ed1c073769da3a59ec67f35a55a8a1d7d14ec"
 summary="Is this a docker compose command?"
 summaryComputed="true"
 usage="isDockerComposeCommand command [ --help ]"

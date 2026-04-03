@@ -153,7 +153,7 @@ __testRun() {
     else
       returnAssert || resultCode=$?
       local stderrLines && stderrLines="$(catchReturn "$handler" fileLineCount "$captureStderr")" || returnClean $? "${clean[@]}" || return $?
-      catchReturn "$handler" printf "%s\n" "stderr-SUCCESS $__test has STDERR: $(pluralWord "$stderrLines" line)" | catchReturn "$handler" tee -a "$error" "$quietLog" || return $?
+      catchReturn "$handler" printf "%s\n" "stderr-SUCCESS $__test has STDERR: $(localePluralWord "$stderrLines" line)" | catchReturn "$handler" tee -a "$error" "$quietLog" || return $?
       catchReturn "$handler" dumpPipe <"$captureStderr" | catchReturn "$handler" tee -a "$quietLog" || returnClean $? "${clean[@]}" || return $?
       __TEST_SUITE_RESULT="[$resultCode] $__test failed, found stderr"
     fi

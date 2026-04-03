@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--non-interactive - Flag. Optional. Do not prompt for input and fail if input is required."$'\n'"--owner ownerName - String. Optional. The \`APPLICATION_OWNER\`."$'\n'"--name applicationName - String. Optional. The \`APPLICATION_NAME\`."$'\n'"--code codeName - String. Optional. The \`APPLICATION_CODE\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="application.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Set up a new project for Zesk Build"$'\n'"- Creates shell development environment"$'\n'"- Registers git hooks"$'\n'"- Configures base environment variables"$'\n'"EXPERIMENTAL - not finished yet."$'\n'"Argument: --non-interactive - Flag. Optional. Do not prompt for input and fail if input is required."$'\n'"Argument: --owner ownerName - String. Optional. The \`APPLICATION_OWNER\`."$'\n'"Argument: --name applicationName - String. Optional. The \`APPLICATION_NAME\`."$'\n'"Argument: --code codeName - String. Optional. The \`APPLICATION_CODE\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/application.sh"
-sourceHash="fd524b49df17bcca15d1669e4d967e9eaca5109b"
+sourceHash="f46a4ce2b342df3d29dc1c07fd60dc7d725b26ab"
 summary="Set up a new project for Zesk Build"
 summaryComputed="true"
 usage="buildApplicationConfigure --non-interactive [ --owner ownerName ] [ --name applicationName ] [ --code codeName ] [ --help ]"

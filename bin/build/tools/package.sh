@@ -150,8 +150,8 @@ packageUpgrade() {
   __packageUpFunction "_${FUNCNAME[0]}" Upgrade "$@"
 }
 _packageUpgrade() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Update packages lists and sources
@@ -164,8 +164,8 @@ packageUpdate() {
   __packageUpFunction "_${FUNCNAME[0]}" Update "$@"
 }
 _packageUpdate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fetch the binary name for the default package in a group
@@ -214,8 +214,8 @@ packageDefault() {
   "$function" "${lookup[@]}"
 }
 _packageDefault() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installs an apt package if a binary does not exist in the which path.
@@ -286,8 +286,8 @@ packageWhich() {
   executableExists "$binary" || throwEnvironment "$handler" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
 _packageWhich() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
@@ -352,8 +352,8 @@ packageWhichUninstall() {
   fi
 }
 _packageWhichUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -471,8 +471,8 @@ packageInstall() {
   ! $verboseFlag || printf -- " %s\n" "($(timingReport "$__start" "total"))"
 }
 _packageInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is a package installed?
@@ -511,8 +511,8 @@ packageIsInstalled() {
   catchEnvironment "$handler" rm -rf "$installed" || return $?
 }
 _packageIsInstalled() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Removes packages using the current package manager.
@@ -573,8 +573,8 @@ packageUninstall() {
   statusMessage --last timingReport "$start" "Uninstallation of ${packages[*]} completed in" || :
 }
 _packageUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: handler - Function. Required.
@@ -604,8 +604,8 @@ packageManagerValid() {
   esac
 }
 _packageManagerValid() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _packageDebugging() {
@@ -631,8 +631,8 @@ packageManagerDefault() {
 }
 _packageManagerDefault() {
   true || packageManagerDefault --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List installed packages on this system using package manager
@@ -640,8 +640,8 @@ packageInstalledList() {
   __packageListFunction "_${FUNCNAME[0]}" "Installed" "$@"
 }
 _packageInstalledList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List installed packages on this system using package manager
@@ -649,8 +649,8 @@ packageAvailableList() {
   __packageListFunction "_${FUNCNAME[0]}" "Available" --before packageUpdate "$@"
 }
 _packageAvailableList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # INTERNAL - has `packageUpdate` set the `restart` flag at some point?
@@ -676,8 +676,8 @@ packageNeedRestartFlag() {
   fi
 }
 _packageNeedRestartFlag() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install a package group to have a binary installed
@@ -724,8 +724,8 @@ packageGroupWhich() {
   executableExists "$binary" || catchReturn "$handler" packageGroupInstall --manager "$manager" "${groups[@]}" || return $?
 }
 _packageGroupWhich() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -773,8 +773,8 @@ packageGroupInstall() {
   done
 }
 _packageGroupInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -821,8 +821,8 @@ packageGroupUninstall() {
   done
 }
 _packageGroupUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names
@@ -865,6 +865,6 @@ packageMapping() {
   done
 }
 _packageMapping() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--verbose - Flag. Optional. Be verbose about what the function is doing."$'\n'"--list - Flag. Optional. Show the list of what has changed since the first invocation."$'\n'"--profile - Flag. Optional. Mark the end of profile definitions."$'\n'"--developer - Flag. Optional. Mark the start of developer definitions."$'\n'""
 base="developer.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="Track changes to the bash environment. WIth no arguments this function returns the new or changed bash functions, variables, or aliases since marks occurred."$'\n'"In general, you will add \`{fn} --profile\` at the end of your \`.bashrc\` file, and you will add \`{fn} --developer\` at the *start* of your \`developer.sh\` before you define anything."$'\n'"Argument: --verbose - Flag. Optional. Be verbose about what the function is doing."$'\n'"Argument: --list - Flag. Optional. Show the list of what has changed since the first invocation."$'\n'"Argument: --profile - Flag. Optional. Mark the end of profile definitions."$'\n'"Argument: --developer - Flag. Optional. Mark the start of developer definitions."$'\n'"stdout: list of function|alias|environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/developer.sh"
-sourceHash="fa87e29b8420fca35c825c744db0d1532036f8cc"
+sourceHash="330aa9921ba19526d3791ad22fc685712858f6b7"
 stdout="list of function|alias|environment"$'\n'""
 summary="Track changes to the bash environment. WIth no arguments this"
 summaryComputed="true"

@@ -39,8 +39,8 @@ nodeInstall() {
   __nodeInstall_corepackEnable "$handler" || return $?
 }
 _nodeInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __nodeInstall_corepackEnable() {
@@ -91,8 +91,8 @@ nodeUninstall() {
   statusMessage timingReport "$start" "Uninstalled $name in" || return $?
 }
 _nodeUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run an action using the current node package manager
@@ -157,8 +157,8 @@ nodePackageManager() {
   catchEnvironment "$handler" "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || return $?
 }
 _nodePackageManager() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installs the selected package manager for node
@@ -177,8 +177,8 @@ nodePackageManagerInstall() {
   catchEnvironment "$handler" "$method" "$@" || return $?
 }
 _nodePackageManagerInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installs the selected package manager for node
@@ -196,8 +196,8 @@ nodePackageManagerUninstall() {
   catchEnvironment "$handler" "$method" "$@" || return $?
 }
 _nodePackageManagerUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is the passed node package manager name valid?
@@ -235,6 +235,6 @@ nodePackageManagerValid() {
   done
 }
 _nodePackageManagerValid() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

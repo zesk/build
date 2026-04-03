@@ -20,8 +20,8 @@ pathIsAbsolute() {
   done
 }
 _pathIsAbsolute() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: directory - Directory. Required. Directory to change to prior to running command.
@@ -63,8 +63,8 @@ directoryChange() {
   throwArgument "$handler" "Missing command" || return $?
 }
 _directoryChange() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -97,8 +97,8 @@ directoryClobber() {
   catchEnvironment "$handler" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -143,8 +143,8 @@ fileDirectoryRequire() {
   directoryRequire --handler "$handler" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
 }
 _fileDirectoryRequire() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -172,8 +172,8 @@ fileDirectoryExists() {
   done
 }
 _fileDirectoryExists() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -240,8 +240,8 @@ directoryRequire() {
   [ ${#directories[@]} -gt 0 ] || throwArgument "$handler" "Need at least one $noun" || return $?
 }
 _directoryRequire() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: directory - Directory. Optional. Directory to check if empty.
@@ -270,8 +270,8 @@ directoryIsEmpty() {
   done
 }
 _directoryIsEmpty() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Given a path to a file, compute the path back up to the top in reverse (../..)
@@ -299,8 +299,8 @@ directoryRelativePath() {
   done
 }
 _directoryRelativePath() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)
@@ -311,8 +311,8 @@ directoryParent() {
   __directoryParent "_${FUNCNAME[0]}" "$@"
 }
 _directoryParent() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Utility for specific implementations of `directoryParent`

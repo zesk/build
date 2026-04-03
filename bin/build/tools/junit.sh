@@ -32,8 +32,8 @@ junitOpen() {
   catchReturn "$handler" __xmlTagOpen testsuites "$@" name="" tests=0 failures=0 errors=0 skipped=0 assertions=0 time=0 timestamp="$(date +%FT%T)" || return $?
 }
 _junitOpen() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Close tag for `testsuites`
@@ -45,8 +45,8 @@ junitClose() {
   catchReturn "$handler" __xmlTagClose testsuites "$@" || return $?
 }
 _junitClose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Open tag for `testsuite`
@@ -73,8 +73,8 @@ junitSuiteOpen() {
   catchReturn "$handler" __xmlTagOpen testsuite "$@" name || return $?
 }
 _junitSuiteOpen() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Close tag for `testsuite`
@@ -86,8 +86,8 @@ junitSuiteClose() {
   catchReturn "$handler" __xmlTagClose testsuite "$@" || return $?
 }
 _junitSuiteClose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Full properties output. Properties are output depending on content containing a newline or not.
@@ -111,8 +111,8 @@ junitProperties() {
   catchReturn "$handler" __xmlTagClose properties || return $?
 }
 _junitProperties() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # DOC TEMPLATE: --help 1
@@ -149,8 +149,8 @@ junitPropertyList() {
   done
 }
 _junitPropertyList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Open tag for `system-out` - test output
@@ -162,8 +162,8 @@ junitSystemOutputOpen() {
   catchReturn "$handler" __xmlTagOpen system-out || return $?
 }
 _junitSystemOutputOpen() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Close tag for `system-out` - test output
@@ -175,8 +175,8 @@ junitSystemOutputClose() {
   catchReturn "$handler" __xmlTagClose system-out || return $?
 }
 _junitSystemOutputClose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Open tag for `system-err` - test errors
@@ -188,8 +188,8 @@ junitSystemErrorOpen() {
   catchReturn "$handler" __xmlTagOpen system-err || return $?
 }
 _junitSystemErrorOpen() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Close tag for `system-err` - test errors
@@ -201,8 +201,8 @@ junitSystemErrorClose() {
   catchReturn "$handler" __xmlTagClose system-err || return $?
 }
 _junitSystemErrorClose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Open tag for `testcase` - Test case
@@ -224,8 +224,8 @@ junitTestCaseOpen() {
   catchReturn "$handler" __xmlTagOpen testcase "$@" || return $?
 }
 _junitTestCaseOpen() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Close tag for `testcase` - Test case
@@ -237,8 +237,8 @@ junitTestCaseClose() {
   catchReturn "$handler" __xmlTagClose testcase || return $?
 }
 _junitTestCaseClose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Output test skipped XML
@@ -250,8 +250,8 @@ junitTestCaseSkipped() {
   catchReturn "$handler" __xmlTag skipped "$@" || return $?
 }
 _junitTestCaseSkipped() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Open tag for `failure` - test failed
@@ -272,8 +272,8 @@ junitTestCaseFailureOpen() {
   catchReturn "$handler" __xmlTagOpen failure "$@" || return $?
 }
 _junitTestCaseFailureOpen() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Close tag for `failure` - test failed
@@ -285,8 +285,8 @@ junitTestCaseFailureClose() {
   catchReturn "$handler" __xmlTagClose failure || return $?
 }
 _junitTestCaseFailureClose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Open tag for `error` - test error output
@@ -302,8 +302,8 @@ junitTestCaseErrorOpen() {
   catchReturn "$handler" __xmlTagOpen error "$@" || return $?
 }
 _junitTestCaseErrorOpen() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Close tag for `error` - test error output
@@ -315,6 +315,6 @@ junitTestCaseErrorClose() {
   catchReturn "$handler" __xmlTagClose error || return $?
 }
 _junitTestCaseErrorClose() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

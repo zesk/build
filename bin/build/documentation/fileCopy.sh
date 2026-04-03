@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--map - Flag. Optional. Map environment values into file before copying."$'\n'"--escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges."$'\n'"source - File. Required. Source path"$'\n'"destination - File. Required. Destination path"$'\n'""
 base="interactive.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Copy file from source to destination"$'\n'"Supports mapping the file using the current environment, or escalated privileges."$'\n'"Argument: --map - Flag. Optional. Map environment values into file before copying."$'\n'"Argument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges."$'\n'"Argument: source - File. Required. Source path"$'\n'"Argument: destination - File. Required. Destination path"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Failed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Failed"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="Copy file from source to destination"
 summaryComputed="true"
 usage="fileCopy [ --map ] [ --escalate ] source destination"

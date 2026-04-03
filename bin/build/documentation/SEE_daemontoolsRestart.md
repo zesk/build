@@ -1,0 +1,1 @@
+[daemontoolsRestart]({rel}tools/daemontools.md#daemontoolsrestart) - Restart the daemontools processes from scratch. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L392))

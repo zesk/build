@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="brew.sh"
@@ -12,7 +12,7 @@ platform="Darwin"$'\n'""
 rawComment="Install Homebrew"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Platform: Darwin"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/brew.sh"
-sourceHash="b6fa130b5ff83c9dcdf9d641248cbcbb66aaf7fa"
+sourceHash="4e97946a0feaf9f5cc837b32dba9c9c33166bab7"
 summary="Install Homebrew"
 summaryComputed="true"
 usage="brewInstall [ --help ]"

@@ -133,5 +133,5 @@ __awsS3Upload() {
 
   catchEnvironment "$handler" aws "${profileArgs[@]+"${profileArgs[@]}"}" s3 sync --delete --quiet "$stagePath" "$target/" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-  statusMessage timingReport "$start" "$(decorate label "$(buildEnvironmentGet APPLICATION_NAME)") published $(pluralWord "${#fileList[@]}" items) to $(decorate value "$target")"
+  statusMessage timingReport "$start" "$(decorate label "$(buildEnvironmentGet APPLICATION_NAME)") published $(localePluralWord "${#fileList[@]}" items) to $(decorate value "$target")"
 }

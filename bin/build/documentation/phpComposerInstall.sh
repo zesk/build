@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="php-composer.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="Install composer for PHP"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/php-composer.sh"
-sourceHash="4feb405ace022fff0d783463e63f8fef573acc4a"
+sourceHash="e1eba180ec90c7cf95b2eb6404840e770524d66b"
 summary="Install composer for PHP"
 summaryComputed="true"
 usage="phpComposerInstall"

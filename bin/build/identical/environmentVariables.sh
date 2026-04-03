@@ -12,7 +12,7 @@
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Requires: declare grep cut usageDocument __help
+# Requires: declare grep cut bashDocumentation __help
 environmentVariables() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -22,6 +22,6 @@ environmentVariables() {
 }
 _environmentVariables() {
   true || environmentVariables --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

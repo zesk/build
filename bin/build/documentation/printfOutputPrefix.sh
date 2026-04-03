@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Pipe to output some text before any output, otherwise, nothing is output."$'\n'"Argument: ... - Arguments. Required. printf arguments."$'\n'"Without arguments, displays help."$'\n'"stdin: text (Optional)"$'\n'"stdout: printf output and then the stdin text IFF stdin text is non-blank"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="80ad24738a32b8002bafa685f78fc47389363a7d"
+sourceHash="5f35ac6dcf31b9c284706fdda354d1d8408dde2c"
 stdin="text (Optional)"$'\n'""
 stdout="printf output and then the stdin text IFF stdin text is non-blank"$'\n'""
 summary="Pipe to output some text before any output, otherwise, nothing"

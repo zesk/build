@@ -59,8 +59,8 @@ developerAnnounce() {
   ! $debugFlag || [ "${#unknowns[@]}" -eq 0 ] || decorate info "Unknowns: $(decorate error "${#unknowns[@]}")"
 }
 _developerAnnounce() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Undo a set of developer functions or aliases
@@ -84,8 +84,8 @@ developerUndo() {
   done
 }
 _developerUndo() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Track changes to the bash environment. WIth no arguments this function returns the new or changed bash functions, variables, or aliases since marks occurred.
@@ -164,8 +164,8 @@ __developerTrackAliases() {
   alias -p | sort -u | tee "$path/alias.source" | textRemoveFields 1 | cut -d = -f 1 >"$path/alias" || return $?
 }
 _developerTrack() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Add a development link to the local version of Zesk Build for testing in local projects.
@@ -200,8 +200,8 @@ buildDevelopmentLink() {
   developerDevelopmentLink --handler "$handler" --binary "install-bin-build.sh" --path "bin/build" --development-path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "${__saved[@]+"${__saved[@]}"}"
 }
 _buildDevelopmentLink() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Link a current library with another version being developed nearby using a link
@@ -362,8 +362,8 @@ developerDevelopmentLink() {
 }
 
 _developerDevelopmentLink() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installer can fall back

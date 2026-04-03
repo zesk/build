@@ -31,7 +31,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
-# Requires: throwArgument sort usageDocument decorate
+# Requires: throwArgument sort bashDocumentation decorate
 versionSort() {
   local handler="_${FUNCNAME[0]}"
 
@@ -60,8 +60,8 @@ versionSort() {
 }
 _versionSort() {
   true || versionSort --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the current IP address of a host
@@ -87,8 +87,8 @@ ipLookup() {
   catchReturn "$handler" urlFetch "$url" - | catchEnvironment "$handler" "${pp[@]}" || return $?
 }
 _ipLookup() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # For security one should update keys every N days
@@ -175,14 +175,14 @@ isUpToDate() {
     case "$daysAgo" in
     0) timeText="Today" ;;
     1) timeText="Yesterday" ;;
-    *) timeText="$(pluralWord $daysAgo day) ago" ;;
+    *) timeText="$(localePluralWord $daysAgo day) ago" ;;
     esac
     labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate red --)" "$label" "EXPIRED $timeText"
     return 1
   fi
   daysAgo=$((-daysAgo))
   if [ $daysAgo -lt 14 ]; then
-    labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate orange --)" "${name}expires on $(decorate code "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+    labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate orange --)" "${name}expires on $(decorate code "$expireDate"), in " "$daysAgo $(localePlural $daysAgo day days)"
   elif [ $daysAgo -lt 30 ]; then
     # decorate info "keyDate $keyDate"
     # decorate info "accessKeyTimestamp $accessKeyTimestamp"
@@ -191,12 +191,12 @@ isUpToDate() {
       "$(decorate warning "${name}expires on")" \
       "$(decorate red "$expireDate")" \
       "$(decorate warning ", in")" \
-      "$(decorate magenta "$(pluralWord $daysAgo day)")"
+      "$(decorate magenta "$(localePluralWord $daysAgo day)")"
     return 0
   fi
   return 0
 }
 _isUpToDate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

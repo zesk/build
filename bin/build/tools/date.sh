@@ -34,8 +34,8 @@ dateToFormat() {
   #  fi
 }
 _dateToFormat() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -53,8 +53,8 @@ dateToTimestamp() {
   dateToFormat "$1" %s
 }
 _dateToTimestamp() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -103,8 +103,8 @@ dateFromTimestamp() {
   __dateFromTimestamp "$value" "$format" "$isUTC"
 }
 _dateFromTimestamp() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Returns yesterday's date, in YYYY-MM-DD format. (same as `%F`)
@@ -128,8 +128,8 @@ dateYesterday() {
   dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
 }
 _dateYesterday() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Tomorrow's date in UTC
@@ -153,8 +153,8 @@ dateTomorrow() {
   dateFromTimestamp "$((ts + 86400))" %F
 }
 _dateTomorrow() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Today's date in UTC
@@ -175,8 +175,8 @@ dateToday() {
   date "${uu[@]+"${uu[@]}"}" +%F
 }
 _dateToday() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is a date valid?
@@ -202,8 +202,8 @@ dateValid() {
   catchEnvironment "$handler" [ "${day#0}" -le 31 ] || return $?
 }
 _dateValid() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Add or subtract days from a text date
@@ -237,6 +237,6 @@ dateAdd() {
   done
 }
 _dateAdd() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

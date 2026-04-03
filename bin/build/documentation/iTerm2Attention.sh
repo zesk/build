@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Attract the operator"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing."$'\n'"Argument: action. String. Action to attract attention: \`true\`, \`false\` or \`!\`"$'\n'"Actions:"$'\n'"- \`true\` - start making dock icon bounce"$'\n'"- \`false\` - stop making dock icon bounce"$'\n'"- \`!\` - Show fireworks at cursor"$'\n'"- \`fireworks\` - Show fireworks at cursor"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="e639d19b7d6de0e83e7f1fbbac181f503559be56"
+sourceHash="91a65f03915e4e3420e13242ad0b50d50652de48"
 summary="Attract the operator"
 summaryComputed="true"
 usage="iTerm2Attention [ --ignore | -i ] [ --verbose | -v ] [ action. String. Action to attract attention: \`true\`, \`false\` or \`!\` ]"

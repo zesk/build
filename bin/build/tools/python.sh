@@ -24,8 +24,8 @@ pythonInstall() {
   fi
 }
 _pythonInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Uninstall python
@@ -37,8 +37,8 @@ pythonUninstall() {
   fi
 }
 _pythonUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Utility to upgrade pip correctly
@@ -72,8 +72,8 @@ pipUpgrade() {
   PIP_ROOT_USER_ACTION=ignore catchReturn "$handler" pipWrapper "${pp[@]+"${pp[@]}"}" install --upgrade pip || return $?
 }
 _pipUpgrade() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Utility to install python dependencies via pip
@@ -124,8 +124,8 @@ pipInstall() {
   statusMessage --last timingReport "$start" "Installed $prettyNames in"
 }
 _pipInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Utility to uninstall python dependencies via pip
@@ -191,8 +191,8 @@ pipUninstall() {
   statusMessage --last timingReport "$start" "Uninstalled $showNames in"
 }
 _pipUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run pip whether it is installed as a module or as a binary
@@ -236,8 +236,8 @@ pipWrapper() {
   fi
 }
 _pipWrapper() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is a package installed for python?
@@ -283,8 +283,8 @@ pythonPackageInstalled() {
   done
 }
 _pythonPackageInstalled() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them.
@@ -342,6 +342,6 @@ pythonVirtual() {
   catchReturn "$handler" pipWrapper --bin "$venv/bin/pip" install "${pp[@]}" || returnClean $? "${clean[@]}" || return $?
 }
 _pythonVirtual() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

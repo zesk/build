@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="source - File. Required. File where the function is defined."$'\n'"lineNumber - String. Required. Previously computed line number of the function."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -8,11 +8,11 @@ description="Extract a bash comment from a file. Excludes lines containing the f
 file="bin/build/tools/bash.sh"
 fn="bashFileComment"
 foundNames=([0]="argument" [1]="requires")
-rawComment="Extract a bash comment from a file. Excludes lines containing the following tokens:"$'\n'"Argument: source - File. Required. File where the function is defined."$'\n'"Argument: lineNumber - String. Required. Previously computed line number of the function."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: head bashFinalComment"$'\n'"Requires: __help usageDocument"$'\n'""$'\n'""
-requires="head bashFinalComment"$'\n'"__help usageDocument"$'\n'""
+rawComment="Extract a bash comment from a file. Excludes lines containing the following tokens:"$'\n'"Argument: source - File. Required. File where the function is defined."$'\n'"Argument: lineNumber - String. Required. Previously computed line number of the function."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: head bashFinalComment"$'\n'"Requires: __help bashDocumentation"$'\n'""$'\n'""
+requires="head bashFinalComment"$'\n'"__help bashDocumentation"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="14651708d1923cc3d3f7101bb8290fae53383553"
+sourceHash="b167dcea2dca6c84836b45fc4f3186065164b093"
 summary="Extract a bash comment from a file. Excludes lines containing"
 summaryComputed="true"
 usage="bashFileComment source lineNumber [ --help ]"

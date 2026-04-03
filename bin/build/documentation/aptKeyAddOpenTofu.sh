@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="tofu.sh"
@@ -12,11 +12,11 @@ rawComment="Add keys to enable apt to download tofu directly from opentofu.org"$
 return_code="1 - if environment is awry"$'\n'"0 - All good to install terraform"$'\n'""
 see="aptKeyRemoveOpenTofu"$'\n'""
 sourceFile="bin/build/tools/tofu.sh"
-sourceHash="43ee145bf6b54d6972866add37ebf9eda9c165df"
+sourceHash="101f4a7ee4840fdcd370adfdc29d30336e07ac86"
 summary="Add keys to enable apt to download tofu directly from"
 summaryComputed="true"
 usage="aptKeyAddOpenTofu [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='➡️ "__usageDocumentCached" "_usageDocument" "/Users/kent/marketacumen/build" "aptKeyAddOpenTofu" "0"'$'\n'''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]maptKeyAddOpenTofu'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if environment is awry'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All good to install terraform'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]maptKeyAddOpenTofu'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if environment is awry'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All good to install terraform'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='➡️ "__usageDocumentCached" "_usageDocument" "/Users/kent/marketacumen/build" "aptKeyAddOpenTofu" "0"'$'\n''Usage: aptKeyAddOpenTofu [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- 1 - if environment is awry'$'\n''- 0 - All good to install terraform'$'\n'''
+helpPlain='Usage: aptKeyAddOpenTofu [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- 1 - if environment is awry'$'\n''- 0 - All good to install terraform'$'\n'''

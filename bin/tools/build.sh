@@ -25,8 +25,8 @@ buildStepInitialize() {
   catchReturn "$handler" environmentFileLoad "$buildEnv" --execute dumpEnvironment || return $?
 }
 _buildStepInitialize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __buildDebugColors() {
@@ -180,10 +180,10 @@ __buildBuild() {
   fi
   envFile="$home/.build.env"
   environmentOutput >"$envFile"
-  decorate info "Wrote $(decorate file "$envFile") $(pluralWord "$(fileSize "$envFile")" byte)" || return $?
+  decorate info "Wrote $(decorate file "$envFile") $(localePluralWord "$(fileSize "$envFile")" byte)" || return $?
   statusMessage --last timingReport "$start" "Built successfully in"
 }
 ___buildBuild() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

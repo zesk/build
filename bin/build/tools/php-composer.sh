@@ -96,8 +96,8 @@ phpComposer() {
   $quietFlag || statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }
 _phpComposer() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install composer for PHP
@@ -113,8 +113,8 @@ phpComposerInstall() {
   catchEnvironment "$handler" chmod +x "$target" || returnClean $? "$tempBinary" || return $?
 }
 _phpComposerInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # For any project, ensures the `version` field in `composer.json` matches `hookRun version-current`
@@ -175,6 +175,6 @@ phpComposerSetVersion() {
   catchEnvironment "$handler" jsonSetValue "${aa[@]+"${aa[@]}"}" --key version --generator hookVersionCurrent --filter versionNoVee "$composerJSON" || return $?
 }
 _phpComposerSetVersion() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

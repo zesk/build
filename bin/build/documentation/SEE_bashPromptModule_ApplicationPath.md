@@ -1,0 +1,1 @@
+[bashPromptModule_ApplicationPath]({rel}tools/prompt.md#bashpromptmodule_applicationpath) - Show current application and path as a badge in iTerm2 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt/modules/ApplicationPath.sh#L9))

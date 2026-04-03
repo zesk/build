@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="mariadb.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="stdin" [2]="stdout")
 rawComment="Summary: Clean mariadb dumps for import"$'\n'"Clean mariadb dumps of the dreaded code \`/*!999999\\- enable the sandbox mode */\`"$'\n'"stdin: mariadbDump"$'\n'"stdout: mariadbDump (cleaned)"$'\n'"- [Official documentation](https://mariadb.org/mariadb-dump-file-compatibility-change/)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/mariadb.sh"
-sourceHash="7926017949193ef4745e95d112978ae3318460f5"
+sourceHash="43f86b5d19307706668a232e37fd6752196bb71b"
 stdin="mariadbDump"$'\n'""
 stdout="mariadbDump (cleaned)"$'\n'""
 summary="Clean mariadb dumps for import"$'\n'""

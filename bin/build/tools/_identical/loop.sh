@@ -73,7 +73,7 @@ _identicalCheckInsideLoop() {
     if [ -n "$tokenFileName" ]; then
       # Bad file
       if [ ${#repairSources[@]} -gt 0 ]; then
-        statusMessage --last decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\" (${#repairSources[@]} repair $(plural ${#repairSources[@]} directory directories))"
+        statusMessage --last decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\" (${#repairSources[@]} repair $(localePlural ${#repairSources[@]} directory directories))"
         # statusMessage --last decorate each quote __identicalCheckRepair "$handler" "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"
         if ! __identicalCheckRepair "$handler" "$prefix" "$token" "$tokenFileName" "$searchFile" "${repairSources[@]}"; then
           badFiles+=("$tokenFileName")

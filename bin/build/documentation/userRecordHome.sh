@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""
 base="user.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="stdout" [2]="file" [3]="argument")
 rawComment="Summary: Quick user database query of the user home directory"$'\n'"Look user up, output user home directory"$'\n'"stdout: \`Directory\`. The user home directory."$'\n'"File: /etc/passwd - Used for the default user database."$'\n'"Argument: user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"Argument: database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/user.sh"
-sourceHash="3afe5553f0bdff164dee304b54ad4be4444f7c32"
+sourceHash="97b162de483a7271940c92af88d7646f5e426e66"
 stdout="\`Directory\`. The user home directory."$'\n'""
 summary="Quick user database query of the user home directory"$'\n'""
 usage="userRecordHome [ user ] [ database ]"

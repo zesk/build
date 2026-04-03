@@ -71,16 +71,16 @@ __documentationTemplateUpdateUnlinked() {
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   if [ -f "$template" ] && filesAreIdentical "$template" "$template.$$"; then
-    statusMessage decorate info "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
+    statusMessage decorate info "Not updating $template - unchanged $total unlinked $(localePlural "$total" function functions)"
     catchEnvironment "$handler" rm -f "$template.$$" || return $?
   else
     catchEnvironment "$handler" mv -f "$template.$$" "$template" || return $?
-    statusMessage decorate info "Updated $(decorate file "$template") with $total unlinked $(plural "$total" function functions)"
+    statusMessage decorate info "Updated $(decorate file "$template") with $total unlinked $(localePlural "$total" function functions)"
   fi
 }
 ___documentationTemplateUpdateUnlinked() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -101,8 +101,8 @@ _buildDocumentation_MergeWithDocsBranch() {
   catchEnvironment "$handler" git checkout "$branch" || return $?
 }
 __buildDocumentation_MergeWithDocsBranch() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -129,7 +129,7 @@ _buildDocumentation_Recommit() {
   fi
 }
 __buildDocumentation_Recommit() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _buildDocumentationGenerateEnvironment() {

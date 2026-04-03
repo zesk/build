@@ -47,8 +47,8 @@ buildDebugEnabled() {
   return 1
 }
 _buildDebugEnabled() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # __buildDebugEnable x2 (comment) (code) buildDebugStart x1 (comment)
@@ -93,8 +93,8 @@ buildDebugStart() {
   __buildDebugEnable
 }
 _buildDebugStart() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -111,8 +111,8 @@ buildDebugStop() {
   __buildDebugDisable
 }
 _buildDebugStop() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -126,8 +126,8 @@ isBashDebug() {
   return 1
 }
 _isBashDebug() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Place this in code where you suspect an infinite loop occurs
@@ -168,8 +168,8 @@ bashRecursionDebug() {
   catchEnvironment "$handler" debuggingStack >"$cacheFile" || return $?
 }
 _bashRecursionDebug() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Adds a trap to capture the debugging stack on interrupt
@@ -238,8 +238,8 @@ bashDebugInterruptFile() {
 }
 _bashDebugInterruptFile() {
   ! false || bashDebugInterruptFile --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __bashDebugInterruptFile() {
@@ -280,8 +280,8 @@ isErrorExit() {
 }
 _isErrorExit() {
   ! false || isErrorExit --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run command and detect any global or local leaks
@@ -358,8 +358,8 @@ plumber() {
   return "$__result"
 }
 _plumber() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List files in paths with a checksum, sorted
@@ -488,8 +488,8 @@ housekeeper() {
   return "$__result"
 }
 _housekeeper() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check output for content and trigger environment error if found
@@ -543,18 +543,18 @@ outputTrigger() {
     lineCount=$((lineCount + 1))
   done
   if [ ! -s "$tempOutput" ]; then
-    ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$(pluralWord "$lineCount" line)")" || :
+    ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$(localePluralWord "$lineCount" line)")" || :
     catchEnvironment "$handler" rm -rf "$tempOutput" || return $?
     return 0
   fi
   catchEnvironment "$handler" cat "$tempOutput" || returnClean $? "${clean[@]}" || return $?
-  ! $verbose || throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$(pluralWord "$lineCount" line)"): " "$@" || returnClean $? "${clean[@]}" || return $?
+  ! $verbose || throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$(localePluralWord "$lineCount" line)"): " "$@" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -rf "$tempOutput" || return $?
   return 1
 }
 _outputTrigger() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __filesOpenList() {
@@ -598,6 +598,6 @@ filesOpenStatus() {
   done
 }
 _filesOpenStatus() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

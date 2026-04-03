@@ -21,7 +21,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
-# Requires: throwArgument sort usageDocument decorate
+# Requires: throwArgument sort bashDocumentation decorate
 versionSort() {
   local handler="_${FUNCNAME[0]}"
 
@@ -50,6 +50,6 @@ versionSort() {
 }
 _versionSort() {
   true || versionSort --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

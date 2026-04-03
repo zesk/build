@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="example" [4]="summary")
 rawComment="Trim spaces and only spaces from the right side of a string passed as arguments or a pipe"$'\n'"Argument: text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input."$'\n'"stdin: Reads lines from stdin until EOF"$'\n'"stdout: Outputs trimmed lines"$'\n'"Example:     {fn} \"\$token\""$'\n'"Example:     grep \"\$tokenPattern\" | {fn} > \"\$tokensFound\""$'\n'"Summary: Trim whitespace of a bash argument"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="80ad24738a32b8002bafa685f78fc47389363a7d"
+sourceHash="5f35ac6dcf31b9c284706fdda354d1d8408dde2c"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs trimmed lines"$'\n'""
 summary="Trim whitespace of a bash argument"$'\n'""

@@ -48,7 +48,7 @@ An example:
         ..
     }
     _myFunction() {
-       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+       bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
 Extensions to the basic `handler` model typically prefix additional parameters before the `returnCode`.
@@ -178,7 +178,7 @@ to generate (as the code reads the script to extract the comment):
           # ...
       }
       _myCoolScript() {
-         usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+         bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
       }
   
       myCoolScript "$@"
@@ -232,7 +232,7 @@ Similarly the same can be converted into our [amazing online documentation](/).
 
 ### Documentation Comment Variables and their meanings
 
-The following variables are formatted and used in the `function help` via `usageDocument` as well as in the
+The following variables are formatted and used in the `function help` via `bashDocumentation` as well as in the
 documentation:
 
 - `fn` - String. Optional. The function name if not specified

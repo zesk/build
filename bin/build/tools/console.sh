@@ -80,8 +80,8 @@ consoleGetColor() {
 
 }
 _consoleGetColor() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Output the brightness of the background color of the console as a number between 0 and 100
@@ -99,8 +99,8 @@ consoleBrightness() {
   fi
 }
 _consoleBrightness() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -125,8 +125,8 @@ consoleConfigureColorMode() {
   printf -- "%s\n" "$colorMode"
 }
 _consoleConfigureColorMode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Modify the decoration environment for light or dark.
@@ -152,8 +152,8 @@ consoleConfigureDecorate() {
   printf "%s\n" "$mode"
 }
 _consoleConfigureDecorate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set the title of the window for the console
@@ -163,8 +163,8 @@ consoleSetTitle() {
   printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set the title of the window for the console to "user@hostname: pwd"
@@ -176,8 +176,8 @@ consoleDefaultTitle() {
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
 _consoleDefaultTitle() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: console hyperlinks
@@ -195,8 +195,8 @@ consoleLink() {
   printf -- "${OSC8}%s${ST}%s${OSC8}${ST}" "$link" "$text"
 }
 _consoleLink() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Are console links (likely) supported?
@@ -214,8 +214,8 @@ consoleLinksSupported() {
 }
 _consoleLinksSupported() {
   ! false || consoleLinksSupported --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output a local file link to the console
@@ -254,8 +254,8 @@ consoleFileLink() {
   fi
 }
 _consoleFileLink() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: decorate file links

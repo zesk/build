@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Sends a notification message via Mac OS X from iTerm2"$'\n'"Argument: message - String. Required. Text to display."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="e639d19b7d6de0e83e7f1fbbac181f503559be56"
+sourceHash="91a65f03915e4e3420e13242ad0b50d50652de48"
 summary="Sends a notification message via Mac OS X from iTerm2"
 summaryComputed="true"
 usage="iTerm2Notify message"

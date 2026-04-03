@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="\`prefix\` - Optional prefix for token search, defaults to \`{\` (same as \`map.sh\`)"$'\n'"\`suffix\` - Optional suffix for token search, defaults to \`}\` (same as \`map.sh\`)"$'\n'""
 base="map.sh"
@@ -14,7 +14,7 @@ rawComment="Argument: \`prefix\` - Optional prefix for token search, defaults to
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 short_description="list mappable variables in a file (without prefix or suffix)"$'\n'""
 sourceFile="bin/build/tools/map.sh"
-sourceHash="9279ce02c4d1ffc6fc2f2c7afa193faf3a8158f6"
+sourceHash="4c91deb7564d353356e6832445db742dc8a696de"
 summary="undocumented"
 usage="mapTokens [ \`prefix\` ] [ \`suffix\` ]"
 # shellcheck disable=SC2016

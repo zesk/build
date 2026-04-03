@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="io.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="example" [1]="argument")
 rawComment="Example:     {fn} < \"\$stateFile\""$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"List names of environment values set in a bash state file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/io.sh"
-sourceHash="0f1011676755f0412e216127710dc6f43e456014"
+sourceHash="0bafb086eee4c0f0080695a1abdfd38ce25a64b7"
 summary="List names of environment values set in a bash state"
 summaryComputed="true"
 usage="environmentNames [ --help ]"

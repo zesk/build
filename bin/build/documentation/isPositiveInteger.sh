@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="value - EmptyString. Required. Value to check if it is an unsigned integer"$'\n'""
 base="type.sh"
@@ -8,11 +8,11 @@ description="Test if an argument is a positive integer (non-zero)"$'\n'"Takes on
 file="bin/build/tools/type.sh"
 fn="isPositiveInteger"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
-rawComment="Test if an argument is a positive integer (non-zero)"$'\n'"Takes one argument only."$'\n'"Argument: value - EmptyString. Required. Value to check if it is an unsigned integer"$'\n'"Return Code: 0 - if it is a positive integer"$'\n'"Return Code: 1 - if it is not a positive integer"$'\n'"Requires: catchArgument isUnsignedInteger usageDocument"$'\n'""$'\n'""
-requires="catchArgument isUnsignedInteger usageDocument"$'\n'""
+rawComment="Test if an argument is a positive integer (non-zero)"$'\n'"Takes one argument only."$'\n'"Argument: value - EmptyString. Required. Value to check if it is an unsigned integer"$'\n'"Return Code: 0 - if it is a positive integer"$'\n'"Return Code: 1 - if it is not a positive integer"$'\n'"Requires: catchArgument isUnsignedInteger bashDocumentation"$'\n'""$'\n'""
+requires="catchArgument isUnsignedInteger bashDocumentation"$'\n'""
 return_code="0 - if it is a positive integer"$'\n'"1 - if it is not a positive integer"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="cf046d7ea9b582a95b5cf64eaaa0310238a19003"
+sourceHash="31b62907df0050b8df8d06ec27701b9721bf81aa"
 summary="Test if an argument is a positive integer (non-zero)"
 summaryComputed="true"
 usage="isPositiveInteger value"

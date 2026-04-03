@@ -13,7 +13,7 @@
 # Argument: function - Function. Required. Function to call; first argument will be `handler`.
 # Argument ... - Arguments. Optional. Additional arguments to the function.
 __usageLoader() {
-  __buildFunctionLoader __usageDocument usage "$@"
+  __buildFunctionLoader __bashDocumentation usage "$@"
 }
 
 # Summary: Universal error handler for functions (with formatting)
@@ -30,15 +30,15 @@ __usageLoader() {
 # Simplifies documentation and keeps it with the code.
 #
 # Environment: *BUILD_DEBUG* - Add `fast-usage` to make this quicker when you do not care about usage/failure.
-# BUILD_DEBUG: fast-usage - `usageDocument` does not output formatted help for performance reasons
+# BUILD_DEBUG: fast-usage - `bashDocumentation` does not output formatted help for performance reasons
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
-usageDocument() {
-  #  usageDocumentSimple "$@"
+bashDocumentation() {
+  #  bashSimpleDocumentation "$@"
   __usageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_usageDocument() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_bashDocumentation() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL __usageMessage 39
@@ -103,7 +103,7 @@ __functionSettings() {
   return 1
 }
 
-# IDENTICAL __usageDocumentCached 31
+# IDENTICAL __bashDocumentationCached 31
 
 # Summary: Display cached usage for a function
 # Argument: handler - Function. Required.
@@ -114,7 +114,7 @@ __functionSettings() {
 # Environment: BUILD_COLORS
 # Environment: BUILD_DOCUMENTATION_PATH
 # Requires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings
-__usageDocumentCached() {
+__bashDocumentationCached() {
   local handler="$1" && shift
   local home="$1" && shift
   local functionName="$1" && shift
@@ -143,15 +143,15 @@ __usageDocumentCached() {
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - String. Optional. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached
-usageDocumentSimple() {
+# Requires: bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached
+bashSimpleDocumentation() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" && shift 3
 
   [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
-  if ! __usageDocumentCached "$handler" "${BUILD_HOME-}" "${functionName}" "$returnCode" "$@"; then
+  if ! __bashDocumentationCached "$handler" "${BUILD_HOME-}" "${functionName}" "$returnCode" "$@"; then
     local color="info" icon="❌" skip=false && case "$returnCode" in 0) icon="🏆" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac
     $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate BOLD "$color" "$*")"
     export BUILD_HOME
@@ -165,9 +165,9 @@ usageDocumentSimple() {
   [ "$returnCode" -eq 0 ] || exec 1>&3 3>&-
   return "$returnCode"
 }
-_usageDocumentSimple() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_bashSimpleDocumentation() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Check that one or more binaries are installed
@@ -192,8 +192,8 @@ executableRequire() {
   done
 }
 _executableRequire() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -220,6 +220,6 @@ environmentRequire() {
   done
 }
 _environmentRequire() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

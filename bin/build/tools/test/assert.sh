@@ -38,7 +38,7 @@ __resultTextCleaned() {
       # Truncate to something readable
       [ "$length" -lt "$max" ] || text="${text:0:$half} ... ${text:$((length - half)):$((length - 1))}"
       # Hide newlines
-      newlineHide "$text"
+      stringHideNewlines "$text"
     fi
   fi
 }
@@ -57,7 +57,7 @@ __resultTextSizeColor() {
   text="$(__resultTextCleaned "$*")"
   local length="${#text}"
 
-  printf -- "%s %s\n" "$(decorate "$color" "$text")" "$(decorate subtle "$(textAlignRight 9 "$(pluralWord "$length" char)")")"
+  printf -- "%s %s\n" "$(decorate "$color" "$text")" "$(decorate subtle "$(textAlignRight 9 "$(localePluralWord "$length" char)")")"
 }
 
 ___printResultPair() {
@@ -159,8 +159,8 @@ __assertedFunctions() {
   return 1
 }
 ___assertedFunctions() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -539,7 +539,7 @@ __assertFileContainsHelper() {
 
   if [ "${#failures[@]}" -gt 0 ]; then
     local message
-    message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb $(plural "${#failures[@]}" string):" "$failWhy: $(decorate each code "${failures[@]}")" "$(dumpPipe --tail "$displayName" <"$file")")"
+    message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb $(localePlural "${#failures[@]}" string):" "$failWhy: $(decorate each code "${failures[@]}")" "$(dumpPipe --tail "$displayName" <"$file")")"
     __profileLabel="$__profileLabel failed"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
@@ -549,7 +549,7 @@ __assertFileContainsHelper() {
     returnAssert
   fi
   __profileLabel="$__profileLabel success"
-  _assertSuccess "$handler" "$functionName" "$linePrefix$displayName $verb $(plural "${#successes[@]}" string): \"$(decorate each code "${successes[@]}")\"" || return $?
+  _assertSuccess "$handler" "$functionName" "$linePrefix$displayName $verb $(localePlural "${#successes[@]}" string): \"$(decorate each code "${successes[@]}")\"" || return $?
 }
 
 # Generic formatter

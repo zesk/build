@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Find list of files which do NOT match a specific pattern or patterns and output them"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pattern ... - String. Required.\`grep -e\` Pattern to find in files."$'\n'"Argument: -- - Delimiter. Required. exception."$'\n'"Argument: exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"Argument: -- - Delimiter. Required. file."$'\n'"Argument: file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="c3e7e8b447b49ef6c60b5bfa7abaccf84b3ca4c6"
+sourceHash="738fcd1771dc6ce03a870787b6db46f942c7ff09"
 summary="Find list of files which do NOT match a specific"
 summaryComputed="true"
 usage="fileNotMatches [ --help ] pattern ... -- [ exception ... ] -- file ..."

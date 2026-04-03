@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="processId - Integer. Required. Wait for process ID to exit."$'\n'"--timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever."$'\n'"--signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order."$'\n'"--require - Flag. Optional. Require all processes to be alive upon first invocation."$'\n'""
 base="process.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Wait for processes not owned by this process to exit, and send signals to terminate processes."$'\n'"Argument: processId - Integer. Required. Wait for process ID to exit."$'\n'"Argument: --timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever."$'\n'"Argument: --signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order."$'\n'"Argument: --require - Flag. Optional. Require all processes to be alive upon first invocation."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/process.sh"
-sourceHash="014ba77f9205a3d4e9437278df62669cfe2287a9"
+sourceHash="b6a9cfd5fce10dfb5d863a90e72c35d40b170092"
 summary="Wait for processes not owned by this process to exit,"
 summaryComputed="true"
 usage="processWait processId [ --timeout seconds ] [ --signals signal ] [ --require ]"

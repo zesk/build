@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="number - Float. Optional. Floating point number to convert to integer."$'\n'""
 base="float.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Argument: number - Float. Optional. Floating point number to convert to integer."$'\n'"Convert float to nearest integer (up or down)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/float.sh"
-sourceHash="25bac776a3510ed38395c9aba0e29f9c2fcc90a4"
+sourceHash="a28ec0a966abb8888989d831f5bd12a87511c186"
 summary="Convert float to nearest integer (up or down)"
 summaryComputed="true"
 usage="floatRound [ number ]"

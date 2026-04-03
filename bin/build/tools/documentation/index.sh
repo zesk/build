@@ -169,8 +169,8 @@ _documentationIndexUnlinkedFunctions() {
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }
 __documentationIndexUnlinkedFunctions() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Compute the documentationPath for all functions defined in documentationPath
@@ -229,11 +229,11 @@ __documentationIndexDocumentation() {
   )
   catchEnvironment "$handler" sort -u <"$unsorted" >"$indexFile" || returnClean $? "$indexFile" "$unsorted" || return $?
   total=$(fileLineCount "$indexFile")
-  statusMessage decorate info "$(printf "%s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate cyan "$(pluralWord "$total" "function")")" "for" "$(decorate each file "${sourcePaths[@]}")" "in" "$(timingReport "$start")")"
+  statusMessage decorate info "$(printf "%s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate cyan "$(localePluralWord "$total" "function")")" "for" "$(decorate each file "${sourcePaths[@]}")" "in" "$(timingReport "$start")")"
 }
 ___documentationIndexDocumentation() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Outputs relative path to cacheDirectory for shared handler
@@ -242,6 +242,6 @@ __documentationIndexCache() {
   catchReturn "$handler" documentationBuildCache "index" || return $?
 }
 ___documentationIndexCache() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashSimpleDocumentation 1
+  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

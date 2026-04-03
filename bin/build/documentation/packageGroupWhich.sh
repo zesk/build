@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="binary - String. Required. Binary which will exist in PATH after \`group\` is installed if it does not exist."$'\n'"group - String. Required. Package group."$'\n'""
 base="package.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Install a package group to have a binary installed"$'\n'"Argument: binary - String. Required. Binary which will exist in PATH after \`group\` is installed if it does not exist."$'\n'"Argument: group - String. Required. Package group."$'\n'"Any unrecognized groups are installed using the name as-is."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
+sourceHash="06e25fa25995eb0e6d2d2931f09e11b0a6055bee"
 summary="Install a package group to have a binary installed"
 summaryComputed="true"
 usage="packageGroupWhich binary group"

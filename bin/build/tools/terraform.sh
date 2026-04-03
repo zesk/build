@@ -19,8 +19,8 @@ aptKeyAddHashicorp() {
   catchReturn "$handler" aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
 }
 _aptKeyAddHashicorp() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -36,8 +36,8 @@ aptKeyRemoveHashicorp() {
   catchReturn "$handler" aptKeyRemove hashicorp "$@" || return $?
 }
 _aptKeyRemoveHashicorp() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install terraform binary
@@ -56,8 +56,8 @@ terraformInstall() {
   executableExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Remove terraform binary
@@ -73,6 +73,6 @@ terraformUninstall() {
   catchReturn "$handler" packageUpdate --force || return $?
 }
 _terraformUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

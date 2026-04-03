@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="code - UnsignedInteger. Required. Exit code to return"$'\n'"handler - Function. Required. Failure command, passed remaining arguments and error code."$'\n'"command ... - Callable. Required. Command to run."$'\n'""
 base="_sugar.sh"
@@ -12,7 +12,7 @@ rawComment="Run \`command\`, handle failure with \`handler\` with \`code\` and \
 requires="isUnsignedInteger returnArgument isFunction isCallable"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="1ff9bebad70c8fea8d82a17d32a3d8b9fd324874"
+sourceHash="ffd716b7922cb0074e135ce841a832b800ed594b"
 summary="Run \`command\`, handle failure with \`handler\` with \`code\` and \`command\`"
 summaryComputed="true"
 usage="catchCode code handler command ..."

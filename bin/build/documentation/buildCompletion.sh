@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-13
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--quiet - Flag. Optional. Do not output any messages to stdout."$'\n'"--alias name - String. Optional. The name of the alias to create."$'\n'"--reload-alias name - String. Optional. The name of the alias which reloads Zesk Build. (source)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="completion.sh"
@@ -12,7 +12,7 @@ rawComment="Add completion handler for Zesk Build to Bash (EXPERIMENTAL)"$'\n'"S
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 shell_option="+expand_aliases"$'\n'""
 sourceFile="bin/build/tools/completion.sh"
-sourceHash="dce8c52456f1a10c5237225e490b0bcabff90676"
+sourceHash="261e02f4521c420bc48a4cbad5ecd023eab402d5"
 summary="Completion for Zesk Build (EXPERIMENTAL)"$'\n'""
 usage="buildCompletion [ --quiet ] [ --alias name ] [ --reload-alias name ] [ --help ]"
 # shellcheck disable=SC2016

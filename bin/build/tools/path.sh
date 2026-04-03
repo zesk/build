@@ -35,8 +35,8 @@ pathRemove() {
   PATH="$(catchEnvironment "$handler" listRemove "${PATH-}" ':' "${items[@]}")" || return $?
 }
 _pathRemove() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Modify the PATH environment variable to add a path.
@@ -75,8 +75,8 @@ pathConfigure() {
   PATH="$tempPath"
 }
 _pathConfigure() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Utility for pathCleanDuplicates to show bad directories
@@ -102,8 +102,8 @@ pathCleanDuplicates() {
   PATH="$newPath"
 }
 _pathCleanDuplicates() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Show the path and where binaries are found
@@ -160,6 +160,6 @@ pathShow() {
   $foundAll
 }
 _pathShow() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

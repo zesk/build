@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="name ... - String. Optional. Exit code value to output."$'\n'""
 base="_sugar.sh"
@@ -8,12 +8,12 @@ description="Print one or more return codes by name."$'\n'"Known codes:"$'\n'"- 
 file="bin/build/tools/_sugar.sh"
 fn="returnCode"
 foundNames=([0]="argument" [1]="see" [2]="file" [3]="requires" [4]="return_code")
-rawComment="Argument: name ... - String. Optional. Exit code value to output."$'\n'"Print one or more return codes by name."$'\n'"Known codes:"$'\n'"- \`success\` (0) - success!"$'\n'"- \`environment\` (1) - generic issue with environment"$'\n'"- \`argument\` (2) - issue with arguments"$'\n'"- \`assert\` (97) - assertion failed (ASCII 97 = \`a\`)"$'\n'"- \`identical\` (105) - identical check failed (ASCII 105 = \`i\`)"$'\n'"- \`leak\` (108) - function leaked globals (ASCII 108 = \`l\`)"$'\n'"- \`timeout\` (116) - timeout exceeded (ASCII 116 = \`t\`)"$'\n'"- \`exit\` - (120) exit function immediately (ASCII 120 = \`x\`)"$'\n'"- \`not-found\` - (127) command not found"$'\n'"- \`user-interrupt\` - (127) User interrupt (Ctrl-C)"$'\n'"- \`interrupt\` - (141) Interrupt signal"$'\n'"- \`internal\` - (253) internal errors"$'\n'"Unknown error code is 254, end of range is 255 which is not used. Use \`returnCodeString\` to get a string from an exit code integer."$'\n'"See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux"$'\n'"File: bin/build/errno.txt"$'\n'"Requires: usageDocument printf"$'\n'"See: returnCodeString"$'\n'"Return Code: 0 - success"$'\n'""$'\n'""
-requires="usageDocument printf"$'\n'""
+rawComment="Argument: name ... - String. Optional. Exit code value to output."$'\n'"Print one or more return codes by name."$'\n'"Known codes:"$'\n'"- \`success\` (0) - success!"$'\n'"- \`environment\` (1) - generic issue with environment"$'\n'"- \`argument\` (2) - issue with arguments"$'\n'"- \`assert\` (97) - assertion failed (ASCII 97 = \`a\`)"$'\n'"- \`identical\` (105) - identical check failed (ASCII 105 = \`i\`)"$'\n'"- \`leak\` (108) - function leaked globals (ASCII 108 = \`l\`)"$'\n'"- \`timeout\` (116) - timeout exceeded (ASCII 116 = \`t\`)"$'\n'"- \`exit\` - (120) exit function immediately (ASCII 120 = \`x\`)"$'\n'"- \`not-found\` - (127) command not found"$'\n'"- \`user-interrupt\` - (127) User interrupt (Ctrl-C)"$'\n'"- \`interrupt\` - (141) Interrupt signal"$'\n'"- \`internal\` - (253) internal errors"$'\n'"Unknown error code is 254, end of range is 255 which is not used. Use \`returnCodeString\` to get a string from an exit code integer."$'\n'"See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux"$'\n'"File: bin/build/errno.txt"$'\n'"Requires: bashDocumentation printf"$'\n'"See: returnCodeString"$'\n'"Return Code: 0 - success"$'\n'""$'\n'""
+requires="bashDocumentation printf"$'\n'""
 return_code="0 - success"$'\n'""
 see="https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux"$'\n'"returnCodeString"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="1ff9bebad70c8fea8d82a17d32a3d8b9fd324874"
+sourceHash="ffd716b7922cb0074e135ce841a832b800ed594b"
 summary="Print one or more return codes by name."
 summaryComputed="true"
 usage="returnCode [ name ... ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--extension extension - String. Required. One or more extensions to search for in the current directory."$'\n'"--prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. \`# IDENTICAL\`) (may specify more than one)"$'\n'"--exclude pattern - String. Optional. One or more patterns of paths to exclude. Similar to pattern used in \`find\`."$'\n'"--cd directory - Directory. Optional. Change to this directory before running. Defaults to current directory."$'\n'"--repair directory - Directory. Optional. Any files in onr or more directories can be used to repair other files."$'\n'"--skip file - Directory. Optional. Ignore this file for repairs."$'\n'"--ignore-singles - Flag. Optional. Skip the check to see if single entries exist."$'\n'"--no-map - Flag. Optional. Do not map __BASE__, __FILE__, __DIR__ tokens."$'\n'"--debug - Flag. Optional. Additional debugging information is output."$'\n'"--help - Flag. Optional. This help."$'\n'"--singles singlesFiles - File. Optional. One or more files which contain a list of allowed \`{identical}\` singles, one per line."$'\n'"--single singleToken - String. Optional. One or more tokens which cam be singles."$'\n'"--token token - String. Optional. Replace this token (only). May be specified more than once. Old method, deprecated but here for compatibility."$'\n'"token ... - String. Optional. Replace this token (only). May be specified more than once."$'\n'""
 base="identical.sh"
@@ -13,7 +13,7 @@ rawComment="Argument: --extension extension - String. Required. One or more exte
 return_code="2 - Argument error"$'\n'"0 - Success, everything matches"$'\n'"100 - Failures"$'\n'""
 see="identicalWatch"$'\n'""
 sourceFile="bin/build/tools/identical.sh"
-sourceHash="3d17e0e52d21bf0984ad94f99e9132c29a6aaed3"
+sourceHash="9b062c3d858b37e9d0bb2c6dc51ad89ca20e549b"
 summary="When, for whatever reason, you need code to match between"
 summaryComputed="true"
 usage="identicalCheck --extension extension --prefix prefix [ --exclude pattern ] [ --cd directory ] [ --repair directory ] [ --skip file ] [ --ignore-singles ] [ --no-map ] [ --debug ] [ --help ] [ --singles singlesFiles ] [ --single singleToken ] [ --token token ] [ token ... ]"

@@ -21,16 +21,16 @@ Error handlers are internally written as the function name with an underscore pr
     }   
     _myFunction() {
         # You can add custom handling code here if desired.
-        # __IDENTICAL__ usageDocument 1
-        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+        # __IDENTICAL__ bashDocumentation 1
+        bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
         # You can add additional handling code here if desired.
     }
 
 ## Usage formatting
 
-{usageDocument}
+{bashDocumentation}
 
-{usageDocumentSimple}
+{bashSimpleDocumentation}
 
 ## Environment
 

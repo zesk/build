@@ -52,8 +52,8 @@ bitbucketGetVariable() {
   printf "%s" "$value"
 }
 _bitbucketGetVariable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: envFile - File. Required. One or more environment files which are suitable to load for docker; must be valid
@@ -73,8 +73,8 @@ bitbucketContainer() {
   dockerLocalContainer --handler "$handler" --image "${BUILD_DOCKER_BITBUCKET_IMAGE-}" --path "${BUILD_DOCKER_BITBUCKET_PATH-}" "$@"
 }
 _bitbucketContainer() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Are we currently in the BitBucket pipeline?
@@ -90,8 +90,8 @@ isBitBucketPipeline() {
   [ -n "${BITBUCKET_WORKSPACE-}" ] && test "${CI-}"
 }
 _isBitBucketPipeline() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Compute the URL to create a new PR
@@ -133,6 +133,6 @@ bitbucketPRNewURL() {
   printf -- "https://bitbucket.org/%s/%s/pull-requests/new?source=%s&event_source=%s" "$org" "$name" "$source" "$eventSource"
 }
 _bitbucketPRNewURL() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

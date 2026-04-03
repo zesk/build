@@ -105,8 +105,8 @@ _arguments() {
   ARGUMENTS="$stateFile" || return $?
 }
 __arguments() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Handle `exit` -> 0
@@ -195,8 +195,8 @@ _commentArgumentSpecification() {
   printf "%s\n" "$functionCache"
 }
 __commentArgumentSpecification() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _commentArgumentSpecificationComplete() {
@@ -241,8 +241,8 @@ _commentArgumentSpecificationDefaults() {
   fi
 }
 __commentArgumentSpecificationDefaults() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: argumentDirectory - Directory. Required. Directory where the arguments structure is stored.
@@ -360,8 +360,8 @@ _commentArgumentSpecificationParseLine() {
   fi
 }
 __commentArgumentSpecificationParseLine() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: text ... - String. Optional. Text to test
@@ -450,8 +450,8 @@ _commentArgumentName() {
   return 0
 }
 ___commentArgumentName() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _commentArgumentTypeFromSpec() {
@@ -502,8 +502,8 @@ _commentArgumentType() {
   return 0
 }
 __commentArgumentType() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: specification - String. Required.
@@ -570,7 +570,7 @@ _commentArgumentsRemainder() {
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
 #
-# Requires: throwArgument usageDocument ___help
+# Requires: throwArgument bashDocumentation ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
   local flag="--help"
@@ -587,6 +587,6 @@ __help() {
   return 0
 }
 ___help() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

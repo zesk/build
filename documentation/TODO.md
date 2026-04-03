@@ -268,7 +268,7 @@
 - urlMatchesLocalFileSize
 - urlOpener
 - usageArgumentUnknown
-- usageDocumentSimple
+- bashSimpleDocumentation
 - usageGenerator
 - executableRequire
 - validateFileContents
@@ -565,7 +565,7 @@ On a "2x" machine:
 - markdownIndentHeading
 - fileFieldMaximum
 - fileLineMaximum
-- newlineHide
+- stringHideNewlines
 - nodePackageManager
 - nodePackageManagerInstall
 - nodePackageManagerUninstall
@@ -604,9 +604,9 @@ On a "2x" machine:
 - stringOffset
 - urlMatchesLocalFileSize
 - urlOpener
-- usageDocument
+- bashDocumentation
 - usageDocumentComplex
-- usageDocumentSimple
+- bashSimpleDocumentation
 - usageGenerator
 - executableRequire
 - validateFileContents

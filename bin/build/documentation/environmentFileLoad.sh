@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--prefix - EnvironmentVariable|Blank. Optional. All subsequent environment variables are prefixed with this prefix."$'\n'"--require - Flag. Optional. All subsequent environment files on the command line will be required."$'\n'"--optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)"$'\n'"--verbose - Flag. Optional. Output errors with variables in files."$'\n'"environmentFile - Required. Environment file to load. For \`--optional\` files the directory must exist."$'\n'"--ignore environmentName - String. Optional. Environment value to ignore on load."$'\n'"--secure environmentName - String. Optional. If found in a loaded file, entire file fails."$'\n'"--secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the \`--ignore\` list."$'\n'"--execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment files."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="io.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Safely load an environment file (no code execution)"$'\n'"Argument: --prefix - EnvironmentVariable|Blank. Optional. All subsequent environment variables are prefixed with this prefix."$'\n'"Argument: --require - Flag. Optional. All subsequent environment files on the command line will be required."$'\n'"Argument: --optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)"$'\n'"Argument: --verbose - Flag. Optional. Output errors with variables in files."$'\n'"Argument: environmentFile - Required. Environment file to load. For \`--optional\` files the directory must exist."$'\n'"Argument: --ignore environmentName - String. Optional. Environment value to ignore on load."$'\n'"Argument: --secure environmentName - String. Optional. If found in a loaded file, entire file fails."$'\n'"Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the \`--ignore\` list."$'\n'"Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment files."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 2 - if file does not exist; outputs an error"$'\n'"Return Code: 0 - if files are loaded successfully"$'\n'""$'\n'""
 return_code="2 - if file does not exist; outputs an error"$'\n'"0 - if files are loaded successfully"$'\n'""
 sourceFile="bin/build/tools/environment/io.sh"
-sourceHash="0f1011676755f0412e216127710dc6f43e456014"
+sourceHash="0bafb086eee4c0f0080695a1abdfd38ce25a64b7"
 summary="Safely load an environment file (no code execution)"
 summaryComputed="true"
 usage="environmentFileLoad [ --prefix ] --require [ --optional ] [ --verbose ] environmentFile [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]"

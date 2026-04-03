@@ -83,7 +83,7 @@ __characterClassReport() {
           fi
         fi
       done
-      printf "[%s %s]\n" "$(decorate BOLD magenta "$matched")" "$(plural "$matched" "${nouns[@]}")"
+      printf "[%s %s]\n" "$(decorate BOLD magenta "$matched")" "$(localePlural "$matched" "${nouns[@]}")"
       total=$((total + matched))
     done
   else
@@ -111,11 +111,11 @@ __characterClassReport() {
       else
         classText="$(decorate blue "${matchedClasses[*]}")"
       fi
-      printf "%s [%s %s]\n" "$classText" "$(decorate BOLD magenta "$matched")" "$(plural "$matched" "${nouns[@]}")"
+      printf "%s [%s %s]\n" "$classText" "$(decorate BOLD magenta "$matched")" "$(localePlural "$matched" "${nouns[@]}")"
       total=$((total + matched))
     done
   fi
 
-  printf "%s total %s\n" "$(decorate BOLD red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
+  printf "%s total %s\n" "$(decorate BOLD red "$total")" "$(decorate red "$(localePlural "$total" "${nouns[@]}")")"
   [ -z "$savedLimit" ] || ulimit -n "$savedLimit" 1>/dev/null 2>&1 || :
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="debugger.sh"
@@ -12,11 +12,11 @@ rawComment="Enables the debugger immediately"$'\n'"    Usage: bashDebuggerEnable
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashDebug bashDebuggerDisable"$'\n'""
 sourceFile="bin/build/tools/debugger.sh"
-sourceHash="6ad7118699fc0df1b74d7db2a4f2a2eda40309d8"
+sourceHash="2f829aa199a00fb332fd6b41ece814a617d0375d"
 summary="Enables the debugger immediately"
 summaryComputed="true"
 usage="bashDebuggerEnable [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashDebuggerEnable'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Enables the debugger immediately'$'\n''Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain=''
+helpPlain='Usage: bashDebuggerEnable [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Enables the debugger immediately'$'\n''Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

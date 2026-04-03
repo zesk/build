@@ -11,7 +11,7 @@
 # Argument: -x - Flag. Optional. Show exported variables. (verbose)
 # Argument: --me - Flag. Optional. Show calling function call stack frame.
 # Argument: --exit - Flag. Optional. Exit with code 0 after output.
-# Requires: printf usageDocument
+# Requires: printf bashDocumentation
 # Environment: BUILD_DEBUG
 # BUILD_DEBUG: debuggingStack - `debuggingStack` shows arguments passed (extra) and exports (optional flag) ALWAYS
 # Requires: throwArgument
@@ -69,8 +69,8 @@ debuggingStack() {
 }
 _debuggingStack() {
   true || debuggingStack --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Internal: true
@@ -163,15 +163,15 @@ dumpPipe() {
   if [ $nBytes -eq 0 ]; then
     suffix=$(decorate orange "(empty)")
   elif [ "$showLines" -lt "$nLines" ]; then
-    suffix="$(decorate warning "(showing $showLines $(plural "$showLines" line lines))")"
+    suffix="$(decorate warning "(showing $showLines $(localePlural "$showLines" line lines))")"
   else
     suffix="$(decorate success "(shown)")"
   fi
   # shellcheck disable=SC2015
   statusMessage --last printf -- "%s%s %s, %s %s %s" \
     "$name" \
-    "$nLines" "$(plural "$nLines" line lines)" \
-    "$nBytes" "$(plural "$nBytes" byte bytes)" \
+    "$nLines" "$(localePlural "$nLines" line lines)" \
+    "$nBytes" "$(localePlural "$nBytes" byte bytes)" \
     "$suffix"
   if [ $nBytes -eq 0 ]; then
     rm -rf "$item" || :
@@ -185,8 +185,8 @@ dumpPipe() {
   rm -rf "$item" || :
 }
 _dumpPipe() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output a file for debugging
@@ -230,8 +230,8 @@ dumpFile() {
   fi
 }
 _dumpFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Internal dumpEnvironmentUnsafe used for both
@@ -308,8 +308,8 @@ __internalDumpEnvironment() {
   [ ${#regulars[@]} -eq 0 ] || for name in "${regulars[@]}"; do
     local value="${!name-}"
     local len=${#value}
-    [ "$len" -lt "$maxLen" ] || value="${value:0:$maxLen} ... $(decorate green "$(pluralWord "$len" "character")")"
-    value=$(newlineHide "$value" "$(decorate green "␤")")
+    [ "$len" -lt "$maxLen" ] || value="${value:0:$maxLen} ... $(decorate green "$(localePluralWord "$len" "character")")"
+    value=$(stringHideNewlines "$value" "$(decorate green "␤")")
     decorate pair -- "$name" "$value"
   done
   [ ${#blanks[@]} -eq 0 ] || decorate pair "[BLANK VARIABLES]" "$(decorate each code "${blanks[@]}")"
@@ -317,7 +317,7 @@ __internalDumpEnvironment() {
   [ ${#secures[@]} -eq 0 ] || for name in "${secures[@]}"; do
     local value="${!name-}"
     local len=${#value}
-    decorate pair "$name" "$(decorate red "$len $(plural "$len" "character" "characters") $secureSuffix")"
+    decorate pair "$name" "$(decorate red "$len $(localePlural "$len" "character" "characters") $secureSuffix")"
   done
 }
 
@@ -335,8 +335,8 @@ dumpEnvironment() {
   __internalDumpEnvironment "$handler" "$@" || return $?
 }
 _dumpEnvironment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output the environment shamelessly (not secure, not recommended)
@@ -376,8 +376,8 @@ dumpEnvironmentUnsafe() {
   __internalDumpEnvironment "$handler" "${aa[@]+"${aa[@]}"}" --secure-match - --secure-suffix ""
 }
 _dumpEnvironmentUnsafe() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Print the load averages
@@ -408,8 +408,8 @@ dumpLoadAverages() {
   catchEnvironment "$handler" decorate pair "Load averages:" "$(decorate each code "${averages[@]+"${averages[@]}"}")" || return $?
 }
 _dumpLoadAverages() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output to hex
@@ -454,8 +454,8 @@ dumpHex() {
   fi
 }
 _dumpHex() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Dumps output as hex
@@ -529,15 +529,15 @@ dumpBinary() {
   if [ $nBytes -eq 0 ]; then
     suffix=$(decorate orange "(empty)")
   elif [ -n "$showBytes" ] && [ "$showBytes" -lt "$nBytes" ]; then
-    suffix="$(decorate warning "(showing $showBytes $(plural "$showBytes" byte bytes))")"
+    suffix="$(decorate warning "(showing $showBytes $(localePlural "$showBytes" byte bytes))")"
   else
     suffix="$(decorate success "(shown)")"
   fi
   # shellcheck disable=SC2015
   statusMessage --last printf -- "%s%s %s, %s %s %s" \
     "$name" \
-    "$nLines" "$(plural "$nLines" line lines)" \
-    "$nBytes" "$(plural "$nBytes" byte bytes)" \
+    "$nLines" "$(localePlural "$nLines" line lines)" \
+    "$nBytes" "$(localePlural "$nBytes" byte bytes)" \
     "$suffix"
   if [ $nBytes -eq 0 ]; then
     catchEnvironment "$handler" rm -rf "$item" || return $?
@@ -553,6 +553,6 @@ dumpBinary() {
   return 0
 }
 _dumpBinary() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

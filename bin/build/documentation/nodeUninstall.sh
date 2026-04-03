@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="node.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="Uninstall nodejs"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/node.sh"
-sourceHash="d67b7944b65b43f66e8e5cae6d4e545d0148cc56"
+sourceHash="f8eb21c84bef13ff53bace1996227ce45f26a91d"
 summary="Uninstall nodejs"
 summaryComputed="true"
 usage="nodeUninstall"

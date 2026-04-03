@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="text - EmptyString. Required. Text to quote."$'\n'""
 base="quote.sh"
@@ -15,7 +15,7 @@ rawComment="Quote grep -e patterns for shell use"$'\n'"Quotes: \" . [ ] | \\n wi
 requires="printf sed"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
-sourceHash="59057e40f593606f5718006f60642e3eeda2fff0"
+sourceHash="ea3a27e64582997f04005c71fc71250ff1ba01c0"
 summary="Quote grep -e patterns for shell use"
 summaryComputed="true"
 usage="quoteGrepPattern text"

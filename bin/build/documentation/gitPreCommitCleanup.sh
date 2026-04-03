@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-16
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Clean up after our pre-commit (deletes cache directory)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="e9e8ed3eb26b4acea3dca8d0b0e855567a7319b0"
+sourceHash="39d6230492936d0e156da4e32557793909dfa40b"
 summary="Clean up after our pre-commit (deletes cache directory)"
 summaryComputed="true"
 usage="gitPreCommitCleanup [ --help ]"

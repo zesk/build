@@ -56,8 +56,8 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
     catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
   }
   ___hookTestsStop() {
-    # __IDENTICAL__ usageDocument 1
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ bashDocumentation 1
+    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   __testStats() {
@@ -80,7 +80,7 @@ if source "${BASH_SOURCE[0]%/*}/../../../../tools.sh"; then
       catchReturn "$handler" decorate box "Functions asserted (cumulative)" || return $?
       catchReturn "$handler" cat "$afFile" || return $?
       lines=$(catchReturn "$handler" fileLineCount <"$afFile") || return $?
-      catchReturn "$handler" decorate info "$lines $(plural "$lines" "function" "functions")" || return $?
+      catchReturn "$handler" decorate info "$lines $(localePlural "$lines" "function" "functions")" || return $?
       catchReturn "$handler" printf -- "\n" || return $?
     else
       catchReturn "$handler" decorate subtle "Assertions not tracked with $(decorate code "TEST_TRACK_ASSERTIONS")" || return $?

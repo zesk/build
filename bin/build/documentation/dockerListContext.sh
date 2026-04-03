@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="docker.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="List the files which would be included in the docker image"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
-sourceHash="51657edc2c4ddde3087728a205decf35b61fd7b4"
+sourceHash="3c99deb85dc2d26f1fb9b74fdec2057025f22e92"
 summary="List the files which would be included in the docker"
 summaryComputed="true"
 usage="dockerListContext"

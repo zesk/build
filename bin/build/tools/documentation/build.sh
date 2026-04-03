@@ -32,85 +32,34 @@ __documentationBuild() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) dd=(--debug) ;;
-    --git)
-      _buildDocumentation_MergeWithDocsBranch
-      return $?
-      ;;
-    --commit)
-      _buildDocumentation_Recommit
-      return $?
-      ;;
-    --company)
-      shift
-      company=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --name)
-      shift
-      applicationName=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --filter)
-      docArgs+=("$argument")
-      shift
-      while [ $# -gt 0 ] && [ "$1" != "--" ]; do docArgs+=("$1") && shift; done
-      docArgs+=("--")
-      ;;
+    --git) _buildDocumentation_MergeWithDocsBranch && return $? || return $? ;;
+    --commit) _buildDocumentation_Recommit && return $? || return $? ;;
+    --company) shift && company=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --name) shift && applicationName=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --filter) docArgs+=("$argument") && shift && while [ $# -gt 0 ] && [ "$1" != "--" ]; do docArgs+=("$1") && shift; done && docArgs+=("--") ;;
     --template)
       [ -z "$templatePath" ] || throwArgument "$handler" "$argument already supplied" || return $?
-      shift
-      templatePath=$(validate "$handler" RealDirectory "$argument" "${1-}") || return $?
+      shift && templatePath=$(validate "$handler" RealDirectory "$argument" "${1-}") || return $?
       ;;
     --page-template)
       [ -z "$pageTemplate" ] || throwArgument "$handler" "$argument already supplied" || return $?
-      shift
-      pageTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
+      shift && pageTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
     --function-template)
       [ -z "$functionTemplate" ] || throwArgument "$handler" "$argument already supplied" || return $?
-      shift
-      functionTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
+      shift && functionTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
-    --source)
-      shift
-      sourcePaths+=("$(validate "$handler" RealDirectory "$argument" "${1-}")") || return $?
-      ;;
-    --target)
-      shift
-      targetPath="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
-      targetPath="${targetPath#"$home"/}"
-      ;;
-    --company-link)
-      shift
-      companyLink=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --unlinked-source)
-      shift
-      unlinkedSources+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $?
-      ;;
-    --unlinked-template)
-      shift
-      unlinkedTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
-      ;;
-    --unlinked-target)
-      shift
-      unlinkedTarget=$(validate "$handler" FileDirectory "$argument" "${1-}") || return $?
-      ;;
-    --clean)
-      indexArgs+=("$argument")
-      cleanFlag=true
-      ;;
-    --see-prefix)
-      shift
-      seePrefix="${1-}"
-      ;;
-    --see-environment-link)
-      shift
-      seeEnvironmentLink=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --force)
-      if [ ${#docArgs[@]} -eq 0 ] || ! inArray "$argument" "${docArgs[@]}"; then
-        docArgs+=("$argument")
-      fi
-      ;;
+    --source) shift && sourcePaths+=("$(validate "$handler" RealDirectory "$argument" "${1-}")") || return $? ;;
+    --target) shift && targetPath="$(validate "$handler" Directory "$argument" "${1-}")" && targetPath="${targetPath#"$home"/}" || return $? ;;
+    --company-link) shift && companyLink=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --unlinked-source) shift && unlinkedSources+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $? ;;
+    --unlinked-template) shift && unlinkedTemplate=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
+    --unlinked-target) shift && unlinkedTarget=$(validate "$handler" FileDirectory "$argument" "${1-}") || return $? ;;
+    --clean) indexArgs+=("$argument") && cleanFlag=true ;;
+    --see-prefix) shift && seePrefix="${1-}" ;;
+    --see-environment-link) shift && seeEnvironmentLink=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --md-cache) shift && docArgs+=("$argument" "${1-}") && dd+=("$argument" "${1-}") ;;
+    --force) docArgs+=("$argument") ;;
     --see-update | --unlinked-update | --index-update | --docs-update)
       [ -z "$actionFlag" ] || throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
       actionFlag="$argument"

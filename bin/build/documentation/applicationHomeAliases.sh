@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="goAlias - String. Alias for \`applicationHome --go\`. Default is \`g\`."$'\n'"setAlias - String. Alias for \`applicationHome\`. Default is \`G\`."$'\n'""
 base="application.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Set aliases \`G\` and \`g\` default for \`applicationHome\`"$'\n'"Localize as you wish for your own shell"$'\n'"Argument: goAlias - String. Alias for \`applicationHome --go\`. Default is \`g\`."$'\n'"Argument: setAlias - String. Alias for \`applicationHome\`. Default is \`G\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/application.sh"
-sourceHash="fd524b49df17bcca15d1669e4d967e9eaca5109b"
+sourceHash="f46a4ce2b342df3d29dc1c07fd60dc7d725b26ab"
 summary="Set aliases \`G\` and \`g\` default for \`applicationHome\`"
 summaryComputed="true"
 usage="applicationHomeAliases [ goAlias ] [ setAlias ]"

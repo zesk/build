@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--first - Flag. Optional. Place any paths after this flag first in the list"$'\n'"--last - Flag. Optional. Place any paths after this flag last in the list. Default."$'\n'"path - the path to be added to the \`MANPATH\` environment"$'\n'""
 base="manpath.sh"
@@ -12,7 +12,7 @@ rawComment="Modify the MANPATH environment variable to add a path."$'\n'"See: ma
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="manPathRemove"$'\n'""
 sourceFile="bin/build/tools/manpath.sh"
-sourceHash="8a6b17740b41a6485576efda52769baec3f7ddd4"
+sourceHash="73a3214fffa3f8f5065133619f130ecf4bdcb5bb"
 summary="Modify the MANPATH environment variable to add a path."
 summaryComputed="true"
 usage="manPathConfigure [ --help ] [ --first ] [ --last ] [ path ]"

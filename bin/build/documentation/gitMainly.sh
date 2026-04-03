@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-16
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="return_code")
 rawComment="Return Code: 1 - Already in main, staging, or HEAD, or git merge failed"$'\n'"Return Code: 0 - git merge succeeded"$'\n'"Merge \`staging\` and \`main\` branches of a git repository into the current branch."$'\n'"Will merge \`origin/staging\` and \`origin/main\` after doing a \`--pull\` for both of them"$'\n'"Current repository should be clean and have no modified files."$'\n'""$'\n'""
 return_code="1 - Already in main, staging, or HEAD, or git merge failed"$'\n'"0 - git merge succeeded"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="e9e8ed3eb26b4acea3dca8d0b0e855567a7319b0"
+sourceHash="39d6230492936d0e156da4e32557793909dfa40b"
 summary="Merge \`staging\` and \`main\` branches of a git repository into"
 summaryComputed="true"
 usage="gitMainly"

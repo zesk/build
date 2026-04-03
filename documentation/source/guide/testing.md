@@ -32,7 +32,7 @@ Your test should NOT output anything to `stderr` - doing this is considered a te
 A simple test:
 
     testPlural() {
-        assertEquals "dogs" "$(plural 2 dog)" || return $?
+        assertEquals "dogs" "$(localePlural 2 dog)" || return $?
     }
 
 ## Testing assistants

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="darwin.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="Are we on Mac OS X?"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/darwin.sh"
-sourceHash="6e18b1e362bd75e1e63eeefba41b20b891294878"
+sourceHash="ad6864730417464b2d7912acac42a6444bb54718"
 summary="Are we on Mac OS X?"
 summaryComputed="true"
 usage="isDarwin"

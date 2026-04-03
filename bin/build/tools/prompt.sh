@@ -83,8 +83,8 @@ bashPrompt() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashPrompt() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Prompt the user properly honoring any attached console.
@@ -114,8 +114,8 @@ bashUserInput() {
   return $exitCode
 }
 _bashUserInput() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set markers for terminal integration
@@ -151,8 +151,8 @@ bashPromptMarkers() {
   printf "%s\n" "${__BASH_PROMPT_MARKERS[@]}"
 }
 _bashPromptMarkers() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Color schemes for prompts
@@ -185,8 +185,8 @@ bashPromptColorScheme() {
   printf -- "%s" "$colors"
 }
 _bashPromptColorScheme() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Given a list of color names, generate the color codes in a colon separated list
@@ -212,8 +212,8 @@ bashPromptColorsFormat() {
   printf "%s\n" "$(listJoin ":" "${colorArray[@]}")"
 }
 _bashPromptColorsFormat() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Sets the console colors based on the project you are currently in.
@@ -238,6 +238,6 @@ bashPromptModule_TermColors() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashPromptModule_TermColors() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

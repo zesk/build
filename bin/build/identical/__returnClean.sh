@@ -10,7 +10,7 @@
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Integer. Required. Exit code to return.
 # Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help
+# Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
@@ -24,6 +24,6 @@ returnClean() {
   fi
 }
 _returnClean() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

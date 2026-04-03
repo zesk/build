@@ -1,0 +1,1 @@
+[deployApplicationVersion]({rel}tools/deploy.md#deployapplicationversion) - Extracts version from an application either from `.deploy` files or ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L58))

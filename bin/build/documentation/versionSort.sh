@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="-r | --reverse - Reverse the sort order (optional)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="pipeline.sh"
@@ -9,11 +9,11 @@ example="    git tag | grep -e '^v[0-9.]*\$' | versionSort"$'\n'""
 file="bin/build/tools/pipeline.sh"
 fn="versionSort"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires")
-rawComment="Summary: Sort versions in the format v0.0.0"$'\n'"Sorts semantic versions prefixed with a \`v\` character; intended to be used as a pipe."$'\n'"vXXX.XXX.XXX"$'\n'"for sort - -k 1.c,1 - the \`c\` is the 1-based character index, so 2 means skip the 1st character"$'\n'"Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume"$'\n'"Argument: -r | --reverse - Reverse the sort order (optional)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     git tag | grep -e '^v[0-9.]*\$' | versionSort"$'\n'"Requires: throwArgument sort usageDocument decorate"$'\n'""$'\n'""
-requires="throwArgument sort usageDocument decorate"$'\n'""
+rawComment="Summary: Sort versions in the format v0.0.0"$'\n'"Sorts semantic versions prefixed with a \`v\` character; intended to be used as a pipe."$'\n'"vXXX.XXX.XXX"$'\n'"for sort - -k 1.c,1 - the \`c\` is the 1-based character index, so 2 means skip the 1st character"$'\n'"Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume"$'\n'"Argument: -r | --reverse - Reverse the sort order (optional)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     git tag | grep -e '^v[0-9.]*\$' | versionSort"$'\n'"Requires: throwArgument sort bashDocumentation decorate"$'\n'""$'\n'""
+requires="throwArgument sort bashDocumentation decorate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/pipeline.sh"
-sourceHash="c579f58f0c66552b6f42e1671a6a5534209b0977"
+sourceHash="0168112ccc2ec8d0a1f711c33f3f33db7ffe8291"
 summary="Sort versions in the format v0.0.0"$'\n'""
 usage="versionSort [ -r | --reverse ] [ --help ]"
 # shellcheck disable=SC2016

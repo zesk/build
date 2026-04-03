@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="prompt.sh"
@@ -16,7 +16,7 @@ requires="buildHome statusMessage buildEnvironmentGetDirectory directoryRequire 
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="consoleConfigureColorMode"$'\n'""
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="60ddb2349a8bd4812bf32e6721494912b17756ac"
+sourceHash="a4bf439a67dd7eaa043b418b6fb13ff52fae8535"
 summary="Sets the console colors based on the project you are"
 summaryComputed="true"
 usage="bashPromptModule_TermColors"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="package - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="tofu.sh"
@@ -12,7 +12,7 @@ rawComment="Uninstall tofu binary and apt sources keys"$'\n'"Argument: package -
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="tofuInstall packageUninstall"$'\n'""
 sourceFile="bin/build/tools/tofu.sh"
-sourceHash="43ee145bf6b54d6972866add37ebf9eda9c165df"
+sourceHash="101f4a7ee4840fdcd370adfdc29d30336e07ac86"
 summary="Uninstall tofu binary and apt sources keys"
 summaryComputed="true"
 usage="tofuUninstall [ package ] [ --help ]"

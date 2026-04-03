@@ -42,7 +42,7 @@ _identicalCheckSinglesChecker() {
       IFS=$'\n' read -d "" -r lineCount lineNumber targetFile <"$tokenFile"
       allSingles+=("$token")
       local linesNoun
-      linesNoun=$(pluralWord "$lineCount" line)
+      linesNoun=$(localePluralWord "$lineCount" line)
       if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
         knownSingles+=("$token")
         knownSinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate info "$(decorate file "$targetFile")")"):$lineNumber ($linesNoun)")
@@ -56,9 +56,9 @@ _identicalCheckSinglesChecker() {
   done < <(find "$tempDirectory" -type f -name '*.match' || :)
 
   if [ "${#lonelySinglesReport[@]}" -gt 0 ]; then
-    statusMessage --last printf -- "%s:\n%s" "$(decorate warning "Single $(plural ${#lonelySinglesReport[@]} token)")" "$(printf -- "- %s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
+    statusMessage --last printf -- "%s:\n%s" "$(decorate warning "Single $(localePlural ${#lonelySinglesReport[@]} token)")" "$(printf -- "- %s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
   elif [ "${#knownSinglesReport[@]}" -gt 0 ]; then
-    statusMessage --last printf -- "%s:\n%s" "$(decorate notice "Single $(plural ${#knownSinglesReport[@]} token) (known)")" "$(printf -- "- %s\n" "${knownSinglesReport[@]}")"
+    statusMessage --last printf -- "%s:\n%s" "$(decorate notice "Single $(localePlural ${#knownSinglesReport[@]} token) (known)")" "$(printf -- "- %s\n" "${knownSinglesReport[@]}")"
   fi
   if [ -n "$binary" ] && [ "${#lonelySinglesFiles[@]}" -gt 0 ]; then
     "$binary" "${lonelySinglesFiles[@]}"

@@ -38,8 +38,8 @@ timing() {
   [ $exitCode = 0 ] || returnMessage "$exitCode" "$@" || return $?
 }
 _timing() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Show elapsed time from a start time
@@ -58,8 +58,8 @@ timingElapsed() {
   printf "%d\n" "$(($(__timestamp) - start))"
 }
 _timingElapsed() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Start a timer
@@ -80,8 +80,8 @@ timingStart() {
 }
 _timingStart() {
   ! false || timingStart --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Format a timing output (milliseconds) as seconds using a decimal
@@ -105,8 +105,8 @@ timingFormat() {
   done
 }
 _timingFormat() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Outputs the timing optionally prefixed by a message.
@@ -163,8 +163,8 @@ timingReport() {
   fi
 }
 _timingReport() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output timing like "1 day, 2 hours, 3 minutes, 4 seconds, 5 ms"
@@ -207,12 +207,12 @@ timingDuration() {
         if [ "$duration" -ge "$unitTotal" ]; then
           unitCount=$((duration % unitTotal))
           if [ $unitCount -gt 0 ]; then
-            found=("$(pluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")
+            found=("$(localePluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")
           fi
           duration=$((duration / unitTotal))
         else
           unitCount=$duration
-          found=("$(pluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")
+          found=("$(localePluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")
           break
         fi
       done
@@ -223,6 +223,6 @@ timingDuration() {
   done
 }
 _timingDuration() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

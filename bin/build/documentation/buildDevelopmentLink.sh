@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization."$'\n'"--reset - Flag. Optional. Revert the link and reinstall using the original binary."$'\n'""
 base="developer.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Add a development link to the local version of Zesk Build for testing in local projects."$'\n'"Copies or updates \`\$BUILD_HOME/bin/build\` in current project."$'\n'"Useful when you want to test a fix on a current project."$'\n'"Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization."$'\n'"Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/developer.sh"
-sourceHash="fa87e29b8420fca35c825c744db0d1532036f8cc"
+sourceHash="330aa9921ba19526d3791ad22fc685712858f6b7"
 summary="Add a development link to the local version of Zesk"
 summaryComputed="true"
 usage="buildDevelopmentLink [ --copy ] [ --reset ]"

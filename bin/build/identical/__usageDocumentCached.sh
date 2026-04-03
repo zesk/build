@@ -2,12 +2,12 @@
 #
 # Identical template
 #
-# Original of __usageDocumentCached
+# Original of __bashDocumentationCached
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL __usageDocumentCached EOF
+# IDENTICAL __bashDocumentationCached EOF
 
 # Summary: Display cached usage for a function
 # Argument: handler - Function. Required.
@@ -18,7 +18,7 @@
 # Environment: BUILD_COLORS
 # Environment: BUILD_DOCUMENTATION_PATH
 # Requires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings
-__usageDocumentCached() {
+__bashDocumentationCached() {
   local handler="$1" && shift
   local home="$1" && shift
   local functionName="$1" && shift

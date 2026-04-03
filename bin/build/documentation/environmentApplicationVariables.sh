@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="application.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="List environment variables related to application deployments"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/application.sh"
-sourceHash="098b7608780123a2e21e2a57911d53cdd9997acc"
+sourceHash="32ee14baef36b8e3c5a1074b2e2bece8f38e5f16"
 summary="List environment variables related to application deployments"
 summaryComputed="true"
 usage="environmentApplicationVariables [ --help ]"

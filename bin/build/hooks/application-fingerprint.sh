@@ -39,8 +39,8 @@ __hookApplicationFingerprint() {
   catchReturn "$handler" hookRun --application "$home" application-files -print0 | xargs -0 -n 1 sha1sum | sort | textSHA || return $?
 }
 ___hookApplicationFingerprint() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __hookApplicationFingerprint "$@"

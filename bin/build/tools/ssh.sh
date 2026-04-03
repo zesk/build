@@ -47,8 +47,8 @@ sshKnownHostsFile() {
   printf "%s\n" "$sshKnown"
 }
 _sshKnownHostsFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -114,8 +114,8 @@ sshKnownHostAdd() {
   return $exitCode
 }
 _sshKnownHostAdd() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -187,8 +187,8 @@ sshKnownHostRemove() {
   [ -n "$sshKnown" ] || throwArgument "$handler" "Need at least one host to remove" || return $?
 }
 _sshKnownHostRemove() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Set up SSH for a user with ID and backup keys in `~/.ssh`
@@ -275,8 +275,8 @@ sshSetup() {
   done
 }
 _sshSetup() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _generateSSHKeyPair() {
   local keyName keyType keyBits

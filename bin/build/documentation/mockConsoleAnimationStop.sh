@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="test.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Stop faking \`consoleHasAnimation\` for testing"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="1d0eb4bb6d7f51be955f3ceed30194b66406006f"
+sourceHash="d2f53a43ae407019ef0c22804c90295e53657f9c"
 summary="Stop faking \`consoleHasAnimation\` for testing"
 summaryComputed="true"
 usage="mockConsoleAnimationStop [ --help ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="usageFunction - Required. \`bash\` function already defined to output handler"$'\n'"binary - Required. Binary which must have a \`which\` path."$'\n'""
 base="usage.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument" [2]="return_code")
 rawComment="Summary: Check that one or more binaries are installed"$'\n'"Argument: usageFunction - Required. \`bash\` function already defined to output handler"$'\n'"Argument: binary - Required. Binary which must have a \`which\` path."$'\n'"Return Code: 1 - If any \`binary\` is not available within the current path"$'\n'"Requires the binaries to be found via \`which\`"$'\n'"Runs \`handler\` on failure"$'\n'""$'\n'""
 return_code="1 - If any \`binary\` is not available within the current path"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="149ac6b252931cd54cda69223411637bb1af3c10"
+sourceHash="96d69ce63944a5fcfe1aba870d92e33b18fbf849"
 summary="Check that one or more binaries are installed"$'\n'""
 usage="executableRequire usageFunction binary"
 # shellcheck disable=SC2016

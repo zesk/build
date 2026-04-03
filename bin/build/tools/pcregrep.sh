@@ -15,8 +15,8 @@ pcregrepInstall() {
   catchReturn "$handler" packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
 }
 _pcregrepInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # The name of the `pcregrep` binary on this operating system
@@ -28,6 +28,6 @@ pcregrepBinary() {
   __pcregrepBinary
 }
 _pcregrepBinary() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

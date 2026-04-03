@@ -109,8 +109,8 @@ __portUpgrade() {
   printf "%s\n" "$result"
 }
 ___portUpgrade() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Update the global database
@@ -138,8 +138,8 @@ __portInstalledList() {
   __portWrapper installed | grep -v 'currently installed' | awk '{ print $1 }'
 }
 ___portInstalledList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List available bottles
@@ -150,8 +150,8 @@ __portAvailableList() {
   __portWrapper list | awk '{ print $1 }'
 }
 ___portAvailableList() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output list of apt standard packages (constant)

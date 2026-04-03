@@ -11,7 +11,7 @@ foundNames=([0]="return_code" [1]="argument")
 rawComment="Is this an empty (zero-sized) file?"$'\n'"Return Code: 0 - if all files passed in are empty files"$'\n'"Return Code: 1 - if any files passed in are non-empty files"$'\n'"Argument: file - File. Optional. One or more files, all of which must be empty."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - if all files passed in are empty files"$'\n'"1 - if any files passed in are non-empty files"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="c3e7e8b447b49ef6c60b5bfa7abaccf84b3ca4c6"
+sourceHash="738fcd1771dc6ce03a870787b6db46f942c7ff09"
 summary="Is this an empty (zero-sized) file?"
 summaryComputed="true"
 usage="fileIsEmpty [ file ] [ --help ]"

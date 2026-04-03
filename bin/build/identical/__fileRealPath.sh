@@ -12,7 +12,7 @@
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - File. Required. One or more files to `realpath`.
-# Requires: executableExists realpath __help usageDocument returnArgument
+# Requires: executableExists realpath __help bashDocumentation returnArgument
 fileRealPath() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __help "$handler" --help || return 0
@@ -35,6 +35,6 @@ fileRealPath() {
   fi
 }
 _fileRealPath() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

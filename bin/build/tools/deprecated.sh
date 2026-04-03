@@ -18,6 +18,50 @@
 #             |_|
 #
 
+# Deprecated: 2026-04
+# See: bashSimpleDocumentation
+usageDocumentSimple() {
+  _deprecated "${FUNCNAME[0]}"
+  bashSimpleDocumentation "$@"
+}
+
+# Deprecated: 2026-04
+# See: bashDocumentation
+usageDocument() {
+  _deprecated "${FUNCNAME[0]}"
+  bashDocumentation "$@"
+}
+
+# Deprecated: 2026-04
+# See: textCannon
+cannon() {
+  _deprecated "${FUNCNAME[0]}"
+  textCannon "$@"
+}
+
+# Deprecated: 2026-04
+# See: localePlural
+plural() {
+  _deprecated "${FUNCNAME[0]}"
+  localePlural "$@"
+}
+
+# Deprecated: 2026-04
+# See: stringHideNewlines
+pluralWord() {
+  _deprecated "${FUNCNAME[0]}"
+  localePluralWord "$@"
+}
+
+# Deprecated: 2026-04
+# See: stringHideNewlines
+newlineHide() {
+  _deprecated "${FUNCNAME[0]}"
+  stringHideNewlines "$@"
+}
+
+# Deprecated: 2026-04
+# See: bashPromptModule_BuildProject
 bashPromptModule_binBuild() {
   _deprecated "${FUNCNAME[0]}"
   bashPromptModule_BuildProject "$@"
@@ -40,177 +84,207 @@ bashPromptModule_binBuild() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Deprecated: 2026-03
+# See: __decorateExtensionBox
 consoleHeadingBoxed() {
   _deprecated "${FUNCNAME[0]}"
   decorate box "$@"
 }
 _consoleHeadingBoxed() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Deprecated: 2026-03
+# See: executeLoop
 loopExecute() {
   _deprecated "${FUNCNAME[0]}"
   executeLoop "$@" || return $?
 }
 
 # Deprecated: 2026-03
+# See: stringRandom
 randomString() {
   _deprecated "${FUNCNAME[0]}"
   stringRandom "$@"
 }
 
 # Deprecated: 2026-03
+# See: executableRequire
 usageRequireBinary() {
   _deprecated "${FUNCNAME[0]}"
   executableRequire "$@"
 }
 
 # Deprecated: 2026-03
+# See: environmentRequire
 usageRequireEnvironment() {
   _deprecated "${FUNCNAME[0]}"
   environmentRequire "$@"
 }
 
 # Deprecated: 2026-03
+# See: gitTagVee
 veeGitTag() {
   _deprecated "${FUNCNAME[0]}"
   gitTagVee "$@"
 }
 
 # Deprecated: 2026-03
+# See: directoryWatch
 watchDirectory() {
   _deprecated "${FUNCNAME[0]}"
   directoryWatch "$@"
 }
 
 # Deprecated: 2026-03
+# See: textSHA
 shaPipe() {
   _deprecated "${FUNCNAME[0]}"
   textSHA "$@"
 }
 
 # Deprecated: 2026-03
+# See: logRotate
 rotateLog() {
   _deprecated "${FUNCNAME[0]}"
   logRotate "$@"
 }
 
 # Deprecated: 2026-03
+# See: logRotates
 rotateLogs() {
   _deprecated "${FUNCNAME[0]}"
-  logsRotate "$@"
+  logRotates "$@"
 }
 
 # Deprecated: 2026-03
+# See: stringUppercase
 uppercase() {
   _deprecated "${FUNCNAME[0]}"
   stringUppercase "$@"
 }
 
 # Deprecated: 2026-03
+# See: stringLowercase
 lowercase() {
   _deprecated "${FUNCNAME[0]}"
   stringLowercase "$@"
 }
 
 # Deprecated: 2026-03
+# See: stringUnquote
 unquote() {
   _deprecated "${FUNCNAME[0]}"
   stringUnquote "$@"
 }
 
 # Deprecated: 2026-03
+# See: cpuLoadAverage
 loadAverage() {
   _deprecated "${FUNCNAME[0]}"
   cpuLoadAverage "$@"
 }
 
 # Deprecated: 2026-03
+# See: booleanParse
 parseBoolean() {
   _deprecated "${FUNCNAME[0]}"
   booleanParse "$@"
 }
 
 # Deprecated: 2026-03
+# See: integerClamp
 clampDigits() {
   _deprecated "${FUNCNAME[0]}"
   integerClamp "$@"
 }
 
 # Deprecated: 2026-03
+# See: textReplaceFirst
 replaceFirstPattern() {
   _deprecated "${FUNCNAME[0]}"
+  textReplaceFirst "$@"
 }
 
 # Deprecated: 2026-03
+# See: textReplace
 stringReplace() {
   _deprecated "${FUNCNAME[0]}"
   textReplace "$@"
 }
 
 # Deprecated: 2026-03
+# See: textTrimBoth
 trimBoth() {
   _deprecated "${FUNCNAME[0]}"
   textTrimBoth "$@"
 }
 
 # Deprecated: 2026-03
+# See: textTrimHead
 trimHead() {
   _deprecated "${FUNCNAME[0]}"
   textTrimHead "$@"
 }
 
 # Deprecated: 2026-03
+# See: textTrimTail
 trimTail() {
   _deprecated "${FUNCNAME[0]}"
   textTrimTail "$@"
 }
 
 # Deprecated: 2026-03
+# See: textSingleBlankLines
 singleBlankLines() {
   _deprecated "${FUNCNAME[0]}"
   textSingleBlankLines "$@"
 }
 
 # Deprecated: 2026-03
+# See: textTrimRight
 trimRightSpace() {
   _deprecated "${FUNCNAME[0]}"
   textTrimRight "$@"
 }
 
 # Deprecated: 2026-03
+# See: textTrimLeft
 trimLeftSpace() {
   _deprecated "${FUNCNAME[0]}"
   textTrimLeft "$@"
 }
 
 # Deprecated: 2026-03
+# See: trimSpace
 trimSpace() {
   _deprecated "${FUNCNAME[0]}"
   textTrim "$@"
 }
 
 # Deprecated: 2026-03
+# See: textRemoveFields
 removeFields() {
   _deprecated "${FUNCNAME[0]}"
   textRemoveFields "$@"
 }
 
 # Deprecated: 2026-01
+# See: stringFound
 isSubstring() {
   _deprecated "${FUNCNAME[0]}"
   stringFound "$@"
 }
 
 # Deprecated: 2026-01
+# See: stringFoundInsensitive
 isSubstringInsensitive() {
   _deprecated "${FUNCNAME[0]}"
   stringFoundInsensitive "$@"
 }
 
 # Deprecated: 2026-01
+# See: hookExists
 hasHook() {
   _deprecated "${FUNCNAME[0]}"
   hookExists "$@"
@@ -223,6 +297,7 @@ hasHook() {
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: binary - Callable. Optional. Run this program after loading test tools.
 # Argument: ... - Optional. Arguments. Arguments for binary.
+# See: testSuite
 testTools() {
   local handler="_${FUNCNAME[0]}"
 
@@ -238,70 +313,81 @@ testTools() {
   catchEnvironment "$handler" "$@" || return $?
 }
 _testTools() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Deprecated: 2026-01
+# See: fileFieldMaximum
 maximumFieldLength() {
   _deprecated "${FUNCNAME[0]}"
   fileFieldMaximum "$@"
 }
 
 # Deprecated: 2026-01
+# See: fileLineMaximum
 maximumLineLength() {
   _deprecated "${FUNCNAME[0]}"
   fileLineMaximum "$@"
 }
 
 # Deprecated: 2026-01
+# See: consoleHeadingBoxed
 boxedHeading() {
   _deprecated "${FUNCNAME[0]}"
   consoleHeadingBoxed "$@" || return $?
 }
 
 # Deprecated: 2026-01
+# See: consoleHeadingLine
 lineFill() {
   _deprecated "${FUNCNAME[0]}"
   consoleHeadingLine
 }
 
 # Deprecated: 2026-01
+# See: textRepeat
 repeat() {
   _deprecated "${FUNCNAME[0]}"
   textRepeat "$@"
 }
 
 # Deprecated: 2026-01
+# See: executableExists
 whichExists() {
   _deprecated "${FUNCNAME[0]}"
   executableExists "$@"
 }
 
 # Deprecated: 2026-01
+# See: hookFind
 whichHook() {
   _deprecated "${FUNCNAME[0]}"
   hookFind "$@"
 }
 
 # Deprecated: 2026-01
+# See: fileExtensionLists
 extensionLists() {
   fileExtensionLists "$@"
 }
 
 # Deprecated: 2026-01
+# See: dateYesterday
 yesterdayDate() {
   _deprecated "${FUNCNAME[0]}"
   dateYesterday "$@"
 }
 
 # Deprecated: 2026-01
+# See: dateToday
 todayDate() {
   _deprecated "${FUNCNAME[0]}"
   dateToday "$@"
 }
 
 # Deprecated: 2026-01
+# See: dateTomorrow
 tomorrowDate() {
   _deprecated "${FUNCNAME[0]}"
   dateTomorrow "$@"
@@ -347,19 +433,20 @@ buildFailed() {
   dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
   throwEnvironment "$handler" "Failed:" "$@" || return $?
 }
-
 _buildFailed() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Deprecated: 2026-01
+# See: bashMakeExecutable
 makeShellFilesExecutable() {
   _deprecated "${FUNCNAME[0]}"
   bashMakeExecutable "$@" || return $?
 }
 
 # Deprecated: 2026-01
+# See: consoleLine
 echoBar() {
   _deprecated "${FUNCNAME[0]}"
   consoleLine "$@" || return $?
@@ -367,6 +454,7 @@ echoBar() {
 
 # Deprecated: 2026-01
 # shellcheck disable=SC2329
+# See: pathIsAbsolute
 isAbsolutePath() {
   _deprecated "${FUNCNAME[0]}"
   pathIsAbsolute "$@" || return $?
@@ -392,17 +480,21 @@ hasColors() {
 }
 
 # Deprecated: 2026-01
+# See: bashFindUncaughtAssertions
 findUncaughtAssertions() {
   _deprecated "${FUNCNAME[0]}"
   bashFindUncaughtAssertions "$@" || return $?
 }
 
+# See: filesOpenStatus
 # Deprecated: 2026-01
 debugOpenFiles() {
   _deprecated "${FUNCNAME[0]}"
   filesOpenStatus "$@" || return $?
 }
 
+# See: consoleLineFill
+# Deprecated: consoleLineFill
 clearLine() {
   _deprecated "${FUNCNAME[0]}"
   consoleLineFill "$@"
@@ -444,8 +536,8 @@ consoleColorMode() {
 }
 
 _consoleColorMode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Validates a value is not blank and is an environment file which is loaded immediately.

@@ -36,8 +36,8 @@ pause() {
   bashUserInput
 }
 _pause() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ####################################################################################################
@@ -56,8 +56,8 @@ fileCopy() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _fileCopy() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check whether copying a file would change it
@@ -71,8 +71,8 @@ fileCopyWouldChange() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _fileCopyWouldChange() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: directoryOrFile - Exists. Required. Directory or file to `source` `.sh` files found.
@@ -93,8 +93,8 @@ approveBashSource() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _approveBashSource() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List approved Bash script sources which can be loaded automatically by project hooks.
@@ -111,8 +111,8 @@ approvedSources() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _approvedSources() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Notify after running a binary. Uses the `notify` hook with some handy parameters which are inherited
@@ -138,8 +138,8 @@ notify() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _notify() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Read user input and return 0 if the user says yes, or non-zero if they say no
@@ -165,8 +165,8 @@ confirmYesNo() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _confirmYesNo() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Ask the user for a menu of options
@@ -184,8 +184,8 @@ confirmMenu() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _confirmMenu() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
@@ -198,8 +198,8 @@ executeLoop() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _executeLoop() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
@@ -212,8 +212,8 @@ interactiveManager() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _interactiveManager() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Display a message and count down display
@@ -228,8 +228,8 @@ interactiveCountdown() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _interactiveCountdown() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Do something the first time and then only occasionally thereafter.
@@ -293,6 +293,6 @@ interactiveOccasionally() {
   fi
 }
 _interactiveOccasionally() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="jsonFile - File. Required. File to get value from."$'\n'"path - String. Required. dot-separated path to get"$'\n'""
 base="json.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Get a value in a JSON file"$'\n'"Argument: jsonFile - File. Required. File to get value from."$'\n'"Argument: path - String. Required. dot-separated path to get"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/json.sh"
-sourceHash="3505d1bfdcea59364bfe55887392a665d22cea11"
+sourceHash="e7e9bbb5a5c883cd136dbe34ac5ccb4394f94a5f"
 summary="Get a value in a JSON file"
 summaryComputed="true"
 usage="jsonFileGet jsonFile path"

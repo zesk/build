@@ -136,7 +136,7 @@ processWait() {
       sinceLastSignal=0
     fi
     if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ] && [ ${#sendSignals[@]} -eq 0 ]; then
-      throwEnvironment "$handler" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
+      throwEnvironment "$handler" "Expired after $elapsed $(localePlural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
     fi
     if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
       statusMessage decorate info "${handler#_} ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
@@ -144,12 +144,12 @@ processWait() {
     sleep 1 || throwEnvironment "$handler" "sleep interrupted" || return $?
   done
   if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
-    statusMessage --last decorate warning "$elapsed $(plural "$elapsed" second seconds) elapsed (threshold is $(decorate code "$STATUS_THRESHOLD"))"
+    statusMessage --last decorate warning "$elapsed $(localePlural "$elapsed" second seconds) elapsed (threshold is $(decorate code "$STATUS_THRESHOLD"))"
   fi
 }
 _processWait() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -184,8 +184,8 @@ processMemoryUsage() {
   done
 }
 _processMemoryUsage() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -221,8 +221,8 @@ processVirtualMemoryAllocation() {
   done
 }
 _processVirtualMemoryAllocation() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # TODO: This is in progress
@@ -259,8 +259,8 @@ processOpenPipes() {
   done
 }
 _processOpenPipes() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # lsof

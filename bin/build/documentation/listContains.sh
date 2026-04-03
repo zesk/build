@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="return_code" [2]="argument")
 rawComment="Summary: Does a character-delimited list contain item(s)?"$'\n'"Return code 0 IFF all items are found in the list. If any item is not found, returns code 1."$'\n'"Return code: 0 - All items are found in the \`listValue\`"$'\n'"Return code: 1 - One or more items were NOT found in the \`listValue\`"$'\n'"If no items are passed in the return value is 0 (true)."$'\n'"Argument: listValue - Required. List value to search."$'\n'"Argument: separator - Required. Separator string for item values (typically \`:\`)"$'\n'"Argument: item ... - Optional. the item to be searched for in the \`listValue\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Add an item to the beginning or end of a text-delimited list"$'\n'""$'\n'""
 return_code="0 - All items are found in the \`listValue\`"$'\n'"1 - One or more items were NOT found in the \`listValue\`"$'\n'""
 sourceFile="bin/build/tools/list.sh"
-sourceHash="87314fd289f273788acd3fd9e6c5a11b2aa05b47"
+sourceHash="41d98a302feb190799f47d4570b57b5beb5b3303"
 summary="Does a character-delimited list contain item(s)?"$'\n'""
 usage="listContains listValue separator [ item ... ] [ --help ]"
 # shellcheck disable=SC2016

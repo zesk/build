@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Output the newest file in the list"$'\n'"Argument: file ... - File. Required. One or more files to examine"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="c3e7e8b447b49ef6c60b5bfa7abaccf84b3ca4c6"
+sourceHash="738fcd1771dc6ce03a870787b6db46f942c7ff09"
 summary="Output the newest file in the list"
 summaryComputed="true"
 usage="fileNewest file ... [ --help ]"

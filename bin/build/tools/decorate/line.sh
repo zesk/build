@@ -50,8 +50,8 @@ consoleLine() {
   printf -- "%s\n" "$(textRepeat "$count" "$barText")"
 }
 _consoleLine() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output a line and fill columns with a character
@@ -81,6 +81,6 @@ consoleHeadingLine() {
   printf "%s\n" "${text:0:$width}"
 }
 _consoleHeadingLine() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

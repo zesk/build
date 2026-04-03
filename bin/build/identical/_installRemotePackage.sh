@@ -329,11 +329,11 @@ _installRemotePackage() {
 # Error handler for _installRemotePackage
 # Argument: returnCode - UnsignedInteger. Required. Exit code.
 # Argument: message ... - EmptyString. Optional. Error message to show.
-# Requires: usageDocumentSimple
+# Requires: bashSimpleDocumentation
 __installRemotePackage() {
   local source content
   source=$(basename "${BASH_SOURCE[0]}")
-  content="$(usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" | grep -v "INTERNAL")"
+  content="$(bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" | grep -v "INTERNAL")"
   content="${content//\{name\}/$name}"
   content="${content//\{source\}/$source}"
   printf -- "%s\n" "$content"

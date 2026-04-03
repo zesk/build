@@ -44,8 +44,8 @@ deployApplication() {
   __deployLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _deployApplication() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -86,8 +86,8 @@ deployApplicationVersion() {
   throwEnvironment "$handler" "No application version found" || return $?
 }
 _deployApplicationVersion() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -110,8 +110,8 @@ deployPackageName() {
 }
 _deployPackageName() {
   true || deployPackageName --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -133,8 +133,8 @@ deployHasVersion() {
   [ -f "$deployHome/$versionName/$targetPackage" ]
 }
 _deployHasVersion() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -164,8 +164,8 @@ deployPreviousVersion() {
   _applicationIdLink "_${FUNCNAME[0]}" previous "$@"
 }
 _deployPreviousVersion() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -178,8 +178,8 @@ deployNextVersion() {
   _applicationIdLink "_${FUNCNAME[0]}" next "$@"
 }
 _deployNextVersion() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -200,8 +200,8 @@ deployMove() {
   directoryClobber "$newApplicationSource" "$applicationPath"
 }
 _deployMove() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Environment: PWD
@@ -222,8 +222,8 @@ deployLink() {
   __deployLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _deployLink() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: deployHome - Directory. Required. Deployment database home.
@@ -235,6 +235,6 @@ deployMigrateDirectoryToLink() {
 }
 
 _deployMigrateDirectoryToLink() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

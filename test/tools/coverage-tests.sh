@@ -92,7 +92,7 @@ __deprecatedFunctions() {
 #
 #  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 #
-#  ! $testFailed || throwEnvironment "$handler" "$(pluralWord "$total" function) are missing tests."
+#  ! $testFailed || throwEnvironment "$handler" "$(localePluralWord "$total" function) are missing tests."
 #}
 
 # Tag: slow-30-seconds slow
@@ -135,7 +135,7 @@ testBuildFunctionsCoverage() {
       missing+=("$function")
       statusMessage --last decorate warning "No references found for $(decorate code "$function")"
     else
-      statusMessage decorate info "$foundCount $(plural "$foundCount" reference references) to $(decorate code "$function"): $(head -n 1 <<<"$matchingTests")"
+      statusMessage decorate info "$foundCount $(localePlural "$foundCount" reference references) to $(decorate code "$function"): $(head -n 1 <<<"$matchingTests")"
     fi
   done < <(buildFunctions)
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
@@ -279,7 +279,7 @@ printfOutputSuffix
 printfOutputPrefix
 sedReplacePattern
 booleanParse
-newlineHide
+stringHideNewlines
 fileRealPath
 isPlain
 EOF

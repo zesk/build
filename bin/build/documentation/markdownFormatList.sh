@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="markdown.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="stdin" [1]="stdout")
 rawComment="Simple function to make list-like things more list-like in Markdown"$'\n'"1. Remove all trailing spaces from all lines"$'\n'"2. remove leading \"dash space\" if it exists (\`- \`)"$'\n'"3. Semantically, if the phrase matches \`[word]+[space][dash][space]\`. backtick quote the \`[word]\`, otherwise skip"$'\n'"4. Prefix each line with a \"dash space\" (\`- \`)"$'\n'"stdin: reads input from stdin"$'\n'"stdout: formatted markdown list"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/markdown.sh"
-sourceHash="7a1158bea472d7a4646324cc4a044fd6ac9ad611"
+sourceHash="114420a39bf775fd41a68d5b6baff543fe5c1b7f"
 stdin="reads input from stdin"$'\n'""
 stdout="formatted markdown list"$'\n'""
 summary="Simple function to make list-like things more list-like in Markdown"

@@ -32,8 +32,8 @@ identicalRepair() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _identicalRepair() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --extension extension - String. Required. One or more extensions to search for in the current directory.
@@ -85,8 +85,8 @@ identicalCheck() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _identicalCheck() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Identical check for shell files
@@ -117,8 +117,8 @@ identicalCheckShell() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _identicalCheckShell() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
@@ -128,8 +128,8 @@ identicalFindTokens() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _identicalFindTokens() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # DOC TEMPLATE: --help 1
@@ -144,6 +144,6 @@ identicalWatch() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _identicalWatch() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Is the current console iTerm2?"$'\n'"Succeeds when LC_TERMINAL is \`iTerm2\` AND TERM is NOT \`screen\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: LC_TERMINAL"$'\n'"Environment: TERM"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="e639d19b7d6de0e83e7f1fbbac181f503559be56"
+sourceHash="91a65f03915e4e3420e13242ad0b50d50652de48"
 summary="Is the current console iTerm2?"
 summaryComputed="true"
 usage="isiTerm2 [ --help ]"

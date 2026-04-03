@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Find the newest modified file in a directory"$'\n'"Argument: directory - Directory. Required. Directory to search for the newest file."$'\n'"Argument: --find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="c3e7e8b447b49ef6c60b5bfa7abaccf84b3ca4c6"
+sourceHash="738fcd1771dc6ce03a870787b6db46f942c7ff09"
 summary="Find the newest modified file in a directory"
 summaryComputed="true"
 usage="directoryNewestFile directory [ --find findArgs ... -- ]"

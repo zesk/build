@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="alternateChar - String. Optional. Use an alternate character or string output"$'\n'"offset - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is \`0\`)"$'\n'""
 base="line.sh"
@@ -13,7 +13,7 @@ rawComment="Summary: Output a bar as wide as the console"$'\n'"Output a bar as w
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="consoleColumns"$'\n'""
 sourceFile="bin/build/tools/decorate/line.sh"
-sourceHash="d4cd740d5d6a84a884fd713f35b747da69c16f00"
+sourceHash="ccbaa0224c3abeac71472c93bd4d77fe170434c0"
 summary="Output a bar as wide as the console"$'\n'""
 usage="consoleLine [ alternateChar ] [ offset ]"
 # shellcheck disable=SC2016

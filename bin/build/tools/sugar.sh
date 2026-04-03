@@ -54,8 +54,8 @@ muzzle() {
   "$@" >/dev/null
 }
 _muzzle() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Suppress return codes
@@ -70,8 +70,8 @@ muzzleReturn() {
   "$@" || return 0
 }
 _muzzleReturn() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -105,8 +105,8 @@ returnMap() {
   return "${value:-0}"
 }
 _returnMap() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL returnUndo 42
@@ -125,7 +125,7 @@ _returnMap() {
 # Example:     thing=$(catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
 # Requires: isUnsignedInteger throwArgument decorate execute
-# Requires: usageDocument
+# Requires: bashDocumentation
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" execArguments=()
   # __IDENTICAL__ __checkHelp1__handler 1
@@ -149,8 +149,8 @@ returnUndo() {
   return "$code"
 }
 _returnUndo() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL executeInputSupport 39

@@ -1,0 +1,1 @@
+[bashSimpleDocumentation]({rel}tools/usage.md#bashsimpledocumentation) - Output a simple error message for a function ([source](https://github.com/zesk/build/blob/main/bin/build/identical/bashSimpleDocumentation.sh#L19))

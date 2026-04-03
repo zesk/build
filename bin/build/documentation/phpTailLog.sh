@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="php.sh"
@@ -12,7 +12,7 @@ rawComment="Tail the PHP log"$'\n'"Argument: --help - Flag. Optional. Display th
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="tail"$'\n'""
 sourceFile="bin/build/tools/php.sh"
-sourceHash="912609aca14f069dd1c36f27415c9d01ecbf6288"
+sourceHash="64d4aa53cd146a2f3f4e58bf69e8a5d68ffd3e73"
 summary="Tail the PHP log"
 summaryComputed="true"
 usage="phpTailLog [ --help ]"

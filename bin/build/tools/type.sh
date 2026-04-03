@@ -29,7 +29,7 @@
 #
 isUnsignedNumber() {
   [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
-  case ${1#+} in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
+  case ${1#+} in --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
 #
@@ -45,7 +45,7 @@ isUnsignedNumber() {
 isNumber() {
   [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   # `-help` match is EXPLICIT as the case removes the first dash
-  case ${1#[-+]} in -help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
+  case ${1#[-+]} in -help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
 #
@@ -61,7 +61,7 @@ isNumber() {
 isInteger() {
   [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   # `-help` match is EXPLICIT as the case removes the first dash
-  case ${1#[-+]} in -help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
+  case ${1#[-+]} in -help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
 
 # True-ish
@@ -90,8 +90,8 @@ isTrue() {
   return 0
 }
 _isTrue() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Bash types beyond `type -t`
@@ -113,8 +113,8 @@ isType() {
   fi
 }
 _isType() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # _IDENTICAL_ isArray 21
@@ -136,8 +136,8 @@ isArray() {
   return 0
 }
 _isArray() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL _type 42
@@ -147,7 +147,7 @@ _isArray() {
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: catchArgument isUnsignedInteger usageDocument
+# Requires: catchArgument isUnsignedInteger bashDocumentation
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
@@ -160,8 +160,8 @@ isPositiveInteger() {
   return 1
 }
 _isPositiveInteger() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Test if argument are bash functions
@@ -169,7 +169,7 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: catchArgument isUnsignedInteger usageDocument type
+# Requires: catchArgument isUnsignedInteger bashDocumentation type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
@@ -180,8 +180,8 @@ isFunction() {
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
 }
 _isFunction() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL isCallable 46
@@ -201,8 +201,8 @@ isCallable() {
   fi
 }
 _isCallable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Test if all arguments are executable binaries
@@ -228,6 +228,6 @@ isExecutable() {
   fi
 }
 _isExecutable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

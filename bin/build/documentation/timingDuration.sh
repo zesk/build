@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Output timing like \"1 day, 2 hours, 3 minutes, 4 seconds, 5 ms\""$'\n'"Argument: duration - UnsignedInteger. Optional. Timing to output"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/timing.sh"
-sourceHash="f214e3b90108da623ba5d789b13d6a42e7600413"
+sourceHash="a2dd1cac5294f71154fbfa2d171e81f150251ed4"
 summary="Output timing like \"1 day, 2 hours, 3 minutes, 4"
 summaryComputed="true"
 usage="timingDuration [ duration ] [ --help ] [ --handler handler ]"

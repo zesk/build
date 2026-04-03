@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="text - EmptyString. Required. Text to quote."$'\n'""
 base="quote.sh"
@@ -10,12 +10,12 @@ example="    name=\"\$(quoteBashString \"\$name\")\""$'\n'""
 file="bin/build/tools/quote.sh"
 fn="quoteBashString"
 foundNames=([0]="argument" [1]="output" [2]="depends" [3]="example")
-name="#584/687 - quoteBashString"
+name="#167/690 - quoteBashString"
 output="string quoted and appropriate to assign to a value in the shell"$'\n'""
 rawComment="Quote bash strings for inclusion as single-quoted for eval"$'\n'"Argument: text - EmptyString. Required. Text to quote."$'\n'"Output: string quoted and appropriate to assign to a value in the shell"$'\n'"Depends: sed"$'\n'"Example:     name=\"\$(quoteBashString \"\$name\")\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
-sourceHash="59057e40f593606f5718006f60642e3eeda2fff0"
+sourceHash="ea3a27e64582997f04005c71fc71250ff1ba01c0"
 summary="Quote bash strings for inclusion as single-quoted for eval"
 summaryComputed="true"
 usage="quoteBashString text"

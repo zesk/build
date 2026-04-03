@@ -45,8 +45,8 @@ deprecatedFilePrependVersion() {
   catchEnvironment "$handler" mv -f "$newTarget" "$target" || returnClean $? "$newTarget" || return $?
 }
 _deprecatedFilePrependVersion() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output a list of tokens for `find` to ignore in deprecated calls
@@ -81,8 +81,8 @@ deprecatedIgnore() {
     "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
 }
 _deprecatedIgnore() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run deprecated tokens file search
@@ -146,8 +146,8 @@ deprecatedTokensFile() {
   statusMessage --last timingReport "$start" "Deprecated token scan took"
 }
 _deprecatedTokensFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
@@ -229,8 +229,8 @@ deprecatedCannonFile() {
   return "$exitCode"
 }
 _deprecatedCannonFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Find files which match a token or tokens
@@ -277,8 +277,8 @@ deprecatedFind() {
   return 1
 }
 _deprecatedFind() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory.
@@ -325,6 +325,6 @@ deprecatedCannon() {
   cannon --path "$cannonPath" "$search" "$@" "${aa[@]}"
 }
 _deprecatedCannon() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

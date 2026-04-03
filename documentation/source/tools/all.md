@@ -76,6 +76,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:bashDebuggerDisable}
 - {SEE:bashDebuggerEnable}
 - {SEE:bashDebugInterruptFile}
+- {SEE:bashDocumentation}
 - {SEE:bashDocumentationExtract}
 - {SEE:bashFileComment}
 - {SEE:bashFinalComment}
@@ -100,6 +101,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:bashRecursionDebug}
 - {SEE:bashSanitize}
 - {SEE:bashShowUsage}
+- {SEE:bashSimpleDocumentation}
 - {SEE:bashSourcePath}
 - {SEE:bashStripComments}
 - {SEE:bashUserInput}
@@ -127,7 +129,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:buildFunctions}
 - {SEE:buildHome}
 - {SEE:buildQuietLog}
-- {SEE:cannon}
 - {SEE:catchArgument}
 - {SEE:catchCode}
 - {SEE:catchEnvironment}
@@ -493,8 +494,11 @@ All functions in Zesk Build, alphabetically.
 - {SEE:linkRename}
 - {SEE:listAppend}
 - {SEE:listCleanDuplicates}
+- {SEE:listContains}
 - {SEE:listJoin}
 - {SEE:listRemove}
+- {SEE:localePlural}
+- {SEE:localePluralWord}
 - {SEE:logRotate}
 - {SEE:logRotates}
 - {SEE:manPathCleanDuplicates}
@@ -522,7 +526,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:muzzleReturn}
 - {SEE:networkIPList}
 - {SEE:networkMACAddressList}
-- {SEE:newlineHide}
 - {SEE:nodeInstall}
 - {SEE:nodePackageManager}
 - {SEE:nodePackageManagerInstall}
@@ -575,8 +578,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:pipWrapper}
 - {SEE:plasterLines}
 - {SEE:plumber}
-- {SEE:plural}
-- {SEE:pluralWord}
 - {SEE:printfOutputEmpty}
 - {SEE:printfOutputPrefix}
 - {SEE:printfOutputSuffix}
@@ -623,6 +624,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:stringContainsInsensitive}
 - {SEE:stringFound}
 - {SEE:stringFoundInsensitive}
+- {SEE:stringHideNewlines}
 - {SEE:stringLowercase}
 - {SEE:stringOffset}
 - {SEE:stringOffsetInsensitive}
@@ -642,6 +644,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:testSuiteOrdering}
 - {SEE:textAlignLeft}
 - {SEE:textAlignRight}
+- {SEE:textCannon}
 - {SEE:textRemoveFields}
 - {SEE:textRepeat}
 - {SEE:textReplace}
@@ -675,8 +678,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:urlParseItem}
 - {SEE:urlSchemeDefaultPort}
 - {SEE:urlValid}
-- {SEE:usageDocument}
-- {SEE:usageDocumentSimple}
 - {SEE:userAgentDefault}
 - {SEE:userHome}
 - {SEE:userRecord}

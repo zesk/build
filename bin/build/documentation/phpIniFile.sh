@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="php.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="Outputs the path to the PHP ini file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/php.sh"
-sourceHash="912609aca14f069dd1c36f27415c9d01ecbf6288"
+sourceHash="64d4aa53cd146a2f3f4e58bf69e8a5d68ffd3e73"
 summary="Outputs the path to the PHP ini file"
 summaryComputed="true"
 usage="phpIniFile"

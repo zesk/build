@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--map - Flag. Optional. Map environment values into file before copying."$'\n'"source - File. Required. Source path"$'\n'"destination - File. Required. Destination path"$'\n'""
 base="interactive.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Check whether copying a file would change it"$'\n'"This function does not modify the source or destination."$'\n'"Argument: --map - Flag. Optional. Map environment values into file before copying."$'\n'"Argument: source - File. Required. Source path"$'\n'"Argument: destination - File. Required. Destination path"$'\n'"Return Code: 0 - Something would change"$'\n'"Return Code: 1 - Nothing would change"$'\n'""$'\n'""
 return_code="0 - Something would change"$'\n'"1 - Nothing would change"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="Check whether copying a file would change it"
 summaryComputed="true"
 usage="fileCopyWouldChange [ --map ] source destination"

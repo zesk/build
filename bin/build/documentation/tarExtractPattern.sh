@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="pattern - The file pattern to extract"$'\n'""
 base="tar.sh"
@@ -12,7 +12,7 @@ rawComment="Platform agnostic tar extract with wildcards"$'\n'"e.g. \`tar -xf '*
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 short_description="Platform agnostic tar extract"$'\n'""
 sourceFile="bin/build/tools/tar.sh"
-sourceHash="7a86bba3f846041fd7f1137bacf4649f73976941"
+sourceHash="653b08cc1c06dc46314ed431523376cc1c8a11d9"
 stdin="A gzipped-tar file"$'\n'""
 stdout="The desired file"$'\n'""
 summary="Platform agnostic tar extract with wildcards"

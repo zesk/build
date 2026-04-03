@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="string - Required. String to test if it is a bash function. Builtins are supported. \`.\` is explicitly not supported to disambiguate it from the current directory \`.\`."$'\n'""
 base="type.sh"
@@ -8,11 +8,11 @@ description="Test if argument are bash functions"$'\n'"If no arguments are passe
 file="bin/build/tools/type.sh"
 fn="isFunction"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
-rawComment="Test if argument are bash functions"$'\n'"Argument: string - Required. String to test if it is a bash function. Builtins are supported. \`.\` is explicitly not supported to disambiguate it from the current directory \`.\`."$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - argument is bash function"$'\n'"Return Code: 1 - argument is not a bash function"$'\n'"Requires: catchArgument isUnsignedInteger usageDocument type"$'\n'""$'\n'""
-requires="catchArgument isUnsignedInteger usageDocument type"$'\n'""
+rawComment="Test if argument are bash functions"$'\n'"Argument: string - Required. String to test if it is a bash function. Builtins are supported. \`.\` is explicitly not supported to disambiguate it from the current directory \`.\`."$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - argument is bash function"$'\n'"Return Code: 1 - argument is not a bash function"$'\n'"Requires: catchArgument isUnsignedInteger bashDocumentation type"$'\n'""$'\n'""
+requires="catchArgument isUnsignedInteger bashDocumentation type"$'\n'""
 return_code="0 - argument is bash function"$'\n'"1 - argument is not a bash function"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="cf046d7ea9b582a95b5cf64eaaa0310238a19003"
+sourceHash="31b62907df0050b8df8d06ec27701b9721bf81aa"
 summary="Test if argument are bash functions"
 summaryComputed="true"
 usage="isFunction string"

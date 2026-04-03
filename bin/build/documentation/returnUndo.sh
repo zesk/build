@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"code - UnsignedInteger. Required. Exit code to return."$'\n'"undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored."$'\n'"-- - Flag. Optional. Used to delimit multiple commands."$'\n'""
 base="sugar.sh"
@@ -9,11 +9,11 @@ example="    local undo thing"$'\n'"    thing=\$(catchEnvironment \"\$handler\" 
 file="bin/build/tools/sugar.sh"
 fn="returnUndo"
 foundNames=([0]="argument" [1]="example" [2]="requires")
-rawComment="Run a function and preserve exit code"$'\n'"Returns \`code\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: code - UnsignedInteger. Required. Exit code to return."$'\n'"Argument: undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored."$'\n'"Argument: -- - Flag. Optional. Used to delimit multiple commands."$'\n'"As a caveat, your command to \`undo\` can NOT take the argument \`--\` as a parameter."$'\n'"Example:     local undo thing"$'\n'"Example:     thing=\$(catchEnvironment \"\$handler\" createLargeResource) || return \$?"$'\n'"Example:     undo+=(-- deleteLargeResource \"\$thing\")"$'\n'"Example:     thing=\$(catchEnvironment \"\$handler\" createMassiveResource) || returnUndo \$? \"\${undo[@]}\" || return \$?"$'\n'"Example:     undo+=(-- deleteMassiveResource \"\$thing\")"$'\n'"Requires: isUnsignedInteger throwArgument decorate execute"$'\n'"Requires: usageDocument"$'\n'""$'\n'""
-requires="isUnsignedInteger throwArgument decorate execute"$'\n'"usageDocument"$'\n'""
+rawComment="Run a function and preserve exit code"$'\n'"Returns \`code\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: code - UnsignedInteger. Required. Exit code to return."$'\n'"Argument: undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored."$'\n'"Argument: -- - Flag. Optional. Used to delimit multiple commands."$'\n'"As a caveat, your command to \`undo\` can NOT take the argument \`--\` as a parameter."$'\n'"Example:     local undo thing"$'\n'"Example:     thing=\$(catchEnvironment \"\$handler\" createLargeResource) || return \$?"$'\n'"Example:     undo+=(-- deleteLargeResource \"\$thing\")"$'\n'"Example:     thing=\$(catchEnvironment \"\$handler\" createMassiveResource) || returnUndo \$? \"\${undo[@]}\" || return \$?"$'\n'"Example:     undo+=(-- deleteMassiveResource \"\$thing\")"$'\n'"Requires: isUnsignedInteger throwArgument decorate execute"$'\n'"Requires: bashDocumentation"$'\n'""$'\n'""
+requires="isUnsignedInteger throwArgument decorate execute"$'\n'"bashDocumentation"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
-sourceHash="805a01b4c2e623a9ee22e4d243ea0285d3491b66"
+sourceHash="2e389c757a84d8e9dbd06cef55f472fae2738c7d"
 summary="Run a function and preserve exit code"
 summaryComputed="true"
 thing=""

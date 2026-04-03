@@ -16,8 +16,8 @@ yumIsInstalled() {
   [ -x "/usr/bin/yum" ]
 }
 _yumIsInstalled() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __yumNonInteractive() {

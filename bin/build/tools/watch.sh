@@ -70,13 +70,13 @@ directoryWatch() {
     fi
 
     [ -z "$secondsToRun" ] || [ $(((stop - init) / 1000)) -lt "$secondsToRun" ] || break
-    ! $verboseFlag || statusMessage decorate info "$(decorate subtle "$(date +%T)"): Sleeping for $elapsed $(plural $elapsed second seconds) $(decorate file "$lastFile") modified $(decorate magenta "$lastTimestamp") ..."
+    ! $verboseFlag || statusMessage decorate info "$(decorate subtle "$(date +%T)"): Sleeping for $elapsed $(localePlural $elapsed second seconds) $(decorate file "$lastFile") modified $(decorate magenta "$lastTimestamp") ..."
     catchEnvironment "$handler" sleep "$elapsed" || returnClean $? "${clean[@]}" || return $?
   done
   ! $verboseFlag || statusMessage --last timingReport "$init" "Watch stopped after"
   returnClean 0 "${clean[@]}"
 }
 _directoryWatch() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

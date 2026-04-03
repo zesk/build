@@ -55,8 +55,8 @@ decorateThemelessMode() {
   __BUILD_DECORATE=":$(listJoin ":" "${styles[@]}"):"
 }
 _decorateThemelessMode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL decorateThemed 71
@@ -90,8 +90,8 @@ decorateThemed() {
   fi
 }
 _decorateThemed() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __decorateThemed() {

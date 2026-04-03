@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="quote - String. Required. Must match beginning and end of string."$'\n'"value - String. Required. Value to unquote."$'\n'""
 base="quote.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument")
 rawComment="Unquote a string"$'\n'"Summary: Unquote a string"$'\n'"Argument: quote - String. Required. Must match beginning and end of string."$'\n'"Argument: value - String. Required. Value to unquote."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
-sourceHash="59057e40f593606f5718006f60642e3eeda2fff0"
+sourceHash="ea3a27e64582997f04005c71fc71250ff1ba01c0"
 summary="Unquote a string"$'\n'""
 usage="stringUnquote quote value"
 # shellcheck disable=SC2016

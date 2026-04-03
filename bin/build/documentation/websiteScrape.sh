@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"url - URL. Required. Url to scrape recursively."$'\n'""
 base="web.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="untested")
 rawComment="Scrape a website."$'\n'"Untested, and in progress. Do not use seriously."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url - URL. Required. Url to scrape recursively."$'\n'"Untested: true"$'\n'"Uses \`wget\` to fetch a site, convert it to HTML nad rewrite it for local consumption."$'\n'"Site is stored in a directory called \`host\` for the URL requested."$'\n'"This is not final yet and may not work properly."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/web.sh"
-sourceHash="51e1573ca2c7c20f95b3413475f7afb24c7c0807"
+sourceHash="16f3842ec6f5892421429c63fdf08ae46e06eed8"
 summary="Scrape a website."
 summaryComputed="true"
 untested="true"$'\n'""

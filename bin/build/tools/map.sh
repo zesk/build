@@ -35,8 +35,8 @@ mapTokens() {
   sed -e "s/$prefixQ/\n$(quoteSedReplacement "$prefix")/g" -e "s/$suffixQ/$(quoteSedReplacement "$suffix")\n)/g" | sed -e "/$prefixQ/!d" -e "/$suffixQ/!d" -e "$removeQuotesPattern"
 }
 _mapTokens() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Maps a string using an environment file
@@ -119,8 +119,8 @@ mapValue() {
   )
 }
 _mapValue() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Maps a string using an environment file
@@ -132,8 +132,8 @@ mapValueTrim() {
   mapValue --handler "_${FUNCNAME[0]}" --replace-filter textTrim "$@"
 }
 _mapValueTrim() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL mapEnvironment 88
@@ -222,8 +222,8 @@ mapEnvironment() {
 }
 _mapEnvironment() {
   decorateInitialized || decorate info --
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
@@ -246,7 +246,7 @@ _mapEnvironment() {
 # Return Code: 1 - searchText is not blank
 # Return Code: 1 - fileTemporaryName failed
 # Return Code: 2 - Arguments are identical
-cannon() {
+textCannon() {
   local handler="_${FUNCNAME[0]}"
 
   local search="" cannonPath="." replace=""
@@ -299,13 +299,13 @@ cannon() {
     statusMessage --inline decorate warning "Modified (NO) files"
   else
     catchReturn "$handler" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnUndo 0 "${undo[@]}" || return $?
-    statusMessage --inline decorate success "Modified $(decorate code "$(pluralWord "$count" file)")"
+    statusMessage --inline decorate success "Modified $(decorate code "$(localePluralWord "$count" file)")"
     exitCode=3
   fi
   returnUndo "$exitCode" "${undo[@]}" || return $?
   return $?
 }
-_cannon() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_textCannon() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

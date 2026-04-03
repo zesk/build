@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="dsn - URL. Database to connect to. All arguments after this are passed to \`binary\`."$'\n'"binary - Callable. Executable to connect to the database."$'\n'"--print - Flag. Optional. Just print the statement instead of running it."$'\n'""
 base="mariadb.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Connect to a mariadb-type database using a URL"$'\n'"Argument: dsn - URL. Database to connect to. All arguments after this are passed to \`binary\`."$'\n'"Argument: binary - Callable. Executable to connect to the database."$'\n'"Argument: --print - Flag. Optional. Just print the statement instead of running it."$'\n'"Environment: MARIADB_BINARY_CONNECT"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/mariadb.sh"
-sourceHash="7926017949193ef4745e95d112978ae3318460f5"
+sourceHash="43f86b5d19307706668a232e37fd6752196bb71b"
 summary="Connect to a mariadb-type database using a URL"
 summaryComputed="true"
 usage="mariadbConnect [ dsn ] [ binary ] [ --print ]"

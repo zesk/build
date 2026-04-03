@@ -33,8 +33,8 @@ installInstallBinary() {
   __selfLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _installInstallBinary() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
@@ -54,8 +54,8 @@ installInstallBuild() {
   installInstallBinary --handler "$handler" "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List all functions which are currently deprecated in Zesk Build
@@ -73,8 +73,8 @@ buildDeprecatedFunctions() {
 }
 _buildDeprecatedFunctions() {
   true || buildDeprecatedFunctions --help || return $?
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # DOC TEMPLATE: --help 1
@@ -117,8 +117,8 @@ buildFunctions() {
   env -i PATH="$PATH" "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_' | "${postprocess[@]}"
 }
 _buildFunctions() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Path to cache directory for build system.
@@ -140,8 +140,8 @@ buildCacheDirectory() {
   catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
 }
 _buildCacheDirectory() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Environment: BUILD_HOME
@@ -166,8 +166,8 @@ buildHome() {
   printf "%s\n" "${BUILD_HOME%/}"
 }
 _buildHome() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Parent: buildHome
@@ -205,8 +205,8 @@ buildEnvironmentNames() {
 }
 _buildEnvironmentNames() {
   true || buildEnvironmentNames --help || return $?
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Determine the environment file names for environment variables
@@ -257,8 +257,8 @@ buildEnvironmentFiles() {
   $foundOne || return 1
 }
 _buildEnvironmentFiles() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __buildEnvironmentFileHeader() {
@@ -362,8 +362,8 @@ buildEnvironmentAdd() {
   done
 }
 _buildEnvironmentAdd() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Load one or more environment settings from the environment file path.
@@ -455,8 +455,8 @@ buildEnvironmentLoad() {
   return "$returnCode"
 }
 _buildEnvironmentLoad() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 unalias tools 2>/dev/null || :
@@ -513,8 +513,8 @@ tools() {
   return $code
 }
 _tools() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Load and print one or more environment settings
@@ -558,8 +558,8 @@ buildEnvironmentGet() {
   done
 }
 _buildEnvironmentGet() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Load and print one or more environment settings which represents a directory which should be created.
@@ -623,8 +623,8 @@ buildEnvironmentGetDirectory() {
   done
 }
 _buildEnvironmentGetDirectory() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -664,13 +664,14 @@ buildQuietLog() {
   throwArgument "$handler" "No arguments" || return $?
 }
 _buildQuietLog() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run a command and ensure the build tools context matches the current project
 # Argument: contextStart - Directory. Required. Context in which the command should run.
-# Argument: command ... - Required. Command to run in new context.
+# Argument: command - Callable. Required. Command to run in new context.
+# Argument: ... - Arguments. Optional. Arguments to the `command`.
 # Avoid infinite loops here, call down.
 buildEnvironmentContext() {
   local handler="_${FUNCNAME[0]}"
@@ -693,6 +694,6 @@ buildEnvironmentContext() {
   catchEnvironment "$handler" "$@" || return $?
 }
 _buildEnvironmentContext() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="count - Integer. Optional. Sets the value for any following named variables to this value."$'\n'"variable - String. Optional. Variable to change or increment."$'\n'"--path cacheDirectory - Directory. Optional. Use this directory path as the state directory."$'\n'"--reset - Flag. Optional. Reset all counters to zero."$'\n'"--separator - String. Optional. When dumping all variables use this as the separator between name and value. (Default is space: \`\"  \"\`)"$'\n'"--line - String. Optional. When dumping all variables use this as the separator between values. (Default is newline: \`\$'\\n'\`)"$'\n'""
 base="utilities.sh"
@@ -13,7 +13,7 @@ rawComment="Argument: count - Integer. Optional. Sets the value for any followin
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="buildCacheDirectory"$'\n'""
 sourceFile="bin/build/tools/utilities.sh"
-sourceHash="586dfb947fce85466b97591587c85c428acf5b6e"
+sourceHash="94563d0a08741ddbc0e4c700e450e33a3cb9e86f"
 summary="Set or increment a incrementor state based on a state"
 summaryComputed="true"
 usage="incrementor [ count ] [ variable ] [ --path cacheDirectory ] [ --reset ] [ --separator ] [ --line ]"

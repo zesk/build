@@ -42,8 +42,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
   }
   ___developerHelp() {
-    # __IDENTICAL__ usageDocument 1
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ bashDocumentation 1
+    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   __developerConfigure() {
@@ -73,8 +73,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___developerConfigure() {
-    # __IDENTICAL__ usageDocument 1
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ bashDocumentation 1
+    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   # Undo project configuration
@@ -94,8 +94,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     statusMessage decorate notice "Deactivated $(decorate value "$name") @ $(decorate file --no-app "$home")."
   }
   ___developerConfigureUndo() {
-    # __IDENTICAL__ usageDocument 1
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ bashDocumentation 1
+    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   __developerConfigure

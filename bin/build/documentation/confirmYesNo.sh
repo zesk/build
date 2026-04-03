@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--default defaultValue - Boolean. Optional. Value to return if no value given by user"$'\n'"--attempts attempts - PositiveInteger. Optional. User can give us a bad response this many times before we return the default."$'\n'"--timeout seconds - PositiveInteger. Optional. Wait this long before choosing the default. If no default, default is --no."$'\n'"--info - Flag. Optional. Add \`Type Y or N\` as instructions to the user."$'\n'"--yes - Flag. Optional. Short for \`--default yes\`"$'\n'"--no - Flag. Optional. Short for \`--default no\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"message ... - String. Any additional arguments are considered part of the message."$'\n'""
 base="interactive.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="return_code" [1]="summary" [2]="argument" [3]="example")
 rawComment="Read user input and return 0 if the user says yes, or non-zero if they say no"$'\n'"Return Code: 0 - Yes"$'\n'"Return Code: 1 - No"$'\n'"Summary: Read user input and return success on yes"$'\n'"Argument: --default defaultValue - Boolean. Optional. Value to return if no value given by user"$'\n'"Argument: --attempts attempts - PositiveInteger. Optional. User can give us a bad response this many times before we return the default."$'\n'"Argument: --timeout seconds - PositiveInteger. Optional. Wait this long before choosing the default. If no default, default is --no."$'\n'"Argument: --info - Flag. Optional. Add \`Type Y or N\` as instructions to the user."$'\n'"Argument: --yes - Flag. Optional. Short for \`--default yes\`"$'\n'"Argument: --no - Flag. Optional. Short for \`--default no\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: message ... - String. Any additional arguments are considered part of the message."$'\n'"Example: Will time out after 10 seconds, regardless (user must make valid input in that time):"$'\n'"Example:"$'\n'"Example:     confirmYesNo --timeout 10 \"Stop the timer!\""$'\n'"Example:"$'\n'""$'\n'""
 return_code="0 - Yes"$'\n'"1 - No"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="856a2d0bdb06c37a1bd64a29256113c9a67bbe3d"
+sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
 summary="Read user input and return success on yes"$'\n'""
 usage="confirmYesNo [ --default defaultValue ] [ --attempts attempts ] [ --timeout seconds ] [ --info ] [ --yes ] [ --no ] [ --help ] [ --handler handler ] [ message ... ]"
 # shellcheck disable=SC2016

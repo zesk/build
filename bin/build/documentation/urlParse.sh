@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"url - a Uniform Resource Locator"$'\n'"--prefix prefix - String. Optional. Prefix variable names with this string."$'\n'"--stringUppercase - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default)."$'\n'""
 base="url.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="return_code" [1]="summary" [2]="argument" [3]="example")
 rawComment="Simple URL parsing. Converts a \`url\` into values which can be parsed or evaluated:"$'\n'"- \`url\` - URL"$'\n'"- \`host\` - Host"$'\n'"- \`user\` - User"$'\n'"- \`password\` - Password"$'\n'"- \`port\` - Connection port"$'\n'"- \`name\` - Path with the first slash removed"$'\n'"- \`path\` - Path"$'\n'"Does little to no validation of any characters so best used for well-formed input."$'\n'"Now works on multiple URLs, output is separated by a blank line for new entries"$'\n'"Return Code: 0 - If parsing succeeds"$'\n'"Return Code: 1 - If parsing fails"$'\n'"Summary: Simple URL Parsing"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url - a Uniform Resource Locator"$'\n'"Argument: --prefix prefix - String. Optional. Prefix variable names with this string."$'\n'"Argument: --stringUppercase - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default)."$'\n'"Example:     eval \"\$(urlParse scheme://user:password@host:port/path)\""$'\n'"Example:     echo \$name"$'\n'""$'\n'""
 return_code="0 - If parsing succeeds"$'\n'"1 - If parsing fails"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="c50fa195093aa14ef2053e1e5b7f154a2346e3a7"
+sourceHash="11f67cb37f84f19d4ec0cff2c23ee1b7f3185d1d"
 summary="Simple URL Parsing"$'\n'""
 usage="urlParse [ --help ] [ url ] [ --prefix prefix ] [ --stringUppercase ]"
 # shellcheck disable=SC2016

@@ -14,7 +14,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Optional. Any additional arguments are passed through.
-# Requires: mktemp __help catchEnvironment usageDocument
+# Requires: mktemp __help catchEnvironment bashDocumentation
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
 fileTemporaryName() {
@@ -37,8 +37,8 @@ fileTemporaryName() {
   fi
 }
 _fileTemporaryName() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL fileTemporaryName

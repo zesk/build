@@ -12,8 +12,8 @@ environmentApplicationVariables() {
 }
 _environmentApplicationVariables() {
   true || environmentApplicationVariables --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Loads application environment variables, set them to their default values if needed, and outputs the list of variables and values.
@@ -61,8 +61,8 @@ environmentApplicationLoad() {
 }
 _environmentApplicationLoad() {
   ! false || environmentApplicationLoad --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # DOC TEMPLATE: --help 1
@@ -126,8 +126,8 @@ environmentFileApplicationMake() {
   done
 }
 _environmentFileApplicationMake() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check application environment is populated correctly.
@@ -172,8 +172,8 @@ environmentFileApplicationVerify() {
   [ ${#missing[@]} -eq 0 ] || throwEnvironment "$handler" "Missing environment values:" "${missing[@]}" || return $?
 }
 _environmentFileApplicationVerify() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: where - Directory. Optional. Where to load the `.env` files.
@@ -227,6 +227,6 @@ dotEnvConfigure() {
   catchReturn "$handler" environmentFileLoad "${aa[@]}" "$@" || return $?
 }
 _dotEnvConfigure() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

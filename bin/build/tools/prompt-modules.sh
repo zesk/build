@@ -62,8 +62,8 @@ backgroundProcess() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _backgroundProcess() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Watch or more directories for changes in a file extension and reload a source file if any changes occur.
@@ -83,8 +83,8 @@ reloadChanges() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _reloadChanges() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Watches your HOME directory for `.` files which are added and unknown to you.
@@ -95,8 +95,8 @@ bashPromptModule_dotFilesWatcher() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashPromptModule_dotFilesWatcher() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # The dot files approved file. Add files to this to approve.
@@ -108,8 +108,8 @@ dotFilesApprovedFile() {
 }
 _dotFilesApprovedFile() {
   true || dotFilesApprovedFile --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Lists of dot files which can be added to the dotFilesApprovedFile
@@ -120,6 +120,6 @@ dotFilesApproved() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _dotFilesApproved() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

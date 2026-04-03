@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--show-file - Boolean. Optional. Show the file name in the output (suffix with \`: \`)"$'\n'"--file name - String. Optional. The file name to display - can be any text."$'\n'"file - File. Optional. A file to read and output URLs found."$'\n'""
 base="url.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Open URLs which appear in a stream"$'\n'"Argument: --show-file - Boolean. Optional. Show the file name in the output (suffix with \`: \`)"$'\n'"Argument: --file name - String. Optional. The file name to display - can be any text."$'\n'"Argument: file - File. Optional. A file to read and output URLs found."$'\n'"stdin: text"$'\n'"stdout: line:URL"$'\n'"Takes a text file and outputs any \`https://\` or \`http://\` URLs found within."$'\n'"URLs are explicitly trimmed at quote, whitespace and escape boundaries."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="c50fa195093aa14ef2053e1e5b7f154a2346e3a7"
+sourceHash="11f67cb37f84f19d4ec0cff2c23ee1b7f3185d1d"
 stdin="text"$'\n'""
 stdout="line:URL"$'\n'""
 summary="Open URLs which appear in a stream"

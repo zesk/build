@@ -44,7 +44,7 @@
 
 ## Usage Utilities
 
-{usageDocument}
+{bashDocumentation}
 
 ## Build Documentation
 

@@ -12,8 +12,8 @@ Talking about these:
 
     _isDarwin() {
         true || isDarwin --help
-        # __IDENTICAL__ usageDocument 1
-        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+        # __IDENTICAL__ bashDocumentation 1
+        bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
 The `--help` line always evaluates to `true` and the second half of the statement NEVER runs. Why?

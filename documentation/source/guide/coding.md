@@ -84,8 +84,8 @@ prefixed with an underscore:
        catchEnvironment "$handler" ...
     }
     _usefulThing() {
-      # __IDENTICAL__ usageDocument 1
-      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+      # __IDENTICAL__ bashDocumentation 1
+      bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
 The underscore error handler acts as an effective "pointer" which allows us to reference the source document where the
@@ -189,7 +189,7 @@ Commands typically are:
 
 ## Standard handler and error handling with underscore handler function
 
-Using the `usageDocument` function we can automatically report errors and handler for any `bash` function:
+Using the `bashDocumentation` function we can automatically report errors and handler for any `bash` function:
 
 Pattern:
 
@@ -203,19 +203,19 @@ Pattern:
         fi
     }
     _functionName() {
-      # __IDENTICAL__ usageDocument 1
-      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+      # __IDENTICAL__ bashDocumentation 1
+      bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
-Typically, any defined function `deployApplication` has a mirror underscore-prefixed `usageDocument` function used for
+Typically, any defined function `deployApplication` has a mirror underscore-prefixed `bashDocumentation` function used for
 error handling:
 
     deployApplication() {
         ...
     }
     _deployApplication() {
-      # __IDENTICAL__ usageDocument 1
-      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+      # __IDENTICAL__ bashDocumentation 1
+      bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
 Our handler function signature is identical:

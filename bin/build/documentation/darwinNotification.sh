@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--title - String. Optional. Title of the notification."$'\n'"--debug - Flag. Optional. Output the osascript as \`darwinNotification.debug\` at the application root after this call."$'\n'"--sound soundName - String. Optional. Sound to play with the notification. Represents a sound base name found in \`/Library/Sounds/\`."$'\n'"message ... - String. Optional. Message to display to the user in the dialog."$'\n'""
 base="darwin.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Display a notification for the user"$'\n'"Argument: --title - String. Optional. Title of the notification."$'\n'"Argument: --debug - Flag. Optional. Output the osascript as \`darwinNotification.debug\` at the application root after this call."$'\n'"Argument: --sound soundName - String. Optional. Sound to play with the notification. Represents a sound base name found in \`/Library/Sounds/\`."$'\n'"Argument: message ... - String. Optional. Message to display to the user in the dialog."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/darwin.sh"
-sourceHash="6e18b1e362bd75e1e63eeefba41b20b891294878"
+sourceHash="ad6864730417464b2d7912acac42a6444bb54718"
 summary="Display a notification for the user"
 summaryComputed="true"
 usage="darwinNotification [ --title ] [ --debug ] [ --sound soundName ] [ message ... ]"

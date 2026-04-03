@@ -54,8 +54,8 @@ fileExtractLines() {
   sed -n "${start},${end}p;${end}q"
 }
 _fileExtractLines() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # `grep` but returns 0 when nothing matches
@@ -77,8 +77,8 @@ grepSafe() {
   grep "$@" || returnMap $? 1 0 || return $?
 }
 _grepSafe() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check if text contains plain text only (no ANSI escape codes, etc.)
@@ -97,8 +97,8 @@ isPlain() {
   return 0
 }
 _isPlain() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check if text contains mappable tokens
@@ -138,8 +138,8 @@ isMappable() {
   return 1
 }
 _isMappable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Parses text and determines if it's true-ish
@@ -165,8 +165,8 @@ booleanParse() {
   return 2
 }
 _booleanParse() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Hide newlines in text (to ensure single-line output or other manipulation)
@@ -178,15 +178,15 @@ _booleanParse() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # stdout: The text with the newline replaced with another character, suitable typically for single-line output
-newlineHide() {
+stringHideNewlines() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   local text="${1-}" replace="${2-"␤"}"
   printf -- "%s\n" "${text//$'\n'/$replace}"
 }
-_newlineHide() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_stringHideNewlines() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Quote strings for inclusion in shell quoted strings
@@ -202,8 +202,8 @@ escapeQuotes() {
   printf %s "$(escapeDoubleQuotes "$(escapeSingleQuotes "$1")")"
 }
 _escapeQuotes() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
@@ -219,8 +219,8 @@ textReplaceFirst() {
   sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/1"
 }
 _textReplaceFirst() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Trim whitespace from beginning and end of a stream
@@ -237,8 +237,8 @@ textTrimBoth() {
   sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _textTrimBoth() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Removes any blank lines from the beginning of a stream
@@ -251,8 +251,8 @@ textTrimHead() {
   sed -e "/./!d" -e :r -e n -e br
 }
 _textTrimHead() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Removes any blank lines from the end of a stream
@@ -265,8 +265,8 @@ textTrimTail() {
   sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _textTrimTail() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Ensures blank lines are singular
@@ -281,8 +281,8 @@ textSingleBlankLines() {
   sed '/^$/N;/^\n$/D'
 }
 _textSingleBlankLines() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Trim spaces and only spaces from the right side of a string passed as arguments or a pipe
@@ -310,8 +310,8 @@ textTrimRight() {
 }
 _textTrimRight() {
   true || textTrim "" # SC2120 fix
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Trim spaces and only spaces from the left side of a string passed as arguments or a pipe
@@ -339,8 +339,8 @@ textTrimLeft() {
 }
 _textTrimLeft() {
   true || textTrim "" # SC2120 fix
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Trim spaces and only spaces from arguments or a pipe
@@ -372,8 +372,8 @@ textTrim() {
 }
 _textTrim() {
   true || textTrim "" # SC2120 fix
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check if an element exists in an array
@@ -401,8 +401,8 @@ inArray() {
   return 1
 }
 _inArray() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: haystack - String. Required. String to search.
@@ -426,8 +426,8 @@ stringContains() {
   return 1
 }
 _stringContains() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: haystack - String. Required. String to search.
@@ -453,8 +453,8 @@ stringContainsInsensitive() {
   return 1
 }
 _stringContainsInsensitive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -478,8 +478,8 @@ stringFound() {
   return 1
 }
 _stringFound() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -509,8 +509,8 @@ stringFoundInsensitive() {
   return 1
 }
 _stringFoundInsensitive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: haystack - String. Required. String to search.
@@ -534,8 +534,8 @@ stringBegins() {
   return 1
 }
 _stringBegins() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: haystack - String. Required. String to search. (case-insensitive)
@@ -561,8 +561,8 @@ stringBeginsInsensitive() {
   return 1
 }
 _stringBeginsInsensitive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -594,8 +594,8 @@ stringTrimWords() {
   printf %s "${result%% }"
 }
 _stringTrimWords() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -621,8 +621,8 @@ fileFieldMaximum() {
   catchReturn "$handler" awk "${ss[@]+"${ss[@]}"}" "{ print length(\$$index) }" | catchReturn "$handler" sort -rn | catchReturn "$handler" head -n 1 || return $?
 }
 _fileFieldMaximum() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -643,8 +643,8 @@ fileLineMaximum() {
   printf "%d" "$max"
 }
 _fileLineMaximum() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Does a file end with a newline or is empty?
@@ -676,8 +676,8 @@ fileEndsWithNewline() {
   $one || throwArgument "$handler" "Requires at least one file $(decorate each code -- "${__saved[@]}")" || return $?
 }
 _fileEndsWithNewline() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # stdout: UnsignedInteger
@@ -744,46 +744,46 @@ fileLineCount() {
   fi
 }
 _fileLineCount() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Plural word which includes the numeric prefix and the noun.
 # Argument: number - Number. Required. An integer or floating point number
 # Argument: singular - String. Required. The singular form of a noun
-# Argument: plural - String. Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
+# Argument: localePlural - String. Optional. The localePlural form of a noun. If not specified uses `singular` plus an ess.
 # Example:     count=$(fileLineCount "$foxSightings") || return $?
-# Example:     printf "We saw %s.\n" "$(pluralWord "$count" fox foxes)"
-# stdout: `String`. The number (direct) and the plural form for non-1 values. e.g. `$(pluralWord 2 potato potatoes)` = `2 potatoes`
-pluralWord() {
+# Example:     printf "We saw %s.\n" "$(localePluralWord "$count" fox foxes)"
+# stdout: `String`. The number (direct) and the localePlural form for non-1 values. e.g. `$(localePluralWord 2 potato potatoes)` = `2 potatoes`
+localePluralWord() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local word
-  word=$(catchReturn "$handler" plural "$@") || return $?
+  word=$(catchReturn "$handler" localePlural "$@") || return $?
   printf -- "%s %s\n" "$1" "$word" || return $?
 }
-_pluralWord() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_localePluralWord() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Outputs the `singular` value to standard out when the value of `number` is one.
-# Otherwise, outputs the `plural` value to standard out.
+# Otherwise, outputs the `localePlural` value to standard out.
 #
 # Short description: Output numeric messages which are grammatically accurate
 # Argument: number - Number. Required. An integer or floating point number
 # Argument: singular - String. Required. The singular form of a noun
-# Argument: plural - String. Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
+# Argument: localePlural - String. Optional. The localePlural form of a noun. If not specified uses `singular` plus an ess.
 #
 # Return Code: 1 - If count is non-numeric
 # Return Code: 0 - If count is numeric
 # Example:     count=$(fileLineCount "$foxSightings") || return $?
-# Example:     printf "We saw %d %s.\n" "$count" "$(plural "$count" fox foxes)"
+# Example:     printf "We saw %d %s.\n" "$count" "$(localePlural "$count" fox foxes)"
 # Example:
 # Example:     n=$(($(date +%s)) - start))
-# Example:     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
-# stdout: `String`. The plural form for non-1 values. e.g. `$(plural 2 potato potatoes)` = `potatoes`
-plural() {
+# Example:     printf "That took %d %s" "$n" "$(localePlural "$n" second seconds)"
+# stdout: `String`. The localePlural form for non-1 values. e.g. `$(localePlural 2 potato potatoes)` = `potatoes`
+localePlural() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
@@ -800,13 +800,13 @@ plural() {
     *) printf %s "${2-}" ;;
     esac
   else
-    throwArgument "$handler" "plural argument: \"$count\" is not numeric" || return $?
+    throwArgument "$handler" "localePlural argument: \"$count\" is not numeric" || return $?
     return 1
   fi
 }
-_plural() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_localePlural() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Convert text to stringLowercase
@@ -829,8 +829,8 @@ stringLowercase() {
   done
 }
 _stringLowercase() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Convert text to uppercase
@@ -853,8 +853,8 @@ stringUppercase() {
   done
 }
 _stringUppercase() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -874,8 +874,8 @@ consoleToPlain() {
 }
 _consoleToPlain() {
   true || consoleToPlain --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Length of an unformatted string
@@ -896,8 +896,8 @@ consolePlainLength() {
   fi
 }
 _consolePlainLength() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Truncate console output width
@@ -938,8 +938,8 @@ consoleTrimWidth() {
   done
 }
 _consoleTrimWidth() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __consoleTrimWidth() {
@@ -992,8 +992,8 @@ textSHA() {
   __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _textSHA() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -1007,8 +1007,8 @@ stringRandom() {
   head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
 }
 _stringRandom() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -1028,8 +1028,8 @@ stringOffset() {
   printf %d "$offset"
 }
 _stringOffset() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -1052,8 +1052,8 @@ stringOffsetInsensitive() {
   printf %d "$offset"
 }
 _stringOffsetInsensitive() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Remove fields from left to right from a text file as a pipe
@@ -1086,8 +1086,8 @@ textRemoveFields() {
   sed -E 's/^([^ ]+ +){'"$fieldCount"'}//'
 }
 _textRemoveFields() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: printf when output is blank
@@ -1111,8 +1111,8 @@ printfOutputEmpty() {
   fi
 }
 _printfOutputEmpty() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Pipe to output some text before any output, otherwise, nothing is output.
@@ -1132,8 +1132,8 @@ printfOutputPrefix() {
   catchReturn "$handler" cat || return $?
 }
 _printfOutputPrefix() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Pipe to output some text after any output, otherwise, nothing is output.
@@ -1153,8 +1153,8 @@ printfOutputSuffix() {
   catchReturn "$handler" printf -- "$@" || return $?
 }
 _printfOutputSuffix() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Replace all occurrences of a string within another string
@@ -1199,8 +1199,8 @@ textReplace() {
   sed -e "$sedCommand"
 }
 _textReplace() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Format text and align it right using spaces.
@@ -1222,8 +1222,8 @@ textAlignRight() {
   printf "%${n}s" "$*"
 }
 _textAlignRight() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: align text left
@@ -1246,8 +1246,8 @@ textAlignLeft() {
   catchEnvironment "$handler" printf -- "%-${n}s" "$*" || return $?
 }
 _textAlignLeft() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: `count` - UnsignedInteger. Required. Count of times to repeat.
@@ -1301,6 +1301,6 @@ textRepeat() {
   throwArgument "$handler" "requires text" || return $?
 }
 _textRepeat() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

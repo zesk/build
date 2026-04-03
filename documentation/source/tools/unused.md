@@ -13,6 +13,10 @@ Hides these from [New and uncategorized functions](./todo.md)
 
 {loopExecute}
 
+{lowercase}
+
+{uppercase}
+
 {randomString}
 
 {rotateLog}

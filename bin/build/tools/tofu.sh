@@ -30,8 +30,8 @@ aptKeyAddOpenTofu() {
   catchReturn "$handler" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Remove keys to disable apt to download tofu from opentofu.org
@@ -46,8 +46,8 @@ aptKeyRemoveOpenTofu() {
   catchReturn "$handler" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install tofu binary
@@ -67,8 +67,8 @@ tofuInstall() {
   executableExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Uninstall tofu binary and apt sources keys
@@ -86,6 +86,6 @@ tofuUninstall() {
   catchReturn "$handler" packageUpdate --force || return $?
 }
 _tofuUninstall() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

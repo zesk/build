@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="organization - String. Organization name."$'\n'"repository - String. Repository name."$'\n'""
 base="bitbucket.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Compute the URL to create a new PR"$'\n'"Argument: organization - String. Organization name."$'\n'"Argument: repository - String. Repository name."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bitbucket.sh"
-sourceHash="4a421c2dcbbf58af3dd11352be2e5851420ecd17"
+sourceHash="85bc3ba8a57976f3c137617ba5eeb9d9767e63b5"
 summary="Compute the URL to create a new PR"
 summaryComputed="true"
 usage="bitbucketPRNewURL [ organization ] [ repository ]"

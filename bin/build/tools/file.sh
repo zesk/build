@@ -47,8 +47,8 @@ filesRename() {
   done
 }
 _filesRename() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fetch the modification time of a file as a timestamp
@@ -70,8 +70,8 @@ fileModificationTime() {
   done
 }
 _fileModificationTime() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fetch the modification time in seconds from now of a file as a timestamp
@@ -97,8 +97,8 @@ fileModificationSeconds() {
   done
 }
 _fileModificationSeconds() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -122,8 +122,8 @@ fileModificationTimes() {
   __fileModificationTimes "$directory" "$@"
 }
 _fileModificationTimes() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List the most recently modified file in a directory prefixed with the timestamp
@@ -137,8 +137,8 @@ fileModifiedRecently() {
   fileModificationTimes "$directory" -type f "$@" | sort -rn | head -n 1
 }
 _fileModifiedRecently() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -164,8 +164,8 @@ fileIsNewest() {
   [ "$1" = "$(fileNewest "$@")" ]
 }
 _fileIsNewest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -189,8 +189,8 @@ fileIsOldest() {
   [ "$1" = "$(fileOldest "$@")" ]
 }
 _fileIsOldest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -229,8 +229,8 @@ fileOldest() {
   __gamutFile "_${FUNCNAME[0]}" -lt "$@"
 }
 _fileOldest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output the newest file in the list
@@ -242,8 +242,8 @@ fileNewest() {
   __gamutFile "_${FUNCNAME[0]}" -gt "$@"
 }
 _fileNewest() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Prints seconds since modified
@@ -263,8 +263,8 @@ fileModifiedSeconds() {
   printf %d "$(($(date +%s) - timestamp))"
 }
 _fileModifiedSeconds() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Prints days (integer) since modified
@@ -283,8 +283,8 @@ fileModifiedDays() {
   printf %d "$((timestamp / 86400))"
 }
 _fileModifiedDays() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL fileRealPath 32
@@ -294,7 +294,7 @@ _fileModifiedDays() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - File. Required. One or more files to `realpath`.
-# Requires: executableExists realpath __help usageDocument returnArgument
+# Requires: executableExists realpath __help bashDocumentation returnArgument
 fileRealPath() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __help "$handler" --help || return 0
@@ -317,8 +317,8 @@ fileRealPath() {
   fi
 }
 _fileRealPath() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: path ... - File. Required. One or more paths to simplify
@@ -351,8 +351,8 @@ directoryPathSimplify() {
   done
 }
 _directoryPathSimplify() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: file ... - Optional. One or more files to get size of.
@@ -388,8 +388,8 @@ fileSize() {
   fi
 }
 _fileSize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: item - String. Optional. Thing to classify
@@ -430,8 +430,8 @@ fileType() {
   done
 }
 _fileType() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Rename a link
@@ -471,8 +471,8 @@ linkRename() {
   __linkRename "$from" "$to"
 }
 _linkRename() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: file - File to get the owner for
@@ -508,8 +508,8 @@ fileOwner() {
   __fileListColumn "_${FUNCNAME[0]}" 3 "$@"
 }
 _fileOwner() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get the file group name
@@ -523,8 +523,8 @@ fileGroup() {
   __fileListColumn "_${FUNCNAME[0]}" 4 "$@"
 }
 _fileGroup() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Find list of files which do NOT match a specific pattern or patterns and output them
@@ -540,8 +540,8 @@ fileNotMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" false "$@"
 }
 _fileNotMatches() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Find one or more patterns in a list of files, with a list of file name pattern exceptions.
@@ -557,8 +557,8 @@ fileMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" true "$@"
 }
 _fileMatches() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: success - Boolean. Required. Should it match or NOT match to be considered success? `true` means match is success
@@ -649,8 +649,8 @@ fileIsEmpty() {
   done
 }
 _fileIsEmpty() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: clipper - Callable. Required.
@@ -707,8 +707,8 @@ directoryOldestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" head "$@"
 }
 _directoryOldestFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Find the newest modified file in a directory
@@ -718,8 +718,8 @@ directoryNewestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" tail "$@"
 }
 _directoryNewestFile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Create a link
@@ -789,8 +789,8 @@ linkCreate() {
   $backupFlag || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }
 _linkCreate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL fileTemporaryName 34
@@ -800,7 +800,7 @@ _linkCreate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Optional. Any additional arguments are passed through.
-# Requires: mktemp __help catchEnvironment usageDocument
+# Requires: mktemp __help catchEnvironment bashDocumentation
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
 fileTemporaryName() {
@@ -823,8 +823,8 @@ fileTemporaryName() {
   fi
 }
 _fileTemporaryName() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL fileTemporaryName
@@ -865,6 +865,6 @@ fileTeeAtomic() {
   catchEnvironment "$handler" mv -f "$target.$$" "$target" || returnClean $? "${clean[@]}" || return $?
 }
 _fileTeeAtomic() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

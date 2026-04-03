@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--version versionCode - String. Optional. Install this version of python."$'\n'""
 base="npm.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="environment" [1]="return_code" [2]="argument")
 rawComment="Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses \`latest\`."$'\n'"Install NPM in the build environment"$'\n'"If this fails it will output the installation log."$'\n'"When this tool succeeds the \`npm\` binary is available in the local operating system."$'\n'"Environment: - \`BUILD_NPM_VERSION\` - String. Default to \`latest\`. Used to install \`npm -i npm@\$BUILD_NPM_VERSION\` on install."$'\n'"Return Code: 1 - If installation of npm fails"$'\n'"Return Code: 0 - If npm is already installed or installed without error"$'\n'"Argument: --version versionCode - String. Optional. Install this version of python."$'\n'""$'\n'""
 return_code="1 - If installation of npm fails"$'\n'"0 - If npm is already installed or installed without error"$'\n'""
 sourceFile="bin/build/tools/npm.sh"
-sourceHash="29f61b341a047701101736e29216f201d60a76d6"
+sourceHash="2e5170857b1aed1eb3139488279d6a1cad2a31a9"
 summary="Install NPM in the build environment"
 summaryComputed="true"
 usage="npmInstall [ --version versionCode ]"

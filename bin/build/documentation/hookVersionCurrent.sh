@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--application application - Directory. Optional. Application home directory."$'\n'""
 base="hooks.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Application current version"$'\n'"Extracts the version from the repository"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --application application - Directory. Optional. Application home directory."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/hooks.sh"
-sourceHash="7d315e46c46ffd9aaf307c9d42c19a2fe3f7dfd0"
+sourceHash="72c705345578f14c58169a63fe05e7998a45ef1b"
 summary="Application current version"
 summaryComputed="true"
 usage="hookVersionCurrent [ --help ] [ --application application ]"

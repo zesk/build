@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="package ... - String. Optional. Additional packages to install using \`packageInstall\`"$'\n'""
 base="terraform.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Install terraform binary"$'\n'"Argument: package ... - String. Optional. Additional packages to install using \`packageInstall\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/terraform.sh"
-sourceHash="3c2857a89f3ea63f9954ca35089a6ed0053d74da"
+sourceHash="abfe10313271e5e1e6f8e72b20a2b69ba9413b83"
 summary="Install terraform binary"
 summaryComputed="true"
 usage="terraformInstall [ package ... ]"

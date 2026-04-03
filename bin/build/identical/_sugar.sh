@@ -36,15 +36,15 @@
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 # File: bin/build/errno.txt
 # INTERNAL: Runner-up for the one-line bash award.
-# Requires: usageDocument printf
+# Requires: bashDocumentation printf
 # See: returnCodeString
 # Return Code: 0 - success
 returnCode() {
   local k && while [ $# -gt 0 ]; do case "$1" in --help) ! "_${FUNCNAME[0]}" 0 || return 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
 }
 _returnCode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # _IDENTICAL_ returnCodeString 15
@@ -60,8 +60,8 @@ returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 _returnCodeString() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Boolean test
@@ -74,9 +74,9 @@ _returnCodeString() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: value - String. Optional. Value to check if it is a boolean.
-# Requires: usageDocument printf
+# Requires: bashDocumentation printf
 isBoolean() {
-  case "${1-}" in true | false) ;; --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; *) return 1 ;; esac
+  case "${1-}" in true | false) ;; --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; *) return 1 ;; esac
 }
 
 # Boolean selector
@@ -86,7 +86,7 @@ isBoolean() {
 # Argument: falseChoice - EmptyString. Optional. Value to output when testValue is `false`
 booleanChoose() {
   local testValue="${1-}" && shift
-  if [ "$testValue" = "--help" ]; then usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 && return 0; fi
+  if [ "$testValue" = "--help" ]; then bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 && return 0; fi
   isBoolean "$testValue" || returnArgument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
@@ -134,7 +134,7 @@ catchReturn() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Integer. Required. Exit code to return.
 # Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help
+# Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
@@ -148,8 +148,8 @@ returnClean() {
   fi
 }
 _returnClean() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output the `command ...` to stdout prior to running, then `execute` it
@@ -204,8 +204,8 @@ convertValue() {
   printf "%s\n" "${value:-0}"
 }
 _convertValue() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run `command`, handle failure with `handler` with `code` and `command` as error
@@ -226,8 +226,8 @@ catchCode() {
   "$command" "$@" || "$__handler" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
 _catchCode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run `command`, upon failure run `handler` with an environment error

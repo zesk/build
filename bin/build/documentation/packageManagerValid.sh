@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"packageManager - String. Manager to check."$'\n'""
 base="package.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Is the package manager supported?"$'\n'"Checks the package manager to be a valid, supported one."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: packageManager - String. Manager to check."$'\n'"Return Code: 0 - The package manager is valid."$'\n'"Return Code: 1 - The package manager is not valid."$'\n'""$'\n'""
 return_code="0 - The package manager is valid."$'\n'"1 - The package manager is not valid."$'\n'""
 sourceFile="bin/build/tools/package.sh"
-sourceHash="99cc82a172db71c0b0f1d98033837052daa954ed"
+sourceHash="06e25fa25995eb0e6d2d2931f09e11b0a6055bee"
 summary="Is the package manager supported?"
 summaryComputed="true"
 usage="packageManagerValid [ --help ] [ packageManager ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="backgroundColor - String. Optional. Background color."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="console.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Modify the decoration environment for light or dark."$'\n'"Run this at the top of your script for best results."$'\n'"Argument: backgroundColor - String. Optional. Background color."$'\n'"Update the color scheme for a light or dark scheme"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/console.sh"
-sourceHash="91c4bb28f83e34c39b4dcef4774e2addc1f37c12"
+sourceHash="1eccb7f32254d9dddecdf43da8654cc9ad7cdbc1"
 summary="Modify the decoration environment for light or dark."
 summaryComputed="true"
 usage="consoleConfigureDecorate [ backgroundColor ] [ --help ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="encodedValue - String. Required. Value to convert to tokens, one per line"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="io.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdout")
 rawComment="Convert an array value which was loaded already"$'\n'"Argument: encodedValue - String. Required. Value to convert to tokens, one per line"$'\n'"stdout: Array values separated by newlines"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/io.sh"
-sourceHash="0f1011676755f0412e216127710dc6f43e456014"
+sourceHash="0bafb086eee4c0f0080695a1abdfd38ce25a64b7"
 stdout="Array values separated by newlines"$'\n'""
 summary="Convert an array value which was loaded already"
 summaryComputed="true"

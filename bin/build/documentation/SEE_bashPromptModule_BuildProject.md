@@ -1,0 +1,1 @@
+[bashPromptModule_BuildProject]({rel}tools/prompt.md#bashpromptmodule_buildproject) - Check which bin/build we are running and keep local to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt/modules/BuildProject.sh#L15))

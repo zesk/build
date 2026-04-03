@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="... - Arguments. Passed to \`docker compose\` command or equivalent"$'\n'""
 base="docker-compose.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Wrapper for \`docker-compose\` or \`docker compose\`"$'\n'"Argument: ... - Arguments. Passed to \`docker compose\` command or equivalent"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="783c382a3fdcc281bcdc87ece102744a5053324f"
+sourceHash="a21ed1c073769da3a59ec67f35a55a8a1d7d14ec"
 summary="Wrapper for \`docker-compose\` or \`docker compose\`"
 summaryComputed="true"
 usage="dockerComposeWrapper [ ... ]"

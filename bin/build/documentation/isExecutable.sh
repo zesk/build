@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="string - String. Required. Path to binary to test if it is executable."$'\n'""
 base="type.sh"
@@ -12,7 +12,7 @@ rawComment="Test if all arguments are executable binaries"$'\n'"Argument: string
 requires="throwArgument  __help catchEnvironment command"$'\n'""
 return_code="0 - All arguments are executable binaries"$'\n'"1 - One or or more arguments are not executable binaries"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="cf046d7ea9b582a95b5cf64eaaa0310238a19003"
+sourceHash="31b62907df0050b8df8d06ec27701b9721bf81aa"
 summary="Test if all arguments are executable binaries"
 summaryComputed="true"
 usage="isExecutable string"

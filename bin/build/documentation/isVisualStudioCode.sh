@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="vendor.sh"
@@ -12,7 +12,7 @@ rawComment="Are we within the Microsoft Visual Studio Code terminal?"$'\n'"Argum
 return_code="0 - within the Visual Studio Code terminal"$'\n'"1 - not within the Visual Studio Code terminal AFAIK"$'\n'""
 see="contextOpen"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
-sourceHash="a00ec5f768f6e94f4baef8adcc9e53d11158fb5a"
+sourceHash="392497becb3db35921e59eb87651810aa2f7c8ea"
 summary="Are we within the Microsoft Visual Studio Code terminal?"
 summaryComputed="true"
 usage="isVisualStudioCode [ --help ]"

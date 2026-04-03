@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="string - EmptyString. Required. Path to binary to test if it is executable."$'\n'""
 base="type.sh"
@@ -12,7 +12,7 @@ rawComment="Test if all arguments are callable as a command"$'\n'"Argument: stri
 requires="throwArgument __help isExecutable isFunction"$'\n'""
 return_code="0 - All arguments are callable as a command"$'\n'"1 - One or or more arguments are callable as a command"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="cf046d7ea9b582a95b5cf64eaaa0310238a19003"
+sourceHash="31b62907df0050b8df8d06ec27701b9721bf81aa"
 summary="Test if all arguments are callable as a command"
 summaryComputed="true"
 usage="isCallable string"

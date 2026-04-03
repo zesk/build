@@ -51,7 +51,7 @@
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
 #
-# Requires: throwArgument usageDocument ___help
+# Requires: throwArgument bashDocumentation ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
   local flag="--help"
@@ -68,6 +68,6 @@ __help() {
   return 0
 }
 ___help() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

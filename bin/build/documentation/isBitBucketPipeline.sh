@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="none"
 base="bitbucket.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="return_code")
 rawComment="Are we currently in the BitBucket pipeline?"$'\n'"Return Code: 0 - is BitBucket pipeline"$'\n'"Return Code: 1 - Not a BitBucket pipeline"$'\n'""$'\n'""
 return_code="0 - is BitBucket pipeline"$'\n'"1 - Not a BitBucket pipeline"$'\n'""
 sourceFile="bin/build/tools/bitbucket.sh"
-sourceHash="4a421c2dcbbf58af3dd11352be2e5851420ecd17"
+sourceHash="85bc3ba8a57976f3c137617ba5eeb9d9767e63b5"
 summary="Are we currently in the BitBucket pipeline?"
 summaryComputed="true"
 usage="isBitBucketPipeline"

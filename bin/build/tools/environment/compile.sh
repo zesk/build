@@ -116,6 +116,6 @@ __environmentCompilePostProcess() {
   muzzleReturn diff -U0 "$@" | catchEnvironment "$handler" grepSafe '^+' | catchEnvironment "$handler" cut -c 2- | catchEnvironment "$handler" grepSafe -v '^+' | catchEnvironment "$handler" sort -u || return $?
 }
 _environmentCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

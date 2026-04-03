@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="text - EmptyString. Required. Text to quote"$'\n'""
 base="sed.sh"
@@ -11,11 +11,11 @@ fn="quoteSedPattern"
 foundNames=([0]="summary" [1]="argument" [2]="output" [3]="example" [4]="requires")
 needSlash=""
 output="string quoted and appropriate to insert in a sed search or replacement phrase"$'\n'""
-rawComment="Summary: Quote sed search strings for shell use"$'\n'"Quote a string to be used in a sed pattern on the command line."$'\n'"Argument: text - EmptyString. Required. Text to quote"$'\n'"Output: string quoted and appropriate to insert in a sed search or replacement phrase"$'\n'"Example:     sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedPattern \"\$2\")/g\""$'\n'"Example:     needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'"Requires: printf sed usageDocument __help"$'\n'""$'\n'""
-requires="printf sed usageDocument __help"$'\n'""
+rawComment="Summary: Quote sed search strings for shell use"$'\n'"Quote a string to be used in a sed pattern on the command line."$'\n'"Argument: text - EmptyString. Required. Text to quote"$'\n'"Output: string quoted and appropriate to insert in a sed search or replacement phrase"$'\n'"Example:     sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedPattern \"\$2\")/g\""$'\n'"Example:     needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'"Requires: printf sed bashDocumentation __help"$'\n'""$'\n'""
+requires="printf sed bashDocumentation __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sed.sh"
-sourceHash="3d4ba5c523c9cedaf6e07ff31fc317123b86e880"
+sourceHash="ad287eee2b6c711c3cfcf76167b59132a0602088"
 summary="Quote sed search strings for shell use"$'\n'""
 usage="quoteSedPattern text"
 # shellcheck disable=SC2016
