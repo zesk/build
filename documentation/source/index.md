@@ -31,24 +31,25 @@ To install directly from the web:
 
 Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **Zesk Build** as needed.
 It's not recommended that you commit `bin/build` to your source repository. You can lock to a version using
-`bin/build/install-bin-build --version "$desiredVersion"`. **Zesk Build**'s installer will install the **most recent**
+`bin/build/install-bin-build.sh --version "$desiredVersion"`. **Zesk Build**'s installer will install the **most recent**
 version without the `--version` argument.
 
 ## Features
 
 - Application [deployment](./tools/deployment.md) support to multiple hosts with rollback
-- Support for [application hooks](./tools/hook.md) and environment
+- Provides an infrastructure for [application hooks](./tools/hook.md) and environment variable standardization
 - [Bash prompt support](./tools/prompt.md) with [colors](./tools/decoration.md)
 - Bash [documentation](./guide/documentation.md) framework with [automatic usage](./guide/documentation.md) in shell and
   markdown documentation
 - Comprehensive [argument](./tools/usage.md) validation
 - Generic [package](./tools/package.md) interface for system configuration
-- Advanced [Bash debugger](./tools/debug.md) features
 - Complete [testing](./tools/test.md) and [assertion](./tools/assert.md) framework
+- Advanced [Bash debugger](./tools/debug.md) features
 - Safe [environment files](./tools/environment.md) support
 - Tools
   for [AWS](./tools/aws.md), [crontab](./tools/crontab.md), [daemontools](./tools/daemontools.md), [docker](./tools/docker.md), [interactivity](./tools/interactive.md), [URLs](./tools/url.md),
   versions, and terminal integration
+- [Identical tool](./tools/identical.md) to keep code clean and consistent
 
 ## Usage and arguments
 
