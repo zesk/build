@@ -7,6 +7,10 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{usageDocument}
+
+{usageDocumentSimple}
+
 {consoleHeadingBoxed}
 
 {loadAverage}

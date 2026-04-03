@@ -146,7 +146,9 @@ buildUsageRemoveDeprecated() {
   if $dryRun; then
     [ "${#deprecatedFiles[@]}" -eq 0 ] && statusMessage --last printf -- "%s\n" "# No deprecated files." || printf -- "git rm -f %s\n" "${deprecatedFiles[@]}" || return $?
   else
-    [ "${#deprecatedFiles[@]}" -eq 0 ] || catchEnvironment "$handler" git rm -f "${deprecatedFiles[@]}" || return $?
+    [ "${#deprecatedFiles[@]}" -eq 0 ] || local f && for f in "${deprecatedFiles[@]}"; do
+      catchEnvironment "$handler" git rm -f "$f" || catchReturn "$handler" rm -f "$f" || return $?
+    done
   fi
 }
 _buildUsageRemoveDeprecated() {
