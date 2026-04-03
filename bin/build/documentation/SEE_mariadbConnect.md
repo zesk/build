@@ -1,0 +1,1 @@
+[mariadbConnect]({rel}tools/mariadb.md#mariadbconnect) - Connect to a mariadb-type database using a URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L142))

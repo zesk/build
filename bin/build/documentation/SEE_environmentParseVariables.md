@@ -1,0 +1,1 @@
+[environmentParseVariables]({rel}tools/environment.md#environmentparsevariables) - Parse variables from an environment variable stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L160))

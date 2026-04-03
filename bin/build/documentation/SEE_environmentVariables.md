@@ -1,0 +1,1 @@
+[environmentVariables]({rel}tools/environment.md#environmentvariables) - Output a list of environment variables and ignore function definitions ([source](https://github.com/zesk/build/blob/main/bin/build/identical/environmentVariables.sh#L15))

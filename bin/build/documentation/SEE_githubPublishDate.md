@@ -1,0 +1,1 @@
+[githubPublishDate]({rel}tools/github.md#githubpublishdate) - Output the publish date for the latest release of ownerRepository ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L106))

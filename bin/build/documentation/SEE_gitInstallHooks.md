@@ -1,0 +1,1 @@
+[gitInstallHooks]({rel}tools/git.md#gitinstallhooks) - Install one or more git hooks from Zesk Build hooks. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L746))

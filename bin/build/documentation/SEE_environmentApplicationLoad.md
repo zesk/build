@@ -1,0 +1,1 @@
+[environmentApplicationLoad]({rel}tools/pipeline.md#environmentapplicationload) - Loads application environment variables, set them to their default values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L26))

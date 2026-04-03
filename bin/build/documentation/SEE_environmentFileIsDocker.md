@@ -1,0 +1,1 @@
+[environmentFileIsDocker]({rel}tools/environment.md#environmentfileisdocker) - Ensure an environment file is compatible with non-quoted docker environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L15))

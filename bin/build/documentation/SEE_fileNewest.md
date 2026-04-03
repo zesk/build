@@ -1,0 +1,1 @@
+[fileNewest]({rel}tools/file.md#filenewest) - Output the newest file in the list ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L240))

@@ -1,0 +1,1 @@
+[nodePackageManagerUninstall]({rel}tools/node.md#nodepackagemanageruninstall) - Installs the selected package manager for node ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L184))

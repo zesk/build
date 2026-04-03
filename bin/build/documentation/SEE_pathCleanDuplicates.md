@@ -1,0 +1,1 @@
+[pathCleanDuplicates]({rel}tools/path.md#pathcleanduplicates) - Cleans the path and removes non-directory entries and duplicates ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L94))

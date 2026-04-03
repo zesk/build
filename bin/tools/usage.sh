@@ -98,8 +98,9 @@ buildUsageCompile() {
   shopt -s expand_aliases || :
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   if $gitActions; then
+    buildUsageRemoveDeprecated --dry-run --handler "$handler" || return $?
     buildUsageRemoveDeprecated --handler "$handler" || return $?
-    find "$home/bin/build/documentation/" -type -f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
+    find "$home/bin/build/documentation/" -type f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
   fi
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
 }
@@ -148,6 +149,11 @@ buildUsageRemoveDeprecated() {
     [ "${#deprecatedFiles[@]}" -eq 0 ] || catchEnvironment "$handler" git rm -f "${deprecatedFiles[@]}" || return $?
   fi
 }
+_buildUsageRemoveDeprecated() {
+  # __IDENTICAL__ buildDocumentation 1
+  buildDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 __buildUsageLoad() {
   local handler="$1" && shift
 

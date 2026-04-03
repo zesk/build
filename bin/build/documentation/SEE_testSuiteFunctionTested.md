@@ -1,0 +1,1 @@
+[testSuiteFunctionTested]({rel}tools/test.md#testsuitefunctiontested) - When environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and assertion ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L512))

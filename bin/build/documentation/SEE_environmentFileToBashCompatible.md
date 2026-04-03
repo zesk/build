@@ -1,0 +1,1 @@
+[environmentFileToBashCompatible]({rel}tools/environment.md#environmentfiletobashcompatible) - Takes any environment file and makes it bash-compatible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L93))

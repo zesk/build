@@ -1,0 +1,1 @@
+[packageNeedRestartFlag]({rel}tools/package.md#packageneedrestartflag) - INTERNAL - has `packageUpdate` set the `restart` flag at some ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L657))

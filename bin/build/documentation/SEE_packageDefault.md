@@ -1,0 +1,1 @@
+[packageDefault]({rel}tools/package.md#packagedefault) - Fetch the binary name for the default package in a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L174))
