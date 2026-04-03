@@ -50,7 +50,7 @@ __awsCredentialsFile() {
     ! "$verbose" || throwEnvironment "$handler" "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
     return 1
   fi
-  local credentialsPath credentials="$HOME/.aws/credentials"
+  local credentialsPath credentials="$home/.aws/credentials"
   if $checkFlag && [ ! -f "$credentials" ]; then
     if ! $createFlag; then
       ! $verbose || throwEnvironment "$handler" "No credentials file ($(decorate value "$credentials")) found" || return $?

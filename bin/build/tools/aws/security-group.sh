@@ -76,7 +76,7 @@ __awsSecurityGroupIPModify() {
 
   [ -n "$mode" ] || throwArgument "$handler" "--add, --remove, or --register is required" || return $?
 
-  for argument in group description region; do
+  local argument && for argument in group description region; do
     if [ -z "${!argument}" ]; then
       throwArgument "$handler" "--$argument is required ($(decorate each code "${__saved[@]}"))" || return $?
     fi
