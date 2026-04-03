@@ -4,7 +4,7 @@
 
 ### Usage
 
-    buildEnvironmentContext contextStart command ...
+    buildEnvironmentContext contextStart command [ ... ]
 
 Run a command and ensure the build tools context matches the current project
 Avoid infinite loops here, call down.
@@ -12,7 +12,8 @@ Avoid infinite loops here, call down.
 ### Arguments
 
 - `contextStart` - Directory. Required. Context in which the command should run.
-- `command ...` - Required. Command to run in new context.
+- `command` - Callable. Required. Command to run in new context.
+- `...` - Arguments. Optional. Arguments to the `command`.
 
 ### Return codes
 

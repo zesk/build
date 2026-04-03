@@ -33,3 +33,4 @@ Unknown error code is 254, end of range is 255 which is not used. Use `returnCod
 ### Requires
 
 bashDocumentation printf
+

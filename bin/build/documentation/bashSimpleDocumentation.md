@@ -24,5 +24,5 @@ Output a simple error message for a function
 
 ### Requires
 
-bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __usageDocumentCached __usageMessageStyle __usageMessage
+bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached
 

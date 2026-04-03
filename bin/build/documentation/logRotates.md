@@ -11,8 +11,8 @@ For all log files in logPath with extension `.log`, rotate them safely
 ### Arguments
 
 - `--dry-run` - Flag. Optional. Do not change anything.
-- `logPath` - Required. Path where log files exist.
-- `count` - Required. Integer of log files to maintain.
+- `logPath` - Directory. Required. Path where log files exist.
+- `count` - PositiveInteger. Required. Integer of log files to maintain.
 
 ### Return codes
 

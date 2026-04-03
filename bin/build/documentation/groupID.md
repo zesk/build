@@ -25,3 +25,4 @@ Convert a group name to a group ID
 ### Requires
 
 throwArgument getent cut printf bashDocumentation decorate grep  quoteGrepPattern
+

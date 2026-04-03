@@ -22,3 +22,4 @@ Delete files or directories and return the same exit code passed in.
 ### Requires
 
 isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help
+

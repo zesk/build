@@ -24,3 +24,4 @@ Is this a boolean? (`true` or `false`)
 ### Requires
 
 bashDocumentation printf
+

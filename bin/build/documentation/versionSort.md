@@ -28,5 +28,5 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 
 ### Requires
 
-throwArgument sort usageDocument decorate
+throwArgument sort bashDocumentation decorate
 
