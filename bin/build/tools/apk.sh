@@ -14,13 +14,9 @@
 # Return Code: 0 - System is an alpine system and apk is installed
 # Return Code: 1 - System is not an alpine system or apk is not installed
 apkIsInstalled() {
-  local handler="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}" && handlerCreate "$handler"
   __help --only "$handler" "$@" || return 0
   isAlpine && executableExists apk
-}
-_apkIsInstalled() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is this an Alpine system?

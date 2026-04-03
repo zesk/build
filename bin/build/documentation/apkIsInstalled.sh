@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Is this an Alpine system and is apk installed?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - System is an alpine system and apk is installed"$'\n'"Return Code: 1 - System is not an alpine system or apk is not installed"$'\n'""$'\n'""
 return_code="0 - System is an alpine system and apk is installed"$'\n'"1 - System is not an alpine system or apk is not installed"$'\n'""
 sourceFile="bin/build/tools/apk.sh"
-sourceHash="0fdfcdc22ffc36f534c87d4fb2d8c20f3da04fa4"
+sourceHash="3500a71121499ef821e33bd8055f69cd4e21eda4"
 summary="Is this an Alpine system and is apk installed?"
 summaryComputed="true"
 usage="apkIsInstalled [ --help ]"
