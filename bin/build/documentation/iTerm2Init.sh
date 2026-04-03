@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'""
 base="iterm2.sh"
@@ -13,7 +13,7 @@ rawComment="Add iTerm2 support to console"$'\n'"Argument: --ignore | -i - Flag. 
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="iTerm2Aliases iTerm2PromptSupport"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="2d803e17fc57d89a3fbb35b7f034c946cc05c65a"
+sourceHash="e639d19b7d6de0e83e7f1fbbac181f503559be56"
 summary="Add iTerm2 support to console"
 summaryComputed="true"
 usage="iTerm2Init [ --ignore | -i ]"

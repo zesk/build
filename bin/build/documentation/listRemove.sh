@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-12
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="listValue - Required. List value to modify."$'\n'"separator - Required. Separator string for item values (typically \`:\`)"$'\n'"item - the item to be removed from the \`listValue\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="list.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Remove one or more items from a text-delimited list"$'\n'"Argument: listValue - Required. List value to modify."$'\n'"Argument: separator - Required. Separator string for item values (typically \`:\`)"$'\n'"Argument: item - the item to be removed from the \`listValue\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/list.sh"
-sourceHash="d039b4726ef8e08c7e4f11ceb46d9ee4af719992"
+sourceHash="87314fd289f273788acd3fd9e6c5a11b2aa05b47"
 summary="Remove one or more items from a text-delimited list"
 summaryComputed="true"
 usage="listRemove listValue separator [ item ] [ --help ]"

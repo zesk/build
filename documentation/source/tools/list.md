@@ -5,6 +5,11 @@
 <hr />
 
 {listAppend}
+
+{listContains}
+
 {listRemove}
+
 {listJoin}
+
 {listCleanDuplicates}

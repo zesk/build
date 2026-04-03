@@ -197,6 +197,7 @@ test_jUnitRemaining suite=junit test/tools/junit-tests.sh
 testListAppend suite=list test/tools/list-tests.sh
 testListAppendSame suite=list test/tools/list-tests.sh
 testListCleanDuplicates suite=list test/tools/list-tests.sh
+testListContains suite=list test/tools/list-tests.sh
 testListJoin suite=list test/tools/list-tests.sh
 testLogFileRotate suite=log test/tools/log-tests.sh  tag=slow
 testLogFileRotate1 suite=log test/tools/log-tests.sh  tag=slow

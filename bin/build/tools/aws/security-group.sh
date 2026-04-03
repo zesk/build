@@ -71,7 +71,7 @@ __awsSecurityGroupIPModify() {
   if [ -z "$region" ]; then
     export AWS_REGION && catchReturn "$handler" buildEnvironmentLoad --quiet AWS_REGION || return $?
     region="${AWS_REGION-}" && [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
-    awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
+    awsRegionValid "$region" || throwArgument "$handler" "AWS_REGION $region is not a valid region" || return $?
   fi
 
   [ -n "$mode" ] || throwArgument "$handler" "--add, --remove, or --register is required" || return $?

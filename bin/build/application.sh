@@ -11,7 +11,7 @@
 # Copyright &copy; 2026, Market Acumen, Inc.
 #
 
-# _IDENTICAL_ application.sh 210
+# _IDENTICAL_ application.sh 222
 
 #
 # This file generically loads all application tools in `./bin/tools` and allows for extensions
@@ -151,7 +151,7 @@ fileRealPath() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __help "$handler" --help || return 0
   if executableExists realpath; then
-    realpath "$@"
+    catchReturn "$handler" realpath "$@" || return $?
   else
     local here && here=$(catchReturn "$handler" pwd) && here="${here%/}/" || return $?
     while [ $# -gt 0 ]; do

@@ -11,6 +11,7 @@ __buildPreReleaseStep() {
   local exitCode=0
 
   statusMessage decorate info "$message ... "
+  iTerm2Badge -i "✏️🌎 $message"
   catchEnvironment "$handler" "$@" || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
   # shellcheck disable=SC2015

@@ -151,7 +151,7 @@ fileRealPath() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __help "$handler" --help || return 0
   if executableExists realpath; then
-    realpath "$@"
+    catchReturn "$handler" realpath "$@" || return $?
   else
     local here && here=$(catchReturn "$handler" pwd) && here="${here%/}/" || return $?
     while [ $# -gt 0 ]; do

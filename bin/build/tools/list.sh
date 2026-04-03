@@ -10,9 +10,11 @@
 #  ▐ ▐ ▝▀▖▐ ▖
 #   ▘▀▘▀▀  ▀
 #
-# text-delimited lists
+# Character-delimited lists
+#
+# Environment: PATH MANPATH
 
-# Output arguments joined by a character
+# Output a list of items joined by a character
 # Output: text
 # Argument: separator - EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.
 # Argument: text0 ... - String. Optional. One or more strings to join
@@ -62,10 +64,14 @@ _listRemove() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Does list contain item(s)?
+# Summary: Does a character-delimited list contain item(s)?
+# Return code 0 IFF all items are found in the list. If any item is not found, returns code 1.
+# Return code: 0 - All items are found in the `listValue`
+# Return code: 1 - One or more items were NOT found in the `listValue`
+# If no items are passed in the return value is 0 (true).
 # Argument: listValue - Required. List value to search.
 # Argument: separator - Required. Separator string for item values (typically `:`)
-# Argument: item ... - the item to be searched for in the `listValue`
+# Argument: item ... - Optional. the item to be searched for in the `listValue`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Add an item to the beginning or end of a text-delimited list
@@ -101,6 +107,8 @@ _listContains() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Add an item to a character-delimited list.
+# Add an item to a list IFF it does not exist in the list already
 # Argument: listValue - Required. List value to modify.
 # Argument: separator - Required. Separator string for item values (typically `:`)
 # Argument: --first - Flag. Optional. Place any items after this flag first in the list
@@ -141,7 +149,7 @@ listAppend() {
       fi
       ;;
     esac
-    shift || throwArgument "$handler" "shift $argument" || return $?
+    shift
   done
   printf "%s\n" "$listValue"
 }
@@ -150,12 +158,12 @@ _listAppend() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Removes duplicates from a list and maintains ordering.
 #
 # Argument: separator - String. Required. List separator character.
 # Argument: listText - String. Required. List to clean duplicates.
 # Argument: --removed - Flag. Optional. Show removed items instead of the new list.
+# Argument: --test testFunction - Function. Optional. Run this function on each item in the list and if the return code is non-zero, then remove it from the list.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 listCleanDuplicates() {
@@ -187,7 +195,9 @@ listCleanDuplicates() {
     IFS="$separator" read -r -a items < <(printf "%s\n" "$1")
     local item
     for item in "${items[@]}"; do
-      if [ -n "$testFunction" ] && ! "$testFunction" "$item"; then
+      if [ "${#removed[@]}" -gt 0 ] && inArray "$item" "${removed[@]}"; then
+        ! $debugFlag || decorate info "Removed $item (already removed)"
+      elif [ -n "$testFunction" ] && ! "$testFunction" "$item"; then
         removed+=("$item")
         ! $debugFlag || decorate info "Removed $item with $testFunction"
       else

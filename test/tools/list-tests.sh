@@ -5,6 +5,33 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+__dataListContains() {
+  cat <<'EOF'
+0|a:b:c:d|:|a:b:c
+0|a,b,c,d|,|a,b,c
+1|a,b,c,d|,|a,b,e
+1|aa,bb,cc,dd|,|aa,bb,ee
+0|aa,bb,cc,dd|,|aa
+0|aa,bb,cc,dd|,|bb
+0|aa,bb,cc,dd|,|cc
+0|aa,bb,cc,dd|,|dd
+1|aa,bb,cc,dd|,|ee
+1|aa,bb,cc,dd|,|ee,aa
+0|JohnQBarbieQKen|Q|KenQBarbie
+0|JohnQBabyQHal|Q|Baby
+0|JohnQBarbieQHal|Q|Barbie
+EOF
+}
+testListContains() {
+  local expectedExitCode listValues sep itemsText
+  while IFS='|' read -r expectedExitCode listValues sep itemsText; do
+    local items=() && IFS="$sep" read -r -a items <<<"$itemsText"
+    local ee=()
+    [ "$expectedExitCode" -ne 2 ] || ee=(--stderr-ok)
+    assertExitCode "${ee[@]+"${ee[@]}"}" "$expectedExitCode" listContains "$listValues" "$sep" "${items[@]+"${items[@]}"}" || return $?
+  done < <(__dataListContains)
+}
+
 testListAppend() {
   local item testList="" s=":" reverseList
 

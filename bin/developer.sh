@@ -81,7 +81,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     muzzle buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors bashPromptModule_BuildProject
-    bashPrompt --skip-prompt --remove bashPromptModule_binBuild 2>/dev/null || :
+    bashPrompt --skip-prompt --remove bashPromptModule_BuildProject 2>/dev/null || :
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-03-13
+# Generated on 2026-04-03
 # shellcheck disable=SC2034
 argument="command - Executable. Required. Command to run."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--name - String. Optional. Display this help."$'\n'""
 base="timing.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Time command, similar to \`time\` but uses internal functions"$'\n'"Argument: command - Executable. Required. Command to run."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --name - String. Optional. Display this help."$'\n'"Outputs time as \`timingReport\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/timing.sh"
-sourceHash="5581b63036fc9da1d491ccedd9fa5ebf5e1a3173"
+sourceHash="f214e3b90108da623ba5d789b13d6a42e7600413"
 summary="Time command, similar to \`time\` but uses internal functions"
 summaryComputed="true"
 usage="timing command [ --help ] [ --name ]"

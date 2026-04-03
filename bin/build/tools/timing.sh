@@ -195,7 +195,7 @@ timingDuration() {
   done
 
   local unitNames=("second" "minute" "hour" "day" "week")
-  local unitTotals=(60 60 24 7)
+  local unitTotals=(60 60 24 7 52)
   local duration && for duration in "${durations[@]}"; do
     if [ "$duration" -lt 1000 ]; then
       printf "%sms\n" "$duration"
