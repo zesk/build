@@ -23,5 +23,5 @@ Extract a bash comment from a file. Excludes lines containing the following toke
 ### Requires
 
 head bashFinalComment
-__help usageDocument
+__help bashDocumentation
 

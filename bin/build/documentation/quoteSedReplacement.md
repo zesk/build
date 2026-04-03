@@ -30,5 +30,5 @@ string quoted and appropriate to insert in a `sed` replacement phrase
 
 ### Requires
 
-printf sed usageDocument __help
+printf sed bashDocumentation __help
 

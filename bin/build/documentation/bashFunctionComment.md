@@ -23,5 +23,5 @@ Extract a bash comment from a file. Excludes lines containing the following toke
 ### Requires
 
 grep cut fileReverseLines __help
-usageDocument
+bashDocumentation
 

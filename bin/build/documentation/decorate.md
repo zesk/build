@@ -31,5 +31,5 @@ Decorated text
 
 ### Requires
 
-isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
+isFunction returnArgument awk catchEnvironment bashDocumentation executeInputSupport __help
 
