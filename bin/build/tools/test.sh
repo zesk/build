@@ -715,7 +715,7 @@ _assertDirectoryNotEmpty() {
 # ▘  ▀▘▘▝▀▘
 #
 
-# Argument: item - File. Required. File that should exist
+# Argument: item ... - File. Required. One or more files which MUST exist.
 # Argument: message ... - String. Optional. An error message if this fails
 # DOC TEMPLATE: assert-common 27
 # Argument: --help - Flag. Optional. Display this help.

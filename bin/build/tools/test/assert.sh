@@ -764,9 +764,13 @@ ___assertFileExists() {
   done
 }
 ___assertFileExistsFormat() {
-  local testPassed="${1-}" success="${2-}"
-  shift 2
-  printf -- "%s %s (wd: \"%s\")" "$(__resultText "$testPassed" "$*")" "$(booleanChoose "$testPassed" "is a file" "is not a file")" "$(decorate value "$(pwd)")"
+  local testPassed="${1-}" success="${2-}" items=() && shift 2
+  while [ $# -gt 0 ]; do
+    ! $success || [ -f "${1-}" ] || items+=("$1")
+    $success || [ ! -f "${1-}" ] || items+=("$1")
+    shift
+  done
+  printf -- "%s %s (wd: \"%s\")" "$(__resultText "$testPassed" "${items[*]}")" "$(booleanChoose "$testPassed" "is a file" "is not a file")" "$(decorate value "$(pwd)")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===

@@ -135,7 +135,7 @@ testEverythingElse() {
   #  phpTailLog
   #  phpTest
   #  pipeRunner
-  #  logRotates
+  #  logDirectoryRotate
   #  sshSetup
   #  bashSimpleDocumentation
   #  executableRequire

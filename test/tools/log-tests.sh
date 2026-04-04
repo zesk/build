@@ -5,6 +5,147 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+_assertComboExists() {
+  local assertion="$1" && shift
+  local line="$1" && shift
+  local rootDir="$1" && shift
+  local suffix="$1" && shift && [ -z "$suffix" ] || suffix=".${suffix}"
+  local ff=()
+  while [ $# -gt 0 ]; do
+    ff+=("$rootDir/$1$suffix")
+    shift
+  done
+  "$assertion" --line "$line" "${ff[@]}" || return $?
+}
+
+_logRandomStuff() {
+  local handler="$1" && shift
+  local rootDir="$1" && shift
+  while [ $# -gt 0 ]; do
+    local targetFile="$rootDir/$1"
+    local lines=$((RANDOM % 10 + 1))
+    catchReturn "$handler" executeCount "$lines" printf "%s\n" "$(stringRandom)" >>"$targetFile" || return $?
+    shift
+  done
+}
+
+testLogDirectoryRotate() {
+  local handler="returnMessage"
+
+  local count=2
+
+  local tempDir && tempDir=$(fileTemporaryName "$handler" -d) || return $?
+
+  local ff=("access.log" "security.log" "user.log")
+  assertExitCode 0 logDirectoryRotate "$tempDir" "$count" || return $?
+  assertExitCode 0 directoryIsEmpty "$tempDir" || return $?
+
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-log -> $count"
+
+  assertExitCode 1 directoryIsEmpty "$tempDir" || return $?
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+
+  count=$((count + 2))
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "4" "${ff[@]}" || return $?
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "4" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "5" "${ff[@]}" || return $?
+
+  count=$((count - 2))
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "4" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "5" "${ff[@]}" || return $?
+
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate --cull 1 "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count CULL 1"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "4" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "5" "${ff[@]}" || return $?
+
+  count=1
+  _logRandomStuff "$handler" "$tempDir" "${ff[@]}" || return $?
+  assertExitCode 0 logDirectoryRotate --cull 99 "$tempDir" "$count" || return $?
+  find "$tempDir" -type f | dumpPipe "Post-rotate -> $count CULL 99"
+
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "" "${ff[@]}" || return $?
+  _assertComboExists assertFileExists "$LINENO" "$tempDir" "1" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "2" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "3" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "4" "${ff[@]}" || return $?
+  _assertComboExists assertFileDoesNotExist "$LINENO" "$tempDir" "5" "${ff[@]}" || return $?
+
+  catchReturn "$handler" rm -rf "$tempDir" || return $?
+
+  unset RANDOM
+}
+
 # Tag: slow
 testLogFileRotate() {
   local handler="returnMessage"

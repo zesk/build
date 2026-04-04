@@ -499,8 +499,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:listRemove}
 - {SEE:localePlural}
 - {SEE:localePluralWord}
+- {SEE:logDirectoryRotate}
 - {SEE:logRotate}
-- {SEE:logRotates}
 - {SEE:manPathCleanDuplicates}
 - {SEE:manPathConfigure}
 - {SEE:manPathRemove}

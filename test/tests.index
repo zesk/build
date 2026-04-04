@@ -199,6 +199,7 @@ testListAppendSame suite=list test/tools/list-tests.sh
 testListCleanDuplicates suite=list test/tools/list-tests.sh
 testListContains suite=list test/tools/list-tests.sh
 testListJoin suite=list test/tools/list-tests.sh
+testLogDirectoryRotate suite=log test/tools/log-tests.sh
 testLogFileRotate suite=log test/tools/log-tests.sh  tag=slow
 testLogFileRotate1 suite=log test/tools/log-tests.sh  tag=slow
 testMacPorts suite=macports test/tools/macports-tests.sh

@@ -13,6 +13,27 @@ _bashDocumentationFormatter_return_code() {
 }
 
 #
+# Format requires: creates links to other functions in documentation.
+#
+_bashDocumentationFormatter_requires() {
+  local tokens eof=false
+  while ! $eof; do
+    IFS=" " read -d $'\n' -r -a tokens || eof=true
+    [ "${#tokens[@]}" -eq 0 ] || local token && for token in "${tokens[@]}"; do
+      if isFunction "$token"; then
+        if isBashBuiltin "$token"; then
+          printf -- "- [\`%s\`]({rel}/guide/builtin.md#$token)\n" "$token"
+        else
+          printf -- "- {SEE:%s}\n" "$token"
+        fi
+      else
+        printf "- %s\n" "$token"
+      fi
+    done
+  done
+}
+
+#
 # Format see blocks as tokens
 #
 _bashDocumentationFormatter_see() {

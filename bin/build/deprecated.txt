@@ -7,6 +7,9 @@ cannon |textCannon |
 __usageDocumentCached|__bashDocumentationCached|
 usageDocument|bashDocumentation|
 usageDocumentSimple|bashSimpleDocumentation|
+rotateLogs|logDirectoryRotate|
+logsRotate|logDirectoryRotate|
+logRotates|logDirectoryRotate|
 
 # v0.41.3
 parseBoolean|booleanParse|
@@ -34,7 +37,7 @@ veeGitTag|gitTagVee|
 watchDirectory|directoryWatch|
 shaPipe|textSHA|
 rotateLog|logRotate|
-rotateLogs|logsRotate|
+rotateLogs|logDirectoryRotate|
 randomString|stringRandom|
 loopExecute|executeLoop|
 bigTextAt|decorate at|

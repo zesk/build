@@ -260,7 +260,7 @@
 - processOpenPipes
 - pythonPackageInstalled
 - returnClean
-- logRotates
+- logDirectoryRotate
 - textSHA
 - sshSetup
 - stringContainsInsensitive
@@ -595,7 +595,7 @@ On a "2x" machine:
 - processOpenPipes
 - quoteBashString
 - textReplaceFirst
-- logRotates
+- logDirectoryRotate
 - sedReplacePattern
 - textSHA
 - contextShow

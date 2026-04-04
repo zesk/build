@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--display - String. Optional. Display name for the condition."$'\n'"--debug - Flag. Optional. Debugging enabled for the assertion function."$'\n'"--line lineNumber - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using \`--line-depth\`."$'\n'"--line-depth depth - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function."$'\n'"--stdout-match - String. Optional. One or more strings which must match \`stdout\` output."$'\n'"--stdout-no-match - String. Optional. One or more strings which must match \`stdout\` output."$'\n'"--stderr-ok - Flag. Optional. Output to \`stderr\` will not cause the test to fail."$'\n'"--stderr-match - String. Optional. One or more strings which must match \`stderr\` output. Implies \`--stderr-ok\`"$'\n'"--stderr-no-match - String. Optional. One or more strings which must match NOT \`stderr\` output. Implies \`--stderr-ok\`"$'\n'"--dump - Flag. Optional. Output \`stderr\` and \`stdout\` after test regardless."$'\n'"--dump-binary - Flag. Optional. Output \`stderr\` and \`stdout\` after test regardless, displayed as binary."$'\n'"--plumber - Flag. Optional. Wrap the test call with the \`plumber\` call to detect local leaks."$'\n'"--leak globalName - Zero or more. String. Allow global leaks for these globals when \`--plumber\` is enabled."$'\n'"--skip-plumber - Flag. Optional. Skip plumber check for function calls. When specified with \`--plumber\` the last occurrence on the command line is effective."$'\n'"--head - Flag. Optional. When outputting \`stderr\` or \`stdout\`, output the head of the file."$'\n'"--tail - Flag. Optional. When outputting \`stderr\` or \`stdout\`, output the tail of the file. (Default)"$'\n'"string ... - Empty strings"$'\n'""
 base="test.sh"
@@ -13,7 +13,7 @@ rawComment="Assert a string is empty."$'\n'"If this fails it will output an erro
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 reviewed="2023-11-12"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="d2f53a43ae407019ef0c22804c90295e53657f9c"
+sourceHash="a67c5b2c2396821f4e070140f0dabed2cde8ea23"
 summary="Assert a string is empty."
 summaryComputed="true"
 usage="assertStringEmpty [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] [ string ... ]"

@@ -9,11 +9,15 @@
 # Docs: o ./documentation/source/tools/log.md
 # Test: o ./test/tools/log-tests.sh
 
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --dry-run - Flag. Optional. Do not change anything.
+# Argument: --cull cullCount - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.
 # Argument: logFile - File. Required. A log file which exists.
-# Argument: count - PositiveInteger. Required. Integer of log files to maintain.
-# Rotate a log file
+# Argument: count - PositiveInteger. Required. Integer of log file backups to maintain.
+# Summary: Rotate a log file
+# Rotates a log file by adding a digit to the end numerically, and moves logs such that the most recent
+# log backup suffix is `.1` and the oldest log backup suffix is `.count`.
 #
 # Backs up files as:
 #
@@ -22,12 +26,14 @@
 #     logFile.2
 #     logFile.3
 #
+# `--cull` will delete `cullCount` files in addition to the backup files if they exist. This is useful if you change this number
+# from a higher to a lower number and want the extra files deleted.
+#
 # But maintains file descriptors for `logFile`.
 logRotate() {
-  local this="${FUNCNAME[0]}"
-  local handler="_$this"
+  local handler="_${FUNCNAME[0]}"
 
-  local logFile="" count="" dryRun=false
+  local logFile="" count="" dryRun=false cullCount=0
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -39,9 +45,10 @@ logRotate() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --dry-run) dryRun=true ;;
+    --cull) shift && cullCount="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $? ;;
     *)
       if [ -z "$logFile" ]; then
-        logFile="$(validate "$handler" File logFile "$logFile")" || return $?
+        logFile="$(validate "$handler" File logFile "$argument")" || return $?
       elif [ -z "$count" ]; then
         count=$(validate "$handler" "PositiveInteger" "count" "$argument")
       else
@@ -57,35 +64,31 @@ logRotate() {
   [ -n "$count" ] || throwArgument "$handler" "count required" || return $?
 
   local index="$count"
-  if [ "$count" -gt 1 ]; then
-    if [ -f "$logFile.$count" ]; then
-      if "$dryRun"; then
-        printf "%s \"%s\"\n" rm "$(escapeDoubleQuotes "$logFile.$count")"
-      else
-        rm "$logFile.$count" || throwEnvironment "$handler" "$this Can not remove $logFile.$count" || return $?
-      fi
-    fi
+  if [ "$count" -gt 1 ] || [ "$cullCount" -gt 0 ]; then
+    while [ "$index" -le $((count + cullCount)) ]; do
+      local f="$logFile.$index"
+      index=$((index + 1))
+      [ -f "$f" ] || continue
+      "$dryRun" && printf "%s \"%s\"\n" rm "$(escapeDoubleQuotes "$f")" || catchReturn "$handler" rm -f "$f" || return $?
+    done
+    index="$count"
   fi
 
   index=$((index - 1))
   while [ "$index" -ge 1 ]; do
-    if [ -f "$logFile.$index" ]; then
-      if "$dryRun"; then
-        printf "%s \"%s\" \"%s\"\n" mv "$(escapeDoubleQuotes "$logFile.$index")" "$(escapeDoubleQuotes "$logFile.$((index + 1))")"
-      else
-        mv "$logFile.$index" "$logFile.$((index + 1))" || throwEnvironment "$handler" "$this Failed to mv $logFile.$index -> $logFile.$((index + 1))" || return $?
-      fi
-    fi
+    local f="$logFile.$index" next="$logFile.$((index + 1))"
     index=$((index - 1))
+    [ -f "$f" ] || continue
+    "$dryRun" && printf "%s \"%s\" \"%s\"\n" mv "$(escapeDoubleQuotes "$f")" "$(escapeDoubleQuotes "$next")" || catchReturn "$handler" mv -f "$f" "$next" || return $?
   done
 
   index=1
   if "$dryRun"; then
-    printf "%s \"%s\" \"%s\"\n" cp "$(escapeDoubleQuotes "$logFile")" "$(escapeDoubleQuotes "$logFile.$index")"
-    printf "printf \"\">\"%s\"\n" "$(escapeDoubleQuotes "$logFile")"
+    printf -- "cp -f \"%s\" \"%s\"\n" "$(escapeDoubleQuotes "$logFile")" "$(escapeDoubleQuotes "$logFile.$index")"
+    printf -- "printf \"\">\"%s\"\n" "$(escapeDoubleQuotes "$logFile")"
   else
-    cp "$logFile" "$logFile.$index" || throwEnvironment "$handler" "$this Failed to copy $logFile $logFile.$index" || return $?
-    printf "" >"$logFile" || throwEnvironment "$handler" "$this Failed to truncate $logFile" || return $?
+    cp -f "$logFile" "$logFile.$index" || throwEnvironment "$handler" "Failed to copy $logFile $logFile.$index" || return $?
+    printf "" >"$logFile" || throwEnvironment "$handler" "Failed to truncate $logFile" || return $?
   fi
 }
 _logRotate() {
@@ -94,14 +97,18 @@ _logRotate() {
 }
 
 # Summary: Rotate log files
-# For all log files in logPath with extension `.log`, rotate them safely
+# For all log files in logPath with extension `.log`, rotate them safely.
+# See: logRotate
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --dry-run - Flag. Optional. Do not change anything.
-# Argument: logPath - Directory. Required. Path where log files exist.
+# Argument: --cull cullCount - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.
+# Argument: logPath - Directory. Required. Path where log files exist. Looks for files which match `*.log`.
 # Argument: count - PositiveInteger. Required. Integer of log files to maintain.
-logRotates() {
+logDirectoryRotate() {
   local handler="_${FUNCNAME[0]}"
 
-  local logPath="" count="" dryRunArgs=()
+  local logPath="" count="" rr=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -112,30 +119,32 @@ logRotates() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --dry-run) dryRunArgs=(--dry-run) ;;
+    --dry-run) rr=(--dry-run) ;;
+    --cull) shift && rr+=("$argument" "${1-}") ;;
     *)
       if [ -z "$logPath" ]; then
-        logPath="$(validate "$handler" Directory logPath "$logPath") || return $?"
+        logPath="$(validate "$handler" Directory logPath "$argument")" || return $?
       elif [ -z "$count" ]; then
         count="$(validate "$handler" PositiveInteger "count" "$argument")" || return $?
       else
-        throwArgument "$handler" "$this Unknown argument $argument" || return $?
+        throwArgument "$handler" "Unknown argument $argument" || return $?
       fi
       ;;
     esac
     shift
   done
-  [ -z "$logPath" ] || throwArgument "$handler" "missing logPath" || return $?
-  [ -z "$count" ] || throwArgument "$handler" "missing count" || return $?
+  [ -n "$logPath" ] || throwArgument "$handler" "missing logPath" || return $?
+  [ -n "$count" ] || throwArgument "$handler" "missing count" || return $?
 
   statusMessage decorate info "Rotating log files in path $(decorate file "$logPath")"
-  find "$logPath" -type f -name '*.log' ! -path "*/.*/*" | while IFS= read -r logFile; do
+  directoryChange "$logPath" find "." -type f -name '*.log' ! -path "*/\.*/*" -print0 | while IFS="" read -d $'\0' -r logFile; do
+    logFile="${logPath%/}/${logFile#./}"
     statusMessage decorate info "Rotating log file $logFile" || :
-    catchEnvironment "$handler" logRotate "${dryRunArgs[@]+${dryRunArgs[@]}}" "$logFile" "$count" || return $?
+    catchEnvironment "$handler" logRotate "$logFile" "$count" "${rr[@]+"${rr[@]}"}" || return $?
   done
   statusMessage --last decorate info "Rotated log files in path $(decorate file "$logPath")"
 }
-_logRotates() {
+_logDirectoryRotate() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

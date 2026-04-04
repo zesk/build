@@ -24,6 +24,7 @@
 see [bash](https://en.wikipedia.org/wiki/Bourne_shell)) and has a long history as a steady and stable shell to bootstrap
 your systems.
 
+- [Bash Builtin Documentation](./builtin.md)
 - [`FUNCNAME` and `BASH_SOURCE` notes](./notes.md)
 - [`test` cheatsheet](./test-cheatsheet.md) - Bash `test` and `[ ]` expressions
 - [Trap Manual Page](./trap.md) - Never enjoy digging to find this definition for `trap`.
