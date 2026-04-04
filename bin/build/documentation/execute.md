@@ -20,7 +20,3 @@ Run binary and output failed command upon error
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-returnMessage __help
-

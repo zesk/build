@@ -36,7 +36,3 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 - {SEE:BUILD_TERM_COLORS_STATE.sh}
 
-### Requires
-
-buildHome statusMessage buildEnvironmentGetDirectory directoryRequire  textSHA --cachedecorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
-

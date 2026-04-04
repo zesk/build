@@ -18,7 +18,3 @@ Redistribute color values to make brightness adjustments more balanced
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
-

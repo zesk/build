@@ -26,8 +26,3 @@ It also reports the host, user and current directory back to iTerm2 on every pro
 - __ITERM2_HOST
 - __ITERM2_HOST_TIME
 
-### Requires
-
-catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState
-__iTerm2_mark __iTerm2_suffix __iTerm2UpdateState
-

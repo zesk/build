@@ -20,8 +20,3 @@ Extract a bash comment from a file. Excludes lines containing the following toke
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-head bashFinalComment
-__help bashDocumentation
-

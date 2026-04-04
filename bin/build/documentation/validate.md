@@ -72,8 +72,3 @@ Internally the function `_validateTypeMapperDefault` is the default type mapper 
 - `0` - Valid is valid, stdout is a filtered version of the value to be used
 - `2` - Valid is invalid, output reason to stderr
 
-### Requires
-
-__validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable __validateTypeType
-isFunction throwArgument __help decorate
-

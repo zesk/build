@@ -20,7 +20,3 @@ Run `handler` with an environment error
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-isFunction returnArgument debuggingStack throwEnvironment
-

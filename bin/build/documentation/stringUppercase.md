@@ -26,5 +26,5 @@ Convert text to uppercase
 
 ### Requires
 
-tr
+- tr
 

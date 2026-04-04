@@ -18,7 +18,3 @@ List any processes associated with daemontools supervisors
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-pgrep read printf
-

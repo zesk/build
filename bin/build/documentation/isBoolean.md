@@ -21,7 +21,3 @@ Is this a boolean? (`true` or `false`)
 - `0` - if value is a boolean
 - `1` - if value is not a boolean
 
-### Requires
-
-bashDocumentation
-

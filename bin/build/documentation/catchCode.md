@@ -21,7 +21,3 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-isUnsignedInteger returnArgument isFunction isCallable
-

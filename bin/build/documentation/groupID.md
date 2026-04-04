@@ -22,7 +22,3 @@ Convert a group name to a group ID
 - `1` - Any group is not found in the database.
 - `2` - Argument errors (blank argument)
 
-### Requires
-
-throwArgument getent cut printf bashDocumentation decorate grep  quoteGrepPattern
-

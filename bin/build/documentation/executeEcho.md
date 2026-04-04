@@ -17,7 +17,3 @@ Output the `command ...` to stdout prior to running, then `execute` it
 
 - Any
 
-### Requires
-
-__help decorate execute __decorateExtensionQuote __decorateExtensionEach
-

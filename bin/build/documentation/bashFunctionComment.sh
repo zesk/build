@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="source - File. Required. File where the function is defined."$'\n'"functionName - String. Required. The name of the bash function to extract the documentation for."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -12,7 +12,7 @@ rawComment="Extract a bash comment from a file. Excludes lines containing the fo
 requires="grep cut fileReverseLines __help"$'\n'"bashDocumentation"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="b167dcea2dca6c84836b45fc4f3186065164b093"
+sourceHash="b400ab63418cb659357620c6f09ea45389cce43d"
 summary="Extract a bash comment from a file. Excludes lines containing"
 summaryComputed="true"
 usage="bashFunctionComment source functionName [ --help ]"

@@ -12,7 +12,7 @@ Creates a `manifest.json` file at target with structure:
 - created - Milliseconds creation time
 - createdString - Milliseconds creation time in current locale language
 - arguments - arguments to this function
-Creates a `files.json` with a list of files as well at target
+Creates a `files.json` with a list of files as well at `target`.
 
 ### Arguments
 

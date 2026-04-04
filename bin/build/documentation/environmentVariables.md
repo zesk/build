@@ -20,7 +20,3 @@ exported variables
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-declare grep cut bashDocumentation __help
-

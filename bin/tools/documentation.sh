@@ -3,6 +3,15 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+_bashDocumentationFormatter_builtin() {
+  local eof=false && while ! $eof; do
+    local tokens=() && IFS=" " read -d $'\n' -r -a tokens || eof=true
+    [ "${#tokens[@]}" -eq 0 ] || local token && for token in "${tokens[@]}"; do
+      printf -- "[\`%s\`]({rel}/guide/builtin.md#%s)\n" "$token" "$(stringLowercase "$token")"
+    done
+  done
+}
+
 __buildDocumentationBuildDirectory() {
   local handler="$1" && shift
   local home="$1" && shift

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="--exclude pattern - String. Optional. String passed to \`! -path pattern\` in \`find\`"$'\n'"directory ... - Directory. Required. Directory to \`source\` all \`.sh\` files used."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -12,7 +12,7 @@ rawComment="Summary: Load a directory of bash scripts"$'\n'"Load a directory of 
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="Loads bash files"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="b167dcea2dca6c84836b45fc4f3186065164b093"
+sourceHash="b400ab63418cb659357620c6f09ea45389cce43d"
 summary="Load a directory of bash scripts"$'\n'""
 usage="bashSourcePath [ --exclude pattern ] directory ... [ --help ]"
 # shellcheck disable=SC2016

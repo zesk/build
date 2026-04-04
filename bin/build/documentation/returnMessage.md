@@ -17,7 +17,3 @@ Return passed in integer return code and output message to `stderr` (non-zero) o
 
 - exitCode
 
-### Requires
-
-isUnsignedInteger printf returnMessage
-

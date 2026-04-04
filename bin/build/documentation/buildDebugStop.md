@@ -18,7 +18,3 @@ Stop build debugging if it is enabled
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-buildDebugEnabled
-

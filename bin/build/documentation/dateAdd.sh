@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="--days delta - SignedInteger. Number of days to add (or subtract - use a negative number). Affects all timestamps *after* it."$'\n'"timestamp ... - Date. Timestamp to update."$'\n'""
 base="date.sh"
@@ -13,7 +13,7 @@ newYearsEve=""
 rawComment="Add or subtract days from a text date"$'\n'"Argument: --days delta - SignedInteger. Number of days to add (or subtract - use a negative number). Affects all timestamps *after* it."$'\n'"Argument: timestamp ... - Date. Timestamp to update."$'\n'"stdout: Date with days added to it"$'\n'"Example:     newYearsEve=\$(dateAdd --days -1 \"2025-01-01\")"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/date.sh"
-sourceHash="65743f6a9828806f273bb3379367926eeeb56a06"
+sourceHash="9ddb73b66ff2ed2416073f5df9990e8fcd544062"
 stdout="Date with days added to it"$'\n'""
 summary="Add or subtract days from a text date"
 summaryComputed="true"

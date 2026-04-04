@@ -20,7 +20,3 @@ Boolean selector
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-isBoolean returnArgument printf
-

@@ -31,5 +31,6 @@ If any requirements are not met, exit status of 1 and a list of unmet requiremen
 
 ### Requires
 
-token1 token2
+- token1
+- token2
 

@@ -20,7 +20,3 @@ This check is simplistic and does not verify actual coverage or code paths.
 - `0` - Function is used within the file
 - `1` - Function is *not* used within the file
 
-### Requires
-
-throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep
-

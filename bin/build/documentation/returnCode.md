@@ -30,7 +30,3 @@ Unknown error code is 254, end of range is 255 which is not used. Use `returnCod
 
 - `0` - success
 
-### Requires
-
-bashDocumentation
-

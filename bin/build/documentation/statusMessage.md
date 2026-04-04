@@ -41,7 +41,3 @@ $(--inline) - Outputs the message at the cursor with a newline
 
 - Intended to be run on an interactive console. Should support $(tput cols).
 
-### Requires
-
-throwArgument consoleHasAnimation catchEnvironment decorate validate consoleLineFill
-

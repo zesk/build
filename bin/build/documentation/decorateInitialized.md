@@ -19,7 +19,3 @@ Useful to set our global color environment at the top level of a script if it ha
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-__help
-

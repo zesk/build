@@ -21,7 +21,3 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 - {SEE:BUILD_COLORS.sh} - Boolean. Optional. Whether the build system will output ANSI colors.
 
-### Requires
-
-isPositiveInteger tput __help convertValue
-

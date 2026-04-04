@@ -24,7 +24,3 @@ When called twice, fails on the second invocation and dumps a call stack to stde
 
 - __BUILD_RECURSION
 
-### Requires
-
-printf unset  export debuggingStack exit
-

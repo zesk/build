@@ -15,8 +15,3 @@
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-throwArgument read environmentVariables decorate sed cat rm throwEnvironment catchEnvironment returnClean
-validate fileTemporaryName
-

@@ -24,7 +24,3 @@ String. Associated record with `index` and `user`.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-grep cut returnMessage printf /etc/passwd whoami
-

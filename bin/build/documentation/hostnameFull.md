@@ -18,7 +18,3 @@ Get the full hostname
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-__help __hostname executableRequire catchEnvironment
-

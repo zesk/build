@@ -25,8 +25,3 @@ Given a list of directories, ensure they exist and create them if they do not.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname
-chmod chown
-

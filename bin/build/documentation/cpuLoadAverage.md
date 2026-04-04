@@ -24,5 +24,5 @@ lines:Number
 
 ### Requires
 
-uptime
+- uptime
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="none"
 base="aws.sh"
@@ -12,7 +12,7 @@ rawComment="aws Command-Line install"$'\n'"Installs x86 or aarch64 binary based 
 requires="packageInstall urlFetch"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
-sourceHash="2868917a7f9f34a65d23270409e9b1504ab860f0"
+sourceHash="120633a085f92d8b58b296b7906b5ad3ec7811cf"
 summary="aws Command-Line install"
 summaryComputed="true"
 usage="awsInstall"

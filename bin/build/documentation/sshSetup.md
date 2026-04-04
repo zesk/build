@@ -22,7 +22,3 @@ You will need the password for this server for the current user.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-userRecordHome catchEnvironment throwEnvironment
-

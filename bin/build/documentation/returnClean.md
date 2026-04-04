@@ -19,7 +19,3 @@ Delete files or directories and return the same exit code passed in.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help
-

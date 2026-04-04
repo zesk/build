@@ -25,7 +25,3 @@ Should never fail, unless date is not installed
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-__timestamp, returnEnvironment date
-

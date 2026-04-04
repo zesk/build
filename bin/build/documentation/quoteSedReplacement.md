@@ -28,7 +28,3 @@ string quoted and appropriate to insert in a `sed` replacement phrase
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-printf sed bashDocumentation __help
-

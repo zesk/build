@@ -20,7 +20,3 @@ Allow blank files or no matches:
 
 - `0` - Normal operation
 
-### Requires
-
-grep returnMap
-

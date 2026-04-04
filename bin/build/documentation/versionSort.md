@@ -26,7 +26,3 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-throwArgument sort bashDocumentation decorate
-

@@ -6,6 +6,18 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testBashEnableBuiltins() {
+  local handler="returnMessage"
+  local enableExceptions=("case" "if" "while" "until")
+  local temp && temp=$(fileTemporaryName "$handler") || return $?
+
+  enable -a | textRemoveFields 1 | sort >"$temp/enable-a" || return $?
+  bashBuiltins | grep -v "$(listJoin "|" "${enableExceptions[@]}")" | sort >"$temp/builtins" || return $?
+  assertExitCode 0 filesAreIdentical "$temp/enable-a" "$temp/builtins" || return $?
+
+  catchReturn "$handler" rm -rf "$temp" || return $?
+}
+
 testIsType() {
   local types=()
   local var0="" var1=()

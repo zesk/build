@@ -31,7 +31,3 @@ Example:     buildDebugStart || :
 
 - {SEE:BUILD_DEBUG.sh}
 
-### Requires
-
-buildDebugEnabled
-

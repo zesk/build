@@ -6,7 +6,7 @@
 
     dateTomorrow [ --local ] [ --help ]
 
-Returns tomorrow's date (UTC time), in YYYY-MM-DD format. (same as `%F`)
+Returns tomorrow's date (UTC time), in `YYYY-MM-DD` format. (same as `%F`)
 
 ### Arguments
 

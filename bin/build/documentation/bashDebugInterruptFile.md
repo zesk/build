@@ -25,7 +25,3 @@ determine where the problem or loop exists.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-trap
-

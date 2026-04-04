@@ -20,5 +20,5 @@ Output the iTerm2 version
 
 ### Requires
 
-stty
+- stty
 

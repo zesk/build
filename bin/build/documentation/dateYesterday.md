@@ -6,7 +6,7 @@
 
     dateYesterday [ --local ] [ --help ]
 
-Returns yesterday's date, in YYYY-MM-DD format. (same as `%F`)
+Returns yesterday's date, in `YYYY-MM-DD` format. (same as `%F`)
 
 ### Arguments
 

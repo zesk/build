@@ -22,7 +22,3 @@ Outputs color *codes* separated by colons.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-decorations read inArray decorate listJoin
-

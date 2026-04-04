@@ -77,11 +77,11 @@ _bashCheckRequires() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List bash buildin functions, one per line
+# List bash builtin functions, one per line
 # stdout: line:function
 bashBuiltins() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  printf "%s\n" ":" "." "[" "alias" "bg" "bind" "break" "builtin" "case" "cd" "command" "compgen" "complete" "continue" "declare" "dirs" "disown" "echo" "enable" "eval" "exec" "exit" "export" "fc" "fg" "getopts" \
+  printf "%s\n" ":" "." "[" "alias" "bg" "bind" "break" "builtin" "case" "caller" "cd" "command" "compgen" "complete" "continue" "declare" "dirs" "disown" "echo" "enable" "eval" "exec" "exit" "export" "false" "fc" "fg" "getopts" \
     "hash" "help" "history" "if" "jobs" "kill" "let" "local" "logout" "popd" "printf" "pushd" "pwd" "read" "readonly" "return" "set" "shift" "shopt" "source" "suspend" "test" "times" "trap" "type" "typeset" \
     "ulimit" "umask" "unalias" "unset" "until" "wait" "while"
 }
@@ -101,7 +101,7 @@ isBashBuiltin() {
   [ $# -gt 0 ] || throwArgument "$handler" "Need builtin" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   case "${1-}" in
-  ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "fc" | "fg" | "getopts")
+  ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "caller" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "false" | "fc" | "fg" | "getopts")
     return 0
     ;;
   "hash" | "help" | "history" | "if" | "jobs" | "kill" | "let" | "local" | "logout" | "popd" | "printf" | "pushd" | "pwd" | "read" | "readonly" | "return" | "set" | "shift" | "shopt" | "source" | "suspend" | "test" | "times" | "trap" | "type" | "typeset")

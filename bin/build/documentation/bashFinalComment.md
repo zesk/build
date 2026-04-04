@@ -18,7 +18,3 @@ Extracts the final comment from a stream
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-fileReverseLines sed cut grep convertValue
-

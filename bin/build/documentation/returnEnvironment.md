@@ -16,7 +16,3 @@ Return `environment` error code. Outputs `message ...` to `stderr`.
 
 - 1
 
-### Requires
-
-returnMessage
-

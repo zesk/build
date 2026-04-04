@@ -20,7 +20,3 @@ Run a command after changing directory to it and then returning to the previous 
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-pushd popd
-

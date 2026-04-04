@@ -16,7 +16,3 @@ Return `argument` error code. Outputs `message ...` to `stderr`.
 
 - 2
 
-### Requires
-
-returnMessage
-

@@ -30,7 +30,3 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 - {SEE:BUILD_DEBUG.sh}
 
-### Requires
-
-mktemp __help catchEnvironment bashDocumentation
-

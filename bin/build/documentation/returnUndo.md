@@ -31,8 +31,3 @@ As a caveat, your command to `undo` can NOT take the argument `--` as a paramete
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-isUnsignedInteger throwArgument decorate execute
-bashDocumentation
-

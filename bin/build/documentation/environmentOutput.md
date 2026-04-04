@@ -22,7 +22,3 @@ Any values which contain a newline are also skipped.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-throwArgument decorate environmentSecureVariables grepSafe env textRemoveFields
-

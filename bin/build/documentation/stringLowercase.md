@@ -26,5 +26,5 @@ Convert text to stringLowercase
 
 ### Requires
 
-tr
+- tr
 

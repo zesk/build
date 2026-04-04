@@ -25,7 +25,3 @@ Does a binary exist in the PATH?
 - `0` - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 - `1` - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
 
-### Requires
-
-throwArgument decorate __decorateExtensionEach command
-

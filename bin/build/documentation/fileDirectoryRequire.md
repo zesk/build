@@ -27,7 +27,3 @@ Creates the directories for all files passed in.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-chmod throwArgument usageArgumentString decorate catchEnvironment dirname
-

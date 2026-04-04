@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="profileName - The credentials profile to load (default value is \`default\` and loads section identified by \`[default]\` in \`~/.aws/credentials\`)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="aws.sh"
@@ -13,7 +13,7 @@ rawComment="Extract a profile from a credentials file"$'\n'"If the AWS credentia
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 setFile=""
 sourceFile="bin/build/tools/aws.sh"
-sourceHash="2868917a7f9f34a65d23270409e9b1504ab860f0"
+sourceHash="120633a085f92d8b58b296b7906b5ad3ec7811cf"
 summary="Get credentials and output environment variables for AWS authentication"$'\n'""
 usage="awsCredentialsHasProfile [ profileName ] [ --help ]"
 # shellcheck disable=SC2016

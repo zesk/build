@@ -18,8 +18,3 @@ Terminate daemontools as gracefully as possible
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment validate statusMessage
-svscanboot id svc svstat
-

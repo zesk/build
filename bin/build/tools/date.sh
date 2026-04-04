@@ -58,11 +58,11 @@ _dateToTimestamp() {
 }
 
 #
-# Converts an integer date to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)
+# Converts an integer date to a date formatted timestamp (e.g. `%Y-%m-%d %H:%M:%S`)
 #
-# dateFromTimestamp 1681966800 %F
+# Example:     dateFromTimestamp 1681966800 %F
 #
-# Argument: integerTimestamp - Integer. Required. Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
+# Argument: integerTimestamp - Integer. Required. Integer. Required. Integer timestamp offset (Seconds since 1/1/1970 UTC, same as `$(date +%s)`)
 # Argument: format - String. Optional. How to output the date (e.g. `%F` - no `+` is required)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -71,6 +71,7 @@ _dateToTimestamp() {
 # Return Code: 0 - If parsing is successful
 # Return Code: 1 - If parsing fails
 # Example:     dateField=$(dateFromTimestamp $init %Y)
+# Requires: throwArgument decorate validate __dateFromTimestamp bashDocumentation
 dateFromTimestamp() {
   local handler="_${FUNCNAME[0]}"
   local isUTC=true value="" format=""
@@ -107,25 +108,26 @@ _dateFromTimestamp() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Returns yesterday's date, in YYYY-MM-DD format. (same as `%F`)
+# Returns yesterday's date, in `YYYY-MM-DD` format. (same as `%F`)
 #
 # Summary: Yesterday's date (UTC time)
 # Argument: --local - Flag. Optional. Local yesterday
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     rotated="$log.$({fn} --local)"
+# Requires: throwArgument date convertValue dateFromTimestamp bashDocumentation
 dateYesterday() {
   local handler="_${FUNCNAME[0]}"
   if [ $# -eq 0 ]; then
-    ts=$(date -u +%s) || return $?
+    ts=$(catchReturn "$handler" date -u +%s) || return $?
   else
     case "$1" in
     --help) "$handler" 0 && return $? || return "$(convertValue $? 1 0)" ;;
-    --local) ts=$(date +%s) ;;
+    --local) ts=$(catchReturn "$handler" date +%s) || return $? ;;
     *) throwArgument "$handler" "Unknown argument: $1" || return $? ;;
     esac
   fi
-  dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
+  dateFromTimestamp "$((ts - 86400))" %F
 }
 _dateYesterday() {
   # __IDENTICAL__ bashDocumentation 1
@@ -133,20 +135,21 @@ _dateYesterday() {
 }
 
 # Summary: Tomorrow's date in UTC
-# Returns tomorrow's date (UTC time), in YYYY-MM-DD format. (same as `%F`)
+# Returns tomorrow's date (UTC time), in `YYYY-MM-DD` format. (same as `%F`)
 #
 # Argument: --local - Flag. Optional. Local tomorrow
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     rotated="$log.$({fn})"
+# Requires: throwArgument date convertValue dateFromTimestamp bashDocumentation
 dateTomorrow() {
   local handler="_${FUNCNAME[0]}" ts
   if [ $# -eq 0 ]; then
-    ts=$(date -u +%s) || return $?
+    ts=$(catchReturn "$handler" date -u +%s) || return $?
   else
     case "$1" in
     --help) "$handler" 0 && return $? || return "$(convertValue $? 1 0)" ;;
-    --local) ts=$(date +%s) ;;
+    --local) ts=$(catchReturn "$handler" date +%s) || return $? ;;
     *) throwArgument "$handler" "Unknown argument: $1" || return $? ;;
     esac
   fi
@@ -179,7 +182,8 @@ _dateToday() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Is a date valid?
+# Summary: Is a date valid?
+# Checks a date syntax and ensures it's a valid calendar date.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
@@ -224,10 +228,7 @@ dateAdd() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --days)
-      shift
-      days=$(validate "$handler" Integer "$argument" "${1-}") || return $?
-      ;;
+    --days) shift && days=$(validate "$handler" Integer "$argument" "${1-}") || return $? ;;
     *)
       timestamp=$(catchArgument "$handler" dateToTimestamp "$argument") || return $?
       catchArgument "$handler" dateFromTimestamp "$((timestamp + (86400 * days)))" "%F" || return $?

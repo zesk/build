@@ -35,10 +35,3 @@ Fetch URL content
 
 - {SEE:BUILD_URL_TIMEOUT.sh}
 
-### Requires
-
-returnMessage executableExists decorate
-validate
-throwArgument catchArgument
-throwEnvironment catchEnvironment
-

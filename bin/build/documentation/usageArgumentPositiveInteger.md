@@ -19,7 +19,3 @@ Validates a value is an positive integer and greater than zero (NOT zero)
 - `2` - Argument error
 - `0` - Success
 
-### Requires
-
-isPositiveInteger throwArgument decorate
-

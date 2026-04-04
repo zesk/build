@@ -30,7 +30,3 @@
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-cp rm cat printf fileRealPath executableExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
-

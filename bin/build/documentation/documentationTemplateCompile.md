@@ -30,9 +30,3 @@ The process:
 - `1` - Issue with file generation
 - `2` - Argument error
 
-### Requires
-
-catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
-basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
-mapEnvironment textSHA printf
-

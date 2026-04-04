@@ -22,7 +22,3 @@ Logs all deprecated functions to application root in a file called `.deprecated`
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-printf date
-

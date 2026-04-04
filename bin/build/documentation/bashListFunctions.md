@@ -20,7 +20,3 @@ List functions in a given shell file
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-__bashListFunctions throwArgument decorate usageArgumentFile
-

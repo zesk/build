@@ -19,7 +19,3 @@ Mostly $ and " are problematic within a string
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-printf decorate
-

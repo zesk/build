@@ -18,7 +18,3 @@ If no arguments are passed, returns exit code 1.
 - `0` - All arguments are callable as a command
 - `1` - One or or more arguments are callable as a command
 
-### Requires
-
-throwArgument __help isExecutable isFunction
-

@@ -97,6 +97,8 @@ __documentationTemplateCompile() {
       if inArray "$tokenName" "${foundTokens[@]+"${foundTokens[@]}"}"; then
         continue
       fi
+      compiledFunctionTarget="$compiledTemplateCache/$tokenName.md"
+      [ -f "$compiledFunctionTarget" ] || forceFlag=true
       if settingsFile=$(__functionSettings "$home" "$tokenName"); then
         settingsFiles+=("$tokenName" "$settingsFile")
         foundTokens+=("$tokenName")
@@ -135,13 +137,14 @@ __documentationTemplateCompile() {
           compiledFunctionTarget="$compiledTemplateCache/$tokenName.md"
           if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && fileIsNewest "$compiledFunctionTarget" "$sourceCodeFile" "$functionTemplate"; then
             statusMessage decorate info "Skip $tokenName and use cache"
+            catchReturn "$handler" touch "$compiledFunctionTarget" || return $?
           else
             {
               __documentationTemplateFunctionCompile "$handler" "$tokenName" "$functionTemplate" | textTrimTail || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
               printf "\n"
             } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
           fi
-          environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+          environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
         done
       fi
       IFS=$'\n' read -r -d '' -a tokenNames <"$documentTokensFile" || :
@@ -151,7 +154,7 @@ __documentationTemplateCompile() {
         set -a # UNDO ok
         #shellcheck source=/dev/null
         source "$compiledFunctionEnv" || throwEnvironment "$handler" "source $compiledFunctionEnv compiled for $targetFile" || return $?
-        mapEnvironment "${tokenNames[@]}" returnClean $? "${clean[@]}" <"$mappedDocumentTemplate" >"$targetFile" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+        mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
         set +a
       ) || throwEnvironment "$handler" "mapEnvironment $tokenName" || returnClean $? "${clean[@]}" || return $?
     else

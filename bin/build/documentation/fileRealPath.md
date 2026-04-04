@@ -19,7 +19,3 @@ Without arguments, displays help.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-executableExists realpath __help bashDocumentation returnArgument
-

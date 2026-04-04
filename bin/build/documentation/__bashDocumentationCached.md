@@ -27,7 +27,3 @@ Display cached usage for a function
 - {SEE:BUILD_COLORS.sh}
 - {SEE:BUILD_DOCUMENTATION_PATH.sh}
 
-### Requires
-
-decorateThemed catchEnvironment __usageMessage decorate __functionSettings
-

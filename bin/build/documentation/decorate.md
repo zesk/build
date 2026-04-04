@@ -29,9 +29,3 @@ Decorated text
 - __BUILD_DECORATE - String. Cached color lookup.
 - {SEE:BUILD_COLORS.sh} - Boolean. Colors enabled (`true` or `false`).
 
-### Requires
-
-isFunction catchArgument catchReturn awk
-bashDocumentation __help
-_decorateInitialize __decorateStyle __decorate executeInputSupport
-

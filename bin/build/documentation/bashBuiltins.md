@@ -1,12 +1,12 @@
 ## `bashBuiltins`
 
-> List bash buildin functions, one per line
+> List bash builtin functions, one per line
 
 ### Usage
 
     bashBuiltins
 
-List bash buildin functions, one per line
+List bash builtin functions, one per line
 
 ### Arguments
 

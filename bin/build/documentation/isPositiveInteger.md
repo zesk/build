@@ -19,7 +19,3 @@ Takes one argument only.
 - `0` - if it is a positive integer
 - `1` - if it is not a positive integer
 
-### Requires
-
-catchArgument isUnsignedInteger bashDocumentation __help
-

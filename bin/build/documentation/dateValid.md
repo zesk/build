@@ -6,7 +6,7 @@
 
     dateValid [ --help ] [ -- ] text
 
-Is a date valid?
+Checks a date syntax and ensures it's a valid calendar date.
 
 ### Arguments
 

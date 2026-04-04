@@ -22,7 +22,3 @@ Output a simple error message for a function
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached
-

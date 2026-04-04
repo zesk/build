@@ -22,7 +22,3 @@ Watches your HOME directory for `.` files which are added and unknown to you.
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm
-

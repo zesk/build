@@ -26,7 +26,3 @@ Also supports formatting input lines instead (on the same line)
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-decorate printf
-

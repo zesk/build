@@ -20,7 +20,3 @@ Run `command`, upon failure run `handler` with an argument error
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-catchCode
-

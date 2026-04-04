@@ -27,6 +27,7 @@ testAwsRegionValid suite=aws test/tools/aws-tests.sh
 testBashBasics suite=bash test/tools/bash-tests.sh  tag=slow-non-critical
 testBashBuiltins suite=bash test/tools/bash-tests.sh  tag=slow tag=slow-non-critical
 testBashCommentFilter suite=bash test/tools/bash-tests.sh
+testBashEnableBuiltins suite=bash test/tools/bash-tests.sh
 testBashGetRequires suite=bash test/tools/bash-tests.sh  tag=a tag=b tag=c tag=fast
 testBashPipeBehavior suite=bash test/tools/bash-tests.sh
 testBashSetScopes suite=bash test/tools/bash-tests.sh  tag=slow-non-critical

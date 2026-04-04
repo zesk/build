@@ -17,8 +17,3 @@
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-environmentVariables cat throwEnvironment catchEnvironment
-throwArgument decorate validate
-

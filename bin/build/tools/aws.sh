@@ -385,11 +385,13 @@ _isS3URL() {
 
 # Upload a set of files or directories to S3.
 # Creates a `manifest.json` file at target with structure:
+#
 # - hostname - host name which sent results
 # - created - Milliseconds creation time
 # - createdString - Milliseconds creation time in current locale language
 # - arguments - arguments to this function
-# Creates a `files.json` with a list of files as well at target
+#
+# Creates a `files.json` with a list of files as well at `target`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1

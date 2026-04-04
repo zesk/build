@@ -19,7 +19,3 @@ Require an argument to be non-blank
 - `2` - If `value` is blank
 - `0` - If `value` is non-blank
 
-### Requires
-
-throwArgument
-

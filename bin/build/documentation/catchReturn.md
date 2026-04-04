@@ -19,7 +19,3 @@ Run binary and catch errors with handler
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-returnArgument
-

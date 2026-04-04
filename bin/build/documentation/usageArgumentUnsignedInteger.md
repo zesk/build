@@ -20,7 +20,3 @@ Validates a value is an unsigned integer and greater than zero (or equal to zero
 - `2` - Argument error
 - `0` - Success
 
-### Requires
-
-isUnsignedInteger throwArgument decorate
-

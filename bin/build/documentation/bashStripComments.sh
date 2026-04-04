@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Pipe to strip comments from a bash file"$'\n'"Removes literally any line which begins with zero or more whitespace characters and then a \`#\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="b167dcea2dca6c84836b45fc4f3186065164b093"
+sourceHash="b400ab63418cb659357620c6f09ea45389cce43d"
 summary="Pipe to strip comments from a bash file"$'\n'""
 usage="bashStripComments [ --help ]"
 # shellcheck disable=SC2016

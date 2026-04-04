@@ -20,7 +20,3 @@ Run `handler` with a passed return code
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
-
-returnArgument
-

@@ -19,7 +19,3 @@ If no arguments are passed, returns exit code 1.
 - `0` - argument is bash function
 - `1` - argument is not a bash function
 
-### Requires
-
-catchArgument isUnsignedInteger bashDocumentation type __help
-

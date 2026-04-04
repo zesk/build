@@ -28,7 +28,3 @@ error messages
 - `0` - Field was found and was non-blank
 - `1` - Field was not found or is blank
 
-### Requires
-
-jq executableExists throwEnvironment printf rm decorate head
-
