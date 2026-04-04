@@ -72,7 +72,7 @@ __testRun() {
   # Initial run output line
   #
   printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
-  printf "%s\n" "Running $__test" | tee -a "$captureStdout" >>"$quietLog"
+  printf "%s\n" "Test Run: $__test" | tee -a "$captureStdout" >>"$quietLog"
 
   #     ▖   ▐        ▐
   #  ▄▄▖▝▚▖ ▜▀ ▞▀▖▞▀▘▜▀
@@ -144,27 +144,27 @@ __testRun() {
   ###########################################
   ###########################################
   ! $verboseMode || decorate each code "${runner[@]}"
+  local resultFlags=()
   if "${runner[@]}" > >(tee -a "$captureStdout") 2> >(tee -a "$captureStderr"); then
+    resultFlags+=("success")
     catchReturn "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
     TMPDIR="$savedTMPDIR"
     if fileIsEmpty "$captureStderr"; then
-      catchReturn "$handler" printf "%s\n" "SUCCESS $__test" | tee -a "$captureStdout" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
       __TEST_SUITE_RESULT=""
     else
+      resultFlags+=("stderr" "stderr-lines-$(localePluralWord "$(catchReturn "$handler" fileLineCount "$captureStderr")" line)")
       returnAssert || resultCode=$?
-      local stderrLines && stderrLines="$(catchReturn "$handler" fileLineCount "$captureStderr")" || returnClean $? "${clean[@]}" || return $?
-      catchReturn "$handler" printf "%s\n" "stderr-SUCCESS $__test has STDERR: $(localePluralWord "$stderrLines" line)" | catchReturn "$handler" tee -a "$error" "$quietLog" || return $?
-      catchReturn "$handler" dumpPipe <"$captureStderr" | catchReturn "$handler" tee -a "$quietLog" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" dumpPipe <"$captureStderr" | catchReturn "$handler" tee -a "$error" "$quietLog" || returnClean $? "${clean[@]}" || return $?
       __TEST_SUITE_RESULT="[$resultCode] $__test failed, found stderr"
     fi
   else
     resultCode=$?
+    resultFlags+=("failed")
     catchReturn "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
     TMPDIR="$savedTMPDIR"
-    catchReturn "$handler" printf "\n%s\n" "FAILED [$resultCode] $__test" | catchReturn "$handler" tee -a "$error" "$quietLog" || returnClean $? "${clean[@]}" || return $?
     __TEST_SUITE_RESULT="[$resultCode] $__test failed"
     if ! fileIsEmpty "$captureStderr" && stringFoundInsensitive ";stderr-FAILED;" ";$__flagText;"; then
-      catchReturn "$handler" printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | catchReturn "$handler" tee -a "$error" "$quietLog" || returnClean $? "${clean[@]}" || return $?
+      resultFlags+=("stderr" "stderr-lines-$(localePluralWord "$(catchReturn "$handler" fileLineCount "$captureStderr")" line)")
       catchReturn "$handler" dumpPipe <"$captureStderr" | tee -a "$quietLog" || returnClean $? "${clean[@]}" || return $?
       __TEST_SUITE_RESULT="[$resultCode] $__test failed (found stderr)"
     fi
@@ -173,6 +173,7 @@ __testRun() {
   ! $doHousekeeper || catchEnvironment "$handler" rm -rf "$housekeeperCache" || returnClean $? "${clean[@]}" || return $?
 
   if $testActuallyFails; then
+    resultFlags+=("must-fail")
     if [ $resultCode -eq 0 ]; then
       catchReturn "$handler" decorate error "Test supposed to fail but succeeded?" || returnClean $? "${clean[@]}" || return $?
       catchReturn "$handler" printf "%s\n" "$__test: Test supposed to fail but succeeded?" >>"$error" || returnClean $? "${clean[@]}" || return $?
@@ -205,12 +206,15 @@ __testRun() {
     else
       decorate error "NO captureStderr"
     fi
+    resultFlags+=("leaks")
     __TEST_SUITE_RESULT="passed with leaks"
     statusMessage printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
   elif [ "$resultCode" -eq 0 ]; then
+    resultFlags+=("passed")
     __TEST_SUITE_RESULT=""
     statusMessage printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate success "passed")" "$timingText"
   else
+    resultFlags+=("failed")
     statusMessage --last printf "[%d] %s %s %s\n" "$resultCode" "$(decorate code "$__test")" "$(decorate error "FAILED")" "$timingText" 1>&2
     dumpPipe --lines 30 LOGFILE <"$quietLog" 1>&2 || :
     __TEST_SUITE_RESULT="failed"
@@ -222,6 +226,9 @@ __testRun() {
     passed=false
     hh=(--failed "$__TEST_SUITE_RESULT")
   fi
+
+  local label="Failed" && $passed || label="Success"
+  catchReturn "$handler" printf "%s\n" "Test $label: $__test $resultCode (${resultFlags[*]})" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
 
   # ============================================================================================================
   # HOOK test-stop

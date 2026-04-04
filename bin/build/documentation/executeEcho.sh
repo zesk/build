@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
-argument="command ... - Any command and arguments to run."$'\n'""
+argument="command ... - Any command and arguments to run."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="_sugar.sh"
 description="Output the \`command ...\` to stdout prior to running, then \`execute\` it"$'\n'""
 file="bin/build/tools/_sugar.sh"
 fn="executeEcho"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
-rawComment="Output the \`command ...\` to stdout prior to running, then \`execute\` it"$'\n'"Argument: command ... - Any command and arguments to run."$'\n'"Return Code: Any"$'\n'"Requires: printf decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""$'\n'""
-requires="printf decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""
+rawComment="Output the \`command ...\` to stdout prior to running, then \`execute\` it"$'\n'"Argument: command ... - Any command and arguments to run."$'\n'"Return Code: Any"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: __help decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""$'\n'""
+requires="__help decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""
 return_code="Any"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ffd716b7922cb0074e135ce841a832b800ed594b"
+sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
 summary="Output the \`command ...\` to stdout prior to running, then"
 summaryComputed="true"
-usage="executeEcho [ command ... ]"
+usage="executeEcho [ command ... ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mexecuteEcho'$'\e''[0m '$'\e''[[(blue)]m[ command ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mcommand ...  '$'\e''[[(value)]mAny command and arguments to run.'$'\e''[[(reset)]m'$'\n'''$'\n''Output the '$'\e''[[(code)]mcommand ...'$'\e''[[(reset)]m to stdout prior to running, then '$'\e''[[(code)]mexecute'$'\e''[[(reset)]m it'$'\n'''$'\n''Return codes:'$'\n''- Any'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mexecuteEcho'$'\e''[0m '$'\e''[[(blue)]m[ command ... ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mcommand ...  '$'\e''[[(value)]mAny command and arguments to run.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help       '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Output the '$'\e''[[(code)]mcommand ...'$'\e''[[(reset)]m to stdout prior to running, then '$'\e''[[(code)]mexecute'$'\e''[[(reset)]m it'$'\n'''$'\n''Return codes:'$'\n''- Any'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: executeEcho [ command ... ]'$'\n'''$'\n''    command ...  Any command and arguments to run.'$'\n'''$'\n''Output the command ... to stdout prior to running, then execute it'$'\n'''$'\n''Return codes:'$'\n''- Any'$'\n'''
+helpPlain='Usage: executeEcho [ command ... ] [ --help ]'$'\n'''$'\n''    command ...  Any command and arguments to run.'$'\n''    --help       Flag. Optional. Display this help.'$'\n'''$'\n''Output the command ... to stdout prior to running, then execute it'$'\n'''$'\n''Return codes:'$'\n''- Any'$'\n'''

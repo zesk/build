@@ -1,1 +1,1 @@
-[phpComposerSetVersion]({rel}tools/php.md#phpcomposersetversion) - For any project, ensures the `version` field in `composer.json` matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php-composer.sh#L133))
+phpComposerSetVersion - (not found)

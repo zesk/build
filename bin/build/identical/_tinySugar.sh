@@ -77,10 +77,9 @@ returnThrow() {
   "$handler" "$returnCode" "$@" || return $?
 }
 
-# Run command and catch errors with handler
+# Run binary and catch errors with handler
 # Argument: handler - Function. Required. Error handler.
-# Argument: command ... - Callable. Required. Command to run.
-# Argument: ... - Arguments. Optional. Arguments to `command`
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?

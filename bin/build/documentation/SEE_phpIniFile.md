@@ -1,1 +1,1 @@
-[phpIniFile]({rel}tools/php.md#phpinifile) - Outputs the path to the PHP ini file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L89))
+phpIniFile - (not found)

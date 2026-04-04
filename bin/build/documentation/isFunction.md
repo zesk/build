@@ -4,14 +4,15 @@
 
 ### Usage
 
-    isFunction string
+    isFunction string [ --help ]
 
 Test if argument are bash functions
 If no arguments are passed, returns exit code 1.
 
 ### Arguments
 
-- `string` - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
+- `string` - String. Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
+- `--help` - Flag. Optional. Display this help.
 
 ### Return codes
 
@@ -20,5 +21,5 @@ If no arguments are passed, returns exit code 1.
 
 ### Requires
 
-catchArgument isUnsignedInteger bashDocumentation type
+catchArgument isUnsignedInteger bashDocumentation type __help
 

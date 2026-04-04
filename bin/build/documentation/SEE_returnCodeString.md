@@ -1,1 +1,0 @@
-[returnCodeString]({rel}tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/identical/__exitString.sh#L22))

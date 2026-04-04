@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="handler - Function. Required. Failure command"$'\n'"message ... - String. Optional. Error message to display."$'\n'""
 base="_sugar.sh"
 description="Run \`handler\` with an argument error"$'\n'""
 file="bin/build/tools/_sugar.sh"
 fn="throwArgument"
-foundNames=([0]="argument")
-rawComment="Run \`handler\` with an argument error"$'\n'"Argument: handler - Function. Required. Failure command"$'\n'"Argument: message ... - String. Optional. Error message to display."$'\n'""$'\n'""
+foundNames=([0]="argument" [1]="requires")
+rawComment="Run \`handler\` with an argument error"$'\n'"Argument: handler - Function. Required. Failure command"$'\n'"Argument: message ... - String. Optional. Error message to display."$'\n'"Requires: isFunction returnArgument decorate debuggingStack"$'\n'""$'\n'""
+requires="isFunction returnArgument decorate debuggingStack"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ffd716b7922cb0074e135ce841a832b800ed594b"
+sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
 summary="Run \`handler\` with an argument error"
 summaryComputed="true"
 usage="throwArgument handler [ message ... ]"

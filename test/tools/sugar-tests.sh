@@ -29,6 +29,33 @@ __alwaysFail() {
   return 1
 }
 
+__dataErrorCodes() {
+  cat <<EOF
+success
+environment
+argument
+assert
+identical
+leak
+timeout
+exit
+not-found
+user-interrupt
+interrupt
+internal
+EOF
+}
+
+testCodeBackAndForth() {
+  local code && while read -r code; do
+    local id && id=$(returnCode "$code") || return $?
+    local idToCode && idToCode=$(returnCodeString "$id") || return $?
+    assertEquals "$code" "$idToCode" || return $?
+    local idAgain && idAgain=$(returnCode "$idToCode") || return $?
+    assertEquals "$id" "$idAgain" || return $?
+  done < <(__dataErrorCodes)
+}
+
 __dataExitString() {
   cat <<EOF
 success 0

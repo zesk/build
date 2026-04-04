@@ -21,7 +21,7 @@
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors.
-# Requires: isPositiveInteger tput
+# Requires: isPositiveInteger tput __help convertValue
 consoleHasColors() {
   # --help is only argument allowed
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -71,6 +71,7 @@ __decorate() {
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Requires: __help convertValue
 decorations() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
@@ -91,7 +92,9 @@ _decorations() {
 # stdout: Decorated text
 # Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
-# Requires: isFunction returnArgument awk catchEnvironment bashDocumentation executeInputSupport __help
+# Requires: isFunction catchArgument catchReturn awk
+# Requires: bashDocumentation __help
+# Requires: _decorateInitialize __decorateStyle __decorate executeInputSupport
 decorate() {
   local handler="_${FUNCNAME[0]}" what="${1-}"
   [ "$what" != "--help" ] || __help "$handler" "$@" || return 0
@@ -112,7 +115,7 @@ decorate() {
       executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
     fi
   fi
-  local lp text="" && IFS=" " read -r lp text <<<"$style" || :
+  local lp text="" && IFS=" " read -r lp text <<<"$style"
   local p='\033['
   executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}0m" -- "$@" || return $?
 }
@@ -126,6 +129,7 @@ _decorate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # shellcheck disable=SC2120
+# Requires: __help
 decorateInitialized() {
   [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE
@@ -136,6 +140,9 @@ _decorateInitialized() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Initialize the environment `__BUILD_DECORATE`
+# Environment: __BUILD_DECORATE
+# Requires: __decorateStyles
 _decorateInitialize() {
   export __BUILD_DECORATE
   [ -n "${__BUILD_DECORATE-}" ] || __decorateStyles || return $?
@@ -145,6 +152,7 @@ _decorateInitialize() {
 # dp may be a dash for simpler parsing - dp=lp when dp is blank or dash
 # text is optional, lp is required to be non-blank
 # Requires: __decorateStyles
+# Environment: __BUILD_DECORATE
 __decorateStyle() {
   local original style pattern=":$1="
 
@@ -163,6 +171,7 @@ if ! isFunction __decorateStyles; then
 fi
 
 # Default array styles, override if you wish
+# Environment: __BUILD_DECORATE
 __decorateStylesBase() {
   local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=48;5;0;37:yellow=48;5;16;38;5;11:"
   styles="$styles:$(printf "%s:" "$@")"

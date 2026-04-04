@@ -4,7 +4,7 @@
 
 ### Usage
 
-    isPositiveInteger value
+    isPositiveInteger value [ --help ]
 
 Test if an argument is a positive integer (non-zero)
 Takes one argument only.
@@ -12,6 +12,7 @@ Takes one argument only.
 ### Arguments
 
 - `value` - EmptyString. Required. Value to check if it is an unsigned integer
+- `--help` - Flag. Optional. Display this help.
 
 ### Return codes
 
@@ -20,5 +21,5 @@ Takes one argument only.
 
 ### Requires
 
-catchArgument isUnsignedInteger bashDocumentation
+catchArgument isUnsignedInteger bashDocumentation __help
 

@@ -1,1 +1,1 @@
-[pcregrepBinary]({rel}tools/pcregrep.md#pcregrepbinary) - The name of the `pcregrep` binary on this operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/pcregrep.sh#L25))
+pcregrepBinary - (not found)

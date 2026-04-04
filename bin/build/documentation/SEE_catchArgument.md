@@ -1,1 +1,0 @@
-[catchArgument]({rel}tools/sugar-core.md#catchargument) - Run `command`, upon failure run `handler` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/identical/_sugar.sh#L242))

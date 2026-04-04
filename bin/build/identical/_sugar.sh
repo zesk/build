@@ -27,7 +27,7 @@
 # - `timeout` (116) - timeout exceeded (ASCII 116 = `t`)
 # - `exit` - (120) exit function immediately (ASCII 120 = `x`)
 # - `not-found` - (127) command not found
-# - `user-interrupt` - (127) User interrupt (Ctrl-C)
+# - `user-interrupt` - (130) User interrupt (Ctrl-C)
 # - `interrupt` - (141) Interrupt signal
 # - `internal` - (253) internal errors
 #
@@ -36,11 +36,11 @@
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 # File: bin/build/errno.txt
 # INTERNAL: Runner-up for the one-line bash award.
-# Requires: bashDocumentation printf
+# Requires: bashDocumentation
 # See: returnCodeString
 # Return Code: 0 - success
 returnCode() {
-  local k && while [ $# -gt 0 ]; do case "$1" in --help) ! "_${FUNCNAME[0]}" 0 || return 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
+  local k && while [ $# -gt 0 ]; do case "$1" in --help) ! "_${FUNCNAME[0]}" 0 || return 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; not-found) k=127 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
 }
 _returnCode() {
   # __IDENTICAL__ bashDocumentation 1
@@ -66,7 +66,7 @@ _returnCodeString() {
 
 # Boolean test
 # If you want "true-ish" use `isTrue`.
-# Returns 0 if `value` is boolean `false` or `true`.
+# Returns 0 if `value` is boolean `false` oHar `true`.
 # Is this a boolean? (`true` or `false`)
 # Return Code: 0 - if value is a boolean
 # Return Code: 1 - if value is not a boolean
@@ -74,7 +74,7 @@ _returnCodeString() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: value - String. Optional. Value to check if it is a boolean.
-# Requires: bashDocumentation printf
+# Requires: bashDocumentation
 isBoolean() {
   case "${1-}" in true | false) ;; --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; *) return 1 ;; esac
 }
@@ -117,17 +117,23 @@ _returnClean() {
 # Output the `command ...` to stdout prior to running, then `execute` it
 # Argument: command ... - Any command and arguments to run.
 # Return Code: Any
-# Requires: printf decorate execute __decorateExtensionQuote __decorateExtensionEach
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Requires: __help decorate execute __decorateExtensionQuote __decorateExtensionEach
 executeEcho() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   printf -- "➡️ %s\n" "$(decorate each quote "$@")" && execute "$@" || return $?
 }
 
-# _IDENTICAL_ execute 7
+# _IDENTICAL_ execute 10
 
-# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: binary - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: returnMessage
+# Requires: returnMessage __help
 execute() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   "$@" || returnMessage "$?" "$@" || return $?
 }
 

@@ -5,9 +5,6 @@ catchEnvironmentQuiet
 catchReturn
 consoleLineFill
 escapeBash
-execute
-executeEcho
-executeInputSupport
 returnMap
 plasterLines
 quoteBashString

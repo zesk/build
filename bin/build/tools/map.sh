@@ -226,10 +226,11 @@ _mapEnvironment() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Replace text `fromText` with `toText` in files
 # Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
 #
-# This can break your files so use with caution. Blank searchText is not allowed.
-# The term `cannon` is not a mistake - it will break something at some point.
+# This can break your files so use with caution. Blank `searchText` is **not allowed**.
+# The term `textCannon` is not a mistake - it will break something at some point.
 #
 # Example:     {fn} master main ! -path '*/old-version/*')
 # DOC TEMPLATE: --help 1
@@ -244,7 +245,7 @@ _mapEnvironment() {
 # Return Code: 3 - At least one or more files were modified successfully
 # Return Code: 1 - --path is not a directory
 # Return Code: 1 - searchText is not blank
-# Return Code: 1 - fileTemporaryName failed
+# Return Code: 1 - `fileTemporaryName` failed
 # Return Code: 2 - Arguments are identical
 textCannon() {
   local handler="_${FUNCNAME[0]}"

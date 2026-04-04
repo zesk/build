@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="core.sh"
@@ -9,11 +9,11 @@ environment="BUILD_COLORS - Boolean. Optional. Whether the build system will out
 file="bin/build/tools/decorate/core.sh"
 fn="consoleHasColors"
 foundNames=([0]="argument" [1]="return_code" [2]="environment" [3]="requires")
-rawComment="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TERM\` to calculate"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Console or output supports colors"$'\n'"Return Code: 1 - Colors are likely not supported by console"$'\n'"Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors."$'\n'"Requires: isPositiveInteger tput"$'\n'""$'\n'""
-requires="isPositiveInteger tput"$'\n'""
+rawComment="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TERM\` to calculate"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Console or output supports colors"$'\n'"Return Code: 1 - Colors are likely not supported by console"$'\n'"Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors."$'\n'"Requires: isPositiveInteger tput __help convertValue"$'\n'""$'\n'""
+requires="isPositiveInteger tput __help convertValue"$'\n'""
 return_code="0 - Console or output supports colors"$'\n'"1 - Colors are likely not supported by console"$'\n'""
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="86495b068ec6825b53932ad3b632552a3bd7259d"
+sourceHash="731c17d638fbcc1823d61f677aa38d3b0fded897"
 summary="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TERM\`"
 summaryComputed="true"
 usage="consoleHasColors [ --help ]"

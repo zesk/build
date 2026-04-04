@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 253
+# IDENTICAL _sugar 266
 
 # Argument: name ... - String. Optional. Exit code value to output.
 # Print one or more return codes by name.
@@ -27,7 +27,7 @@
 # - `timeout` (116) - timeout exceeded (ASCII 116 = `t`)
 # - `exit` - (120) exit function immediately (ASCII 120 = `x`)
 # - `not-found` - (127) command not found
-# - `user-interrupt` - (127) User interrupt (Ctrl-C)
+# - `user-interrupt` - (130) User interrupt (Ctrl-C)
 # - `interrupt` - (141) Interrupt signal
 # - `internal` - (253) internal errors
 #
@@ -36,11 +36,11 @@
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 # File: bin/build/errno.txt
 # INTERNAL: Runner-up for the one-line bash award.
-# Requires: bashDocumentation printf
+# Requires: bashDocumentation
 # See: returnCodeString
 # Return Code: 0 - success
 returnCode() {
-  local k && while [ $# -gt 0 ]; do case "$1" in --help) ! "_${FUNCNAME[0]}" 0 || return 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
+  local k && while [ $# -gt 0 ]; do case "$1" in --help) ! "_${FUNCNAME[0]}" 0 || return 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; not-found) k=127 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
 }
 _returnCode() {
   # __IDENTICAL__ bashDocumentation 1
@@ -66,7 +66,7 @@ _returnCodeString() {
 
 # Boolean test
 # If you want "true-ish" use `isTrue`.
-# Returns 0 if `value` is boolean `false` or `true`.
+# Returns 0 if `value` is boolean `false` oHar `true`.
 # Is this a boolean? (`true` or `false`)
 # Return Code: 0 - if value is a boolean
 # Return Code: 1 - if value is not a boolean
@@ -74,7 +74,7 @@ _returnCodeString() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: value - String. Optional. Value to check if it is a boolean.
-# Requires: bashDocumentation printf
+# Requires: bashDocumentation
 isBoolean() {
   case "${1-}" in true | false) ;; --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; *) return 1 ;; esac
 }
@@ -89,44 +89,6 @@ booleanChoose() {
   if [ "$testValue" = "--help" ]; then bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 && return 0; fi
   isBoolean "$testValue" || returnArgument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
-}
-
-# _IDENTICAL_ _errors 36
-
-# Return `argument` error code. Outputs `message ...` to `stderr`.
-# Argument: message ... - String. Optional. Message to output.
-# Return Code: 2
-# Requires: returnMessage
-returnArgument() {
-  returnMessage 2 "$@" || return $?
-}
-
-# Return `environment` error code. Outputs `message ...` to `stderr`.
-# Argument: message ... - String. Optional. Message to output.
-# Return Code: 1
-# Requires: returnMessage
-returnEnvironment() {
-  returnMessage 1 "$@" || return $?
-}
-
-# Run `handler` with a passed return code
-# Argument: returnCode - Integer. Required. Return code.
-# Argument: handler - Function. Required. Error handler.
-# Argument: message ... - String. Optional. Error message
-# Requires: returnArgument
-returnThrow() {
-  local returnCode="${1-}" && shift || returnArgument "Missing return code" || return $?
-  local handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
-  "$handler" "$returnCode" "$@" || return $?
-}
-
-# Run binary and catch errors with handler
-# Argument: handler - Function. Required. Error handler.
-# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
-# Requires: returnArgument
-catchReturn() {
-  local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
-  "$@" || "$handler" "$?" "$@" || return $?
 }
 
 # _IDENTICAL_ returnClean 21
@@ -155,17 +117,23 @@ _returnClean() {
 # Output the `command ...` to stdout prior to running, then `execute` it
 # Argument: command ... - Any command and arguments to run.
 # Return Code: Any
-# Requires: printf decorate execute __decorateExtensionQuote __decorateExtensionEach
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Requires: __help decorate execute __decorateExtensionQuote __decorateExtensionEach
 executeEcho() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   printf -- "➡️ %s\n" "$(decorate each quote "$@")" && execute "$@" || return $?
 }
 
-# _IDENTICAL_ execute 7
+# _IDENTICAL_ execute 10
 
-# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: binary - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: returnMessage
+# Requires: returnMessage __help
 execute() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   "$@" || returnMessage "$?" "$@" || return $?
 }
 
@@ -212,6 +180,7 @@ _convertValue() {
 # Argument: code - UnsignedInteger. Required. Exit code to return
 # Argument: handler - Function. Required. Failure command, passed remaining arguments and error code.
 # Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
 # Requires: isUnsignedInteger returnArgument isFunction isCallable
 catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
@@ -230,23 +199,21 @@ _catchCode() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run `command`, upon failure run `handler` with an environment error
+# Run `handler` with an argument error
 # Argument: handler - Function. Required. Failure command
-# Argument: command ... - Callable. Required. Command to run.
-catchEnvironment() {
-  catchCode 1 "$@" || return $?
-}
-
-# Run `command`, upon failure run `handler` with an argument error
-# Argument: handler - Function. Required. Failure command
-# Argument: command ... - Callable. Required. Command to run.
-catchArgument() {
-  catchCode 2 "$@" || return $?
+# Argument: message ... - String. Optional. Error message to display.
+# Requires: isFunction returnArgument decorate debuggingStack
+throwArgument() {
+  local __handler="${1-}"
+  # __IDENTICAL__ __checkHandler 1
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
+  shift && "$__handler" 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
-# Argument: handler - Function. Required. Failure command
-# Argument: message ... - String. Optional. Error message to display.
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
+# Requires: isFunction returnArgument decorate debuggingStack
 throwEnvironment() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
@@ -254,14 +221,60 @@ throwEnvironment() {
   shift && "$__handler" 1 "$@" || return $?
 }
 
-# Run `handler` with an argument error
-# Argument: handler - Function. Required. Failure command
-# Argument: message ... - String. Optional. Error message to display.
-throwArgument() {
-  local __handler="${1-}"
-  # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
-  shift && "$__handler" 2 "$@" || return $?
+# Run `command`, upon failure run `handler` with an argument error
+# Argument: handler - String. Required. Failure command
+# Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
+# Requires: catchCode
+catchArgument() {
+  catchCode 2 "$@" || return $?
+}
+
+# Run `command`, upon failure run `handler` with an environment error
+# Argument: handler - String. Required. Failure command
+# Argument: command ... - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Arguments to `command`
+# Requires: catchCode
+catchEnvironment() {
+  catchCode 1 "$@" || return $?
+}
+
+# _IDENTICAL_ _errors 36
+
+# Return `argument` error code. Outputs `message ...` to `stderr`.
+# Argument: message ... - String. Optional. Message to output.
+# Return Code: 2
+# Requires: returnMessage
+returnArgument() {
+  returnMessage 2 "$@" || return $?
+}
+
+# Return `environment` error code. Outputs `message ...` to `stderr`.
+# Argument: message ... - String. Optional. Message to output.
+# Return Code: 1
+# Requires: returnMessage
+returnEnvironment() {
+  returnMessage 1 "$@" || return $?
+}
+
+# Run `handler` with a passed return code
+# Argument: returnCode - Integer. Required. Return code.
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
+# Requires: returnArgument
+returnThrow() {
+  local returnCode="${1-}" && shift || returnArgument "Missing return code" || return $?
+  local handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
+  "$handler" "$returnCode" "$@" || return $?
+}
+
+# Run binary and catch errors with handler
+# Argument: handler - Function. Required. Error handler.
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
+# Requires: returnArgument
+catchReturn() {
+  local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
+  "$@" || "$handler" "$?" "$@" || return $?
 }
 
 # <-- END of IDENTICAL _sugar

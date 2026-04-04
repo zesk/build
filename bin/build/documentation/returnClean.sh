@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
 argument="exitCode - Integer. Required. Exit code to return."$'\n'"item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr."$'\n'""
 base="_sugar.sh"
@@ -13,7 +13,7 @@ rawComment="Delete files or directories and return the same exit code passed in.
 requires="isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ffd716b7922cb0074e135ce841a832b800ed594b"
+sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
 summary="Delete files or directories and return the same exit code"
 summaryComputed="true"
 usage="returnClean exitCode [ item ]"

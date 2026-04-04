@@ -16,12 +16,16 @@
 # IDENTICAL executeInputSupport EOF
 
 # Support arguments and stdin as arguments to an executor
-# Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
 executeInputSupport() {
   local handler="$1" executor=() && shift
-
+  if [ "$handler" = "--help" ]; then
+    "_${FUNCNAME[0]}" 0 && return $? || return $?
+  fi
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
       shift
@@ -52,4 +56,8 @@ executeInputSupport() {
     fi
     catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
   fi
+}
+_executeInputSupport() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

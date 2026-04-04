@@ -1,1 +1,0 @@
-[muzzle]({rel}tools/sugar.md#muzzle) - Suppress stdout without piping. Handy when you just want a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L50))

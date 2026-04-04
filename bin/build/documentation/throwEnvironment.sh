@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-04
 # shellcheck disable=SC2034
-argument="handler - Function. Required. Failure command"$'\n'"message ... - String. Optional. Error message to display."$'\n'""
+argument="handler - Function. Required. Error handler."$'\n'"message ... - String. Optional. Error message"$'\n'""
 base="_sugar.sh"
 description="Run \`handler\` with an environment error"$'\n'""
 file="bin/build/tools/_sugar.sh"
 fn="throwEnvironment"
-foundNames=([0]="argument")
-rawComment="Run \`handler\` with an environment error"$'\n'"Argument: handler - Function. Required. Failure command"$'\n'"Argument: message ... - String. Optional. Error message to display."$'\n'""$'\n'""
+foundNames=([0]="argument" [1]="requires")
+rawComment="Run \`handler\` with an environment error"$'\n'"Argument: handler - Function. Required. Error handler."$'\n'"Argument: message ... - String. Optional. Error message"$'\n'"Requires: isFunction returnArgument decorate debuggingStack"$'\n'""$'\n'""
+requires="isFunction returnArgument decorate debuggingStack"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ffd716b7922cb0074e135ce841a832b800ed594b"
+sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
 summary="Run \`handler\` with an environment error"
 summaryComputed="true"
 usage="throwEnvironment handler [ message ... ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mthrowEnvironment'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mhandler'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mhandler      '$'\e''[[(value)]mFunction. Required. Failure command'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mmessage ...  '$'\e''[[(value)]mString. Optional. Error message to display.'$'\e''[[(reset)]m'$'\n'''$'\n''Run '$'\e''[[(code)]mhandler'$'\e''[[(reset)]m with an environment error'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mthrowEnvironment'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mhandler'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mhandler      '$'\e''[[(value)]mFunction. Required. Error handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mmessage ...  '$'\e''[[(value)]mString. Optional. Error message'$'\e''[[(reset)]m'$'\n'''$'\n''Run '$'\e''[[(code)]mhandler'$'\e''[[(reset)]m with an environment error'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: throwEnvironment handler [ message ... ]'$'\n'''$'\n''    handler      Function. Required. Failure command'$'\n''    message ...  String. Optional. Error message to display.'$'\n'''$'\n''Run handler with an environment error'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+helpPlain='Usage: throwEnvironment handler [ message ... ]'$'\n'''$'\n''    handler      Function. Required. Error handler.'$'\n''    message ...  String. Optional. Error message'$'\n'''$'\n''Run handler with an environment error'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

@@ -291,6 +291,7 @@ testArgEnvStuff suite=sugar test/tools/sugar-tests.sh
 testBoolean suite=sugar test/tools/sugar-tests.sh
 testCatchCode suite=sugar test/tools/sugar-tests.sh
 testChoose suite=sugar test/tools/sugar-tests.sh
+testCodeBackAndForth suite=sugar test/tools/sugar-tests.sh
 testExitCode suite=sugar test/tools/sugar-tests.sh
 testExitCodeCase suite=sugar test/tools/sugar-tests.sh
 testExitString suite=sugar test/tools/sugar-tests.sh

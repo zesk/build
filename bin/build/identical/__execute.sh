@@ -9,9 +9,12 @@
 
 # _IDENTICAL_ execute EOF
 
-# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: binary - Callable. Required. Command to run.
+# Argument: ... - Arguments. Optional. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: returnMessage
+# Requires: returnMessage __help
 execute() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   "$@" || returnMessage "$?" "$@" || return $?
 }

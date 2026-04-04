@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="True-ish"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value ... - EmptyString. One or more values to test."$'\n'"Succeeds when all arguments are \"true\"-ish"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="31b62907df0050b8df8d06ec27701b9721bf81aa"
+sourceHash="36a33330145335895a980b5846e9badfaab6d726"
 summary="True-ish"
 summaryComputed="true"
 usage="isTrue [ --help ] [ value ... ]"

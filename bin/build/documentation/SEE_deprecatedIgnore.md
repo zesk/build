@@ -1,0 +1,1 @@
+[deprecatedIgnore]({rel}tools/deprecated.md#deprecatedignore) - Output a list of tokens for `find` to ignore in ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L55))
