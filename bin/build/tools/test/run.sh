@@ -227,7 +227,7 @@ __testRun() {
     hh=(--failed "$__TEST_SUITE_RESULT")
   fi
 
-  local label="Failed" && $passed || label="Success"
+  local label="Failed" && ! $passed || label="Passed"
   catchReturn "$handler" printf "%s\n" "Test $label: $__test $resultCode (${resultFlags[*]})" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
 
   # ============================================================================================================

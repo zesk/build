@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 270
+# IDENTICAL _sugar 274
 
 # Argument: name ... - String. Optional. Exit code value to output.
 # Print one or more return codes by name.
@@ -123,6 +123,10 @@ _returnClean() {
 executeEcho() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   printf -- "➡️ %s\n" "$(decorate each quote "$@")" && execute "$@" || return $?
+}
+_executeEcho() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # _IDENTICAL_ execute 14

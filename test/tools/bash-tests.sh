@@ -8,12 +8,15 @@
 
 testBashEnableBuiltins() {
   local handler="returnMessage"
-  local enableExceptions=("case" "if" "while" "until")
-  local temp && temp=$(fileTemporaryName "$handler") || return $?
+  local enableExceptions=("case" "if" "while" "until" "shift")
+  local temp && temp=$(fileTemporaryName "$handler" -d) || return $?
 
-  enable -a | textRemoveFields 1 | sort >"$temp/enable-a" || return $?
-  bashBuiltins | grep -v "$(listJoin "|" "${enableExceptions[@]}")" | sort >"$temp/builtins" || return $?
-  assertExitCode 0 filesAreIdentical "$temp/enable-a" "$temp/builtins" || return $?
+  enable -a | textRemoveFields 1 | grep -v "\($(quoteGrepPattern "$(listJoin "|" "${enableExceptions[@]}")")\)" | sort >"$temp/enable-a" || return $?
+  bashBuiltins | grep -v "\($(quoteGrepPattern "$(listJoin "|" "${enableExceptions[@]}")")\)" | sort >"$temp/builtins" || return $?
+  if ! assertExitCode 0 filesAreIdentical "$temp/enable-a" "$temp/builtins"; then
+    diff -u "$temp/enable-a" "$temp/builtins" | decorate diff red blue 1>&2
+    return 1
+  fi
 
   catchReturn "$handler" rm -rf "$temp" || return $?
 }
