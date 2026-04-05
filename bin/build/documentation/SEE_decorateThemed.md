@@ -1,0 +1,1 @@
+[decorateThemed]({rel}tools/decoration.md#decoratethemed) - Applies the current theme to text rendered using `decorateThemelessMode` ([source](https://github.com/zesk/build/blob/main/bin/build/identical/decorateThemed.sh#L15))
