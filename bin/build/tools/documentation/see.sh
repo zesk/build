@@ -84,25 +84,26 @@ __documentationIndexSeeLinker() {
 
     local matchingToken
     while read -r matchingToken; do
+      local cacheStart && cacheStart=$(timingStart)
       local cleanToken && cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
       local markdownCacheFile="$markdownCache/SEE_$cleanToken.md"
       local settingsCacheFile="$markdownCache/$cleanToken.sh"
-      local cacheStart && cacheStart=$(timingStart)
+      local cacheVerb=""
       if [ -f "$settingsCacheFile" ] && [ -f "$markdownCacheFile" ] && fileIsNewest "$markdownCacheFile" "$settingsCacheFile"; then
         tokenValue="$(cat "$markdownCacheFile")"
-        ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found (CACHED $(timingElapsed "$cacheStart"))"
+        cacheVerb="CACHED"
       else
         tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken" | tee "$markdownCacheFile") || return $?
-        ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found (Generated $(timingElapsed "$cacheStart")) > $markdownCacheFile"
+        cacheVerb="Generated"
       fi
-      ! $debugFlag || statusMessage decorate pair "$tokenName" "$(stringHideNewlines "$tokenValue")"
       local rel="{rel}"
       if [ "$tokenValue" != "${tokenValue#*"$rel"}" ]; then
         tokenValue="$(rel="$matchingPrefix" mapEnvironment rel <<<"$tokenValue")"
       fi
       catchReturn "$handler" __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile" || returnClean $? "${clean[@]}" || return $?
+      ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") ($cacheVerb $(timingElapsed "$cacheStart"))"
     done < <(__pcregrep -o1 "$seePattern" "$matchingFile")
 
     clean+=("$matchingFile.new")

@@ -212,7 +212,7 @@ __documentationBuild() {
         "file" "$seeFile" "$fileLinkPattern" \
         "environment" "$seeEnvironment" "${seeEnvironmentLink#/}" || return $?
 
-      catchReturn "$handler" executeEcho __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" || return $?
+      catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" || return $?
     ) || returnClean $? "${clean[@]}" || return $?
   fi
 
