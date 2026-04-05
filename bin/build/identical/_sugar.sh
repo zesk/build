@@ -125,7 +125,7 @@ executeEcho() {
   printf -- "➡️ %s\n" "$(decorate each quote "$@")" && execute "$@" || return $?
 }
 
-# _IDENTICAL_ execute 10
+# _IDENTICAL_ execute 14
 
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: binary - Callable. Required. Command to run.
@@ -135,6 +135,10 @@ executeEcho() {
 execute() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   "$@" || returnMessage "$?" "$@" || return $?
+}
+_execute() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # _IDENTICAL_ convertValue 37
