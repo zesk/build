@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="--env-file envFile - File. Optional. One (or more) environment files used to map \`documentTemplate\` prior to scanning, as defaults prior to each function generation, and after file generation."$'\n'"--md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored."$'\n'"cacheDirectory - Directory. Required. Cache directory where the indexes live."$'\n'"sourceFile - File. Directory. Required. The document template containing functions to define"$'\n'"functionTemplate - File. Required. The template for individual functions defined in the \`documentTemplate\`."$'\n'"targetFile - FileDirectory. Required. Target file to generate"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -13,7 +13,7 @@ requires="catchEnvironment timingStart throwArgument usageArgumentFile usageArgu
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
 see="documentationIndexLookup"$'\n'"documentationIndexIndex"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="1f9778ca4eec6f436b2ccf105d35df208a8bb2e2"
+sourceHash="2a87180edf5c0d8045fd431686237bebbeb4ef21"
 summary="Convert a template file to a documentation file using templates"$'\n'""
 usage="documentationTemplateCompile [ --env-file envFile ] [ --md-cache markdownCacheDirectory ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]"
 # shellcheck disable=SC2016

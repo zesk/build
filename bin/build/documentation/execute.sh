@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"binary - Callable. Required. Command to run."$'\n'"... - Arguments. Optional. Any arguments are passed to \`binary\`."$'\n'""
 base="_sugar.sh"
@@ -12,7 +12,7 @@ rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Argument
 requires="returnMessage __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
+sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
 summary="Run binary and output failed command upon error"
 summaryComputed="true"
 usage="execute [ --help ] binary [ ... ]"

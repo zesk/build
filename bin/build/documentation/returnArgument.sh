@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="message ... - String. Optional. Message to output."$'\n'""
 base="_sugar.sh"
@@ -12,7 +12,7 @@ rawComment="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\
 requires="returnMessage"$'\n'""
 return_code="2"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
+sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
 summary="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."
 summaryComputed="true"
 usage="returnArgument [ message ... ]"

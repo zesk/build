@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="none"
 base="bash.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="stdout")
 rawComment="List bash builtin functions, one per line"$'\n'"stdout: line:function"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="b400ab63418cb659357620c6f09ea45389cce43d"
+sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
 stdout="line:function"$'\n'""
 summary="List bash builtin functions, one per line"
 summaryComputed="true"

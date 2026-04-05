@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="source - File. Required. File where the function is defined."$'\n'"lineNumber - String. Required. Previously computed line number of the function."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -12,7 +12,7 @@ rawComment="Extract a bash comment from a file. Excludes lines containing the fo
 requires="head bashFinalComment"$'\n'"__help bashDocumentation"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="b400ab63418cb659357620c6f09ea45389cce43d"
+sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
 summary="Extract a bash comment from a file. Excludes lines containing"
 summaryComputed="true"
 usage="bashFileComment source lineNumber [ --help ]"

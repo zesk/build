@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="--end - Flag. Optional. End themeless mode."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="theme.sh"
@@ -8,11 +8,12 @@ description="Converts decoration style to a mode where the theme can be applied 
 environment="__BUILD_DECORATE"$'\n'""
 file="bin/build/tools/decorate/theme.sh"
 fn="decorateThemelessMode"
-foundNames=([0]="argument" [1]="environment")
-rawComment="Converts decoration style to a mode where the theme can be applied later to text which is formatted."$'\n'"All decorate calls made after this call will output with special codes not to be displayed to the user."$'\n'"Argument: --end - Flag. Optional. End themeless mode."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: __BUILD_DECORATE"$'\n'""$'\n'""
+foundNames=([0]="argument" [1]="environment" [2]="see")
+rawComment="Converts decoration style to a mode where the theme can be applied later to text which is formatted."$'\n'"All decorate calls made after this call will output with special codes not to be displayed to the user."$'\n'"Argument: --end - Flag. Optional. End themeless mode."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: __BUILD_DECORATE"$'\n'"See: decorateThemed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+see="decorateThemed"$'\n'""
 sourceFile="bin/build/tools/decorate/theme.sh"
-sourceHash="6461e5b830018972d12a5e0463737690c4020ee4"
+sourceHash="675e7307ac7289de1fc74a9c743b6b2ca22a3547"
 summary="Converts decoration style to a mode where the theme can"
 summaryComputed="true"
 usage="decorateThemelessMode [ --end ] [ --help ]"

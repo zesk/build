@@ -1,1 +1,0 @@
-[bashFunctionComment]({rel}tools/bash.md#bashfunctioncomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/bin/build/identical/bashFunctionComment.sh#L44))

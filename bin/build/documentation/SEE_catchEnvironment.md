@@ -1,1 +1,0 @@
-[catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run `command`, upon failure run `handler` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/identical/_sugar.sh#L231))

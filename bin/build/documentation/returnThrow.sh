@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="returnCode - Integer. Required. Return code."$'\n'"handler - Function. Required. Error handler."$'\n'"message ... - String. Optional. Error message"$'\n'""
 base="_sugar.sh"
@@ -12,7 +12,7 @@ rawComment="Run \`handler\` with a passed return code"$'\n'"Argument: returnCode
 requires="returnArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
+sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
 summary="Run \`handler\` with a passed return code"
 summaryComputed="true"
 usage="returnThrow returnCode handler [ message ... ]"

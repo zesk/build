@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-05
 # shellcheck disable=SC2034
 argument="command ... - Any command and arguments to run."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="_sugar.sh"
@@ -12,7 +12,7 @@ rawComment="Output the \`command ...\` to stdout prior to running, then \`execut
 requires="__help decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""
 return_code="Any"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="32a2bdf200db74bbc78877ab740c4498f427a661"
+sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
 summary="Output the \`command ...\` to stdout prior to running, then"
 summaryComputed="true"
 usage="executeEcho [ command ... ] [ --help ]"
