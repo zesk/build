@@ -103,7 +103,7 @@ __functionSettings() {
   return 1
 }
 
-# IDENTICAL __bashDocumentationCached 31
+# IDENTICAL __bashDocumentationCached 30
 
 # Summary: Display cached usage for a function
 # Argument: handler - Function. Required.
@@ -111,9 +111,7 @@ __functionSettings() {
 # Argument: functionName - String. Function to display usage for
 # Argument: returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to `0` - no error.
 # Argument: message ... - String. Optional. Display this message which describes why `exitCode` occurred.
-# Environment: BUILD_HOME
-# Environment: BUILD_COLORS
-# Environment: BUILD_DOCUMENTATION_PATH
+# Environment: BUILD_HOME BUILD_COLORS BUILD_DOCUMENTATION_PATH
 # Requires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings
 __bashDocumentationCached() {
   local handler="$1" && shift

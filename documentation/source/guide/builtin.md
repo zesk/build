@@ -256,6 +256,15 @@ is true unless a name is not found or an invalid option is supplied.
 
 ### `kill`
 
+    kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
+
+Send the processes named by `pid` (or `jobspec`) the signal `sigspec`. If `sigspec` is not present, then `sigterm` is
+assumed. An argument of `-l` lists the signal names; if arguments follow `-l` they are assumed to be signal numbers for
+which
+names should be listed. Kill is a shell builtin for two reasons: it allows job IDs to be used instead of process IDs,
+and, if you have reached the limit on processes that you can create, you don't have to start a process to kill another
+one.
+
 ### `suspend`
 
     suspend [-f]
@@ -318,8 +327,9 @@ variable need not have its integer attribute turned on to be used in an expressi
 Constants with a leading 0 are interpreted as octal numbers. A leading `0x` or `0X` denotes hexadecimal. Otherwise,
 numbers take the form `[base#]n`, where base is a decimal number between 2 and 64 representing the arithmetic base,
 and n is a number in that base. If `base#` is omitted, then base 10 is used. The digits greater than 9 are represented
-by the lowercase letters, the uppercase letters, @, and _, in that order. If base is less than or equal to 36,
-lowercase and uppercase letters may be used interchangeably to represent numbers between 10 and 35.
+by the stringLowercase letters, the stringUppercase letters, @, and _, in that order. If base is less than or equal to
+36,
+stringLowercase and stringUppercase letters may be used interchangeably to represent numbers between 10 and 35.
 
 Operators are evaluated in order of precedence. Sub-expressions in parentheses are evaluated first and may override the
 precedence rules above.

@@ -11,7 +11,7 @@ Display cached usage for a function
 ### Arguments
 
 - `handler` - Function. Required.
-- `home` - Directory. BUILD_HOME
+- `home` - Directory. `BUILD_HOME`
 - `functionName` - String. Function to display usage for
 - `returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to 0` - no error.
 - `message ...` - String. Optional. Display this message which describes why `exitCode` occurred.
@@ -24,6 +24,5 @@ Display cached usage for a function
 
 ### Environment
 
-- {SEE:BUILD_COLORS.sh}
-- {SEE:BUILD_DOCUMENTATION_PATH.sh}
+- {SEE:BUILD_HOME.sh} {SEE:BUILD_COLORS.sh} {SEE:BUILD_DOCUMENTATION_PATH.sh}
 

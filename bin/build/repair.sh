@@ -39,6 +39,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       --internal)
         cleaned+=("$1")
         ;;
+      --no-fingerprint) doFingerprint=false ;;
       *)
         doFingerprint=false
         cleaned+=("$1")

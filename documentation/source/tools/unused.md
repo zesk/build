@@ -7,6 +7,14 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{cannon}
+
+{pluralWord}
+
+{plural}
+
+{newlineHide}
+
 {usageDocument}
 
 {usageDocumentSimple}
