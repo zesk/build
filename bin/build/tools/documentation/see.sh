@@ -84,16 +84,18 @@ __documentationIndexSeeLinker() {
 
     local matchingToken
     while read -r matchingToken; do
-      ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
       local cleanToken && cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
       local markdownCacheFile="$markdownCache/SEE_$cleanToken.md"
       local settingsCacheFile="$markdownCache/$cleanToken.sh"
+      local cacheStart && cacheStart=$(timingStart)
       if [ -f "$settingsCacheFile" ] && [ -f "$markdownCacheFile" ] && fileIsNewest "$markdownCacheFile" "$settingsCacheFile"; then
         tokenValue="$(cat "$markdownCacheFile")"
+        ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found (CACHED $(timingElapsed "$cacheStart"))"
       else
         tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken" | tee "$markdownCacheFile") || return $?
+        ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found (Generated $(timingElapsed "$cacheStart")) > $markdownCacheFile"
       fi
       ! $debugFlag || statusMessage decorate pair "$tokenName" "$(stringHideNewlines "$tokenValue")"
       local rel="{rel}"
@@ -123,7 +125,6 @@ __documentationIndexSeeLinker() {
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
   statusMessage --last timingReport "$start" "See completed in" || :
 }
-
 ___documentationIndexSeeLinker() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

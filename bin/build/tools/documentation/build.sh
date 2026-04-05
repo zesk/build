@@ -31,8 +31,7 @@ __documentationBuild() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --debug) dd=(--debug) ;;
-    --git) _buildDocumentation_MergeWithDocsBranch && return $? || return $? ;;
+    --debug) dd+=(--debug) ;;
     --commit) _buildDocumentation_Recommit && return $? || return $? ;;
     --company) shift && company=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --name) shift && applicationName=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
@@ -213,7 +212,7 @@ __documentationBuild() {
         "file" "$seeFile" "$fileLinkPattern" \
         "environment" "$seeEnvironment" "${seeEnvironmentLink#/}" || return $?
 
-      catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" || return $?
+      catchReturn "$handler" executeEcho __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" || return $?
     ) || returnClean $? "${clean[@]}" || return $?
   fi
 

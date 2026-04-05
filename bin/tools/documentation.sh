@@ -264,16 +264,13 @@ buildDocumentationBuild() {
     __buildDocumentationBuildRelease "$handler" "$home" || return $?
 
     statusMessage --last decorate notice "Copying all non-tools ..."
-    while IFS="" read -r file; do
-      file=${file#"$documentationSource"}
+    catchReturn "$handler" cp -f "$documentationSource/"*.md "$targetHome/" || return $?
+    for file in env guide images js release teach; do
       statusMessage decorate notice "Copying $file ..."
-      catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      cp -f "$documentationSource/$file" "$targetHome/$file" || return $?
-    done < <(find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}')
-
-    local example
-
-    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || throwEnvironment "$handler" "generating example" || return $?
+      catchEnvironment "$handler" rm -rf "$targetHome/$file" || return $?
+      cp -rf "$documentationSource/$file" "$targetHome/$file" || return $?
+    done
+    local example && example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || throwEnvironment "$handler" "generating example" || return $?
 
     # Mappable files
     statusMessage --last decorate notice "Mapping non-tools ..."

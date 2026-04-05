@@ -70,7 +70,6 @@ _bashDocumentationExtract() {
 # Uses a cache at `buildCacheDirectory`
 # See: buildCacheDirectory
 #
-# Argument: --git - Flag. Optional. Merge current branch in with `docs` branch
 # Argument: --commit - Flag. Optional. Commit docs to non-docs branch
 # Argument: --force - Flag. Optional. Force generation, ignore cache directives
 # Argument: --unlinked - Flag. Optional. Show unlinked functions
