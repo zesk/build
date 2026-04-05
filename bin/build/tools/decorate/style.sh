@@ -3,9 +3,11 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# Fetch
+# Summary: Get or modify a decoration style
+# When `newFormat` is blank, retrieves the format style.
+# Otherwise sets the new style.
 # Argument: style - String. Required. The style to fetch or replace.
-# Argument: newFormat - String. Optional. The new style formatting options as a string in the form `lp dp label`
+# Argument: newFormat - String. Optional. The new style formatting options as a string in the form `escapeCodes label`
 decorateStyle() {
   local handler="_${FUNCNAME[0]}"
   local style="" newFormat="" oldFormat changed=false

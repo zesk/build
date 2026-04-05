@@ -9,6 +9,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Environment: __BUILD_DECORATE
+# See: decorateThemed
 decorateThemelessMode() {
   local handler="_${FUNCNAME[0]}"
 
