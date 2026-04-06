@@ -19,6 +19,90 @@
 #
 
 # Deprecated: 2026-04
+# See: isUpToDate
+isUpToDate() {
+  _deprecated "${FUNCNAME[0]}"
+  decorate expired "$@"
+}
+
+# Deprecated: 2026-04
+# See: textVersionSort
+versionSort() {
+  _deprecated "${FUNCNAME[0]}"
+  textVersionSort "$@"
+}
+
+# Argument: where - Directory. Optional. Where to load the `.env` files.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+#
+# Loads `.env` which is the current project configuration file
+# Also loads `.env.local` if it exists
+# Generally speaking - these are NAME=value files and should be parsable by
+# bash and other languages.
+# See: toDockerEnv
+# Summary: Load `.env` and optional `.env.local` into bash context
+#
+# Requires the file `.env` to exist and is loaded via bash `source` and all variables are `export`ed in the current shell context.
+#
+# If `.env.local` exists, it is also loaded in a similar manner.
+#
+# Use with caution on trusted content only.
+# Return Code: 1 - if `.env` does not exist; outputs an error
+# Return Code: 0 - if files are loaded successfully
+# DEPRECATED: 2024-07-20
+# See: environmentFileLoad
+dotEnvConfigure() {
+  local handler="_${FUNCNAME[0]}"
+
+  local aa=() where=""
+  _deprecated "${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --verbose | --debug)
+      aa+=("$argument")
+      ;;
+    *)
+      where=$(validate "$handler" Directory "where" "$1") || return $?
+      ;;
+    esac
+    shift
+  done
+
+  if [ -z "$where" ]; then
+    where=$(catchEnvironment "$handler" pwd) || return $?
+  fi
+  aa+=(--require "$where/.env" --optional "$where/.env.local" --require)
+  catchReturn "$handler" environmentFileLoad "${aa[@]}" "$@" || return $?
+}
+_dotEnvConfigure() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Deprecated: 2026-04
+# See: networkIPLookup
+ipLookup() {
+  _deprecated "${FUNCNAME[0]}"
+  networkIPLookup "$@"
+}
+
+# Deprecated: 2026-04
+# See: networkNameFull
+hostnameFull() {
+  _deprecated "${FUNCNAME[0]}"
+  networkNameFull "$@"
+}
+
+# Deprecated: 2026-04
 # See: bashSimpleDocumentation
 usageDocumentSimple() {
   _deprecated "${FUNCNAME[0]}"

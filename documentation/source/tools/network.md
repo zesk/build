@@ -5,4 +5,9 @@
 <hr />
 
 {networkIPList}
+
 {networkMACAddressList}
+
+{networkNameFull}
+
+{networkIPLookup}

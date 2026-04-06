@@ -16,6 +16,8 @@
 
 {dateFromTimestamp}
 
+{dateExpired}
+
 # Now Relative
 
 {dateToday}

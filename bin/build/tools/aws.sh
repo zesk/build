@@ -93,7 +93,7 @@ awsIsKeyUpToDate() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export AWS_ACCESS_KEY_DATE
   catchReturn "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
-  isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
+  decorate expired "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 _awsIsKeyUpToDate() {
   # __IDENTICAL__ bashDocumentation 1
@@ -293,7 +293,7 @@ _awsSecurityGroupIPModify() {
 # Argument: --services service0,service1,... - List. Required. List of services to add or remove (service names or port numbers)
 # Argument: --id developerId - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
 # Argument: --group securityGroup - String.  String. Required. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
-# Argument: --ip ip - IP. Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+# Argument: --ip ip - IP. Optional. Specify bn IP manually (uses networkIPLookup tool from tools.sh by default)
 # Argument: --revoke - Flag. Optional. Remove permissions
 # Argument: --help - Flag. Optional. Show this help
 #

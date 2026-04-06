@@ -103,7 +103,7 @@ decorate() {
       executeInputSupport "$handler" "$extend" -- "$@" || return $?
       return 0
     else
-      executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
+      executeInputSupport "$handler" __decorate "❌" "[$what☹️" "]" -- "$@" || return 2
     fi
   fi
   local lp text="" && IFS=" " read -r lp text <<<"$style"

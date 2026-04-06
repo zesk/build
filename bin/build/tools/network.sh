@@ -65,3 +65,30 @@ networkMACAddressList() {
 _networkMACAddressList() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Get the current IP address of a host
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Environment: IP_URL
+# Environment: IP_URL_FILTER
+# shellcheck disable=SC2120
+networkIPLookup() {
+  local handler="_${FUNCNAME[0]}"
+
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+
+  local url jqFilter
+  url=$(catchReturn "$handler" buildEnvironmentGet IP_URL) || return $?
+  [ -n "$url" ] || throwEnvironment "$handler" "$(decorate value "IP_URL") is required for $(decorate code "${handler#_}")" || return $?
+  urlValid "$url" || throwEnvironment "$handler" "URL $(decorate error "$url") is not a valid URL" || return $?
+
+  local jqFilter
+  jqFilter=$(catchReturn "$handler" buildEnvironmentGet IP_URL_FILTER) || return $?
+  local pp=(cat)
+  [ -z "$jqFilter" ] || pp=(jq -r "$jqFilter")
+  catchReturn "$handler" urlFetch "$url" - | catchEnvironment "$handler" "${pp[@]}" || return $?
+}
+_networkIPLookup() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

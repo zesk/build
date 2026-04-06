@@ -4,5 +4,8 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-
 {processWait}
+
+{processMemoryUsage}
+
+{processVirtualMemoryAllocation}

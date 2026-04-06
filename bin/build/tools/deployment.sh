@@ -601,7 +601,7 @@ deployToRemote() {
   #
   # Current IP
   #
-  currentIP=$(catchEnvironment "$handler" ipLookup) || throwEnvironment "$handler" "Unable to determine IP address" || return $?
+  currentIP=$(catchEnvironment "$handler" networkIPLookup) || throwEnvironment "$handler" "Unable to determine IP address" || return $?
   [ -n "$currentIP" ] || throwEnvironment "$handler" "IP address lookup blank" || return $?
 
   if $addSSHHosts; then

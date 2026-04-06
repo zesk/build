@@ -67,7 +67,7 @@ __installBinBuildURL() {
 }
 
 # Checks requested version OR Zesk Build version on GitHub
-# Requires: __installBinBuildJSON jsonField jq versionSort decorate __githubInstallationURL throwArgument
+# Requires: __installBinBuildJSON jsonField jq textVersionSort decorate __githubInstallationURL throwArgument
 __installBinBuildVersion() {
   local handler="$1" installPath="$2" packagePath="$3" desiredVersion="$4" jsonFile="" version url upIcon="☝️" okIcon="👌"
 
@@ -93,7 +93,7 @@ __installBinBuildVersion() {
     local latest
     myVersion=$(jq -r .version <"$packagePath/build.json")
     # shellcheck disable=SC2119
-    latest=$(printf "%s\n" "$myVersion" "$version" | versionSort | tail -n 1)
+    latest=$(printf "%s\n" "$myVersion" "$version" | textVersionSort | tail -n 1)
     if [ "$myVersion" = "$latest" ]; then
       printf -- "%s %s" "$okIcon" "$(decorate info "$version")"
       catchEnvironment "$handler" rm -f "$jsonFile" || return $?
@@ -612,9 +612,9 @@ __installRemotePackageLocal() {
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
+# Example:     git tag | grep -e '^v[0-9.]*$' | textVersionSort
 # Requires: throwArgument sort bashDocumentation decorate
-versionSort() {
+textVersionSort() {
   local handler="_${FUNCNAME[0]}"
 
   local reverse=""
@@ -640,8 +640,8 @@ versionSort() {
   done
   sort -t . -k "1.2,1n$reverse" -k "2,2n$reverse" -k "3,3n$reverse"
 }
-_versionSort() {
-  true || versionSort --help
+_textVersionSort() {
+  true || textVersionSort --help
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1644,7 +1644,7 @@ decorate() {
       executeInputSupport "$handler" "$extend" -- "$@" || return $?
       return 0
     else
-      executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
+      executeInputSupport "$handler" __decorate "❌" "[$what☹️" "]" -- "$@" || return 2
     fi
   fi
   local lp text="" && IFS=" " read -r lp text <<<"$style"

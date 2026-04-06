@@ -7,6 +7,16 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{versionSort}
+
+{isUpToDate}
+
+{hostnameFull}
+
+{ipLookup}
+
+{dotEnvConfigure}
+
 {cannon}
 
 {pluralWord}

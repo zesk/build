@@ -13,4 +13,5 @@ A pattern used can be per-project:
 Which allows you to navigate between projects and change your current context.
 
 {applicationHome}
+
 {applicationHomeAliases}

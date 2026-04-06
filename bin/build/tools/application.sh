@@ -87,8 +87,8 @@ _applicationHome() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Set aliases `G` and `g` default for `applicationHome`
+# Summary: `applicationHome` bash aliases setup
+# Set aliases `G` and `g` (defaults) to aliases of `applicationHome`
 # Localize as you wish for your own shell
 # Argument: goAlias - String. Alias for `applicationHome --go`. Default is `g`.
 # Argument: setAlias - String. Alias for `applicationHome`. Default is `G`.
@@ -131,6 +131,7 @@ _applicationHomeAliases() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Configure project for Zesk Build
 # Set up a new project for Zesk Build
 # - Creates shell development environment
 # - Registers git hooks

@@ -67,7 +67,7 @@ __buildDocumentationBuildDirectory() {
   aa+=(--template "$source")
   aa+=(--md-cache "$home/bin/build/documentation")
   aa+=(--unlinked-source "$documentationSource")
-  aa+=(--unlinked-template "$source/todo.md" --unlinked-target "$target/todo.md")
+  aa+=(--unlinked-template "$home/documentation/template/todo.md" --unlinked-target "$target/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
   aa+=(--see-prefix "./documentation/.docs")
   aa+=(--see-environment-link "/env/index.md")
@@ -129,7 +129,7 @@ __buildDocumentationBuildRelease() {
       printf -- "- [%s](%s)\n" "$version" "./$version.md" >>"$target"
     fi
     index=$((index + 1))
-  done < <(find "$notesPath" -name "*.md" | versionSort -r)
+  done < <(find "$notesPath" -name "*.md" | textVersionSort -r)
 }
 
 # Build the build documentation

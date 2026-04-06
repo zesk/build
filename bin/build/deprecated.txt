@@ -1,3 +1,9 @@
+# v0.42.1
+versionSort|textVersionSort|
+isUpToDate|decorate expired|
+hostnameFull|networkNameFull|
+ipLookup|networkIPLookup|
+
 # v0.42.0
 bashPromptModule_binBuild|bashPromptModule_BuildProject|
 newlineHide|stringHideNewlines|

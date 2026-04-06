@@ -229,7 +229,7 @@ __releaseNew() {
     decorate pair "$width" "New:" "$(decorate BOLD green "$newVersion")"
     local checkVersion="$liveVersion"
     [ -n "$checkVersion" ] || checkVersion="$lastVersion"
-    lastVersion="$(printf "%s\n" "$liveVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
+    lastVersion="$(printf "%s\n" "$liveVersion" "$newVersion" | textVersionSort | tail -n 1)" || return $?
     if [ "$newVersion" != "$lastVersion" ]; then
       throwArgument "$handler" "$(decorate error "$newVersion") is before live $(decorate code "$liveVersion")" || return $?
     fi
@@ -252,7 +252,7 @@ __releaseNew() {
     fi
   fi
   local versionOrdering && versionOrdering="$(printf "%s\n%s" "$liveVersion" "$currentVersion")"
-  if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | versionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
+  if [ "$currentVersion" != "$liveVersion" ] && [ "$(printf %s "$versionOrdering" | textVersionSort)" = "$versionOrdering" ] || [ "$currentVersion" == "v$nextVersion" ]; then
     decorate pair $width "Ready to deploy:" "$currentVersion"
     decorate pair $width "Release notes:" "$notes"
     if $isInteractive; then

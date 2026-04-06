@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Centralizing access to environment variables in code has the added benefit we can add debugging here if needed
+# Current user's home directory.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash
 # Type: Directory

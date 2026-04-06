@@ -4,7 +4,7 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-# Filters
+## Filters
 
 {grepSafe}
 
@@ -18,13 +18,13 @@
 
 {printfOutputEmpty}
 
-# Formatting
+## Formatting
 
 {textAlignLeft}
 
 {textAlignRight}
 
-# ANSI text
+## ANSI text
 
 {isPlain}
 
@@ -34,7 +34,7 @@
 
 {consolePlainLength}
 
-# Space
+## Space
 
 {stringTrimWords}
 
@@ -52,7 +52,7 @@
 
 {textSingleBlankLines}
 
-# Finding or Calculating
+## Finding or Calculating
 
 {inArray}
 
@@ -80,7 +80,7 @@
 
 {fileEndsWithNewline}
 
-# Language-related
+## Language-related
 
 {localePlural}
 
@@ -88,7 +88,7 @@
 
 {booleanParse}
 
-# Transformation
+## Transformation
 
 {stringLowercase}
 
@@ -104,10 +104,22 @@
 
 {textReplace}
 
-# Random
+## Random
 
 {stringRandom}
 
-# Numeric
+## Numeric
+
+{textVersionSort}
 
 {integerClamp}
+
+## Sed-related
+
+- See [quoting](./quote.md)
+
+{sedReplacePattern}
+
+{quoteSedPattern}
+
+{quoteSedReplacement}

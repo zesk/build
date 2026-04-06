@@ -8,30 +8,33 @@ __bashPromptModule_TermColors() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return 0
+  local home && home=$(catchReturn "$handler" buildHome) || return 0
+  local otherHome && otherHome=$(catchReturn "$handler" bashLibraryHome "bin/build/tools.sh" 2>/dev/null) || :
 
   local debug=false
   ! buildDebugEnabled term-colors || debug=true
 
-  local schemeFile dd=()
-  ! $debug || dd+=("--debug")
+  if [ "$home" = "$otherHome" ]; then
+    local schemeFile dd=()
+    ! $debug || dd+=("--debug")
 
-  local savedState savedModified=""
-  savedState=$(catchReturn "$handler" buildEnvironmentGet BUILD_TERM_COLORS_STATE) || return $?
-  if [ -n "$savedState" ]; then
-    local savedHome savedModified
-    savedHome="${savedState%|*}"
-    savedModified="${savedState##*|}"
-    ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE=$savedState -> $savedHome ($savedModified)"
-    if [ "$savedHome" != "$home" ]; then
-      ! $debug || statusMessage decorate info "Saved home changed for term colors: $savedHome (saved) != $home (current)"
-      savedState=""
+    local savedState savedModified=""
+    savedState=$(catchReturn "$handler" buildEnvironmentGet BUILD_TERM_COLORS_STATE) || return $?
+    if [ -n "$savedState" ]; then
+      local savedHome savedModified
+      savedHome="${savedState%|*}"
+      savedModified="${savedState##*|}"
+      ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE=$savedState -> $savedHome ($savedModified)"
+      if [ "$savedHome" != "$home" ]; then
+        ! $debug || statusMessage decorate info "Saved home changed for term colors: $savedHome (saved) != $home (current)"
+        savedState=""
+      fi
+    else
+      ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE is blank"
     fi
   else
-    ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE is blank"
+      ! $debug || statusMessage decorate info "$(decorate file "$home") -> $(decorate file "$otherHome")"
   fi
-
   # Deprecated files
   for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
     ! $debug || statusMessage decorate info "Looking at $(decorate file "$schemeFile")"
@@ -39,9 +42,8 @@ __bashPromptModule_TermColors() {
       ! $debug || statusMessage decorate info "$(decorate file "$schemeFile") does not exist"
       continue
     fi
-    local modified
-    modified=$(catchReturn "$handler" fileModificationTime "$schemeFile") || return $?
-    if ! isInteger "$savedModified" || [ "$modified" -gt "$savedModified" ]; then
+    local modified && modified=$(catchReturn "$handler" fileModificationTime "$schemeFile") || return $?
+    if [ -z "$savedState" ] || ! isInteger "$savedModified" || [ "$modified" -gt "$savedModified" ]; then
       ! $debug || statusMessage decorate info "Applying colors from $(decorate file "$schemeFile") ... "
       if catchReturn "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
         export BUILD_TERM_COLORS_STATE

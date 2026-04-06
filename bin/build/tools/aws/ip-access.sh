@@ -48,7 +48,7 @@ __awsIPAccess() {
 
   [ ${#securityGroups[@]} -gt 0 ] || throwArgument "$handler" "One or more --group is required" || return $?
   if [ -z "$currentIP" ]; then
-    if ! currentIP=$(ipLookup) || [ -z "$currentIP" ]; then
+    if ! currentIP=$(networkIPLookup) || [ -z "$currentIP" ]; then
       throwEnvironment "$handler" "Unable to determine IP address" || return $?
     fi
   fi

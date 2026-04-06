@@ -27,9 +27,13 @@ __decorateExtensionBoxLineStyle() {
 #      ╱	╲	╳
 #      ╴	╵	╶	╷	╸	╹	╺	╻	╼	╽	╾	╿
 
+# The `.Pure` extension means this function knows how to deal with standard input.
+__decorateExtensionBox.Pure() {
+  __decorateExtensionBox "$@"
+}
+
 # fn: decorate box
 # Summary: Box around content
-# The `.Pure` extension means this function knows how to deal with standard input.
 # Argument: --type (ascii|line|double-line) - String. Optional. Line style. Default `line`
 # Argument: --outside outsideStyle - String. Optional. Style to apply to the outside border. (Default `decoration`)
 # Argument: --inside insideStyle - String. Optional. Style to apply to the inside content. (Default `decoration`)
@@ -37,15 +41,21 @@ __decorateExtensionBoxLineStyle() {
 # Argument: --size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default none)
 # Argument: --fill fileCharacter - String. Optional. Use this character to fill empty space in the box.
 # Argument: text ... - String. Optional. Text to put in the box, one per line.
-# Example:     {fn} Moving ...
+# Example:     {fn} --style ascii "Moving ..."
+# Example:     {fn} --style line Hello
+# Example:     {fn} --style double-line "I'm sorry, Hal, I'm afraid I can't do that.
 # Output:     +==========================================================================+
-# Output:     |                                                                          |
 # Output:     | Moving ...                                                               |
-# Output:     |                                                                          |
 # Output:     +==========================================================================+
+# Output:     ┌──────────────────────────────────────────────────────────────────────────┐
+# Output:     │ Hello                                                                    │
+# Output:     └──────────────────────────────────────────────────────────────────────────┘
+# Output:     ╔══════════════════════════════════════════════════════════════════════════╗
+# Output:     ║ I'm sorry, Hal, I'm afraid I can't do that.                              ║
+# Output:     ╚══════════════════════════════════════════════════════════════════════════╝
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-__decorateExtensionBox.Pure() {
+__decorateExtensionBox() {
   local handler="_${FUNCNAME[0]}"
 
   local textLines=() outside="decoration" inside="decoration" nLines=0 lineStyleCodes="" lineStyle="line" fill=" " argumentWidth="console" maxWidth=""

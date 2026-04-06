@@ -63,7 +63,9 @@ _urlSchemeDefaultPort() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Simple URL parsing. Converts a `url` into values which can be parsed or evaluated:
+# Simple URL parsing. Converts a `url` into values which can be parsed or evaluated.
+#
+# Generates output which can be evaluated and separates the URL into components.
 #
 # - `url` - URL
 # - `host` - Host
@@ -82,7 +84,7 @@ _urlSchemeDefaultPort() {
 # Summary: Simple URL Parsing
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: url - a Uniform Resource Locator
+# Argument: url - String. Required. a Uniform Resource Locator
 # Argument: --prefix prefix - String. Optional. Prefix variable names with this string.
 # Argument: --stringUppercase - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default).
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
@@ -222,7 +224,8 @@ _urlParseItem() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Checks if a URL is valid
+# Summary: Is a URL valid?
+# Checks if a URL is syntactically valid - solely a text check.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator
@@ -254,9 +257,12 @@ _urlValid() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: URL opener stream filter
 # Open URLs which appear in a stream
 # (but continue to output the stream)
 # Argument: --exec - Executable. Optional. If not supplied uses `urlOpen`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # stdin: text
 # stdout: text
 urlOpener() {

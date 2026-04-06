@@ -367,7 +367,7 @@ gitCurrentBranch
 gitHasAnyRefs
 gitHookTypes
 gitPreCommitCleanup
-hostnameFull
+networkNameFull
 bashDebuggerDisable
 isiTerm2
 iTerm2Aliases
@@ -391,7 +391,7 @@ phpInstall
 phpUninstall
 phpLog
 phpIniFile
-ipLookup
+networkIPLookup
 returnAssert
 returnIdentical
 returnLeak

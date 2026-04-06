@@ -5,7 +5,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL versionSort EOF
+# IDENTICAL textVersionSort EOF
 
 # Summary: Sort versions in the format v0.0.0
 #
@@ -20,9 +20,9 @@
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
+# Example:     git tag | grep -e '^v[0-9.]*$' | textVersionSort
 # Requires: throwArgument sort bashDocumentation decorate
-versionSort() {
+textVersionSort() {
   local handler="_${FUNCNAME[0]}"
 
   local reverse=""
@@ -48,8 +48,8 @@ versionSort() {
   done
   sort -t . -k "1.2,1n$reverse" -k "2,2n$reverse" -k "3,3n$reverse"
 }
-_versionSort() {
-  true || versionSort --help
+_textVersionSort() {
+  true || textVersionSort --help
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

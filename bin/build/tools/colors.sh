@@ -228,11 +228,8 @@ colorSampleSemanticStyles() {
   [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
 
   local style && for style in "${styles[@]}"; do
-    local leftLabel && leftLabel=$(textAlignLeft 10 "$style")
-    printf "%s" "$reset"
-    decorate "$style" "     $leftLabel: $text"
-    printf "%s" "$reset"
-    decorate BOLD "$style" "BOLD $leftLabel: $text"
+    decorate pair "$style" "$reset$(decorate "$style" "$text")$reset"
+    decorate pair "BOLD $style" "$reset$(decorate BOLD "$style" "$text")$reset"
   done
   decorate "pair" "pair" "$text"
   decorate BOLD "pair" "BOLD pair" "$text"
@@ -872,6 +869,7 @@ colorScheme() {
     fi
   done <"$colorsFile"
 
+  local dd=()
   ! $debug || dd+=(--verbose)
   ! $iTerm2 || iTerm2SetColors "${dd[@]+"${dd[@]}"}" --fill --ignore --skip-errors <"$colorsFile" || :
 

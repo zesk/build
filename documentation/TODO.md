@@ -543,7 +543,7 @@ On a "2x" machine:
 - approveBashSource
 - interactiveCountdown
 - interactiveManager
-- ipLookup
+- networkIPLookup
 - isBashBuiltin
 - isCharacterClasses
 - isDarwin

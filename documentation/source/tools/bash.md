@@ -4,6 +4,13 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
+## Execution
+
+{executableExists}
+
+{executeCount}
+
+{bashMakeExecutable}
 
 # User interaction
 
@@ -48,13 +55,3 @@
 {isBashBuiltin}
 
 {bashBuiltins}
-
-# Linting
-
-{bashSanitize}
-
-{bashLintFiles}
-
-{bashLintFilesInteractive}
-
-{bashLint}

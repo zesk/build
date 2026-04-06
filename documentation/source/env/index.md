@@ -1,10 +1,13 @@
 # Environment Variables
 
+[⬅ Home ](../index.md)
+
 Note that you should place environment variables (if you override the default, for example), in:
 
     ./bin/env/VARIABLE_NAME.sh
 
-Where `VARIABLE_NAME` is the name of your environment variable. `buildEnvironmentAdd` does this for you if you want. Also
+Where `VARIABLE_NAME` is the name of your environment variable. `buildEnvironmentAdd` does this for you if you want.
+Also
 `buildEnvironmentNames` shows all known names within the current application scope.
 
 These are the known environment variables in `Zesk Build` - to see default behaviors look at files in `./bin/build/env`.
@@ -45,11 +48,9 @@ Project configuration variables:
 - `APPLICATION_NAME`, `APPLICATION_JSON`, `APPLICATION_JSON_PREFIX`, `BUILD_HOOK_EXTENSIONS`,
   `APPLICATION_CODE_EXTENSIONS`, `APPLICATION_CODE`
 
-## See also
+See also:
 
 - [`buildEnvironmentLoad`](../tools/build.md#buildEnvironmentLoad)
 - [`buildEnvironmentGet`](../tools/build.md#buildEnvironmentGet)
-
-# Categories of Environment Variables
 
 <!-- source/env/index.md is the original version of this file and the one which should be edited -->

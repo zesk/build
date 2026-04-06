@@ -6,15 +6,17 @@
 #
 # host in this context means system host
 
-# Get the full hostname
+# Summary: Platform-agnostic host name
+# Get the full hostname on the current platform.
+# Formerly `hostname``Full`.
 # Requires: __help __hostname executableRequire catchEnvironment
-hostnameFull() {
+networkNameFull() {
   local handler="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" __hostname || return $?
 }
-_hostnameFull() {
+_networkNameFull() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

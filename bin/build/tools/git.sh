@@ -150,7 +150,7 @@ gitVersionList() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   [ -d "./.git" ] || throwEnvironment "$handler" "No .git directory at $(pwd), stopping" || return $?
-  catchEnvironment "$handler" git tag | grep -e '^v[0-9.]*$' | versionSort "$@" || return $?
+  catchEnvironment "$handler" git tag | grep -e '^v[0-9.]*$' | textVersionSort "$@" || return $?
 }
 _gitVersionList() {
   # __IDENTICAL__ bashDocumentation 1
@@ -1179,7 +1179,7 @@ gitBranchMergeCurrent() {
     comment="${FUNCNAME[0]} by $(whoami) on $(hostname)"
   fi
   if $addIP; then
-    comment="$comment @ $(ipLookup || printf "%s" "$? <- ipLookup failed")" 2>/dev/null
+    comment="$comment @ $(networkIPLookup || printf "%s" "$? <- networkIPLookup failed")" 2>/dev/null
   fi
   local currentBranch
   currentBranch=$(catchEnvironment "$handler" gitCurrentBranch) || return $?

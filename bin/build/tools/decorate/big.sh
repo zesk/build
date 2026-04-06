@@ -84,13 +84,18 @@ ___decorateExtensionBig() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Makes this a pure function - handles `stdin`
+__decorateExtensionAt.Pure() {
+  __decorateExtensionAt "$@"
+}
+
 # Experimental
 # fn: decorate at
 # Place text at a position on the console.
 # Argument: x - Integer. Console X offset
 # Argument: y - Integer. Console Y offset
 # Argument: text ... - EmptyString. Text line to output at the x,y console location. Additional lines are placed below the previous line.
-__decorateExtensionAt.Pure() {
+__decorateExtensionAt() {
   local handler="_${FUNCNAME[0]}"
   local x="" y=""
 
@@ -147,7 +152,7 @@ __decorateExtensionAt.Pure() {
   done
   catchEnvironment "$handler" cursorSet "$saveX" "$saveY" || return $?
 }
-___decorateExtensionAt.Pure() {
+___decorateExtensionAt() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

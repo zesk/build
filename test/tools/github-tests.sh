@@ -50,7 +50,7 @@ testGithubStuff() {
 
   current=$(catchEnvironment "$handler" hookVersionCurrent) || return $?
 
-  earliest=$(printf "%s\n" "$latest" "$current" | versionSort | head -n 1) || return $?
+  earliest=$(printf "%s\n" "$latest" "$current" | textVersionSort | head -n 1) || return $?
 
   assertEquals "$earliest" "$latest" || return $?
 }

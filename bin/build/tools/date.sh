@@ -241,3 +241,76 @@ _dateAdd() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Summary: Is a date in the past beyond its expiration date?
+# stdout: Two tokens on a single line:
+# stdout: - UnsignedInteger. Days until expiration.
+# stdout: - UnsignedInteger. Expiration timestamp.
+#
+# This tool checks the `keyDate` and checks if it is within `upToDateDays` of today; if not this fails.
+#
+# It will also fail if:
+#
+# - `keyDate` is empty or has an invalid value
+# - `upToDateDays` is less than zero
+#
+# Return code: 0 - The date has not expired.
+# Return code: 1 - The date has expired.
+# Return code: 2 - The date is incorrectly formatted.
+# Return code: 2 - Argument error.
+#
+# Argument: keyDate - Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
+# Argument: upToDateDays - Integer. Optional. Days that key expires after `keyDate`. Default is 90.
+# Argument: --name name - String. Optional. Name of the expiring item for error messages.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Example:     if ! dateExpired "$AWS_ACCESS_KEY_DATE" 90; then
+# Example:       decorate big Failed, update key and reset date
+# Example:       exit 99
+# Example:     fi
+dateExpired() {
+  local handler="_${FUNCNAME[0]}"
+
+  local keyDate="" upToDateDays=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --local) ll=(--local) ;;
+    *)
+      if [ -z "$keyDate" ]; then
+        keyDate=$(validate "$handler" Date "keyDate" "$argument") || return $?
+      elif [ -z "$upToDateDays" ]; then
+        upToDateDays=$(validate "$handler" UnsignedInteger "upToDateDays" "$argument") || return $?
+      else
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      fi
+      ;;
+    esac
+    shift || throwArgument "$handler" "shift $argument" || return $?
+  done
+  [ -n "$keyDate" ] || throwArgument "$handler" "missing keyDate" || return $?
+  [ -n "$upToDateDays" ] || upToDateDays=90
+
+  local keyTimestamp && keyTimestamp=$(catchArgument "$handler" dateToTimestamp "${keyDate:0:10}") || return $?
+  local todayTimestamp && todayTimestamp=$(dateToTimestamp "$(dateToday "${ll[@]+"${ll[@]}"}")") || throwEnvironment "$handler" "Unable to generate dateToday" || return $?
+  local accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
+  local expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
+  local deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
+  local expireDays=$((deltaDays - upToDateDays))
+  if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
+    return 1
+  fi
+  expireDays=$((-expireDays))
+  catchReturn "$handler" printf -- "%d %s\n" "$expireDays" "$expireTimestamp" || return $?
+}
+_dateExpired() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

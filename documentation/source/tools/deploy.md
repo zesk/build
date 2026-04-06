@@ -16,21 +16,18 @@ minimizes moving parts to change deployment code bases.
 ## Deploy Information
 
 {deployApplicationVersion}
+
 {deployPackageName}
+
 {deployHasVersion}
+
 {deployPreviousVersion}
+
 {deployNextVersion}
 
 ## Deploy
 
 {deployApplication}
-
-## Utilities
-
-{deployMove}
-{deployMigrateDirectoryToLink}
-{deployLink}
-{deployRemoteFinish}
 
 ## Deployment Hooks
 
@@ -71,16 +68,34 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 1. `deploy-cleanup` - On each deployed system
     - Fail: Nothing
 
+## Utilities
+
+{deployMove}
+
+{deployMigrateDirectoryToLink}
+
+{deployLink}
+
+{deployRemoteFinish}
+
 ## Hook documentation
 
 {__hookApplicationEnvironment}
+
 {__hookApplicationID}
+
 {__hookApplicationTag}
+
 {__hookMaintenance}
 
 {__hookDeployStart}
+
 {__hookDeployMove}
+
 {__hookDeployConfirm}
+
 {__hookDeployCleanup}
+
 {__hookDeployFinish}
+
 {__hookDeployRevert}

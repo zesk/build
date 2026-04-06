@@ -55,7 +55,7 @@ __installURL() {
 # Return Code: 0 - Do not upgrade, version is same as remote (stdout is found, current version)
 # Return Code: 1 - Do upgrade, version changed. (stdout is version change details)
 # See: _installRemotePackage
-# Requires: __installJSON jsonField jq versionSort decorate __installLatestVersion throwArgument
+# Requires: __installJSON jsonField jq textVersionSort decorate __installLatestVersion throwArgument
 __installFetchVersion() {
   local handler="$1" installPath="$2" packagePath="$3" jsonFile version url upIcon="☝️" okIcon="👌"
 
@@ -76,7 +76,7 @@ __installFetchVersion() {
     local latest
     myVersion=$(jq -r .version <"$packagePath/package.json")
     # shellcheck disable=SC2119
-    latest=$(printf "%s\n" "$myVersion" "$version" | versionSort | tail -n 1)
+    latest=$(printf "%s\n" "$myVersion" "$version" | textVersionSort | tail -n 1)
     if [ "$myVersion" = "$latest" ]; then
       printf -- "%s %s" "$okIcon" "$(decorate info "$version")"
       return 0
@@ -526,7 +526,7 @@ __installRemotePackageLocal() {
 
 # <-- END of IDENTICAL _installRemotePackage
 
-# IDENTICAL versionSort 47
+# IDENTICAL textVersionSort 47
 
 # Summary: Sort versions in the format v0.0.0
 #
@@ -541,9 +541,9 @@ __installRemotePackageLocal() {
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
+# Example:     git tag | grep -e '^v[0-9.]*$' | textVersionSort
 # Requires: throwArgument sort bashDocumentation decorate
-versionSort() {
+textVersionSort() {
   local handler="_${FUNCNAME[0]}"
 
   local reverse=""
@@ -569,8 +569,8 @@ versionSort() {
   done
   sort -t . -k "1.2,1n$reverse" -k "2,2n$reverse" -k "3,3n$reverse"
 }
-_versionSort() {
-  true || versionSort --help
+_textVersionSort() {
+  true || textVersionSort --help
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1485,7 +1485,7 @@ decorate() {
       executeInputSupport "$handler" "$extend" -- "$@" || return $?
       return 0
     else
-      executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
+      executeInputSupport "$handler" __decorate "❌" "[$what☹️" "]" -- "$@" || return 2
     fi
   fi
   local lp text="" && IFS=" " read -r lp text <<<"$style"

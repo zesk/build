@@ -28,13 +28,13 @@ bashPromptModule_BuildProject() {
     return 0
   fi
 
-  local otherHome && otherHome=$(bashLibraryHome "$tools" "$here") || return 0
+  local otherHome && otherHome=$(bashLibraryHome "$tools" "$here" 2>/dev/null) || return 0
 
   [ -x "$home/$tools" ] || return 0
   local oldVersion newVersion newestVersion
   oldVersion="$(jq -r .version "$home/$version")"
   newVersion="$(jq -r .version "$otherHome/$version")"
-  newestVersion="$(printf -- "%s\n" "$oldVersion" "$newVersion" | versionSort | tail -n 1)"
+  newestVersion="$(printf -- "%s\n" "$oldVersion" "$newVersion" | textVersionSort | tail -n 1)"
   if [ "$oldVersion" != "$newVersion" ]; then
     if [ "$oldVersion" = "$newestVersion" ]; then
       buildMessage="$(printf -- "build %s -> %s " "$(decorate green "$oldVersion")" "$(decorate yellow "$newVersion")")"

@@ -403,7 +403,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:hookSourceOptional}
 - {SEE:hookVersionCurrent}
 - {SEE:hookVersionLive}
-- {SEE:hostnameFull}
+- {SEE:networkNameFull}
 - {SEE:hostTTFB}
 - {SEE:housekeeper}
 - {SEE:identicalCheck}
@@ -419,7 +419,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:interactiveOccasionally}
-- {SEE:ipLookup}
+- {SEE:networkIPLookup}
 - {SEE:isAlpine}
 - {SEE:isArray}
 - {SEE:isBashBuiltin}
@@ -448,7 +448,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:isType}
 - {SEE:isUnsignedInteger}
 - {SEE:isUnsignedNumber}
-- {SEE:isUpToDate}
+- {SEE:decorate expired}
 - {SEE:isValidateType}
 - {SEE:isVersion}
 - {SEE:isVisualStudioCode}
@@ -687,7 +687,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:validateTypeList}
 - {SEE:versionNextMinor}
 - {SEE:versionNoVee}
-- {SEE:versionSort}
+- {SEE:textVersionSort}
 - {SEE:websiteScrape}
 - {SEE:xdebugDisable}
 - {SEE:xdebugEnable}

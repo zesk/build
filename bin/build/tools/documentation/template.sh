@@ -36,7 +36,7 @@ __documentationTemplateUpdate() {
 # Argument: cacheDirectory - Directory. Required. Cache directory.
 # Argument: envFile - File. Required. Environment file used as base environment for all template generation.
 # Argument: template - File. Required. Final template file.
-# Argument: todoTemplateCode - File. Optional. Template code for template.
+# Argument: todoTemplate - File. Optional. Template file for template.
 __documentationTemplateUpdateUnlinked() {
   local handler="_${FUNCNAME[0]}"
   local maxMissing=50
@@ -45,17 +45,16 @@ __documentationTemplateUpdateUnlinked() {
   cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "${1-}") && shift || return $?
   envFile=$(validate "$handler" File "envFile" "${1-}") && shift || return $?
   template=$(validate "$handler" File "template" "${1-}") && shift || return $?
+  if [ $# -eq 0 ]; then
+    todoTemplate=$(catchReturn "$handler" documentationTemplate "todo") || return $?
+  else
+    todoTemplate=$(validate "$handler" File "todoTemplate" "${1-}") || return $?
+  fi
 
-  local todoTemplateCode="todo" todoTemplate
-  [ $# -eq 0 ] || todoTemplateCode="$1"
-  todoTemplate=$(catchReturn "$handler" documentationTemplate "$todoTemplateCode") || return $?
-
-  local unlinkedFunctions total
-  unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
+  local unlinkedFunctions && unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   local clean=("$unlinkedFunctions")
   catchReturn "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
-  local total
-  total=$(catchReturn "$handler" fileLineCount "$unlinkedFunctions") || return $?
+  local total && total=$(catchReturn "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (

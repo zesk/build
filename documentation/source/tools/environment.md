@@ -63,7 +63,11 @@ Tools to manipulate environment files in **Bash**:
 
 {environmentNames}
 
-## Application `.env`
+## Application Environment (`.env`)
+
+{environmentFileShow}
+
+{environmentApplicationLoad}
 
 {environmentFileApplicationMake}
 

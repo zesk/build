@@ -237,7 +237,7 @@ githubRelease() {
   releaseName="${extras[1]}"
   commitish="${extras[2]}"
 
-  isUpToDate --name "GITHUB_ACCESS_TOKEN_EXPIRE" "$accessTokenExpire" 0 || throwEnvironment "$handler" "Need to update the GitHub access token, expired" || return $?
+  decorate expired --name "GITHUB_ACCESS_TOKEN_EXPIRE" "$accessTokenExpire" 0 || throwEnvironment "$handler" "Need to update the GitHub access token, expired" || return $?
   # descriptionFile
   [ -f "$descriptionFile" ] || throwEnvironment "$handler" "Description file $descriptionFile is not a file" || return $?
   [ -n "$repoOwner" ] || throwArgument "$handler" "Repository owner is blank" || return $?

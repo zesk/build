@@ -9,7 +9,7 @@
 testHostnameFull() {
   local handler="returnMessage"
 
-  catchReturn "$handler" timing hostnameFull || return $?
-  assertExitCode --line "$LINENO" 0 hostnameFull || return $?
-  assertExitCode --line "$LINENO" 0 hostnameFull --help || return $?
+  catchReturn "$handler" timing networkNameFull || return $?
+  assertExitCode --line "$LINENO" 0 networkNameFull || return $?
+  assertExitCode --line "$LINENO" 0 networkNameFull --help || return $?
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Sample current version script, uses release files directory listing and versionSort.
+# Sample current version script, uses release files directory listing and textVersionSort.
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
@@ -15,7 +15,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Hook to return the current version
 #
 # Defaults to the last version numerically found in `docs/release` directory.
-# Requires: catchReturn catchEnvironment muzzle pushd cd printf versionSort popd bashDocumentation
+# Requires: catchReturn catchEnvironment muzzle pushd cd printf textVersionSort popd bashDocumentation
 # Summary: {base} hook
 __hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
@@ -28,7 +28,7 @@ __hookVersionCurrent() {
   notes=$(catchReturn "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
   pathIsAbsolute "$notes" || notes="$home/$notes"
   catchEnvironment "$handler" muzzle pushd "$notes" || return $?
-  find . -mindepth 1 -maxdepth 1 -name '*.md' | cut -c 3- | sed 's/.md//g' | versionSort -r | head -n 1 || :
+  find . -mindepth 1 -maxdepth 1 -name '*.md' | cut -c 3- | sed 's/.md//g' | textVersionSort -r | head -n 1 || :
   catchEnvironment "$handler" muzzle popd || return $?
 }
 ___hookVersionCurrent() {
