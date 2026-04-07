@@ -353,7 +353,7 @@ gitTagVersion() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
-    shift || throwArgument "$handler" "shift $argument" || return $?
+    shift
   done
 
   local maximumTagsPerVersion
@@ -598,7 +598,7 @@ gitMainly() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
-    shift || throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
+    shift
   done
 
   errorLog=$(fileTemporaryName "$handler") || return $?
@@ -764,16 +764,9 @@ gitInstallHooks() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --copy)
-      execute=false
-      ;;
-    --verbose)
-      verbose=true
-      ;;
-    --application)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      home=$(validate "$handler" Directory "applicationHome" "$1") || return $?
-      ;;
+    --copy) execute=false ;;
+    --verbose) verbose=true ;;
+    --application) shift && home=$(validate "$handler" Directory "applicationHome" "$1") || return $? ;;
     *)
       hook="$argument"
       if inArray "$hook" "${types[@]}"; then

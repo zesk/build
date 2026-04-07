@@ -66,7 +66,7 @@ fileModificationTime() {
     [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
     [ -f "$argument" ] || throwArgument "$handler" "$argument is not a file" || return $?
     printf "%d\n" "$(date -r "$argument" +%s)"
-    shift || throwArgument "$handler" "shift" || return $?
+    shift
   done
 }
 _fileModificationTime() {
@@ -378,7 +378,7 @@ fileSize() {
     while [ $# -gt 0 ]; do
       size="$(stat "${opts[@]}" "$1")" || throwEnvironment "$handler" "Unable to stat" "${opts[@]}" "$1" || return $?
       printf "%s\n" "$size"
-      shift || throwArgument "$handler" shift || return $?
+      shift
     done
   else
     local file && while read -r file; do

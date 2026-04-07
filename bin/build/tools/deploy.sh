@@ -192,12 +192,27 @@ _deployNextVersion() {
 deployMove() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local applicationPath newApplicationSource
-  applicationPath=$(validate "$handler" Directory applicationPath "${1-}") || return $?
-  shift || throwArgument "$handler" "missing argument" || return $?
-  newApplicationSource=$(pwd) || throwEnvironment "$handler" "Unable to get pwd" || return $?
-  directoryClobber "$newApplicationSource" "$applicationPath"
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *)
+      [ -z "$applicationPath" ] || throwArgument "$handler" "Application path already specified?" || return $?
+      applicationPath=$(validate "$handler" Directory applicationPath "${1-}") || return $?
+      ;;
+    esac
+    shift
+  done
+  [ -n "$applicationPath" ] || throwArgument "$handler" "applicationPath is required" || return $?
+  local newApplicationSource && newApplicationSource=$(catchReturn "$handler" pwd) || return $?
+  catchReturn "$handler" directoryClobber "$newApplicationSource" "$applicationPath" || return $?
 }
 _deployMove() {
   # __IDENTICAL__ bashDocumentation 1

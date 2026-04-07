@@ -29,20 +29,13 @@ __decorateExtensionWrap() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --fill)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      [ 1 -eq "${#1}" ] || throwArgument "$handler" "Fill character must be single character" || return $?
-      fill="$1"
-      width="${width:-needed}"
+      shift && [ 1 -eq "${#1}" ] || throwArgument "$handler" "Fill character must be single character" || return $?
+      fill="$1" && width="${width:-needed}"
       ;;
-    --width)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      isUnsignedInteger "$1" && [ "$1" -gt 0 ] || throwArgument "$handler" "$argument requires positive integer" || return $?
-      width="$1"
-      ;;
+    --width) shift && width=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
     *)
       if [ "$prefix" = $'\1' ]; then
-        prefix="$1"
-        shift
+        prefix="$1" && shift
         suffix="${*-}"
         [ $# -gt 0 ] || break
       fi

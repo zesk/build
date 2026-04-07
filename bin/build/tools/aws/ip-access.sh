@@ -24,10 +24,7 @@ __awsIPAccess() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --services)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      IFS=', ' read -r -a services <<<"$1" || :
-      ;;
+    --services) shift && IFS=', ' read -r -a services <<<"${1-}" ;;
     # IDENTICAL profileNameArgumentHandler 1
     --profile) shift && profileName="$(validate "$handler" string "$argument" "$1")" && pp=("$argument" "$profileName") || return $? ;;
     --revoke) optionRevoke=true ;;

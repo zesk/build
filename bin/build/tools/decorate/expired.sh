@@ -36,6 +36,7 @@
 # Example:       decorate big Failed, update key and reset date
 # Example:       exit 99
 # Example:     fi
+# See: dateExpired
 __decorateExtensionExpired() {
   local handler="_${FUNCNAME[0]}"
 
@@ -64,7 +65,7 @@ __decorateExtensionExpired() {
       fi
       ;;
     esac
-    shift || throwArgument "$handler" "shift $argument" || return $?
+    shift
   done
   [ -n "$keyDate" ] || throwArgument "$handler" "missing keyDate" || return $?
   [ -n "$upToDateDays" ] || upToDateDays=90
@@ -83,6 +84,7 @@ __decorateExtensionExpired() {
     return 1
   fi
 
+  isInteger "$expireDays" || throwEnvironment "$handler" "Expire days is not integer [\"$keyDate\" \"$upToDateDays\"] -> \"$expireDays\" \"$expireTimestamp\"" || return $?
   local expireDate && expireDate=$(dateFromTimestamp "$expireTimestamp" '%A, %B %d, %Y %R')
 
   local header && header="$(decorate warning "${name}expires on")"

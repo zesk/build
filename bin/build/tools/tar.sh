@@ -30,7 +30,7 @@ tarExtractPattern() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local pattern="$argument"
-      shift || throwArgument "$handler" "No pattern supplied" || return $?
+      shift
       # -h means follow symlinks
       if tar --version | grep -q GNU; then
         # GNU
@@ -80,8 +80,7 @@ tarCreate() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      target="$argument"
-      shift || throwArgument "$handler" "No files supplied" || return $?
+      target="$argument" && shift
       # -h means follow symlinks
       if tar --version | grep -q GNU; then
         # GNU

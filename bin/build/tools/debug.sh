@@ -517,17 +517,9 @@ outputTrigger() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --verbose)
-      verbose=true
-      ;;
-    --name)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      [ -n "$1" ] || throwArgument "$handler" "Blank $argument argument" || return $?
-      name="$1"
-      ;;
-    *)
-      break
-      ;;
+    --verbose) verbose=true ;;
+    --name) shift && name=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    *) break ;;
     esac
     shift
   done

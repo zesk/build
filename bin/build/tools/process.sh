@@ -50,16 +50,11 @@ processWait() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --require)
-      requireFlag=true
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
+    --require) requireFlag=true ;;
+    --verbose) verboseFlag=true ;;
     --signals)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      IFS=',' read -r -a signals < <(stringUppercase "$1")
-      for signal in "${signals[@]}"; do
+      shift && IFS=',' read -r -a signals < <(stringUppercase "${1-}")
+      local signal && for signal in "${signals[@]}"; do
         case "$signal" in
         STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
         *)
@@ -68,22 +63,13 @@ processWait() {
         esac
       done
       ;;
-    --timeout)
-      shift || throwArgument "$handler" "missing $argument" || return $?
-      timeout=$(validate "$handler" Integer "timeout" "$1") || return $?
-      signalTimeout=$timeout
-      ;;
-    *)
-      processId=$(validate "$handler" Integer "processId" "$1") || return $?
-      processIds+=("$processId")
-      ;;
+    --timeout) shift && timeout=$(validate "$handler" Integer "timeout" "$1") && signalTimeout="$timeout" || return $? ;;
+    *) processIds+=("$(validate "$handler" Integer "processId" "$1")") || return $? ;;
     esac
     shift
   done
 
-  local elapsed lastSignal sinceLastSignal now
-  local timeout signalTimeout
-  local signals signal
+  local sinceLastSignal now
   local processIds aliveIds
   local requireFlag verboseFlag signals signal
   local STATUS_THRESHOLD=10
@@ -93,11 +79,12 @@ processWait() {
     throwArgument "$handler" "Requires at least one processId" || return $?
   fi
 
-  local start sendSignals sendSignals=("${signals[@]+"${signals[@]}"}") lastSignal=0 elapsed=0 processTemp
+  local sendSignals=("${signals[@]+"${signals[@]}"}") lastSignal=0
 
-  start=$(date +%s) || throwEnvironment "$handler" "date failed" || return $?
+  local start && start=$(catchReturn "$handler" date +%s) || return $?
 
-  processTemp=$(fileTemporaryName "$handler") || return $?
+  local sinceLastSignal
+  local processTemp && processTemp=$(fileTemporaryName "$handler") || return $?
   while [ ${#processIds[@]} -gt 0 ]; do
     catchEnvironment "$handler" _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
     # Reset aliveIds, load them from _processSignal
@@ -118,7 +105,7 @@ processWait() {
       break
     fi
     now=$(date +%s)
-    elapsed=$((now - start))
+    local elapsed=$((now - start))
     sinceLastSignal=$((now - lastSignal))
     if [ "$sinceLastSignal" -gt "$signalTimeout" ]; then
       if [ ${#sendSignals[@]} -gt 0 ]; then

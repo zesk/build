@@ -153,7 +153,7 @@ testCrontabApplicationSync() {
       decorate info "Home is $argument"
       ;;
     esac
-    shift || throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
+    shift
   done
 
   testEnv=$(fileTemporaryName "$handler")

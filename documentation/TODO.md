@@ -303,7 +303,7 @@ On a "2x" machine:
 - 31.729 testFileMatches
 - 28.134 testPackageAPI
 - 27.874 testAwsEnvironmentFromCredentials
-- 27.545 testIsUpToDate
+- 27.545 testDateExpired
 - 24.631 testWrapperShellScripts
 - 23.574 testColorBrightness
 - 21.886 testAWSExpiration

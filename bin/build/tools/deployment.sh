@@ -258,7 +258,7 @@ deployRemoteFinish() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
-    shift || throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
+    shift
   done
 
   local start width name deployArguments

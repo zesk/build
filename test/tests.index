@@ -246,7 +246,8 @@ testPHPBuild suite=php test/tools/php-tests.sh  tag=php-install tag=simple-php t
 testPHPComposerInstallation suite=php test/tools/php-tests.sh  tag=package-install
 testPHPComposerSetVersion suite=php test/tools/php-tests.sh
 testPHPInstallation suite=php test/tools/php-tests.sh  tag=package-install
-testIsUpToDate suite=pipeline test/tools/pipeline-tests.sh  tag=slow
+testDateExpired suite=pipeline test/tools/pipeline-tests.sh  tag=slow
+testDecorateExpired suite=pipeline test/tools/pipeline-tests.sh  tag=slow
 testVersionSort suite=pipeline test/tools/pipeline-tests.sh
 testCPUCount suite=platform test/tools/platform-tests.sh
 testExecutableExists suite=platform test/tools/platform-tests.sh

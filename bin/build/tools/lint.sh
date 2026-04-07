@@ -134,7 +134,7 @@ bashLintFiles() {
       checkedFiles+=("$(validate "$handler" File "checkFile" "$argument")") || return $?
       ;;
     esac
-    shift || throwArgument "$handler" "shift after $argument failed" || return $?
+    shift
   done
 
   catchReturn "$handler" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?

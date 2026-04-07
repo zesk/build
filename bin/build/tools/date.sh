@@ -293,7 +293,7 @@ dateExpired() {
       fi
       ;;
     esac
-    shift || throwArgument "$handler" "shift $argument" || return $?
+    shift
   done
   [ -n "$keyDate" ] || throwArgument "$handler" "missing keyDate" || return $?
   [ -n "$upToDateDays" ] || upToDateDays=90

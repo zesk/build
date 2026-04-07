@@ -997,7 +997,7 @@ __decorateExtensionQuoteProcessLine() {
 
 # <-- END of IDENTICAL decorate
 
-# IDENTICAL executeInputSupport 47
+# IDENTICAL executeInputSupport 48
 
 # Support arguments and stdin as arguments to an executor
 # DOC TEMPLATE: --help 1
@@ -1005,6 +1005,7 @@ __decorateExtensionQuoteProcessLine() {
 # Argument: executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
+# Requires: catchReturn bashDocumentation
 executeInputSupport() {
   local handler="$1" executor=() && shift
   if [ "$handler" = "--help" ]; then
@@ -1025,20 +1026,20 @@ executeInputSupport() {
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
-      catchEnvironment "$handler" "${executor[@]}" "" || return $?
+      catchReturn "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
       IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
-      catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
+      catchReturn "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done
   else
     if [ "${1-}" = "--" ]; then
       shift
     fi
-    catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
+    catchReturn "$handler" "${executor[@]}" "$@" || return $?
   fi
 }
 _executeInputSupport() {

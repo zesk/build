@@ -23,72 +23,49 @@ testVersionSort() {
 }
 
 # Tag: slow
-testIsUpToDate() {
-  local thisYear thisMonth expirationDays start testDate
+testDecorateExpired() {
+  __testExpirationFunction decorate expired || return $?
+}
 
-  start=$(timingStart)
-  __testSection "decorate expired testing: BUILD_DEBUG=${BUILD_DEBUG-}"
-  thisYear=$(($(date +%Y) + 0))
-  thisMonth="$(date +%m)"
-  assertExitCode --stderr-match "missing keyDate" 2 decorate expired || return $?
-  assertExitCode --stderr-ok 2 decorate expired "" || return $?
-  assertExitCode --stderr-ok 2 decorate expired 99999 || return $?
+# Tag: slow
+testDateExpired() {
+  __testExpirationFunction dateExpired || return $?
+}
 
-  testDate=2020-01-01
+__testExpirationFunction() {
+  local start && start=$(timingStart)
+  __testSection "$*: BUILD_DEBUG=${BUILD_DEBUG-}"
+  local thisYear && thisYear=$(($(date +%Y) + 0))
+  local thisMonth && thisMonth="$(date +%m)"
+  assertExitCode --stderr-match "missing keyDate" 2 "$@" || return $?
+  assertExitCode --stderr-ok 2 "$@" "" || return $?
+  assertExitCode --stderr-ok 2 "$@" 99999 || return $?
 
-  decorate info "2020: $testDate"
+  local testDate="2020-01-01"
 
-  assertNotExitCode 0 decorate expired $testDate 10 || return $?
+  decorate info "$*: $testDate"
+
+  assertNotExitCode 0 "$@" $testDate 10 || return $?
   testDate="$thisYear-01-01"
 
-  __testSection "ThisYear-01-01: $testDate"
+  __testSection "$*: ThisYear-01-01: $testDate"
 
-  expirationDays=367
-  assertNotExitCode --stderr-ok --line "$LINENO" 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=366
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=365
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-
-  __testSection "ThisYear-ThisMonth-01: $testDate"
+  local expirationDays && for expirationDays in 367 366 365 3650; do
+    assertExitCode 0 "$@" "$testDate" "$expirationDays" || return $?
+  done
+  __testSection "$*: ThisYear-ThisMonth-01: $testDate"
 
   testDate="$thisYear-$thisMonth-01"
   expirationDays=60
+  assertExitCode 0 "$@" "$testDate" "$expirationDays" || return $?
 
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-
-  testDate=$(dateToday)
-
-  __testSection "dateToday: $testDate"
-
-  expirationDays=0
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=1
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=2
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-
-  testDate=$(dateYesterday)
-
-  __testSection "dateYesterday: $testDate"
-
-  expirationDays=0
-  assertNotExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=1
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=2
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-
-  testDate=$(dateTomorrow)
-
-  __testSection "dateTomorrow: $testDate"
-
-  expirationDays=0
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=1
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-  expirationDays=2
-  assertExitCode 0 decorate expired "$testDate" "$expirationDays" || return $?
-
-  timingReport "$start" Done
+  local returnCode=1
+  for testDate in "$(dateYesterday)" "$(dateToday)" $(dateTomorrow); do
+    __testSection "$testDate"
+    for expirationDays in 0 1 2; do
+      assertExitCode "$returnCode" "$@" "$testDate" "$expirationDays" || return $?
+      returnCode=0
+    done
+  done
+  timingReport "$start" "$* Done"
 }

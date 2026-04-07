@@ -37,12 +37,10 @@ stringValidate() {
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  local text character
+  local text="${1-}" && shift || throwArgument "$handler" "missing text" || return $?
 
-  text="${1-}"
-  shift || throwArgument "$handler" "missing text" || return $?
   [ $# -gt 0 ] || throwArgument "$handler" "missing class" || return $?
-  for character in $(printf "%s" "$text" | grep -o .); do
+  local character && for character in $(printf "%s" "$text" | grep -o .); do
     if ! isCharacterClasses "$character" "$@"; then
       return 1
     fi

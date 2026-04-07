@@ -84,7 +84,7 @@ executeCount() {
       fi
       ;;
     esac
-    shift || throwArgument "$handler" shift || return $?
+    shift
   done
 
 }
@@ -276,10 +276,7 @@ serviceToPort() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --services)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      servicesFile=$(validate "$handler" File "servicesFile" "$1") || return $?
-      ;;
+    --services) shift && servicesFile=$(validate "$handler" File "servicesFile" "${1-}") || return $? ;;
     *)
       if [ ! -f "$servicesFile" ]; then
         catchEnvironment "$handler" serviceToStandardPort "$@" || return $?

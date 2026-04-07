@@ -120,17 +120,14 @@ dumpPipe() {
     --tail)
       endBinary="tail"
       ;;
-    --symbol)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      symbol="$1"
-      ;;
+    --symbol) shift && symbol="$(validate "$handler" EmptyString "$argument" "${1-}")" || return $? ;;
     --lines) shift && showLines=$(validate "$handler" UnsignedInteger "showLines" "$1") || return $? ;;
     *)
       names+=("$argument")
       break
       ;;
     esac
-    shift || throwArgument "$handler" shift || return $?
+    shift
   done
 
   if [ -z "$showLines" ]; then

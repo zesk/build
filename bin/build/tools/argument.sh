@@ -84,7 +84,7 @@ _arguments() {
       catchReturn "$handler" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || returnClean $? || return $?
       ;;
     esac
-    shift || throwArgument "$handler" "missing argument #$__index: $argument" || returnClean $? "${clean[@]}" || return $?
+    shift
   done
   stateFile=$(_commentArgumentsRemainder "$handler" "$spec" "$stateFile" "$@") || returnClean $? "${clean[@]}" || return $?
 
