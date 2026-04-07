@@ -33,7 +33,7 @@ __bashPromptModule_TermColors() {
       ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE is blank"
     fi
   else
-      ! $debug || statusMessage decorate info "$(decorate file "$home") -> $(decorate file "$otherHome")"
+    ! $debug || statusMessage decorate info "$(decorate file "$home") -> $(decorate file "$otherHome")"
   fi
   # Deprecated files
   for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do

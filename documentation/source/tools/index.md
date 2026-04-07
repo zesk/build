@@ -94,7 +94,7 @@
 - [Documentation](./documentation.md) – Bash documentation automatically and beautifully
 - [Hook API](./hook.md) – Application hooks let you change behavior across applications.
 - [Hooks](./hooks.md) – List of available or known hooks
-- [Identical](./identical.md) – The identical system to keep your code and source in perfect harmony
+- [Identical](./identical.md) – A system to keep your code and source in perfect harmony
 - [Installation](./install.md) – Install other software like `aws` or `python` using package managers or custom
   techniques.
 - [Utilities](./utilities.md) – Some handy utilities
@@ -151,7 +151,7 @@ We have added platform-generic installation names (see [packageGroupInstall](../
 The `tools.sh` shell is the only include you need in your scripts:
 
     # shellcheck source=/dev/null
-    . ./bin/build/tools.sh
+    source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh"
 
 (see `bin/build/identical/__tools.sh` for an error-reporting loader)
 
@@ -159,5 +159,5 @@ Once included, [all functions here](./all.md) are available for use.
 
 # New or Obsolete
 
-- [Obsolete](./unused.md)
 - [New uncategorized functions](./todo.md)
+- [Obsolete](./unused.md)

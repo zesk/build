@@ -15,13 +15,17 @@ Package names change between platforms. Use `packageGroupInstall` for generic cr
 ## Conditional installation
 
 {packageWhich}
+
 {packageWhichUninstall}
 
 ## Package management
 
 {packageUpdate}
+
 {packageUpgrade}
+
 {packageInstall}
+
 {packageUninstall}
 
 ## Package groups
@@ -29,19 +33,27 @@ Package names change between platforms. Use `packageGroupInstall` for generic cr
 A package group represents software which often is installed using different package manager names.
 
 {packageGroupWhich}
+
 {packageGroupInstall}
+
 {packageGroupUninstall}
+
 {packageMapping}
 
 ## Package lists
 
 {packageDefault}
+
 {packageIsInstalled}
+
 {packageInstalledList}
+
 {packageAvailableList}
 
 ## Package Utilities
 
 {packageManagerValid}
+
 {packageManagerDefault}
+
 {packageNeedRestartFlag}

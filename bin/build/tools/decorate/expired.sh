@@ -87,10 +87,10 @@ __decorateExtensionExpired() {
 
   local header && header="$(decorate warning "${name}expires on")"
   local days && days="$(localePluralWord "$expireDays" day days)"
-  if [ $expireDays -lt 14 ]; then
+  if [ "$expireDays" -lt 14 ]; then
     local reset && reset=$(decorate reset --)
     labeledBigText --prefix "$reset" --top --tween "$(decorate orange --)" "$header $(decorate code "$expireDate"), in " "$days"
-  elif [ $expireDays -lt 30 ]; then
+  elif [ "$expireDays" -lt 30 ]; then
     # decorate info "keyDate $keyDate"
     # decorate info "accessKeyTimestamp $accessKeyTimestamp"
     # decorate info "expireDate $expireDate"
