@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial \`--\`."$'\n'"-- - Alone after the executor forces \`stdin\` to be ignored. The \`--\` flag is also removed from the arguments passed to the executor."$'\n'"... - Any additional arguments are passed directly to the executor"$'\n'""
 base="sugar.sh"
 description="Support arguments and stdin as arguments to an executor"$'\n'""
 file="bin/build/tools/sugar.sh"
 fn="executeInputSupport"
-foundNames=([0]="argument")
-rawComment="Support arguments and stdin as arguments to an executor"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial \`--\`."$'\n'"Argument: -- - Alone after the executor forces \`stdin\` to be ignored. The \`--\` flag is also removed from the arguments passed to the executor."$'\n'"Argument: ... - Any additional arguments are passed directly to the executor"$'\n'""$'\n'""
+foundNames=([0]="argument" [1]="requires")
+rawComment="Support arguments and stdin as arguments to an executor"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial \`--\`."$'\n'"Argument: -- - Alone after the executor forces \`stdin\` to be ignored. The \`--\` flag is also removed from the arguments passed to the executor."$'\n'"Argument: ... - Any additional arguments are passed directly to the executor"$'\n'"Requires: catchReturn bashDocumentation"$'\n'""$'\n'""
+requires="catchReturn bashDocumentation"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
-sourceHash="6e42dd6d4eb3c031e99370af2ef0f7d61102e84f"
+sourceHash="6c1b25e84cf38f47c9e5d60da397593419cd5433"
 summary="Support arguments and stdin as arguments to an executor"
 summaryComputed="true"
 usage="executeInputSupport [ --help ] [ executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial \`--\`. ] [ -- ] [ ... ]"

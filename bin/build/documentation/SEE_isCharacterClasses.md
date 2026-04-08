@@ -1,1 +1,1 @@
-[isCharacterClasses]({rel}tools/character.md#ischaracterclasses) - Does this character match one or more character classes? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L85))
+[isCharacterClasses]({rel}tools/character.md#ischaracterclasses) - Does this character match one or more character classes? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L83))

@@ -1,1 +1,1 @@
-[gitPreCommitHasExtension]({rel}tools/git.md#gitprecommithasextension) - Does this commit have the following file extensions? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L950))
+[gitPreCommitHasExtension]({rel}tools/git.md#gitprecommithasextension) - Does this commit have the following file extensions? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L943))

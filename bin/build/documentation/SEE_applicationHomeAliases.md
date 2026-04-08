@@ -1,1 +1,2 @@
-[applicationHomeAliases]({rel}tools/application.md#applicationhomealiases) - Set aliases `G` and `g` default for `applicationHome` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L94))
+[applicationHomeAliases]({rel}tools/application.md#applicationhomealiases) - `applicationHome` bash aliases setup
+ ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L94))

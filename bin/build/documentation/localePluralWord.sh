@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="number - Number. Required. An integer or floating point number"$'\n'"singular - String. Required. The singular form of a noun"$'\n'"localePlural - String. Optional. The localePlural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'""
 base="text.sh"
@@ -13,7 +13,7 @@ foundNames=([0]="argument" [1]="example" [2]="stdout")
 rawComment="Plural word which includes the numeric prefix and the noun."$'\n'"Argument: number - Number. Required. An integer or floating point number"$'\n'"Argument: singular - String. Required. The singular form of a noun"$'\n'"Argument: localePlural - String. Optional. The localePlural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'"Example:     count=\$(fileLineCount \"\$foxSightings\") || return \$?"$'\n'"Example:     printf \"We saw %s.\\n\" \"\$(localePluralWord \"\$count\" fox foxes)\""$'\n'"stdout: \`String\`. The number (direct) and the localePlural form for non-1 values. e.g. \`\$(localePluralWord 2 potato potatoes)\` = \`2 potatoes\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="5f35ac6dcf31b9c284706fdda354d1d8408dde2c"
+sourceHash="7f4afd0db4aa281d91724f7bdc480865ea6088e9"
 stdout="\`String\`. The number (direct) and the localePlural form for non-1 values. e.g. \`\$(localePluralWord 2 potato potatoes)\` = \`2 potatoes\`"$'\n'""
 summary="Plural word which includes the numeric prefix and the noun."
 summaryComputed="true"

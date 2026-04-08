@@ -1,1 +1,1 @@
-[fileExtensionLists]({rel}tools/utilities.md#fileextensionlists) - Generates a directory containing files with `extension` as the file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L338))
+[fileExtensionLists]({rel}tools/utilities.md#fileextensionlists) - Generates a directory containing files with `extension` as the file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L335))

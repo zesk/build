@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="region ... - String. Required. The AWS Region to validate."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="aws.sh"
@@ -12,7 +12,7 @@ foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="checked")
 rawComment="Summary: Check an AWS region code for validity"$'\n'"Checks an AWS region identifier for validity as of September 2024."$'\n'"Note that passing no parameters returns success."$'\n'"Argument: region ... - String. Required. The AWS Region to validate."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - All regions are valid AWS region"$'\n'"Return Code: 1 - One or more regions are NOT a valid AWS region"$'\n'"Checked: 2024-09-02"$'\n'""$'\n'""
 return_code="0 - All regions are valid AWS region"$'\n'"1 - One or more regions are NOT a valid AWS region"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
-sourceHash="120633a085f92d8b58b296b7906b5ad3ec7811cf"
+sourceHash="16fc69e4b0e8bc369cc44854fd5c323db626923a"
 summary="Check an AWS region code for validity"$'\n'""
 usage="awsRegionValid region ... [ --help ]"
 # shellcheck disable=SC2016

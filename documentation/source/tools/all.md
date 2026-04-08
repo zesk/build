@@ -200,6 +200,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:dateTomorrow}
 - {SEE:dateToTimestamp}
 - {SEE:dateValid}
+- {SEE:dateWithinDays}
 - {SEE:dateYesterday}
 - {SEE:debuggingStack}
 - {SEE:decorate}
@@ -266,7 +267,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:documentationTemplateFunctionCompile}
 - {SEE:documentationTemplateUpdate}
 - {SEE:documentationUnlinked}
-- {SEE:dotEnvConfigure}
 - {SEE:dotFilesApproved}
 - {SEE:dotFilesApprovedFile}
 - {SEE:dumpBinary}
@@ -403,7 +403,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:hookSourceOptional}
 - {SEE:hookVersionCurrent}
 - {SEE:hookVersionLive}
-- {SEE:networkNameFull}
 - {SEE:hostTTFB}
 - {SEE:housekeeper}
 - {SEE:identicalCheck}
@@ -419,7 +418,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:interactiveOccasionally}
-- {SEE:networkIPLookup}
 - {SEE:isAlpine}
 - {SEE:isArray}
 - {SEE:isBashBuiltin}
@@ -448,7 +446,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:isType}
 - {SEE:isUnsignedInteger}
 - {SEE:isUnsignedNumber}
-- {SEE:decorate expired}
 - {SEE:isValidateType}
 - {SEE:isVersion}
 - {SEE:isVisualStudioCode}
@@ -525,7 +522,9 @@ All functions in Zesk Build, alphabetically.
 - {SEE:muzzle}
 - {SEE:muzzleReturn}
 - {SEE:networkIPList}
+- {SEE:networkIPLookup}
 - {SEE:networkMACAddressList}
+- {SEE:networkNameFull}
 - {SEE:nodeInstall}
 - {SEE:nodePackageManager}
 - {SEE:nodePackageManagerInstall}
@@ -657,6 +656,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:textTrimLeft}
 - {SEE:textTrimRight}
 - {SEE:textTrimTail}
+- {SEE:textVersionSort}
 - {SEE:throwArgument}
 - {SEE:throwEnvironment}
 - {SEE:timing}
@@ -687,7 +687,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:validateTypeList}
 - {SEE:versionNextMinor}
 - {SEE:versionNoVee}
-- {SEE:textVersionSort}
 - {SEE:websiteScrape}
 - {SEE:xdebugDisable}
 - {SEE:xdebugEnable}

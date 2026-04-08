@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="return_code" [1]="argument")
 rawComment="Fetches a list of tags from git and filters those which start with v and a digit and returns"$'\n'"them sorted by version correctly."$'\n'"Return Code: 1 - If the \`.git\` directory does not exist"$'\n'"Return Code: 0 - Success"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="1 - If the \`.git\` directory does not exist"$'\n'"0 - Success"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="39d6230492936d0e156da4e32557793909dfa40b"
+sourceHash="ef317634b04a01c8ac47c9c01567340a86b0e4b6"
 summary="Fetches a list of tags from git and filters those"
 summaryComputed="true"
 usage="gitVersionList [ --help ]"

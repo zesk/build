@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="colors.sh"
@@ -15,7 +15,7 @@ return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'
 see="stty"$'\n'""
 side_effect="MAY define two environment variables"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="3770972335552cd2776a277b8b4765f0d98baf44"
+sourceHash="fc21248154005d496fe709e58062054e9ea1b478"
 stdout="Integer"$'\n'""
 summary="Column count in current console"$'\n'""
 usage="consoleColumns [ --help ]"

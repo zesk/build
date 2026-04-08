@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="file ... - Optional. One or more files to get size of."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="return_code")
 rawComment="Argument: file ... - Optional. One or more files to get size of."$'\n'"stdin: File. One or more files to get size of."$'\n'"stdout: UnsignedInteger"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Environment error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="738fcd1771dc6ce03a870787b6db46f942c7ff09"
+sourceHash="7a68c870255c297437371bfaf0f2d87b4eae10f2"
 stdin="File. One or more files to get size of."$'\n'""
 stdout="UnsignedInteger"$'\n'""
 summary="undocumented"

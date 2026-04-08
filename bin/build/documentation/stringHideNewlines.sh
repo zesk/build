@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"text - String. Required. Text to replace."$'\n'"replace - String. Optional. Replacement string for newlines. Default is \`␤\`"$'\n'""
 base="text.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="argument" [2]="stdout")
 rawComment="Hide newlines in text (to ensure single-line output or other manipulation)"$'\n'"Summary: Replace newlines in text with a replacement token for single-line output"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: text - String. Required. Text to replace."$'\n'"Argument: replace - String. Optional. Replacement string for newlines. Default is \`␤\`"$'\n'"Without arguments, displays help."$'\n'"stdout: The text with the newline replaced with another character, suitable typically for single-line output"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="5f35ac6dcf31b9c284706fdda354d1d8408dde2c"
+sourceHash="7f4afd0db4aa281d91724f7bdc480865ea6088e9"
 stdout="The text with the newline replaced with another character, suitable typically for single-line output"$'\n'""
 summary="Replace newlines in text with a replacement token for single-line output"$'\n'""
 usage="stringHideNewlines [ --help ] text [ replace ]"

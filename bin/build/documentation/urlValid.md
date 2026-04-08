@@ -1,12 +1,12 @@
 ## `urlValid`
 
-> Checks if a URL is valid
+> Is a URL valid?
 
 ### Usage
 
     urlValid [ --help ] url ...
 
-Checks if a URL is valid
+Checks if a URL is syntactically valid - solely a text check.
 
 ### Arguments
 

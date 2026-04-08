@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="none"
 base="version.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="stdin" [1]="stdout")
 rawComment="Take one or more versions and strip the leading \`v\`"$'\n'"stdin: Versions containing a preceding \`v\` character (optionally)"$'\n'"stdout: Versions with the initial \`v\` (if it exists) removed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="c1acbc52b12338b1d0c8787ef16abe0dd2208468"
+sourceHash="c46a7ad1a2ce9c37037298181de3c3922434f9a1"
 stdin="Versions containing a preceding \`v\` character (optionally)"$'\n'""
 stdout="Versions with the initial \`v\` (if it exists) removed"$'\n'""
 summary="Take one or more versions and strip the leading \`v\`"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="platform.sh"
@@ -11,7 +11,7 @@ foundNames=([0]="summary" [1]="stdout" [2]="argument")
 rawComment="Summary: Return integer count of CPUs on this system"$'\n'"stdout: PositiveInteger"$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="6c7ce0643697f47fbac426fa33cc605998d45e4b"
+sourceHash="e33c50c2df0999389804156b51677eba562981be"
 stdout="PositiveInteger"$'\n'""
 summary="Return integer count of CPUs on this system"$'\n'""
 usage="cpuCount [ --handler handler ] [ --help ]"

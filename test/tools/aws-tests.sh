@@ -106,7 +106,7 @@ _isAWSKeyUpToDateTest() {
   if [ "$pass" = "true" ]; then
     assertExitCode --line "$line" 0 awsIsKeyUpToDate "$@" || return $?
   else
-    assertNotExitCode --line "$line" 0 awsIsKeyUpToDate "$@" || return $?
+    assertNotExitCode --stderr-ok --line "$line" 0 awsIsKeyUpToDate "$@" || return $?
   fi
 }
 
@@ -131,7 +131,7 @@ testAWSExpiration() {
 
   __testSection bad AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=99999
-  assertExitCode --stderr-match "Invalid date" 2 awsIsKeyUpToDate || return $?
+  assertExitCode --stderr-match "is not type" --stderr-match "Date" 2 awsIsKeyUpToDate || return $?
 
   __testSection OLD AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=2020-01-01

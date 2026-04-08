@@ -1,12 +1,12 @@
 ## `applicationHomeAliases`
 
-> Set aliases `G` and `g` default for `applicationHome`
+> `applicationHome` bash aliases setup
 
 ### Usage
 
     applicationHomeAliases [ goAlias ] [ setAlias ]
 
-Set aliases `G` and `g` default for `applicationHome`
+Set aliases `G` and `g` (defaults) to aliases of `applicationHome`
 Localize as you wish for your own shell
 
 ### Arguments

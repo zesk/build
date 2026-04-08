@@ -1,6 +1,6 @@
 ## `buildApplicationConfigure`
 
-> Set up a new project for Zesk Build
+> Configure project for Zesk Build
 
 ### Usage
 

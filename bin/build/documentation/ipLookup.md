@@ -1,25 +1,20 @@
 ## `ipLookup`
 
-> Get the current IP address of a host
+> undocumented
 
 ### Usage
 
-    ipLookup [ --help ]
+    ipLookup
 
-Get the current IP address of a host
+No documentation for `ipLookup`.
 
 ### Arguments
 
-- `--help` - Flag. Optional. Display this help.
+- none
 
 ### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-### Environment
-
-- {SEE:IP_URL.sh}
-- {SEE:IP_URL_FILTER.sh}
 

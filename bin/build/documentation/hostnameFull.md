@@ -1,12 +1,12 @@
 ## `hostnameFull`
 
-> Get the full hostname
+> undocumented
 
 ### Usage
 
     hostnameFull
 
-Get the full hostname
+No documentation for `hostnameFull`.
 
 ### Arguments
 

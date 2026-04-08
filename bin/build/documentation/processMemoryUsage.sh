@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="pid - Integer. Required. Process ID of running process"$'\n'""
 base="process.sh"
@@ -13,7 +13,7 @@ output="423"$'\n'""
 rawComment="Outputs value of resident memory used by a process, value is in kilobytes"$'\n'"Argument: pid - Integer. Required. Process ID of running process"$'\n'"Example:     > {fn} 23"$'\n'"Output: 423"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/process.sh"
-sourceHash="b6a9cfd5fce10dfb5d863a90e72c35d40b170092"
+sourceHash="9a9162fce05d86abc173c620c9416ff86fe4e013"
 summary="Outputs value of resident memory used by a process, value"
 summaryComputed="true"
 usage="processMemoryUsage pid"

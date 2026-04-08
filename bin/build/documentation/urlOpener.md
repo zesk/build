@@ -1,10 +1,10 @@
 ## `urlOpener`
 
-> Open URLs which appear in a stream
+> URL opener stream filter
 
 ### Usage
 
-    urlOpener [ --exec ]
+    urlOpener [ --exec ] [ --help ]
 
 Open URLs which appear in a stream
 (but continue to output the stream)
@@ -12,6 +12,7 @@ Open URLs which appear in a stream
 ### Arguments
 
 - `--exec` - Executable. Optional. If not supplied uses `urlOpen`.
+- `--help` - Flag. Optional. Display this help.
 
 ### Reads standard input
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. This help."$'\n'"--first - Flag. Optional. The first deployment has no prior version and can not be reverted."$'\n'"--revert - Flag. Optional. Means this is part of the undo process of a deployment."$'\n'"--home deployHome - Directory. Required. Path where the deployments database is on system."$'\n'"--id applicationId - String. Required. Should match \`APPLICATION_ID\` or \`APPLICATION_TAG\` in \`.env\` or \`.deploy/\`"$'\n'"--application applicationPath - FileDirectory. Required. Path on the  system where the application is live"$'\n'"--target targetPackage - Filename. Optional. Package name, defaults to \`BUILD_TARGET\`"$'\n'"--message message - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring."$'\n'""
 base="deploy.sh"
@@ -14,7 +14,7 @@ rawComment="Summary: Deploy an application from a deployment repository"$'\n'"Th
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="deployToRemote"$'\n'""
 sourceFile="bin/build/tools/deploy.sh"
-sourceHash="0dba533d3c624acbe70f69b4a92b652fb25d40d4"
+sourceHash="5a5eadb87fbfbe1607e28405b9f8a9b51d2cc067"
 summary="Deploy an application from a deployment repository"$'\n'""
 usage="deployApplication [ --help ] [ --first ] [ --revert ] --home deployHome --id applicationId --application applicationPath [ --target targetPackage ] [ --message message ]"
 use_hook="maintenance"$'\n'"deploy-shutdown"$'\n'"deploy-activate deploy-start deploy-finish"$'\n'""

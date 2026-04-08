@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
@@ -11,7 +11,7 @@ foundNames=()
 rawComment="List remote hosts for the current git repository"$'\n'"Parses \`user@host:path/project.git\` and extracts \`host\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="39d6230492936d0e156da4e32557793909dfa40b"
+sourceHash="ef317634b04a01c8ac47c9c01567340a86b0e4b6"
 summary="List remote hosts for the current git repository"
 summaryComputed="true"
 usage="gitRemoteHosts"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-08
 # shellcheck disable=SC2034
 apt_get="xxd"$'\n'""
 argument="none"
@@ -13,7 +13,7 @@ foundNames=([0]="depends" [1]="apt_get" [2]="stdin" [3]="stdout")
 rawComment="Dumps output as hex"$'\n'"Depends: xxd"$'\n'"apt-get: xxd"$'\n'"stdin: binary"$'\n'"stdout: formatted output set to ideal \`consoleColumns\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceHash="cf4b6700737aff4b802883d3a622b71bd7afb70d"
+sourceHash="63d0b744477aa020f81137dccf35c889f1754a76"
 stdin="binary"$'\n'""
 stdout="formatted output set to ideal \`consoleColumns\`"$'\n'""
 summary="Dumps output as hex"

@@ -1,1 +1,1 @@
-[colorNormalize]({rel}tools/decorate.md#colornormalize) - Redistribute color values to make brightness adjustments more balanced ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L560))
+[colorNormalize]({rel}tools/decorate.md#colornormalize) - Redistribute color values to make brightness adjustments more balanced ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L557))

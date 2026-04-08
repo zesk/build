@@ -19,7 +19,7 @@ You can also simply supply a list of port numbers, and mix and match: `--service
 --services service0,service1,- `...` - List. Required. List of services to add or remove (service names or port numbers)
 - `--id developerId` - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
 - `--group securityGroup` - String.  String. Required. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
-- `--ip ip` - IP. Optional. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+- `--ip ip` - IP. Optional. Specify bn IP manually (uses networkIPLookup tool from tools.sh by default)
 - `--revoke` - Flag. Optional. Remove permissions
 - `--help` - Flag. Optional. Show this help
 

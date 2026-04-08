@@ -170,7 +170,7 @@ _timingReport() {
 # Output timing like "1 day, 2 hours, 3 minutes, 4 seconds, 5 ms"
 # Argument: duration - UnsignedInteger. Optional. Timing to output
 # DOC TEMPLATE: --help 1
-# Argument: --stop unit - String. Optional. Stop computation and display at this unit.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.

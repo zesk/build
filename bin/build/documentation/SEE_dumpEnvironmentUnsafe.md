@@ -1,1 +1,1 @@
-[dumpEnvironmentUnsafe]({rel}tools/dump.md#dumpenvironmentunsafe) - Output the environment shamelessly (not secure, not recommended) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L348))
+[dumpEnvironmentUnsafe]({rel}tools/dump.md#dumpenvironmentunsafe) - Output the environment shamelessly (not secure, not recommended) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L345))

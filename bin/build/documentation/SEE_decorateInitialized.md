@@ -1,1 +1,1 @@
-[decorateInitialized]({rel}tools/decorate.md#decorateinitialized) - Is the decorate color system initialized yet? ([source](https://github.com/zesk/build/blob/main/bin/build/identical/decorate.sh#L128))
+[decorateInitialized]({rel}tools/decorate.md#decorateinitialized) - Is the decorate color system initialized yet? ([source](https://github.com/zesk/build/blob/main/bin/build/identical/decorate.sh#L132))
