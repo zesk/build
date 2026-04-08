@@ -11,7 +11,7 @@ foundNames=([0]="argument")
 rawComment="Format a timing output (milliseconds) as seconds using a decimal"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: delta - Integer. Milliseconds"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/timing.sh"
-sourceHash="f783345c9632fff6bf787e6f257d7886528addeb"
+sourceHash="2942709f6b6ce296179e8a702d5f43b585384afd"
 summary="Format a timing output (milliseconds) as seconds using a decimal"
 summaryComputed="true"
 usage="timingFormat [ --help ] [ delta ]"
