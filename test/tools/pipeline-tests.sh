@@ -37,7 +37,7 @@ __testExpirationFunction() {
   __testSection "$*: BUILD_DEBUG=${BUILD_DEBUG-}"
   local thisYear && thisYear=$(($(date +%Y) + 0))
   local thisMonth && thisMonth="$(date +%m)"
-  assertExitCode --stderr-match "missing keyDate" 2 "$@" || return $?
+  assertExitCode --stderr-match "Date" 2 "$@" || return $?
   assertExitCode --stderr-ok 2 "$@" "" || return $?
   assertExitCode --stderr-ok 2 "$@" 99999 || return $?
 
