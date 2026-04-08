@@ -247,7 +247,7 @@ _dateAdd() {
 # stdout: - UnsignedInteger. Days until expiration.
 # stdout: - UnsignedInteger. Expiration timestamp.
 #
-# This tool checks the `keyDate` and checks if it is within `upToDateDays` of today; if not this fails.
+# This tool checks the `keyDate` and checks if it is within `days` of today; if not this fails.
 #
 # It will also fail if:
 #
@@ -264,11 +264,11 @@ _dateAdd() {
 # Argument: --name name - String. Optional. Name of the expiring item for error messages.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Example:     if ! dateExpired "$AWS_ACCESS_KEY_DATE" 90; then
+# Example:     if ! dateWithinDays "$AWS_ACCESS_KEY_DATE" 90; then
 # Example:       decorate big Failed, update key and reset date
 # Example:       exit 99
 # Example:     fi
-dateExpired() {
+dateWithinDays() {
   local handler="_${FUNCNAME[0]}"
 
   local keyDate="" upToDateDays=""
@@ -304,13 +304,14 @@ dateExpired() {
   local expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
   local deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   local expireDays=$((deltaDays - upToDateDays))
+  expireDays=$((-expireDays))
+  catchReturn "$handler" printf -- "%d %s\n" "$expireDays" "$expireTimestamp" || return $?
   if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
     return 1
   fi
-  expireDays=$((-expireDays))
-  catchReturn "$handler" printf -- "%d %s\n" "$expireDays" "$expireTimestamp" || return $?
+  return 0
 }
-_dateExpired() {
+_dateWithinDays() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -36,7 +36,7 @@
 # Example:       decorate big Failed, update key and reset date
 # Example:       exit 99
 # Example:     fi
-# See: dateExpired
+# See: dateWithinDays
 __decorateExtensionExpired() {
   local handler="_${FUNCNAME[0]}"
 
@@ -50,10 +50,7 @@ __decorateExtensionExpired() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --name)
-      shift || :
-      name="$1"
-      ;;
+    --name) shift || name=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$keyDate" ]; then
         keyDate=$(validate "$handler" Date "keyDate" "$argument") || return $?
@@ -71,27 +68,28 @@ __decorateExtensionExpired() {
   [ -n "$upToDateDays" ] || upToDateDays=90
   [ -z "$name" ] || name="$name "
 
-  local expireDays expireTimestamp
-  if ! read -r expireDays expireTimestamp < <(dateExpired "$keyDate" "$upToDateDays"); then
-    local label timeText
-    label=$(printf "%s %s\n" "$(decorate error "${name}expired on ")" "$(decorate red "$keyDate")")
-    case "$expireDays" in
-    0) timeText="Today" ;;
-    1) timeText="Yesterday" ;;
-    *) timeText="$(localePluralWord "$expireDays" day) ago" ;;
-    esac
-    labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate red --)" "$label" "EXPIRED $timeText"
+  local tempResults && tempResults=$(fileTemporaryName "$handler") || return $?
+  local withinDays=0 && dateWithinDays "$keyDate" "$upToDateDays" >"$tempResults" || withinDays=$?
+  [ "$withinDays" -le 1 ] || returnClean "$withinDays" "$tempResults" || return "$withinDays"
+  read -r expireDays expireTimestamp <"$tempResults"
+  catchReturn "$handler" rm -rf "$tempResults" || return $?
+  if ! isInteger "$expireDays"; then
+    throwArgument "$handler" "Unable to compute expire days: \"$keyDate\" \"$upToDateDays\" $expireDays $expireTimestamp " || return $?
+  fi
+  local absDays=$expireDays && [ "$expireDays" -gt 0 ] || absDays=$((-expireDays))
+  local timePastSuffix=" ago" timeText && timeText="$(timingDuration --stop day "$((absDays * 24 * 60 * 60 * 1000))")"
+  case "$expireDays" in 0) timeText="Today" && timePastSuffix="" ;; "-1") timeText="Yesterday" && timePastSuffix="" ;; esac
+  if [ $withinDays -ne 0 ]; then
+    local label && label=$(printf "%s %s\n" "$(decorate error "${name}expired on ")" "$(decorate red "$keyDate")")
+    labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate red --)" "$label" "EXPIRED $timeText$timePastSuffix"
     return 1
   fi
 
-  isInteger "$expireDays" || throwEnvironment "$handler" "Expire days is not integer [\"$keyDate\" \"$upToDateDays\"] -> \"$expireDays\" \"$expireTimestamp\"" || return $?
   local expireDate && expireDate=$(dateFromTimestamp "$expireTimestamp" '%A, %B %d, %Y %R')
-
   local header && header="$(decorate warning "${name}expires on")"
-  local days && days="$(localePluralWord "$expireDays" day days)"
   if [ "$expireDays" -lt 14 ]; then
     local reset && reset=$(decorate reset --)
-    labeledBigText --prefix "$reset" --top --tween "$(decorate orange --)" "$header $(decorate code "$expireDate"), in " "$days"
+    labeledBigText --prefix "$reset" --top --tween "$(decorate orange --)" "$header $(decorate code "$expireDate"), in " "$timeText"
   elif [ "$expireDays" -lt 30 ]; then
     # decorate info "keyDate $keyDate"
     # decorate info "accessKeyTimestamp $accessKeyTimestamp"
@@ -100,7 +98,7 @@ __decorateExtensionExpired() {
       "$(decorate warning "${name}expires on")" \
       "$(decorate red "$expireDate")" \
       "$(decorate warning ", in")" \
-      "$(decorate magenta "$days")"
+      "$(decorate magenta "$timeText")"
     return 0
   fi
   return 0

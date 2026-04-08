@@ -170,13 +170,14 @@ _timingReport() {
 # Output timing like "1 day, 2 hours, 3 minutes, 4 seconds, 5 ms"
 # Argument: duration - UnsignedInteger. Optional. Timing to output
 # DOC TEMPLATE: --help 1
+# Argument: --stop unit - String. Optional. Stop computation and display at this unit.
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 timingDuration() {
   local handler="_${FUNCNAME[0]}"
 
-  local durations=()
+  local durations=() stopUnit=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -189,13 +190,14 @@ timingDuration() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --stop) shift && stopUnit=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     *) durations+=("$(validate "$handler" Number duration "$argument")") ;;
     esac
     shift
   done
 
-  local unitNames=("second" "minute" "hour" "day" "week")
-  local unitTotals=(60 60 24 7 52)
+  local unitNames=("second" "minute" "hour" "day" "week" "year")
+  local unitTotals=(60 60 24 7 52 1000)
   local duration && for duration in "${durations[@]}"; do
     if [ "$duration" -lt 1000 ]; then
       printf "%sms\n" "$duration"
@@ -206,10 +208,11 @@ timingDuration() {
         unitName=${unitNames[index]} unitTotal=${unitTotals[index]}
         if [ "$duration" -ge "$unitTotal" ]; then
           unitCount=$((duration % unitTotal))
-          if [ $unitCount -gt 0 ]; then
+          duration=$((duration / unitTotal))
+          if [ $unitCount -gt 0 ] && [ -z "$stopUnit" ]; then
             found=("$(localePluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")
           fi
-          duration=$((duration / unitTotal))
+          [ "$unitName" != "$stopUnit" ] || stopUnit=""
         else
           unitCount=$duration
           found=("$(localePluralWord "$unitCount" "$unitName")" "${found[@]+"${found[@]}"}")

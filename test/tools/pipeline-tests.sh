@@ -28,8 +28,8 @@ testDecorateExpired() {
 }
 
 # Tag: slow
-testDateExpired() {
-  __testExpirationFunction dateExpired || return $?
+testDateWithinDays() {
+  __testExpirationFunction dateWithinDays || return $?
 }
 
 __testExpirationFunction() {
@@ -45,7 +45,7 @@ __testExpirationFunction() {
 
   decorate info "$*: $testDate"
 
-  assertNotExitCode 0 "$@" $testDate 10 || return $?
+  assertNotExitCode --stderr-ok 0 "$@" $testDate 10 || return $?
   testDate="$thisYear-01-01"
 
   __testSection "$*: ThisYear-01-01: $testDate"
@@ -59,12 +59,13 @@ __testExpirationFunction() {
   expirationDays=60
   assertExitCode 0 "$@" "$testDate" "$expirationDays" || return $?
 
-  local returnCode=1
+  local returnCode=1 ss=(--stderr-ok)
   for testDate in "$(dateYesterday)" "$(dateToday)" $(dateTomorrow); do
     __testSection "$testDate"
     for expirationDays in 0 1 2; do
-      assertExitCode "$returnCode" "$@" "$testDate" "$expirationDays" || return $?
+      assertExitCode "${ss[@]+"${ss[@]}"}" "$returnCode" "$@" "$testDate" "$expirationDays" || return $?
       returnCode=0
+      ss=()
     done
   done
   timingReport "$start" "$* Done"
