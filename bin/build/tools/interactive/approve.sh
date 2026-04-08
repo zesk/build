@@ -13,7 +13,8 @@ __approveBashSource() {
   local handler="$1" && shift
 
   local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30)
-  local clearFlag=false deleteFlag=false reportFlag=false hh=()
+  local clearFlag=false deleteFlag=false reportFlag=false checkFlag=false hh=()
+  local approveCachePath=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -25,6 +26,7 @@ __approveBashSource() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --info) aa=(--info) ;;
+    --check) checkFlag=true ;;
     --no-info) aa=() ;;
     --clear) clearFlag=true ;;
     --verbose) verboseFlag=true ;;
@@ -33,24 +35,45 @@ __approveBashSource() {
     --prefix) shift && prefix="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     *)
       local sourcePath="$argument" verb=""
+      [ -n "$approveCachePath" ] || approveCachePath=$(__approveHome "$handler") || return $?
       displayPath="$(decorate file "$sourcePath")"
       if "$clearFlag"; then
-        __interactiveApproveClear "$handler" "$sourcePath" || return $?
+        __approveClear "$handler" "$sourcePath" || return $?
         ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
         approveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
         return 0
       fi
       if [ -f "$sourcePath" ]; then
         verb="file"
-        if __interactiveApprove "$handler" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+        if $checkFlag; then
+          __approveCacheFileValue "$handler" "$approveCachePath" "$sourcePath"
+          return $?
+        fi
+        if __approveRegisterCacheFile "$handler" "$sourcePath" "$approvedHome" "File" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           catchEnvironment "$handler" source "$sourcePath" || return $?
         else
           decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${handler#_} --clear \"$sourcePath\"")"
         fi
       elif [ -d "$sourcePath" ]; then
-        verb="path"
-        if __interactiveApprove "$handler" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+        local sourceFile approved=true
+        if $checkFlag; then
+          while read -r sourceFile; do
+            if ! __approveCacheFileValue "$handler" "$sourceFile" "$approvedHome" "$sourceFile" "${aa[@]+"${aa[@]}"}"; then
+              approved=false
+              break
+            fi
+          done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
+          $approved
+          return $?
+        fi
+        while read -r sourceFile; do
+          if ! __approveRegisterCacheFile "$handler" "$sourceFile" "$approvedHome" "File path" "$sourceFile" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+            approved=false
+            break
+          fi
+        done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
+        if $approved; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           catchEnvironment "$handler" bashSourcePath "$sourcePath" || return $?
         else
@@ -84,24 +107,15 @@ __approveBashSource() {
 # Argument: sourceFile - File. Required.
 # Argument: prompt - String. Optional.
 # Argument: ... - Arguments. Optional. Passed to `confirmYesNo`
-__interactiveApprove() {
+__approve() {
   local handler="$1" sourcePath="$2" approved displayFile approvedHome
 
   shift 2 || catchArgument "$handler" "shift" || return $?
-  approvedHome=$(__interactiveApproveHome "$handler") || return $?
+  approvedHome=$(__approveHome "$handler") || return $?
 
   if [ -d "$sourcePath" ]; then
     sourcePath="${sourcePath%/}"
-    local sourceFile approved=true
-    while read -r sourceFile; do
-      if ! __interactiveApproveRegisterCacheFile "$handler" "$sourceFile" "$approvedHome" "$@"; then
-        approved=false
-        break
-      fi
-    done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
     "$approved"
-  else
-    __interactiveApproveRegisterCacheFile "$handler" "$sourcePath" "$approvedHome" "$@"
   fi
 }
 
@@ -112,11 +126,11 @@ __interactiveApprove() {
 # Argument: approvedHome - Directory. Required.
 # Argument: verb - String. Required.
 # Argument: ... - Arguments. Passed to `confirmYesNo`.
-__interactiveApproveRegisterCacheFile() {
+__approveRegisterCacheFile() {
   local handler="$1" sourceFile="$2" approvedHome="$3" verb="$4" approved displayFile approvedHome
 
   shift 4
-  cacheFile="$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourceFile")"
+  cacheFile="$(__approveCacheFile "$handler" "$approvedHome" "$sourceFile")"
   displayFile=$(decorate file "$sourceFile")
   if [ ! -f "$cacheFile" ]; then
     if confirmYesNo "$@" "$verb $(decorate file "$sourcePath")?"; then
@@ -140,7 +154,7 @@ __interactiveApproveRegisterCacheFile() {
 
 # The home directory for the interactive approved state files
 # Argument: handler - Function. Required.
-__interactiveApproveHome() {
+__approveHome() {
   local handler="$1" approvedHome
   approvedHome=$(catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
   printf "%s\n" "$approvedHome"
@@ -151,32 +165,44 @@ __interactiveApproveHome() {
 # Argument: approvedHome - Directory. Required.
 # Argument: sourceFile - File. Required.
 # stdout: File. Cache file for `sourceFile`
-__interactiveApproveCacheFile() {
+__approveCacheFile() {
   local handler="$1" approvedHome="$2" sourceFile="$3" cacheFile
 
-  [ -f "$sourceFile" ] || throwArgument "$handler" "File does not exist: $sourceFile" || return $?
+  [ -d "$approvedHome" ] || throwArgument "$handler" "approvedHome does not exist: $approvedHome" || return $?
+  [ -f "$sourceFile" ] || throwArgument "$handler" "sourceFile does not exist: $sourceFile" || return $?
   cacheFile="$approvedHome/$(catchReturn "$handler" textSHA <"$sourceFile")" || return $?
   printf "%s\n" "$cacheFile"
 }
 
+# Get the cache approval value for a specific file
+# Argument: handler - Function. Required.
+# Argument: approvedHome - Directory. Required.
+# Argument: sourceFile - File. Required.
+# stdout: File. Cache file for `sourceFile`
+__approveCacheFileValue() {
+  local cacheFile && cacheFile=$(catchReturn "$1" __approveCacheFile "$@") || return $?
+  [ -f "$cacheFile" ] || return 3
+  local approved && approved=$(head -n 1 "$cacheFile")
+  isBoolean "$approved" || return 1
+  "$approved"
+}
+
 # Argument: handler - Function. Required.
 # Argument: approvedTarget - File. Required.
-__interactiveApproveClear() {
+__approveClear() {
   local handler="$1" sourcePath="$2"
 
   shift 2 || catchArgument "$handler" "shift" || return $?
-  approvedHome=$(__interactiveApproveHome "$handler") || return $?
+  approvedHome=$(__approveHome "$handler") || return $?
 
   if [ -d "$sourcePath" ]; then
     local sourceFile
     while read -r sourceFile; do
-      local cacheFile
-      cacheFile=$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourceFile") || return $?
+      local cacheFile && cacheFile=$(__approveCacheFile "$handler" "$approvedHome" "$sourceFile") || return $?
       [ ! -f "$cacheFile" ] || catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
     done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
   else
-    local cacheFile
-    cacheFile=$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourcePath") || return $?
+    local cacheFile && cacheFile=$(__approveCacheFile "$handler" "$approvedHome" "$sourcePath") || return $?
     [ ! -f "$cacheFile" ] || catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
   fi
 }
@@ -210,7 +236,7 @@ __approvedSources() {
 
   local home
 
-  home=$(__interactiveApproveHome "$handler") || return $?
+  home=$(__approveHome "$handler") || return $?
   local cacheFile unapprovedBashSources=() approvedBashSources=() handledFiles=() deleteFiles=()
   while read -r cacheFile; do
     local displayCacheFile
@@ -233,7 +259,7 @@ __approvedSources() {
 
       if [ -f "$name" ]; then
         local actualCacheFile
-        actualCacheFile=$(__interactiveApproveCacheFile "$handler" "$home" "$name") || return $?
+        actualCacheFile=$(__approveCacheFile "$handler" "$home" "$name") || return $?
         if [ "$actualCacheFile" != "$cacheFile" ]; then
           why+=("original file $displayName changed")
         fi

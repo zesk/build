@@ -53,7 +53,7 @@ __documentationTemplateUpdateUnlinked() {
 
   local unlinkedFunctions && unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   local clean=("$unlinkedFunctions")
-  catchReturn "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" __documentationIndexUnlinkedFunctions "$handler" "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
   local total && total=$(catchReturn "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals

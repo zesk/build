@@ -30,9 +30,9 @@ To install directly from the web:
     curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/{version}/bin/build/install-bin-build.sh" | bash
 
 Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **Zesk Build** as needed.
-It's not recommended that you commit `bin/build` to your source repository. You can lock to a version using
-`bin/build/install-bin-build.sh --version "$desiredVersion"`. **Zesk Build**'s installer will install the **most recent**
-version without the `--version` argument.
+Do *NOT* commit `bin/build` to your source repository – commit `install-bin-build.sh` and load it as needed. You can
+lock to a version using `install-bin-build.sh --version "$desiredVersion"`. **Zesk Build**'s installer will install
+the **most recent** version without the `--version` argument.
 
 ## Features
 

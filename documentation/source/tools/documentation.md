@@ -20,6 +20,8 @@
 
 {documentationIndexLookup}
 
+{documentationIndexUnlinkedFunctions}
+
 {documentationUnlinked}
 
 ## Generating documentation

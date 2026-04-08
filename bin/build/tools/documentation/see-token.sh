@@ -33,7 +33,7 @@ __documentationSeeTokenGenerate() {
 
   tokenCache=$(catchReturn "$handler" directoryRequire "$cacheDirectory/see/tokens") || return $?
   if [ "$matchingToken" != "${matchingToken//../}" ]; then
-    throwArgument "$handler" "Token contains invalid characters: $matchingToken" || return $?
+    throwEnvironment "$handler" "Token contains invalid characters: $matchingToken" || return $?
   fi
   local matchingTokenFile="${matchingToken//[^A-Za-z0-9]/_}"
   local tokenCacheFile="$tokenCache/$matchingTokenFile"

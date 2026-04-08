@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Time when a build was initiated, set upon first invocation if not already
+# Time when a build was initiated, set upon first invocation if not already.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Deployment
 # Type: Date

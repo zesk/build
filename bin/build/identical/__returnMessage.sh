@@ -20,9 +20,10 @@ returnMessage() {
   local handler="_${FUNCNAME[0]}"
   local code="${1:-1}" && shift 2>/dev/null
   if [ "$code" = "--help" ]; then "$handler" 0 && return; fi
-  isUnsignedInteger "$code" || returnMessage 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${handler#_} non-integer \"$code\"" "$@" || return $?
+  local trace="${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> "
+  isUnsignedInteger "$code" || returnMessage 2 "$trace${handler#_} non-integer \"$code\"" "$@" || return $?
   if [ "$code" -gt 0 ]; then
-    printf -- "%s %s\n" "❌ [$code]" "${*-§}" 1>&2
+    printf -- "%s%s %s\n" "❌ $trace" "[$code]" "${*-§}" 1>&2
   else
     printf -- "%s %s\n" "✅" "${*-§}"
   fi

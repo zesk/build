@@ -147,11 +147,13 @@ __documentationBuild() {
   clean+=("$envFile")
   _buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName" >"$envFile" || returnClean $? "${clean[@]}" || return $?
 
+  local unlinkedSource="$envFile.unlinkedTemplate"
   if [ -f "$unlinkedTemplate" ]; then
-    if [ "$actionFlag" = "--index-update" ] || [ -z "$actionFlag" ]; then
-      # First copy
-      catchReturn "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
+    # First copy
+    clean+=("$unlinkedSource")
+    catchReturn "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedSource" || returnClean $? "${clean[@]}" || return $?
 
+    if [ "$actionFlag" = "--index-update" ] || [ -z "$actionFlag" ]; then
       if [ "${#unlinkedSources[@]}" -gt 0 ]; then
         # Create or update indexes
         elapsed=$(timingStart)
@@ -163,20 +165,19 @@ __documentationBuild() {
   fi
 
   if [ "$actionFlag" = "--docs-update" ] || [ -z "$actionFlag" ]; then
-
     elapsed=$(timingStart)
     statusMessage decorate info "Compiling templates into documentation source ..."
     __documentationTemplateDirectoryCompile "$handler" "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]}" || return $?
     statusMessage --last timingReport "$elapsed" "Compiling templates into documentation source took"
 
   fi
-  if [ -n "$unlinkedTemplate" ]; then
+  if [ -n "$unlinkedTarget" ]; then
     if [ "$actionFlag" = "--unlinked-update" ] || [ -z "$actionFlag" ]; then
       ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
 
       elapsed=$(timingStart)
       statusMessage decorate info "Updating unlinked ..."
-      catchReturn "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTarget" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTarget" "$unlinkedSource" || returnClean $? "${clean[@]}" || return $?
       statusMessage --last timingReport "$elapsed" "Updated unlinked index in" || :
       catchReturn "$handler" environmentFileLoad "$envFile" --execute documentationTemplateCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$unlinkedTemplate" "$functionTemplate" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
       if [ "$actionFlag" = "--unlinked-update" ]; then

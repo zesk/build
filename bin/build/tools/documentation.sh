@@ -410,3 +410,14 @@ ___bashDocumentation_FindFunctionDefinitions() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# List functions without documentation pages.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+documentationIndexUnlinkedFunctions() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$(buildCacheDirectory)" "$@"
+}
+_documentationIndexUnlinkedFunctions() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

@@ -64,10 +64,12 @@ __buildDocumentationBuildDirectory() {
   aa+=(--source "$home/bin")
   aa+=(--target "$target")
 
+  catchReturn "$handler" cp "$home/documentation/template/todo.md" "$source/todo.md" || return $?
+
   aa+=(--template "$source")
   aa+=(--md-cache "$home/bin/build/documentation")
-  aa+=(--unlinked-source "$documentationSource")
-  aa+=(--unlinked-template "$home/documentation/template/todo.md" --unlinked-target "$target/todo.md")
+  aa+=(--unlinked-source "$source")
+  aa+=(--unlinked-template "$source/todo.md" --unlinked-target "$target/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
   aa+=(--see-prefix "./documentation/.docs")
   aa+=(--see-environment-link "/env/index.md")
@@ -143,11 +145,11 @@ __buildDocumentationBuildRelease() {
 # Argument: --reference - Flag. Enable reference file updates.
 # Argument: --no-reference - Flag. Disable reference file updates.
 # Argument: --reference-only - Flag. Reference file updates.
-# Argument: --mkdocs - Flag. Enable documentation generation.
-# Argument: --no-mkdocs - Flag. Disable documentation generation.
-# Argument: --mkdocs-only - Flag. Documentation generation only.
-# Argument: --see-update - Flag. Documentation generation only.
-# Argument: --index-update - Flag. Documentation generation only.
+# Argument: --mkdocs - Flag. Enable `mkdocs` generation.
+# Argument: --no-mkdocs - Flag. Disable `mkdocs` generation.
+# Argument: --mkdocs-only - Flag. `mkdocs` generation only.
+# Argument: --see-update - Flag. `SEE:` token updates
+# Argument: --index-update - Flag. Update documentation indexes.`
 # Argument: --docs-update - Flag. Documentation generation only.
 # Argument: --env-update - Flag. Just update env document.
 # Argument: --clean - Flag. Clean caches.
@@ -265,7 +267,7 @@ buildDocumentationBuild() {
 
     statusMessage --last decorate notice "Copying all non-tools ..."
     catchReturn "$handler" cp -f "$documentationSource/"*.md "$targetHome/" || return $?
-    for file in env guide images js release teach; do
+    for file in guide images js release teach; do
       statusMessage decorate notice "Copying $file ..."
       catchEnvironment "$handler" rm -rf "$targetHome/$file" || return $?
       cp -rf "$documentationSource/$file" "$targetHome/$file" || return $?
@@ -284,10 +286,10 @@ buildDocumentationBuild() {
 
     local targetEnv="$home/documentation/.docs/env/index.md"
     catchReturn "$handler" fileDirectoryRequire "$targetEnv" || return $?
-    catchReturn "$handler" cp "$home/documentation/source/env/index.md" "$targetEnv" || return $?
     ea=(--verbose
-      --source "$home/bin/build/env"
       --template-path "$home/documentation/template"
+      --source "$home/documentation/source/env/index.md"
+      --source-path "$home/bin/build/env"
       --target "$targetEnv"
       "${ea[@]+"${ea[@]}"}")
     catchReturn "$handler" documentationBuildEnvironment "${ea[@]+"${ea[@]}"}" || return $?

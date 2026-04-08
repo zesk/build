@@ -1,0 +1,1 @@
+[documentationIndexUnlinkedFunctions]({rel}#not-found-documentationIndexUnlinkedFunctions#documentationindexunlinkedfunctions) - List functions without documentation pages. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L416))

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# List of extensions for which build hooks may be written and run
+# List of extensions for which build hooks may be written and run.
 # Presence in this list simply means it may run, not that it is written or runs; add your own
 # `bin/hooks/pre-commit-XXX.sh` to handle a specific file type in your application.
 #
 # Currently:
+#
 # - `sh` - Bash
 # - `PHP` - PHP
 # - `js` - JavaScript
@@ -16,6 +17,7 @@
 # - `rs` - Rust
 # - `css` - CSS
 # - `less`, `sass`, `scss` - Compiled stylesheets
+#
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: List

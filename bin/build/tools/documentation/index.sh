@@ -120,12 +120,10 @@ _documentationIndexGenerate() {
 # List of functions which are not linked to anywhere in the documentation index
 #
 # Argument: cacheDirectory - Directory. Required. Index cache directory.
-_documentationIndexUnlinkedFunctions() {
-  local handler="_${FUNCNAME[0]}"
+__documentationIndexUnlinkedFunctions() {
+  local handler="$1" && shift
 
-  local cacheDirectory=""
-
-  local debugFlag=false
+  local cacheDirectory="" debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -138,6 +136,7 @@ _documentationIndexUnlinkedFunctions() {
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) debugFlag=true ;;
     *)
+      [ -z "$cacheDirectory" ] || throwArgument "$handler" "unknown #$__index/$__count: $argument" || return $?
       if ! cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$1"); then
         return $?
       fi
@@ -167,10 +166,6 @@ _documentationIndexUnlinkedFunctions() {
     dumpPipe --tail --lines 20 "code index" <"$tempFile.code" 1>&2
   fi
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-}
-__documentationIndexUnlinkedFunctions() {
-  # __IDENTICAL__ bashSimpleDocumentation 1
-  bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Compute the documentationPath for all functions defined in documentationPath

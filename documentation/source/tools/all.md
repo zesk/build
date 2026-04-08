@@ -260,6 +260,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:documentationBuildEnvironment}
 - {SEE:documentationIndexDocumentation}
 - {SEE:documentationIndexLookup}
+- {SEE:documentationIndexUnlinkedFunctions}
 - {SEE:documentationMkdocs}
 - {SEE:documentationTemplate}
 - {SEE:documentationTemplateCompile}

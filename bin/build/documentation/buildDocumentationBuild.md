@@ -20,11 +20,11 @@ Build the build documentation
 - `--reference` - Flag. Enable reference file updates.
 - `--no-reference` - Flag. Disable reference file updates.
 - `--reference-only` - Flag. Reference file updates.
-- `--mkdocs` - Flag. Enable documentation generation.
-- `--no-mkdocs` - Flag. Disable documentation generation.
-- `--mkdocs-only` - Flag. Documentation generation only.
-- `--see-update` - Flag. Documentation generation only.
-- `--index-update` - Flag. Documentation generation only.
+- `--mkdocs` - Flag. Enable `mkdocs` generation.
+- `--no-mkdocs` - Flag. Disable `mkdocs` generation.
+- `--mkdocs-only` - Flag. `mkdocs` generation only.
+- `--see-update` - Flag. `SEE:` token updates
+- `--index-update` - Flag. Update documentation indexes.`
 - `--docs-update` - Flag. Documentation generation only.
 - `--env-update` - Flag. Just update env document.
 - `--clean` - Flag. Clean caches.

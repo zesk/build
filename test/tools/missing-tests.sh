@@ -11,6 +11,7 @@ testEverythingElse() {
   # dockerComposeWrapper
   # plasterLines
 
+  # documentationIndexUnlinkedFunctions
   #  catchEnvironmentQuiet
   #  executeInputSupport
 

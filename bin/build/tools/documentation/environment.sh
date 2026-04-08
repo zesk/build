@@ -40,7 +40,7 @@ __documentationBuildEnvironment() {
   local handler="$1" && shift
 
   local cleanFlag=false forceFlag=false verboseFlag=false
-  local templatePath="" sources=() documentation="" target=""
+  local templatePath="" sources=() documentation="" target="" source=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -54,8 +54,9 @@ __documentationBuildEnvironment() {
     --clean) cleanFlag=true ;;
     --force) forceFlag=true ;;
     --verbose) verboseFlag=true ;;
-    --source) shift && sources+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $? ;;
-    --target) shift && target="$(validate "$handler" File "$argument" "${1-}")" || return $? ;;
+    --source-path) shift && sources+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $? ;;
+    --source) shift && source="$(validate "$handler" File "$argument" "${1-}")" || return $? ;;
+    --target) shift && target="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $? ;;
     --documentation) shift && documentation=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --template-path) shift && templatePath=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
@@ -79,10 +80,10 @@ __documentationBuildEnvironment() {
   [ -d "$documentation" ] || throwArgument "$handler" "Not a directory: $documentation" || return $?
 
   local argument
-  for argument in target templatePath; do
+  for argument in source target templatePath; do
     [ -n "${!argument-}" ] || throwArgument "$handler" "$argument is blank" || return $?
   done
-  [ "${#sources[@]}" -gt 0 ] || throwArgument "$handler" "--source is required" || return $?
+  [ "${#sources[@]}" -gt 0 ] || throwArgument "$handler" "--source-path is required" || return $?
 
   local targetDirectory
   targetDirectory=$(catchEnvironment "$handler" dirname "$target") || return $?
@@ -121,12 +122,23 @@ __documentationBuildEnvironment() {
 
   while IFS="" read -r item; do categories+=("$item"); done <"$cacheDirectory/categories"
 
+  local ee=() && while read -r envFile; do ee+=("$envFile"); done < <(local source && for source in "${sources[@]}"; do find "$source" -maxdepth 1 -type f -name "*.sh"; done)
+
+  if [ -f "$target" ] && ! $forceFlag; then
+    local ff=("$lineTemplate" "$moreTemplate" "$moreHeader" "$moreFooter")
+    if fileIsNewest "$target" "$source" "${ff[@]}" "${ee[@]+"${ee[@]}"}"; then
+      statusMessage decorate notice "Environment document $(decorate file "$target") is up to date."
+      return 0
+    fi
+  fi
+  catchReturn "$handler" cp "$source" "$target" || return $?
+
   statusMessage decorate info "Iterating through env files ..."
   catchEnvironment "$handler" cp "$cacheDirectory/categories" "$cacheDirectory/categories.unsorted" || return $?
   local settings
   settings="$cacheDirectory/.settings.$$"
 
-  while read -r envFile; do
+  [ "${#ee[@]}" -eq 0 ] || for envFile in "${ee[@]}"; do
     local envTarget name="${envFile##*/}"
 
     set -a # UNDO ok
@@ -165,7 +177,7 @@ __documentationBuildEnvironment() {
       category="$category" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget" || returnUndo $? set +a || return $?
     fi
     printf "%s\n" "$name" >>"$cacheDirectory/mores"
-  done < <(local source && for source in "${sources[@]}"; do find "$source" -maxdepth 1 -name "*.sh"; done)
+  done
   set +a
 
   catchEnvironment "$handler" sort -u <"$cacheDirectory/categories.unsorted" >"$cacheDirectory/categories" || return $?

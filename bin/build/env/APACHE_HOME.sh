@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Constant for the Apache configuration home directory
+# Constant for the Apache configuration home directory.
+# Default: /etc/apache2
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Vendor
 # Vendor: Apache

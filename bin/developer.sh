@@ -71,6 +71,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     catchReturn "$handler" colorScheme <"$home/etc/term-colors.conf" || return $?
 
+    approveBashSource --check "${BASH_SOURCE[0]}" || decorate warning "$(decorate file "${BASH_SOURCE[0]}") is not approved"
+
     # shellcheck disable=SC2139
     alias t="tools"
     alias '?'="__buildHelp"

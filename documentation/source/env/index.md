@@ -50,7 +50,7 @@ Project configuration variables:
 
 See also:
 
-- [`buildEnvironmentLoad`](../tools/build.md#buildEnvironmentLoad)
-- [`buildEnvironmentGet`](../tools/build.md#buildEnvironmentGet)
+- [`buildEnvironmentLoad`](../tools/build.md#buildenvironmentload)
+- [`buildEnvironmentGet`](../tools/build.md#buildenvironmentget)
 
 <!-- source/env/index.md is the original version of this file and the one which should be edited -->
