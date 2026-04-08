@@ -37,8 +37,8 @@ _arguments() {
   local stateFile checkFunction value clean required flags=() noneFlag=false
 
   ARGUMENTS="${ARGUMENTS-}"
-  shift || throwArgument "$_handler_" "Missing this" || return $?
-  shift || throwArgument "$_handler_" "Missing source" || return $?
+  local source && source=$(validate "$_handler_" "File" "source" "${1-}") && shift || return $?
+  local this && this=$(validate "$_handler_" "String" "this" "${1-}") && shift || return $?
   if [ "${1-}" = "--none" ]; then
     shift
     noneFlag=true

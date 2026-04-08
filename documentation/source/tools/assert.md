@@ -4,7 +4,7 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-These functions are solely available after you call `testSuite`. Check out our [testing guide](../guide/testing.md)
+Check out our [testing guide](../guide/testing.md)
 
 ## Equality
 
