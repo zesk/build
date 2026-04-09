@@ -150,9 +150,12 @@ __buildBuild() {
   ! $debugFlag || statusMessage decorate warning "Running identical ..."
   "$home/bin/build/repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
 
+  ! $debugFlag || statusMessage decorate warning "Running function build ..."
+  buildFunctionsCompile --derive buildFunctionSeeTemplate -- --derive buildFunctionMarkdownDocumentation -- || throwEnvironment "$handler" "Identical repair failed" || return $?
+
   if $makeDocumentation; then
     ! $debugFlag || statusMessage decorate warning "Updating documentation cache ..."
-    catchReturn "$handler" buildUsageCompile || return $?
+    catchReturn "$handler" buildFunctionsCompile || return $?
 
     local rootPath="$home/documentation/.site"
     local rootShow && rootShow=$(decorate file "$rootPath")

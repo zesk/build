@@ -1,1 +1,1 @@
-[gitMainly]({rel}tools/git.md#gitmainly) - Merge `staging` and `main` branches of a git repository into ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L571))
+[gitMainly]({rel}documentation/source/tools/git.md#gitmainly) - Merge \`staging\` and \`main\` branches of a git repository into ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L572))

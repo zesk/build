@@ -217,10 +217,10 @@ _documentationTemplateUpdate() {
 # Requires: catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
 # Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
 # Requires: mapEnvironment textSHA printf
-documentationTemplateCompile() {
+documentationTemplateFileCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_documentationTemplateCompile() {
+_documentationTemplateFileCompile() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -418,6 +418,28 @@ documentationIndexUnlinkedFunctions() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$(buildCacheDirectory)" "$@"
 }
 _documentationIndexUnlinkedFunctions() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Document a function and generate a function template (markdown). To custom format any
+# of the fields in this, write functions in the form `_documentationTemplateFormatter_${name}` such that
+# name matches the variable name (stringLowercase alphanumeric characters and underscores).
+#
+# Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
+# sample function `_documentationTemplateFormatter_return_code`.
+#
+# See: _documentationTemplateFormatter_return_code
+# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`
+# Argument: settingsFile - Required. Settings file to be loaded.
+# Return Code: 0 - Success
+# Return Code: 1 - Template file not found
+# Short description: Simple bash function documentation
+#
+documentationTemplateCompile() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationTemplateCompile() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

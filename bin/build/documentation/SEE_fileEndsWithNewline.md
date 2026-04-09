@@ -1,1 +1,1 @@
-[fileEndsWithNewline]({rel}tools/text.md#fileendswithnewline) - Does a file end with a newline or is empty? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L657))
+[fileEndsWithNewline]({rel}documentation/source/tools/text.md#fileendswithnewline) - Does a file end with a newline or is empty? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L658))

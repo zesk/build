@@ -1,1 +1,1 @@
-[daemontoolsIsRunning]({rel}tools/daemontools.md#daemontoolsisrunning) - Is daemontools running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L242))
+[daemontoolsIsRunning]({rel}documentation/source/tools/daemontools.md#daemontoolsisrunning) - Is daemontools running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L243))

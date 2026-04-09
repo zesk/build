@@ -1,1 +1,1 @@
-[mockConsoleAnimationStop]({rel}tools/assert.md#mockconsoleanimationstop) - Stop faking `consoleHasAnimation` for testing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1474))
+[mockConsoleAnimationStop]({rel}documentation/source/tools/assert.md#mockconsoleanimationstop) - Stop faking \`consoleHasAnimation\` for testing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1475))

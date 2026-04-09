@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-05
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="libraryRelativePath - RelativeFile. Required. Path of file to find from the home directory. Must also be executable."$'\n'"startDirectory - Directory. Optional. Place to start searching. Uses \`pwd\` if not specified."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -10,10 +10,13 @@ file="bin/build/tools/bash.sh"
 fn="bashLibraryHome"
 foundNames=([0]="summary" [1]="argument" [2]="stdout" [3]="example")
 libFound=""
+line="137"
+lowerFn="bashlibraryhome"
 rawComment="Summary: Output the home for a library in the parent path"$'\n'"This function searches for a library located at the current path and searches upwards until it is found."$'\n'"A simple example is \`bin/build/tools.sh\` for this library which will generally give you an application root if this library"$'\n'"is properly installed. You can use this for any application to find a library's home directory."$'\n'"Note that the \`libraryRelativePath\` given must be both executable and a file."$'\n'"Argument: libraryRelativePath - RelativeFile. Required. Path of file to find from the home directory. Must also be executable."$'\n'"Argument: startDirectory - Directory. Optional. Place to start searching. Uses \`pwd\` if not specified."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: Parent path where \`libraryRelativePath\` exists"$'\n'"Example:     libFound=\$(bashLibraryHome \"bin/watcher/server.py\")"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
 sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
+sourceLine="137"
 stdout="Parent path where \`libraryRelativePath\` exists"$'\n'""
 summary="Output the home for a library in the parent path"$'\n'""
 usage="bashLibraryHome libraryRelativePath [ startDirectory ] [ --help ]"
@@ -21,3 +24,4 @@ usage="bashLibraryHome libraryRelativePath [ startDirectory ] [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashLibraryHome'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mlibraryRelativePath'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ startDirectory ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mlibraryRelativePath  '$'\e''[[(value)]mRelativeFile. Required. Path of file to find from the home directory. Must also be executable.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mstartDirectory       '$'\e''[[(value)]mDirectory. Optional. Place to start searching. Uses '$'\e''[[(code)]mpwd'$'\e''[[(reset)]m if not specified.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help               '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''This function searches for a library located at the current path and searches upwards until it is found.'$'\n''A simple example is '$'\e''[[(code)]mbin/build/tools.sh'$'\e''[[(reset)]m for this library which will generally give you an application root if this library'$'\n''is properly installed. You can use this for any application to find a library'\''s home directory.'$'\n''Note that the '$'\e''[[(code)]mlibraryRelativePath'$'\e''[[(reset)]m given must be both executable and a file.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''Parent path where '$'\e''[[(code)]mlibraryRelativePath'$'\e''[[(reset)]m exists'$'\n'''$'\n''Example:'$'\n''    libFound=$(bashLibraryHome "bin/watcher/server.py")'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: bashLibraryHome libraryRelativePath [ startDirectory ] [ --help ]'$'\n'''$'\n''    libraryRelativePath  RelativeFile. Required. Path of file to find from the home directory. Must also be executable.'$'\n''    startDirectory       Directory. Optional. Place to start searching. Uses pwd if not specified.'$'\n''    --help               Flag. Optional. Display this help.'$'\n'''$'\n''This function searches for a library located at the current path and searches upwards until it is found.'$'\n''A simple example is bin/build/tools.sh for this library which will generally give you an application root if this library'$'\n''is properly installed. You can use this for any application to find a library'\''s home directory.'$'\n''Note that the libraryRelativePath given must be both executable and a file.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''Parent path where libraryRelativePath exists'$'\n'''$'\n''Example:'$'\n''    libFound=$(bashLibraryHome "bin/watcher/server.py")'$'\n'''
+documentationPath="documentation/source/tools/bash.md"

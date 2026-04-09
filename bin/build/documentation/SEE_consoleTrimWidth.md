@@ -1,2 +1,1 @@
-[consoleTrimWidth]({rel}tools/text.md#consoletrimwidth) - Truncate console output width
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L907))
+[consoleTrimWidth]({rel}documentation/source/tools/text.md#consoletrimwidth) - Truncate console output width"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L908))

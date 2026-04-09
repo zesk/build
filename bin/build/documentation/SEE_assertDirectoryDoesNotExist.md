@@ -1,2 +1,1 @@
-[assertDirectoryDoesNotExist]({rel}tools/assert.md#assertdirectorydoesnotexist) - Test that a directory does not exist
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L608))
+[assertDirectoryDoesNotExist]({rel}documentation/source/tools/assert.md#assertdirectorydoesnotexist) - Test that a directory does not exist"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L609))

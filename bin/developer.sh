@@ -10,7 +10,8 @@
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # Zesk Build Development
   # - `buildPR` - Open URL to a new Pull Request
-  # - `buildUsageCompile` - Compile the usage directory `./bin/build/documentation/`
+  # - `buildBuildFunctions` - Compile the usage directory `./bin/build/documentation/` and derived files.
+  # - `buildFunctionsCompile` - Compile the usage directory `./bin/build/documentation/` (just settings).
   # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
   # - `buildContainer image` - Load Zesk Build in a container image
   # - `buildBuildTiming` - Run the build with different setups to see which one is fastest
@@ -54,7 +55,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     iTerm2Image -i "$home/etc/zesk-build-icon.png"
 
     markdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
-
   }
   ___buildHelp() {
     # __IDENTICAL__ bashDocumentation 1
@@ -83,9 +83,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     muzzle buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors bashPromptModule_BuildProject
-    bashPrompt --skip-prompt --remove bashPromptModule_BuildProject 2>/dev/null || :
+    bashPrompt --skip-prompt --remove "bashPromptModule_""binBuild" 2>/dev/null || :
 
     pathConfigure --last "$home/bin" "$home/bin/build"
+    pathCleanDuplicates
 
     __buildHelp --cache
 
@@ -135,9 +136,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   }
   __buildBackground() {
     decorate warning backgroundProcess is still experimental
+    backgroundProcess --terminate 2>/dev/null || :
     backgroundProcess --new-only --stop 30 --wait 90 bin/build/tools.sh fingerprint --check -- bin/build/tools.sh fingerprint
     backgroundProcess --new-only --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
-    backgroundProcess --verbose --stop 30 --wait 90 bin/build/repair.sh --internal --check -- bin/build/repair.sh --internal
+    # backgroundProcess --verbose --stop 30 --wait 90 bin/build/repair.sh --internal --check -- bin/build/repair.sh --internal
   }
   __buildConfigure
 else

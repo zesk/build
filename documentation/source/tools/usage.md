@@ -30,6 +30,8 @@ Error handlers are internally written as the function name with an underscore pr
 
 {bashDocumentation}
 
+{bashDocumentationMarkdown}
+
 {bashSimpleDocumentation}
 
 ## Environment

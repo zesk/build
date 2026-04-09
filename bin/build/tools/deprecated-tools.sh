@@ -236,9 +236,9 @@ _deprecatedCannonFile() {
 # Find files which match a token or tokens
 # Return Code: 0 - One of the search tokens was found in a file (which matches find arguments)
 # Return Code: 1 - Search tokens were not found in any file (which matches find arguments)
-# Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
+# Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for `textCannon`.
 # Argument: search - String. Required. String to search for (one or more)
-# Argument: --path cannonPath - Directory. Optional. Run textCannon operation starting in this directory.
+# Argument: --path cannonPath - Directory. Optional. Run `textCannon` operation starting in this directory.
 # See: buildHome
 deprecatedFind() {
   local handler="_${FUNCNAME[0]}"

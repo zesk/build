@@ -1,1 +1,1 @@
-[deployRemoteFinish]({rel}tools/deploy.md#deployremotefinish) - This is **run on the remote system** after deployment; environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L214))
+[deployRemoteFinish]({rel}documentation/source/tools/deploy.md#deployremotefinish) - This is **run on the remote system** after deployment; environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L215))

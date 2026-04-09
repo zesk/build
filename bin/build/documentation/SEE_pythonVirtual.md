@@ -1,1 +1,1 @@
-[pythonVirtual]({rel}tools/python.md#pythonvirtual) - Set up a virtual environment for a project and install ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L299))
+[pythonVirtual]({rel}documentation/source/tools/python.md#pythonvirtual) - Set up a virtual environment for a project and install ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L300))

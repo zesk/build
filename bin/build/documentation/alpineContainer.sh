@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--env-file envFile - File. Optional. One or more environment files which are suitable to load for docker; must be valid"$'\n'"--env envVariable=envValue - File. Optional. One or more environment variables to set."$'\n'"--platform platform - String. Optional. Platform to run (arm vs intel)."$'\n'"extraArgs - Mixed. Optional. The first non-file argument to \`alpineContainer\` is passed directly through to \`docker run\` as arguments"$'\n'""
 base="apk.sh"
@@ -8,10 +8,13 @@ description="Open an Alpine container shell"$'\n'""
 file="bin/build/tools/apk.sh"
 fn="alpineContainer"
 foundNames=([0]="argument" [1]="return_code")
+line="50"
+lowerFn="alpinecontainer"
 rawComment="Open an Alpine container shell"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --env-file envFile - File. Optional. One or more environment files which are suitable to load for docker; must be valid"$'\n'"Argument: --env envVariable=envValue - File. Optional. One or more environment variables to set."$'\n'"Argument: --platform platform - String. Optional. Platform to run (arm vs intel)."$'\n'"Argument: extraArgs - Mixed. Optional. The first non-file argument to \`{fn}\` is passed directly through to \`docker run\` as arguments"$'\n'"Return Code: 1 - If already inside docker, or the environment file passed is not valid"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: Any - \`docker run\` error code is returned if non-zero"$'\n'""$'\n'""
 return_code="1 - If already inside docker, or the environment file passed is not valid"$'\n'"0 - Success"$'\n'"Any - \`docker run\` error code is returned if non-zero"$'\n'""
 sourceFile="bin/build/tools/apk.sh"
 sourceHash="0fdfcdc22ffc36f534c87d4fb2d8c20f3da04fa4"
+sourceLine="50"
 summary="Open an Alpine container shell"
 summaryComputed="true"
 usage="alpineContainer [ --help ] [ --env-file envFile ] [ --env envVariable=envValue ] [ --platform platform ] [ extraArgs ]"
@@ -19,3 +22,4 @@ usage="alpineContainer [ --help ] [ --env-file envFile ] [ --env envVariable=env
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]malpineContainer'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --env-file envFile ]'$'\e''[0m '$'\e''[[(blue)]m[ --env envVariable=envValue ]'$'\e''[0m '$'\e''[[(blue)]m[ --platform platform ]'$'\e''[0m '$'\e''[[(blue)]m[ extraArgs ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help                      '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--env-file envFile          '$'\e''[[(value)]mFile. Optional. One or more environment files which are suitable to load for docker; must be valid'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--env envVariable=envValue  '$'\e''[[(value)]mFile. Optional. One or more environment variables to set.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--platform platform         '$'\e''[[(value)]mString. Optional. Platform to run (arm vs intel).'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mextraArgs                   '$'\e''[[(value)]mMixed. Optional. The first non-file argument to '$'\e''[[(code)]malpineContainer'$'\e''[[(reset)]m is passed directly through to '$'\e''[[(code)]mdocker run'$'\e''[[(reset)]m as arguments'$'\e''[[(reset)]m'$'\n'''$'\n''Open an Alpine container shell'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If already inside docker, or the environment file passed is not valid'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]mAny'$'\e''[[(reset)]m - '$'\e''[[(code)]mdocker run'$'\e''[[(reset)]m error code is returned if non-zero'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: alpineContainer [ --help ] [ --env-file envFile ] [ --env envVariable=envValue ] [ --platform platform ] [ extraArgs ]'$'\n'''$'\n''    --help                      Flag. Optional. Display this help.'$'\n''    --env-file envFile          File. Optional. One or more environment files which are suitable to load for docker; must be valid'$'\n''    --env envVariable=envValue  File. Optional. One or more environment variables to set.'$'\n''    --platform platform         String. Optional. Platform to run (arm vs intel).'$'\n''    extraArgs                   Mixed. Optional. The first non-file argument to alpineContainer is passed directly through to docker run as arguments'$'\n'''$'\n''Open an Alpine container shell'$'\n'''$'\n''Return codes:'$'\n''- 1 - If already inside docker, or the environment file passed is not valid'$'\n''- 0 - Success'$'\n''- Any - docker run error code is returned if non-zero'$'\n'''
+documentationPath="documentation/source/tools/apk.md"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-08
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="oldSuffix - String. Required. Old suffix to look rename from."$'\n'"newSuffix - String. Required. New suffix to rename to."$'\n'"actionVerb - String. Required. Description to output for found files."$'\n'"file ... - String. Required. One or more files to rename, if found, renaming occurs."$'\n'""
 base="file.sh"
@@ -9,13 +9,17 @@ example="    filesRename \"\" \".\$\$.backup\" hiding etc/app.json etc/config.js
 file="bin/build/tools/file.sh"
 fn="filesRename"
 foundNames=([0]="summary" [1]="argument" [2]="example")
+line="30"
+lowerFn="filesrename"
 rawComment="Renames \"\$file0\$oldSuffix\" to \"\$file0\$newSuffix\" if file exists and outputs a message using the actionVerb"$'\n'"If files do not exist, does nothing"$'\n'"Used to move files, temporarily, sometimes and then move back easily."$'\n'"Renames files which have \`oldSuffix\` to then have \`newSuffix\` and output a message using \`actionVerb\`:"$'\n'"Summary: Rename a list of files usually to back them up temporarily"$'\n'"Argument: oldSuffix - String. Required. Old suffix to look rename from."$'\n'"Argument: newSuffix - String. Required. New suffix to rename to."$'\n'"Argument: actionVerb - String. Required. Description to output for found files."$'\n'"Argument: file ... - String. Required. One or more files to rename, if found, renaming occurs."$'\n'"Example:     {fn} \"\" \".\$\$.backup\" hiding etc/app.json etc/config.json"$'\n'"Example:     ..."$'\n'"Example:     {fn} \".\$\$.backup\" \"\" restoring etc/app.json etc/config.json"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="7a68c870255c297437371bfaf0f2d87b4eae10f2"
+sourceLine="30"
 summary="Rename a list of files usually to back them up temporarily"$'\n'""
 usage="filesRename oldSuffix newSuffix actionVerb file ..."
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfilesRename'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]moldSuffix'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mnewSuffix'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mactionVerb'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfile ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]moldSuffix   '$'\e''[[(value)]mString. Required. Old suffix to look rename from.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mnewSuffix   '$'\e''[[(value)]mString. Required. New suffix to rename to.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mactionVerb  '$'\e''[[(value)]mString. Required. Description to output for found files.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mfile ...    '$'\e''[[(value)]mString. Required. One or more files to rename, if found, renaming occurs.'$'\e''[[(reset)]m'$'\n'''$'\n''Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb'$'\n''If files do not exist, does nothing'$'\n''Used to move files, temporarily, sometimes and then move back easily.'$'\n''Renames files which have '$'\e''[[(code)]moldSuffix'$'\e''[[(reset)]m to then have '$'\e''[[(code)]mnewSuffix'$'\e''[[(reset)]m and output a message using '$'\e''[[(code)]mactionVerb'$'\e''[[(reset)]m:'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    filesRename "" ".$$.backup" hiding etc/app.json etc/config.json'$'\n''    ...'$'\n''    filesRename ".$$.backup" "" restoring etc/app.json etc/config.json'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: filesRename oldSuffix newSuffix actionVerb file ...'$'\n'''$'\n''    oldSuffix   String. Required. Old suffix to look rename from.'$'\n''    newSuffix   String. Required. New suffix to rename to.'$'\n''    actionVerb  String. Required. Description to output for found files.'$'\n''    file ...    String. Required. One or more files to rename, if found, renaming occurs.'$'\n'''$'\n''Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb'$'\n''If files do not exist, does nothing'$'\n''Used to move files, temporarily, sometimes and then move back easily.'$'\n''Renames files which have oldSuffix to then have newSuffix and output a message using actionVerb:'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    filesRename "" ".$$.backup" hiding etc/app.json etc/config.json'$'\n''    ...'$'\n''    filesRename ".$$.backup" "" restoring etc/app.json etc/config.json'$'\n'''
+documentationPath="documentation/source/tools/file.md"

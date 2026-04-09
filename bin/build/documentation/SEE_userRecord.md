@@ -1,2 +1,1 @@
-[userRecord]({rel}tools/platform.md#userrecord) - Quick user database look up
- ([source](https://github.com/zesk/build/blob/main/bin/build/identical/daemontools-log.sh#L70))
+[userRecord]({rel}documentation/source/tools/user.md#userrecord) - Quick user database look up"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L38))

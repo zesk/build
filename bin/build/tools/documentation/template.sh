@@ -181,27 +181,30 @@ __documentationUnlinked() {
   catchReturn "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
 }
 
-# See: bashDocumentFunction
-# Document a function and generate a function template (markdown). To custom format any
-# of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}` such that
-# name matches the variable name (stringLowercase alphanumeric characters and underscores).
-#
-# Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
-# sample function `_bashDocumentationFormatter_return_code`.
-#
-# See: _bashDocumentationFormatter_return_code
-# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`
-# Argument: settingsFile - Required. Settings file to be loaded.
-# Return Code: 0 - Success
-# Return Code: 1 - Template file not found
-# Short description: Simple bash function documentation
-#
-_bashDocumentation_Template() {
+__documentationTemplateCompile() {
   local saved=("$@")
   local handler="$1" && shift
-  local template="$1" && shift
 
-  [ -f "$template" ] || throwArgument "$handler" "Template $template not found" || return $?
+  local template=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *)
+      template=$(validate "$handler" File "template" "$argument") && shift && break || return $?
+      ;;
+    esac
+    shift
+  done
+  [ -n "$template" ] || throwArgument "$handler" "template is required" || return $?
+
   # monitor off - not sure why here but let's leave it for now - KMD 2025-12
   set +m
   (
@@ -217,7 +220,7 @@ _bashDocumentation_Template() {
     while read -r token; do
       local value="${!token-}"
       if [ -n "$value" ]; then
-        formatter="_bashDocumentationFormatter_${token}"
+        formatter="_documentationTemplateFormatter_${token}"
         if isFunction "$formatter"; then
           : # printf "%s\n" "Running $formatter on $token" 1>&2
           declare -x "$token"="$(printf "%s\n" "${!token}" | "$formatter")"

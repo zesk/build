@@ -1,1 +1,1 @@
-[buildEnvironmentNames]({rel}tools/build.md#buildenvironmentnames) - Output the list of environment variable names which can be ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L193))
+[buildEnvironmentNames]({rel}documentation/source/tools/build.md#buildenvironmentnames) - Output the list of environment variable names which can be ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L194))

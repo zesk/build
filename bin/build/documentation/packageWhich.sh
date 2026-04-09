@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"binary - String. Required. The binary to look for"$'\n'"packageName ... - String. Optional. The package name to install if the binary is not found in the \`\$PATH\`. If not supplied uses the same name as the binary."$'\n'""
 base="package.sh"
@@ -10,13 +10,17 @@ example="    packageWhich mariadb mariadb-client"$'\n'""
 file="bin/build/tools/package.sh"
 fn="packageWhich"
 foundNames=([0]="summary" [1]="example" [2]="argument" [3]="environment")
+line="233"
+lowerFn="packagewhich"
 rawComment="Installs an apt package if a binary does not exist in the which path."$'\n'"The assumption here is that \`packageInstallPackage\` will install the desired \`binary\`."$'\n'"Confirms that \`binary\` is installed after installation succeeds."$'\n'"Summary: Install tools using \`apt-get\` if they are not found"$'\n'"Example:     packageWhich mariadb mariadb-client"$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: binary - String. Required. The binary to look for"$'\n'"Argument: packageName ... - String. Optional. The package name to install if the binary is not found in the \`\$PATH\`. If not supplied uses the same name as the binary."$'\n'"Environment: Technically this will install the binary and any related files as a package."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
 sourceHash="06e25fa25995eb0e6d2d2931f09e11b0a6055bee"
+sourceLine="233"
 summary="Install tools using \`apt-get\` if they are not found"$'\n'""
 usage="packageWhich [ --manager packageManager ] binary [ packageName ... ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mpackageWhich'$'\e''[0m '$'\e''[[(blue)]m[ --manager packageManager ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mbinary'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ packageName ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--manager packageManager  '$'\e''[[(value)]mString. Optional. Package manager to use. (apk, apt, brew)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mbinary                    '$'\e''[[(value)]mString. Required. The binary to look for'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mpackageName ...           '$'\e''[[(value)]mString. Optional. The package name to install if the binary is not found in the '$'\e''[[(code)]m$PATH'$'\e''[[(reset)]m. If not supplied uses the same name as the binary.'$'\e''[[(reset)]m'$'\n'''$'\n''Installs an apt package if a binary does not exist in the which path.'$'\n''The assumption here is that '$'\e''[[(code)]mpackageInstallPackage'$'\e''[[(reset)]m will install the desired '$'\e''[[(code)]mbinary'$'\e''[[(reset)]m.'$'\n''Confirms that '$'\e''[[(code)]mbinary'$'\e''[[(reset)]m is installed after installation succeeds.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- Technically this will install the binary and any related files as a package.'$'\n'''$'\n''Example:'$'\n''    packageWhich mariadb mariadb-client'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: packageWhich [ --manager packageManager ] binary [ packageName ... ]'$'\n'''$'\n''    --manager packageManager  String. Optional. Package manager to use. (apk, apt, brew)'$'\n''    binary                    String. Required. The binary to look for'$'\n''    packageName ...           String. Optional. The package name to install if the binary is not found in the $PATH. If not supplied uses the same name as the binary.'$'\n'''$'\n''Installs an apt package if a binary does not exist in the which path.'$'\n''The assumption here is that packageInstallPackage will install the desired binary.'$'\n''Confirms that binary is installed after installation succeeds.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- Technically this will install the binary and any related files as a package.'$'\n'''$'\n''Example:'$'\n''    packageWhich mariadb mariadb-client'$'\n'''
+documentationPath="documentation/source/tools/package.md"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-08
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--exclude path - String. Optional. Exclude paths which contain this string"$'\n'"--exec binary - Executable. Optional. For each failed file run this command."$'\n'"directory - Directory. Optional. Where to search for files to check."$'\n'"--list - Flag. Optional. List files which fail. (Default is simply to exit silently.)"$'\n'""
 base="lint.sh"
@@ -8,10 +8,13 @@ description="Search bash files for assertions which do not terminate a function 
 file="bin/build/tools/lint.sh"
 fn="bashFindUncaughtAssertions"
 foundNames=([0]="argument")
+line="291"
+lowerFn="bashfinduncaughtassertions"
 rawComment="Search bash files for assertions which do not terminate a function and are likely an error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --exclude path - String. Optional. Exclude paths which contain this string"$'\n'"Argument: --exec binary - Executable. Optional. For each failed file run this command."$'\n'"Argument: directory - Directory. Optional. Where to search for files to check."$'\n'"Argument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/lint.sh"
 sourceHash="c878e1e25a7b6f85bec3d207ceb30844a60a0856"
+sourceLine="291"
 summary="Search bash files for assertions which do not terminate a"
 summaryComputed="true"
 usage="bashFindUncaughtAssertions [ --help ] [ --handler handler ] [ --exclude path ] [ --exec binary ] [ directory ] [ --list ]"
@@ -19,3 +22,4 @@ usage="bashFindUncaughtAssertions [ --help ] [ --handler handler ] [ --exclude p
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashFindUncaughtAssertions'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m '$'\e''[[(blue)]m[ --exclude path ]'$'\e''[0m '$'\e''[[(blue)]m[ --exec binary ]'$'\e''[0m '$'\e''[[(blue)]m[ directory ]'$'\e''[0m '$'\e''[[(blue)]m[ --list ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--handler handler  '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--exclude path     '$'\e''[[(value)]mString. Optional. Exclude paths which contain this string'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--exec binary      '$'\e''[[(value)]mExecutable. Optional. For each failed file run this command.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mdirectory          '$'\e''[[(value)]mDirectory. Optional. Where to search for files to check.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--list             '$'\e''[[(value)]mFlag. Optional. List files which fail. (Default is simply to exit silently.)'$'\e''[[(reset)]m'$'\n'''$'\n''Search bash files for assertions which do not terminate a function and are likely an error'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: bashFindUncaughtAssertions [ --help ] [ --handler handler ] [ --exclude path ] [ --exec binary ] [ directory ] [ --list ]'$'\n'''$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    --exclude path     String. Optional. Exclude paths which contain this string'$'\n''    --exec binary      Executable. Optional. For each failed file run this command.'$'\n''    directory          Directory. Optional. Where to search for files to check.'$'\n''    --list             Flag. Optional. List files which fail. (Default is simply to exit silently.)'$'\n'''$'\n''Search bash files for assertions which do not terminate a function and are likely an error'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/test.md"

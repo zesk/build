@@ -1,2 +1,1 @@
-[urlParseItem]({rel}tools/url.md#urlparseitem) - Get a URL component directly
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L186))
+[urlParseItem]({rel}documentation/source/tools/url.md#urlparseitem) - Get a URL component directly"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L187))

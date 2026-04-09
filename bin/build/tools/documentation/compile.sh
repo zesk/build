@@ -8,7 +8,7 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-__documentationTemplateCompile() {
+__documentationTemplateFileCompile() {
   local handler="$1" && shift
 
   local start
@@ -201,7 +201,7 @@ __documentationTemplateSettingsCompile() {
     [ -n "${!argument}" ] || throwArgument "$handler" "Requires argument $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
   done
 
-  _bashDocumentation_Template "$handler" "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
+  __documentationTemplateCompile "$handler" "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 
 __documentationTemplateFunctionCompile() {
@@ -235,14 +235,12 @@ __documentationTemplateFunctionCompile() {
   done
 
   # Validate arguments
-  local argument
-  for argument in functionName functionTemplate; do
+  local argument && for argument in functionName functionTemplate; do
     [ -n "${!argument}" ] || throwArgument "$handler" "Requires argument $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
   done
 
-  local settingsFile
-  settingsFile=$(catchReturn "$handler" __documentationIndexLookup "$handler" "$functionName") || return $?
-  _bashDocumentation_Template "$handler" "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
+  local settingsFile && settingsFile=$(catchReturn "$handler" __documentationIndexLookup "$handler" "$functionName") || return $?
+  __documentationTemplateCompile "$handler" "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 
 __documentationTemplateDirectoryCompile() {
@@ -286,8 +284,7 @@ __documentationTemplateDirectoryCompile() {
   # IDENTICAL startBeginTiming 1
   local start && start=$(timingStart) || return $?
 
-  local argument
-  for argument in cacheDirectory templateDirectory functionTemplate targetDirectory; do
+  local argument && for argument in cacheDirectory templateDirectory functionTemplate targetDirectory; do
     [ -n "${!argument}" ] || throwArgument "$handler" "Need $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
   done
 
@@ -298,13 +295,13 @@ __documentationTemplateDirectoryCompile() {
     decorate pair targetDirectory "$targetDirectory"
   fi
 
-  local exitCode=0 fileCount=0 templateFile=""
-  while read -r templateFile; do
+  local exitCode=0 fileCount=0
+  local templateFile="" && while read -r templateFile; do
     local base="${templateFile#"$templateDirectory/"}"
     [ "$base" != "$templateFile" ] || throwEnvironment "$handler" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
     local targetFile="$targetDirectory/$base"
     ! $verboseFlag || statusMessage decorate info Compiling "$templateFile"
-    if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
+    if ! documentationTemplateFileCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then
       decorate error "Failed to generate $targetFile" 1>&2
       exitCode=1
       break

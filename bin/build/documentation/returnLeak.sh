@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
@@ -8,13 +8,17 @@ description="Return code is \`leak\`"$'\n'""
 file="bin/build/tools/test.sh"
 fn="returnLeak"
 foundNames=([0]="summary" [1]="return_code")
+line="1518"
+lowerFn="returnleak"
 rawComment="Summary: Leak return code"$'\n'"Return code is \`leak\`"$'\n'"Return Code: 108"$'\n'""$'\n'""
 return_code="108"$'\n'""
 sourceFile="bin/build/tools/test.sh"
 sourceHash="a67c5b2c2396821f4e070140f0dabed2cde8ea23"
+sourceLine="1518"
 summary="Leak return code"$'\n'""
 usage="returnLeak"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnLeak'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]mleak'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: returnLeak'$'\n'''$'\n''Return code is leak'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
+documentationPath="documentation/source/tools/assert.md"

@@ -32,7 +32,11 @@
 
 {documentationTemplateFunctionCompile}
 
+{documentationTemplateFileCompile}
+
 {documentationTemplateDirectoryCompile}
+
+{bashDocumentationTemplate}
 
 ## `mkdocs` Tools
 

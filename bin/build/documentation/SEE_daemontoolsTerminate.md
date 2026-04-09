@@ -1,1 +1,1 @@
-[daemontoolsTerminate]({rel}tools/daemontools.md#daemontoolsterminate) - Terminate daemontools as gracefully as possible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L331))
+[daemontoolsTerminate]({rel}documentation/source/tools/daemontools.md#daemontoolsterminate) - Terminate daemontools as gracefully as possible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L332))

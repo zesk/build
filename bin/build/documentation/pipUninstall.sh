@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"pipPackage [ ... ] - String. Required. Pip package name to uninstall."$'\n'""
 base="python.sh"
@@ -8,10 +8,13 @@ description="Utility to uninstall python dependencies via pip"$'\n'""
 file="bin/build/tools/python.sh"
 fn="pipUninstall"
 foundNames=([0]="argument")
+line="137"
+lowerFn="pipuninstall"
 rawComment="Utility to uninstall python dependencies via pip"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: pipPackage [ ... ] - String. Required. Pip package name to uninstall."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/python.sh"
 sourceHash="76ef1bab7d4e571a0f70f466c3650c365d9ea30f"
+sourceLine="137"
 summary="Utility to uninstall python dependencies via pip"
 summaryComputed="true"
 usage="pipUninstall [ --help ] [ --handler handler ] pipPackage [ ... ]"
@@ -19,3 +22,4 @@ usage="pipUninstall [ --help ] [ --handler handler ] pipPackage [ ... ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mpipUninstall'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mpipPackage [ ... ]'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help              '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--handler handler   '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mpipPackage [ ... ]  '$'\e''[[(value)]mString. Required. Pip package name to uninstall.'$'\e''[[(reset)]m'$'\n'''$'\n''Utility to uninstall python dependencies via pip'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: pipUninstall [ --help ] [ --handler handler ] pipPackage [ ... ]'$'\n'''$'\n''    --help              Flag. Optional. Display this help.'$'\n''    --handler handler   Function. Optional. Use this error handler instead of the default error handler.'$'\n''    pipPackage [ ... ]  String. Required. Pip package name to uninstall.'$'\n'''$'\n''Utility to uninstall python dependencies via pip'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/python.md"

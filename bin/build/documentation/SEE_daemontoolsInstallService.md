@@ -1,1 +1,1 @@
-[daemontoolsInstallService]({rel}tools/daemontools.md#daemontoolsinstallservice) - Install a daemontools service which runs a binary as the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L53))
+[daemontoolsInstallService]({rel}documentation/source/tools/daemontools.md#daemontoolsinstallservice) - Install a daemontools service which runs a binary as the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L54))

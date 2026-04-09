@@ -1,1 +1,1 @@
-[identicalWatch]({rel}tools/identical.md#identicalwatch) - Watch a project for changes and propagate them immediately upon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L142))
+[identicalWatch]({rel}documentation/source/tools/identical.md#identicalwatch) - Watch a project for changes and propagate them immediately upon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L143))

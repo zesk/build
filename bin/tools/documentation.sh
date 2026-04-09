@@ -3,7 +3,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-_bashDocumentationFormatter_builtin() {
+_documentationTemplateFormatter_builtin() {
   local eof=false && while ! $eof; do
     local tokens=() && IFS=" " read -d $'\n' -r -a tokens || eof=true
     [ "${#tokens[@]}" -eq 0 ] || local token && for token in "${tokens[@]}"; do

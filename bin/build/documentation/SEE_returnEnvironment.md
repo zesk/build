@@ -1,1 +1,1 @@
-[returnEnvironment]({rel}tools/sugar-core.md#returnenvironment) - Return `environment` error code. Outputs `message ...` to `stderr`. ([source](https://github.com/zesk/build/blob/main/bin/build/identical/_errors.sh#L23))
+[returnEnvironment]({rel}documentation/source/tools/sugar-core.md#returnenvironment) - Return \`environment\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L264))

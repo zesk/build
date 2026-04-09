@@ -1,1 +1,1 @@
-[deployNextVersion]({rel}tools/deploy.md#deploynextversion) - Get the next version of the supplied version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L176))
+[deployNextVersion]({rel}documentation/source/tools/deploy.md#deploynextversion) - Get the next version of the supplied version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L177))

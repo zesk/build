@@ -1,2 +1,1 @@
-[validate]({rel}tools/validate.md#validate) - Validate a value by type
- ([source](https://github.com/zesk/build/blob/main/bin/build/identical/validate.sh#L93))
+[validate]({rel}documentation/source/tools/validate.md#validate) - Validate a value by type"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L94))

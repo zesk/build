@@ -1,1 +1,1 @@
-[returnArgument]({rel}tools/sugar-core.md#returnargument) - Return `argument` error code. Outputs `message ...` to `stderr`. ([source](https://github.com/zesk/build/blob/main/bin/build/identical/_errors.sh#L15))
+[returnArgument]({rel}documentation/source/tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L256))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"--secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"--keep-comments - Flag. Keep all comments in the source"$'\n'"--variables - CommaDelimitedList. Optional. Always output the value of these variables."$'\n'"--parse - Flag. Optional. Parse the file for things which look like variables to output (basically \`^foo=\`)"$'\n'"environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible)."$'\n'""
 base="compile.sh"
@@ -8,11 +8,14 @@ description="Load an environment file and evaluate it using bash and output the 
 file="bin/build/tools/environment/compile.sh"
 fn="environmentCompile"
 foundNames=([0]="argument" [1]="security")
+line="15"
+lowerFn="environmentcompile"
 rawComment="Load an environment file and evaluate it using bash and output the changed environment variables after running"$'\n'"Do not perform this operation on files which are untrusted."$'\n'"Argument: --underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"Argument: --secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"Argument: --keep-comments - Flag. Keep all comments in the source"$'\n'"Argument: --variables - CommaDelimitedList. Optional. Always output the value of these variables."$'\n'"Argument: --parse - Flag. Optional. Parse the file for things which look like variables to output (basically \`^foo=\`)"$'\n'"Argument: environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible)."$'\n'"Security: source"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="source"$'\n'""
 sourceFile="bin/build/tools/environment/compile.sh"
 sourceHash="76a25ffef0da6dfdf470318dedd5968b6a4e07d4"
+sourceLine="15"
 summary="Load an environment file and evaluate it using bash and"
 summaryComputed="true"
 usage="environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --variables ] [ --parse ] environmentFile"
@@ -20,3 +23,4 @@ usage="environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]menvironmentCompile'$'\e''[0m '$'\e''[[(blue)]m[ --underscore ]'$'\e''[0m '$'\e''[[(blue)]m[ --secure ]'$'\e''[0m '$'\e''[[(blue)]m[ --keep-comments ]'$'\e''[0m '$'\e''[[(blue)]m[ --variables ]'$'\e''[0m '$'\e''[[(blue)]m[ --parse ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]menvironmentFile'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--underscore     '$'\e''[[(value)]mFlag. Optional. Include environment variables which begin with underscore '$'\e''[[(code)]m_'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--secure         '$'\e''[[(value)]mFlag. Optional. Include environment variables which are in '$'\e''[[(code)]menvironmentSecureVariables'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--keep-comments  '$'\e''[[(value)]mFlag. Keep all comments in the source'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--variables      '$'\e''[[(value)]mCommaDelimitedList. Optional. Always output the value of these variables.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--parse          '$'\e''[[(value)]mFlag. Optional. Parse the file for things which look like variables to output (basically '$'\e''[[(code)]m^foo='$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]menvironmentFile  '$'\e''[[(value)]mFile. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible).'$'\e''[[(reset)]m'$'\n'''$'\n''Load an environment file and evaluate it using bash and output the changed environment variables after running'$'\n''Do not perform this operation on files which are untrusted.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --variables ] [ --parse ] environmentFile'$'\n'''$'\n''    --underscore     Flag. Optional. Include environment variables which begin with underscore _.'$'\n''    --secure         Flag. Optional. Include environment variables which are in environmentSecureVariables'$'\n''    --keep-comments  Flag. Keep all comments in the source'$'\n''    --variables      CommaDelimitedList. Optional. Always output the value of these variables.'$'\n''    --parse          Flag. Optional. Parse the file for things which look like variables to output (basically ^foo=)'$'\n''    environmentFile  File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible).'$'\n'''$'\n''Load an environment file and evaluate it using bash and output the changed environment variables after running'$'\n''Do not perform this operation on files which are untrusted.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/environment.md"

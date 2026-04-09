@@ -1,1 +1,1 @@
-[environmentFileApplicationMake]({rel}tools/environment.md#environmentfileapplicationmake) - Create environment file `.env` for build. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L81))
+[environmentFileApplicationMake]({rel}documentation/source/tools/environment.md#environmentfileapplicationmake) - Create environment file \`.env\` for build. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L82))

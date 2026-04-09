@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-04
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
@@ -8,13 +8,17 @@ description="Return code is \`identical\`"$'\n'""
 file="bin/build/tools/test.sh"
 fn="returnIdentical"
 foundNames=([0]="summary" [1]="return_code")
+line="1503"
+lowerFn="returnidentical"
 rawComment="Summary: Identical return code"$'\n'"Return code is \`identical\`"$'\n'"Return Code: 105"$'\n'""$'\n'""
 return_code="105"$'\n'""
 sourceFile="bin/build/tools/test.sh"
 sourceHash="a67c5b2c2396821f4e070140f0dabed2cde8ea23"
+sourceLine="1503"
 summary="Identical return code"$'\n'""
 usage="returnIdentical"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnIdentical'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]midentical'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 105'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: returnIdentical'$'\n'''$'\n''Return code is identical'$'\n'''$'\n''Return codes:'$'\n''- 105'$'\n'''
+documentationPath="documentation/source/tools/assert.md"

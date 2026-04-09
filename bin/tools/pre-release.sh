@@ -40,10 +40,10 @@ buildPreRelease() {
   __buildPreReleaseStep "$handler" "$interruptCode" "Linting" __buildPreReleaseLintFiles "$home" || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
-  __buildPreReleaseStep "$handler" "$interruptCode" "Usage remove deprecated" buildUsageRemoveDeprecated || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Usage remove deprecated" buildFunctionsRemoveDeprecated || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
-  __buildPreReleaseStep "$handler" "$interruptCode" "Usage compile" buildUsageCompile || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Functions compile" buildBuildFunctions || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
   __buildPreReleaseStep "$handler" "$interruptCode" "Fingerprint" fingerprint || exitCode=$?

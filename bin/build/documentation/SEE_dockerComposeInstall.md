@@ -1,2 +1,1 @@
-[dockerComposeInstall]({rel}tools/install.md#dockercomposeinstall) - Install `docker-compose`
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L36))
+[dockerComposeInstall]({rel}documentation/source/tools/install.md#dockercomposeinstall) - Install \`docker-compose\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L37))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="name - String. Required. Volume name to delete."$'\n'""
 base="docker.sh"
@@ -8,10 +8,13 @@ description="Delete a docker volume"$'\n'""
 file="bin/build/tools/docker.sh"
 fn="dockerVolumeDelete"
 foundNames=([0]="argument")
+line="310"
+lowerFn="dockervolumedelete"
 rawComment="Delete a docker volume"$'\n'"Argument: name - String. Required. Volume name to delete."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
 sourceHash="3c99deb85dc2d26f1fb9b74fdec2057025f22e92"
+sourceLine="310"
 summary="Delete a docker volume"
 summaryComputed="true"
 usage="dockerVolumeDelete name"
@@ -19,3 +22,4 @@ usage="dockerVolumeDelete name"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdockerVolumeDelete'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mname'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mname  '$'\e''[[(value)]mString. Required. Volume name to delete.'$'\e''[[(reset)]m'$'\n'''$'\n''Delete a docker volume'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: dockerVolumeDelete name'$'\n'''$'\n''    name  String. Required. Volume name to delete.'$'\n'''$'\n''Delete a docker volume'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/docker.md"

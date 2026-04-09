@@ -1,1 +1,1 @@
-[approveBashSource]({rel}tools/approve.md#approvebashsource) - Loads files or a directory of `.sh` files using `source` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L91))
+[approveBashSource]({rel}documentation/source/tools/approve.md#approvebashsource) - Loads files or a directory of \`.sh\` files using \`source\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L92))

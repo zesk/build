@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-05
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"-- - Flag. Optional. Interactive mode on fixing errors."$'\n'"--home home - Directory. Optional. Sanitize files starting here. (Defaults to \`buildHome\`)"$'\n'"--interactive - Flag. Optional. Interactive mode on fixing errors."$'\n'"--check checkDirectory - Directory. Optional. Check shell scripts in this directory for common errors."$'\n'"... - Additional arguments are passed to \`bashLintFiles\` \`validateFileContents\`"$'\n'""
 base="bash.sh"
@@ -9,10 +9,13 @@ description="Sanitize bash files for code quality."$'\n'"used in find \`find ...
 file="bin/build/tools/bash.sh"
 fn="bashSanitize"
 foundNames=([0]="argument" [1]="configuration_file")
+line="33"
+lowerFn="bashsanitize"
 rawComment="Sanitize bash files for code quality."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: -- - Flag. Optional. Interactive mode on fixing errors."$'\n'"Argument: --home home - Directory. Optional. Sanitize files starting here. (Defaults to \`buildHome\`)"$'\n'"Argument: --interactive - Flag. Optional. Interactive mode on fixing errors."$'\n'"Argument: --check checkDirectory - Directory. Optional. Check shell scripts in this directory for common errors."$'\n'"Argument: ... - Additional arguments are passed to \`bashLintFiles\` \`validateFileContents\`"$'\n'"Configuration File: bashSanitize.conf (file containing simple \`stringContains\` matches to skip file NAMES, one per line, e.g. \`etc/docker\`)"$'\n'"used in find \`find ... ! -path '*LINE*'\` and in grep -e 'LINE'"$'\n'"TODO - use one mechanism for bashSanitize.conf format"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
 sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
+sourceLine="33"
 summary="Sanitize bash files for code quality."
 summaryComputed="true"
 usage="bashSanitize [ --help ] [ -- ] [ --home home ] [ --interactive ] [ --check checkDirectory ] [ ... ]"
@@ -20,3 +23,4 @@ usage="bashSanitize [ --help ] [ -- ] [ --home home ] [ --interactive ] [ --chec
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashSanitize'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ -- ]'$'\e''[0m '$'\e''[[(blue)]m[ --home home ]'$'\e''[0m '$'\e''[[(blue)]m[ --interactive ]'$'\e''[0m '$'\e''[[(blue)]m[ --check checkDirectory ]'$'\e''[0m '$'\e''[[(blue)]m[ ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help                  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--                      '$'\e''[[(value)]mFlag. Optional. Interactive mode on fixing errors.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--home home             '$'\e''[[(value)]mDirectory. Optional. Sanitize files starting here. (Defaults to '$'\e''[[(code)]mbuildHome'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--interactive           '$'\e''[[(value)]mFlag. Optional. Interactive mode on fixing errors.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--check checkDirectory  '$'\e''[[(value)]mDirectory. Optional. Check shell scripts in this directory for common errors.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m...                     '$'\e''[[(value)]mAdditional arguments are passed to '$'\e''[[(code)]mbashLintFiles'$'\e''[[(reset)]m '$'\e''[[(code)]mvalidateFileContents'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n'''$'\n''Sanitize bash files for code quality.'$'\n''used in find '$'\e''[[(code)]mfind ... ! -path '\'''$'\e''[[(cyan)]mLINE'$'\e''[[(reset)]m'\'''$'\e''[[(reset)]m and in grep -e '\''LINE'\'''$'\n''TODO - use one mechanism for bashSanitize.conf format'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: bashSanitize [ --help ] [ -- ] [ --home home ] [ --interactive ] [ --check checkDirectory ] [ ... ]'$'\n'''$'\n''    --help                  Flag. Optional. Display this help.'$'\n''    --                      Flag. Optional. Interactive mode on fixing errors.'$'\n''    --home home             Directory. Optional. Sanitize files starting here. (Defaults to buildHome)'$'\n''    --interactive           Flag. Optional. Interactive mode on fixing errors.'$'\n''    --check checkDirectory  Directory. Optional. Check shell scripts in this directory for common errors.'$'\n''    ...                     Additional arguments are passed to bashLintFiles validateFileContents'$'\n'''$'\n''Sanitize bash files for code quality.'$'\n''used in find find ... ! -path '\''LINE'\'' and in grep -e '\''LINE'\'''$'\n''TODO - use one mechanism for bashSanitize.conf format'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/lint.md"

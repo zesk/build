@@ -31,11 +31,15 @@ __bashDocumentationSettingsFileDetails() {
   home=$(catchReturn "$handler" buildHome) || return $?
 
   local file="${definitionFile#"${home%/}"/}"
+  if [ -z "$lineNumber" ]; then
+    lineNumber="$(grep -n -e "^$fn()" "$file" | cut -f 1 -d :)" || return $?
+  fi
   catchReturn "$handler" __dumpSimpleValue "file" "$file" || return $?
+  catchReturn "$handler" __dumpSimpleValue "line" "$lineNumber" || return $?
   catchReturn "$handler" __dumpSimpleValue "sourceFile" "$file" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
   catchReturn "$handler" __dumpSimpleValue "sourceHash" "$(textSHA <"$definitionFile")" || return $?
   catchReturn "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
-  [ -z "$lineNumber" ] || catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
 }
 
 # Caching version - __bashDocumentationExtractDirect does the actual work
@@ -273,6 +277,7 @@ __bashDocumentationExtractDirect() {
   if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
     catchReturn "$handler" __dumpSimpleValue "fn" "$fn" || return $?
   fi
+  catchReturn "$handler" __dumpSimpleValue "lowerFn" "$(stringLowercase "$fn")" || return $?
   if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
     catchReturn "$handler" __dumpSimpleValue "argument" "none" || return $?
     if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
@@ -287,6 +292,7 @@ __bashDocumentationExtractDirect() {
   catchReturn "$handler" __dumpNameValue "rawComment" "$rawComment" || return $?
   catchReturn "$handler" __dumpArrayValue "foundNames" "${foundNames[@]+"${foundNames[@]}"}" || return $?
 
+  unset rawComment
   # IDENTICAL profileFunctionTail 6
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then

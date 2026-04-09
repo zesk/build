@@ -1,1 +1,1 @@
-[buildEnvironmentFiles]({rel}tools/build.md#buildenvironmentfiles) - Determine the environment file names for environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L220))
+[buildEnvironmentFiles]({rel}documentation/source/tools/build.md#buildenvironmentfiles) - Determine the environment file names for environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L221))

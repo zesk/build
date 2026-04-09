@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="None"$'\n'""
 base="markdown.sh"
@@ -11,10 +11,13 @@ example="    markdownRemoveUnfinishedSections < inputFile > outputFile"$'\n'"   
 file="bin/build/tools/markdown.sh"
 fn="markdownRemoveUnfinishedSections"
 foundNames=([0]="argument" [1]="depends" [2]="return_code" [3]="environment" [4]="example")
+line="76"
+lowerFn="markdownremoveunfinishedsections"
 rawComment="Given a file containing Markdown, remove header and any section which has a variable still"$'\n'"This EXPLICITLY ignores variables with a colon to work with \`{SEE:other}\` syntax"$'\n'"This operates as a filter on a file. A section is any group of contiguous lines beginning with a line"$'\n'"which starts with a \`#\` character and then continuing to but not including the next line which starts with a \`#\`"$'\n'"character or the end of file; which corresponds roughly to headings in Markdown."$'\n'"If a section contains an unused variable in the form \`{variable}\`, the entire section is removed from the output."$'\n'"This can be used to remove sections which have variables or values which are optional."$'\n'"If you need a section to always be displayed; provide default values or blank values for the variables in those sections"$'\n'"to prevent removal."$'\n'"Argument: None"$'\n'"Depends: read printf"$'\n'"Return Code: 0"$'\n'"Environment: None"$'\n'"Example:     markdownRemoveUnfinishedSections < inputFile > outputFile"$'\n'"Example:     map.sh < \$templateFile | markdownRemoveUnfinishedSections"$'\n'""$'\n'""
 return_code="0"$'\n'""
 sourceFile="bin/build/tools/markdown.sh"
 sourceHash="114420a39bf775fd41a68d5b6baff543fe5c1b7f"
+sourceLine="76"
 summary="Given a file containing Markdown, remove header and any section"
 summaryComputed="true"
 usage="markdownRemoveUnfinishedSections [ None ]"
@@ -22,3 +25,4 @@ usage="markdownRemoveUnfinishedSections [ None ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmarkdownRemoveUnfinishedSections'$'\e''[0m '$'\e''[[(blue)]m[ None ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mNone  '$'\e''[[(value)]mNone'$'\e''[[(reset)]m'$'\n'''$'\n''Given a file containing Markdown, remove header and any section which has a variable still'$'\n''This EXPLICITLY ignores variables with a colon to work with '$'\e''[[(code)]m{SEE:other}'$'\e''[[(reset)]m syntax'$'\n''This operates as a filter on a file. A section is any group of contiguous lines beginning with a line'$'\n''which starts with a '$'\e''[[(code)]m#'$'\e''[[(reset)]m character and then continuing to but not including the next line which starts with a '$'\e''[[(code)]m#'$'\e''[[(reset)]m'$'\n''character or the end of file; which corresponds roughly to headings in Markdown.'$'\n''If a section contains an unused variable in the form '$'\e''[[(code)]m{variable}'$'\e''[[(reset)]m, the entire section is removed from the output.'$'\n''This can be used to remove sections which have variables or values which are optional.'$'\n''If you need a section to always be displayed; provide default values or blank values for the variables in those sections'$'\n''to prevent removal.'$'\n'''$'\n''Return codes:'$'\n''- 0'$'\n'''$'\n''Environment variables:'$'\n''- None'$'\n'''$'\n''Example:'$'\n''    markdownRemoveUnfinishedSections < inputFile > outputFile'$'\n''    map.sh < $templateFile | markdownRemoveUnfinishedSections'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: markdownRemoveUnfinishedSections [ None ]'$'\n'''$'\n''    None  None'$'\n'''$'\n''Given a file containing Markdown, remove header and any section which has a variable still'$'\n''This EXPLICITLY ignores variables with a colon to work with {SEE:other} syntax'$'\n''This operates as a filter on a file. A section is any group of contiguous lines beginning with a line'$'\n''which starts with a # character and then continuing to but not including the next line which starts with a #'$'\n''character or the end of file; which corresponds roughly to headings in Markdown.'$'\n''If a section contains an unused variable in the form {variable}, the entire section is removed from the output.'$'\n''This can be used to remove sections which have variables or values which are optional.'$'\n''If you need a section to always be displayed; provide default values or blank values for the variables in those sections'$'\n''to prevent removal.'$'\n'''$'\n''Return codes:'$'\n''- 0'$'\n'''$'\n''Environment variables:'$'\n''- None'$'\n'''$'\n''Example:'$'\n''    markdownRemoveUnfinishedSections < inputFile > outputFile'$'\n''    map.sh < $templateFile | markdownRemoveUnfinishedSections'$'\n'''
+documentationPath="documentation/source/tools/markdown.md"

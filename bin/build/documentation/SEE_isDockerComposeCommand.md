@@ -1,1 +1,1 @@
-[isDockerComposeCommand]({rel}tools/docker-compose.md#isdockercomposecommand) - Is this a docker compose command? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L124))
+[isDockerComposeCommand]({rel}documentation/source/tools/docker-compose.md#isdockercomposecommand) - Is this a docker compose command? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L125))

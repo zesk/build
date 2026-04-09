@@ -1,2 +1,1 @@
-[assertDirectoryEmpty]({rel}tools/assert.md#assertdirectoryempty) - Test that a directory exists
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L652))
+[assertDirectoryEmpty]({rel}documentation/source/tools/assert.md#assertdirectoryempty) - Test that a directory exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L653))

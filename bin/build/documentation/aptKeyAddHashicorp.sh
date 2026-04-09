@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="terraform.sh"
@@ -8,10 +8,13 @@ description="Add keys to enable apt to download terraform directly from hashicor
 file="bin/build/tools/terraform.sh"
 fn="aptKeyAddHashicorp"
 foundNames=([0]="return_code" [1]="argument")
+line="16"
+lowerFn="aptkeyaddhashicorp"
 rawComment="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - All good to install terraform"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="1 - if environment is awry"$'\n'"0 - All good to install terraform"$'\n'""
 sourceFile="bin/build/tools/terraform.sh"
 sourceHash="abfe10313271e5e1e6f8e72b20a2b69ba9413b83"
+sourceLine="16"
 summary="Add keys to enable apt to download terraform directly from"
 summaryComputed="true"
 usage="aptKeyAddHashicorp [ --help ]"
@@ -19,3 +22,4 @@ usage="aptKeyAddHashicorp [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]maptKeyAddHashicorp'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Add keys to enable apt to download terraform directly from hashicorp.com'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if environment is awry'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All good to install terraform'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: aptKeyAddHashicorp [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download terraform directly from hashicorp.com'$'\n'''$'\n''Return codes:'$'\n''- 1 - if environment is awry'$'\n''- 0 - All good to install terraform'$'\n'''
+documentationPath="documentation/source/tools/terraform.md"

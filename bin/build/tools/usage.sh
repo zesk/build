@@ -12,8 +12,21 @@
 # Argument: handler - Function. Required. Error handler.
 # Argument: function - Function. Required. Function to call; first argument will be `handler`.
 # Argument ... - Arguments. Optional. Additional arguments to the function.
-__usageLoader() {
+__bashDocumentationLoader() {
   __buildFunctionLoader __bashDocumentation usage "$@"
+}
+
+# Summary: Output documentation for a function in Markdown format
+#
+# Argument: functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+bashDocumentationMarkdown() {
+  __bashDocumentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_bashDocumentationMarkdown() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Universal error handler for functions (with formatting)
@@ -34,7 +47,7 @@ __usageLoader() {
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 bashDocumentation() {
   #  bashSimpleDocumentation "$@"
-  __usageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+  __bashDocumentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _bashDocumentation() {
   # __IDENTICAL__ bashDocumentation 1

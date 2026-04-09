@@ -1,1 +1,1 @@
-[buildHome]({rel}tools/build.md#buildhome) - Prints the build home directory (usually same as the application ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L151))
+[buildHome]({rel}documentation/source/tools/build.md#buildhome) - Prints the build home directory (usually same as the application ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L152))

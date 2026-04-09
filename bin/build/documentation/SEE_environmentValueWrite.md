@@ -1,1 +1,1 @@
-[environmentValueWrite]({rel}tools/environment.md#environmentvaluewrite) - Write a value to a state file as NAME="value" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L12))
+[environmentValueWrite]({rel}documentation/source/tools/environment.md#environmentvaluewrite) - Write a value to a state file as NAME=\"value\" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L13))

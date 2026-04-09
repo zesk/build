@@ -1,1 +1,1 @@
-[catchCode]({rel}tools/sugar-core.md#catchcode) - Run `command`, handle failure with `handler` with `code` and `command` ([source](https://github.com/zesk/build/blob/main/bin/build/identical/_sugar.sh#L184))
+[catchCode]({rel}documentation/source/tools/sugar-core.md#catchcode) - Run \`command\`, handle failure with \`handler\` with \`code\` and \`command\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L193))

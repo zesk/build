@@ -1,1 +1,1 @@
-[environmentOutput]({rel}tools/environment.md#environmentoutput) - Output all exported environment variables, hiding secure ones and ones ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L201))
+[environmentOutput]({rel}documentation/source/tools/environment.md#environmentoutput) - Output all exported environment variables, hiding secure ones and ones ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L202))

@@ -3,15 +3,30 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+buildBuildFunctions() {
+  local handler="_${FUNCNAME[0]}"
+  local dd=()
+
+  dd+=(--derive buildFunctionSeeTemplate --)
+  dd+=(--derive buildFunctionMarkdownDocumentation --)
+  catchReturn "$handler" buildFunctionsCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
+}
+_buildBuildFunctions() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Extract and build the bin/build/documentation/ cache
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
+# Argument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
 # Argument: --all - Flag. Optional. Do everything regardless of cache state.
+# Argument: --derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-buildUsageCompile() {
+buildFunctionsCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local cleanFlag=false quickFlag=true gitActions=true
+  local cleanFlag=false quickFlag=true gitActions=false dd=()
 
   decorateInitialized || decorate info --
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -24,8 +39,12 @@ buildUsageCompile() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --clean) cleanFlag=true ;;
-    --skip-git) gitActions=false ;;
+    --git) gitActions=true ;;
     --all) quickFlag=false ;;
+    --derive) dd+=("--") && shift && while [ $# -gt 0 ]; do
+      [ "$1" != "--" ] || break
+      dd+=("$1") && shift
+    done ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -34,14 +53,14 @@ buildUsageCompile() {
     shift
   done
 
-  __buildUsageLoad "$handler" || return $?
+  __buildFunctionsLoad "$handler" || return $?
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   local docPath="$home/bin/build/documentation"
   if $cleanFlag; then
     catchReturn "$handler" statusMessage decorate info "Cleaning $docPath" || return $?
-    [ ! -d "$docPath" ] || catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' ! -path '*/.*/*' -delete || return $?
+    [ ! -d "$docPath" ] || catchEnvironment "$handler" find "$docPath" -type f \( -name '*.sh' -or -name '*.md' \) ! -path '*/.*/*' -delete || return $?
     return 0
   fi
 
@@ -57,7 +76,7 @@ buildUsageCompile() {
   actualTotalFunctions=$totalFunctions
   if $quickFlag; then
     catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' -empty -delete || return $?
-    if __buildUsageIsComplete "$handler" "$docPath" "$tempFunctions"; then
+    if __buildFunctionsIsComplete "$handler" "$docPath" "$tempFunctions" "${dd[@]+"${dd[@]}"}"; then
       local allModificationTimes="$tempFunctions.all"
       clean+=("$allModificationTimes")
       {
@@ -92,24 +111,24 @@ buildUsageCompile() {
     local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
     (
-      statusMessage timing --name "$prefix $fun" __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      statusMessage timing --name "$prefix $fun" __buildFunctionsCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" "${dd[@]+"${dd[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     ) || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   shopt -s expand_aliases || :
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   if $gitActions; then
-    buildUsageRemoveDeprecated --dry-run --handler "$handler" || return $?
-    buildUsageRemoveDeprecated --handler "$handler" || return $?
+    buildFunctionsRemoveDeprecated --dry-run --handler "$handler" || return $?
+    buildFunctionsRemoveDeprecated --handler "$handler" || return $?
     find "$home/bin/build/documentation/" -type f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
   fi
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
 }
-_buildUsageCompile() {
+_buildFunctionsCompile() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-buildUsageRemoveDeprecated() {
+buildFunctionsRemoveDeprecated() {
   local handler="_${FUNCNAME[0]}"
 
   local dryRun=false
@@ -151,12 +170,12 @@ buildUsageRemoveDeprecated() {
     done
   fi
 }
-_buildUsageRemoveDeprecated() {
+_buildFunctionsRemoveDeprecated() {
   # __IDENTICAL__ buildDocumentation 1
   buildDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__buildUsageLoad() {
+__buildFunctionsLoad() {
   local handler="$1" && shift
 
   : # Do nothing currently
@@ -170,7 +189,8 @@ __buildUsageLoad() {
 # Argument: function - String. Required. Function to extract
 # Argument: sourceFile - File|EmptyString. Required. Source file or blank if not known.
 # Argument: prefix ... - String. Optional. Prefix the status line with this text.
-__buildUsageCompileFunction() {
+# Argument: derived  - .... Optional. Derived functions to run on new or modified files.
+__buildFunctionsCompileFunction() {
   export BUILD_DEBUG
   local flag=",usage-profile," flags=",${BUILD_DEBUG-},"
 
@@ -185,7 +205,9 @@ __buildUsageCompileFunction() {
 
   local fun && fun=$(validate "$handler" Function "function" "${1-}") && shift || return $?
   local sourceHash="" sourceFile="${1-}" && shift || return $?
-  local prefix="$*" && set -- && [ -z "$prefix" ] || prefix="${prefix% } "
+  local prefix="$1" && shift && [ -z "$prefix" ] || prefix="${prefix% } "
+  local derived=("$@") && set --
+
   local prettyFun && prettyFun=$(catchReturn "$handler" decorate code "$fun") || return $?
 
   __profilePrefix="${__profilePrefix}[$fun] "
@@ -248,6 +270,13 @@ __buildUsageCompileFunction() {
 
     if [ "$computedHash" = "$sourceHash" ]; then
       __profileLabel="cache match - no action"
+      # IDENTICAL profileFunctionMarker 3
+      # ********************************************************************************************************************
+      if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+      # ********************************************************************************************************************
+      [ "${#derived[@]}" -eq 0 ] || __buildFunctionsCheckDerived "$handler" "$documentationSettingsFile" "$([ "$__profile" != "false" ] && printf true || printf false)" "${derived[@]}" || throwEnvironment "$handler" "Derived failed" || :
+
+      __profileLabel="derived-check"
       # IDENTICAL profileFunctionTail 6
       # ********************************************************************************************************************
       if [ "$__profile" != "false" ]; then
@@ -255,6 +284,7 @@ __buildUsageCompileFunction() {
         printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
       fi
       # ********************************************************************************************************************
+
       return 0
     fi
   fi
@@ -318,6 +348,14 @@ __buildUsageCompileFunction() {
     # ********************************************************************************************************************
   fi
 
+  __profileLabel="derived"
+  # IDENTICAL profileFunctionMarker 3
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
+
+  [ "${#derived[@]}" -eq 0 ] || __buildFunctionsDerived "$handler" "$documentationSettingsFile" "${derived[@]}" || throwEnvironment "$handler" "Derived failed" || :
+
   # IDENTICAL profileFunctionTail 6
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then
@@ -332,10 +370,11 @@ __buildUsageCompileFunction() {
 # Argument: handler - Function. Required.
 # Argument: docPath - Directory. Required.
 # Argument: tempFunctions - File. Required. File containing list of function names
-__buildUsageIsComplete() {
+__buildFunctionsIsComplete() {
   local handler="$handler" && shift
   local docPath="$1" && shift
   local tempFunctions="$1" && shift
+
   local missing=() finished=false && while ! $finished; do
     local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
@@ -356,7 +395,7 @@ __buildUsageIsComplete() {
     index=$((index + 1))
     catchReturn "$handler" statusMessage decorate warning "Loading missing: $fun" || return $?
     (
-      __buildUsageCompileFunction "$handler" "$docPath" "$fun" "" "Missing #$index/${#missing[@]}" || return $?
+      __buildFunctionsCompileFunction "$handler" "$docPath" "$fun" "" "Missing #$index/${#missing[@]}" "$@" || return $?
     ) || return $?
   done
   catchReturn "$handler" statusMessage decorate info "No functions missing" || return $?

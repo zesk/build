@@ -1,1 +1,1 @@
-[junitProperties]({rel}tools/junit.md#junitproperties) - Full properties output. Properties are output depending on content containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L105))
+[junitProperties]({rel}documentation/source/tools/junit.md#junitproperties) - Full properties output. Properties are output depending on content containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L106))

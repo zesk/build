@@ -1,2 +1,1 @@
-[documentationTemplateCompile]({rel}tools/documentation.md#documentationtemplatecompile) - Convert a template file to a documentation file using templates
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L219))
+[documentationTemplateCompile]({rel}documentation/source/tools/documentation.md#documentationtemplatecompile) - Document a function and generate a function template (markdown). To ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L439))

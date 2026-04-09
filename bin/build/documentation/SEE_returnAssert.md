@@ -1,2 +1,1 @@
-[returnAssert]({rel}tools/assert.md#returnassert) - Assertion return code
- ([source](https://github.com/zesk/build/blob/main/bin/build/identical/returnAssert.sh#L10))
+[returnAssert]({rel}documentation/source/tools/assert.md#returnassert) - Assertion return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1488))

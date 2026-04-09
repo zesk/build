@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-08
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration"$'\n'"text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for \`style\`."$'\n'""
 base="core.sh"
@@ -9,11 +9,14 @@ environment="__BUILD_DECORATE - String. Cached color lookup."$'\n'"BUILD_COLORS 
 file="bin/build/tools/decorate/core.sh"
 fn="decorate"
 foundNames=([0]="argument" [1]="stdout" [2]="environment" [3]="requires")
+line="89"
+lowerFn="decorate"
 rawComment="Singular decoration function"$'\n'"Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration"$'\n'"Argument: text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for \`style\`."$'\n'"You can extend this function by writing a your own extension \`__decorationExtensionCustom\` is called for \`decorate custom\`."$'\n'"stdout: Decorated text"$'\n'"Environment: __BUILD_DECORATE - String. Cached color lookup."$'\n'"Environment: BUILD_COLORS - Boolean. Colors enabled (\`true\` or \`false\`)."$'\n'"Requires: isFunction catchArgument catchReturn awk"$'\n'"Requires: bashDocumentation __help"$'\n'"Requires: _decorateInitialize __decorateStyle __decorate executeInputSupport"$'\n'""$'\n'""
 requires="isFunction catchArgument catchReturn awk"$'\n'"bashDocumentation __help"$'\n'"_decorateInitialize __decorateStyle __decorate executeInputSupport"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/core.sh"
 sourceHash="92d19ecf3dc210cf2cf1100feb0f74f4d25f6447"
+sourceLine="89"
 stdout="Decorated text"$'\n'""
 summary="Singular decoration function"
 summaryComputed="true"
@@ -22,3 +25,4 @@ usage="decorate style [ text ... ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdecorate'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mstyle'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ text ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mstyle     '$'\e''[[(value)]mString. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mtext ...  '$'\e''[[(value)]mString. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for '$'\e''[[(code)]mstyle'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n'''$'\n''Singular decoration function'$'\n''You can extend this function by writing a your own extension '$'\e''[[(code)]m__decorationExtensionCustom'$'\e''[[(reset)]m is called for '$'\e''[[(code)]mdecorate custom'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- '$'\e''[[(code)]m__BUILD_DECORATE'$'\e''[[(reset)]m - String. Cached color lookup.'$'\n''- '$'\e''[[(code)]mBUILD_COLORS'$'\e''[[(reset)]m - Boolean. Colors enabled ('$'\e''[[(code)]mtrue'$'\e''[[(reset)]m or '$'\e''[[(code)]mfalse'$'\e''[[(reset)]m).'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''Decorated text'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: decorate style [ text ... ]'$'\n'''$'\n''    style     String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration'$'\n''    text ...  String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for style.'$'\n'''$'\n''Singular decoration function'$'\n''You can extend this function by writing a your own extension __decorationExtensionCustom is called for decorate custom.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- __BUILD_DECORATE - String. Cached color lookup.'$'\n''- BUILD_COLORS - Boolean. Colors enabled (true or false).'$'\n'''$'\n''Writes to stdout:'$'\n''Decorated text'$'\n'''
+documentationPath="documentation/source/tools/decorate.md"

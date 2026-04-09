@@ -1,1 +1,1 @@
-[reloadChanges]({rel}tools/prompt.md#reloadchanges) - Watch or more directories for changes in a file extension ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L81))
+[reloadChanges]({rel}documentation/source/tools/prompt.md#reloadchanges) - Watch or more directories for changes in a file extension ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L82))

@@ -1,2 +1,1 @@
-[buildCompletion]({rel}tools/completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/completion.sh#L16))
+[buildCompletion]({rel}documentation/source/tools/completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/completion.sh#L17))

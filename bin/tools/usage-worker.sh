@@ -11,7 +11,7 @@
 # Argument: --workers workerCount - PositiveInteger. Optional. Create this many workers to do the job.
 # Argument: --all - Flag. Optional. Check and build all of the build functions usage data.
 # Argument: --clean - Flag. Optional. Delete all usage files before starting.
-buildUsageCompileParallel() {
+buildFunctionsCompileParallel() {
   local handler="_${FUNCNAME[0]}"
   local totalWorkers=1 allFlag=false cleanFlag=false
 
@@ -40,7 +40,7 @@ buildUsageCompileParallel() {
   local start && start=$(timingStart) || return $?
 
   # Load test stuff here
-  __buildUsageLoad "$handler" || return $?
+  __buildFunctionsLoad "$handler" || return $?
 
   set -euo pipefail
   local cachePath && cachePath="$(catchReturn "$handler" buildCacheDirectory "${FUNCNAME[0]}")" || return $?
@@ -51,7 +51,7 @@ buildUsageCompileParallel() {
     decorate info "Cleaned process state" || return $?
   fi
   # shellcheck disable=SC2064
-  trap "__buildUsageCompileParallel \"$cachePath\"" EXIT INT
+  trap "__buildFunctionsCompileParallel \"$cachePath\"" EXIT INT
 
   local fifo="$cachePath/fifo" writerPidFile="$cachePath/writer" workerPidFile="$cachePath/workers" pid
 
@@ -65,10 +65,10 @@ buildUsageCompileParallel() {
       throwEnvironment "$handler" "${FUNCNAME[0]} already running as pid $(decorate value "$pid")" || return $?
     fi
     decorate warning "Cleaning up dead process ${FUNCNAME[0]} $(decorate value "$pid")"
-    __buildUsageCompileCleanupProcesses "$handler" "$cachePath" || return $?
+    __buildFunctionsCompileCleanupProcesses "$handler" "$cachePath" || return $?
   fi
 
-  local undo=(__buildUsageCompileParallel "$cachePath")
+  local undo=(__buildFunctionsCompileParallel "$cachePath")
 
   catchEnvironment "$handler" rm -f "$fifo" || return $?
   catchEnvironment "$handler" mkfifo "$fifo" || returnUndo $? "${undo[@]}" || return $?
@@ -81,14 +81,14 @@ buildUsageCompileParallel() {
   # start multiple workers in parallel
   catchEnvironment "$handler" rm -rf "$workerPidFile" || return $?
   local workerId && for workerId in $(seq 1 "$totalWorkers"); do
-    __buildUsageCompileWorker "$handler" "$cachePath" "$workerId" &
+    __buildFunctionsCompileWorker "$handler" "$cachePath" "$workerId" &
     pid=$!
     catchEnvironment "$handler" printf "%d\n" "$!" >>"$workerPidFile" || returnUndo $? "${undo[@]}" || return $?
     statusMessage --last decorate info "Worker $workerId: Process $pid" || return $?
   done
 
   # start writer
-  __buildUsageCompileWriter "$handler" "$cachePath" "$allFlag" &
+  __buildFunctionsCompileWriter "$handler" "$cachePath" "$allFlag" &
   pid=$!
   catchEnvironment "$handler" printf "%d\n" "$pid" >"$writerPidFile" || returnUndo $? "${undo[@]}" || return $?
   local endY && IFS=$'\n' read -r -d '' _x endY < <(cursorGet)
@@ -98,33 +98,33 @@ buildUsageCompileParallel() {
   statusMessage decorate info "Started writer $pid" || return $?
 
   if ! wait; then
-    __buildUsageCompileParallel "$cachePath" || :
+    __buildFunctionsCompileParallel "$cachePath" || :
     trap - EXIT INT || :
     throwEnvironment "$handler" "Processes failed." || return $?
   fi
 
-  __buildUsageCompileParallel "$cachePath" || return $?
+  __buildFunctionsCompileParallel "$cachePath" || return $?
 
   trap - EXIT INT || :
   statusMessage timingReport "$start" "Ran $(localePluralWord "$totalWorkers" "worker")" || return $?
 }
-_buildUsageCompileParallel() {
+_buildFunctionsCompileParallel() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Cleanup function
-__buildUsageCompileParallel() {
+__buildFunctionsCompileParallel() {
   local handler="${FUNCNAME[0]#_}"
   local cachePath="$1"
   if [ -d "$cachePath" ]; then
-    __buildUsageCompileCleanupProcesses "$handler" "$cachePath" || return $?
+    __buildFunctionsCompileCleanupProcesses "$handler" "$cachePath" || return $?
     # catchEnvironment "$handler" rm -rf "$cachePath" || return $?
   fi
 }
 
 # Cleanup function
-__buildUsageCompileCleanupProcesses() {
+__buildFunctionsCompileCleanupProcesses() {
   local handler="$1" && shift
   local cachePath="$1" && shift
   [ -d "$cachePath" ] || return 0
@@ -141,7 +141,7 @@ __buildUsageCompileCleanupProcesses() {
 }
 
 # --- writer: generate jobs into the FIFO in the background ---
-__buildUsageCompileWriter() {
+__buildFunctionsCompileWriter() {
   local handler="$1" && shift
   local cachePath="$1" && shift
   local all="$1" && shift
@@ -152,7 +152,7 @@ __buildUsageCompileWriter() {
   ! buildDebugEnabled usage-writer || verboseFlag=true
 
   # shellcheck disable=SC2064
-  catchReturn "$handler" trap "__buildUsageCompileProcessTerminate \"\" \"Writer\"" HUP TERM || return $?
+  catchReturn "$handler" trap "__buildFunctionsCompileProcessTerminate \"\" \"Writer\"" HUP TERM || return $?
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
@@ -223,7 +223,7 @@ __buildUsageCompileWriter() {
   catchEnvironment "$handler" rm -f "$cachePath/writer" || return $?
 }
 
-__buildUsageCompileWorker() {
+__buildFunctionsCompileWorker() {
   local handler="$1" && shift
   local cachePath="$1" && shift
   local workerId="$1" && shift
@@ -274,7 +274,7 @@ __buildUsageCompileWorker() {
   local icon="✅"
   # shellcheck disable=SC2064
   export __CHILD=true
-  catchReturn "$handler" trap "__buildUsageCompileProcessTerminate \"$yOffset\" \"$prefix\"" HUP TERM || return $?
+  catchReturn "$handler" trap "__buildFunctionsCompileProcessTerminate \"$yOffset\" \"$prefix\"" HUP TERM || return $?
   local returnCode=0 && while true; do
     catchReturn "$handler" flock 4 || return $? # grab lock
     if ! IFS="" read -r -d $'\0' -n "$recordSize" -u 3 recordLine; then
@@ -297,7 +297,7 @@ __buildUsageCompileWorker() {
       break
     fi
     local start && start=$(timingStart) || return $?
-    if ! __buildUsageCompileFunction "$handler" "$docPath" "$functionName" "$sourceFile" "$prefix" 1>&2; then
+    if ! __buildFunctionsCompileFunction "$handler" "$docPath" "$functionName" "$sourceFile" "$prefix" 1>&2; then
       returnCode=1
       break
     fi
@@ -314,7 +314,7 @@ __buildUsageCompileWorker() {
   return $returnCode
 }
 
-__buildUsageCompileProcessTerminate() {
+__buildFunctionsCompileProcessTerminate() {
   local returnCode="$?"
   local yOffset="$1" && shift
   local title="$1" && shift

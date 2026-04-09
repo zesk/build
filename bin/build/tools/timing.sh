@@ -31,11 +31,11 @@ timing() {
   done
 
   [ -n "$name" ] || name="$*"
-  local start exitCode=0 && start=$(timingStart)
+  local start && start=$(timingStart)
   isCallable "${1-}" || throwArgument "$handler" "${1-} must be callable" || return $?
-  catchReturn "$handler" "$@" || exitCode="$?"
-  timingReport "$start" "$name"
-  [ $exitCode = 0 ] || returnMessage "$exitCode" "$@" || return $?
+  local exitCode=0 && "$@" || exitCode="$?"
+  catchReturn "$handler" timingReport "$start" "$name" || return $?
+  return $exitCode
 }
 _timing() {
   # __IDENTICAL__ bashDocumentation 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-08
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="pid - Integer. Required. Process ID of running process"$'\n'""
 base="process.sh"
@@ -9,11 +9,14 @@ example="    > processMemoryUsage 23"$'\n'""
 file="bin/build/tools/process.sh"
 fn="processMemoryUsage"
 foundNames=([0]="argument" [1]="example" [2]="output" [3]="return_code")
+line="150"
+lowerFn="processmemoryusage"
 output="423"$'\n'""
 rawComment="Outputs value of resident memory used by a process, value is in kilobytes"$'\n'"Argument: pid - Integer. Required. Process ID of running process"$'\n'"Example:     > {fn} 23"$'\n'"Output: 423"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/process.sh"
 sourceHash="9a9162fce05d86abc173c620c9416ff86fe4e013"
+sourceLine="150"
 summary="Outputs value of resident memory used by a process, value"
 summaryComputed="true"
 usage="processMemoryUsage pid"
@@ -21,3 +24,4 @@ usage="processMemoryUsage pid"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mprocessMemoryUsage'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mpid'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mpid  '$'\e''[[(value)]mInteger. Required. Process ID of running process'$'\e''[[(reset)]m'$'\n'''$'\n''Outputs value of resident memory used by a process, value is in kilobytes'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    > processMemoryUsage 23'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: processMemoryUsage pid'$'\n'''$'\n''    pid  Integer. Required. Process ID of running process'$'\n'''$'\n''Outputs value of resident memory used by a process, value is in kilobytes'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    > processMemoryUsage 23'$'\n'''
+documentationPath="documentation/source/tools/process.md"

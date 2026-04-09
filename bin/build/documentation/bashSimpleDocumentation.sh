@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-05
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"source - File. Required. File where documentation exists."$'\n'"function - String. Required. Function to document."$'\n'"returnCode - UnsignedInteger. Required. Exit code to return."$'\n'"message ... - String. Optional. Message to display to the user."$'\n'""
 base="usage.sh"
@@ -8,11 +8,14 @@ description="Output a simple error message for a function"$'\n'""
 file="bin/build/tools/usage.sh"
 fn="bashSimpleDocumentation"
 foundNames=([0]="argument" [1]="requires")
+line="159"
+lowerFn="bashsimpledocumentation"
 rawComment="Output a simple error message for a function"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: source - File. Required. File where documentation exists."$'\n'"Argument: function - String. Required. Function to document."$'\n'"Argument: returnCode - UnsignedInteger. Required. Exit code to return."$'\n'"Argument: message ... - String. Optional. Message to display to the user."$'\n'"Requires: bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached"$'\n'""$'\n'""
 requires="bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="8ddfafc5bad0eecab565455b12a58dcba877ee82"
+sourceHash="f78944fb6a094a23e87df1b578764a61fd0bee9e"
+sourceLine="159"
 summary="Output a simple error message for a function"
 summaryComputed="true"
 usage="bashSimpleDocumentation [ --help ] source function returnCode [ message ... ]"
@@ -20,3 +23,4 @@ usage="bashSimpleDocumentation [ --help ] source function returnCode [ message .
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashSimpleDocumentation'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]msource'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfunction'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mreturnCode'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help       '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]msource       '$'\e''[[(value)]mFile. Required. File where documentation exists.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mfunction     '$'\e''[[(value)]mString. Required. Function to document.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mreturnCode   '$'\e''[[(value)]mUnsignedInteger. Required. Exit code to return.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mmessage ...  '$'\e''[[(value)]mString. Optional. Message to display to the user.'$'\e''[[(reset)]m'$'\n'''$'\n''Output a simple error message for a function'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: bashSimpleDocumentation [ --help ] source function returnCode [ message ... ]'$'\n'''$'\n''    --help       Flag. Optional. Display this help.'$'\n''    source       File. Required. File where documentation exists.'$'\n''    function     String. Required. Function to document.'$'\n''    returnCode   UnsignedInteger. Required. Exit code to return.'$'\n''    message ...  String. Optional. Message to display to the user.'$'\n'''$'\n''Output a simple error message for a function'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/usage.md"

@@ -1,1 +1,1 @@
-[assertFileDoesNotContain]({rel}tools/assert.md#assertfiledoesnotcontain) - Assert a file does not contains any occurrence of one ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1044))
+[assertFileDoesNotContain]({rel}documentation/source/tools/assert.md#assertfiledoesnotcontain) - Assert a file does not contains any occurrence of one ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1045))

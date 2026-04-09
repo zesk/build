@@ -78,6 +78,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:bashDebugInterruptFile}
 - {SEE:bashDocumentation}
 - {SEE:bashDocumentationExtract}
+- {SEE:bashDocumentationMarkdown}
 - {SEE:bashFileComment}
 - {SEE:bashFinalComment}
 - {SEE:bashFindUncaughtAssertions}
@@ -265,6 +266,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:documentationTemplate}
 - {SEE:documentationTemplateCompile}
 - {SEE:documentationTemplateDirectoryCompile}
+- {SEE:documentationTemplateFileCompile}
 - {SEE:documentationTemplateFunctionCompile}
 - {SEE:documentationTemplateUpdate}
 - {SEE:documentationUnlinked}

@@ -1,2 +1,1 @@
-[cpuCount]({rel}tools/cpu.md#cpucount) - Return integer count of CPUs on this system
- ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L13))
+[cpuCount]({rel}documentation/source/tools/cpu.md#cpucount) - Return integer count of CPUs on this system"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L14))

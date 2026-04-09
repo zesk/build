@@ -1,1 +1,1 @@
-[timingDuration]({rel}tools/timing.md#timingduration) - Output timing like "1 day, 2 hours, 3 minutes, 4 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L176))
+[timingDuration]({rel}documentation/source/tools/timing.md#timingduration) - Output timing like \"1 day, 2 hours, 3 minutes, 4 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L177))

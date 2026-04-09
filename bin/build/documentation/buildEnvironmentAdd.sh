@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--force - Flag. Optional. Replace the existing file if it exists or create it if it does not."$'\n'"--quiet - Flag. Optional. No status messages."$'\n'"--verbose - Flag. Optional. Display status messages."$'\n'"--value value - String. Optional. Set the value to this fixed string in the file. Only valid when a single \`environmentName\` is used."$'\n'"environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project."$'\n'""
 base="build.sh"
@@ -8,10 +8,13 @@ description="Adds an environment variable file to a project"$'\n'""
 file="bin/build/tools/build.sh"
 fn="buildEnvironmentAdd"
 foundNames=([0]="argument")
+line="316"
+lowerFn="buildenvironmentadd"
 rawComment="Adds an environment variable file to a project"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --force - Flag. Optional. Replace the existing file if it exists or create it if it does not."$'\n'"Argument: --quiet - Flag. Optional. No status messages."$'\n'"Argument: --verbose - Flag. Optional. Display status messages."$'\n'"Argument: --value value - String. Optional. Set the value to this fixed string in the file. Only valid when a single \`environmentName\` is used."$'\n'"Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
 sourceHash="36d6620f5e7ef50da4732294ca63c0ba7d07b1f4"
+sourceLine="316"
 summary="Adds an environment variable file to a project"
 summaryComputed="true"
 usage="buildEnvironmentAdd [ --help ] [ --force ] [ --quiet ] [ --verbose ] [ --value value ] environmentName ..."
@@ -19,3 +22,4 @@ usage="buildEnvironmentAdd [ --help ] [ --force ] [ --quiet ] [ --verbose ] [ --
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbuildEnvironmentAdd'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --force ]'$'\e''[0m '$'\e''[[(blue)]m[ --quiet ]'$'\e''[0m '$'\e''[[(blue)]m[ --verbose ]'$'\e''[0m '$'\e''[[(blue)]m[ --value value ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]menvironmentName ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help               '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--force              '$'\e''[[(value)]mFlag. Optional. Replace the existing file if it exists or create it if it does not.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--quiet              '$'\e''[[(value)]mFlag. Optional. No status messages.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--verbose            '$'\e''[[(value)]mFlag. Optional. Display status messages.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--value value        '$'\e''[[(value)]mString. Optional. Set the value to this fixed string in the file. Only valid when a single '$'\e''[[(code)]menvironmentName'$'\e''[[(reset)]m is used.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]menvironmentName ...  '$'\e''[[(value)]mEnvironmentName. Required. One or more environment variable names to add to this project.'$'\e''[[(reset)]m'$'\n'''$'\n''Adds an environment variable file to a project'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: buildEnvironmentAdd [ --help ] [ --force ] [ --quiet ] [ --verbose ] [ --value value ] environmentName ...'$'\n'''$'\n''    --help               Flag. Optional. Display this help.'$'\n''    --force              Flag. Optional. Replace the existing file if it exists or create it if it does not.'$'\n''    --quiet              Flag. Optional. No status messages.'$'\n''    --verbose            Flag. Optional. Display status messages.'$'\n''    --value value        String. Optional. Set the value to this fixed string in the file. Only valid when a single environmentName is used.'$'\n''    environmentName ...  EnvironmentName. Required. One or more environment variable names to add to this project.'$'\n'''$'\n''Adds an environment variable file to a project'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/build.md"

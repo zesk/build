@@ -98,6 +98,7 @@ __bashDocumentation() {
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
+    # ********************************************************************************************************************
     if ! catchReturn "$handler" bashDocumentationExtract "$displayName" "$functionDefinitionFile" >"$variablesFile" <"$commentFile"; then
       dumpPipe "commentFile" <"$commentFile"
       dumpPipe "variablesFile" <"$variablesFile"
@@ -105,7 +106,7 @@ __bashDocumentation() {
       throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
     fi
 
-    if [ -n "${rawComment-}" ]; then decorate error "FOUND LEAK AT $LINENO" && debuggingStack 1>&2 && pause; fi
+    if [ -n "${rawComment-}" ]; then decorate error "FOUND LEAK AT $LINENO $displayName $functionDefinitionFile" && debuggingStack 1>&2 && pause; fi
 
     __profileLabel=bashDocumentationExtract
     # IDENTICAL profileFunctionMarker 3

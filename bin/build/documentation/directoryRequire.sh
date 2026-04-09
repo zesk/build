@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="directoryPath ... - One or more directories to create"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"--owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'""
 base="directory.sh"
@@ -9,11 +9,14 @@ example="    directoryRequire \"\$cachePath\""$'\n'""
 file="bin/build/tools/directory.sh"
 fn="directoryRequire"
 foundNames=([0]="argument" [1]="example" [2]="requires")
+line="190"
+lowerFn="directoryrequire"
 rawComment="Given a list of directories, ensure they exist and create them if they do not."$'\n'"Argument: directoryPath ... - One or more directories to create"$'\n'"Example:     {fn} \"\$cachePath\""$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'"Requires: throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname"$'\n'"Requires: chmod chown"$'\n'""$'\n'""
 requires="throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname"$'\n'"chmod chown"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/directory.sh"
 sourceHash="e3a8c59981053233f360475ab67f48cb580f1f5c"
+sourceLine="190"
 summary="Given a list of directories, ensure they exist and create"
 summaryComputed="true"
 usage="directoryRequire [ directoryPath ... ] [ --help ] [ --mode fileMode ] [ --owner ownerName ]"
@@ -21,3 +24,4 @@ usage="directoryRequire [ directoryPath ... ] [ --help ] [ --mode fileMode ] [ -
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdirectoryRequire'$'\e''[0m '$'\e''[[(blue)]m[ directoryPath ... ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --mode fileMode ]'$'\e''[0m '$'\e''[[(blue)]m[ --owner ownerName ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mdirectoryPath ...  '$'\e''[[(value)]mOne or more directories to create'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--mode fileMode    '$'\e''[[(value)]mString. Optional. Enforce the directory mode for '$'\e''[[(code)]mmkdir --mode'$'\e''[[(reset)]m and '$'\e''[[(code)]mchmod'$'\e''[[(reset)]m. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to '$'\e''[[(code)]m-'$'\e''[[(reset)]m to reset to no value.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--owner ownerName  '$'\e''[[(value)]mString. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to '$'\e''[[(code)]m-'$'\e''[[(reset)]m to reset to no value.'$'\e''[[(reset)]m'$'\n'''$'\n''Given a list of directories, ensure they exist and create them if they do not.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    directoryRequire "$cachePath"'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: directoryRequire [ directoryPath ... ] [ --help ] [ --mode fileMode ] [ --owner ownerName ]'$'\n'''$'\n''    directoryPath ...  One or more directories to create'$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --mode fileMode    String. Optional. Enforce the directory mode for mkdir --mode and chmod. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to - to reset to no value.'$'\n''    --owner ownerName  String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to - to reset to no value.'$'\n'''$'\n''Given a list of directories, ensure they exist and create them if they do not.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    directoryRequire "$cachePath"'$'\n'''
+documentationPath="documentation/source/tools/directory.md"

@@ -1,1 +1,1 @@
-[gitPreCommitListExtension]({rel}tools/git.md#gitprecommitlistextension) - List the file(s) of an extension ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L979))
+[gitPreCommitListExtension]({rel}documentation/source/tools/git.md#gitprecommitlistextension) - List the file(s) of an extension ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L980))

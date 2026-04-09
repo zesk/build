@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="text - String. Optional. Text to quote"$'\n'""
 base="quote.sh"
@@ -9,11 +9,14 @@ example="    escapeDoubleQuotes \"Now I can't not include this in a bash string.
 file="bin/build/tools/quote.sh"
 fn="escapeDoubleQuotes"
 foundNames=([0]="argument" [1]="output" [2]="example")
+line="66"
+lowerFn="escapedoublequotes"
 output="Single quotes are prefixed with a backslash"$'\n'""
 rawComment="Quote strings for inclusion in shell quoted strings"$'\n'"Argument: text - String. Optional. Text to quote"$'\n'"Output: Single quotes are prefixed with a backslash"$'\n'"Example:     {fn} \"Now I can't not include this in a bash string.\""$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
 sourceHash="ea3a27e64582997f04005c71fc71250ff1ba01c0"
+sourceLine="66"
 summary="Quote strings for inclusion in shell quoted strings"
 summaryComputed="true"
 usage="escapeDoubleQuotes [ text ]"
@@ -21,3 +24,4 @@ usage="escapeDoubleQuotes [ text ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mescapeDoubleQuotes'$'\e''[0m '$'\e''[[(blue)]m[ text ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mtext  '$'\e''[[(value)]mString. Optional. Text to quote'$'\e''[[(reset)]m'$'\n'''$'\n''Quote strings for inclusion in shell quoted strings'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    escapeDoubleQuotes "Now I can'\''t not include this in a bash string."'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: escapeDoubleQuotes [ text ]'$'\n'''$'\n''    text  String. Optional. Text to quote'$'\n'''$'\n''Quote strings for inclusion in shell quoted strings'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    escapeDoubleQuotes "Now I can'\''t not include this in a bash string."'$'\n'''
+documentationPath="documentation/source/tools/quote.md"

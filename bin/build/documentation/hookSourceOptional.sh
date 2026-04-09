@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source (if it exists)."$'\n'""
 base="hook.sh"
@@ -11,11 +11,14 @@ example="    hookSourceOptional test-cleanup"$'\n'""
 file="bin/build/tools/hook.sh"
 fn="hookSourceOptional"
 foundNames=([0]="argument" [1]="return_code" [2]="example" [3]="test" [4]="see" [5]="environment" [6]="build_debug")
+line="209"
+lowerFn="hooksourceoptional"
 rawComment="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: hookName ... - String. Required. Hook to source (if it exists)."$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 0 - is returned if the hook is not found"$'\n'"Example:     {fn} test-cleanup"$'\n'"Test: testHookSystem"$'\n'"See: hooks.md hookRun"$'\n'"Environment: BUILD_HOOK_EXTENSIONS"$'\n'"Environment: BUILD_HOOK_DIRS"$'\n'"Environment: BUILD_DEBUG"$'\n'"BUILD_DEBUG: hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""$'\n'""
 return_code="Any - The hook exit code is returned if it is run"$'\n'"0 - is returned if the hook is not found"$'\n'""
 see="hooks.md hookRun"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
 sourceHash="d73ad55665973abb9a6ef49bd10909b83e0cc3a0"
+sourceLine="209"
 summary="Identical to \`hookRun\` but returns exit code zero if the"
 summaryComputed="true"
 test="testHookSystem"$'\n'""
@@ -24,3 +27,4 @@ usage="hookSourceOptional [ --application applicationHome ] [ --extensions exten
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mhookSourceOptional'$'\e''[0m '$'\e''[[(blue)]m[ --application applicationHome ]'$'\e''[0m '$'\e''[[(blue)]m[ --extensions extensionList ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mhookName ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--application applicationHome  '$'\e''[[(value)]mPath. Optional. Directory of alternate application home.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--extensions extensionList     '$'\e''[[(value)]mColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to '$'\e''[[(code)]mBUILD_HOOK_EXTENSIONS'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mhookName ...                   '$'\e''[[(value)]mString. Required. Hook to source (if it exists).'$'\e''[[(reset)]m'$'\n'''$'\n''Identical to '$'\e''[[(code)]mhookRun'$'\e''[[(reset)]m but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]mAny'$'\e''[[(reset)]m - The hook exit code is returned if it is run'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    hookSourceOptional test-cleanup'$'\n'''$'\n'''$'\e''[[(code)]mBUILD_DEBUG'$'\e''[[(reset)]m settings:'$'\n''- '$'\e''[[(code)]mhook'$'\e''[[(reset)]m - '$'\e''[[(code)]mhookRun'$'\e''[[(reset)]m and '$'\e''[[(code)]mhookSource'$'\e''[[(reset)]m and optional versions of the same functions will output additional debugging information'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: hookSourceOptional [ --application applicationHome ] [ --extensions extensionList ] hookName ...'$'\n'''$'\n''    --application applicationHome  Path. Optional. Directory of alternate application home.'$'\n''    --extensions extensionList     ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to BUILD_HOOK_EXTENSIONS.'$'\n''    hookName ...                   String. Required. Hook to source (if it exists).'$'\n'''$'\n''Identical to hookRun but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- Any - The hook exit code is returned if it is run'$'\n''- 0 - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    hookSourceOptional test-cleanup'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- hook - hookRun and hookSource and optional versions of the same functions will output additional debugging information'$'\n'''
+documentationPath="documentation/source/tools/hook.md"

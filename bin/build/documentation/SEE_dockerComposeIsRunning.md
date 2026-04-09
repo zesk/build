@@ -1,1 +1,1 @@
-[dockerComposeIsRunning]({rel}tools/docker-compose.md#dockercomposeisrunning) - Is docker compose currently running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L84))
+[dockerComposeIsRunning]({rel}documentation/source/tools/docker-compose.md#dockercomposeisrunning) - Is docker compose currently running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L85))

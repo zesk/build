@@ -1,1 +1,1 @@
-[junitSystemOutputOpen]({rel}tools/junit.md#junitsystemoutputopen) - Open tag for `system-out` - test output ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L158))
+[junitSystemOutputOpen]({rel}documentation/source/tools/junit.md#junitsystemoutputopen) - Open tag for \`system-out\` - test output ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L159))

@@ -215,17 +215,24 @@ __bashPromptModule_Background() {
         return 0
       fi
     else
-      __bashPromptModule_BackgroundLogger "$cache" "Found pid $pid dead related to main process"
+      __backgroundLogger "$cache" "Found pid $pid dead related to main process"
       catchEnvironment "$handler" rm -f "$d/main.pid" "$d/main.alive" || return $?
     fi
     ! $verboseFlag || statusMessage decorate success "Launching background main ... PID: "
     __backgroundMain "$handler" "$cache" "$verboseFlag" "$threshold" 2>>"$cache/main.err" &
+    __backgroundLogger "$cache" "Main launched as pid $!"
     disown
+    __backgroundLogger "$cache" "disown -> $?"
   )
 }
 ___bashPromptModule_Background() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__backgroundLogger() {
+  local cachePath="$1" && shift
+  printf "%s\n" "$*" >>"$cachePath/main.log"
 }
 
 # Daemon which runs the other background processes
@@ -246,16 +253,17 @@ __backgroundMain() {
   if isPositiveInteger "$pid"; then
     local delta=$(((now - alive) / 1000))
     if kill -0 "$pid" 2>/dev/null; then
-      __bashPromptModule_BackgroundLogger "$cache" "Found $pid alive related to main process"
+      __backgroundLogger "$cache" "Found $pid alive related to main process"
       if [ -z "$alive" ] || [ $delta -gt "$aliveThreshold" ]; then
         decorate error "Background main frozen? Killing $pid and restarting alive $(__nowRelative "$now" "$alive") ($delta > threshold $aliveThreshold)"
-        __bashPromptModule_BackgroundLogger "$cache" "Attempting to kill -TERM $pid"
-        catchEnvironment "$handler" kill -TERM "$pid" || __bashPromptModule_BackgroundLogger "$cache" "kill -TERM $pid failed"
+        __backgroundLogger "$cache" "Attempting to kill -TERM $pid"
+        processWait --timeout 5 --signals TERM,KILL "$pid"
+        __backgroundLogger "$cache" "processWait $pid -> $?"
         catchEnvironment "$handler" rm -f "$d/main.pid" "$d/main.alive" || return $?
         while [ "$(timingElapsed "$now")" -lt 2000 ]; do
           if kill -0 "$pid" 2>/dev/null; then
             sleep 1
-            __bashPromptModule_BackgroundLogger "$cache" "Attempting to kill -9 $pid"
+            __backgroundLogger "$cache" "Attempting to kill -9 $pid"
             catchEnvironment "$handler" kill -9 "$pid" || :
           fi
         done
@@ -265,7 +273,8 @@ __backgroundMain() {
       fi
     else
       ! $verboseFlag || decorate info "Main process ID is $pid - and is dead"
-      kill -TERM "$pid" 2>/dev/null || :
+      processWait --timeout 5 --signals TERM,KILL "$pid"
+      __backgroundLogger "$cache" "processWait $pid -> $?"
       catchEnvironment "$handler" rm -f "$d/main.pid" "$d/main.alive" || return $?
     fi
   else
@@ -409,6 +418,7 @@ __backgroundProcessManager() {
     catchEnvironment "$handler" printf -- "%s\n" "$now" >"$d/run" || return $?
     __backgroundProcessExitWrapper "$home" "$d" "${command[@]}" &
     pid=$!
+    __backgroundLogger "$cache" "Ran ${command[*]} -> Process $pid"
     catchEnvironment "$handler" printf -- "%d\n" "$pid" >"$d/pid" || return $?
     if [ "$stopSeconds" -gt 0 ]; then
       catchEnvironment "$handler" printf -- "%s\n" "$((now + (stopSeconds * 1000)))" >"$d/waitStop" || return $?
@@ -432,7 +442,8 @@ __backgroundProcessKill() {
 
   id=$(decorate label "${id:0:6}")
   if [ -n "$pid" ]; then
-    catchReturn "$handler" kill -TERM "$pid" 2>>"$d/process-errors" || :
+    local returnCode && catchReturn "$handler" kill -TERM "$pid" 2>>"$d/process-errors" || returnCode=$?
+    __backgroundLogger "$cache" "kill -TERM $pid -> $returnCode"
     ! $verboseFlag || statusMessage decorate info "Removed process $id (PID $pid) $(decorate each code "${command[@]}")"
   else
     ! $verboseFlag || statusMessage decorate info "Removed process $id $(decorate each code "${command[@]}")"

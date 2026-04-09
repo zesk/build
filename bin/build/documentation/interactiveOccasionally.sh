@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--delta deltaMilliseconds - PositiveInteger. Optional. Default is 60000."$'\n'"--mark - Flag. Optional. Write the marker which says the"$'\n'"--verbose - Flag. Optional. Be chatty."$'\n'"name - EnvironmentVariable. Required. The global codename for this interaction."$'\n'""
 base="interactive.sh"
@@ -8,10 +8,13 @@ description="Do something the first time and then only occasionally thereafter."
 file="bin/build/tools/interactive.sh"
 fn="interactiveOccasionally"
 foundNames=([0]="argument" [1]="return_code")
+line="245"
+lowerFn="interactiveoccasionally"
 rawComment="Do something the first time and then only occasionally thereafter."$'\n'"This manages a state file compared to the current time and triggers after \`delta\` seconds."$'\n'"Think of it like something that only returns 0 like once every \`delta\` seconds but it's going to happen at minimum \`delta\` seconds, or the next time after that. And the first time as well."$'\n'"Argument: --delta deltaMilliseconds - PositiveInteger. Optional. Default is 60000."$'\n'"Argument: --mark - Flag. Optional. Write the marker which says the"$'\n'"Argument: --verbose - Flag. Optional. Be chatty."$'\n'"Argument: name - EnvironmentVariable. Required. The global codename for this interaction."$'\n'"Return Code: 0 - Do the thing"$'\n'"Return Code: 1 - Do not do the thing"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - Do the thing"$'\n'"1 - Do not do the thing"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
 sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
+sourceLine="245"
 summary="Do something the first time and then only occasionally thereafter."
 summaryComputed="true"
 usage="interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verbose ] name"
@@ -19,3 +22,4 @@ usage="interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verb
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]minteractiveOccasionally'$'\e''[0m '$'\e''[[(blue)]m[ --delta deltaMilliseconds ]'$'\e''[0m '$'\e''[[(blue)]m[ --mark ]'$'\e''[0m '$'\e''[[(blue)]m[ --verbose ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mname'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--delta deltaMilliseconds  '$'\e''[[(value)]mPositiveInteger. Optional. Default is 60000.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--mark                     '$'\e''[[(value)]mFlag. Optional. Write the marker which says the'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--verbose                  '$'\e''[[(value)]mFlag. Optional. Be chatty.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mname                       '$'\e''[[(value)]mEnvironmentVariable. Required. The global codename for this interaction.'$'\e''[[(reset)]m'$'\n'''$'\n''Do something the first time and then only occasionally thereafter.'$'\n''This manages a state file compared to the current time and triggers after '$'\e''[[(code)]mdelta'$'\e''[[(reset)]m seconds.'$'\n''Think of it like something that only returns 0 like once every '$'\e''[[(code)]mdelta'$'\e''[[(reset)]m seconds but it'\''s going to happen at minimum '$'\e''[[(code)]mdelta'$'\e''[[(reset)]m seconds, or the next time after that. And the first time as well.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Do the thing'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Do not do the thing'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verbose ] name'$'\n'''$'\n''    --delta deltaMilliseconds  PositiveInteger. Optional. Default is 60000.'$'\n''    --mark                     Flag. Optional. Write the marker which says the'$'\n''    --verbose                  Flag. Optional. Be chatty.'$'\n''    name                       EnvironmentVariable. Required. The global codename for this interaction.'$'\n'''$'\n''Do something the first time and then only occasionally thereafter.'$'\n''This manages a state file compared to the current time and triggers after delta seconds.'$'\n''Think of it like something that only returns 0 like once every delta seconds but it'\''s going to happen at minimum delta seconds, or the next time after that. And the first time as well.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Do the thing'$'\n''- 1 - Do not do the thing'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/interactive.md"

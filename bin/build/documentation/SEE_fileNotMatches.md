@@ -1,1 +1,1 @@
-[fileNotMatches]({rel}tools/file.md#filenotmatches) - Find list of files which do NOT match a specific ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L538))
+[fileNotMatches]({rel}documentation/source/tools/file.md#filenotmatches) - Find list of files which do NOT match a specific ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L539))

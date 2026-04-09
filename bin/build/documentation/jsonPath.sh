@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="path - String. Output a json path separated by dots."$'\n'""
 base="json.sh"
@@ -8,13 +8,17 @@ description="Generate a path for a JSON structure for use in \`jq\` queries"$'\n
 file="bin/build/tools/json.sh"
 fn="jsonPath"
 foundNames=([0]="summary" [1]="argument")
+line="48"
+lowerFn="jsonpath"
 rawComment="Summary: Generate \`jq\` paths"$'\n'"Generate a path for a JSON structure for use in \`jq\` queries"$'\n'"Argument: path - String. Output a json path separated by dots."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/json.sh"
 sourceHash="e7e9bbb5a5c883cd136dbe34ac5ccb4394f94a5f"
+sourceLine="48"
 summary="Generate \`jq\` paths"$'\n'""
 usage="jsonPath [ path ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mjsonPath'$'\e''[0m '$'\e''[[(blue)]m[ path ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mpath  '$'\e''[[(value)]mString. Output a json path separated by dots.'$'\e''[[(reset)]m'$'\n'''$'\n''Generate a path for a JSON structure for use in '$'\e''[[(code)]mjq'$'\e''[[(reset)]m queries'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: jsonPath [ path ]'$'\n'''$'\n''    path  String. Output a json path separated by dots.'$'\n'''$'\n''Generate a path for a JSON structure for use in jq queries'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/json.md"

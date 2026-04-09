@@ -1,1 +1,1 @@
-[consoleHeadingLine]({rel}tools/decoration.md#consoleheadingline) - Output a line and fill columns with a character ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/line.sh#L59))
+[consoleHeadingLine]({rel}documentation/source/tools/decoration.md#consoleheadingline) - Output a line and fill columns with a character ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/line.sh#L60))

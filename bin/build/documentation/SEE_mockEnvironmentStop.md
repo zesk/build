@@ -1,1 +1,1 @@
-[mockEnvironmentStop]({rel}tools/assert.md#mockenvironmentstop) - Restore a mocked value. Works solely with the default `saveGlobalName` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1451))
+[mockEnvironmentStop]({rel}documentation/source/tools/assert.md#mockenvironmentstop) - Restore a mocked value. Works solely with the default \`saveGlobalName\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1452))

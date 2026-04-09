@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="--env-file envFile - File. Optional. Environment file to load."$'\n'"--home homeDirectory - Directory. Optional. Directory for application home."$'\n'""
 base="php.sh"
@@ -9,10 +9,13 @@ file="bin/build/tools/php.sh"
 fn="phpTest"
 foundNames=([0]="argument" [1]="hook")
 hook="test-setup - Move or copy files prior to docker-compose build to build test container\""$'\n'"test-runner - Run PHP Unit and any other tests inside the container\""$'\n'"test-cleanup - Reverse of test-setup hook actions\""$'\n'""
+line="336"
+lowerFn="phptest"
 rawComment="Argument: --env-file envFile - File. Optional. Environment file to load."$'\n'"Argument: --home homeDirectory - Directory. Optional. Directory for application home."$'\n'"Test a docker-based PHP application during build"$'\n'"Hook: test-setup - Move or copy files prior to docker-compose build to build test container\""$'\n'"Hook: test-runner - Run PHP Unit and any other tests inside the container\""$'\n'"Hook: test-cleanup - Reverse of test-setup hook actions\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/php.sh"
 sourceHash="64d4aa53cd146a2f3f4e58bf69e8a5d68ffd3e73"
+sourceLine="336"
 summary="Test a docker-based PHP application during build"
 summaryComputed="true"
 usage="phpTest [ --env-file envFile ] [ --home homeDirectory ]"
@@ -20,3 +23,4 @@ usage="phpTest [ --env-file envFile ] [ --home homeDirectory ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mphpTest'$'\e''[0m '$'\e''[[(blue)]m[ --env-file envFile ]'$'\e''[0m '$'\e''[[(blue)]m[ --home homeDirectory ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--env-file envFile    '$'\e''[[(value)]mFile. Optional. Environment file to load.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--home homeDirectory  '$'\e''[[(value)]mDirectory. Optional. Directory for application home.'$'\e''[[(reset)]m'$'\n'''$'\n''Test a docker-based PHP application during build'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: phpTest [ --env-file envFile ] [ --home homeDirectory ]'$'\n'''$'\n''    --env-file envFile    File. Optional. Environment file to load.'$'\n''    --home homeDirectory  Directory. Optional. Directory for application home.'$'\n'''$'\n''Test a docker-based PHP application during build'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+documentationPath="documentation/source/tools/php.md"

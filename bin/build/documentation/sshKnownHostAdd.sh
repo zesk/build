@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-03
+# Generated on 2026-04-09
 # shellcheck disable=SC2034
 argument="hostName ... - String. Optional. One ore more hosts to add to the known hosts file"$'\n'""
 base="ssh.sh"
@@ -8,10 +8,13 @@ description="Adds the host to the \`~/.known_hosts\` if it is not found in it al
 file="bin/build/tools/ssh.sh"
 fn="sshKnownHostAdd"
 foundNames=([0]="return_code" [1]="argument")
+line="73"
+lowerFn="sshknownhostadd"
 rawComment="Adds the host to the \`~/.known_hosts\` if it is not found in it already"$'\n'"Side effects:"$'\n'"1. \`~/.ssh\` may be created if it does not exist"$'\n'"1. \`~/.ssh\` mode is set to \`0700\` (read/write/execute user)"$'\n'"1. \`~/.ssh/known_hosts\` is created if it does not exist"$'\n'"1. \`~/.ssh/known_hosts\` mode is set to \`0600\` (read/write user)"$'\n'"1. \`~./.ssh/known_hosts\` is possibly modified (appended)"$'\n'"If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail"$'\n'"Return Code: 1 - Environment errors"$'\n'"Return Code: 0 - All hosts exist in or were successfully added to the known hosts file"$'\n'"Argument: hostName ... - String. Optional. One ore more hosts to add to the known hosts file"$'\n'"If no arguments are passed, the default behavior is to set up the \`~/.ssh\` directory and create the known hosts file."$'\n'""$'\n'""
 return_code="1 - Environment errors"$'\n'"0 - All hosts exist in or were successfully added to the known hosts file"$'\n'""
 sourceFile="bin/build/tools/ssh.sh"
 sourceHash="da31df886e47e169a75f4a40634ff3d8ce30c031"
+sourceLine="73"
 summary="Adds the host to the \`~/.known_hosts\` if it is not"
 summaryComputed="true"
 usage="sshKnownHostAdd [ hostName ... ]"
@@ -19,3 +22,4 @@ usage="sshKnownHostAdd [ hostName ... ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]msshKnownHostAdd'$'\e''[0m '$'\e''[[(blue)]m[ hostName ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mhostName ...  '$'\e''[[(value)]mString. Optional. One ore more hosts to add to the known hosts file'$'\e''[[(reset)]m'$'\n'''$'\n''Adds the host to the '$'\e''[[(code)]m~/.known_hosts'$'\e''[[(reset)]m if it is not found in it already'$'\n''Side effects:'$'\n''1. '$'\e''[[(code)]m~/.ssh'$'\e''[[(reset)]m may be created if it does not exist'$'\n''1. '$'\e''[[(code)]m~/.ssh'$'\e''[[(reset)]m mode is set to '$'\e''[[(code)]m0700'$'\e''[[(reset)]m (read/write/execute user)'$'\n''1. '$'\e''[[(code)]m~/.ssh/known_hosts'$'\e''[[(reset)]m is created if it does not exist'$'\n''1. '$'\e''[[(code)]m~/.ssh/known_hosts'$'\e''[[(reset)]m mode is set to '$'\e''[[(code)]m0600'$'\e''[[(reset)]m (read/write user)'$'\n''1. '$'\e''[[(code)]m~./.ssh/known_hosts'$'\e''[[(reset)]m is possibly modified (appended)'$'\n''If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail'$'\n''If no arguments are passed, the default behavior is to set up the '$'\e''[[(code)]m~/.ssh'$'\e''[[(reset)]m directory and create the known hosts file.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment errors'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All hosts exist in or were successfully added to the known hosts file'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: sshKnownHostAdd [ hostName ... ]'$'\n'''$'\n''    hostName ...  String. Optional. One ore more hosts to add to the known hosts file'$'\n'''$'\n''Adds the host to the ~/.known_hosts if it is not found in it already'$'\n''Side effects:'$'\n''1. ~/.ssh may be created if it does not exist'$'\n''1. ~/.ssh mode is set to 0700 (read/write/execute user)'$'\n''1. ~/.ssh/known_hosts is created if it does not exist'$'\n''1. ~/.ssh/known_hosts mode is set to 0600 (read/write user)'$'\n''1. ~./.ssh/known_hosts is possibly modified (appended)'$'\n''If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail'$'\n''If no arguments are passed, the default behavior is to set up the ~/.ssh directory and create the known hosts file.'$'\n'''$'\n''Return codes:'$'\n''- 1 - Environment errors'$'\n''- 0 - All hosts exist in or were successfully added to the known hosts file'$'\n'''
+documentationPath="documentation/source/tools/ssh.md"
