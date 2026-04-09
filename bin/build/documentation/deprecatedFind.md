@@ -10,9 +10,9 @@ Find files which match a token or tokens
 
 ### Arguments
 
-- `findArgumentFunction` - Function. Required. Find arguments (for `find`) for cannon.
+- `findArgumentFunction` - Function. Required. Find arguments (for `find`) for `textCannon`.
 - `search` - String. Required. String to search for (one or more)
-- `--path cannonPath` - Directory. Optional. Run textCannon operation starting in this directory.
+- `--path cannonPath` - Directory. Optional. Run `textCannon` operation starting in this directory.
 
 ### Return codes
 

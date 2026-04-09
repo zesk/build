@@ -284,7 +284,7 @@ __buildFunctionsCompileFunction() {
         printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
       fi
       # ********************************************************************************************************************
-
+      catchReturn "$handler" touch "$documentationSettingsFile" || return $?
       return 0
     fi
   fi

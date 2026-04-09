@@ -76,8 +76,11 @@ buildFunctionMarkdownDocumentation() {
   local targetFile && targetFile="$(dirname "$settingsFile")/${fn}.md"
   local template && template=$(catchReturn "$handler" documentationTemplate function) || return $?
   if $checkFlag; then
-    [ -f "$targetFile" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile"
-    return $?
+    if [ -f "$targetFile" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile"; then
+      catchReturn "$handler" touch "$targetFile" || return $?
+      return 0
+    fi
+    return 1
   fi
   catchReturn "$handler" bashDocumentationMarkdown "$fn" >"$targetFile" || return $?
 }
@@ -120,8 +123,11 @@ buildFunctionSeeTemplate() {
   local targetFile && targetFile="$(dirname "$settingsFile")/SEE_${fn}.md"
   local template && template=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
   if $checkFlag; then
-    [ -f "$targetFile" ] && [ -f "$documentationPath" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile" "$documentationPath"
-    return $?
+    if [ -f "$targetFile" ] && [ -f "$documentationPath" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile" "$documentationPath"; then
+      catchReturn "$handler" touch "$targetFile" || return $?
+      return 0
+    fi
+    return 1
   fi
   (
     catchReturn "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
