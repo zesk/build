@@ -908,7 +908,7 @@ gitPreCommitHeader() {
   local directory total color
 
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
-  [ -f "$directory/@" ] || throwEnvironment "$handler" "$directory/@ missing" || return $?
+  [ -f "$directory/@" ] || decorate warning "No new files to commit"
   total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(textAlignRight "$width" "all")")" "$(decorate info "$total $(localePlural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
