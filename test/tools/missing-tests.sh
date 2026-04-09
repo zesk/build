@@ -12,6 +12,8 @@ testEverythingElse() {
   # plasterLines
 
   # documentationIndexUnlinkedFunctions
+  # bashDocumentationMarkdown
+  # documentationTemplateFileCompile
   #  catchEnvironmentQuiet
   #  executeInputSupport
 

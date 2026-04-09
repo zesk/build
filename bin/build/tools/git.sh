@@ -897,7 +897,7 @@ _gitPreCommitSetup() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Output a display for pre-commit files changed
+# Output a display for pre-commit files changed.
 # Argument: extension - String. Optional. Extension to display
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -955,7 +955,7 @@ _gitPreCommitHasExtension() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List the extensions available
+# List the extensions available.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # stdout: String. One per line.
@@ -971,7 +971,7 @@ _gitPreCommitExtensionList() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List the file(s) of an extension
+# List the file(s) of an extension.
 # Argument: extension - String. Optional. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
