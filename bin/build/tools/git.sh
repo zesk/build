@@ -905,11 +905,10 @@ gitPreCommitHeader() {
   local handler="_${FUNCNAME[0]}" width=5
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local directory total color
+  local directory total=0 color
 
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
-  [ -f "$directory/@" ] || decorate warning "No new files to commit"
-  total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
+  [ ! -f "$directory/@" ] || total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(textAlignRight "$width" "all")")" "$(decorate info "$total $(localePlural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     local extension="$1" label="$1"
