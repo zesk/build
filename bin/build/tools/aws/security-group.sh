@@ -5,6 +5,13 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+#!/usr/bin/env bash
+#
+# Amazon Web Services: awsSecurityGroupIPModify
+#
+# Copyright &copy; 2026 Market Acumen, Inc.
+#
+
 __awsSecurityGroupIPModify() {
   local handler="$1" && shift
 
@@ -22,37 +29,14 @@ __awsSecurityGroupIPModify() {
     --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL profileNameArgumentHandler 1
     --profile) shift && profileName="$(validate "$handler" string "$argument" "$1")" && pp=("$argument" "$profileName") || return $? ;;
-    --group)
-      shift
-      group=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --port)
-      shift
-      port=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
-      ;;
-    --description)
-      shift
-      description=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --ip)
-      shift
-      ip=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --add)
-      verb="Adding"
-      mode="$argument"
-      ;;
-    --remove)
-      verb="Removing"
-      mode="$argument"
-      ;;
-    --register)
-      verb="Registering"
-      mode="$argument"
-      ;;
-    --install)
-      ! executableExists aws || catchReturn "$handler" awsInstall || return $?
-      ;;
+    --group) shift && group=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --port) shift && port=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
+    --description) shift && description=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --ip) shift && ip=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --add) verb="Adding" && mode="$argument" ;;
+    --remove) verb="Removing" && mode="$argument" ;;
+    --register) verb="Registering" && mode="$argument" ;;
+    --install) ! executableExists aws || catchReturn "$handler" awsInstall || return $? ;;
     # IDENTICAL regionArgumentHandler 1
     --region) shift && region=$(validate "$handler" AWSRegion "$argument" "${1-}") || return $? ;;
     *)

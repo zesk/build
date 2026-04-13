@@ -220,10 +220,8 @@ buildDocumentationBuild() {
     return 0
   fi
 
-  local version
-  version=$(hookVersionCurrent)
-  local timestamp
-  timestamp="$(date -u "+%F %T") UTC"
+  local version && version=$(catchReturn "$handler" hookVersionCurrent) || return $?
+  local timestamp && timestamp="$(catchReturn "$handler" date -u "+%F %T") UTC" || return $?
 
   # Greeting
   catchReturn "$handler" buildEnvironmentLoad APPLICATION_NAME || return $?
