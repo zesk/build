@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-14
 # shellcheck disable=SC2034
 argument="--filter filterArgs ... --  - Arguments. Optional. Passed to \`find\` and allows filtering list."$'\n'"--force - Flag. Optional. Force generation of files."$'\n'"--verbose - Flag. Optional. Output more messages."$'\n'"--env-file envFile - File. Optional. One (or more) environment files used during map of \`functionTemplate\`"$'\n'"--md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored."$'\n'"cacheDirectory - Required. The directory where function index exists and additional cache files can be stored."$'\n'"templateDirectory - Required. Directory containing documentation templates"$'\n'"functionTemplate - Required. Function template file to generate documentation for functions"$'\n'"targetDirectory - Required. Directory to create generated documentation"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -8,14 +8,14 @@ description="Convert a directory of templates for bash functions into full-fledg
 file="bin/build/tools/documentation.sh"
 fn="documentationTemplateDirectoryCompile"
 foundNames=([0]="argument" [1]="summary" [2]="see" [3]="return_code")
-line="255"
+line="256"
 lowerFn="documentationtemplatedirectorycompile"
 rawComment="Argument: --filter filterArgs ... --  - Arguments. Optional. Passed to \`find\` and allows filtering list."$'\n'"Argument: --force - Flag. Optional. Force generation of files."$'\n'"Argument: --verbose - Flag. Optional. Output more messages."$'\n'"Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of \`functionTemplate\`"$'\n'"Argument: --md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored."$'\n'"Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored."$'\n'"Argument: templateDirectory - Required. Directory containing documentation templates"$'\n'"Argument: functionTemplate - Required. Function template file to generate documentation for functions"$'\n'"Argument: targetDirectory - Required. Directory to create generated documentation"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Summary: Convert a directory of templates into documentation for Bash functions"$'\n'"Convert a directory of templates for bash functions into full-fledged documentation."$'\n'"The process:"$'\n'"1. \`templateDirectory\` is scanned for files which look like \`*.md\`"$'\n'"1. \`{fn}\` is called for each one"$'\n'"If the \`cacheDirectory\` is supplied, it's used to store values and hashes of the various files to avoid having"$'\n'"to regenerate each time."$'\n'"See: documentationTemplateCompile"$'\n'"Return Code: 0 - If success"$'\n'"Return Code: 1 - Any template file failed to generate for any reason"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - If success"$'\n'"1 - Any template file failed to generate for any reason"$'\n'"2 - Argument error"$'\n'""
 see="documentationTemplateCompile"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="d079b892a371cbbf3a4c8696e9e186c0c6c2e830"
-sourceLine="255"
+sourceHash="053022e849a1557d427212d89dc2881e59289681"
+sourceLine="256"
 summary="Convert a directory of templates into documentation for Bash functions"$'\n'""
 usage="documentationTemplateDirectoryCompile [ --filter filterArgs ... --  ] [ --force ] [ --verbose ] [ --env-file envFile ] [ --md-cache markdownCacheDirectory ] cacheDirectory templateDirectory functionTemplate targetDirectory [ --help ]"
 # shellcheck disable=SC2016

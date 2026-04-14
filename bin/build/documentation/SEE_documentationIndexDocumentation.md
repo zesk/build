@@ -1,1 +1,1 @@
-[documentationIndexDocumentation]({rel}documentation/source/tools/documentation.md#documentationindexdocumentation) - Generate the documentation index (e.g. functions defined in the documentation) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L365))
+[documentationIndexDocumentation]({rel}documentation/source/tools/documentation.md#documentationindexdocumentation) - Generate the documentation index (e.g. functions defined in the documentation) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L366))

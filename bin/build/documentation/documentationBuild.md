@@ -4,7 +4,7 @@
 
 ### Usage
 
-    documentationBuild [ --commit ] [ --force ] [ --unlinked ] [ --unlinked-update ] [ --clean ] [ --help ] [ --company companyName ] [ --company-link companyLink ] [ --unlinked-source directory ] [ --page-template pageTemplateFile ] --source sourceDirectory --target targetDirectory [ --function-template functionTemplateFile ] [ --unlinked-template unlinkedTemplateFile ] [ --unlinked-target unlinkedTarget ] [ --see-prefix seePrefix ] [ --see-update ] [ --unlinked-update ] [ --index-update ] [ --docs-update ]
+    documentationBuild [ --commit ] [ --force ] [ --unlinked ] [ --unlinked-update ] [ --clean ] [ --help ] [ --company companyName ] [ --company-link companyLink ] [ --unlinked-source directory ] [ --page-template pageTemplateFile ] --template templateDirectory --source sourceDirectory --target targetDirectory [ --function-template functionTemplateFile ] [ --unlinked-template unlinkedTemplateFile ] [ --unlinked-target unlinkedTarget ] [ --see-prefix seePrefix ] [ --see-update ] [ --unlinked-update ] [ --index-update ] [ --docs-update ]
 
 Build documentation for Bash functions
 Given that bash is not an ideal template language, caching is mandatory.
@@ -22,6 +22,7 @@ Uses a cache at `buildCacheDirectory`
 - `--company-link companyLink` - String. Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
 - `--unlinked-source directory` - Directory. Optional.
 - `--page-template pageTemplateFile` - File. Optional.
+- `--template templateDirectory` - Directory. Required. Location of documentation template file to generate documentation.
 - `--source sourceDirectory` - Directory. Required. Location of source code. Can specify one or more.
 - `--target targetDirectory` - Directory. Required. Location of documentation build target.
 - `--function-template functionTemplateFile` - File. Optional.

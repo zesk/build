@@ -1,1 +1,2 @@
 [deprecatedFind]({rel}documentation/source/tools/deprecated.md#deprecatedfind) - Find files which match a token or tokens ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L243))
+[deprecatedFind]({rel}documentation/source/tools/deprecated.md#deprecatedfind) - Find files which match a token or tokens ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L243))

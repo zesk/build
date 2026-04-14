@@ -1,2 +1,3 @@
 [developerAnnounce]({rel}documentation/source/tools/developer.md#developerannounce) - Announce a list of functions now available ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L9))
 [developerAnnounce]({rel}documentation/source/tools/developer.md#developerannounce) - Announce a list of functions now available ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L9))
+[developerAnnounce]({rel}documentation/source/tools/developer.md#developerannounce) - Announce a list of functions now available ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L9))

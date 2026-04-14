@@ -1,1 +1,2 @@
 [iTerm2ColorNames]({rel}documentation/source/tools/iterm2.md#iterm2colornames) - Solely the color names (e.g blue), not anything else ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L194))
+[iTerm2ColorNames]({rel}documentation/source/tools/iterm2.md#iterm2colornames) - Solely the color names (e.g blue), not anything else ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L194))

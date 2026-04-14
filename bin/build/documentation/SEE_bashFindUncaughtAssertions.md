@@ -1,1 +1,2 @@
 [bashFindUncaughtAssertions]({rel}documentation/source/tools/test.md#bashfinduncaughtassertions) - Search bash files for assertions which do not terminate a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L291))
+[bashFindUncaughtAssertions]({rel}documentation/source/tools/test.md#bashfinduncaughtassertions) - Search bash files for assertions which do not terminate a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L291))

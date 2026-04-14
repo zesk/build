@@ -43,7 +43,7 @@ buildPreRelease() {
   __buildPreReleaseStep "$handler" "$interruptCode" "Usage remove deprecated" buildFunctionsRemoveDeprecated || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
-  __buildPreReleaseStep "$handler" "$interruptCode" "Functions compile" buildBuildFunctions || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Functions compile" buildFunctionsDerivedCompile || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
   __buildPreReleaseStep "$handler" "$interruptCode" "Fingerprint" fingerprint || exitCode=$?

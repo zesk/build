@@ -1,1 +1,2 @@
 [gitVersionList]({rel}documentation/source/tools/git.md#gitversionlist) - Fetches a list of tags from git and filters those ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L149))
+[gitVersionList]({rel}documentation/source/tools/git.md#gitversionlist) - Fetches a list of tags from git and filters those ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L149))

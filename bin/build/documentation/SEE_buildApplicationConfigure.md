@@ -1,1 +1,2 @@
 [buildApplicationConfigure]({rel}documentation/source/tools/build.md#buildapplicationconfigure) - Configure project for Zesk Build"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L146))
+[buildApplicationConfigure]({rel}documentation/source/tools/build.md#buildapplicationconfigure) - Configure project for Zesk Build"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L146))

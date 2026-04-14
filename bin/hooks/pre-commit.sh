@@ -45,7 +45,7 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
     if ! find "$home/bin/build/documentation" -type f -name '*.sh' -empty | decorate warning | decorate wrap "- " "" | outputTrigger | printfOutputPrefix "%s\n" "$(decorate error "Zero documentation files:")"; then
       statusMessage decorate info "Building usage ..."
       catchEnvironment "$handler" find "$home/bin/build/documentation" -type f -name '*.sh' -empty -delete || return $?
-      env -i "HOME=$HOME" "PATH=$PATH" CI="1" "$home/bin/tools.sh" buildBuildFunctions || return $?
+      env -i "HOME=$HOME" "PATH=$PATH" CI="1" "$home/bin/tools.sh" buildFunctionsDerivedCompile || return $?
       if ! find "$home/bin/build/documentation" -type f -name '*.sh' -empty | decorate warning | decorate wrap "- " "" | outputTrigger | printfOutputPrefix "%s\n" "$(decorate error "Can not create documentation files:")" 1>&2; then
         return 1
       fi

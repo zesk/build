@@ -1,1 +1,2 @@
 [environmentSecureVariables]({rel}documentation/source/tools/environment.md#environmentsecurevariables) - List environment variables related to security ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L45))
+[environmentSecureVariables]({rel}documentation/source/tools/environment.md#environmentsecurevariables) - List environment variables related to security ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L45))

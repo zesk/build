@@ -1,1 +1,2 @@
 [returnClean]({rel}documentation/source/tools/sugar-core.md#returnclean) - Delete files or directories and return the same exit code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L101))
+[returnClean]({rel}documentation/source/tools/sugar-core.md#returnclean) - Delete files or directories and return the same exit code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L101))

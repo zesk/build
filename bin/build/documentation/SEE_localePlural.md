@@ -1,1 +1,2 @@
 [localePlural]({rel}documentation/source/tools/text.md#localeplural) - Outputs the \`singular\` value to standard out when the value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L786))
+[localePlural]({rel}documentation/source/tools/text.md#localeplural) - Outputs the \`singular\` value to standard out when the value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L786))

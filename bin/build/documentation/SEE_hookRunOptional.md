@@ -1,1 +1,2 @@
 [hookRunOptional]({rel}documentation/source/tools/hook.md#hookrunoptional) - Identical to \`hookRun\` but returns exit code zero if the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L154))
+[hookRunOptional]({rel}documentation/source/tools/hook.md#hookrunoptional) - Identical to \`hookRun\` but returns exit code zero if the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L154))

@@ -81,6 +81,7 @@ _bashDocumentationExtract() {
 # Argument: --company-link companyLink - String. Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
 # Argument: --unlinked-source directory - Directory. Optional.
 # Argument: --page-template pageTemplateFile - File. Optional.
+# Argument: --template templateDirectory - Directory. Required. Location of documentation template file to generate documentation.
 # Argument: --source sourceDirectory - Directory. Required. Location of source code. Can specify one or more.
 # Argument: --target targetDirectory - Directory. Required. Location of documentation build target.
 # Argument: --function-template functionTemplateFile - File. Optional.

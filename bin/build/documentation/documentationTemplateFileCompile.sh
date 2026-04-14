@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-14
 # shellcheck disable=SC2034
 argument="--env-file envFile - File. Optional. One (or more) environment files used to map \`documentTemplate\` prior to scanning, as defaults prior to each function generation, and after file generation."$'\n'"--md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored."$'\n'"cacheDirectory - Directory. Required. Cache directory where the indexes live."$'\n'"sourceFile - File. Directory. Required. The document template containing functions to define"$'\n'"functionTemplate - File. Required. The template for individual functions defined in the \`documentTemplate\`."$'\n'"targetFile - FileDirectory. Required. Target file to generate"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -8,15 +8,15 @@ description="Convert a template which contains bash functions into full-fledged 
 file="bin/build/tools/documentation.sh"
 fn="documentationTemplateFileCompile"
 foundNames=([0]="summary" [1]="argument" [2]="see" [3]="return_code" [4]="requires")
-line="220"
+line="221"
 lowerFn="documentationtemplatefilecompile"
 rawComment="Summary: Convert a template file to a documentation file using templates"$'\n'"Argument: --env-file envFile - File. Optional. One (or more) environment files used to map \`documentTemplate\` prior to scanning, as defaults prior to each function generation, and after file generation."$'\n'"Argument: --md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored."$'\n'"Argument: cacheDirectory - Directory. Required. Cache directory where the indexes live."$'\n'"Argument: sourceFile - File. Directory. Required. The document template containing functions to define"$'\n'"Argument: functionTemplate - File. Required. The template for individual functions defined in the \`documentTemplate\`."$'\n'"Argument: targetFile - FileDirectory. Required. Target file to generate"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Convert a template which contains bash functions into full-fledged documentation."$'\n'"The process:"$'\n'"1. \`documentTemplate\` is scanned for tokens which are assumed to represent Bash functions"$'\n'"1. \`functionTemplate\` is used to generate the documentation for each function"$'\n'"1. Functions are looked up in \`cacheDirectory\` using indexing functions and"$'\n'"1. Template used to generate documentation and compiled to \`targetFile\`"$'\n'"\`cacheDirectory\` is required - build an index using \`documentationIndexIndex\` prior to using this."$'\n'"See: documentationIndexLookup"$'\n'"See: documentationIndexIndex"$'\n'"Return Code: 0 - If success"$'\n'"Return Code: 1 - Issue with file generation"$'\n'"Return Code: 2 - Argument error"$'\n'"Requires: catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory"$'\n'"Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean"$'\n'"Requires: mapEnvironment textSHA printf"$'\n'""$'\n'""
 requires="catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory"$'\n'"basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean"$'\n'"mapEnvironment textSHA printf"$'\n'""
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
 see="documentationIndexLookup"$'\n'"documentationIndexIndex"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="d079b892a371cbbf3a4c8696e9e186c0c6c2e830"
-sourceLine="220"
+sourceHash="053022e849a1557d427212d89dc2881e59289681"
+sourceLine="221"
 summary="Convert a template file to a documentation file using templates"$'\n'""
 usage="documentationTemplateFileCompile [ --env-file envFile ] [ --md-cache markdownCacheDirectory ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]"
 # shellcheck disable=SC2016

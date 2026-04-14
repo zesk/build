@@ -1,1 +1,2 @@
 [websiteScrape]({rel}documentation/source/tools/web.md#websitescrape) - Scrape a website. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L126))
+[websiteScrape]({rel}documentation/source/tools/web.md#websitescrape) - Scrape a website. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L126))

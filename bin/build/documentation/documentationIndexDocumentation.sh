@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-14
 # shellcheck disable=SC2034
 argument="cacheDirectory - Required. Cache directory where the index will be created."$'\n'"documentationSource ... - OneOrMore. Documentation source path to find tokens and their definitions."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -8,13 +8,13 @@ description="Generate the documentation index (e.g. functions defined in the doc
 file="bin/build/tools/documentation.sh"
 fn="documentationIndexDocumentation"
 foundNames=([0]="argument" [1]="return_code")
-line="365"
+line="366"
 lowerFn="documentationindexdocumentation"
 rawComment="Generate the documentation index (e.g. functions defined in the documentation)"$'\n'"Argument: cacheDirectory - Required. Cache directory where the index will be created."$'\n'"Argument: documentationSource ... - OneOrMore. Documentation source path to find tokens and their definitions."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - If success"$'\n'"Return Code: 1 - Issue with file generation"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="d079b892a371cbbf3a4c8696e9e186c0c6c2e830"
-sourceLine="365"
+sourceHash="053022e849a1557d427212d89dc2881e59289681"
+sourceLine="366"
 summary="Generate the documentation index (e.g. functions defined in the documentation)"
 summaryComputed="true"
 usage="documentationIndexDocumentation cacheDirectory [ documentationSource ... ] [ --help ]"

@@ -1,1 +1,2 @@
 [environmentValueReadArray]({rel}documentation/source/tools/environment.md#environmentvaluereadarray) - Read an array value from a state file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L147))
+[environmentValueReadArray]({rel}documentation/source/tools/environment.md#environmentvaluereadarray) - Read an array value from a state file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L147))

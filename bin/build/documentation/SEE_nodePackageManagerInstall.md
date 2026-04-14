@@ -1,1 +1,2 @@
 [nodePackageManagerInstall]({rel}documentation/source/tools/node.md#nodepackagemanagerinstall) - Installs the selected package manager for node ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L165))
+[nodePackageManagerInstall]({rel}documentation/source/tools/node.md#nodepackagemanagerinstall) - Installs the selected package manager for node ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L165))

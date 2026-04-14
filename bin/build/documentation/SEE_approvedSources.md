@@ -1,1 +1,2 @@
 [approvedSources]({rel}documentation/source/tools/approve.md#approvedsources) - List approved Bash script sources which can be loaded automatically ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L110))
+[approvedSources]({rel}documentation/source/tools/approve.md#approvedsources) - List approved Bash script sources which can be loaded automatically ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L110))

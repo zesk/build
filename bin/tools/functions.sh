@@ -3,7 +3,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-buildBuildFunctions() {
+buildFunctionsDerivedCompile() {
   local handler="_${FUNCNAME[0]}"
   local dd=()
 
@@ -11,7 +11,7 @@ buildBuildFunctions() {
   dd+=(--derive buildFunctionMarkdownDocumentation --)
   catchReturn "$handler" buildFunctionsCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
 }
-_buildBuildFunctions() {
+_buildFunctionsDerivedCompile() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -36,19 +36,19 @@ buildFunctionsCompile() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --clean) cleanFlag=true ;;
-    --git) gitActions=true ;;
-    --all) quickFlag=false ;;
-    --derive) dd+=("--") && shift && while [ $# -gt 0 ]; do
-      [ "$1" != "--" ] || break
-      dd+=("$1") && shift
-    done ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      --clean) cleanFlag=true ;;
+      --git) gitActions=true ;;
+      --all) quickFlag=false ;;
+      --derive) dd+=("--") && shift && while [ $# -gt 0 ]; do
+        [ "$1" != "--" ] || break
+        dd+=("$1") && shift
+      done ;;
+      *)
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        ;;
     esac
     shift
   done
@@ -140,15 +140,15 @@ buildFunctionsRemoveDeprecated() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --dry-run) dryRun=true ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      # _IDENTICAL_ handlerHandler 1
+      --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+      --dry-run) dryRun=true ;;
+      *)
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        ;;
     esac
     shift
   done

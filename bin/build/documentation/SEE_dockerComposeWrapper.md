@@ -1,2 +1,4 @@
 [dockerComposeWrapper]({rel}documentation/source/tools/docker-compose.md#dockercomposewrapper) - Wrapper for \`docker-compose\` or \`docker compose\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L10))
 [dockerComposeWrapper]({rel}documentation/source/tools/docker-compose.md#dockercomposewrapper) - Wrapper for \`docker-compose\` or \`docker compose\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L10))
+[dockerComposeWrapper]({rel}documentation/source/tools/docker-compose.md#dockercomposewrapper) - Wrapper for \`docker-compose\` or \`docker compose\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L10))
+[dockerComposeWrapper]({rel}documentation/source/tools/docker-compose.md#dockercomposewrapper) - Wrapper for \`docker-compose\` or \`docker compose\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L10))

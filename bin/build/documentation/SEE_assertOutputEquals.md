@@ -1,1 +1,2 @@
 [assertOutputEquals]({rel}documentation/source/tools/assert.md#assertoutputequals) - Assert output of a binary equals a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L853))
+[assertOutputEquals]({rel}documentation/source/tools/assert.md#assertoutputequals) - Assert output of a binary equals a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L853))

@@ -1,1 +1,2 @@
 [assertOutputDoesNotContain]({rel}documentation/source/tools/assert.md#assertoutputdoesnotcontain) - Run a command and expect the output to not contain ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L954))
+[assertOutputDoesNotContain]({rel}documentation/source/tools/assert.md#assertoutputdoesnotcontain) - Run a command and expect the output to not contain ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L954))

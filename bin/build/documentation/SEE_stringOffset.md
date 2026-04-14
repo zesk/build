@@ -1,1 +1,2 @@
 [stringOffset]({rel}documentation/source/tools/text.md#stringoffset) - Outputs the integer offset of \`needle\` if found as substring ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1020))
+[stringOffset]({rel}documentation/source/tools/text.md#stringoffset) - Outputs the integer offset of \`needle\` if found as substring ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1020))

@@ -1,1 +1,2 @@
 [isVisualStudioCode]({rel}documentation/source/tools/vendor.md#isvisualstudiocode) - Are we within the Microsoft Visual Studio Code terminal? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L60))
+[isVisualStudioCode]({rel}documentation/source/tools/vendor.md#isvisualstudiocode) - Are we within the Microsoft Visual Studio Code terminal? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L60))

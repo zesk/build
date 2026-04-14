@@ -1,1 +1,2 @@
 [decorateThemed]({rel}documentation/source/tools/decoration.md#decoratethemed) - Applies the current theme to text rendered using \`decorateThemelessMode\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L70))
+[decorateThemed]({rel}documentation/source/tools/decoration.md#decoratethemed) - Applies the current theme to text rendered using \`decorateThemelessMode\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L70))

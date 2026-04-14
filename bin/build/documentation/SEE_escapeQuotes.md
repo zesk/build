@@ -1,1 +1,2 @@
 [escapeQuotes]({rel}documentation/source/tools/quote.md#escapequotes) - Quote strings for inclusion in shell quoted strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L199))
+[escapeQuotes]({rel}documentation/source/tools/quote.md#escapequotes) - Quote strings for inclusion in shell quoted strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L199))
