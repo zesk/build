@@ -49,7 +49,7 @@ __approveBashSource() {
           __approveCacheFileValue "$handler" "$approveCachePath" "$sourcePath"
           return $?
         fi
-        if __approveRegisterCacheFile "$handler" "$sourcePath" "$approveCachePath" "File" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+        if __approveRegisterCacheFile "$handler" "$sourcePath" "$approveCachePath" "Approve file" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           catchEnvironment "$handler" source "$sourcePath" || return $?
         else
@@ -59,7 +59,7 @@ __approveBashSource() {
         local sourceFile approved=true
         if $checkFlag; then
           while read -r sourceFile; do
-            if ! __approveCacheFileValue "$handler" "$sourceFile" "$approvedHome" "File" "${aa[@]+"${aa[@]}"}"; then
+            if ! __approveCacheFileValue "$handler" "$sourceFile" "$approvedHome" "Approve $(decorate file "$sourcePath") file" "${aa[@]+"${aa[@]}"}"; then
               approved=false
               break
             fi
