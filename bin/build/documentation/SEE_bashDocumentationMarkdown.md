@@ -1,2 +1,3 @@
 [bashDocumentationMarkdown]({rel}documentation/source/tools/usage.md#bashdocumentationmarkdown) - Output documentation for a function in Markdown format"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L24))
 [bashDocumentationMarkdown]({rel}documentation/source/tools/usage.md#bashdocumentationmarkdown) - Output documentation for a function in Markdown format"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L24))
+[bashDocumentationMarkdown]({rel}documentation/source/tools/usage.md#bashdocumentationmarkdown) - Output documentation for a function in Markdown format"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L24))

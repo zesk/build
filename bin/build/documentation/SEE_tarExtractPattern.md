@@ -1,2 +1,3 @@
 [tarExtractPattern]({rel}documentation/source/tools/tar.md#tarextractpattern) - Platform agnostic tar extract with wildcards ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tar.sh#L19))
 [tarExtractPattern]({rel}documentation/source/tools/tar.md#tarextractpattern) - Platform agnostic tar extract with wildcards ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tar.sh#L19))
+[tarExtractPattern]({rel}documentation/source/tools/tar.md#tarextractpattern) - Platform agnostic tar extract with wildcards ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tar.sh#L19))

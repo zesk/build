@@ -1,2 +1,3 @@
 [awsCredentialsRemove]({rel}documentation/source/tools/aws.md#awscredentialsremove) - Remove credentials from the AWS credentials file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L234))
 [awsCredentialsRemove]({rel}documentation/source/tools/aws.md#awscredentialsremove) - Remove credentials from the AWS credentials file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L234))
+[awsCredentialsRemove]({rel}documentation/source/tools/aws.md#awscredentialsremove) - Remove credentials from the AWS credentials file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L234))

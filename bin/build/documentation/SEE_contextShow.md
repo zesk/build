@@ -1,2 +1,4 @@
 [contextShow]({rel}documentation/source/tools/vendor.md#contextshow) - Show the current editor being used as a text string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L104))
 [contextShow]({rel}documentation/source/tools/vendor.md#contextshow) - Show the current editor being used as a text string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L104))
+[contextShow]({rel}documentation/source/tools/vendor.md#contextshow) - Show the current editor being used as a text string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L104))
+[contextShow]({rel}documentation/source/tools/vendor.md#contextshow) - Show the current editor being used as a text string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L104))

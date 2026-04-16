@@ -1,2 +1,4 @@
 [packageManagerDefault]({rel}documentation/source/tools/package.md#packagemanagerdefault) - Determine the default package manager on this platform. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L625))
 [packageManagerDefault]({rel}documentation/source/tools/package.md#packagemanagerdefault) - Determine the default package manager on this platform. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L625))
+[packageManagerDefault]({rel}documentation/source/tools/package.md#packagemanagerdefault) - Determine the default package manager on this platform. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L625))
+[packageManagerDefault]({rel}documentation/source/tools/package.md#packagemanagerdefault) - Determine the default package manager on this platform. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L625))

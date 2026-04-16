@@ -1,2 +1,4 @@
 [dockerPlatformDefault]({rel}documentation/source/tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
 [dockerPlatformDefault]({rel}documentation/source/tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
+[dockerPlatformDefault]({rel}documentation/source/tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
+[dockerPlatformDefault]({rel}documentation/source/tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))

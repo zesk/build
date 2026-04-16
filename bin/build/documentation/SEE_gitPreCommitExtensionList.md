@@ -1,2 +1,3 @@
 [gitPreCommitExtensionList]({rel}documentation/source/tools/git.md#gitprecommitextensionlist) - List the extensions available. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L962))
 [gitPreCommitExtensionList]({rel}documentation/source/tools/git.md#gitprecommitextensionlist) - List the extensions available. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L962))
+[gitPreCommitExtensionList]({rel}documentation/source/tools/git.md#gitprecommitextensionlist) - List the extensions available. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L962))

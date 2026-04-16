@@ -1,2 +1,3 @@
 [decorateStyle]({rel}documentation/source/tools/decorate.md#decoratestyle) - Get or modify a decoration style"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/style.sh#L11))
 [decorateStyle]({rel}documentation/source/tools/decorate.md#decoratestyle) - Get or modify a decoration style"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/style.sh#L11))
+[decorateStyle]({rel}documentation/source/tools/decorate.md#decoratestyle) - Get or modify a decoration style"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/style.sh#L11))

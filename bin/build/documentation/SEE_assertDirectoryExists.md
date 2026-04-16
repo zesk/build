@@ -1,2 +1,3 @@
 [assertDirectoryExists]({rel}documentation/source/tools/assert.md#assertdirectoryexists) - Test that a directory exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L564))
 [assertDirectoryExists]({rel}documentation/source/tools/assert.md#assertdirectoryexists) - Test that a directory exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L564))
+[assertDirectoryExists]({rel}documentation/source/tools/assert.md#assertdirectoryexists) - Test that a directory exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L564))

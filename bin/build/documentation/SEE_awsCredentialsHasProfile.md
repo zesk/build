@@ -1,2 +1,3 @@
 [awsCredentialsHasProfile]({rel}documentation/source/tools/aws.md#awscredentialshasprofile) - Get credentials and output environment variables for AWS authentication"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L195))
 [awsCredentialsHasProfile]({rel}documentation/source/tools/aws.md#awscredentialshasprofile) - Get credentials and output environment variables for AWS authentication"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L195))
+[awsCredentialsHasProfile]({rel}documentation/source/tools/aws.md#awscredentialshasprofile) - Get credentials and output environment variables for AWS authentication"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L195))

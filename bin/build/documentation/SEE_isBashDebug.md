@@ -1,2 +1,3 @@
 [isBashDebug]({rel}documentation/source/tools/debug.md#isbashdebug) - Returns whether the shell has the debugging flag set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L123))
 [isBashDebug]({rel}documentation/source/tools/debug.md#isbashdebug) - Returns whether the shell has the debugging flag set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L123))
+[isBashDebug]({rel}documentation/source/tools/debug.md#isbashdebug) - Returns whether the shell has the debugging flag set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L123))

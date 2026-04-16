@@ -2,3 +2,4 @@
 [fileLineMaximum]({rel}documentation/source/tools/text.md#filelinemaximum) - Outputs the maximum line length passed into stdin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L632))
 [fileLineMaximum]({rel}documentation/source/tools/text.md#filelinemaximum) - Outputs the maximum line length passed into stdin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L632))
 [fileLineMaximum]({rel}documentation/source/tools/text.md#filelinemaximum) - Outputs the maximum line length passed into stdin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L632))
+[fileLineMaximum]({rel}documentation/source/tools/text.md#filelinemaximum) - Outputs the maximum line length passed into stdin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L632))

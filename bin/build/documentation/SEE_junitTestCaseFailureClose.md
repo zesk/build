@@ -1,2 +1,3 @@
 [junitTestCaseFailureClose]({rel}documentation/source/tools/junit.md#junittestcasefailureclose) - Close tag for \`failure\` - test failed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L282))
 [junitTestCaseFailureClose]({rel}documentation/source/tools/junit.md#junittestcasefailureclose) - Close tag for \`failure\` - test failed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L282))
+[junitTestCaseFailureClose]({rel}documentation/source/tools/junit.md#junittestcasefailureclose) - Close tag for \`failure\` - test failed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L282))

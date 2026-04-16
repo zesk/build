@@ -1,2 +1,3 @@
 [isBitBucketPipeline]({rel}documentation/source/tools/bitbucket.md#isbitbucketpipeline) - Are we currently in the BitBucket pipeline? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L84))
 [isBitBucketPipeline]({rel}documentation/source/tools/bitbucket.md#isbitbucketpipeline) - Are we currently in the BitBucket pipeline? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L84))
+[isBitBucketPipeline]({rel}documentation/source/tools/bitbucket.md#isbitbucketpipeline) - Are we currently in the BitBucket pipeline? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L84))

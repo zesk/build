@@ -1,2 +1,3 @@
 [stringBeginsInsensitive]({rel}documentation/source/tools/text.md#stringbeginsinsensitive) - Find whether a substring exists as teh beginning of one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L547))
 [stringBeginsInsensitive]({rel}documentation/source/tools/text.md#stringbeginsinsensitive) - Find whether a substring exists as teh beginning of one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L547))
+[stringBeginsInsensitive]({rel}documentation/source/tools/text.md#stringbeginsinsensitive) - Find whether a substring exists as teh beginning of one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L547))

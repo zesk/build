@@ -1,2 +1,4 @@
 [directoryChange]({rel}documentation/source/tools/directory.md#directorychange) - Run a command after changing directory to it and then ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L32))
 [directoryChange]({rel}documentation/source/tools/directory.md#directorychange) - Run a command after changing directory to it and then ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L32))
+[directoryChange]({rel}documentation/source/tools/directory.md#directorychange) - Run a command after changing directory to it and then ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L32))
+[directoryChange]({rel}documentation/source/tools/directory.md#directorychange) - Run a command after changing directory to it and then ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L32))

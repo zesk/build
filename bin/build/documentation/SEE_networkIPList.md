@@ -1,2 +1,3 @@
 [networkIPList]({rel}documentation/source/tools/network.md#networkiplist) - List IPv4 Addresses associated with this system using \`ifconfig\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L47))
 [networkIPList]({rel}documentation/source/tools/network.md#networkiplist) - List IPv4 Addresses associated with this system using \`ifconfig\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L47))
+[networkIPList]({rel}documentation/source/tools/network.md#networkiplist) - List IPv4 Addresses associated with this system using \`ifconfig\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L47))

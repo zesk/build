@@ -1,2 +1,3 @@
 [userHome]({rel}documentation/source/tools/user.md#userhome) - The current user HOME (must exist) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L14))
 [userHome]({rel}documentation/source/tools/user.md#userhome) - The current user HOME (must exist) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L14))
+[userHome]({rel}documentation/source/tools/user.md#userhome) - The current user HOME (must exist) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L14))

@@ -16,7 +16,7 @@ _buildFunctionsDerivedCompile() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Extract and build the bin/build/documentation/ cache
+# Extract and build the documentation settings cache
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
 # Argument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
 # Argument: --all - Flag. Optional. Do everything regardless of cache state.
@@ -155,11 +155,15 @@ buildFunctionsRemoveDeprecated() {
 
   local deprecatedFiles=()
   local fun && while read -r fun; do
-    local extension && for extension in sh md; do
-      local target="$home/bin/build/documentation/$fun.$extension"
-      if [ -f "$target" ]; then
-        deprecatedFiles+=("$target")
-      fi
+    export BUILD_DOCUMENTATION_PATH
+    local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
+    local path && for path in "${paths[@]}"; do
+      local extension && for extension in sh md; do
+        local target="$home/$path/$fun.$extension"
+        if [ -f "$target" ]; then
+          deprecatedFiles+=("$target")
+        fi
+      done
     done
   done < <(catchReturn "$handler" buildDeprecatedFunctions) || return $?
   if $dryRun; then

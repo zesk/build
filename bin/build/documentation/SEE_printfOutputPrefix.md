@@ -1,2 +1,3 @@
 [printfOutputPrefix]({rel}documentation/source/tools/text.md#printfoutputprefix) - Pipe to output some text before any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1124))
 [printfOutputPrefix]({rel}documentation/source/tools/text.md#printfoutputprefix) - Pipe to output some text before any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1124))
+[printfOutputPrefix]({rel}documentation/source/tools/text.md#printfoutputprefix) - Pipe to output some text before any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1124))

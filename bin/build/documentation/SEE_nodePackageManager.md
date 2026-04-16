@@ -1,3 +1,4 @@
 [nodePackageManager]({rel}documentation/source/tools/node.md#nodepackagemanager) - Run an action using the current node package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L104))
 [nodePackageManager]({rel}documentation/source/tools/node.md#nodepackagemanager) - Run an action using the current node package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L104))
 [nodePackageManager]({rel}documentation/source/tools/node.md#nodepackagemanager) - Run an action using the current node package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L104))
+[nodePackageManager]({rel}documentation/source/tools/node.md#nodepackagemanager) - Run an action using the current node package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L104))

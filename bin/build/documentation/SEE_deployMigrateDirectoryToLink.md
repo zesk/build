@@ -1,2 +1,3 @@
 [deployMigrateDirectoryToLink]({rel}documentation/source/tools/deploy.md#deploymigratedirectorytolink) - Automatically convert application deployments using non-links to links. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L248))
 [deployMigrateDirectoryToLink]({rel}documentation/source/tools/deploy.md#deploymigratedirectorytolink) - Automatically convert application deployments using non-links to links. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L248))
+[deployMigrateDirectoryToLink]({rel}documentation/source/tools/deploy.md#deploymigratedirectorytolink) - Automatically convert application deployments using non-links to links. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L248))

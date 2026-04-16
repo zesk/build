@@ -22,20 +22,17 @@ __bashDocumentationSettingsHeader() {
 __bashDocumentationSettingsFileDetails() {
   local handler="$1" && shift
 
-  local definitionFile lineNumber
-
-  definitionFile=$(validate "$handler" RealFile "definitionFile" "${1-}") && shift || return $?
+  local definitionFile && definitionFile=$(validate "$handler" RealFile "definitionFile" "${1-}") && shift || return $?
   local lineNumber="${1-}"
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   local file="${definitionFile#"${home%/}"/}"
-  if [ -z "$lineNumber" ]; then
-    lineNumber="$(grep -n -e "^$fn()" "$file" | cut -f 1 -d :)" || return $?
-  fi
   catchReturn "$handler" __dumpSimpleValue "file" "$file" || return $?
-  catchReturn "$handler" __dumpSimpleValue "line" "$lineNumber" || return $?
+  if [ -z "$lineNumber" ]; then
+    lineNumber="$(grep -n -e "^$fn()" "$definitionFile" | cut -f 1 -d :)" || lineNumber=""
+  fi
+  [ -z "$lineNumber" ] || catchReturn "$handler" __dumpSimpleValue "line" "$lineNumber" || return $?
   catchReturn "$handler" __dumpSimpleValue "sourceFile" "$file" || return $?
   catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
   catchReturn "$handler" __dumpSimpleValue "sourceHash" "$(textSHA <"$definitionFile")" || return $?
@@ -90,7 +87,7 @@ __bashDocumentationExtract() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local definitionFile="$home/bin/build/documentation/$fn.sh"
+  local definitionFile && definitionFile=$(__functionSettings "$home" "$handler" "$fn" true) || return $?
   if $generateCache; then
     if __bashDocumentationExtractCheckCache "$handler" "$source" "$definitionFile"; then
       return 0
@@ -104,6 +101,7 @@ __bashDocumentationExtract() {
   fi
 
 }
+
 __bashDocumentationExtractCheckCache() {
   local handler="$1" source="$2" definitionFile="$3"
   local sourceHash && sourceHash=$(catchReturn "$handler" textSHA <"$source") || return $?

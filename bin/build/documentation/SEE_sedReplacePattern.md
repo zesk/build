@@ -1,2 +1,3 @@
 [sedReplacePattern]({rel}documentation/source/tools/quote.md#sedreplacepattern) - Quote a sed command for search and replace ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sed.sh#L19))
 [sedReplacePattern]({rel}documentation/source/tools/quote.md#sedreplacepattern) - Quote a sed command for search and replace ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sed.sh#L19))
+[sedReplacePattern]({rel}documentation/source/tools/quote.md#sedreplacepattern) - Quote a sed command for search and replace ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sed.sh#L19))
