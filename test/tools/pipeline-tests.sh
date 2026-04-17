@@ -24,7 +24,7 @@ testVersionSort() {
 
 # Tag: slow
 testDecorateExpired() {
-  __testExpirationFunction decorate expired || return $?
+  BUILD_DEBUG=handler __testExpirationFunction decorate expired || return $?
 }
 
 # Tag: slow
