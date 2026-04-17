@@ -3,13 +3,55 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# Extract and build the documentation settings cache and generate derived files
+# Argument: --clean - Flag. Optional. Clean everything and then exit.
+# Argument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
+# Argument: --all - Flag. Optional. Do everything regardless of cache state.
+# Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
 buildFunctionsDerivedCompile() {
   local handler="_${FUNCNAME[0]}"
-  local dd=()
+  local dd=() doFingerprint=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --clean | --git | --all) dd+=("$argument") ;;
+    --fingerprint)
+      local home && home=$(catchReturn "$handler" buildHome) || return $?
+      local fingerprint && fingerprint=$(catchReturn "$handler" hookRun --application "$home" application-fingerprint) || return $?
+      local jsonFile && jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
+      local prefix && prefix=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+      local path && path=$(jsonPath "${prefix}" "buildFunctions") || return $?
+      local savedFingerprint && savedFingerprint=$(jsonFileGet "$jsonFile" "$path") || return $?
+      if [ "$savedFingerprint" = "$fingerprint" ]; then
+        statusMessage --last decorate info "${FUNCNAME[0]} fingerprint matches - no action."
+        return 0
+      fi
+      doFingerprint=("$jsonFile" "$path")
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
 
   dd+=(--derive buildFunctionSeeTemplate --)
   dd+=(--derive buildFunctionMarkdownDocumentation --)
   catchReturn "$handler" buildFunctionsCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
+  if [ "${#doFingerprint[@]}" -gt 0 ]; then
+    local fingerprint && fingerprint=$(catchReturn "$handler" hookRun --application "$home" application-fingerprint) || return $?
+    catchReturn "$handler" jsonFileSet "${doFingerprint[@]}" "$fingerprint" || return $?
+  fi
 }
 _buildFunctionsDerivedCompile() {
   # __IDENTICAL__ bashDocumentation 1

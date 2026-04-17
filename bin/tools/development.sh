@@ -149,7 +149,7 @@ __buildFingerUpdate() {
   f=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
   jf=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
   local path u=()
-  for path in .fingerprint .deprecated '.identical."--internal"' '.identical.default'; do
+  for path in .fingerprint .deprecated '.identical."--internal"' '.identical.default' '.buildFunctions'; do
     local value
     value=$(catchReturn "$handler" jsonFileGet "$jf" "$path") || return $?
     if [ "$value" != "$f" ]; then
