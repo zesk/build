@@ -151,12 +151,9 @@ __buildBuild() {
   "$home/bin/build/repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running function build ..."
-  buildFunctionsCompile --derive buildFunctionSeeTemplate -- --derive buildFunctionMarkdownDocumentation -- || throwEnvironment "$handler" "Identical repair failed" || return $?
+  buildFunctionsDerivedCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?
 
   if $makeDocumentation; then
-    ! $debugFlag || statusMessage decorate warning "Updating documentation cache ..."
-    catchReturn "$handler" buildFunctionsCompile || return $?
-
     local rootPath="$home/documentation/.site"
     local rootShow && rootShow=$(decorate file "$rootPath")
     local path && for path in "$rootPath" "$home/documentation/.docs"; do
