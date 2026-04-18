@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-18
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"source - File. Required. File where documentation exists."$'\n'"function - String. Required. Function to document."$'\n'"returnCode - UnsignedInteger. Required. Exit code to return."$'\n'"message ... - String. Optional. Message to display to the user."$'\n'""
 base="usage.sh"
@@ -8,14 +8,14 @@ description="Output a simple error message for a function"$'\n'""
 file="bin/build/tools/usage.sh"
 fn="bashSimpleDocumentation"
 foundNames=([0]="argument" [1]="requires")
-line="159"
+line="162"
 lowerFn="bashsimpledocumentation"
 rawComment="Output a simple error message for a function"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: source - File. Required. File where documentation exists."$'\n'"Argument: function - String. Required. Function to document."$'\n'"Argument: returnCode - UnsignedInteger. Required. Exit code to return."$'\n'"Argument: message ... - String. Optional. Message to display to the user."$'\n'"Requires: bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached"$'\n'""$'\n'""
 requires="bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="f78944fb6a094a23e87df1b578764a61fd0bee9e"
-sourceLine="159"
+sourceHash="ddb96a662a09265b68ab540fea480c55cab1fba0"
+sourceLine="162"
 summary="Output a simple error message for a function"
 summaryComputed="true"
 usage="bashSimpleDocumentation [ --help ] source function returnCode [ message ... ]"

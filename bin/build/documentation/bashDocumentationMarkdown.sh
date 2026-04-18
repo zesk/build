@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-18
 # shellcheck disable=SC2034
 argument="functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="usage.sh"
@@ -13,7 +13,7 @@ lowerFn="bashdocumentationmarkdown"
 rawComment="Summary: Output documentation for a function in Markdown format"$'\n'"Argument: functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="f78944fb6a094a23e87df1b578764a61fd0bee9e"
+sourceHash="ddb96a662a09265b68ab540fea480c55cab1fba0"
 sourceLine="24"
 summary="Output documentation for a function in Markdown format"$'\n'""
 usage="bashDocumentationMarkdown functionName [ --help ]"

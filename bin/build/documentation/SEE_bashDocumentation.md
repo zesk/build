@@ -1,3 +1,1 @@
 [bashDocumentation]({rel}documentation/source/tools/documentation.md#bashdocumentation) - Universal error handler for functions (with formatting)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L48))
-[bashDocumentation]({rel}documentation/source/tools/documentation.md#bashdocumentation) - Universal error handler for functions (with formatting)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L48))
-[bashDocumentation]({rel}documentation/source/tools/documentation.md#bashdocumentation) - Universal error handler for functions (with formatting)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L48))

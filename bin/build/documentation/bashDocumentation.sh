@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-18
 # shellcheck disable=SC2034
 argument="functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use \`__bashDocumentation_FindFunctionDefinitions\` or \`__bashDocumentation_FindFunctionDefinition\`."$'\n'"functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"exitCode - Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"message - String. Optional. A message."$'\n'""
 base="usage.sh"
@@ -15,7 +15,7 @@ lowerFn="bashdocumentation"
 rawComment="Summary: Universal error handler for functions (with formatting)"$'\n'"Actual function is called \`{functionName}\`."$'\n'"Argument: functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use \`__bashDocumentation_FindFunctionDefinitions\` or \`__bashDocumentation_FindFunctionDefinition\`."$'\n'"Argument: functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"Argument: exitCode - Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"Argument: message - String. Optional. A message."$'\n'"Generates console usage output for a script using documentation tools parsed from the comment of the function identified."$'\n'"Simplifies documentation and keeps it with the code."$'\n'"Environment: *BUILD_DEBUG* - Add \`fast-usage\` to make this quicker when you do not care about usage/failure."$'\n'"BUILD_DEBUG: fast-usage - \`bashDocumentation\` does not output formatted help for performance reasons"$'\n'"BUILD_DEBUG: handler - For all \`--help\` and any function which uses \`usageTemplate\` to output documentation (upon error), the stack will be displayed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="f78944fb6a094a23e87df1b578764a61fd0bee9e"
+sourceHash="ddb96a662a09265b68ab540fea480c55cab1fba0"
 sourceLine="48"
 summary="Universal error handler for functions (with formatting)"$'\n'""
 usage="bashDocumentation functionDefinitionFile functionName exitCode [ message ]"
