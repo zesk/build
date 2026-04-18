@@ -1,3 +1,1 @@
 [daemontoolsHome]({rel}documentation/source/tools/daemontools.md#daemontoolshome) - Print the daemontools service home path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L266))
-[daemontoolsHome]({rel}documentation/source/tools/daemontools.md#daemontoolshome) - Print the daemontools service home path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L266))
-[daemontoolsHome]({rel}documentation/source/tools/daemontools.md#daemontoolshome) - Print the daemontools service home path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L266))

@@ -1,5 +1,1 @@
 [jsonSetValue]({rel}documentation/source/tools/json.md#jsonsetvalue) - Sets the value of a variable in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L158))
-[jsonSetValue]({rel}documentation/source/tools/json.md#jsonsetvalue) - Sets the value of a variable in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L158))
-[jsonSetValue]({rel}documentation/source/tools/json.md#jsonsetvalue) - Sets the value of a variable in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L158))
-[jsonSetValue]({rel}documentation/source/tools/json.md#jsonsetvalue) - Sets the value of a variable in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L158))
-[jsonSetValue]({rel}documentation/source/tools/json.md#jsonsetvalue) - Sets the value of a variable in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L158))

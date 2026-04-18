@@ -1,3 +1,1 @@
 [markdownToConsole]({rel}documentation/source/tools/markdown.md#markdowntoconsole) - Converts backticks, bold and italic to console colors."$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L471))
-[markdownToConsole]({rel}documentation/source/tools/markdown.md#markdowntoconsole) - Converts backticks, bold and italic to console colors."$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L471))
-[markdownToConsole]({rel}documentation/source/tools/markdown.md#markdowntoconsole) - Converts backticks, bold and italic to console colors."$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L471))

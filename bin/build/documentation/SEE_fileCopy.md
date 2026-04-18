@@ -1,2 +1,1 @@
 [fileCopy]({rel}documentation/source/tools/interactive.md#filecopy) - Copy file from source to destination ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L55))
-[fileCopy]({rel}documentation/source/tools/interactive.md#filecopy) - Copy file from source to destination ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L55))

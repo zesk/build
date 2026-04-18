@@ -1,3 +1,1 @@
 [consoleSetTitle]({rel}documentation/source/tools/console.md#consolesettitle) - Set the title of the window for the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L160))
-[consoleSetTitle]({rel}documentation/source/tools/console.md#consolesettitle) - Set the title of the window for the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L160))
-[consoleSetTitle]({rel}documentation/source/tools/console.md#consolesettitle) - Set the title of the window for the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L160))

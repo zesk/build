@@ -1,4 +1,1 @@
 [isUnsignedInteger]({rel}documentation/source/tools/type.md#isunsignedinteger) - Is value an unsigned integer?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L170))
-[isUnsignedInteger]({rel}documentation/source/tools/type.md#isunsignedinteger) - Is value an unsigned integer?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L170))
-[isUnsignedInteger]({rel}documentation/source/tools/type.md#isunsignedinteger) - Is value an unsigned integer?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L170))
-[isUnsignedInteger]({rel}documentation/source/tools/type.md#isunsignedinteger) - Is value an unsigned integer?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L170))

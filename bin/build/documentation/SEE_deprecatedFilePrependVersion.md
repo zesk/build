@@ -1,2 +1,1 @@
 [deprecatedFilePrependVersion]({rel}documentation/source/tools/deprecated.md#deprecatedfileprependversion) - Take a deprecated.txt file and add a comment with the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L12))
-[deprecatedFilePrependVersion]({rel}documentation/source/tools/deprecated.md#deprecatedfileprependversion) - Take a deprecated.txt file and add a comment with the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L12))

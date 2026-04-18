@@ -1,3 +1,1 @@
 [environmentLines]({rel}documentation/source/tools/environment.md#environmentlines) - List lines of environment values set in a bash state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L179))
-[environmentLines]({rel}documentation/source/tools/environment.md#environmentlines) - List lines of environment values set in a bash state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L179))
-[environmentLines]({rel}documentation/source/tools/environment.md#environmentlines) - List lines of environment values set in a bash state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L179))

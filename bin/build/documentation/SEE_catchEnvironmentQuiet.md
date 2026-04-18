@@ -1,2 +1,1 @@
 [catchEnvironmentQuiet]({rel}documentation/source/tools/sugar.md#catchenvironmentquiet) - Run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L16))
-[catchEnvironmentQuiet]({rel}documentation/source/tools/sugar.md#catchenvironmentquiet) - Run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L16))

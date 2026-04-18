@@ -1,3 +1,1 @@
 [processMemoryUsage]({rel}documentation/source/tools/process.md#processmemoryusage) - Outputs value of resident memory used by a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L150))
-[processMemoryUsage]({rel}documentation/source/tools/process.md#processmemoryusage) - Outputs value of resident memory used by a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L150))
-[processMemoryUsage]({rel}documentation/source/tools/process.md#processmemoryusage) - Outputs value of resident memory used by a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L150))

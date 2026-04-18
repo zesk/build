@@ -1,2 +1,1 @@
 [githubLatestRelease]({rel}documentation/source/tools/github.md#githublatestrelease) - Get the latest release version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L121))
-[githubLatestRelease]({rel}documentation/source/tools/github.md#githublatestrelease) - Get the latest release version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L121))

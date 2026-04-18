@@ -1,2 +1,1 @@
 [fingerprint]({rel}documentation/source/tools/fingerprint.md#fingerprint) - Update file from \`APPLICATION_JSON\` with application fingerprint. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/fingerprint.sh#L19))
-[fingerprint]({rel}documentation/source/tools/fingerprint.md#fingerprint) - Update file from \`APPLICATION_JSON\` with application fingerprint. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/fingerprint.sh#L19))

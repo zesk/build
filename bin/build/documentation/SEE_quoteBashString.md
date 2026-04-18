@@ -1,3 +1,1 @@
 [quoteBashString]({rel}documentation/source/tools/quote.md#quotebashstring) - Quote bash strings for inclusion as single-quoted for eval ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L21))
-[quoteBashString]({rel}documentation/source/tools/quote.md#quotebashstring) - Quote bash strings for inclusion as single-quoted for eval ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L21))
-[quoteBashString]({rel}documentation/source/tools/quote.md#quotebashstring) - Quote bash strings for inclusion as single-quoted for eval ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L21))

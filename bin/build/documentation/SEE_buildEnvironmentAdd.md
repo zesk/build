@@ -1,2 +1,1 @@
 [buildEnvironmentAdd]({rel}documentation/source/tools/build.md#buildenvironmentadd) - Adds an environment variable file to a project ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L316))
-[buildEnvironmentAdd]({rel}documentation/source/tools/build.md#buildenvironmentadd) - Adds an environment variable file to a project ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L316))

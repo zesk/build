@@ -1,2 +1,1 @@
 [stringFoundInsensitive]({rel}documentation/source/tools/text.md#stringfoundinsensitive) - Check if one string is a substring of another set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L494))
-[stringFoundInsensitive]({rel}documentation/source/tools/text.md#stringfoundinsensitive) - Check if one string is a substring of another set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L494))

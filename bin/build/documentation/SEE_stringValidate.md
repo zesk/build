@@ -1,2 +1,1 @@
 [stringValidate]({rel}documentation/source/tools/character.md#stringvalidate) - Ensure that every character in a text string passes all ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L35))
-[stringValidate]({rel}documentation/source/tools/character.md#stringvalidate) - Ensure that every character in a text string passes all ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L35))

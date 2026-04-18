@@ -1,2 +1,1 @@
 [networkMACAddressList]({rel}documentation/source/tools/network.md#networkmacaddresslist) - List MAC addresses associated with this system using \`ifconfig\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L60))
-[networkMACAddressList]({rel}documentation/source/tools/network.md#networkmacaddresslist) - List MAC addresses associated with this system using \`ifconfig\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L60))

@@ -1,2 +1,1 @@
 [buildDevelopmentLink]({rel}documentation/source/tools/developer.md#builddevelopmentlink) - Add a development link to the local version of Zesk ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L179))
-[buildDevelopmentLink]({rel}documentation/source/tools/developer.md#builddevelopmentlink) - Add a development link to the local version of Zesk ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L179))

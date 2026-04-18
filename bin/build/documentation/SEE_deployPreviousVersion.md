@@ -1,2 +1,1 @@
 [deployPreviousVersion]({rel}documentation/source/tools/deploy.md#deploypreviousversion) - Get the previous version of the supplied version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L163))
-[deployPreviousVersion]({rel}documentation/source/tools/deploy.md#deploypreviousversion) - Get the previous version of the supplied version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L163))

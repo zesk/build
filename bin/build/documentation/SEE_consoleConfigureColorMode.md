@@ -1,2 +1,1 @@
 [consoleConfigureColorMode]({rel}documentation/source/tools/console.md#consoleconfigurecolormode) - Print the suggested color mode for the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L110))
-[consoleConfigureColorMode]({rel}documentation/source/tools/console.md#consoleconfigurecolormode) - Print the suggested color mode for the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L110))

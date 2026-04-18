@@ -1,3 +1,1 @@
 [buildEnvironmentContext]({rel}documentation/source/tools/build.md#buildenvironmentcontext) - Run a command and ensure the build tools context matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L676))
-[buildEnvironmentContext]({rel}documentation/source/tools/build.md#buildenvironmentcontext) - Run a command and ensure the build tools context matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L676))
-[buildEnvironmentContext]({rel}documentation/source/tools/build.md#buildenvironmentcontext) - Run a command and ensure the build tools context matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L676))

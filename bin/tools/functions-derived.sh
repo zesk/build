@@ -134,7 +134,7 @@ buildFunctionSeeTemplate() {
     local functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     catchReturn "$handler" environmentFileLoad "$settingsFile" || return $?
     local sourceLink && sourceLink="$(catchReturn "$handler" mapEnvironment <<<"$functionLinkPattern")" || return $?
-    sourceLink="$sourceLink" catchReturn "$handler" mapEnvironment <"$template" >>"$targetFile" || return $?
+    sourceLink="$sourceLink" catchReturn "$handler" mapEnvironment <"$template" >"$targetFile" || return $?
   ) || return $?
 }
 _buildFunctionSeeTemplate() {

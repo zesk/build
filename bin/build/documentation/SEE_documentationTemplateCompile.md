@@ -1,2 +1,1 @@
 [documentationTemplateCompile]({rel}documentation/source/tools/documentation.md#documentationtemplatecompile) - Document a function and generate a function template (markdown). To ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L440))
-[documentationTemplateCompile]({rel}documentation/source/tools/documentation.md#documentationtemplatecompile) - Document a function and generate a function template (markdown). To ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L440))

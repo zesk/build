@@ -1,3 +1,1 @@
 [bashLintFiles]({rel}documentation/source/tools/lint.md#bashlintfiles) - Check files for the existence of a string"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L105))
-[bashLintFiles]({rel}documentation/source/tools/lint.md#bashlintfiles) - Check files for the existence of a string"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L105))
-[bashLintFiles]({rel}documentation/source/tools/lint.md#bashlintfiles) - Check files for the existence of a string"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L105))

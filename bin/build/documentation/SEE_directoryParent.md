@@ -1,2 +1,1 @@
 [directoryParent]({rel}documentation/source/tools/directory.md#directoryparent) - Finds a file above \`startingDirectory\`, uses \`testExpression\` to test (defaults ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L310))
-[directoryParent]({rel}documentation/source/tools/directory.md#directoryparent) - Finds a file above \`startingDirectory\`, uses \`testExpression\` to test (defaults ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L310))

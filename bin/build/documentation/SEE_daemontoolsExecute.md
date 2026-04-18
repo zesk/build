@@ -1,4 +1,1 @@
 [daemontoolsExecute]({rel}documentation/source/tools/daemontools.md#daemontoolsexecute) - Launch the daemontools daemon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L288))
-[daemontoolsExecute]({rel}documentation/source/tools/daemontools.md#daemontoolsexecute) - Launch the daemontools daemon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L288))
-[daemontoolsExecute]({rel}documentation/source/tools/daemontools.md#daemontoolsexecute) - Launch the daemontools daemon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L288))
-[daemontoolsExecute]({rel}documentation/source/tools/daemontools.md#daemontoolsexecute) - Launch the daemontools daemon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L288))

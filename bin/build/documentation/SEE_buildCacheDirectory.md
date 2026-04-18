@@ -1,3 +1,1 @@
 [buildCacheDirectory]({rel}documentation/source/tools/build.md#buildcachedirectory) - Path to cache directory for build system. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L135))
-[buildCacheDirectory]({rel}documentation/source/tools/build.md#buildcachedirectory) - Path to cache directory for build system. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L135))
-[buildCacheDirectory]({rel}documentation/source/tools/build.md#buildcachedirectory) - Path to cache directory for build system. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L135))

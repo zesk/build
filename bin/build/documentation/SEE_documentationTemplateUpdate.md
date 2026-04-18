@@ -1,2 +1,1 @@
 [documentationTemplateUpdate]({rel}documentation/source/tools/documentation.md#documentationtemplateupdate) - Map template files using our identical functionality ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L184))
-[documentationTemplateUpdate]({rel}documentation/source/tools/documentation.md#documentationtemplateupdate) - Map template files using our identical functionality ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L184))

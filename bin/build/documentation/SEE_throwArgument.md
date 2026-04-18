@@ -1,2 +1,1 @@
 [throwArgument]({rel}documentation/source/tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L214))
-[throwArgument]({rel}documentation/source/tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L214))

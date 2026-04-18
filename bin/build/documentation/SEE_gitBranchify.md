@@ -1,4 +1,1 @@
 [gitBranchify]({rel}documentation/source/tools/git.md#gitbranchify) - Check out a branch with the current version and optional ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1093))
-[gitBranchify]({rel}documentation/source/tools/git.md#gitbranchify) - Check out a branch with the current version and optional ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1093))
-[gitBranchify]({rel}documentation/source/tools/git.md#gitbranchify) - Check out a branch with the current version and optional ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1093))
-[gitBranchify]({rel}documentation/source/tools/git.md#gitbranchify) - Check out a branch with the current version and optional ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1093))

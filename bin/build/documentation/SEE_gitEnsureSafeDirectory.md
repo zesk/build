@@ -1,2 +1,1 @@
 [gitEnsureSafeDirectory]({rel}documentation/source/tools/git.md#gitensuresafedirectory) - When running git operations on a deployment host, at times ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L63))
-[gitEnsureSafeDirectory]({rel}documentation/source/tools/git.md#gitensuresafedirectory) - When running git operations on a deployment host, at times ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L63))

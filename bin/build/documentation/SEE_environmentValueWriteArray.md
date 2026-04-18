@@ -1,3 +1,1 @@
 [environmentValueWriteArray]({rel}documentation/source/tools/environment.md#environmentvaluewritearray) - Write an array value as NAME=([0]=\"a\" [1]=\"b\" [2]=\"c\") ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L47))
-[environmentValueWriteArray]({rel}documentation/source/tools/environment.md#environmentvaluewritearray) - Write an array value as NAME=([0]=\"a\" [1]=\"b\" [2]=\"c\") ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L47))
-[environmentValueWriteArray]({rel}documentation/source/tools/environment.md#environmentvaluewritearray) - Write an array value as NAME=([0]=\"a\" [1]=\"b\" [2]=\"c\") ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L47))

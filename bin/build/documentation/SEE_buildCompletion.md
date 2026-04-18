@@ -1,5 +1,1 @@
 [buildCompletion]({rel}documentation/source/tools/completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/completion.sh#L17))
-[buildCompletion]({rel}documentation/source/tools/completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/completion.sh#L17))
-[buildCompletion]({rel}documentation/source/tools/completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/completion.sh#L17))
-[buildCompletion]({rel}documentation/source/tools/completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/completion.sh#L17))
-[buildCompletion]({rel}documentation/source/tools/completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/completion.sh#L17))

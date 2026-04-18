@@ -1,3 +1,1 @@
 [environmentFileToDocker]({rel}documentation/source/tools/environment.md#environmentfiletodocker) - Takes any environment file and makes it docker-compatible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L78))
-[environmentFileToDocker]({rel}documentation/source/tools/environment.md#environmentfiletodocker) - Takes any environment file and makes it docker-compatible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L78))
-[environmentFileToDocker]({rel}documentation/source/tools/environment.md#environmentfiletodocker) - Takes any environment file and makes it docker-compatible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L78))

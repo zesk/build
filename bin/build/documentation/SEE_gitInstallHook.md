@@ -1,3 +1,1 @@
 [gitInstallHook]({rel}documentation/source/tools/git.md#gitinstallhook) - Install the most recent version of this hook and RUN ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L811))
-[gitInstallHook]({rel}documentation/source/tools/git.md#gitinstallhook) - Install the most recent version of this hook and RUN ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L811))
-[gitInstallHook]({rel}documentation/source/tools/git.md#gitinstallhook) - Install the most recent version of this hook and RUN ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L811))

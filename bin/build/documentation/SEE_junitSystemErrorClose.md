@@ -1,3 +1,1 @@
 [junitSystemErrorClose]({rel}documentation/source/tools/junit.md#junitsystemerrorclose) - Close tag for \`system-err\` - test errors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L198))
-[junitSystemErrorClose]({rel}documentation/source/tools/junit.md#junitsystemerrorclose) - Close tag for \`system-err\` - test errors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L198))
-[junitSystemErrorClose]({rel}documentation/source/tools/junit.md#junitsystemerrorclose) - Close tag for \`system-err\` - test errors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L198))

@@ -1,3 +1,1 @@
 [environmentLoad]({rel}documentation/source/tools/environment.md#environmentload) - Safely load an environment from stdin (no code execution) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L202))
-[environmentLoad]({rel}documentation/source/tools/environment.md#environmentload) - Safely load an environment from stdin (no code execution) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L202))
-[environmentLoad]({rel}documentation/source/tools/environment.md#environmentload) - Safely load an environment from stdin (no code execution) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L202))

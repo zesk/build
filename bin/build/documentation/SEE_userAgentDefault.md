@@ -1,3 +1,1 @@
 [userAgentDefault]({rel}documentation/source/tools/url.md#useragentdefault) - Default user agent string for web agents"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L527))
-[userAgentDefault]({rel}documentation/source/tools/url.md#useragentdefault) - Default user agent string for web agents"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L527))
-[userAgentDefault]({rel}documentation/source/tools/url.md#useragentdefault) - Default user agent string for web agents"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L527))

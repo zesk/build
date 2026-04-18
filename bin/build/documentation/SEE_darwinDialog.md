@@ -1,2 +1,1 @@
 [darwinDialog]({rel}documentation/source/tools/darwin.md#darwindialog) - Display a dialog using \`osascript\` with the choices provided. Typically ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L200))
-[darwinDialog]({rel}documentation/source/tools/darwin.md#darwindialog) - Display a dialog using \`osascript\` with the choices provided. Typically ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L200))
