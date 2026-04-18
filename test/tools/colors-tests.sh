@@ -6,6 +6,15 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testColorModes() {
+  mockEnvironmentStart __BUILD_DECORATE
+  __decorateStylesDefaultDark
+  colorSampleSemanticStyles
+  __decorateStylesDefaultLight
+  colorSampleSemanticStyles
+  mockEnvironmentStop __BUILD_DECORATE
+}
+
 testColorSampleCodes() {
   assertExitCode 0 colorSampleCodes || return $?
   assertExitCode --stderr-match "Only argument allowed is" --stderr-match "--help" 2 colorSampleCodes --no-arguments-really-allowed || return $?

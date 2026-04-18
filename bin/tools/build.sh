@@ -121,13 +121,12 @@ __buildBuild() {
   local start
   start=$(timingStart)
 
-  decorateInitialized || catchEnvironment "$handler" muzzle consoleConfigureDecorate || return $?
+  decorateInitialized || statusMessage decorate info "Color mode is " && catchEnvironment "$handler" consoleConfigureDecorate || return $?
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   catchReturn "$handler" packageInstall || return $?
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   catchReturn "$handler" decorate big "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
   consoleLine "."
