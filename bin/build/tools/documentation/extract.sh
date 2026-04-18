@@ -87,7 +87,7 @@ __bashDocumentationExtract() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local definitionFile && definitionFile=$(__functionSettings "$home" "$handler" "$fn" true) || return $?
+  local definitionFile && definitionFile=$(__functionSettings "$home" "$fn" true) || return $?
   if $generateCache; then
     if __bashDocumentationExtractCheckCache "$handler" "$source" "$definitionFile"; then
       return 0

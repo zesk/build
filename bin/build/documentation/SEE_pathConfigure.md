@@ -1,3 +1,4 @@
 [pathConfigure]({rel}documentation/source/tools/path.md#pathconfigure) - Modify the PATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L48))
 [pathConfigure]({rel}documentation/source/tools/path.md#pathconfigure) - Modify the PATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L48))
 [pathConfigure]({rel}documentation/source/tools/path.md#pathconfigure) - Modify the PATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L48))
+[pathConfigure]({rel}documentation/source/tools/path.md#pathconfigure) - Modify the PATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L48))

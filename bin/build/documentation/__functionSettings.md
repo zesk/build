@@ -4,7 +4,7 @@
 
 ### Usage
 
-    __functionSettings [ home ] [ functionName ]
+    __functionSettings [ home ] [ functionName ] [ justPath ]
 
 Requires:
 
@@ -12,6 +12,7 @@ Requires:
 
 - `home` - Directory. BUILD_HOME
 - `functionName` - String. Function to fetch settings for
+- `justPath` - Boolean. Optional. Pass in `true` to just fetch the file path.
 
 ### Return codes
 

@@ -100,10 +100,10 @@ __bashDocumentation() {
     # ********************************************************************************************************************
     # ********************************************************************************************************************
     if ! catchReturn "$handler" bashDocumentationExtract "$displayName" "$functionDefinitionFile" >"$variablesFile" <"$commentFile"; then
-      dumpPipe "commentFile" <"$commentFile"
-      dumpPipe "variablesFile" <"$variablesFile"
-      dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
-      throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
+      dumpPipe "commentFile" <"$commentFile" 1>&2
+      dumpPipe "variablesFile" <"$variablesFile" 1>&2
+      dumpPipe "functionDefinitionFile" <"$functionDefinitionFile" 1>&2
+      throwEnvironment "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
     fi
 
     if [ -n "${rawComment-}" ]; then decorate error "FOUND LEAK AT $LINENO $displayName $functionDefinitionFile" && debuggingStack 1>&2 && pause; fi
