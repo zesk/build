@@ -185,7 +185,7 @@ __usageMessage() {
 __functionSettings() {
   local home="$1" && shift
   local functionName="$1" && shift
-  local justPath=false && [ $# -eq 0 ] || justPath="$1" && shift
+  local justPath=false && [ $# -eq 0 ] || justPath="$1"
 
   export BUILD_DOCUMENTATION_PATH
   local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
