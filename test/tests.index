@@ -49,6 +49,7 @@ testIsCharacterClasses suite=character test/tools/character-tests.sh
 testStringValidate suite=character test/tools/character-tests.sh
 testValidateCharacterClass suite=character test/tools/character-tests.sh  tag=slow
 testColorFormat suite=colors test/tools/colors-tests.sh
+testColorModes suite=colors test/tools/colors-tests.sh
 testColorSampleCodes suite=colors test/tools/colors-tests.sh
 testColorSampleCombinations suite=colors test/tools/colors-tests.sh
 testColorSampleStyles suite=colors test/tools/colors-tests.sh
