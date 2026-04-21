@@ -10,11 +10,13 @@
 
 ### Generating cache files
 
-{buildUsageCompile}
+{buildFunctionsDerivedCompile}
 
-{buildUsageCompileParallel}
+{buildFunctionsCompile}
 
-{buildUsageRemoveDeprecated}
+{buildFunctionsCompileParallel}
+
+{buildFunctionsRemoveDeprecated}
 
 {buildToolsCompile}
 

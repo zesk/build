@@ -1,1 +1,1 @@
-[fileCopyWouldChange]({rel}documentation/source/tools/interactive.md#filecopywouldchange) - Check whether copying a file would change it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L70))
+[fileCopyWouldChange]({rel}interactive.md#filecopywouldchange) - Check whether copying a file would change it ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))

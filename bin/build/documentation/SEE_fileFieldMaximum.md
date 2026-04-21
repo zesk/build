@@ -1,1 +1,1 @@
-[fileFieldMaximum]({rel}documentation/source/tools/text.md#filefieldmaximum) - Given an input file, determine the maximum length of fieldIndex, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L610))
+[fileFieldMaximum]({rel}tools/text.md#filefieldmaximum) - Given an input file, determine the maximum length of fieldIndex, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L609))

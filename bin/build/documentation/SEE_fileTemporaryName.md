@@ -1,1 +1,1 @@
-[fileTemporaryName]({rel}documentation/source/tools/file.md#filetemporaryname) - Wrapper for \`mktemp\`. Generate a temporary file name, and fail ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L806))
+[fileTemporaryName]({rel}tools/file.md#filetemporaryname) - Wrapper for `mktemp`. Generate a temporary file name, and fail ([source](https://github.com/zesk/build/blob/main/bin/build/identical/fileTemporaryName.sh#L19))

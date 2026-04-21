@@ -1,1 +1,2 @@
-[quoteSedReplacement]({rel}documentation/source/tools/quote.md#quotesedreplacement) - Quote sed replacement strings for shell use"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sed.sh#L57))
+[quoteSedReplacement]({rel}quote.md#quotesedreplacement) - Quote sed replacement strings for shell use
+ ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
