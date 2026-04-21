@@ -179,7 +179,7 @@ __documentationBuild() {
       statusMessage decorate info "Updating unlinked ..."
       catchReturn "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTarget" "$unlinkedSource" || returnClean $? "${clean[@]}" || return $?
       statusMessage --last timingReport "$elapsed" "Updated unlinked index in" || :
-      catchReturn "$handler" environmentFileLoad "$envFile" --execute documentationTemplateCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$unlinkedTemplate" "$functionTemplate" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" environmentFileLoad "$envFile" --execute documentationTemplateCompile "$cacheDirectory" "$unlinkedTemplate" "$functionTemplate" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
       if [ "$actionFlag" = "--unlinked-update" ]; then
         printf "\n"
         catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
