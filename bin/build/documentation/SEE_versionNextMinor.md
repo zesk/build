@@ -1,1 +1,1 @@
-[versionNextMinor]({rel}documentation/source/tools/version.md#versionnextminor) - Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L116))
+[versionNextMinor]({rel}tools/version.md#versionnextminor) - Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L115))
