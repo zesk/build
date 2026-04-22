@@ -40,8 +40,8 @@ realPath|fileRealPath|
 runCount|executeCount|
 trimWords|stringTrimWords|
 unquote |stringUnquote |
-uppercase |stringUppercase |
-lowercase |stringLowercase |
+uppercase |stringUppercase |-name|*.sh
+lowercase |stringLowercase |-name|*.sh
 usageRequireBinary|executableRequire|
 usageRequireEnvironment|environmentRequire|
 veeGitTag|gitTagVee|

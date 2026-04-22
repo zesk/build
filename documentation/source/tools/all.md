@@ -651,7 +651,7 @@ All functions in Zesk Build, alphabetically.
 - [stringRandom](../documentation/source/tools/text.md#stringrandom) - Outputs 40 random hexadecimal characters, stringLowercase. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1005))
 - [stringTrimWords](../documentation/source/tools/text.md#stringtrimwords) - Remove words from the end of a phrase ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L576))
 - [stringUnquote](../documentation/source/tools/text.md#stringunquote) - Unquote a string"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L120))
-- [stringUppercase](../documentation/source/tools/text.md#stringuppercase) - Convert text to uppercase ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L845))
+- [stringUppercase](../documentation/source/tools/text.md#stringuppercase) - Convert text to stringUppercase ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L845))
 - [stringValidate](../documentation/source/tools/character.md#stringvalidate) - Ensure that every character in a text string passes all ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L35))
 - [sysvInitScriptInstall](../documentation/source/tools/sysvinit.md#sysvinitscriptinstall) - Install a script to run upon initialization. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sysvinit.sh#L12))
 - [sysvInitScriptUninstall](../documentation/source/tools/sysvinit.md#sysvinitscriptuninstall) - Remove an initialization script ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sysvinit.sh#L63))
