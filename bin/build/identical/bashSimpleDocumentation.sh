@@ -16,11 +16,11 @@
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - String. Optional. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached __usageMessageStyle __usageMessage
+# Requires: bashFunctionComment decorate read printf returnCodeString helpArgument bashDocumentation __bashDocumentationCached __usageMessageStyle __usageMessage
 bashSimpleDocumentation() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" && shift 3
 
   [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2

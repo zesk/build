@@ -55,7 +55,7 @@
 __decorateExtensionBig() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local fonts binary index=0
 

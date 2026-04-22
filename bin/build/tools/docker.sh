@@ -20,7 +20,7 @@
 # Fetch the default platform for docker
 # Outputs one of: `linux/arm64`, `linux/mips64`, `linux/amd64`
 dockerPlatformDefault() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local os=linux chip
   case "$(uname -m)" in
   *arm*) chip=arm64 ;;
@@ -42,7 +42,7 @@ _dockerPlatformDefault() {
 #
 # INTERNAL
 __dumpDockerTestFile() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local proc1File=/proc/1/sched
 
   if [ -f "$proc1File" ]; then
@@ -67,7 +67,7 @@ ___dumpDockerTestFile() {
 # Checked: 2025-07-09
 # TODO: Write a test to check this date every oh, say, 3 months
 dockerInside() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if [ ! -f /proc/1/cmdline ]; then
     # Not inside
     return 1
@@ -87,7 +87,7 @@ _dockerInside() {
 
 # List the files which would be included in the docker image
 dockerListContext() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf 'FROM scratch\nCOPY . /\n' | DOCKER_BUILDKIT=1 docker build -q -f- -o- . | tar t
 }
 _dockerListContext() {
@@ -296,7 +296,7 @@ _dockerImages() {
 # Argument: name - String. Required.
 dockerVolumeExists() {
   local handler="_${FUNCNAME[0]}"
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   [ $# -eq 1 ] || throwArgument "$handler" "Requires a volume name" || return $?
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
@@ -309,7 +309,7 @@ _dockerVolumeExists() {
 # Argument: name - String. Required. Volume name to delete.
 dockerVolumeDelete() {
   local handler="_${FUNCNAME[0]}"
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   [ $# -eq 1 ] || throwArgument "$handler" "Requires a volume name" || return $?
   docker volume ls --format json | jq .Name | grep -q "$1"
 }

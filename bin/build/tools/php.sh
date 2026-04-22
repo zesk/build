@@ -20,7 +20,7 @@
 # Return Code: 0 - If installation succeeds
 phpInstall() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" packageWhich php php-common php-cli "$@" || return $?
 }
 _phpInstall() {
@@ -39,7 +39,7 @@ _phpInstall() {
 # Return Code: 0 - If uninstallation succeeds
 phpUninstall() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" packageWhichUninstall php php-common php-cli "$@" || return $?
 }
 _phpUninstall() {
@@ -53,7 +53,7 @@ _phpUninstall() {
 # See: tail
 phpTailLog() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local logFile
   logFile=$(catchEnvironment "$handler" phpLog) || return $?
   [ -n "$logFile" ] || throwEnvironment "$handler" "PHP log file is blank" || return $?
@@ -75,7 +75,7 @@ _phpTailLog() {
 #
 phpLog() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   executableExists php || throwEnvironment "$handler" "php not installed" || return $?
   php -r "echo ini_get('error_log');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }
@@ -89,7 +89,7 @@ _phpLog() {
 #
 phpIniFile() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   executableExists php || throwEnvironment "$handler" "php not installed" || return $?
   php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }

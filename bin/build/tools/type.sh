@@ -97,7 +97,7 @@ _isTrue() {
 # Bash types beyond `type -t`
 isType() {
   local text argument="${1-}"
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   if text=$(declare -p "$argument" 2>/dev/null); then
     case "$text" in
     *"declare -ax "*) printf -- "%s\n" "array" "export" ;;
@@ -124,7 +124,7 @@ _isType() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 isArray() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ -n "${1-}" ] || return 1
     case "$(declare -p "${1-}" 2>/dev/null)" in
@@ -149,12 +149,12 @@ _isArray() {
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: catchArgument isUnsignedInteger bashDocumentation __help
+# Requires: catchArgument isUnsignedInteger bashDocumentation helpArgument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
     return 0
@@ -173,12 +173,12 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: catchArgument isUnsignedInteger bashDocumentation type __help
+# Requires: catchArgument isUnsignedInteger bashDocumentation type helpArgument
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
@@ -188,18 +188,18 @@ _isFunction() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL isCallable 46
+# IDENTICAL isCallable 43
 
 # Test if all arguments are callable as a command
 # Argument: string - EmptyString. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command
-# Requires: throwArgument __help isExecutable isFunction
+# Requires: throwArgument helpArgument isExecutable isFunction
 isCallable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if ! isFunction "$1" && ! isExecutable "$1"; then
     return 1
   fi
@@ -214,21 +214,18 @@ _isCallable() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
-# Requires: throwArgument  __help catchEnvironment command
+# Requires: throwArgument  helpArgument type
+# Environment: PATH
 isExecutable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
-  if [ -f "$1" ]; then
-    # Docker has an issue when you mount a local volume inside a container
-    # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
-    # Report *correctly* when you use `ls`.
-    local mode && mode=$(catchEnvironment "$handler" ls -l "$1") || return $?
-    mode="${mode%% *}" && [ "${mode#*x}" != "$mode" ]
+  if [ "${1#/}" != "$1" ] && [ -f "$1" ]; then
+    [ -x "$1" ]
   else
-    [ -n "$(which "$1")" ]
+    muzzle type -P "$1"
   fi
 }
 _isExecutable() {

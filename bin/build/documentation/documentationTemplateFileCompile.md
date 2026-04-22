@@ -4,7 +4,7 @@
 
 ### Usage
 
-    documentationTemplateFileCompile [ --env-file envFile ] [ --md-cache markdownCacheDirectory ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]
+    documentationTemplateFileCompile [ --env-file envFile ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]
 
 Convert a template which contains bash functions into full-fledged documentation.
 The process:
@@ -17,7 +17,6 @@ The process:
 ### Arguments
 
 - `--env-file envFile` - File. Optional. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
-- `--md-cache markdownCacheDirectory` - Directory. Optional. Cache directory where the markdown cache is stored.
 - `cacheDirectory` - Directory. Required. Cache directory where the indexes live.
 - `sourceFile` - File. Directory. Required. The document template containing functions to define
 - `functionTemplate` - File. Required. The template for individual functions defined in the `documentTemplate`.

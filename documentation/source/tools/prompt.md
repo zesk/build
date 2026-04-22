@@ -26,7 +26,7 @@ Examples:
     bashPrompt bashPromptModule_BuildProject consoleDefaultTitle
     bashPrompt --colors "$(bashPromptColorScheme forest)"
 
-# Functions
+## Prompt Functions
 
 {bashPrompt}
 
@@ -38,7 +38,7 @@ Examples:
 
 {bashUserInput}
 
-# Bash Prompt Modules
+## `bashPrompt` Modules
 
 - {SEE:bashPromptModule_BuildProject}
 - {SEE:bashPromptModule_ApplicationPath}
@@ -57,7 +57,7 @@ To enable:
 
 {bashPromptModule_TermColors}
 
-## dotFilesWatcher Tools
+## `dotFilesWatcher` Tools
 
 Example during setup:
 
@@ -73,7 +73,7 @@ Any new dot files which appear will then show a warning in your console.
 
 {dotFilesApproved}
 
-## reloadChanges Tools
+## `reloadChanges` Tools
 
 {reloadChanges}
 

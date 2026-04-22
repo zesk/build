@@ -11,7 +11,7 @@
 pcregrepInstall() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
 }
 _pcregrepInstall() {
@@ -24,7 +24,7 @@ _pcregrepInstall() {
 # Argument: --help - Flag. Optional. Display this help.
 # stdout: String. Name of binary for pcregrep.
 pcregrepBinary() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   __pcregrepBinary
 }
 _pcregrepBinary() {

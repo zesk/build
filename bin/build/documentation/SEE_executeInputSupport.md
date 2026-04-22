@@ -1,1 +1,0 @@
-[executeInputSupport]({rel}documentation/source/tools/sugar.md#executeinputsupport) - Support arguments and stdin as arguments to an executor ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L165))

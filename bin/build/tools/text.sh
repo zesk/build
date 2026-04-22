@@ -73,7 +73,7 @@ _fileExtractLines() {
 # See: grep
 # Requires: grep returnMap
 grepSafe() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   grep "$@" || returnMap $? 1 0 || return $?
 }
 _grepSafe() {
@@ -88,7 +88,7 @@ _grepSafe() {
 # Return code: - `0` - Text is plain
 # Return code: - `1` - Text contains non-plain characters
 isPlain() {
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
 
   while [ $# -gt 0 ]; do
     case "$1" in *[^[:print:]]*) return 1 ;; esac
@@ -147,13 +147,13 @@ _isMappable() {
 # Return Code: 0 - true
 # Return Code: 1 - false
 # Return Code: 2 - Neither
-# Requires: stringLowercase __help
+# Requires: stringLowercase helpArgument
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Return code: - `0` - Text is plain
 # Return code: - `1` - Text contains non-plain characters
 booleanParse() {
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   case "$(stringLowercase "${1-}")" in
   y | yes | 1 | true)
     return 0
@@ -180,7 +180,7 @@ _booleanParse() {
 # stdout: The text with the newline replaced with another character, suitable typically for single-line output
 stringHideNewlines() {
   # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   local text="${1-}" replace="${2-"␤"}"
   printf -- "%s\n" "${text//$'\n'/$replace}"
 }
@@ -198,7 +198,7 @@ _stringHideNewlines() {
 # stdout: The input text properly quoted
 escapeQuotes() {
   # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   printf %s "$(escapeDoubleQuotes "$(escapeSingleQuotes "$1")")"
 }
 _escapeQuotes() {
@@ -215,7 +215,7 @@ _escapeQuotes() {
 # stdout: Outputs modified lines
 textReplaceFirst() {
   # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/1"
 }
 _textReplaceFirst() {
@@ -233,7 +233,7 @@ _textReplaceFirst() {
 # INTERNAL: 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
 # INTERNAL: 3. `/./!{N;ba}`: For blank lines at the end, it appends lines to the pattern space (`N`) until a non-blank line is found, then loops back to label `a`.
 textTrimBoth() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _textTrimBoth() {
@@ -247,7 +247,7 @@ _textTrimBoth() {
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 textTrimHead() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e "/./!d" -e :r -e n -e br
 }
 _textTrimHead() {
@@ -261,7 +261,7 @@ _textTrimHead() {
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 textTrimTail() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _textTrimTail() {
@@ -277,7 +277,7 @@ _textTrimTail() {
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines where any blank lines are replaced with a single blank line.
 textSingleBlankLines() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed '/^$/N;/^\n$/D'
 }
 _textSingleBlankLines() {
@@ -412,7 +412,7 @@ _inArray() {
 # Summary: Find whether a substring exists in one or more strings
 # Does needle exist as a substring of haystack?
 stringContains() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local haystack="${1-}"
 
   [ -n "$haystack" ] || return 1
@@ -437,7 +437,7 @@ _stringContains() {
 # Summary: Find whether a substring exists in one or more strings
 # Does needle exist as a substring of haystack?
 stringContainsInsensitive() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local haystack="${1-}"
 
   [ -n "$haystack" ] || return 1
@@ -468,7 +468,7 @@ _stringContainsInsensitive() {
 #
 stringFound() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local haystack needle=${1-}
   shift || return 1
   for haystack; do
@@ -493,7 +493,7 @@ _stringFound() {
 #
 stringFoundInsensitive() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local element arrayElement
 
@@ -520,7 +520,7 @@ _stringFoundInsensitive() {
 # Summary: Find whether a substring exists as teh beginning of one or more strings
 # Does needle exist as a substring of haystack?
 stringBegins() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local haystack="${1-}"
 
   [ -n "$haystack" ] || return 1
@@ -545,7 +545,7 @@ _stringBegins() {
 # Summary: Find whether a substring exists as teh beginning of one or more strings
 # Does needle exist as a substring of haystack? (case-insensitive)
 stringBeginsInsensitive() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local haystack="${1-}"
 
   [ -n "$haystack" ] || return 1
@@ -576,7 +576,7 @@ _stringBeginsInsensitive() {
 stringTrimWords() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local wordCount=$((${1-0} + 0)) words=() result
   shift || return 0
@@ -610,7 +610,7 @@ _stringTrimWords() {
 fileFieldMaximum() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local index=$((${1-1} + 0)) charArg=${2-}
 
@@ -633,7 +633,7 @@ fileLineMaximum() {
   local handler="_${FUNCNAME[0]}"
   local max
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   max=0
   while IFS= read -r line; do
     if [ "${#line}" -gt "$max" ]; then
@@ -757,7 +757,7 @@ _fileLineCount() {
 # stdout: `String`. The number (direct) and the localePlural form for non-1 values. e.g. `$(localePluralWord 2 potato potatoes)` = `2 potatoes`
 localePluralWord() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local word
   word=$(catchReturn "$handler" localePlural "$@") || return $?
   printf -- "%s %s\n" "$1" "$word" || return $?
@@ -785,7 +785,7 @@ _localePluralWord() {
 # stdout: `String`. The localePlural form for non-1 values. e.g. `$(localePlural 2 potato potatoes)` = `potatoes`
 localePlural() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local count=${1-} plural="${3-"${2}s"}"
   if [ "$count" -eq "$count" ] 2>/dev/null; then
@@ -819,7 +819,7 @@ _localePlural() {
 # stdout: `String`. The stringLowercase version of the `text`.
 # Requires: tr
 stringLowercase() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then
@@ -843,7 +843,7 @@ _stringLowercase() {
 # stdout: `String`. The stringUppercase version of the `text`.
 # Requires: tr
 stringUppercase() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then
@@ -869,7 +869,7 @@ _stringUppercase() {
 # stdin: arbitrary text which may contain ANSI escape sequences for the terminal
 # stdout: the same text with those ANSI escape sequences removed
 consoleToPlain() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e $'s,\x1B\[[0-9;]*[a-zA-Z],,g' -e $'s,\x1B\][^\x1B]*\x1B\x5c\x5c,,g'
 }
 _consoleToPlain() {
@@ -884,7 +884,7 @@ _consoleToPlain() {
 # stdout: `UnsignedInteger`. Length of the plain characters in the input arguments.
 consolePlainLength() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   if [ $# -gt 0 ]; then
     local text && text="$(consoleToPlain <<<"$*")"
@@ -1003,7 +1003,7 @@ _textSHA() {
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 # stdout: `String`. A random hexadecimal string.
 stringRandom() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
 }
 _stringRandom() {
@@ -1018,7 +1018,7 @@ _stringRandom() {
 # Argument: haystack - String. Required.
 # stdout: `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.
 stringOffset() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local length=${#2}
   local substring="${2/${1-}*/}"
   local offset="${#substring}"
@@ -1039,7 +1039,7 @@ _stringOffset() {
 # Argument: haystack - String. Required.
 # stdout: `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.
 stringOffsetInsensitive() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local length=${#2}
   local needle haystack
   needle=$(stringLowercase "${1-}")
@@ -1100,7 +1100,7 @@ _textRemoveFields() {
 # Example:     cat "$failedFunctions" | decorate wrap -- "- " | {fn} "%s\n" "No functions failed."
 printfOutputEmpty() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
   local finished=false char=$'\n' line
   if ! IFS="" read -r line; then finished=true && char=""; fi
   if [ -z "$line" ] && $finished; then
@@ -1123,7 +1123,7 @@ _printfOutputEmpty() {
 # stdout: printf output and then the stdin text IFF stdin text is non-blank
 printfOutputPrefix() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
   local finished=false char=$'\n' line
   if ! IFS="" read -r line; then finished=true && char=""; fi
   [ -n "$line" ] || ! $finished || return 0
@@ -1144,7 +1144,7 @@ _printfOutputPrefix() {
 # stdout: stdin text and then printf output IFF stdin text is non-blank
 printfOutputSuffix() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
   local finished=false char=$'\n' line
   if ! IFS="" read -r line; then finished=true && char=""; fi
   [ -n "$line" ] || ! $finished || return 0
@@ -1217,7 +1217,7 @@ _textReplace() {
 textAlignRight() {
   local handler="_${FUNCNAME[0]}"
   local n
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   n=$(validate "$handler" UnsignedInteger "characterWidth" "${1-}") && shift || return $?
   printf "%${n}s" "$*"
 }
@@ -1241,7 +1241,7 @@ _textAlignRight() {
 textAlignLeft() {
   local handler="_${FUNCNAME[0]}"
   local n
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   n=$(validate "$handler" UnsignedInteger "characterWidth" "${1-}") && shift || return $?
   catchEnvironment "$handler" printf -- "%-${n}s" "$*" || return $?
 }

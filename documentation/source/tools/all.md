@@ -6,693 +6,713 @@ All functions in Zesk Build, alphabetically.
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-- {SEE:alpineContainer}
-- {SEE:apkIsInstalled}
-- {SEE:applicationHome}
-- {SEE:applicationHomeAliases}
-- {SEE:approveBashSource}
-- {SEE:approvedSources}
-- {SEE:aptIsInstalled}
-- {SEE:aptKeyAdd}
-- {SEE:aptKeyAddHashicorp}
-- {SEE:aptKeyAddOpenTofu}
-- {SEE:aptKeyRemove}
-- {SEE:aptKeyRemoveHashicorp}
-- {SEE:aptKeyRemoveOpenTofu}
-- {SEE:aptKeyRingDirectory}
-- {SEE:aptNonInteractive}
-- {SEE:aptSourcesDirectory}
-- {SEE:assertContains}
-- {SEE:assertDirectoryDoesNotExist}
-- {SEE:assertDirectoryEmpty}
-- {SEE:assertDirectoryExists}
-- {SEE:assertDirectoryNotEmpty}
-- {SEE:assertEquals}
-- {SEE:assertExitCode}
-- {SEE:assertFileContains}
-- {SEE:assertFileDoesNotContain}
-- {SEE:assertFileDoesNotExist}
-- {SEE:assertFileExists}
-- {SEE:assertFileSize}
-- {SEE:assertGreaterThan}
-- {SEE:assertGreaterThanOrEqual}
-- {SEE:assertLessThan}
-- {SEE:assertLessThanOrEqual}
-- {SEE:assertNotContains}
-- {SEE:assertNotEquals}
-- {SEE:assertNotExitCode}
-- {SEE:assertNotFileSize}
-- {SEE:assertNotZeroFileSize}
-- {SEE:assertOutputContains}
-- {SEE:assertOutputDoesNotContain}
-- {SEE:assertOutputEquals}
-- {SEE:assertStatistics}
-- {SEE:assertStringEmpty}
-- {SEE:assertStringNotEmpty}
-- {SEE:assertZeroFileSize}
-- {SEE:awsCredentialsAdd}
-- {SEE:awsCredentialsFile}
-- {SEE:awsCredentialsFromEnvironment}
-- {SEE:awsCredentialsHasProfile}
-- {SEE:awsCredentialsRemove}
-- {SEE:awsEnvironmentFromCredentials}
-- {SEE:awsHasEnvironment}
-- {SEE:awsInstall}
-- {SEE:awsIPAccess}
-- {SEE:awsIsKeyUpToDate}
-- {SEE:awsProfilesList}
-- {SEE:awsRegionValid}
-- {SEE:awsS3DirectoryDelete}
-- {SEE:awsS3Upload}
-- {SEE:awsSecurityGroupIPModify}
-- {SEE:backgroundProcess}
-- {SEE:bashBuiltins}
-- {SEE:bashCheckRequires}
-- {SEE:bashCommentFilter}
-- {SEE:bashCommentVariable}
-- {SEE:bashCoverage}
-- {SEE:bashCoverageReport}
-- {SEE:bashDebug}
-- {SEE:bashDebuggerDisable}
-- {SEE:bashDebuggerEnable}
-- {SEE:bashDebugInterruptFile}
-- {SEE:bashDocumentation}
-- {SEE:bashDocumentationExtract}
-- {SEE:bashDocumentationMarkdown}
-- {SEE:bashFileComment}
-- {SEE:bashFinalComment}
-- {SEE:bashFindUncaughtAssertions}
-- {SEE:bashFunctionComment}
-- {SEE:bashFunctionCommentVariable}
-- {SEE:bashFunctionDefined}
-- {SEE:bashGetRequires}
-- {SEE:bashLibrary}
-- {SEE:bashLibraryHome}
-- {SEE:bashLint}
-- {SEE:bashLintFiles}
-- {SEE:bashLintFilesInteractive}
-- {SEE:bashListFunctions}
-- {SEE:bashMakeExecutable}
-- {SEE:bashPrompt}
-- {SEE:bashPromptColorScheme}
-- {SEE:bashPromptColorsFormat}
-- {SEE:bashPromptMarkers}
-- {SEE:bashPromptModule_dotFilesWatcher}
-- {SEE:bashPromptModule_TermColors}
-- {SEE:bashRecursionDebug}
-- {SEE:bashSanitize}
-- {SEE:bashShowUsage}
-- {SEE:bashSimpleDocumentation}
-- {SEE:bashSourcePath}
-- {SEE:bashStripComments}
-- {SEE:bashUserInput}
-- {SEE:bitbucketContainer}
-- {SEE:bitbucketGetVariable}
-- {SEE:bitbucketPRNewURL}
-- {SEE:booleanChoose}
-- {SEE:booleanParse}
-- {SEE:brewInstall}
-- {SEE:buildApplicationConfigure}
-- {SEE:buildCacheDirectory}
-- {SEE:buildCompletion}
-- {SEE:buildDebugEnabled}
-- {SEE:buildDebugStart}
-- {SEE:buildDebugStop}
-- {SEE:buildDeprecatedFunctions}
-- {SEE:buildDevelopmentLink}
-- {SEE:buildEnvironmentAdd}
-- {SEE:buildEnvironmentContext}
-- {SEE:buildEnvironmentFiles}
-- {SEE:buildEnvironmentGet}
-- {SEE:buildEnvironmentGetDirectory}
-- {SEE:buildEnvironmentLoad}
-- {SEE:buildEnvironmentNames}
-- {SEE:buildFunctions}
-- {SEE:buildHome}
-- {SEE:buildQuietLog}
-- {SEE:catchArgument}
-- {SEE:catchCode}
-- {SEE:catchEnvironment}
-- {SEE:catchEnvironmentQuiet}
-- {SEE:catchReturn}
-- {SEE:characterClasses}
-- {SEE:characterClassReport}
-- {SEE:characterFromInteger}
-- {SEE:characterToInteger}
-- {SEE:colorBrightness}
-- {SEE:colorFormat}
-- {SEE:colorMultiply}
-- {SEE:colorNormalize}
-- {SEE:colorParse}
-- {SEE:colorSampleCodes}
-- {SEE:colorSampleCombinations}
-- {SEE:colorSampleSemanticStyles}
-- {SEE:colorSampleStyles}
-- {SEE:colorScheme}
-- {SEE:confirmMenu}
-- {SEE:confirmYesNo}
-- {SEE:consoleBrightness}
-- {SEE:consoleColumns}
-- {SEE:consoleConfigureColorMode}
-- {SEE:consoleConfigureDecorate}
-- {SEE:consoleDefaultTitle}
-- {SEE:consoleFileLink}
-- {SEE:consoleGetColor}
-- {SEE:consoleHasAnimation}
-- {SEE:consoleHasColors}
-- {SEE:consoleHeadingLine}
-- {SEE:consoleLine}
-- {SEE:consoleLineFill}
-- {SEE:consoleLink}
-- {SEE:consoleLinksSupported}
-- {SEE:consolePlainLength}
-- {SEE:consoleRows}
-- {SEE:consoleSetTitle}
-- {SEE:consoleToPlain}
-- {SEE:consoleTrimWidth}
-- {SEE:contextOpen}
-- {SEE:contextShow}
-- {SEE:convertValue}
-- {SEE:cpuCount}
-- {SEE:cpuLoadAverage}
-- {SEE:crontabApplicationUpdate}
-- {SEE:cursorGet}
-- {SEE:cursorSet}
-- {SEE:daemontoolsExecute}
-- {SEE:daemontoolsHome}
-- {SEE:daemontoolsInstall}
-- {SEE:daemontoolsInstallService}
-- {SEE:daemontoolsIsRunning}
-- {SEE:daemontoolsManager}
-- {SEE:daemontoolsProcessIds}
-- {SEE:daemontoolsRemoveService}
-- {SEE:daemontoolsRestart}
-- {SEE:daemontoolsTerminate}
-- {SEE:darwinDialog}
-- {SEE:darwinNotification}
-- {SEE:darwinSoundDirectory}
-- {SEE:darwinSoundInstall}
-- {SEE:darwinSoundNames}
-- {SEE:darwinSoundValid}
-- {SEE:dateAdd}
-- {SEE:dateFromTimestamp}
-- {SEE:dateToday}
-- {SEE:dateToFormat}
-- {SEE:dateTomorrow}
-- {SEE:dateToTimestamp}
-- {SEE:dateValid}
-- {SEE:dateWithinDays}
-- {SEE:dateYesterday}
-- {SEE:debuggingStack}
-- {SEE:decorate}
-- {SEE:decorateInitialized}
-- {SEE:decoratePath}
-- {SEE:decorateStyle}
-- {SEE:decorateThemed}
-- {SEE:decorateThemelessMode}
-- {SEE:decorations}
-- {SEE:deployApplication}
-- {SEE:deployApplicationVersion}
-- {SEE:deployBuildEnvironment}
-- {SEE:deployHasVersion}
-- {SEE:deployLink}
-- {SEE:deployMigrateDirectoryToLink}
-- {SEE:deployMove}
-- {SEE:deployNextVersion}
-- {SEE:deployPackageName}
-- {SEE:deployPreviousVersion}
-- {SEE:deployRemoteFinish}
-- {SEE:deployToRemote}
-- {SEE:deprecatedCannon}
-- {SEE:deprecatedCannonFile}
-- {SEE:deprecatedFilePrependVersion}
-- {SEE:deprecatedFind}
-- {SEE:deprecatedIgnore}
-- {SEE:deprecatedTokensFile}
-- {SEE:developerAnnounce}
-- {SEE:developerDevelopmentLink}
-- {SEE:developerTrack}
-- {SEE:developerUndo}
-- {SEE:directoryChange}
-- {SEE:directoryClobber}
-- {SEE:directoryIsEmpty}
-- {SEE:directoryNewestFile}
-- {SEE:directoryOldestFile}
-- {SEE:directoryParent}
-- {SEE:directoryPathSimplify}
-- {SEE:directoryRelativePath}
-- {SEE:directoryRequire}
-- {SEE:directoryWatch}
-- {SEE:dockerCompose}
-- {SEE:dockerComposeCommandList}
-- {SEE:dockerComposeInstall}
-- {SEE:dockerComposeIsRunning}
-- {SEE:dockerComposeUninstall}
-- {SEE:dockerComposeWrapper}
-- {SEE:dockerImages}
-- {SEE:dockerInside}
-- {SEE:dockerListContext}
-- {SEE:dockerLocalContainer}
-- {SEE:dockerPlatformDefault}
-- {SEE:dockerVolumeDelete}
-- {SEE:dockerVolumeExists}
-- {SEE:documentationBuild}
-- {SEE:documentationBuildCache}
-- {SEE:documentationBuildEnvironment}
-- {SEE:documentationIndexDocumentation}
-- {SEE:documentationIndexLookup}
-- {SEE:documentationIndexUnlinkedFunctions}
-- {SEE:documentationMkdocs}
-- {SEE:documentationTemplate}
-- {SEE:documentationTemplateCompile}
-- {SEE:documentationTemplateDirectoryCompile}
-- {SEE:documentationTemplateFileCompile}
-- {SEE:documentationTemplateFunctionCompile}
-- {SEE:documentationTemplateUpdate}
-- {SEE:documentationUnlinked}
-- {SEE:dotFilesApproved}
-- {SEE:dotFilesApprovedFile}
-- {SEE:dumpBinary}
-- {SEE:dumpEnvironment}
-- {SEE:dumpEnvironmentUnsafe}
-- {SEE:dumpFile}
-- {SEE:dumpHex}
-- {SEE:dumpLoadAverages}
-- {SEE:dumpPipe}
-- {SEE:environmentApplicationLoad}
-- {SEE:environmentApplicationVariables}
-- {SEE:environmentClean}
-- {SEE:environmentCompile}
-- {SEE:environmentFileApplicationMake}
-- {SEE:environmentFileApplicationVerify}
-- {SEE:environmentFileBashCompatibleToDocker}
-- {SEE:environmentFileDockerToBashCompatible}
-- {SEE:environmentFileIsDocker}
-- {SEE:environmentFileLoad}
-- {SEE:environmentFileShow}
-- {SEE:environmentFileToBashCompatible}
-- {SEE:environmentFileToDocker}
-- {SEE:environmentLines}
-- {SEE:environmentLoad}
-- {SEE:environmentNames}
-- {SEE:environmentOutput}
-- {SEE:environmentParseVariables}
-- {SEE:environmentRequire}
-- {SEE:environmentSecureVariables}
-- {SEE:environmentValueConvertArray}
-- {SEE:environmentValueRead}
-- {SEE:environmentValueReadArray}
-- {SEE:environmentValueWrite}
-- {SEE:environmentValueWriteArray}
-- {SEE:environmentVariableNameValid}
-- {SEE:environmentVariables}
-- {SEE:escapeBash}
-- {SEE:escapeDoubleQuotes}
-- {SEE:escapeQuotes}
-- {SEE:escapeSingleQuotes}
-- {SEE:evalCheck}
-- {SEE:executableExists}
-- {SEE:executableRequire}
-- {SEE:execute}
-- {SEE:executeCount}
-- {SEE:executeEcho}
-- {SEE:executeInputSupport}
-- {SEE:executeLoop}
-- {SEE:fileCopy}
-- {SEE:fileCopyWouldChange}
-- {SEE:fileDirectoryExists}
-- {SEE:fileDirectoryRequire}
-- {SEE:fileEndsWithNewline}
-- {SEE:fileExtensionLists}
-- {SEE:fileExtractLines}
-- {SEE:fileFieldMaximum}
-- {SEE:fileGroup}
-- {SEE:fileIsEmpty}
-- {SEE:fileIsNewest}
-- {SEE:fileIsOldest}
-- {SEE:fileLineCount}
-- {SEE:fileLineMaximum}
-- {SEE:fileMatches}
-- {SEE:fileModificationSeconds}
-- {SEE:fileModificationTime}
-- {SEE:fileModificationTimes}
-- {SEE:fileModifiedDays}
-- {SEE:fileModifiedRecently}
-- {SEE:fileModifiedSeconds}
-- {SEE:fileNewest}
-- {SEE:fileNotMatches}
-- {SEE:fileOldest}
-- {SEE:fileOwner}
-- {SEE:fileRealPath}
-- {SEE:fileReverseLines}
-- {SEE:filesAreIdentical}
-- {SEE:fileSize}
-- {SEE:filesOpenStatus}
-- {SEE:filesRename}
-- {SEE:fileTeeAtomic}
-- {SEE:fileTemporaryName}
-- {SEE:fileType}
-- {SEE:fingerprint}
-- {SEE:floatRound}
-- {SEE:floatTruncate}
-- {SEE:gitBranchExists}
-- {SEE:gitBranchExistsLocal}
-- {SEE:gitBranchExistsRemote}
-- {SEE:gitBranchify}
-- {SEE:gitBranchMergeCurrent}
-- {SEE:gitCommit}
-- {SEE:gitCommitHash}
-- {SEE:gitCurrentBranch}
-- {SEE:gitEnsureSafeDirectory}
-- {SEE:gitFindHome}
-- {SEE:gitHasAnyRefs}
-- {SEE:gitHookTypes}
-- {SEE:githubLatest}
-- {SEE:githubLatestRelease}
-- {SEE:githubProjectJSON}
-- {SEE:githubPublishDate}
-- {SEE:githubRelease}
-- {SEE:githubURLParse}
-- {SEE:gitInsideHook}
-- {SEE:gitInstall}
-- {SEE:gitInstallHook}
-- {SEE:gitInstallHooks}
-- {SEE:gitMainly}
-- {SEE:gitPreCommitCleanup}
-- {SEE:gitPreCommitExtensionList}
-- {SEE:gitPreCommitHasExtension}
-- {SEE:gitPreCommitHeader}
-- {SEE:gitPreCommitListExtension}
-- {SEE:gitPreCommitSetup}
-- {SEE:gitRemoteHosts}
-- {SEE:gitRemoveFileFromHistory}
-- {SEE:gitRepositoryChanged}
-- {SEE:gitShowChanges}
-- {SEE:gitShowStatus}
-- {SEE:gitTagAgain}
-- {SEE:gitTagDelete}
-- {SEE:gitTagVee}
-- {SEE:gitTagVersion}
-- {SEE:gitUninstall}
-- {SEE:gitVersionLast}
-- {SEE:gitVersionList}
-- {SEE:grepSafe}
-- {SEE:groupID}
-- {SEE:hookExists}
-- {SEE:hookFind}
-- {SEE:hookRun}
-- {SEE:hookRunOptional}
-- {SEE:hookSource}
-- {SEE:hookSourceOptional}
-- {SEE:hookVersionCurrent}
-- {SEE:hookVersionLive}
-- {SEE:hostTTFB}
-- {SEE:housekeeper}
-- {SEE:identicalCheck}
-- {SEE:identicalCheckShell}
-- {SEE:identicalFindTokens}
-- {SEE:identicalRepair}
-- {SEE:identicalWatch}
-- {SEE:inArray}
-- {SEE:incrementor}
-- {SEE:installInstallBinary}
-- {SEE:installInstallBuild}
-- {SEE:integerClamp}
-- {SEE:interactiveCountdown}
-- {SEE:interactiveManager}
-- {SEE:interactiveOccasionally}
-- {SEE:isAlpine}
-- {SEE:isArray}
-- {SEE:isBashBuiltin}
-- {SEE:isBashDebug}
-- {SEE:isBitBucketPipeline}
-- {SEE:isBoolean}
-- {SEE:isCallable}
-- {SEE:isCharacterClass}
-- {SEE:isCharacterClasses}
-- {SEE:isDarwin}
-- {SEE:isDockerComposeCommand}
-- {SEE:isErrorExit}
-- {SEE:isExecutable}
-- {SEE:isFunction}
-- {SEE:isInteger}
-- {SEE:isiTerm2}
-- {SEE:isMappable}
-- {SEE:isNumber}
-- {SEE:isPHPStorm}
-- {SEE:isPlain}
-- {SEE:isPositiveInteger}
-- {SEE:isPyCharm}
-- {SEE:isS3URL}
-- {SEE:isTrue}
-- {SEE:isTTYAvailable}
-- {SEE:isType}
-- {SEE:isUnsignedInteger}
-- {SEE:isUnsignedNumber}
-- {SEE:isValidateType}
-- {SEE:isVersion}
-- {SEE:isVisualStudioCode}
-- {SEE:iTerm2Aliases}
-- {SEE:iTerm2Attention}
-- {SEE:iTerm2Badge}
-- {SEE:iTerm2ColorNames}
-- {SEE:iTerm2ColorTypes}
-- {SEE:iTerm2Download}
-- {SEE:iTerm2Image}
-- {SEE:iTerm2Init}
-- {SEE:iTerm2IsColorName}
-- {SEE:iTerm2IsColorType}
-- {SEE:iTerm2Notify}
-- {SEE:iTerm2PromptSupport}
-- {SEE:iTerm2SetColors}
-- {SEE:iTerm2Version}
-- {SEE:json}
-- {SEE:jsonField}
-- {SEE:jsonFileGet}
-- {SEE:jsonFileSet}
-- {SEE:jsonPath}
-- {SEE:jsonSetValue}
-- {SEE:junitClose}
-- {SEE:junitOpen}
-- {SEE:junitProperties}
-- {SEE:junitPropertyList}
-- {SEE:junitSuiteClose}
-- {SEE:junitSuiteOpen}
-- {SEE:junitSystemErrorClose}
-- {SEE:junitSystemErrorOpen}
-- {SEE:junitSystemOutputClose}
-- {SEE:junitSystemOutputOpen}
-- {SEE:junitTestCaseClose}
-- {SEE:junitTestCaseErrorClose}
-- {SEE:junitTestCaseErrorOpen}
-- {SEE:junitTestCaseFailureClose}
-- {SEE:junitTestCaseFailureOpen}
-- {SEE:junitTestCaseOpen}
-- {SEE:junitTestCaseSkipped}
-- {SEE:labeledBigText}
-- {SEE:linkCreate}
-- {SEE:linkRename}
-- {SEE:listAppend}
-- {SEE:listCleanDuplicates}
-- {SEE:listContains}
-- {SEE:listJoin}
-- {SEE:listRemove}
-- {SEE:localePlural}
-- {SEE:localePluralWord}
-- {SEE:logDirectoryRotate}
-- {SEE:logRotate}
-- {SEE:manPathCleanDuplicates}
-- {SEE:manPathConfigure}
-- {SEE:manPathRemove}
-- {SEE:mapEnvironment}
-- {SEE:mapTokens}
-- {SEE:mapValue}
-- {SEE:mapValueTrim}
-- {SEE:mariadbConnect}
-- {SEE:mariadbDump}
-- {SEE:mariadbDumpClean}
-- {SEE:mariadbInstall}
-- {SEE:mariadbUninstall}
-- {SEE:markdownCheckIndex}
-- {SEE:markdownFormatList}
-- {SEE:markdownIndentHeading}
-- {SEE:markdownRemoveUnfinishedSections}
-- {SEE:markdownToConsole}
-- {SEE:mockConsoleAnimationStart}
-- {SEE:mockConsoleAnimationStop}
-- {SEE:mockEnvironmentStart}
-- {SEE:mockEnvironmentStop}
-- {SEE:muzzle}
-- {SEE:muzzleReturn}
-- {SEE:networkIPList}
-- {SEE:networkIPLookup}
-- {SEE:networkMACAddressList}
-- {SEE:networkNameFull}
-- {SEE:nodeInstall}
-- {SEE:nodePackageManager}
-- {SEE:nodePackageManagerInstall}
-- {SEE:nodePackageManagerUninstall}
-- {SEE:nodePackageManagerValid}
-- {SEE:nodeUninstall}
-- {SEE:notify}
-- {SEE:npmInstall}
-- {SEE:npmUninstall}
-- {SEE:outputTrigger}
-- {SEE:packageAvailableList}
-- {SEE:packageDefault}
-- {SEE:packageGroupInstall}
-- {SEE:packageGroupUninstall}
-- {SEE:packageGroupWhich}
-- {SEE:packageInstall}
-- {SEE:packageInstalledList}
-- {SEE:packageIsInstalled}
-- {SEE:packageManagerDefault}
-- {SEE:packageManagerValid}
-- {SEE:packageMapping}
-- {SEE:packageNeedRestartFlag}
-- {SEE:packageUninstall}
-- {SEE:packageUpdate}
-- {SEE:packageUpgrade}
-- {SEE:packageWhich}
-- {SEE:packageWhichUninstall}
-- {SEE:pathCleanDuplicates}
-- {SEE:pathConfigure}
-- {SEE:pathIsAbsolute}
-- {SEE:pathRemove}
-- {SEE:pathShow}
-- {SEE:pause}
-- {SEE:pcregrepBinary}
-- {SEE:pcregrepInstall}
-- {SEE:phpBuild}
-- {SEE:phpComposer}
-- {SEE:phpComposerInstall}
-- {SEE:phpComposerSetVersion}
-- {SEE:phpIniFile}
-- {SEE:phpInstall}
-- {SEE:phpLog}
-- {SEE:phpTailLog}
-- {SEE:phpTest}
-- {SEE:phpUninstall}
-- {SEE:pipeRunner}
-- {SEE:pipInstall}
-- {SEE:pipUninstall}
-- {SEE:pipUpgrade}
-- {SEE:pipWrapper}
-- {SEE:plasterLines}
-- {SEE:plumber}
-- {SEE:printfOutputEmpty}
-- {SEE:printfOutputPrefix}
-- {SEE:printfOutputSuffix}
-- {SEE:processMemoryUsage}
-- {SEE:processOpenPipes}
-- {SEE:processVirtualMemoryAllocation}
-- {SEE:processWait}
-- {SEE:pythonInstall}
-- {SEE:pythonPackageInstalled}
-- {SEE:pythonUninstall}
-- {SEE:pythonVirtual}
-- {SEE:quoteBashString}
-- {SEE:quoteGrepPattern}
-- {SEE:quoteSedPattern}
-- {SEE:quoteSedReplacement}
-- {SEE:readlineConfigurationAdd}
-- {SEE:releaseNew}
-- {SEE:releaseNotes}
-- {SEE:reloadChanges}
-- {SEE:returnArgument}
-- {SEE:returnAssert}
-- {SEE:returnClean}
-- {SEE:returnCode}
-- {SEE:returnCodeString}
-- {SEE:returnEnvironment}
-- {SEE:returnIdentical}
-- {SEE:returnLeak}
-- {SEE:returnMap}
-- {SEE:returnMessage}
-- {SEE:returnThrow}
-- {SEE:returnUndo}
-- {SEE:rsyncInstall}
-- {SEE:sedReplacePattern}
-- {SEE:serviceToPort}
-- {SEE:serviceToStandardPort}
-- {SEE:sshKnownHostAdd}
-- {SEE:sshKnownHostRemove}
-- {SEE:sshKnownHostsFile}
-- {SEE:sshSetup}
-- {SEE:statusMessage}
-- {SEE:stringBegins}
-- {SEE:stringBeginsInsensitive}
-- {SEE:stringContains}
-- {SEE:stringContainsInsensitive}
-- {SEE:stringFound}
-- {SEE:stringFoundInsensitive}
-- {SEE:stringHideNewlines}
-- {SEE:stringLowercase}
-- {SEE:stringOffset}
-- {SEE:stringOffsetInsensitive}
-- {SEE:stringRandom}
-- {SEE:stringTrimWords}
-- {SEE:stringUnquote}
-- {SEE:stringUppercase}
-- {SEE:stringValidate}
-- {SEE:sysvInitScriptInstall}
-- {SEE:sysvInitScriptUninstall}
-- {SEE:tarCreate}
-- {SEE:tarExtractPattern}
-- {SEE:terraformInstall}
-- {SEE:terraformUninstall}
-- {SEE:testSuite}
-- {SEE:testSuiteFunctionTested}
-- {SEE:testSuiteOrdering}
-- {SEE:textAlignLeft}
-- {SEE:textAlignRight}
-- {SEE:textCannon}
-- {SEE:textRemoveFields}
-- {SEE:textRepeat}
-- {SEE:textReplace}
-- {SEE:textReplaceFirst}
-- {SEE:textSHA}
-- {SEE:textSingleBlankLines}
-- {SEE:textTrim}
-- {SEE:textTrimBoth}
-- {SEE:textTrimHead}
-- {SEE:textTrimLeft}
-- {SEE:textTrimRight}
-- {SEE:textTrimTail}
-- {SEE:textVersionSort}
-- {SEE:throwArgument}
-- {SEE:throwEnvironment}
-- {SEE:timing}
-- {SEE:timingDuration}
-- {SEE:timingElapsed}
-- {SEE:timingFormat}
-- {SEE:timingReport}
-- {SEE:timingStart}
-- {SEE:tofuInstall}
-- {SEE:tofuUninstall}
-- {SEE:tools}
-- {SEE:urlContentLength}
-- {SEE:urlFetch}
-- {SEE:urlFilter}
-- {SEE:urlMatchesLocalFileSize}
-- {SEE:urlOpen}
-- {SEE:urlOpener}
-- {SEE:urlParse}
-- {SEE:urlParseItem}
-- {SEE:urlSchemeDefaultPort}
-- {SEE:urlValid}
-- {SEE:userAgentDefault}
-- {SEE:userHome}
-- {SEE:userRecord}
-- {SEE:userRecordHome}
-- {SEE:userRecordName}
-- {SEE:validate}
-- {SEE:validateTypeList}
-- {SEE:versionNextMinor}
-- {SEE:versionNoVee}
-- {SEE:websiteScrape}
-- {SEE:xdebugDisable}
-- {SEE:xdebugEnable}
-- {SEE:xdebugInstall}
-- {SEE:yarnInstall}
-- {SEE:yumIsInstalled}
+- [alpineContainer](../documentation/source/tools/apk.md#alpinecontainer) - Open an Alpine container shell ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apk.sh#L50))
+- [apkIsInstalled](../apk.md#apkisinstalled) - Is this an Alpine system and is apk installed? ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [applicationHome](../documentation/source/tools/application.md#applicationhome) - Set, or cd to current application home directory. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L52))
+- [applicationHomeAliases](../documentation/source/tools/application.md#applicationhomealiases) - \`applicationHome\` bash aliases setup"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L95))
+- [approveBashSource](../documentation/source/tools/approve.md#approvebashsource) - Loads files or a directory of \`.sh\` files using \`source\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L92))
+- [approvedSources](../documentation/source/tools/approve.md#approvedsources) - List approved Bash script sources which can be loaded automatically ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L110))
+- [aptIsInstalled](../documentation/source/tools/apt.md#aptisinstalled) - Is apt-get installed? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apt.sh#L25))
+- [aptKeyAdd](../documentation/source/tools/apt.md#aptkeyadd) - Add keys to enable apt to download terraform directly from ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apt.sh#L77))
+- [aptKeyAddHashicorp](../documentation/source/tools/terraform.md#aptkeyaddhashicorp) - Add keys to enable apt to download terraform directly from ([source](https://github.com/zesk/build/blob/main/bin/build/tools/terraform.sh#L16))
+- [aptKeyAddOpenTofu](../documentation/source/tools/tofu.md#aptkeyaddopentofu) - Add keys to enable apt to download tofu directly from ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L19))
+- [aptKeyRemove](../documentation/source/tools/apt.md#aptkeyremove) - Remove apt keys ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apt.sh#L95))
+- [aptKeyRemoveHashicorp](../documentation/source/tools/terraform.md#aptkeyremovehashicorp) - Add keys to enable apt to download terraform directly from ([source](https://github.com/zesk/build/blob/main/bin/build/tools/terraform.sh#L33))
+- [aptKeyRemoveOpenTofu](../documentation/source/tools/tofu.md#aptkeyremoveopentofu) - Remove keys to disable apt to download tofu from opentofu.org ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L43))
+- [aptKeyRingDirectory](../documentation/source/tools/apt.md#aptkeyringdirectory) - Get key ring directory path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apt.sh#L47))
+- [aptNonInteractive](../documentation/source/tools/apt.md#aptnoninteractive) - Run apt-get non-interactively ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apt.sh#L36))
+- [aptSourcesDirectory](../documentation/source/tools/apt.md#aptsourcesdirectory) - Get APT source list path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apt.sh#L57))
+- [assertContains](../documentation/source/tools/assert.md#assertcontains) - Assert one string contains another (case-sensitive) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L439))
+- [assertDirectoryDoesNotExist](../documentation/source/tools/assert.md#assertdirectorydoesnotexist) - Test that a directory does not exist"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L609))
+- [assertDirectoryEmpty](../documentation/source/tools/assert.md#assertdirectoryempty) - Test that a directory exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L653))
+- [assertDirectoryExists](../documentation/source/tools/assert.md#assertdirectoryexists) - Test that a directory exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L564))
+- [assertDirectoryNotEmpty](../documentation/source/tools/assert.md#assertdirectorynotempty) - Test that a directory does not exist"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L700))
+- [assertEquals](../documentation/source/tools/assert.md#assertequals) - Assert two strings are equal. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L260))
+- [assertExitCode](../documentation/source/tools/assert.md#assertexitcode) - Assert a process runs and exits with the correct exit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L166))
+- [assertFileContains](../documentation/source/tools/assert.md#assertfilecontains) - Assert a file contains one or more strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1000))
+- [assertFileDoesNotContain](../documentation/source/tools/assert.md#assertfiledoesnotcontain) - Assert a file does not contains any occurrence of one ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1045))
+- [assertFileDoesNotExist](../documentation/source/tools/assert.md#assertfiledoesnotexist) - Test that a file does not exist"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L799))
+- [assertFileExists](../documentation/source/tools/assert.md#assertfileexists) - Test that a file exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L754))
+- [assertFileSize](../documentation/source/tools/assert.md#assertfilesize) - Assert a file has an expected size in bytes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1091))
+- [assertGreaterThan](../documentation/source/tools/assert.md#assertgreaterthan) - Assert \`leftValue > rightValue\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1290))
+- [assertGreaterThanOrEqual](../documentation/source/tools/assert.md#assertgreaterthanorequal) - Assert actual value is greater than or equal to expected value"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1334))
+- [assertLessThan](../documentation/source/tools/assert.md#assertlessthan) - Assert \`leftValue < rightValue\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1380))
+- [assertLessThanOrEqual](../documentation/source/tools/assert.md#assertlessthanorequal) - Assert \`leftValue <= rightValue\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1426))
+- [assertNotContains](../documentation/source/tools/assert.md#assertnotcontains) - Assert one string does not contains another (case-sensitive) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L484))
+- [assertNotEquals](../documentation/source/tools/assert.md#assertnotequals) - Assert two strings are not equal"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L306))
+- [assertNotExitCode](../documentation/source/tools/assert.md#assertnotexitcode) - Assert a process runs and exits with an exit code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L214))
+- [assertNotFileSize](../documentation/source/tools/assert.md#assertnotfilesize) - Assert a file does NOT have an expected size in ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1137))
+- [assertNotZeroFileSize](../documentation/source/tools/assert.md#assertnotzerofilesize) - Assert a file is non-empty (non-zero sized) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1232))
+- [assertOutputContains](../documentation/source/tools/assert.md#assertoutputcontains) - Run a command and expect the output to contain the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L903))
+- [assertOutputDoesNotContain](../documentation/source/tools/assert.md#assertoutputdoesnotcontain) - Run a command and expect the output to not contain ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L954))
+- [assertOutputEquals](../documentation/source/tools/assert.md#assertoutputequals) - Assert output of a binary equals a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L853))
+- [assertStatistics](../documentation/source/tools/test.md#assertstatistics) - Output assertion counts"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L117))
+- [assertStringEmpty](../documentation/source/tools/assert.md#assertstringempty) - Assert a string is empty. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L395))
+- [assertStringNotEmpty](../documentation/source/tools/assert.md#assertstringnotempty) - Assert a string is non-empty. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L350))
+- [assertZeroFileSize](../documentation/source/tools/assert.md#assertzerofilesize) - Assert a file is empty (zero sized) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1182))
+- [awsCredentialsAdd](../tools/aws.md#awscredentialsadd) - Write an AWS profile to the AWS credentials file
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L214))
+- [awsCredentialsFile](../documentation/source/tools/aws.md#awscredentialsfile) - Get the path to the AWS credentials file"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L59))
+- [awsCredentialsFromEnvironment](../documentation/source/tools/aws.md#awscredentialsfromenvironment) - Write an AWS profile to the AWS credentials file"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L252))
+- [awsCredentialsHasProfile](../documentation/source/tools/aws.md#awscredentialshasprofile) - Get credentials and output environment variables for AWS authentication"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L195))
+- [awsCredentialsRemove](../documentation/source/tools/aws.md#awscredentialsremove) - Remove credentials from the AWS credentials file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L234))
+- [awsEnvironmentFromCredentials](../documentation/source/tools/aws.md#awsenvironmentfromcredentials) - Get credentials and output environment variables for AWS authentication"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L169))
+- [awsHasEnvironment](../documentation/source/tools/aws.md#awshasenvironment) - Test whether the AWS environment variables are set or not"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L117))
+- [awsInstall](../documentation/source/tools/aws.md#awsinstall) - aws Command-Line install ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L30))
+- [awsIPAccess](../documentation/source/tools/aws.md#awsipaccess) - Grant access to AWS security group for this IP only using Amazon IAM credentials"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L311))
+- [awsIsKeyUpToDate](../documentation/source/tools/aws.md#awsiskeyuptodate) - Test whether the AWS keys do not need to be updated"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L91))
+- [awsProfilesList](../documentation/source/tools/aws.md#awsprofileslist) - List AWS profiles available in the credentials file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L135))
+- [awsRegionValid](../documentation/source/tools/aws.md#awsregionvalid) - Check an AWS region code for validity"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L328))
+- [awsS3DirectoryDelete](../documentation/source/tools/aws.md#awss3directorydelete) - Delete a directory remotely on S3 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L417))
+- [awsS3Upload](../documentation/source/tools/aws.md#awss3upload) - Upload a set of files or directories to S3. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L402))
+- [awsSecurityGroupIPModify](../documentation/source/tools/aws.md#awssecuritygroupipmodify) - Modify an EC2 Security Group"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L283))
+- [backgroundProcess](../documentation/source/tools/prompt.md#backgroundprocess) - Background process manager for shell (UNSTABLE)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L61))
+- [bashBuiltins](../documentation/source/tools/bash.md#bashbuiltins) - List bash builtin functions, one per line ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L82))
+- [bashCheckRequires](../documentation/source/tools/bash.md#bashcheckrequires) - Checks a bash script to ensure all requirements are met, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L72))
+- [bashCommentFilter](../documentation/source/tools/bash.md#bashcommentfilter) - Filter comments from a bash stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L519))
+- [bashCommentVariable](../documentation/source/tools/bash.md#bashcommentvariable) - Gets a list of the variable values from a bash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L449))
+- [bashCoverage](../documentation/source/tools/coverage.md#bashcoverage) - Collect code coverage statistics for a code sample ([source](https://github.com/zesk/build/blob/main/bin/build/tools/coverage.sh#L15))
+- [bashCoverageReport](../documentation/source/tools/coverage.md#bashcoveragereport) - Experimental. Likely abandon."$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/coverage.sh#L58))
+- [bashDebug](../documentation/source/tools/debug.md#bashdebug) - {fn}: Simple debugger to walk through a program ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L40))
+- [bashDebuggerDisable](../documentation/source/tools/debug.md#bashdebuggerdisable) - Disables the debugger immediately ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L93))
+- [bashDebuggerEnable](../documentation/source/tools/debug.md#bashdebuggerenable) - Enables the debugger immediately ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L59))
+- [bashDebugInterruptFile](../documentation/source/tools/debug.md#bashdebuginterruptfile) - Adds a trap to capture the debugging stack on interrupt ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L187))
+- [bashDocumentation](../documentation/source/tools/documentation.md#bashdocumentation) - Universal error handler for functions (with formatting)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L48))
+- [bashDocumentationExtract](../documentation/source/tools/documentation.md#bashdocumentationextract) - Generate a set of name/value pairs to document bash functions"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L58))
+- [bashDocumentationMarkdown](../documentation/source/tools/usage.md#bashdocumentationmarkdown) - Output documentation for a function in Markdown format"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L24))
+- [bashFileComment](../bash.md#bashfilecomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [bashFinalComment](../documentation/source/tools/bash.md#bashfinalcomment) - Extracts the final comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L555))
+- [bashFindUncaughtAssertions](../tools/test.md#bashfinduncaughtassertions) - Search bash files for assertions which do not terminate a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L290))
+- [bashFunctionComment](../bash.md#bashfunctioncomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [bashFunctionCommentVariable](../documentation/source/tools/bash.md#bashfunctioncommentvariable) - Gets a list of the variable values from a bash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L407))
+- [bashFunctionDefined](../documentation/source/tools/bash.md#bashfunctiondefined) - Is a function defined in a bash source file?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L257))
+- [bashGetRequires](../documentation/source/tools/bash.md#bashgetrequires) - Gets a list of the \`Requires:\` comments in a bash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L44))
+- [bashLibrary](../documentation/source/tools/bash.md#bashlibrary) - Run or source a library"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L160))
+- [bashLibraryHome](../documentation/source/tools/bash.md#bashlibraryhome) - Output the home for a library in the parent path"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L137))
+- [bashLint](../documentation/source/tools/lint.md#bashlint) - Check bash files for common errors"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L33))
+- [bashLintFiles](../documentation/source/tools/lint.md#bashlintfiles) - Check files for the existence of a string"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L105))
+- [bashLintFilesInteractive](../documentation/source/tools/lint.md#bashlintfilesinteractive) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L208))
+- [bashListFunctions](../documentation/source/tools/bash.md#bashlistfunctions) - List functions in a given shell file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L360))
+- [bashMakeExecutable](../tools/bash.md#bashmakeexecutable) - Makes all `*.sh` files executable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L123))
+- [bashPrompt](../documentation/source/tools/prompt.md#bashprompt) - Bash prompt creates the \`PS1\` prompt with the following extra ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+- [bashPromptColorScheme](../prompt.md#bashpromptcolorscheme) - Color schemes for prompts ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [bashPromptColorsFormat](../documentation/source/tools/prompt.md#bashpromptcolorsformat) - Given a list of color names, generate the color codes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L196))
+- [bashPromptMarkers](../documentation/source/tools/prompt.md#bashpromptmarkers) - Set markers for terminal integration ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L127))
+- [bashPromptModule_dotFilesWatcher](../documentation/source/tools/prompt.md#bashpromptmodule_dotfileswatcher) - Watches your HOME directory for \`.\` files which are added ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L94))
+- [bashPromptModule_TermColors](../documentation/source/tools/prompt.md#bashpromptmodule_termcolors) - Sets the console colors based on the project you are ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L237))
+- [bashRecursionDebug](../documentation/source/tools/debug.md#bashrecursiondebug) - Place this in code where you suspect an infinite loop ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L139))
+- [bashSanitize](../documentation/source/tools/lint.md#bashsanitize) - Sanitize bash files for code quality. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L33))
+- [bashShowUsage](../documentation/source/tools/bash.md#bashshowusage) - Show function handler in files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L315))
+- [bashSimpleDocumentation](../usage.md#bashsimpledocumentation) - Output a simple error message for a function ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [bashSourcePath](../bash.md#bashsourcepath) - Load a directory of bash scripts
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [bashStripComments](../documentation/source/tools/bash.md#bashstripcomments) - Pipe to strip comments from a bash file"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L296))
+- [bashUserInput](../documentation/source/tools/bash.md#bashuserinput) - Prompt the user properly honoring any attached console. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L100))
+- [bitbucketContainer](../documentation/source/tools/bitbucket.md#bitbucketcontainer) - Run the default build container for build testing on BitBucket ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L66))
+- [bitbucketGetVariable](../documentation/source/tools/bitbucket.md#bitbucketgetvariable) - Fetch a value from the pipelines YAML file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L39))
+- [bitbucketPRNewURL](../documentation/source/tools/bitbucket.md#bitbucketprnewurl) - Compute the URL to create a new PR ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L100))
+- [booleanChoose](../documentation/source/tools/sugar-core.md#booleanchoose) - Boolean selector ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L87))
+- [booleanParse](../text.md#booleanparse) - Parses text and determines if it's true-ish ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [brewInstall](../documentation/source/tools/brew.md#brewinstall) - Install Homebrew ([source](https://github.com/zesk/build/blob/main/bin/build/tools/brew.sh#L19))
+- [buildApplicationConfigure](../documentation/source/tools/build.md#buildapplicationconfigure) - Configure project for Zesk Build"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L146))
+- [buildCacheDirectory](../documentation/source/tools/build.md#buildcachedirectory) - Path to cache directory for build system. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L135))
+- [buildCompletion](../completion.md#buildcompletion) - Completion for Zesk Build (EXPERIMENTAL)
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [buildDebugEnabled](../documentation/source/tools/debug.md#builddebugenabled) - Is build debugging enabled? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L21))
+- [buildDebugStart](../tools/debug.md#builddebugstart) - Start build debugging if it is enabled. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L87))
+- [buildDebugStop](../documentation/source/tools/debug.md#builddebugstop) - Stop build debugging if it is enabled ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L106))
+- [buildDeprecatedFunctions](../documentation/source/tools/build.md#builddeprecatedfunctions) - List all functions which are currently deprecated in Zesk Build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L65))
+- [buildDevelopmentLink](../documentation/source/tools/developer.md#builddevelopmentlink) - Add a development link to the local version of Zesk ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L179))
+- [buildEnvironmentAdd](../build.md#buildenvironmentadd) - Adds an environment variable file to a project ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [buildEnvironmentContext](../documentation/source/tools/build.md#buildenvironmentcontext) - Run a command and ensure the build tools context matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L676))
+- [buildEnvironmentFiles](../build.md#buildenvironmentfiles) - Determine the environment file names for environment variables ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [buildEnvironmentGet](../documentation/source/tools/build.md#buildenvironmentget) - Load and print one or more environment settings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L535))
+- [buildEnvironmentGetDirectory](../documentation/source/tools/build.md#buildenvironmentgetdirectory) - Load and print one or more environment settings which represents ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L580))
+- [buildEnvironmentLoad](../build.md#buildenvironmentload) - Load one or more environment settings from the environment file ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [buildEnvironmentNames](../build.md#buildenvironmentnames) - Output the list of environment variable names which can be ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [buildFunctions](../build.md#buildfunctions) - Prints the list of functions defined in Zesk Build ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [buildHome](../documentation/source/tools/build.md#buildhome) - Prints the build home directory (usually same as the application ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L152))
+- [buildQuietLog](../documentation/source/tools/build.md#buildquietlog) - Generate the path for a quiet log in the build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L635))
+- [catchArgument](../documentation/source/tools/sugar-core.md#catchargument) - Run \`command\`, upon failure run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L237))
+- [catchCode](../documentation/source/tools/sugar-core.md#catchcode) - Run \`command\`, handle failure with \`handler\` with \`code\` and \`command\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L193))
+- [catchEnvironment](../documentation/source/tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L246))
+- [catchEnvironmentQuiet](../documentation/source/tools/sugar.md#catchenvironmentquiet) - Run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L16))
+- [catchReturn](../documentation/source/tools/sugar.md#catchreturn) - Run binary and catch errors with handler ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L283))
+- [characterClasses](../documentation/source/tools/character.md#characterclasses) - List the classes allowed in \`isCharacterClass\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L153))
+- [characterClassReport](../documentation/source/tools/character.md#characterclassreport) - Write a report of the character classes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L21))
+- [characterFromInteger](../documentation/source/tools/character.md#characterfrominteger) - Given a list of integers, output the character codes associated ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L118))
+- [characterToInteger](../documentation/source/tools/character.md#charactertointeger) - Convert a character to the corresponding ASCII code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L60))
+- [colorBrightness](../documentation/source/tools/decorate.md#colorbrightness) - Return an integer between 0 and 100 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L502))
+- [colorFormat](../documentation/source/tools/decorate.md#colorformat) - Take r g b decimal values and convert them to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L654))
+- [colorMultiply](../documentation/source/tools/decorate.md#colormultiply) - Multiply color values by a factor and return the new ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L721))
+- [colorNormalize](../documentation/source/tools/decorate.md#colornormalize) - Redistribute color values to make brightness adjustments more balanced ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L558))
+- [colorParse](../documentation/source/tools/decorate.md#colorparse) - Parse a color and output R G B decimal values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L693))
+- [colorSampleCodes](../documentation/source/tools/decorate.md#colorsamplecodes) - Alternate color output"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L106))
+- [colorSampleCombinations](../documentation/source/tools/decorate.md#colorsamplecombinations) - Show combinations of foreground and background colors in the console. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L137))
+- [colorSampleSemanticStyles](../documentation/source/tools/decorate.md#colorsamplesemanticstyles) - Output colors"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L213))
+- [colorSampleStyles](../documentation/source/tools/decorate.md#colorsamplestyles) - Output colors"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L171))
+- [colorScheme](../documentation/source/tools/decorate.md#colorscheme) - Set the terminal color scheme to the specification ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L810))
+- [confirmMenu](../interactive.md#confirmmenu) - Ask the user for a menu of options ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [confirmYesNo](../documentation/source/tools/interactive.md#confirmyesno) - Read user input and return success on yes"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L164))
+- [consoleBrightness](../documentation/source/tools/console.md#consolebrightness) - Output the brightness of the background color of the console as a number between 0 and 100"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L95))
+- [consoleColumns](../documentation/source/tools/console.md#consolecolumns) - Column count in current console"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L405))
+- [consoleConfigureColorMode](../documentation/source/tools/console.md#consoleconfigurecolormode) - Print the suggested color mode for the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L110))
+- [consoleConfigureDecorate](../documentation/source/tools/console.md#consoleconfiguredecorate) - Modify the decoration environment for light or dark. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L142))
+- [consoleDefaultTitle](../documentation/source/tools/console.md#consoledefaulttitle) - Set the title of the window for the console to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L172))
+- [consoleFileLink](../documentation/source/tools/console.md#consolefilelink) - Output a local file link to the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L225))
+- [consoleGetColor](../documentation/source/tools/console.md#consolegetcolor) - Get the console foreground or background color"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L18))
+- [consoleHasAnimation](../documentation/source/tools/decorate.md#consolehasanimation) - Does the console support animation? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L55))
+- [consoleHasColors](../decorate.md#consolehascolors) - Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [consoleHeadingLine](../documentation/source/tools/decoration.md#consoleheadingline) - Output a line and fill columns with a character ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/line.sh#L60))
+- [consoleLine](../documentation/source/tools/decoration.md#consoleline) - Output a bar as wide as the console"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/line.sh#L14))
+- [consoleLineFill](../tools/decorate.md#consolelinefill) - Clear a line in the console
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L248))
+- [consoleLink](../documentation/source/tools/console.md#consolelink) - console hyperlinks"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L191))
+- [consoleLinksSupported](../console.md#consolelinkssupported) - Are console links (likely) supported? ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [consolePlainLength](../documentation/source/tools/text.md#consoleplainlength) - Length of an unformatted string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L885))
+- [consoleRows](../documentation/source/tools/console.md#consolerows) - Row count in current console"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L440))
+- [consoleSetTitle](../documentation/source/tools/console.md#consolesettitle) - Set the title of the window for the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L160))
+- [consoleToPlain](../documentation/source/tools/text.md#consoletoplain) - Strip ANSI console escape sequences from a file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L871))
+- [consoleTrimWidth](../documentation/source/tools/text.md#consoletrimwidth) - Truncate console output width"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L908))
+- [contextOpen](../documentation/source/tools/vendor.md#contextopen) - Open a file in a shell using the program we ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L76))
+- [contextShow](../documentation/source/tools/vendor.md#contextshow) - Show the current editor being used as a text string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L104))
+- [convertValue](../documentation/source/tools/sugar-core.md#convertvalue) - map a value from one value to another given from-to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L160))
+- [cpuCount](../documentation/source/tools/cpu.md#cpucount) - Return integer count of CPUs on this system"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L14))
+- [cpuLoadAverage](../documentation/source/tools/cpu.md#cpuloadaverage) - Get the load average using uptime ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L390))
+- [crontabApplicationUpdate](../documentation/source/tools/crontab.md#crontabapplicationupdate) - Application-specific crontab management"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/crontab.sh#L66))
+- [cursorGet](../documentation/source/tools/cursor.md#cursorget) - Get the current cursor position ([source](https://github.com/zesk/build/blob/main/bin/build/tools/cursor.sh#L16))
+- [cursorSet](../cursor.md#cursorset) - Move the cursor to x y ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [daemontoolsExecute](../documentation/source/tools/daemontools.md#daemontoolsexecute) - Launch the daemontools daemon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L288))
+- [daemontoolsHome](../documentation/source/tools/daemontools.md#daemontoolshome) - Print the daemontools service home path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L266))
+- [daemontoolsInstall](../documentation/source/tools/daemontools.md#daemontoolsinstall) - Install daemontools and dependencies ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L12))
+- [daemontoolsInstallService](../documentation/source/tools/daemontools.md#daemontoolsinstallservice) - Install a daemontools service which runs a binary as the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L54))
+- [daemontoolsIsRunning](../documentation/source/tools/daemontools.md#daemontoolsisrunning) - Is daemontools running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L243))
+- [daemontoolsManager](../documentation/source/tools/daemontools.md#daemontoolsmanager) - Runs a daemon which monitors files and operates on services. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L476))
+- [daemontoolsProcessIds](../documentation/source/tools/daemontools.md#daemontoolsprocessids) - List any processes associated with daemontools supervisors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L310))
+- [daemontoolsRemoveService](../documentation/source/tools/daemontools.md#daemontoolsremoveservice) - Remove a daemontools service by name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L195))
+- [daemontoolsRestart](../documentation/source/tools/daemontools.md#daemontoolsrestart) - Restart the daemontools processes from scratch. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L393))
+- [daemontoolsTerminate](../documentation/source/tools/daemontools.md#daemontoolsterminate) - Terminate daemontools as gracefully as possible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L332))
+- [darwinDialog](../documentation/source/tools/darwin.md#darwindialog) - Display a dialog using \`osascript\` with the choices provided. Typically ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L200))
+- [darwinNotification](../documentation/source/tools/darwin.md#darwinnotification) - Display a notification for the user ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L127))
+- [darwinSoundDirectory](../darwin.md#darwinsounddirectory) - Directory for user sounds ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [darwinSoundInstall](../documentation/source/tools/darwin.md#darwinsoundinstall) - Install a sound file for notifications ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L56))
+- [darwinSoundNames](../documentation/source/tools/darwin.md#darwinsoundnames) - List valid sound names usable for notifications in Darwin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L97))
+- [darwinSoundValid](../documentation/source/tools/darwin.md#darwinsoundvalid) - Is a Darwin sound name valid? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L35))
+- [dateAdd](../documentation/source/tools/date.md#dateadd) - Add or subtract days from a text date ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L219))
+- [dateFromTimestamp](../documentation/source/tools/date.md#datefromtimestamp) - Converts an integer date to a date formatted timestamp (e.g. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L75))
+- [dateToday](../documentation/source/tools/date.md#datetoday) - Today's date in UTC"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L170))
+- [dateToFormat](../documentation/source/tools/date.md#datetoformat) - Platform agnostic date conversion"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L22))
+- [dateTomorrow](../documentation/source/tools/date.md#datetomorrow) - Tomorrow's date in UTC"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L145))
+- [dateToTimestamp](../documentation/source/tools/date.md#datetotimestamp) - Converts a date to an integer timestamp ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L51))
+- [dateValid](../documentation/source/tools/date.md#datevalid) - Is a date valid?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L192))
+- [dateWithinDays](../tools/date.md#datewithindays) - Is a date in the past beyond its expiration date?
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L270))
+- [dateYesterday](../documentation/source/tools/date.md#dateyesterday) - Yesterday's date (UTC time)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L119))
+- [debuggingStack](../documentation/source/tools/dump.md#debuggingstack) - Dump the function and include stacks and the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L18))
+- [decorate](../decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [decorateInitialized](../decorate.md#decorateinitialized) - Is the decorate color system initialized yet? ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [decoratePath](../documentation/source/tools/decoration.md#decoratepath) - Display file paths and replace prefixes with icons"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/path.sh#L21))
+- [decorateStyle](../documentation/source/tools/decorate.md#decoratestyle) - Get or modify a decoration style"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/style.sh#L11))
+- [decorateThemed](../documentation/source/tools/decoration.md#decoratethemed) - Applies the current theme to text rendered using \`decorateThemelessMode\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L70))
+- [decorateThemelessMode](../documentation/source/tools/decoration.md#decoratethemelessmode) - Converts decoration style to a mode where the theme can ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L13))
+- [decorations](../decorate.md#decorations) - Output a list of build-in decoration styles, one per line ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [deployApplication](../documentation/source/tools/deploy.md#deployapplication) - Deploy an application from a deployment repository"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L43))
+- [deployApplicationVersion](../documentation/source/tools/deploy.md#deployapplicationversion) - Extracts version from an application either from \`.deploy\` files or ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L59))
+- [deployBuildEnvironment](../documentation/source/tools/deployment.md#deploybuildenvironment) - Deploy to a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L33))
+- [deployHasVersion](../documentation/source/tools/deploy.md#deployhasversion) - Does a deploy version exist? versionName is the version identifier ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L123))
+- [deployLink](../documentation/source/tools/deploy.md#deploylink) - Link deployment to new version of the application"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L236))
+- [deployMigrateDirectoryToLink](../documentation/source/tools/deploy.md#deploymigratedirectorytolink) - Automatically convert application deployments using non-links to links. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L248))
+- [deployMove](../documentation/source/tools/deploy.md#deploymove) - Safe application deployment by moving ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L192))
+- [deployNextVersion](../documentation/source/tools/deploy.md#deploynextversion) - Get the next version of the supplied version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L177))
+- [deployPackageName](../documentation/source/tools/deploy.md#deploypackagename) - Outputs the build target name which is based on the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L102))
+- [deployPreviousVersion](../documentation/source/tools/deploy.md#deploypreviousversion) - Get the previous version of the supplied version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L163))
+- [deployRemoteFinish](../documentation/source/tools/deploy.md#deployremotefinish) - This is **run on the remote system** after deployment; environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L215))
+- [deployToRemote](../tools/deployment.md#deploytoremote) - Deploy current application to one or more hosts
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L478))
+- [deprecatedCannon](../documentation/source/tools/deprecated.md#deprecatedcannon) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L289))
+- [deprecatedCannonFile](../documentation/source/tools/deprecated.md#deprecatedcannonfile) - Run textCannon using a configuration file or files. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L171))
+- [deprecatedFilePrependVersion](../documentation/source/tools/deprecated.md#deprecatedfileprependversion) - Take a deprecated.txt file and add a comment with the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L12))
+- [deprecatedFind](../documentation/source/tools/deprecated.md#deprecatedfind) - Find files which match a token or tokens ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L243))
+- [deprecatedIgnore](../documentation/source/tools/deprecated.md#deprecatedignore) - Output a list of tokens for \`find\` to ignore in ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L56))
+- [deprecatedTokensFile](../documentation/source/tools/deprecated.md#deprecatedtokensfile) - Run deprecated tokens file search ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L89))
+- [developerAnnounce](../documentation/source/tools/developer.md#developerannounce) - Announce a list of functions now available ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L9))
+- [developerDevelopmentLink](../documentation/source/tools/developer.md#developerdevelopmentlink) - Link a current library with another version being developed nearby ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L221))
+- [developerTrack](../documentation/source/tools/developer.md#developertrack) - Track changes to the bash environment. WIth no arguments this ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L100))
+- [developerUndo](../documentation/source/tools/developer.md#developerundo) - Undo a set of developer functions or aliases ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L68))
+- [directoryChange](../documentation/source/tools/directory.md#directorychange) - Run a command after changing directory to it and then ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L32))
+- [directoryClobber](../documentation/source/tools/directory.md#directoryclobber) - Copy directory over another sort-of-atomically ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L76))
+- [directoryIsEmpty](../directory.md#directoryisempty) - Does a directory exist and is it empty? ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [directoryNewestFile](../documentation/source/tools/directory.md#directorynewestfile) - Find the newest modified file in a directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L717))
+- [directoryOldestFile](../documentation/source/tools/directory.md#directoryoldestfile) - Find the oldest modified file in a directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L706))
+- [directoryParent](../documentation/source/tools/directory.md#directoryparent) - Finds a file above \`startingDirectory\`, uses \`testExpression\` to test (defaults ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L310))
+- [directoryPathSimplify](../documentation/source/tools/directory.md#directorypathsimplify) - Normalizes segments of \`/./\` and \`/../\` in a path without ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L327))
+- [directoryRelativePath](../documentation/source/tools/directory.md#directoryrelativepath) - Given a path to a file, compute the path back ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L287))
+- [directoryRequire](../documentation/source/tools/directory.md#directoryrequire) - Given a list of directories, ensure they exist and create ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L190))
+- [directoryWatch](../documentation/source/tools/watch.md#directorywatch) - Watch a directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/watch.sh#L20))
+- [dockerCompose](../documentation/source/tools/docker-compose.md#dockercompose) - docker compose wrapper with automatic .env support ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L168))
+- [dockerComposeCommandList](../documentation/source/tools/docker-compose.md#dockercomposecommandlist) - List of docker compose commands ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L107))
+- [dockerComposeInstall](../documentation/source/tools/install.md#dockercomposeinstall) - Install \`docker-compose\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L37))
+- [dockerComposeIsRunning](../documentation/source/tools/docker-compose.md#dockercomposeisrunning) - Is docker compose currently running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L85))
+- [dockerComposeUninstall](../documentation/source/tools/install.md#dockercomposeuninstall) - Uninstall \`docker-compose\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L62))
+- [dockerComposeWrapper](../documentation/source/tools/docker-compose.md#dockercomposewrapper) - Wrapper for \`docker-compose\` or \`docker compose\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L10))
+- [dockerImages](../documentation/source/tools/docker.md#dockerimages) - List docker images which are currently pulled ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L218))
+- [dockerInside](../documentation/source/tools/docker.md#dockerinside) - Are we inside a docker container right now? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L69))
+- [dockerListContext](../documentation/source/tools/docker.md#dockerlistcontext) - List the files which would be included in the docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L89))
+- [dockerLocalContainer](../documentation/source/tools/docker.md#dockerlocalcontainer) - Run a build container using given docker image. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L117))
+- [dockerPlatformDefault](../documentation/source/tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
+- [dockerVolumeDelete](../documentation/source/tools/docker.md#dockervolumedelete) - Delete a docker volume ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L310))
+- [dockerVolumeExists](../documentation/source/tools/docker.md#dockervolumeexists) - Does a docker volume exist with name? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L297))
+- [documentationBuild](../documentation/source/tools/documentation.md#documentationbuild) - Build documentation for Bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L99))
+- [documentationBuildCache](../documentation/source/tools/documentation.md#documentationbuildcache) - Get the cache directory for the documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L160))
+- [documentationBuildEnvironment](../documentation/source/tools/documentation.md#documentationbuildenvironment) - Build documentation for ./bin/env (or bin/build/env) directory. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L148))
+- [documentationIndexDocumentation](../documentation/source/tools/documentation.md#documentationindexdocumentation) - Generate the documentation index (e.g. functions defined in the documentation) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L366))
+- [documentationIndexLookup](../documentation/source/tools/documentation.md#documentationindexlookup) - Looks up information in the function index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L350))
+- [documentationIndexUnlinkedFunctions](../documentation/source/tools/documentation.md#documentationindexunlinkedfunctions) - List functions without documentation pages. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L418))
+- [documentationMkdocs](../documentation/source/tools/documentation.md#documentationmkdocs) - Build documentation using mkdocs and a template ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mkdocs.sh#L10))
+- [documentationTemplate](../documentation/source/tools/documentation.md#documentationtemplate) - Get an internal template name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L122))
+- [documentationTemplateCompile](../documentation/source/tools/documentation.md#documentationtemplatecompile) - Document a function and generate a function template (markdown). To ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L440))
+- [documentationTemplateDirectoryCompile](../documentation/source/tools/documentation.md#documentationtemplatedirectorycompile) - Convert a directory of templates into documentation for Bash functions"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L256))
+- [documentationTemplateFileCompile](../documentation/source/tools/documentation.md#documentationtemplatefilecompile) - Convert a template file to a documentation file using templates"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L221))
+- [documentationTemplateFunctionCompile](../documentation/source/tools/documentation.md#documentationtemplatefunctioncompile) - Generate a function documentation block using \`functionTemplate\` for \`functionName\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L280))
+- [documentationTemplateUpdate](../documentation/source/tools/documentation.md#documentationtemplateupdate) - Map template files using our identical functionality ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L184))
+- [documentationUnlinked](../documentation/source/tools/documentation.md#documentationunlinked) - List unlinked functions in documentation index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L111))
+- [dotFilesApproved](../documentation/source/tools/prompt.md#dotfilesapproved) - Lists of dot files which can be added to the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L119))
+- [dotFilesApprovedFile](../documentation/source/tools/prompt.md#dotfilesapprovedfile) - The dot files approved file. Add files to this to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L105))
+- [dumpBinary](../tools/dump.md#dumpbinary) - Dumps output as hex ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L463))
+- [dumpEnvironment](../documentation/source/tools/dump.md#dumpenvironment) - Output the environment but try to hide secure value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L330))
+- [dumpEnvironmentUnsafe](../tools/dump.md#dumpenvironmentunsafe) - Output the environment shamelessly (not secure, not recommended) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L345))
+- [dumpFile](../documentation/source/tools/dump.md#dumpfile) - Output a file for debugging ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L198))
+- [dumpHex](../tools/dump.md#dumphex) - Output to hex ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L413))
+- [dumpLoadAverages](../documentation/source/tools/dump.md#dumploadaverages) - Print the load averages ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L383))
+- [dumpPipe](../tools/dump.md#dumppipe) - Dump a pipe with a title and stats ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L98))
+- [environmentApplicationLoad](../documentation/source/tools/environment.md#environmentapplicationload) - Loads application environment variables, set them to their default values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L27))
+- [environmentApplicationVariables](../tools/environment.md#environmentapplicationvariables) - List environment variables related to application deployments ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L8))
+- [environmentClean](../documentation/source/tools/environment.md#environmentclean) - Clean *most* exported variables from the current context except a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L177))
+- [environmentCompile](../documentation/source/tools/environment.md#environmentcompile) - Load an environment file and evaluate it using bash and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/compile.sh#L15))
+- [environmentFileApplicationMake](../documentation/source/tools/environment.md#environmentfileapplicationmake) - Create environment file \`.env\` for build. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L82))
+- [environmentFileApplicationVerify](../documentation/source/tools/environment.md#environmentfileapplicationverify) - Check application environment is populated correctly. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L140))
+- [environmentFileBashCompatibleToDocker](../documentation/source/tools/environment.md#environmentfilebashcompatibletodocker) - Ensure an environment file is compatible with non-quoted docker environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L178))
+- [environmentFileDockerToBashCompatible](../documentation/source/tools/environment.md#environmentfiledockertobashcompatible) - Ensure an environment file is compatible with non-quoted docker environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L116))
+- [environmentFileIsDocker](../documentation/source/tools/environment.md#environmentfileisdocker) - Ensure an environment file is compatible with non-quoted docker environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L16))
+- [environmentFileLoad](../documentation/source/tools/environment.md#environmentfileload) - Safely load an environment file (no code execution) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L333))
+- [environmentFileShow](../documentation/source/tools/environment.md#environmentfileshow) - Display and validate application variables. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L61))
+- [environmentFileToBashCompatible](../documentation/source/tools/environment.md#environmentfiletobashcompatible) - Takes any environment file and makes it bash-compatible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L94))
+- [environmentFileToDocker](../documentation/source/tools/environment.md#environmentfiletodocker) - Takes any environment file and makes it docker-compatible ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L78))
+- [environmentLines](../documentation/source/tools/environment.md#environmentlines) - List lines of environment values set in a bash state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L179))
+- [environmentLoad](../documentation/source/tools/environment.md#environmentload) - Safely load an environment from stdin (no code execution) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L202))
+- [environmentNames](../documentation/source/tools/environment.md#environmentnames) - List names of environment values set in a bash state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L165))
+- [environmentOutput](../documentation/source/tools/environment.md#environmentoutput) - Output all exported environment variables, hiding secure ones and ones ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L204))
+- [environmentParseVariables](../documentation/source/tools/environment.md#environmentparsevariables) - Parse variables from an environment variable stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L161))
+- [environmentRequire](../documentation/source/tools/usage.md#environmentrequire) - Requires environment variables to be set and non-blank ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L222))
+- [environmentSecureVariables](../documentation/source/tools/environment.md#environmentsecurevariables) - List environment variables related to security ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L45))
+- [environmentValueConvertArray](../documentation/source/tools/environment.md#environmentvalueconvertarray) - Convert an array value which was loaded already ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L117))
+- [environmentValueRead](../documentation/source/tools/environment.md#environmentvalueread) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L89))
+- [environmentValueReadArray](../environment.md#environmentvaluereadarray) - Read an array value from a state file ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [environmentValueWrite](../documentation/source/tools/environment.md#environmentvaluewrite) - Write a value to a state file as NAME=\"value\" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L13))
+- [environmentValueWriteArray](../environment.md#environmentvaluewritearray) - Write an array value as NAME=([0]="a" [1]="b" [2]="c") ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [environmentVariableNameValid](../documentation/source/tools/environment.md#environmentvariablenamevalid) - Validates zero or more environment variable names. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L16))
+- [environmentVariables](../environment.md#environmentvariables) - Output a list of environment variables and ignore function definitions ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [escapeBash](../documentation/source/tools/quote.md#escapebash) - Converts strings to shell escaped strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L84))
+- [escapeDoubleQuotes](../quote.md#escapedoublequotes) - Quote strings for inclusion in shell quoted strings ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [escapeQuotes](../documentation/source/tools/quote.md#escapequotes) - Quote strings for inclusion in shell quoted strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L199))
+- [escapeSingleQuotes](../documentation/source/tools/quote.md#escapesinglequotes) - Quote strings for inclusion in shell quoted strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L106))
+- [evalCheck](../documentation/source/tools/test.md#evalcheck) - Check files to ensure \`eval\`s in code have been checked ([source](https://github.com/zesk/build/blob/main/bin/build/tools/security.sh#L60))
+- [executableExists](../documentation/source/tools/bash.md#executableexists) - Does a binary exist in the PATH?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L174))
+- [executableRequire](../documentation/source/tools/usage.md#executablerequire) - Check that one or more binaries are installed"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L196))
+- [execute](../sugar-core.md#execute) - Run binary and output failed command upon error ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [executeCount](../documentation/source/tools/bash.md#executecount) - Run a binary count times"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L59))
+- [executeEcho](../sugar-core.md#executeecho) - Output the `command ...` to stdout prior to running, then ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [executeInputSupport](../documentation/source/tools/sugar.md#executeinputsupport) - Support arguments and stdin as arguments to an executor ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L165))
+- [executeLoop](../documentation/source/tools/interactive.md#executeloop) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L197))
+- [fileCopy](../documentation/source/tools/interactive.md#filecopy) - Copy file from source to destination ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L55))
+- [fileCopyWouldChange](../interactive.md#filecopywouldchange) - Check whether copying a file would change it ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [fileDirectoryExists](../documentation/source/tools/file.md#filedirectoryexists) - Does the file's directory exist? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L154))
+- [fileDirectoryRequire](../directory.md#filedirectoryrequire) - Given a list of files, ensure their parent directories exist ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [fileEndsWithNewline](../documentation/source/tools/text.md#fileendswithnewline) - Does a file end with a newline or is empty? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L658))
+- [fileExtensionLists](../tools/utilities.md#fileextensionlists) - Generates a directory containing files with `extension` as the file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L335))
+- [fileExtractLines](../documentation/source/tools/file.md#fileextractlines) - Extract a range of lines from a file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L27))
+- [fileFieldMaximum](../tools/text.md#filefieldmaximum) - Given an input file, determine the maximum length of fieldIndex, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L609))
+- [fileGroup](../documentation/source/tools/file.md#filegroup) - Get the file group name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L522))
+- [fileIsEmpty](../tools/file.md#fileisempty) - Is this an empty (zero-sized) file? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L630))
+- [fileIsNewest](../documentation/source/tools/file.md#fileisnewest) - Check to see if the first file is the newest ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L158))
+- [fileIsOldest](../tools/file.md#fileisoldest) - Check to see if the first file is the newest ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L183))
+- [fileLineCount](../documentation/source/tools/file.md#filelinecount) - Outputs the number of lines read from stdin (or supplied ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L693))
+- [fileLineMaximum](../tools/text.md#filelinemaximum) - Outputs the maximum line length passed into stdin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L631))
+- [fileMatches](../documentation/source/tools/file.md#filematches) - Find one or more patterns in a list of files, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L556))
+- [fileModificationSeconds](../tools/file.md#filemodificationseconds) - Fetch the modification time in seconds from now of a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L83))
+- [fileModificationTime](../documentation/source/tools/file.md#filemodificationtime) - Fetch the modification time of a file as a timestamp ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L60))
+- [fileModificationTimes](../tools/file.md#filemodificationtimes) - Lists files in a directory recursively along with their modification ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L115))
+- [fileModifiedDays](../documentation/source/tools/file.md#filemodifieddays) - Prints days (integer) since modified ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L276))
+- [fileModifiedRecently](../documentation/source/tools/file.md#filemodifiedrecently) - List the most recently modified file in a directory prefixed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L132))
+- [fileModifiedSeconds](../documentation/source/tools/file.md#filemodifiedseconds) - Prints seconds since modified ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L256))
+- [fileNewest](../documentation/source/tools/file.md#filenewest) - Output the newest file in the list ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L241))
+- [fileNotMatches](../documentation/source/tools/file.md#filenotmatches) - Find list of files which do NOT match a specific ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L539))
+- [fileOldest](../tools/file.md#fileoldest) - Output the oldest file in the list. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L227))
+- [fileOwner](../documentation/source/tools/file.md#fileowner) - Get the file owner name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L507))
+- [fileRealPath](../file.md#filerealpath) - Find the full, actual path of a file avoiding symlinks ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [fileReverseLines](../documentation/source/tools/file.md#filereverselines) - Reverse output lines"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L106))
+- [filesAreIdentical](../diff.md#filesareidentical) - Are files identical?
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [fileSize](../tools/file.md#filesize) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L364))
+- [filesOpenStatus](../documentation/source/tools/unused.md#filesopenstatus) - Output current open files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L562))
+- [filesRename](../tools/file.md#filesrename) - Rename a list of files usually to back them up temporarily
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L29))
+- [fileTeeAtomic](../documentation/source/tools/file.md#fileteeatomic) - tee but atomic (EXPERIMENTAL)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L841))
+- [fileTemporaryName](../file.md#filetemporaryname) - Wrapper for `mktemp`. Generate a temporary file name, and fail ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [fileType](../documentation/source/tools/file.md#filetype) - Better type handling of shell objects ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L403))
+- [fingerprint](../documentation/source/tools/fingerprint.md#fingerprint) - Update file from \`APPLICATION_JSON\` with application fingerprint. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/fingerprint.sh#L19))
+- [floatRound](../documentation/source/tools/float.md#floatround) - Convert float to nearest integer (up or down) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/float.sh#L13))
+- [floatTruncate](../documentation/source/tools/float.md#floattruncate) - Convert float to an integer, round down always ([source](https://github.com/zesk/build/blob/main/bin/build/tools/float.sh#L27))
+- [gitBranchExists](../documentation/source/tools/git.md#gitbranchexists) - Does a branch exist locally or remotely? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1016))
+- [gitBranchExistsLocal](../documentation/source/tools/git.md#gitbranchexistslocal) - Does a branch exist locally? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1039))
+- [gitBranchExistsRemote](../documentation/source/tools/git.md#gitbranchexistsremote) - Does a branch exist remotely? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1062))
+- [gitBranchify](../documentation/source/tools/git.md#gitbranchify) - Check out a branch with the current version and optional ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1093))
+- [gitBranchMergeCurrent](../documentation/source/tools/git.md#gitbranchmergecurrent) - Merge the current branch with another, push to remote, and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1140))
+- [gitCommit](../documentation/source/tools/git.md#gitcommit) - Commits all files added to git and also update release ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L462))
+- [gitCommitHash](../documentation/source/tools/git.md#gitcommithash) - Get the commit hash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L660))
+- [gitCurrentBranch](../documentation/source/tools/git.md#gitcurrentbranch) - Get the current branch name"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L673))
+- [gitEnsureSafeDirectory](../documentation/source/tools/git.md#gitensuresafedirectory) - When running git operations on a deployment host, at times ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L63))
+- [gitFindHome](../documentation/source/tools/git.md#gitfindhome) - Finds \`.git\` directory above or at \`startingDirectory\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L438))
+- [gitHasAnyRefs](../documentation/source/tools/git.md#githasanyrefs) - Does git have any tags?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L691))
+- [gitHookTypes](../documentation/source/tools/git.md#githooktypes) - List current valid git hook types ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L718))
+- [githubLatest](../documentation/source/tools/github.md#githublatest) - Get the latest JSON structure ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L146))
+- [githubLatestRelease](../documentation/source/tools/github.md#githublatestrelease) - Get the latest release version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L121))
+- [githubProjectJSON](../documentation/source/tools/github.md#githubprojectjson) - Get a project JSON structure ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L133))
+- [githubPublishDate](../documentation/source/tools/github.md#githubpublishdate) - Output the publish date for the latest release of ownerRepository ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L107))
+- [githubRelease](../documentation/source/tools/github.md#githubrelease) - Generate a release on GitHub using API"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
+- [githubURLParse](../documentation/source/tools/github.md#githuburlparse) - Parse a GitHub URL and return the owner and project ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L64))
+- [gitInsideHook](../documentation/source/tools/git.md#gitinsidehook) - Are we currently inside a git hook? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L295))
+- [gitInstall](../documentation/source/tools/git.md#gitinstall) - Install git if needed"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L28))
+- [gitInstallHook](../documentation/source/tools/git.md#gitinstallhook) - Install the most recent version of this hook and RUN ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L811))
+- [gitInstallHooks](../documentation/source/tools/git.md#gitinstallhooks) - Install one or more git hooks from Zesk Build hooks. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L747))
+- [gitMainly](../documentation/source/tools/git.md#gitmainly) - Merge \`staging\` and \`main\` branches of a git repository into ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L572))
+- [gitPreCommitCleanup](../documentation/source/tools/git.md#gitprecommitcleanup) - Clean up after our pre-commit (deletes cache directory) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L998))
+- [gitPreCommitExtensionList](../documentation/source/tools/git.md#gitprecommitextensionlist) - List the extensions available. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L962))
+- [gitPreCommitHasExtension](../documentation/source/tools/git.md#gitprecommithasextension) - Does this commit have the following file extensions? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L943))
+- [gitPreCommitHeader](../tools/git.md#gitprecommitheader) - Output a display for pre-commit files changed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L903))
+- [gitPreCommitListExtension](../documentation/source/tools/git.md#gitprecommitlistextension) - List the file(s) of an extension. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L979))
+- [gitPreCommitSetup](../documentation/source/tools/git.md#gitprecommitsetup) - Set up a pre-commit hook and create a cache of ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L882))
+- [gitRemoteHosts](../documentation/source/tools/git.md#gitremotehosts) - List remote hosts for the current git repository ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L308))
+- [gitRemoveFileFromHistory](../documentation/source/tools/git.md#gitremovefilefromhistory) - Has a lot of caveats ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L210))
+- [gitRepositoryChanged](../documentation/source/tools/git.md#gitrepositorychanged) - Has a git repository been changed from HEAD? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L227))
+- [gitShowChanges](../documentation/source/tools/git.md#gitshowchanges) - Show changed files from HEAD ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L246))
+- [gitShowStatus](../documentation/source/tools/git.md#gitshowstatus) - Show changed files from HEAD with their status prefix character: ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L276))
+- [gitTagAgain](../tools/git.md#gittagagain) - Remove a tag everywhere and tag again on the current ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L121))
+- [gitTagDelete](../documentation/source/tools/git.md#gittagdelete) - Delete git tag locally and at origin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L87))
+- [gitTagVee](../documentation/source/tools/git.md#gittagvee) - Given a tag in the form \"1.1.3\" convert it to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L185))
+- [gitTagVersion](../documentation/source/tools/git.md#gittagversion) - Generates a git tag for a build version, so \`v1.0d1\`, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L336))
+- [gitUninstall](../documentation/source/tools/install.md#gituninstall) - Uninstall git"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L41))
+- [gitVersionLast](../documentation/source/tools/git.md#gitversionlast) - Get the last reported version. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L164))
+- [gitVersionList](../documentation/source/tools/git.md#gitversionlist) - Fetches a list of tags from git and filters those ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L149))
+- [grepSafe](../documentation/source/tools/text.md#grepsafe) - \`grep\` but returns 0 when nothing matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L75))
+- [groupID](../documentation/source/tools/group.md#groupid) - Convert a group name to a group ID ([source](https://github.com/zesk/build/blob/main/bin/build/tools/group.sh#L17))
+- [helpArgument](../argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [hookExists](../documentation/source/tools/hook.md#hookexists) - Determine if a hook exists"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L229))
+- [hookFind](../documentation/source/tools/hook.md#hookfind) - Find the path to a hook binary file"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L282))
+- [hookRun](../documentation/source/tools/hook.md#hookrun) - Run a project hook"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L128))
+- [hookRunOptional](../documentation/source/tools/hook.md#hookrunoptional) - Identical to \`hookRun\` but returns exit code zero if the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L154))
+- [hookSource](../documentation/source/tools/hook.md#hooksource) - Run a project hook"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L186))
+- [hookSourceOptional](../documentation/source/tools/hook.md#hooksourceoptional) - Identical to \`hookRun\` but returns exit code zero if the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L209))
+- [hookVersionCurrent](../documentation/source/tools/hooks.md#hookversioncurrent) - Application current version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hooks.sh#L70))
+- [hookVersionLive](../documentation/source/tools/hooks.md#hookversionlive) - Application deployed version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hooks.sh#L82))
+- [hostTTFB](../documentation/source/tools/web.md#hostttfb) - Fetch Time to First Byte and other stats ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L97))
+- [housekeeper](../documentation/source/tools/debug.md#housekeeper) - Run a command and ensure files are not modified ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L397))
+- [identicalCheck](../documentation/source/tools/identical.md#identicalcheck) - When, for whatever reason, you need code to match between ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L84))
+- [identicalCheckShell](../documentation/source/tools/identical.md#identicalcheckshell) - Identical check for shell files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L116))
+- [identicalFindTokens](../documentation/source/tools/identical.md#identicalfindtokens) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L127))
+- [identicalRepair](../documentation/source/tools/identical.md#identicalrepair) - Repair an identical \`token\` in \`destination\` from \`source\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L31))
+- [identicalWatch](../documentation/source/tools/identical.md#identicalwatch) - Watch a project for changes and propagate them immediately upon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L143))
+- [inArray](../documentation/source/tools/text.md#inarray) - Check if an element exists in an array ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L391))
+- [incrementor](../documentation/source/tools/utilities.md#incrementor) - Set or increment a incrementor state based on a state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/utilities.sh#L52))
+- [installInstallBinary](../documentation/source/tools/installer.md#installinstallbinary) - Installs an installer the first time in a new project, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L32))
+- [installInstallBuild](../documentation/source/tools/build.md#installinstallbuild) - Installs \`install-bin-build.sh\` the first time in a new project, and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L48))
+- [integerClamp](../documentation/source/tools/text.md#integerclamp) - Clamp digits between two integers ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L594))
+- [interactiveCountdown](../documentation/source/tools/interactive.md#interactivecountdown) - Display a message and count down display ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L227))
+- [interactiveManager](../documentation/source/tools/interactive.md#interactivemanager) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L211))
+- [interactiveOccasionally](../documentation/source/tools/interactive.md#interactiveoccasionally) - Do something the first time and then only occasionally thereafter. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L245))
+- [isAlpine](../documentation/source/tools/apk.md#isalpine) - Is this an Alpine system? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apk.sh#L29))
+- [isArray](../documentation/source/tools/type.md#isarray) - Is a variable declared as an array? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L126))
+- [isBashBuiltin](../documentation/source/tools/bash.md#isbashbuiltin) - Is a token a bash builtin?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L99))
+- [isBashDebug](../documentation/source/tools/debug.md#isbashdebug) - Returns whether the shell has the debugging flag set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L123))
+- [isBitBucketPipeline](../documentation/source/tools/bitbucket.md#isbitbucketpipeline) - Are we currently in the BitBucket pipeline? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L84))
+- [isBoolean](../documentation/source/tools/sugar-core.md#isboolean) - Boolean test ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L78))
+- [isCallable](../type.md#iscallable) - Test if all arguments are callable as a command ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [isCharacterClass](../documentation/source/tools/character.md#ischaracterclass) - Poor-man's bash character class matching ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L200))
+- [isCharacterClasses](../documentation/source/tools/character.md#ischaracterclasses) - Does this character match one or more character classes? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L84))
+- [isDarwin](../documentation/source/tools/darwin.md#isdarwin) - Are we on Mac OS X? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L10))
+- [isDockerComposeCommand](../documentation/source/tools/docker-compose.md#isdockercomposecommand) - Is this a docker compose command? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L125))
+- [isErrorExit](../documentation/source/tools/debug.md#iserrorexit) - Returns whether the shell has the error exit flag set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L275))
+- [isExecutable](../type.md#isexecutable) - Test if all arguments are executable binaries ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [isFunction](../type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [isInteger](../documentation/source/tools/type.md#isinteger) - Test if an argument is a signed integer ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L61))
+- [isiTerm2](../documentation/source/tools/iterm2.md#isiterm2) - Is the current console iTerm2? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L36))
+- [isMappable](../documentation/source/tools/map.md#ismappable) - Check if text contains mappable tokens ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L114))
+- [isNumber](../documentation/source/tools/type.md#isnumber) - Test if an argument is a floating point number ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L45))
+- [isPHPStorm](../documentation/source/tools/vendor.md#isphpstorm) - Are we within the JetBrains PHPStorm terminal? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L23))
+- [isPlain](../documentation/source/tools/text.md#isplain) - Check if text contains plain text only (no ANSI escape ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L90))
+- [isPositiveInteger](../type.md#ispositiveinteger) - Test if an argument is a positive integer (non-zero) ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [isPyCharm](../vendor.md#ispycharm) - Are we within the JetBrains PyCharm terminal? ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [isS3URL](../documentation/source/tools/aws.md#iss3url) - Is the URL passed in a S3 URL? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L373))
+- [isTrue](../documentation/source/tools/type.md#istrue) - True-ish ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L72))
+- [isTTYAvailable](../tools/console.md#isttyavailable) - Quiet test for a TTY
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L373))
+- [isType](../type.md#istype) - Bash types beyond `type -t` ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [isUnsignedInteger](../documentation/source/tools/type.md#isunsignedinteger) - Is value an unsigned integer?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L170))
+- [isUnsignedNumber](../documentation/source/tools/type.md#isunsignednumber) - Test if an argument is a positive floating point number ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L30))
+- [isValidateType](../documentation/source/tools/validate.md#isvalidatetype) - Are all arguments passed a valid validate type? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L458))
+- [isVersion](../tools/version.md#isversion) - Check if something matches a version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L15))
+- [isVisualStudioCode](../documentation/source/tools/vendor.md#isvisualstudiocode) - Are we within the Microsoft Visual Studio Code terminal? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L60))
+- [iTerm2Aliases](../documentation/source/tools/iterm2.md#iterm2aliases) - Installs iTerm2 aliases which are: ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L164))
+- [iTerm2Attention](../documentation/source/tools/iterm2.md#iterm2attention) - Attract the operator ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L589))
+- [iTerm2Badge](../documentation/source/tools/iterm2.md#iterm2badge) - Set the badge for the iTerm2 console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L664))
+- [iTerm2ColorNames](../documentation/source/tools/iterm2.md#iterm2colornames) - Solely the color names (e.g blue), not anything else ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L194))
+- [iTerm2ColorTypes](../documentation/source/tools/iterm2.md#iterm2colortypes) - Colors for various UI elements ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L241))
+- [iTerm2Download](../documentation/source/tools/iterm2.md#iterm2download) - Download an file from remote to terminal host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L365))
+- [iTerm2Image](../documentation/source/tools/iterm2.md#iterm2image) - Output an image to the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L266))
+- [iTerm2Init](../documentation/source/tools/iterm2.md#iterm2init) - Add iTerm2 support to console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L829))
+- [iTerm2IsColorName](../documentation/source/tools/iterm2.md#iterm2iscolorname) - Is it a color name? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L207))
+- [iTerm2IsColorType](../documentation/source/tools/iterm2.md#iterm2iscolortype) - This is faster than inArray etc. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L222))
+- [iTerm2Notify](../documentation/source/tools/iterm2.md#iterm2notify) - Sends a notification message via Mac OS X from iTerm2 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L781))
+- [iTerm2PromptSupport](../documentation/source/tools/iterm2.md#iterm2promptsupport) - Add support for iTerm2 to bashPrompt ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L130))
+- [iTerm2SetColors](../documentation/source/tools/iterm2.md#iterm2setcolors) - Set terminal colors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L445))
+- [iTerm2Version](../documentation/source/tools/iterm2.md#iterm2version) - Output the iTerm2 version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L717))
+- [json](../documentation/source/tools/json.md#json) - JSON pretty"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L258))
+- [jsonField](../documentation/source/tools/json.md#jsonfield) - Fetch a non-blank field from a JSON file with error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L23))
+- [jsonFileGet](../documentation/source/tools/json.md#jsonfileget) - Get a value in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L88))
+- [jsonFileSet](../documentation/source/tools/json.md#jsonfileset) - Set or delete a value in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L110))
+- [jsonPath](../documentation/source/tools/json.md#jsonpath) - Generate \`jq\` paths"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L48))
+- [jsonSetValue](../documentation/source/tools/json.md#jsonsetvalue) - Sets the value of a variable in a JSON file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/json.sh#L158))
+- [junitClose](../documentation/source/tools/junit.md#junitclose) - Close tag for \`testsuites\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L42))
+- [junitOpen](../documentation/source/tools/junit.md#junitopen) - Open tag for \`testsuites\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L29))
+- [junitProperties](../documentation/source/tools/junit.md#junitproperties) - Full properties output. Properties are output depending on content containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L106))
+- [junitPropertyList](../documentation/source/tools/junit.md#junitpropertylist) - Output list of \`property\` tags ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L122))
+- [junitSuiteClose](../junit.md#junitsuiteclose) - Close tag for `testsuite` ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [junitSuiteOpen](../documentation/source/tools/junit.md#junitsuiteopen) - Open tag for \`testsuite\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L70))
+- [junitSystemErrorClose](../documentation/source/tools/junit.md#junitsystemerrorclose) - Close tag for \`system-err\` - test errors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L198))
+- [junitSystemErrorOpen](../documentation/source/tools/junit.md#junitsystemerroropen) - Open tag for \`system-err\` - test errors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L185))
+- [junitSystemOutputClose](../documentation/source/tools/junit.md#junitsystemoutputclose) - Close tag for \`system-out\` - test output ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L172))
+- [junitSystemOutputOpen](../documentation/source/tools/junit.md#junitsystemoutputopen) - Open tag for \`system-out\` - test output ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L159))
+- [junitTestCaseClose](../documentation/source/tools/junit.md#junittestcaseclose) - Close tag for \`testcase\` - Test case ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L234))
+- [junitTestCaseErrorClose](../documentation/source/tools/junit.md#junittestcaseerrorclose) - Close tag for \`error\` - test error output ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L312))
+- [junitTestCaseErrorOpen](../documentation/source/tools/junit.md#junittestcaseerroropen) - Open tag for \`error\` - test error output ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L295))
+- [junitTestCaseFailureClose](../documentation/source/tools/junit.md#junittestcasefailureclose) - Close tag for \`failure\` - test failed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L282))
+- [junitTestCaseFailureOpen](../documentation/source/tools/junit.md#junittestcasefailureopen) - Open tag for \`failure\` - test failed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L265))
+- [junitTestCaseOpen](../documentation/source/tools/junit.md#junittestcaseopen) - Open tag for \`testcase\` - Test case ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L221))
+- [junitTestCaseSkipped](../documentation/source/tools/junit.md#junittestcaseskipped) - Output test skipped XML"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L246))
+- [labeledBigText](../documentation/source/tools/decoration.md#labeledbigtext) - Outputs a label before a decorate big for output. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/big.sh#L182))
+- [linkCreate](../documentation/source/tools/file.md#linkcreate) - Create a link ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L729))
+- [linkRename](../documentation/source/tools/file.md#linkrename) - Rename a link ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L442))
+- [listAppend](../list.md#listappend) - Add an item to a character-delimited list.
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [listCleanDuplicates](../documentation/source/tools/list.md#listcleanduplicates) - Removes duplicates from a list and maintains ordering. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/list.sh#L169))
+- [listContains](../list.md#listcontains) - Does a character-delimited list contain item(s)?
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [listJoin](../documentation/source/tools/list.md#listjoin) - Output a list of items joined by a character ([source](https://github.com/zesk/build/blob/main/bin/build/tools/list.sh#L23))
+- [listRemove](../list.md#listremove) - Remove one or more items from a text-delimited list ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [localePlural](../documentation/source/tools/text.md#localeplural) - Outputs the \`singular\` value to standard out when the value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L786))
+- [localePluralWord](../tools/text.md#localepluralword) - Plural word which includes the numeric prefix and the noun. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L757))
+- [logDirectoryRotate](../documentation/source/tools/log.md#logdirectoryrotate) - Rotate log files"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/log.sh#L108))
+- [logRotate](../log.md#logrotate) - Rotate a log file
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [manPathCleanDuplicates](../documentation/source/tools/manpath.md#manpathcleanduplicates) - Cleans the MANPATH and removes non-directory entries and duplicates ([source](https://github.com/zesk/build/blob/main/bin/build/tools/manpath.sh#L60))
+- [manPathConfigure](../manpath.md#manpathconfigure) - Modify the MANPATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [manPathRemove](../documentation/source/tools/manpath.md#manpathremove) - Remove a path from the MANPATH environment variable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/manpath.sh#L36))
+- [mapEnvironment](../documentation/source/tools/map.md#mapenvironment) - Convert tokens in files to environment variable values"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L160))
+- [mapTokens](../documentation/source/tools/map.md#maptokens) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L17))
+- [mapValue](../documentation/source/tools/map.md#mapvalue) - Maps a string using an environment file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L54))
+- [mapValueTrim](../documentation/source/tools/map.md#mapvaluetrim) - Maps a string using an environment file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L131))
+- [mariadbConnect](../documentation/source/tools/mariadb.md#mariadbconnect) - Connect to a mariadb-type database using a URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L143))
+- [mariadbDump](../documentation/source/tools/mariadb.md#mariadbdump) - Dump a MariaDB database to raw SQL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L53))
+- [mariadbDumpClean](../documentation/source/tools/mariadb.md#mariadbdumpclean) - Clean mariadb dumps for import"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L125))
+- [mariadbInstall](../documentation/source/tools/install.md#mariadbinstall) - Install \`mariadb\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L16))
+- [mariadbUninstall](../documentation/source/tools/install.md#mariadbuninstall) - Uninstall \`mariadb\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L32))
+- [markdownCheckIndex](../documentation/source/tools/markdown.md#markdowncheckindex) - Displays any markdown files next to the given index file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L142))
+- [markdownFormatList](../documentation/source/tools/markdown.md#markdownformatlist) - Simple function to make list-like things more list-like in Markdown ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L118))
+- [markdownIndentHeading](../documentation/source/tools/markdown.md#markdownindentheading) - Add an indent to all markdown headings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L15))
+- [markdownRemoveUnfinishedSections](../documentation/source/tools/markdown.md#markdownremoveunfinishedsections) - Given a file containing Markdown, remove header and any section ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L76))
+- [markdownToConsole](../documentation/source/tools/markdown.md#markdowntoconsole) - Converts backticks, bold and italic to console colors."$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L471))
+- [mockConsoleAnimationStart](../documentation/source/tools/assert.md#mockconsoleanimationstart) - Fake \`consoleHasAnimation\` for testing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1464))
+- [mockConsoleAnimationStop](../assert.md#mockconsoleanimationstop) - Stop faking `consoleHasAnimation` for testing ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [mockEnvironmentStart](../documentation/source/tools/assert.md#mockenvironmentstart) - Fake a value for testing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1440))
+- [mockEnvironmentStop](../documentation/source/tools/assert.md#mockenvironmentstop) - Restore a mocked value. Works solely with the default \`saveGlobalName\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1452))
+- [muzzle](../documentation/source/tools/sugar.md#muzzle) - Suppress stdout without piping. Handy when you just want a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L51))
+- [muzzleReturn](../documentation/source/tools/sugar.md#muzzlereturn) - Suppress return codes"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L67))
+- [networkIPList](../documentation/source/tools/network.md#networkiplist) - List IPv4 Addresses associated with this system using \`ifconfig\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L47))
+- [networkIPLookup](../documentation/source/tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L75))
+- [networkMACAddressList](../documentation/source/tools/network.md#networkmacaddresslist) - List MAC addresses associated with this system using \`ifconfig\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L60))
+- [networkNameFull](../network.md#networknamefull) - Platform-agnostic host name
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [nodeInstall](../documentation/source/tools/node.md#nodeinstall) - Install nodejs ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L9))
+- [nodePackageManager](../documentation/source/tools/node.md#nodepackagemanager) - Run an action using the current node package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L104))
+- [nodePackageManagerInstall](../documentation/source/tools/node.md#nodepackagemanagerinstall) - Installs the selected package manager for node ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L165))
+- [nodePackageManagerUninstall](../documentation/source/tools/node.md#nodepackagemanageruninstall) - Installs the selected package manager for node ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L185))
+- [nodePackageManagerValid](../documentation/source/tools/node.md#nodepackagemanagervalid) - Is the passed node package manager name valid? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L211))
+- [nodeUninstall](../documentation/source/tools/node.md#nodeuninstall) - Uninstall nodejs ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L62))
+- [notify](../documentation/source/tools/interactive.md#notify) - Notify after running a binary. Uses the \`notify\` hook with ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L137))
+- [npmInstall](../documentation/source/tools/install.md#npminstall) - Install NPM in the build environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/npm.sh#L19))
+- [npmUninstall](../documentation/source/tools/install.md#npmuninstall) - Core as part of some systems - so this succeeds ([source](https://github.com/zesk/build/blob/main/bin/build/tools/npm.sh#L68))
+- [outputTrigger](../documentation/source/tools/debug.md#outputtrigger) - Check output for content and trigger environment error if found ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L506))
+- [packageAvailableList](../documentation/source/tools/package.md#packageavailablelist) - List installed packages on this system using package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L648))
+- [packageDefault](../documentation/source/tools/package.md#packagedefault) - Fetch the binary name for the default package in a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L175))
+- [packageGroupInstall](../documentation/source/tools/package.md#packagegroupinstall) - Install a package group ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L735))
+- [packageGroupUninstall](../documentation/source/tools/package.md#packagegroupuninstall) - Uninstall a package group ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L784))
+- [packageGroupWhich](../documentation/source/tools/package.md#packagegroupwhich) - Install a package group to have a binary installed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L687))
+- [packageInstall](../documentation/source/tools/package.md#packageinstall) - Install packages using a package manager"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L377))
+- [packageInstalledList](../package.md#packageinstalledlist) - List installed packages on this system using package manager ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [packageIsInstalled](../documentation/source/tools/package.md#packageisinstalled) - Is a package installed? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L482))
+- [packageManagerDefault](../package.md#packagemanagerdefault) - Determine the default package manager on this platform. ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [packageManagerValid](../documentation/source/tools/package.md#packagemanagervalid) - Is the package manager supported? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L597))
+- [packageMapping](../package.md#packagemapping) - undocumented ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [packageNeedRestartFlag](../documentation/source/tools/package.md#packageneedrestartflag) - INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L658))
+- [packageUninstall](../documentation/source/tools/package.md#packageuninstall) - Removes packages using package manager"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L524))
+- [packageUpdate](../documentation/source/tools/package.md#packageupdate) - Update packages lists and sources ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L163))
+- [packageUpgrade](../documentation/source/tools/package.md#packageupgrade) - Upgrade packages lists and sources ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L149))
+- [packageWhich](../documentation/source/tools/package.md#packagewhich) - Install tools using \`apt-get\` if they are not found"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L233))
+- [packageWhichUninstall](../documentation/source/tools/package.md#packagewhichuninstall) - Install tools using \`apt-get\` if they are not found"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L306))
+- [pathCleanDuplicates](../documentation/source/tools/path.md#pathcleanduplicates) - Cleans the path and removes non-directory entries and duplicates ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L95))
+- [pathConfigure](../documentation/source/tools/path.md#pathconfigure) - Modify the PATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L48))
+- [pathIsAbsolute](../documentation/source/tools/directory.md#pathisabsolute) - Is a path an absolute path? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L14))
+- [pathRemove](../documentation/source/tools/path.md#pathremove) - Remove a path from the PATH environment variable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L12))
+- [pathShow](../documentation/source/tools/path.md#pathshow) - Show the path and where binaries are found ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L113))
+- [pause](../documentation/source/tools/interactive.md#pause) - Pause for user input ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L31))
+- [pcregrepBinary](../documentation/source/tools/pcregrep.md#pcregrepbinary) - The name of the \`pcregrep\` binary on this operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/pcregrep.sh#L26))
+- [pcregrepInstall](../documentation/source/tools/pcregrep.md#pcregrepinstall) - Install pcregrep binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/pcregrep.sh#L11))
+- [phpBuild](../documentation/source/tools/php.md#phpbuild) - Build deployment using composer, adding environment values to .env and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L157))
+- [phpComposer](../php.md#phpcomposer) - Run Composer commands on code
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [phpComposerInstall](../documentation/source/tools/php.md#phpcomposerinstall) - Install composer for PHP ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php-composer.sh#L104))
+- [phpComposerSetVersion](../documentation/source/tools/php.md#phpcomposersetversion) - For any project, ensures the \`version\` field in \`composer.json\` matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php-composer.sh#L134))
+- [phpIniFile](../documentation/source/tools/php.md#phpinifile) - Outputs the path to the PHP ini file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L90))
+- [phpInstall](../documentation/source/tools/install.md#phpinstall) - Install \`php\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L21))
+- [phpLog](../documentation/source/tools/php.md#phplog) - Outputs the path to the PHP log file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L76))
+- [phpTailLog](../documentation/source/tools/php.md#phptaillog) - Tail the PHP log ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L54))
+- [phpTest](../documentation/source/tools/php.md#phptest) - Test a docker-based PHP application during build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L336))
+- [phpUninstall](../documentation/source/tools/install.md#phpuninstall) - Uninstall \`php\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L40))
+- [pipeRunner](../documentation/source/tools/utilities.md#piperunner) - Single reader, multiple writers ([source](https://github.com/zesk/build/blob/main/bin/build/tools/utilities.sh#L185))
+- [pipInstall](../python.md#pipinstall) - Utility to install python dependencies via pip ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [pipUninstall](../documentation/source/tools/python.md#pipuninstall) - Utility to uninstall python dependencies via pip ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L137))
+- [pipUpgrade](../documentation/source/tools/python.md#pipupgrade) - Utility to upgrade pip correctly ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L48))
+- [pipWrapper](../documentation/source/tools/python.md#pipwrapper) - Run pip whether it is installed as a module or ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L206))
+- [plasterLines](../documentation/source/tools/cursor.md#plasterlines) - Outputs a line and fills the remainder with space ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L263))
+- [plumber](../documentation/source/tools/debug.md#plumber) - Run command and detect any global or local leaks ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L298))
+- [printfOutputEmpty](../documentation/source/tools/text.md#printfoutputempty) - printf when output is blank"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1101))
+- [printfOutputPrefix](../tools/text.md#printfoutputprefix) - Pipe to output some text before any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1123))
+- [printfOutputSuffix](../documentation/source/tools/text.md#printfoutputsuffix) - Pipe to output some text after any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1145))
+- [processMemoryUsage](../tools/process.md#processmemoryusage) - Outputs value of resident memory used by a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L149))
+- [processOpenPipes](../documentation/source/tools/unused.md#processopenpipes) - Output the number of open files for a process ID ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L220))
+- [processVirtualMemoryAllocation](../documentation/source/tools/process.md#processvirtualmemoryallocation) - Outputs value of virtual memory allocated for a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L188))
+- [processWait](../documentation/source/tools/process.md#processwait) - Wait for processes not owned by this process to exit, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L36))
+- [pythonInstall](../documentation/source/tools/install.md#pythoninstall) - Install \`python\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L19))
+- [pythonPackageInstalled](../documentation/source/tools/python.md#pythonpackageinstalled) - Is a package installed for python? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L252))
+- [pythonUninstall](../documentation/source/tools/install.md#pythonuninstall) - Uninstall python ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L32))
+- [pythonVirtual](../documentation/source/tools/python.md#pythonvirtual) - Set up a virtual environment for a project and install ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L300))
+- [quoteBashString](../documentation/source/tools/quote.md#quotebashstring) - Quote bash strings for inclusion as single-quoted for eval ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L21))
+- [quoteGrepPattern](../quote.md#quotegreppattern) - Quote grep -e patterns for shell use ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [quoteSedPattern](../quote.md#quotesedpattern) - Quote sed search strings for shell use
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [quoteSedReplacement](../quote.md#quotesedreplacement) - Quote sed replacement strings for shell use
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [readlineConfigurationAdd](../documentation/source/tools/readline.md#readlineconfigurationadd) - Add configuration to \`~/.inputrc\` for a key binding ([source](https://github.com/zesk/build/blob/main/bin/build/tools/readline.sh#L13))
+- [releaseNew](../documentation/source/tools/version.md#releasenew) - Generate a new release notes and bump the version"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L172))
+- [releaseNotes](../documentation/source/tools/version.md#releasenotes) - Output path to current release notes"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L64))
+- [reloadChanges](../documentation/source/tools/prompt.md#reloadchanges) - Watch or more directories for changes in a file extension ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L82))
+- [returnArgument](../documentation/source/tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L256))
+- [returnAssert](../documentation/source/tools/assert.md#returnassert) - Assertion return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1488))
+- [returnClean](../sugar-core.md#returnclean) - Delete files or directories and return the same exit code ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [returnCode](../documentation/source/tools/sugar-core.md#returncode) - Print one or more return codes by name. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L42))
+- [returnCodeString](../documentation/source/tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L59))
+- [returnEnvironment](../documentation/source/tools/sugar-core.md#returnenvironment) - Return \`environment\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L264))
+- [returnIdentical](../documentation/source/tools/assert.md#returnidentical) - Identical return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1503))
+- [returnLeak](../documentation/source/tools/assert.md#returnleak) - Leak return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1518))
+- [returnMap](../tools/sugar.md#returnmap) - map a return value from one value to another ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L85))
+- [returnMessage](../documentation/source/tools/sugar-core.md#returnmessage) - Return passed in integer return code and output message to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L143))
+- [returnThrow](../sugar-core.md#returnthrow) - Run `handler` with a passed return code ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [returnUndo](../documentation/source/tools/sugar-core.md#returnundo) - Run a function and preserve exit code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L129))
+- [rsyncInstall](../rsync.md#rsyncinstall) - Install `rsync`. ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [sedReplacePattern](../documentation/source/tools/quote.md#sedreplacepattern) - Quote a sed command for search and replace ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sed.sh#L19))
+- [serviceToPort](../documentation/source/tools/service.md#servicetoport) - Get the port number associated with a service ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L263))
+- [serviceToStandardPort](../documentation/source/tools/service.md#servicetostandardport) - Hard-coded services for: ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L221))
+- [sshKnownHostAdd](../documentation/source/tools/ssh.md#sshknownhostadd) - Adds the host to the \`~/.known_hosts\` if it is not ([source](https://github.com/zesk/build/blob/main/bin/build/tools/ssh.sh#L73))
+- [sshKnownHostRemove](../documentation/source/tools/ssh.md#sshknownhostremove) - Adds the host to the \`~/.known_hosts\` if it is not ([source](https://github.com/zesk/build/blob/main/bin/build/tools/ssh.sh#L142))
+- [sshKnownHostsFile](../documentation/source/tools/ssh.md#sshknownhostsfile) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/ssh.sh#L13))
+- [sshSetup](../documentation/source/tools/ssh.md#sshsetup) - Set up SSH for a user with ID and backup ([source](https://github.com/zesk/build/blob/main/bin/build/tools/ssh.sh#L206))
+- [statusMessage](../documentation/source/tools/decorate.md#statusmessage) - Output a status message and display correctly on consoles with animation and in log files"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L314))
+- [stringBegins](../documentation/source/tools/text.md#stringbegins) - Find whether a substring exists as teh beginning of one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L522))
+- [stringBeginsInsensitive](../documentation/source/tools/text.md#stringbeginsinsensitive) - Find whether a substring exists as teh beginning of one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L547))
+- [stringContains](../documentation/source/tools/text.md#stringcontains) - Find whether a substring exists in one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L414))
+- [stringContainsInsensitive](../documentation/source/tools/text.md#stringcontainsinsensitive) - Find whether a substring exists in one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L439))
+- [stringFound](../documentation/source/tools/text.md#stringfound) - Check if one string is a substring of another set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L469))
+- [stringFoundInsensitive](../documentation/source/tools/text.md#stringfoundinsensitive) - Check if one string is a substring of another set ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L494))
+- [stringHideNewlines](../tools/text.md#stringhidenewlines) - Replace newlines in text with a replacement token for single-line output
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L180))
+- [stringLowercase](../documentation/source/tools/text.md#stringlowercase) - Convert text to stringLowercase ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L821))
+- [stringOffset](../documentation/source/tools/text.md#stringoffset) - Outputs the integer offset of \`needle\` if found as substring ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1020))
+- [stringOffsetInsensitive](../documentation/source/tools/text.md#stringoffsetinsensitive) - Outputs the integer offset of \`needle\` if found as substring ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1041))
+- [stringRandom](../documentation/source/tools/text.md#stringrandom) - Outputs 40 random hexadecimal characters, stringLowercase. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1005))
+- [stringTrimWords](../documentation/source/tools/text.md#stringtrimwords) - Remove words from the end of a phrase ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L576))
+- [stringUnquote](../documentation/source/tools/text.md#stringunquote) - Unquote a string"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L120))
+- [stringUppercase](../documentation/source/tools/text.md#stringuppercase) - Convert text to uppercase ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L845))
+- [stringValidate](../documentation/source/tools/character.md#stringvalidate) - Ensure that every character in a text string passes all ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L35))
+- [sysvInitScriptInstall](../documentation/source/tools/sysvinit.md#sysvinitscriptinstall) - Install a script to run upon initialization. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sysvinit.sh#L12))
+- [sysvInitScriptUninstall](../documentation/source/tools/sysvinit.md#sysvinitscriptuninstall) - Remove an initialization script ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sysvinit.sh#L63))
+- [tarCreate](../documentation/source/tools/tar.md#tarcreate) - Platform agnostic tar cfz which ignores owner and attributes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tar.sh#L66))
+- [tarExtractPattern](../documentation/source/tools/tar.md#tarextractpattern) - Platform agnostic tar extract with wildcards ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tar.sh#L19))
+- [terraformInstall](../install.md#terraforminstall) - Install terraform binary ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [terraformUninstall](../documentation/source/tools/install.md#terraformuninstall) - Remove terraform binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/terraform.sh#L66))
+- [testSuite](../documentation/source/tools/test.md#testsuite) - Run bash test suites for {name}. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L101))
+- [testSuiteFunctionTested](../documentation/source/tools/test.md#testsuitefunctiontested) - When environment variable \`TEST_TRACK_ASSERTIONS\` is \`true\` – \`testSuite\` and assertion ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L513))
+- [testSuiteOrdering](../documentation/source/tools/test.md#testsuiteordering) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L495))
+- [textAlignLeft](../documentation/source/tools/decoration.md#textalignleft) - align text left"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1241))
+- [textAlignRight](../documentation/source/tools/decoration.md#textalignright) - align text right"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1217))
+- [textCannon](../documentation/source/tools/text.md#textcannon) - Replace text \`fromText\` with \`toText\` in files"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L250))
+- [textRemoveFields](../documentation/source/tools/text.md#textremovefields) - Remove fields from left to right from a text file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1064))
+- [textRepeat](../documentation/source/tools/decoration.md#textrepeat) - Repeat a string"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1262))
+- [textReplace](../documentation/source/tools/text.md#textreplace) - Replace all occurrences of a string within another string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1166))
+- [textReplaceFirst](../documentation/source/tools/text.md#textreplacefirst) - Replaces the first and only the first occurrence of a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L216))
+- [textSHA](../documentation/source/tools/text.md#textsha) - SHA1 checksum of standard input"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L991))
+- [textSingleBlankLines](../documentation/source/tools/text.md#textsingleblanklines) - Ensures blank lines are singular ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L279))
+- [textTrim](../documentation/source/tools/text.md#texttrim) - Trim whitespace of a bash argument"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L355))
+- [textTrimBoth](../documentation/source/tools/text.md#texttrimboth) - Trim whitespace from beginning and end of a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L235))
+- [textTrimHead](../documentation/source/tools/text.md#texttrimhead) - Removes any blank lines from the beginning of a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L249))
+- [textTrimLeft](../documentation/source/tools/text.md#texttrimleft) - Trim whitespace of a bash argument"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L324))
+- [textTrimRight](../documentation/source/tools/text.md#texttrimright) - Trim whitespace of a bash argument"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L295))
+- [textTrimTail](../tools/text.md#texttrimtail) - Removes any blank lines from the end of a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L262))
+- [textVersionSort](../documentation/source/tools/text.md#textversionsort) - Sort versions in the format v0.0.0"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1325))
+- [throwArgument](../documentation/source/tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L214))
+- [throwEnvironment](../sugar-core.md#throwenvironment) - Run `handler` with an environment error ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [timing](../documentation/source/tools/timing.md#timing) - Time command, similar to \`time\` but uses internal functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L14))
+- [timingDuration](../documentation/source/tools/timing.md#timingduration) - Output timing like \"1 day, 2 hours, 3 minutes, 4 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L177))
+- [timingElapsed](../documentation/source/tools/timing.md#timingelapsed) - Show elapsed time from a start time"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L54))
+- [timingFormat](../documentation/source/tools/timing.md#timingformat) - Format a timing output (milliseconds) as seconds using a decimal ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L91))
+- [timingReport](../tools/timing.md#timingreport) - Output the time elapsed
+-  ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L127))
+- [timingStart](../documentation/source/tools/timing.md#timingstart) - Start a timer"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L76))
+- [tofuInstall](../documentation/source/tools/tofu.md#tofuinstall) - Install tofu binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L59))
+- [tofuUninstall](../documentation/source/tools/tofu.md#tofuuninstall) - Uninstall tofu binary and apt sources keys ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L80))
+- [tools](../documentation/source/tools/build.md#tools) - Run a Zesk Build command or load it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L471))
+- [urlContentLength](../documentation/source/tools/url.md#urlcontentlength) - Get the size of a remote URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L60))
+- [urlFetch](../documentation/source/tools/url.md#urlfetch) - Fetch URL content"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L559))
+- [urlFilter](../documentation/source/tools/url.md#urlfilter) - Open URLs which appear in a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L355))
+- [urlMatchesLocalFileSize](../documentation/source/tools/url.md#urlmatcheslocalfilesize) - Compare a remote file size with a local file size ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L13))
+- [urlOpen](../tools/url.md#urlopen) - Open a URL using the operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L418))
+- [urlOpener](../documentation/source/tools/url.md#urlopener) - URL opener stream filter"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L268))
+- [urlParse](../documentation/source/tools/url.md#urlparse) - Simple URL Parsing"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L92))
+- [urlParseItem](../documentation/source/tools/url.md#urlparseitem) - Get a URL component directly"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L187))
+- [urlSchemeDefaultPort](../documentation/source/tools/url.md#urlschemedefaultport) - Output the port for the given scheme ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L28))
+- [urlValid](../documentation/source/tools/url.md#urlvalid) - Is a URL valid?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L234))
+- [userAgentDefault](../documentation/source/tools/url.md#useragentdefault) - Default user agent string for web agents"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L527))
+- [userHome](../documentation/source/tools/user.md#userhome) - The current user HOME (must exist) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L14))
+- [userRecord](../documentation/source/tools/user.md#userrecord) - Quick user database look up"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L38))
+- [userRecordHome](../documentation/source/tools/user.md#userrecordhome) - Quick user database query of the user home directory"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L73))
+- [userRecordName](../documentation/source/tools/user.md#userrecordname) - Quick user database query of the user name"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L58))
+- [validate](../validate.md#validate) - Validate a value by type
+-  ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))
+- [validateTypeList](../documentation/source/tools/validate.md#validatetypelist) - List types which can be validated ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L442))
+- [versionNextMinor](../tools/version.md#versionnextminor) - Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L115))
+- [versionNoVee](../documentation/source/tools/version.md#versionnovee) - Take one or more versions and strip the leading \`v\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L36))
+- [websiteScrape](../documentation/source/tools/web.md#websitescrape) - Scrape a website. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L126))
+- [xdebugDisable](../documentation/source/tools/xdebug.md#xdebugdisable) - Disable Xdebug on systems that have it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/xdebug.sh#L70))
+- [xdebugEnable](../documentation/source/tools/xdebug.md#xdebugenable) - Enable Xdebug on systems that have it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/xdebug.sh#L54))
+- [xdebugInstall](../documentation/source/tools/xdebug.md#xdebuginstall) - Install the xdebug PHP Debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/xdebug.sh#L16))
+- [yarnInstall](../documentation/source/tools/node.md#yarninstall) - Install yarn in the build environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/yarn.sh#L21))
+- [yumIsInstalled](../documentation/source/tools/yum.md#yumisinstalled) - Is yum installed? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/yum.sh#L14))

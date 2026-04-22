@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options."$'\n'"path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified."$'\n'""
 base="platform.sh"
@@ -15,7 +15,7 @@ rawComment="Makes all \`*.sh\` files executable"$'\n'"TODO: - findArguments is d
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashMakeExecutable"$'\n'"chmod-sh.sh"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="e33c50c2df0999389804156b51677eba562981be"
+sourceHash="097e41ee15602cdab3bc28d8a420362c8b93b425"
 sourceLine="124"
 summary="Makes all \`*.sh\` files executable"
 summaryComputed="true"

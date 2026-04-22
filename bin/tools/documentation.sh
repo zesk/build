@@ -31,8 +31,7 @@ __buildDocumentationBuildDirectory() {
     fi
   done < <(find "$documentationSource" -name '*.md' ! -path '*/tools/*')
 
-  catchReturn "$handler" cp -f "$home/etc/"*.png "$documentationSource/images/" || return $?
-  catchReturn "$handler" cp -f "$home/etc/"*.svg "$documentationSource/images/" || return $?
+  catchReturn "$handler" cp -f "$home/etc/"*.svg "$home/etc/"*.png "$documentationSource/images/" || return $?
   local asset && for asset in js images; do
     source="$documentationSource/$asset"
     target="$home/documentation/.docs/$asset"
@@ -59,7 +58,7 @@ __buildDocumentationBuildDirectory() {
   done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
   statusMessage --last timingReport "$start" "Created skeleton file structure in"
 
-  functionTemplate="$(catchReturn "$handler" documentationTemplate "function")" || return $?
+  local functionTemplate && functionTemplate="$(catchReturn "$handler" documentationTemplate "function")" || return $?
 
   aa+=(--source "$home/bin")
   aa+=(--target "$target")
@@ -67,7 +66,6 @@ __buildDocumentationBuildDirectory() {
   catchReturn "$handler" cp "$home/documentation/template/todo.md" "$source/todo.md" || return $?
 
   aa+=(--template "$source")
-  aa+=(--md-cache "$home/bin/build/documentation")
   aa+=(--unlinked-source "$source")
   aa+=(--unlinked-template "$source/todo.md" --unlinked-target "$target/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
@@ -78,7 +76,14 @@ __buildDocumentationBuildDirectory() {
   local target=$home/documentation/source/tools/all.md
   catchEnvironment "$handler" cp "$home/documentation/template/all.md" "$target" || return $?
   printf "\n" >>"$target"
-  buildFunctions | sort -u | decorate wrap '- {SEE:' '}' >>"$target"
+
+  local fun && while read -r fun; do
+    local seeFile && if seeFile=$(__documentationFile "$home" "SEE/$fun"); then
+      decorate wrap "- " "" <"$seeFile" | rel="../" mapEnvironment
+    else
+      printf -- "- {SEE:%s} %s\n" "$fun" "<!-- later -->"
+    fi
+  done < <(buildFunctions | sort -u) >>"$target"
 
   #       _                                       _        _   _             ____        _ _     _
   #    __| | ___   ___ _   _ _ __ ___   ___ _ __ | |_ __ _| |_(_) ___  _ __ | __ ) _   _(_) | __| |

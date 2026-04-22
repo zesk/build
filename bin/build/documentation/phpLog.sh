@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="php.sh"
@@ -13,7 +13,7 @@ lowerFn="phplog"
 rawComment="Outputs the path to the PHP log file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/php.sh"
-sourceHash="64d4aa53cd146a2f3f4e58bf69e8a5d68ffd3e73"
+sourceHash="cd2691e7c6370ed405b6513e2b412ce1541ca05b"
 sourceLine="76"
 summary="Outputs the path to the PHP log file"
 summaryComputed="true"

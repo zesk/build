@@ -38,7 +38,7 @@
 #
 bitbucketGetVariable() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local value yml home
 
@@ -65,7 +65,7 @@ _bitbucketGetVariable() {
 # Updated: 2026-01-15
 bitbucketContainer() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   export BUILD_DOCKER_BITBUCKET_IMAGE BUILD_DOCKER_BITBUCKET_PATH
   if ! buildEnvironmentLoad BUILD_DOCKER_BITBUCKET_IMAGE BUILD_DOCKER_BITBUCKET_PATH; then
     return 1
@@ -82,7 +82,7 @@ _bitbucketContainer() {
 # Return Code: 1 - Not a BitBucket pipeline
 # shellcheck disable=SC2120
 isBitBucketPipeline() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   export BUILD_DEBUG BITBUCKET_WORKSPACE CI
   if ! buildEnvironmentLoad BITBUCKET_WORKSPACE CI; then
     return 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="file - File to get the owner for"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -13,7 +13,7 @@ lowerFn="filegroup"
 rawComment="Get the file group name"$'\n'"Argument: file - File to get the owner for"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Outputs the file group for each file passed on the command line"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Unable to access file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Unable to access file"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="7a68c870255c297437371bfaf0f2d87b4eae10f2"
+sourceHash="7e7132935e7a4026938b5792385f9b35d7bd4f35"
 sourceLine="522"
 summary="Get the file group name"
 summaryComputed="true"

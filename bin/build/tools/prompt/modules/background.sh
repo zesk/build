@@ -187,7 +187,7 @@ __backgroundProcess() {
 __bashPromptModule_Background() {
   local handler="_${FUNCNAME[0]}" verboseFlag=false
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local cache threshold=""
 

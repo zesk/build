@@ -1,1 +1,0 @@
-[stringOffsetInsensitive]({rel}documentation/source/tools/text.md#stringoffsetinsensitive) - Outputs the integer offset of \`needle\` if found as substring ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1041))

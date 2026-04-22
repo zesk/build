@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="console.sh"
@@ -13,7 +13,7 @@ lowerFn="consolelinkssupported"
 rawComment="Are console links (likely) supported?"$'\n'"Unfortunately there's no way to test for this feature currently"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/console.sh"
-sourceHash="1eccb7f32254d9dddecdf43da8654cc9ad7cdbc1"
+sourceHash="82d47fdc5820e57d7aeb7f061bb09ecb16c35cd7"
 sourceLine="204"
 summary="Are console links (likely) supported?"
 summaryComputed="true"

@@ -1,0 +1,1 @@
+[documentationUnlinked]({rel}tools/documentation.md#documentationunlinked) - List unlinked functions in documentation index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L111))

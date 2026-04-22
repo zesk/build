@@ -34,7 +34,7 @@
 # Environment: LC_TERMINAL
 # Environment: TERM
 isiTerm2() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   export LC_TERMINAL TERM
   [ "${LC_TERMINAL-}" = "iTerm2" ] && [ "${TERM-}" != "screen" ]
 }
@@ -130,7 +130,7 @@ __iTerm2UpdateState() {
 iTerm2PromptSupport() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchEnvironment "$handler" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
   catchEnvironment "$handler" bashPrompt --skip-prompt --last __iTerm2UpdateState || return $?
 }
@@ -163,7 +163,7 @@ _iTerm2PromptSupport() {
 # Argument: --help - Flag. Optional. Display this help.
 iTerm2Aliases() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local home skipped=()
 
@@ -192,7 +192,7 @@ _iTerm2Aliases() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 iTerm2ColorNames() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" black red green yellow blue magenta cyan white
 }
 _iTerm2ColorNames() {
@@ -240,7 +240,7 @@ _iTerm2IsColorType() {
 # Colors for various UI elements
 iTerm2ColorTypes() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local colors
   printf "%s\n" fg bg selbg selfg curbg curfg # Selection and maybe current line?
   printf "%s\n" bold link underline           # Formatting
@@ -780,7 +780,7 @@ _iTerm2Version() {
 # Argument: message - String. Required. Text to display.
 iTerm2Notify() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local handler="_${FUNCNAME[0]}"
 

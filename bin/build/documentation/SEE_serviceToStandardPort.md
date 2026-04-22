@@ -1,1 +1,0 @@
-[serviceToStandardPort]({rel}documentation/source/tools/service.md#servicetostandardport) - Hard-coded services for: ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L221))

@@ -1,0 +1,1 @@
+[buildEnvironmentGetDirectory]({rel}tools/build.md#buildenvironmentgetdirectory) - Load and print one or more environment settings which represents ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L580))

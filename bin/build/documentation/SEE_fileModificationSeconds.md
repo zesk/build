@@ -1,1 +1,0 @@
-[fileModificationSeconds]({rel}tools/file.md#filemodificationseconds) - Fetch the modification time in seconds from now of a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L83))

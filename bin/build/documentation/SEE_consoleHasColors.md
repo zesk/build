@@ -1,1 +1,0 @@
-[consoleHasColors]({rel}documentation/source/tools/decorate.md#consolehascolors) - Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TERM\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L16))

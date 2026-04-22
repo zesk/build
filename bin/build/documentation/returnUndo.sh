@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"code - UnsignedInteger. Required. Exit code to return."$'\n'"undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored."$'\n'"-- - Flag. Optional. Used to delimit multiple commands."$'\n'""
 base="sugar.sh"
@@ -15,7 +15,7 @@ rawComment="Run a function and preserve exit code"$'\n'"Returns \`code\`"$'\n'"A
 requires="isUnsignedInteger throwArgument decorate execute"$'\n'"bashDocumentation"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
-sourceHash="6c1b25e84cf38f47c9e5d60da397593419cd5433"
+sourceHash="36e344d0d5577dc38ae6bfbc9d09545127bec634"
 sourceLine="129"
 summary="Run a function and preserve exit code"
 summaryComputed="true"

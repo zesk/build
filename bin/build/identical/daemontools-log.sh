@@ -56,9 +56,9 @@ _isUnsignedInteger() {
 # Argument: binary - Callable. Required. Command to run.
 # Argument: ... - Arguments. Optional. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: returnMessage __help
+# Requires: returnMessage helpArgument
 execute() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   "$@" || returnMessage "$?" "$@" || return $?
 }
 _execute() {
@@ -78,7 +78,7 @@ _execute() {
 # Requires: grep cut returnMessage printf /etc/passwd whoami
 userRecord() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local index="${1-}" user="${2-}" userDatabase=${3-"/etc/passwd"} value
   [ -n "$user" ] || user=$(catchReturn "$handler" whoami) || return $?
   [ -f "$userDatabase" ] || throwEnvironment "$handler" "No $userDatabase" || return $?
@@ -97,7 +97,7 @@ _userRecord() {
 # Argument: user - String. Optional. User name to look up. Uses `whoami` if not supplied.
 # Argument: database - File. Optional. User name database file to examine. Uses `/etc/passwd` if not supplied.
 userRecordName() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   userRecord 5 "$@"
 }
 _userRecordName() {
@@ -112,7 +112,7 @@ _userRecordName() {
 # Argument: user - String. Optional. User name to look up. Uses `whoami` if not supplied.
 # Argument: database - File. Optional. User name database file to examine. Uses `/etc/passwd` if not supplied.
 userRecordHome() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   userRecord 6 "$@"
 }
 _userRecordHome() {

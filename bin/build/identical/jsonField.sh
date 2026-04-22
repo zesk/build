@@ -21,7 +21,7 @@
 # Return Code: 1 - Field was not found or is blank
 # Requires: jq executableExists throwEnvironment printf rm decorate head
 jsonField() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "$jsonFile is not a file" || return $?

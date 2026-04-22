@@ -12,7 +12,7 @@
 daemontoolsInstall() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local packages
 
   if isAlpine; then
@@ -242,7 +242,7 @@ _daemontoolsRemoveService() {
 # Argument: --help - Flag. Optional. Display this help.
 daemontoolsIsRunning() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   local processIds processId
 
@@ -265,7 +265,7 @@ _daemontoolsIsRunning() {
 # Return Code: 1 - No environment file found
 daemontoolsHome() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" buildEnvironmentGet DAEMONTOOLS_HOME || return $?
 }
 _daemontoolsHome() {
@@ -287,7 +287,7 @@ __daemontoolsRequirements() {
 # Argument: --help - Flag. Optional. Display this help.
 daemontoolsExecute() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   __daemontoolsRequirements "$handler" || return $?
 
@@ -309,7 +309,7 @@ _daemontoolsExecute() {
 # Requires: pgrep read printf
 daemontoolsProcessIds() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local processIds=() processId
   while read -r processId; do processIds+=("$processId"); done < <(pgrep 'svscan*')

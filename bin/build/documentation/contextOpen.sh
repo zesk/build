@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="vendor.sh"
@@ -14,7 +14,7 @@ lowerFn="contextopen"
 rawComment="Open a file in a shell using the program we are using. Supports VSCode and PHPStorm."$'\n'"Environment: EDITOR - Used as a default editor (first)"$'\n'"Environment: VISUAL - Used as another default editor (last)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
-sourceHash="392497becb3db35921e59eb87651810aa2f7c8ea"
+sourceHash="6a1c6758472ed8ae9048cda1a9a026cbbe718421"
 sourceLine="76"
 summary="Open a file in a shell using the program we"
 summaryComputed="true"

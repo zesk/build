@@ -1,1 +1,0 @@
-[bashPromptColorsFormat]({rel}documentation/source/tools/prompt.md#bashpromptcolorsformat) - Given a list of color names, generate the color codes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L196))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="vendor.sh"
@@ -14,7 +14,7 @@ rawComment="Are we within the JetBrains PHPStorm terminal?"$'\n'"Argument: --hel
 return_code="0 - within the PhpStorm terminal"$'\n'"1 - not within the PhpStorm terminal AFAIK"$'\n'""
 see="contextOpen"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
-sourceHash="392497becb3db35921e59eb87651810aa2f7c8ea"
+sourceHash="6a1c6758472ed8ae9048cda1a9a026cbbe718421"
 sourceLine="23"
 summary="Are we within the JetBrains PHPStorm terminal?"
 summaryComputed="true"

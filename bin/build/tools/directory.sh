@@ -13,7 +13,7 @@
 # Return Code: 1 - one ore more paths are not absolute paths
 pathIsAbsolute() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ "$1" != "${1#/}" ] || return 1
     shift || :
@@ -75,7 +75,7 @@ _directoryChange() {
 #
 directoryClobber() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local source target targetPath targetName sourceStage targetBackup
 
@@ -108,6 +108,8 @@ _directoryClobber() {
 #
 # Example:     logFile=./.build/$me.log
 # Example:     {fn} "$logFile"
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
@@ -126,6 +128,8 @@ fileDirectoryRequire() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --owner | --mode)
@@ -285,7 +289,7 @@ _directoryIsEmpty() {
 # Argument: directory - String. A path to convert.
 # stdout: Relative paths, one per line
 directoryRelativePath() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local relTop
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then

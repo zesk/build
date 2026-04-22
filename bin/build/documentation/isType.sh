@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="type.sh"
@@ -13,7 +13,7 @@ lowerFn="istype"
 rawComment="Bash types beyond \`type -t\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="36a33330145335895a980b5846e9badfaab6d726"
+sourceHash="3df0d84917e775e2aba0d9280d56eb8d73b4a8c3"
 sourceLine="98"
 summary="Bash types beyond \`type -t\`"
 summaryComputed="true"

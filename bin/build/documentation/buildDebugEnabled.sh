@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
-BUILD_DEBUG=""
+BUILD_DEBUG="handler"
 argument="moduleName - String. Optional. If \`BUILD_DEBUG\` contains any token passed, debugging is enabled."$'\n'""
 base="debug.sh"
 description="Is build debugging enabled?"$'\n'""
@@ -16,7 +16,7 @@ lowerFn="builddebugenabled"
 rawComment="Is build debugging enabled?"$'\n'"Argument: moduleName - String. Optional. If \`BUILD_DEBUG\` contains any token passed, debugging is enabled."$'\n'"Return Code: 1 - Debugging is not enabled (for any module)"$'\n'"Return Code: 0 - Debugging is enabled"$'\n'"Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. \`BUILD_DEBUG\` may be a comma-separated list of modules to target debugging."$'\n'"Example:     BUILD_DEBUG=false # All debugging disabled"$'\n'"Example:     BUILD_DEBUG= # All debugging disabled"$'\n'"Example:     unset BUILD_DEBUG # All debugging is disabled"$'\n'"Example:     BUILD_DEBUG=true # All debugging is enabled"$'\n'"Example:     BUILD_DEBUG=handler,bashPrompt # Debug \`handler\` and \`bashPrompt\` calls"$'\n'""$'\n'""
 return_code="1 - Debugging is not enabled (for any module)"$'\n'"0 - Debugging is enabled"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="e1803ab132eb8607c3c4f9de4461bcf144668876"
+sourceHash="20094ded2fe440d8caa5368a60b92d19047e793c"
 sourceLine="21"
 summary="Is build debugging enabled?"
 summaryComputed="true"

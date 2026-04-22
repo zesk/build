@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-13
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="environment.sh"
@@ -10,11 +10,11 @@ fn="environmentVariables"
 foundNames=([0]="requires")
 line="135"
 lowerFn="environmentvariables"
-rawComment="Output a list of environment variables and ignore function definitions"$'\n'"both \`set\` and \`env\` output functions and this is an easy way to just output"$'\n'"exported variables"$'\n'"Requires: declare grep cut bashDocumentation __help"$'\n'""$'\n'""
-requires="declare grep cut bashDocumentation __help"$'\n'""
+rawComment="Output a list of environment variables and ignore function definitions"$'\n'"both \`set\` and \`env\` output functions and this is an easy way to just output"$'\n'"exported variables"$'\n'"Requires: declare grep cut bashDocumentation helpArgument"$'\n'""$'\n'""
+requires="declare grep cut bashDocumentation helpArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="f97e7b6e9384e8c9f494f115dacd41e614c5f8fb"
+sourceHash="4fff2500d71b08fe7a68e307aa2911a2c1d0dd6e"
 sourceLine="135"
 summary="Output a list of environment variables and ignore function definitions"
 summaryComputed="true"

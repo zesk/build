@@ -1,1 +1,0 @@
-[textSingleBlankLines]({rel}documentation/source/tools/text.md#textsingleblanklines) - Ensures blank lines are singular ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L279))

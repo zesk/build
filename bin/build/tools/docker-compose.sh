@@ -10,7 +10,7 @@
 dockerComposeWrapper() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   executableExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
   if muzzle docker compose --help; then
     catchEnvironment "$handler" docker compose "$@" || return $?
@@ -36,7 +36,7 @@ _dockerComposeWrapper() {
 # See: pipInstall
 dockerComposeInstall() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   executableExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
   if muzzle docker compose --help; then
     return 0
@@ -61,7 +61,7 @@ _dockerComposeInstall() {
 # Return Code: 0 - If installation succeeds
 dockerComposeUninstall() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if muzzle docker compose --help; then
     return 0
   fi
@@ -84,7 +84,7 @@ _dockerComposeUninstall() {
 # shellcheck disable=SC2120
 dockerComposeIsRunning() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local temp
   temp=$(fileTemporaryName "$handler") || return $?
   # DO NOT USE dockerCompose as it generates the .env file (again)
@@ -105,7 +105,7 @@ _dockerComposeIsRunning() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 dockerComposeCommandList() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Sampled 2025
   printf -- "%s\n" attach build commit config cp create down events exec export images kill logs ls pause port ps pull push restart rm run scale start stats stop top unpause up version wait watch | sort -u
 }

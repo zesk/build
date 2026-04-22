@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="groupName - String. Required. Group name to convert to a group ID"$'\n'""
 base="group.sh"
@@ -14,7 +14,7 @@ rawComment="Convert a group name to a group ID"$'\n'"Argument: groupName - Strin
 requires="throwArgument getent cut printf bashDocumentation decorate grep  quoteGrepPattern"$'\n'""
 return_code="0 - All groups were found in the database and IDs were output successfully"$'\n'"1 - Any group is not found in the database."$'\n'"2 - Argument errors (blank argument)"$'\n'""
 sourceFile="bin/build/tools/group.sh"
-sourceHash="4f05a0c0130285531cbb39213039a1bb8deca045"
+sourceHash="f7e598d496eb312e42677daab03b26f68e1b277e"
 sourceLine="17"
 stdout="\`Integer\`. One line for each group name passed as an argument."$'\n'""
 summary="Convert a group name to a group ID"

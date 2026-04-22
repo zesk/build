@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--dump headerFile - String. Optional. Dump the headers to the file specified, specify \`-\` to output to \`stdout\`."$'\n'"--header header - String. Optional. Send a header in the format 'Name: Value'"$'\n'"--wget - Flag. Optional. Force use of wget. If unavailable, fail."$'\n'"--redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9."$'\n'"--curl - Flag. Optional. Force use of curl. If unavailable, fail."$'\n'"--binary binaryName - Callable. Use this binary instead. If the base name of the file is not \`curl\` or \`wget\` you MUST supply \`--argument-format\`."$'\n'"--argument-format format - String. Optional. Supply \`curl\` or \`wget\` for parameter formatting."$'\n'"--user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with \`--password\`. Note: User names may not contain the character \`:\` when using \`curl\`."$'\n'"--password password - String. Optional. If supplied along with \`--user\`, uses HTTP Simple authentication."$'\n'"--agent userAgent - String. Optional. Specify the user agent string."$'\n'"--timeout timeoutSeconds - PositiveInteger. Optional. A number of seconds to wait before failing. Defaults to \`BUILD_URL_TIMEOUT\` environment value."$'\n'"url - URL. Required. URL to fetch to target file."$'\n'"file - FileDirectory. Optional. Target file. Use \`-\` to send to \`stdout\`. Default value is \`-\`."$'\n'""
 base="url.sh"
@@ -15,7 +15,7 @@ rawComment="Summary: Fetch URL content"$'\n'"Argument: --help - Flag. Optional. 
 requires="returnMessage executableExists decorate"$'\n'"validate"$'\n'"throwArgument catchArgument"$'\n'"throwEnvironment catchEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
-sourceHash="03de01449586d23f1ef8786eecbe5543530200e0"
+sourceHash="b3fe10c77f9d1f20d674b0096ef81f381e4339f0"
 sourceLine="559"
 summary="Fetch URL content"$'\n'""
 usage="urlFetch [ --help ] [ --dump headerFile ] [ --header header ] [ --wget ] [ --redirect-max maxRedirections ] [ --curl ] [ --binary binaryName ] [ --argument-format format ] [ --user userName ] [ --password password ] [ --agent userAgent ] [ --timeout timeoutSeconds ] url [ file ]"

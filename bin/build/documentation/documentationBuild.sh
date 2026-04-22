@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-14
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--commit - Flag. Optional. Commit docs to non-docs branch"$'\n'"--force - Flag. Optional. Force generation, ignore cache directives"$'\n'"--unlinked - Flag. Optional. Show unlinked functions"$'\n'"--unlinked-update - Flag. Optional. Update unlinked document file"$'\n'"--clean - Flag. Optional. Erase the cache before starting."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--company companyName - String. Optional. Company name (uses \`BUILD_COMPANY\` if not set)"$'\n'"--company-link companyLink - String. Optional. Company name (uses \`BUILD_COMPANY_LINK\` if not set)"$'\n'"--unlinked-source directory - Directory. Optional."$'\n'"--page-template pageTemplateFile - File. Optional."$'\n'"--template templateDirectory - Directory. Required. Location of documentation template file to generate documentation."$'\n'"--source sourceDirectory - Directory. Required. Location of source code. Can specify one or more."$'\n'"--target targetDirectory - Directory. Required. Location of documentation build target."$'\n'"--function-template functionTemplateFile - File. Optional."$'\n'"--unlinked-template unlinkedTemplateFile - File. Optional."$'\n'"--unlinked-target unlinkedTarget - FileDirectory. Optional."$'\n'"--see-prefix seePrefix - EmptyString. Optional."$'\n'"--see-update - Flag. Optional. Update the \`see\` indexes only."$'\n'"--unlinked-update - Flag. Optional. Update the unlinked file only."$'\n'"--index-update - Flag. Optional. Update the documentation indexes only."$'\n'"--docs-update - Flag. Optional. Update the documentation target only."$'\n'""
 artifact="\`cacheDirectory\` may be created even on non-zero exit code"$'\n'""
@@ -15,7 +15,7 @@ rawComment="Build documentation for Bash functions"$'\n'"Given that bash is not 
 return_code="0 - Success"$'\n'"1 - Issue with environment"$'\n'"2 - Argument error"$'\n'""
 see="buildCacheDirectory"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="053022e849a1557d427212d89dc2881e59289681"
+sourceHash="d5058bbc6d4f089e430d7b7f6f0fa84aeacc3113"
 sourceLine="99"
 summary="Build documentation for Bash functions"
 summaryComputed="true"

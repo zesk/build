@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="iterm2.sh"
@@ -14,7 +14,7 @@ rawComment="Output the iTerm2 version"$'\n'"Requires: stty"$'\n'""$'\n'""
 requires="stty"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="91a65f03915e4e3420e13242ad0b50d50652de48"
+sourceHash="0527ba47f537e4e6b5039d1b56e7d23b8233bcae"
 sourceLine="717"
 summary="Output the iTerm2 version"
 summaryComputed="true"

@@ -1,0 +1,1 @@
+[bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal error handler for functions (with formatting)"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L48))

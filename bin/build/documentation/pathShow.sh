@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"binary - Executable. Optional. Display where this executable appears in the path."$'\n'""
 base="path.sh"
@@ -13,7 +13,7 @@ lowerFn="pathshow"
 rawComment="Show the path and where binaries are found"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: binary - Executable. Optional. Display where this executable appears in the path."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/path.sh"
-sourceHash="ef619ed0883f30842aea5824d3041921d03f400f"
+sourceHash="21f0a5cf2e762f067606fe4d4a3c0e6f7a52a264"
 sourceLine="113"
 summary="Show the path and where binaries are found"
 summaryComputed="true"

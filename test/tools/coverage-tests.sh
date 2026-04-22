@@ -264,7 +264,7 @@ testBuildFunctionsHelpCoverage() {
 
 __dataBuildFunctionsWithBlankHelp() {
   cat <<EOF
-__help
+helpArgument
 inArray
 jsonPath
 isS3URL

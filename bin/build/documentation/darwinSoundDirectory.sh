@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="darwin.sh"
@@ -13,7 +13,7 @@ lowerFn="darwinsounddirectory"
 rawComment="Directory for user sounds"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/darwin.sh"
-sourceHash="ad6864730417464b2d7912acac42a6444bb54718"
+sourceHash="ec705e085d0b6db06177741d264497efd1aa9f27"
 sourceLine="21"
 summary="Directory for user sounds"
 summaryComputed="true"

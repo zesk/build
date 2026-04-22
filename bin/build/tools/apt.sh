@@ -23,7 +23,7 @@ __aptLoader() {
 #
 # shellcheck disable=SC2120
 aptIsInstalled() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   executableExists apt apt-get dpkg 2>/dev/null && [ -f /etc/debian_version ]
 }
 _aptIsInstalled() {
@@ -35,7 +35,7 @@ _aptIsInstalled() {
 # Argument: ... - Arguments. Pass through arguments to `apt-get`
 aptNonInteractive() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   __aptLoader "$handler" "_$handler" "$@"
 }
 _aptNonInteractive() {
@@ -45,7 +45,7 @@ _aptNonInteractive() {
 
 # Get key ring directory path
 aptKeyRingDirectory() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" "/etc/apt/keyrings"
 }
 _aptKeyRingDirectory() {
@@ -55,7 +55,7 @@ _aptKeyRingDirectory() {
 
 # Get APT source list path
 aptSourcesDirectory() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" "/etc/apt/sources.list.d"
 }
 _aptSourcesDirectory() {

@@ -1,1 +1,0 @@
-[documentationMkdocs]({rel}documentation/source/tools/documentation.md#documentationmkdocs) - Build documentation using mkdocs and a template ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mkdocs.sh#L10))

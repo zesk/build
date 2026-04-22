@@ -1,1 +1,0 @@
-[directoryRelativePath]({rel}documentation/source/tools/directory.md#directoryrelativepath) - Given a path to a file, compute the path back ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L287))

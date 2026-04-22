@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -13,7 +13,7 @@ lowerFn="githasanyrefs"
 rawComment="Summary: Does git have any tags?"$'\n'"Do any tags exist at all in \`git\`?"$'\n'"May need to \`git pull --tags\`, or no tags exist."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - At least one tag exists"$'\n'"Return Code: 1 - No tags exist"$'\n'""$'\n'""
 return_code="0 - At least one tag exists"$'\n'"1 - No tags exist"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="4f7e4ceea530507ccd2bd4a042d5d5d5b9ef4356"
+sourceHash="72d910edfadc6d7f0d48966788e271372c6d5c66"
 sourceLine="691"
 summary="Does git have any tags?"$'\n'""
 usage="gitHasAnyRefs [ --help ]"

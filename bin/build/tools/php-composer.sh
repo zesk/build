@@ -103,7 +103,7 @@ _phpComposer() {
 # Install composer for PHP
 phpComposerInstall() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   ! executableExists composer || return 0
   catchReturn "$handler" phpInstall || return $?
   local target="/usr/local/bin/composer"

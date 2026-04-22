@@ -1486,7 +1486,7 @@ _mockConsoleAnimationStop() {
 # Summary: Assertion return code
 # Return Code: 97
 returnAssert() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnAssertCode 1
   return 97 # "$(returnCode assert)"
 }
@@ -1501,7 +1501,7 @@ _returnAssert() {
 # Return code is `identical`
 # Return Code: 105
 returnIdentical() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnIdenticalCode 1
   return 105 # "$(returnCode identical)"
 }
@@ -1516,7 +1516,7 @@ _returnIdentical() {
 # Return code is `leak`
 # Return Code: 108
 returnLeak() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnLeakCode 1
   return 108 # "$(returnCode leak)"
 }

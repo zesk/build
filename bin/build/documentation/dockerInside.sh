@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="docker.sh"
@@ -14,7 +14,7 @@ lowerFn="dockerinside"
 rawComment="Are we inside a docker container right now?"$'\n'"Return Code: 0 - Yes"$'\n'"Return Code: 1 - No"$'\n'"TODO: This changed 2023 ..."$'\n'"Checked: 2025-07-09"$'\n'"TODO: Write a test to check this date every oh, say, 3 months"$'\n'""$'\n'""
 return_code="0 - Yes"$'\n'"1 - No"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
-sourceHash="3c99deb85dc2d26f1fb9b74fdec2057025f22e92"
+sourceHash="7ff1d9ef9d41486d9537ae6db40de4176c5794ab"
 sourceLine="69"
 summary="Are we inside a docker container right now?"
 summaryComputed="true"

@@ -57,7 +57,7 @@ __documentationBuild() {
     --clean) indexArgs+=("$argument") && cleanFlag=true ;;
     --see-prefix) shift && seePrefix="${1-}" ;;
     --see-environment-link) shift && seeEnvironmentLink=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-    --md-cache) shift && docArgs+=("$argument" "${1-}") && dd+=("$argument" "${1-}") ;;
+    --md-cache) shift && docArgs+=("$argument" "${1-}") ;;
     --force) docArgs+=("$argument") ;;
     --see-update | --unlinked-update | --index-update | --docs-update)
       [ -z "$actionFlag" ] || throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?

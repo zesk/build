@@ -1,0 +1,1 @@
+[buildEnvironmentLoad]({rel}tools/build.md#buildenvironmentload) - Load one or more environment settings from the environment file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L386))

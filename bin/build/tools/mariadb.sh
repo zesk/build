@@ -15,7 +15,7 @@
 # Return Code: 0 - If installation succeeds
 mariadbInstall() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" packageGroupInstall mariadb || return $?
 }
 _mariadbInstall() {
@@ -31,7 +31,7 @@ _mariadbInstall() {
 # Return Code: 0 - If uninstallation succeeds
 mariadbUninstall() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" packageGroupUninstall mariadb || return $?
 }
 _mariadbUninstall() {
@@ -123,7 +123,7 @@ _mariadbDump() {
 # stdout: mariadbDump (cleaned)
 # - [Official documentation](https://mariadb.org/mariadb-dump-file-compatibility-change/)
 mariadbDumpClean() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Without LC_CTYPE and LAND it outputs the error:
   # - 'sed: RE error: illegal byte sequence' when encountering unicode byte sequences in a text stream
   LC_CTYPE=C LANG=C sed '/^\/\*M!999999/d'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="findArgumentFunction - Function. Required. Find arguments (for \`find\`) for \`textCannon\`."$'\n'"search - String. Required. String to search for (one or more)"$'\n'"--path cannonPath - Directory. Optional. Run \`textCannon\` operation starting in this directory."$'\n'""
 base="deprecated-tools.sh"
@@ -14,7 +14,7 @@ rawComment="Find files which match a token or tokens"$'\n'"Return Code: 0 - One 
 return_code="0 - One of the search tokens was found in a file (which matches find arguments)"$'\n'"1 - Search tokens were not found in any file (which matches find arguments)"$'\n'""
 see="buildHome"$'\n'""
 sourceFile="bin/build/tools/deprecated-tools.sh"
-sourceHash="229d07011a43281db43ea65776e6992a397ea5a7"
+sourceHash="1121098df87cee32b55dc85263f73f68977219d8"
 sourceLine="243"
 summary="Find files which match a token or tokens"
 summaryComputed="true"

@@ -120,7 +120,7 @@ _documentationUnlinked() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 documentationTemplate() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local source="${BASH_SOURCE[0]%.sh}"
   local template="$source/__${1-}.md"
 
@@ -159,7 +159,7 @@ _documentationBuildEnvironment() {
 # Argument: --help - Flag. Optional. Display this help.
 documentationBuildCache() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local code && code=$(catchReturn "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
   local suffix=".documentation/${code-default}/${1-}"
 
@@ -192,7 +192,6 @@ _documentationTemplateUpdate() {
 # Summary: Convert a template file to a documentation file using templates
 #
 # Argument: --env-file envFile - File. Optional. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
-# Argument: --md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored.
 # Argument: cacheDirectory - Directory. Required. Cache directory where the indexes live.
 # Argument: sourceFile - File. Directory. Required. The document template containing functions to define
 # Argument: functionTemplate - File. Required. The template for individual functions defined in the `documentTemplate`.
@@ -230,7 +229,6 @@ _documentationTemplateFileCompile() {
 # Argument: --force - Flag. Optional. Force generation of files.
 # Argument: --verbose - Flag. Optional. Output more messages.
 # Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of `functionTemplate`
-# Argument: --md-cache markdownCacheDirectory - Directory. Optional. Cache directory where the markdown cache is stored.
 # Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
 # Argument: templateDirectory - Required. Directory containing documentation templates
 # Argument: functionTemplate - Required. Function template file to generate documentation for functions
@@ -298,7 +296,7 @@ __bashDocumentationDefaultArguments() {
 # Argument: delimiter - String. Required. The character to separate name value pairs in the input
 __documentationFormatArguments() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   [ $# -le 3 ] || throwArgument "$handler" "Requires 3 or fewer arguments" || return $?
 
@@ -392,7 +390,7 @@ __bashDocumentation_FindFunctionDefinitions() {
 
   local directory
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   directory=$(validate "$handler" Directory "directory" "${1-}") && shift || return $?
 
   local foundCount=0 phraseCount=${#@}

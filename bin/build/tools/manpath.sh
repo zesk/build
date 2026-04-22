@@ -15,7 +15,7 @@
 #
 manPathConfigure() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local tempPath
   export MANPATH
@@ -35,7 +35,7 @@ _manPathConfigure() {
 # Argument: path - Directory. Required. The path to be removed from the `MANPATH` environment
 manPathRemove() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local tempPath
   export MANPATH
@@ -59,7 +59,7 @@ _manPathRemove() {
 # No-Arguments: default
 manPathCleanDuplicates() {
   local handler="_${FUNCNAME[0]}" newPath
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   export MANPATH
 
   catchReturn "$handler" buildEnvironmentLoad MANPATH || return $?

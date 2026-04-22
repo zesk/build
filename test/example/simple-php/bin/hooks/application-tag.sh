@@ -6,7 +6,7 @@
 __applicationTag() {
   bins=(md5sum md5)
   for bin in "${bins[@]}"; do
-    if which "$bin" >/dev/null; then
+    if command -v "$bin" >/dev/null; then
       sum="$("$bin" <./composer.lock | awk '{ print $1 }')"
       printf %s "${sum:0:8}"
       return 0

@@ -1,1 +1,0 @@
-[documentationTemplateFileCompile]({rel}documentation/source/tools/documentation.md#documentationtemplatefilecompile) - Convert a template file to a documentation file using templates"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L221))

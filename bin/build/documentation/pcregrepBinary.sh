@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="pcregrep.sh"
@@ -13,7 +13,7 @@ lowerFn="pcregrepbinary"
 rawComment="The name of the \`pcregrep\` binary on this operating system"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: String. Name of binary for pcregrep."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/pcregrep.sh"
-sourceHash="4dc681f85a46c0d33be0642e6eb0303a3561cd39"
+sourceHash="89d29dfac3e56dd9bcac2772d6772fae8cfbb0d9"
 sourceLine="26"
 stdout="String. Name of binary for pcregrep."$'\n'""
 summary="The name of the \`pcregrep\` binary on this operating system"

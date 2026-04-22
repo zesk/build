@@ -1,1 +1,0 @@
-[isValidateType]({rel}documentation/source/tools/validate.md#isvalidatetype) - Are all arguments passed a valid validate type? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L458))

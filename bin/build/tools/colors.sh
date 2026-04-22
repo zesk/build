@@ -53,7 +53,7 @@ __wrapColor() {
 # Return Code: 0 - Supports console animation
 # Return Code: 1 - Does not support console animation
 consoleHasAnimation() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Important: This can *not* use buildEnvironmentLoad - leads to infinite loops
   export CI
   [ -z "${CI-}" ]
@@ -106,7 +106,7 @@ __consoleEscape1() {
 colorSampleCodes() {
   local i j n
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! consoleHasColors; then
     printf "no colors\n"
     return 0
@@ -138,7 +138,7 @@ colorSampleCombinations() {
   local fg bg text extra padding
   local top3=37
 
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   extra="0;"
   if [ "$1" = "--bold" ]; then
@@ -169,7 +169,7 @@ _colorSampleCombinations() {
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 colorSampleStyles() {
-  [ $# -eq 0 ] || __help "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local styles=(
     red
     green
@@ -211,7 +211,7 @@ _colorSampleStyles() {
 # Outputs sample sentences for the `action` commands to see what they look like.
 #
 colorSampleSemanticStyles() {
-  [ $# -eq 0 ] || __help "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local styles=(
     code
     decoration
@@ -374,7 +374,7 @@ _statusMessage() {
 isTTYAvailable() {
   export __BUILD_HAS_TTY
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if [ "${__BUILD_HAS_TTY-}" != "true" ] && [ "${__BUILD_HAS_TTY-}" != "false" ]; then
     if bash -c ": >/dev/tty" >/dev/null 2>/dev/null; then
       __BUILD_HAS_TTY=true
@@ -403,7 +403,7 @@ _isTTYAvailable() {
 # Environment: - `LINES` - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! isTTYAvailable; then
     printf -- "%d" 120
   else
@@ -438,7 +438,7 @@ _consoleColumns() {
 # Environment: - `LINES` - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   if ! isTTYAvailable; then
     printf -- "%d" 60
@@ -469,7 +469,7 @@ _consoleRows() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 markdownToConsole() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # shellcheck disable=SC2119
   _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
 }
@@ -515,7 +515,7 @@ colorBrightness() {
       fi
     done
   elif [ $# -lt 3 ]; then
-    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     throwArgument "$handler" "Requires 3 arguments" || return $?
   fi
   while [ $# -ge 3 ]; do
@@ -558,7 +558,7 @@ __colorNormalize() {
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   executableExists bc || throwEnvironment "$handler" "Requires bc installed - missing" || return $?
   local red green blue
@@ -592,7 +592,7 @@ _colorNormalize() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 integerClamp() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   local min="${1-}" max="${2-}" number
 
@@ -654,7 +654,7 @@ _colorRange() {
 colorFormat() {
   local handler="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if [ $# -gt 0 ]; then format="${1:-"$format"}" && shift; fi
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
@@ -692,7 +692,7 @@ _colorFormat() {
 # Takes arguments or stdin.
 colorParse() {
   if [ $# -gt 0 ]; then
-    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     while [ $# -gt 0 ]; do
       __colorParseArgument "$1" || return $?
       shift
@@ -722,7 +722,7 @@ colorMultiply() {
   local handler="_${FUNCNAME[0]}"
   local factor colorsArray=()
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   executableExists bc || throwEnvironment "$handler" "Requires bc binary" || return $?
   factor=$(validate "$handler" String "factor" "${1-}") && shift || return $?

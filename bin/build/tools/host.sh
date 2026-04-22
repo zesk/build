@@ -9,11 +9,11 @@
 # Summary: Platform-agnostic host name
 # Get the full hostname on the current platform.
 # Formerly `hostname``Full`.
-# Requires: __help __hostname executableRequire catchEnvironment
+# Requires: helpArgument __hostname executableRequire catchEnvironment
 networkNameFull() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchReturn "$handler" __hostname || return $?
 }
 _networkNameFull() {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="variableName - String. Required. Get this variable value."$'\n'"--prefix - Flag. Optional. Find variables with the prefix \`variableName\`"$'\n'"--insensitive | -i - Flag. Optional. Match case insensitive."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -13,7 +13,7 @@ lowerFn="bashcommentvariable"
 rawComment="Gets a list of the variable values from a bash function comment"$'\n'"Argument: variableName - String. Required. Get this variable value."$'\n'"stdin: Comment source (\`# \` removed)"$'\n'"Argument: --prefix - Flag. Optional. Find variables with the prefix \`variableName\`"$'\n'"Argument: --insensitive | -i - Flag. Optional. Match case insensitive."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
+sourceHash="ce103c0a855c85ae7ea74c3b00899b56536cfe79"
 sourceLine="449"
 stdin="Comment source (\`# \` removed)"$'\n'""
 summary="Gets a list of the variable values from a bash"

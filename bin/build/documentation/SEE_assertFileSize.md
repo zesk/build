@@ -1,1 +1,0 @@
-[assertFileSize]({rel}documentation/source/tools/assert.md#assertfilesize) - Assert a file has an expected size in bytes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1091))

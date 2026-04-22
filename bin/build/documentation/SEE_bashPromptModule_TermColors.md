@@ -1,1 +1,0 @@
-[bashPromptModule_TermColors]({rel}documentation/source/tools/prompt.md#bashpromptmodule_termcolors) - Sets the console colors based on the project you are ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L237))

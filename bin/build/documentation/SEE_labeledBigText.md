@@ -1,1 +1,0 @@
-[labeledBigText]({rel}documentation/source/tools/decoration.md#labeledbigtext) - Outputs a label before a decorate big for output. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/big.sh#L182))

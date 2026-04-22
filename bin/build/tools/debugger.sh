@@ -38,7 +38,7 @@
 # `h` or `?`  - This help
 #
 bashDebug() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   bashDebuggerEnable
   "$@"
   bashDebuggerDisable
@@ -59,7 +59,7 @@ _bashDebug() {
 bashDebuggerEnable() {
   export __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL __BUILD_BASH_DEBUG_LAST
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   __BUILD_BASH_DEBUG_WATCH=()
   __BUILD_BASH_STEP_CONTROL=()
@@ -91,7 +91,7 @@ _bashDebuggerEnable() {
 # Argument: --help - Flag. Optional. Display this help.
 # See: bashDebug bashDebuggerEnable
 bashDebuggerDisable() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   trap - DEBUG
   unset __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL __BUILD_BASH_DEBUG_LAST

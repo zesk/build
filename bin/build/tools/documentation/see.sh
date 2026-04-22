@@ -24,7 +24,7 @@ __documentationIndexSeeLinker() {
   start=$(timingStart)
 
   # Argument parsing
-  local cacheDirectory="" documentationSource="" documentationTarget="" markdownCache=""
+  local cacheDirectory="" documentationSource="" documentationTarget=""
   local debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -37,7 +37,6 @@ __documentationIndexSeeLinker() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) debugFlag=true ;;
-    --md-cache) shift && markdownCache="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
     *)
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$argument") || return $?
@@ -54,9 +53,7 @@ __documentationIndexSeeLinker() {
     shift
   done
 
-  [ -n "$markdownCache" ] || markdownCache="$cacheDirectory/see/tokens"
-
-  local arg && for arg in cacheDirectory documentationSource documentationTarget markdownCache; do
+  local arg && for arg in cacheDirectory documentationSource documentationTarget; do
     [ -n "${!arg}" ] || throwArgument "$handler" "$arg is required" || return $?
   done
 
@@ -88,8 +85,8 @@ __documentationIndexSeeLinker() {
       local cleanToken && cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
-      local markdownCacheFile="$markdownCache/SEE_$cleanToken.md"
-      local settingsCacheFile="$markdownCache/$cleanToken.sh"
+      local markdownCacheFile && markdownCacheFile=$(__documentationFile "$home" "SEE/$cleanToken") || markdownCacheFile=""
+      local settingsCacheFile && settingsCacheFile="$(__functionSettings "$home" "$cleanToken")" || settingsCacheFile=""
       local cacheVerb=""
       if [ -f "$settingsCacheFile" ] && [ -f "$markdownCacheFile" ] && fileIsNewest "$markdownCacheFile" "$settingsCacheFile"; then
         tokenValue="$(cat "$markdownCacheFile")"

@@ -1,0 +1,1 @@
+[awsEnvironmentFromCredentials]({rel}tools/aws.md#awsenvironmentfromcredentials) - Get credentials and output environment variables for AWS authentication"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L169))

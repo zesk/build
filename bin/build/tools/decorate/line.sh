@@ -59,7 +59,7 @@ _consoleLine() {
 # Argument: displayText - String. Optional.  Text to display on the line before the fill bar.
 consoleHeadingLine() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local text cleanText width barText
 

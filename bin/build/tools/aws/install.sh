@@ -8,7 +8,7 @@
 __awsInstall() {
   local handler="$1" && shift
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   if executableExists aws; then
     return 0

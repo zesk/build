@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="oldSuffix - String. Required. Old suffix to look rename from."$'\n'"newSuffix - String. Required. New suffix to rename to."$'\n'"actionVerb - String. Required. Description to output for found files."$'\n'"file ... - String. Required. One or more files to rename, if found, renaming occurs."$'\n'""
 base="file.sh"
@@ -14,7 +14,7 @@ lowerFn="filesrename"
 rawComment="Renames \"\$file0\$oldSuffix\" to \"\$file0\$newSuffix\" if file exists and outputs a message using the actionVerb"$'\n'"If files do not exist, does nothing"$'\n'"Used to move files, temporarily, sometimes and then move back easily."$'\n'"Renames files which have \`oldSuffix\` to then have \`newSuffix\` and output a message using \`actionVerb\`:"$'\n'"Summary: Rename a list of files usually to back them up temporarily"$'\n'"Argument: oldSuffix - String. Required. Old suffix to look rename from."$'\n'"Argument: newSuffix - String. Required. New suffix to rename to."$'\n'"Argument: actionVerb - String. Required. Description to output for found files."$'\n'"Argument: file ... - String. Required. One or more files to rename, if found, renaming occurs."$'\n'"Example:     {fn} \"\" \".\$\$.backup\" hiding etc/app.json etc/config.json"$'\n'"Example:     ..."$'\n'"Example:     {fn} \".\$\$.backup\" \"\" restoring etc/app.json etc/config.json"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="7a68c870255c297437371bfaf0f2d87b4eae10f2"
+sourceHash="7e7132935e7a4026938b5792385f9b35d7bd4f35"
 sourceLine="30"
 summary="Rename a list of files usually to back them up temporarily"$'\n'""
 usage="filesRename oldSuffix newSuffix actionVerb file ..."

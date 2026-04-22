@@ -33,7 +33,7 @@
 __usageTemplate() {
   local handler="_${FUNCNAME[0]}" __saved=("$@")
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ $# -ge 5 ] || throwArgument "$handler" "Requires 5 or more arguments" || return $?
 
   local binName options="$2" delimiter="$3" description="$4" returnCode
@@ -87,7 +87,7 @@ ___usageTemplate() {
 # Argument: labelPrefix - String. Optional. Defaults to blue color text.
 # Argument: valuePrefix - String. Optional. Defaults to red color text.
 __usageGenerator() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine
 
   labelOptionalPrefix=${3-"$(decorate blue --)"}

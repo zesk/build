@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="environmentVariableName - String. Optional. Map this value only. If not specified, all environment variables are mapped."$'\n'"--prefix - String. Optional. Prefix character for tokens, defaults to \`{\`."$'\n'"--suffix - String. Optional. Suffix character for tokens, defaults to \`}\`."$'\n'"--search-filter - Zero or more. Callable. Filter for search tokens. (e.g. \`lowercase\`)"$'\n'"--replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. \`textTrim\`)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="map.sh"
@@ -16,7 +16,7 @@ requires="environmentVariables cat throwEnvironment catchEnvironment"$'\n'"throw
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="mapValue"$'\n'""
 sourceFile="bin/build/tools/map.sh"
-sourceHash="47b2e0d4ee0705157ba8c60aa3bc13f2043e8ca7"
+sourceHash="595efe51c5b190a1402240f2ac82b72d74b894cf"
 sourceLine="160"
 summary="Convert tokens in files to environment variable values"$'\n'""
 usage="mapEnvironment [ environmentVariableName ] [ --prefix ] [ --suffix ] [ --search-filter ] [ --replace-filter ] [ --help ]"

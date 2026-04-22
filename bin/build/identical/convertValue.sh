@@ -20,7 +20,7 @@
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then

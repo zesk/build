@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-13
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="environmentName - EnvironmentVariable. Optional. A required environment variable name"$'\n'"-- - Separator. Optional. Separates requires from optional environment variables"$'\n'"optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name."$'\n'""
 base="environment.sh"
@@ -13,7 +13,7 @@ lowerFn="environmentfileshow"
 rawComment="Display and validate application variables."$'\n'"Return Code: 1 - If any required application variables are blank, the function fails with an environment error"$'\n'"Return Code: 0 - All required application variables are non-blank"$'\n'"Argument: environmentName - EnvironmentVariable. Optional. A required environment variable name"$'\n'"Argument: -- - Separator. Optional. Separates requires from optional environment variables"$'\n'"Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name."$'\n'""$'\n'""
 return_code="1 - If any required application variables are blank, the function fails with an environment error"$'\n'"0 - All required application variables are non-blank"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="f97e7b6e9384e8c9f494f115dacd41e614c5f8fb"
+sourceHash="4fff2500d71b08fe7a68e307aa2911a2c1d0dd6e"
 sourceLine="61"
 summary="Display and validate application variables."
 summaryComputed="true"

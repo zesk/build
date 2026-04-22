@@ -121,7 +121,7 @@ __buildBuild() {
   local start
   start=$(timingStart)
 
-  decorateInitialized || statusMessage decorate info "Color mode is " && catchEnvironment "$handler" consoleConfigureDecorate || return $?
+  decorateInitialized || statusMessage decorate info "Color mode is " && catchReturn "$handler" consoleConfigureDecorate || return $?
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   catchReturn "$handler" packageInstall || return $?

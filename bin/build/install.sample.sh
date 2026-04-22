@@ -106,7 +106,7 @@ _installCheck() {
 # Return Code: 1 - Field was not found or is blank
 # Requires: jq executableExists throwEnvironment printf rm decorate head
 jsonField() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "$jsonFile is not a file" || return $?
@@ -658,11 +658,11 @@ _textVersionSort() {
 # Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Return Code: 2 - Valid is invalid, output reason to stderr
 # Requires: __validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable __validateTypeType
-# Requires: isFunction throwArgument __help decorate
+# Requires: isFunction throwArgument helpArgument decorate
 validate() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code -- "$@"))" || return $?
 
   local handler="$1" && shift
@@ -916,7 +916,7 @@ _urlFetch() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 57
+# IDENTICAL helpArgument 60
 
 # Simple help argument handler.
 #
@@ -933,30 +933,33 @@ _urlFetch() {
 #
 # Example:     # NOT DEFINED handler
 # Example:
-# Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+# Example:     helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 # Example:     # Argument 1 absolutely exists
-# Example:     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 # Example:
 # Example:     # DEFINED handler
 # Example:
 # Example:     local handler="_${FUNCNAME[0]}"
-# Example:     __help "$handler" "$@" || return 0
-# Example:     [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
-# Example:     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+# Example:     helpArgument "$handler" "$@" || return 0
+# Example:     [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
+# Example:     [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 # Example:
 # Example:     # Blank Arguments for help
-# Example:     [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-# Example:     [ $# -gt 0 ] || __help "$handler" --help || return 0
+# Example:     [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
+# Example:     [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
 #
-# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
-# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
+# DEPRECATED-Example: [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return $?
+# DEPRECATED-Example: [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return $?
 #
-# Requires: throwArgument bashDocumentation ___help
-__help() {
-  [ $# -gt 0 ] || ! ___help 0 || return 0
+# Requires: throwArgument bashDocumentation _helpArgument
+# Return code: 0 - Help was not found or displayed
+# Return code: 1 - Help was found and displayed
+# Return code: 2 - Argument error
+helpArgument() {
+  [ $# -gt 0 ] || ! _helpArgument 0 || return 0
   local flag="--help"
   local handler="${1-}" && shift
   if [ "$handler" = "--only" ]; then
@@ -970,7 +973,7 @@ __help() {
   done
   return 0
 }
-___help() {
+_helpArgument() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1020,28 +1023,45 @@ __usageMessage() {
   fi
 }
 
-# IDENTICAL __functionSettings 22
+# IDENTICAL __documentationFile 24
+
+# Summary: Load cached documentation files
+# Argument: home - Directory. BUILD_HOME
+# Argument: functionName - String. Function to fetch documentation file
+# Argument: generatePath - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.
+# Argument: extension - String. File extension. Optional. Default to `md`.
+# Environment: BUILD_DOCUMENTATION_PATH
+# Requires:
+__documentationFile() {
+  local home="$1" && shift
+  local functionName="$1" && shift
+  local generatePath=false && if [ $# -gt 0 ]; then generatePath="$1" && shift; fi
+  local extension="md" && if [ $# -gt 0 ]; then extension="$1" && shift; fi
+
+  export BUILD_DOCUMENTATION_PATH
+  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
+  local docFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
+    docFile="$home/${path%/}/$functionName.$extension"
+    $generatePath || [ -f "$docFile" ] || continue
+    printf "%s\n" "$docFile"
+    return 0
+  done
+  return 1
+}
+
+# IDENTICAL __functionSettings 13
 
 # Summary: Load cached function comment values
 # Argument: home - Directory. BUILD_HOME
 # Argument: functionName - String. Function to fetch settings for
-# Argument: justPath - Boolean. Optional. Pass in `true` to just fetch the file path.
+# Argument: generatePath - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.
 # Environment: BUILD_DOCUMENTATION_PATH
-# Requires:
+# Requires: __documentationFile
 __functionSettings() {
   local home="$1" && shift
   local functionName="$1" && shift
-  local justPath=false && [ $# -eq 0 ] || justPath="$1"
-
-  export BUILD_DOCUMENTATION_PATH
-  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
-  local settingsFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
-    settingsFile="$home/${path%/}/$functionName.sh"
-    $justPath || [ -f "$settingsFile" ] || continue
-    printf "%s\n" "$settingsFile"
-    return 0
-  done
-  return 1
+  local generatePath=false && if [ $# -gt 0 ]; then generatePath="$1" && shift; fi
+  __documentationFile "$home" "$functionName" "$generatePath" "sh"
 }
 
 # IDENTICAL __bashDocumentationCached 30
@@ -1085,11 +1105,11 @@ __bashDocumentationCached() {
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - String. Optional. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached __usageMessageStyle __usageMessage
+# Requires: bashFunctionComment decorate read printf returnCodeString helpArgument bashDocumentation __bashDocumentationCached __usageMessageStyle __usageMessage
 bashSimpleDocumentation() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" && shift 3
 
   [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
@@ -1118,7 +1138,7 @@ _bashSimpleDocumentation() {
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
@@ -1146,12 +1166,12 @@ _bashFinalComment() {
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: grep cut fileReverseLines __help
+# Requires: grep cut fileReverseLines helpArgument
 # Requires: bashDocumentation
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   grep -m 1 -B $maxLines -e "^\s*$functionName() {" "$source" | bashFinalComment
   # Explained:
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)
@@ -1172,7 +1192,7 @@ _bashFunctionComment() {
 # Credits: Eric Pement
 # Depends: awk
 fileReverseLines() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 _fileReverseLines() {
@@ -1188,10 +1208,10 @@ _fileReverseLines() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - File. Required. One or more files to `realpath`.
-# Requires: executableExists realpath __help bashDocumentation returnArgument
+# Requires: executableExists realpath helpArgument bashDocumentation returnArgument
 fileRealPath() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
   if executableExists realpath; then
     catchReturn "$handler" realpath "$@" || return $?
   else
@@ -1222,12 +1242,12 @@ _fileRealPath() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Optional. Any additional arguments are passed through.
-# Requires: mktemp __help catchEnvironment bashDocumentation
+# Requires: mktemp helpArgument catchEnvironment bashDocumentation
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
 fileTemporaryName() {
   local handler="_${FUNCNAME[0]}"
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   handler="$1" && shift
   local debug=",${BUILD_DEBUG-},"
   if [ "${debug#*,temp,}" != "$debug" ]; then
@@ -1292,18 +1312,18 @@ _executableExists() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL isCallable 46
+# IDENTICAL isCallable 43
 
 # Test if all arguments are callable as a command
 # Argument: string - EmptyString. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command
-# Requires: throwArgument __help isExecutable isFunction
+# Requires: throwArgument helpArgument isExecutable isFunction
 isCallable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if ! isFunction "$1" && ! isExecutable "$1"; then
     return 1
   fi
@@ -1318,21 +1338,18 @@ _isCallable() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
-# Requires: throwArgument  __help catchEnvironment command
+# Requires: throwArgument  helpArgument type
+# Environment: PATH
 isExecutable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
-  if [ -f "$1" ]; then
-    # Docker has an issue when you mount a local volume inside a container
-    # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
-    # Report *correctly* when you use `ls`.
-    local mode && mode=$(catchEnvironment "$handler" ls -l "$1") || return $?
-    mode="${mode%% *}" && [ "${mode#*x}" != "$mode" ]
+  if [ "${1#/}" != "$1" ] && [ -f "$1" ]; then
+    [ -x "$1" ]
   else
-    [ -n "$(which "$1")" ]
+    muzzle type -P "$1"
   fi
 }
 _isExecutable() {
@@ -1349,12 +1366,12 @@ _isExecutable() {
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: catchArgument isUnsignedInteger bashDocumentation __help
+# Requires: catchArgument isUnsignedInteger bashDocumentation helpArgument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
     return 0
@@ -1373,12 +1390,12 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: catchArgument isUnsignedInteger bashDocumentation type __help
+# Requires: catchArgument isUnsignedInteger bashDocumentation type helpArgument
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
@@ -1397,10 +1414,10 @@ _isFunction() {
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors.
-# Requires: isPositiveInteger tput __help convertValue
+# Requires: isPositiveInteger tput helpArgument convertValue
 consoleHasColors() {
   # --help is only argument allowed
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   # Values allowed for this global are true and false
   # Important: DO NOT use buildEnvironmentLoad BUILD_COLORS TERM
@@ -1447,9 +1464,9 @@ __decorate() {
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: __help convertValue
+# Requires: helpArgument convertValue
 decorations() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
     underline no-underline bold no-bold \
     black black-contrast blue cyan green magenta orange red white yellow \
@@ -1469,11 +1486,11 @@ _decorations() {
 # Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
 # Requires: isFunction catchArgument catchReturn awk
-# Requires: bashDocumentation __help
+# Requires: bashDocumentation helpArgument
 # Requires: _decorateInitialize __decorateStyle __decorate executeInputSupport
 decorate() {
   local handler="_${FUNCNAME[0]}" what="${1-}"
-  [ "$what" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "$what" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
   local style && shift && catchReturn "$handler" _decorateInitialize || return $?
   if ! style=$(__decorateStyle "$what"); then
@@ -1505,9 +1522,9 @@ _decorate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # shellcheck disable=SC2120
-# Requires: __help
+# Requires: helpArgument
 decorateInitialized() {
-  [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE
   [ -n "${__BUILD_DECORATE-}" ]
 }
@@ -1818,11 +1835,11 @@ _executeInputSupport() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Integer. Required. Exit code to return.
 # Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help
+# Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument helpArgument
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
     throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
@@ -1851,7 +1868,7 @@ _returnClean() {
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then
@@ -1973,7 +1990,7 @@ catchReturn() {
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" execArguments=()
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
   shift
   # __IDENTICAL__ __checkCode__handler 1
   isUnsignedInteger "$code" || throwArgument "$__handler" "Not unsigned integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?

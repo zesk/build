@@ -85,7 +85,7 @@ buildFunctionMarkdownDocumentation() {
   catchReturn "$handler" bashDocumentationMarkdown "$fn" >"$targetFile" || return $?
 }
 
-# Generate `SEE_{fn}.md`
+# Generate `SEE/{fn}.md`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --check - Flag. Optional. Check to see if an update is needed
@@ -120,7 +120,7 @@ buildFunctionSeeTemplate() {
       environmentValueWrite "documentationPath" "$documentationPath" >>"$settingsFile"
     fi
   fi
-  local targetFile && targetFile="$(dirname "$settingsFile")/SEE_${fn}.md"
+  local targetFile && targetFile="$(__documentationFile "$home" "SEE/$fn" true)"
   local template && template=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
   if $checkFlag; then
     if [ -f "$targetFile" ] && [ -f "$documentationPath" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile" "$documentationPath"; then
@@ -133,8 +133,10 @@ buildFunctionSeeTemplate() {
     catchReturn "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
     local functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     catchReturn "$handler" environmentFileLoad "$settingsFile" || return $?
+    documentationPath="${documentationPath#documentation/source/}"
     local sourceLink && sourceLink="$(catchReturn "$handler" mapEnvironment <<<"$functionLinkPattern")" || return $?
-    sourceLink="$sourceLink" catchReturn "$handler" mapEnvironment <"$template" >"$targetFile" || return $?
+    fileDirectoryRequire --handler "$handler" "$targetFile" || return $?
+    documentationPath="$documentationPath" sourceLink="$sourceLink" catchReturn "$handler" mapEnvironment <"$template" >"$targetFile" || return $?
   ) || return $?
 }
 _buildFunctionSeeTemplate() {

@@ -1,1 +1,0 @@
-[assertFileContains]({rel}documentation/source/tools/assert.md#assertfilecontains) - Assert a file contains one or more strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1000))

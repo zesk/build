@@ -59,7 +59,7 @@ __doEvalCheck() {
 # Check files to ensure `eval`s in code have been checked
 evalCheck() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local fileName
   if [ $# -gt 0 ]; then
     __doEvalCheck "$handler" "$@" || return $?

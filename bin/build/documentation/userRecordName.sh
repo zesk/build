@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""
 base="user.sh"
@@ -13,7 +13,7 @@ lowerFn="userrecordname"
 rawComment="Summary: Quick user database query of the user name"$'\n'"Look user up, output user name"$'\n'"stdout: the user name"$'\n'"File: /etc/passwd"$'\n'"Argument: user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"Argument: database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/user.sh"
-sourceHash="97b162de483a7271940c92af88d7646f5e426e66"
+sourceHash="748c273a0fe671ed2423893475bacc1706b94267"
 sourceLine="58"
 stdout="the user name"$'\n'""
 summary="Quick user database query of the user name"$'\n'""

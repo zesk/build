@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--local - Flag. Optional. Local yesterday"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="date.sh"
@@ -16,7 +16,7 @@ requires="throwArgument date convertValue dateFromTimestamp bashDocumentation"$'
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 rotated=""
 sourceFile="bin/build/tools/date.sh"
-sourceHash="f5a2a19f38f552df28e9aae96fa09336f3cf3753"
+sourceHash="8b6a5808143207c1b2329179a4d73d95ea46d8cc"
 sourceLine="119"
 summary="Yesterday's date (UTC time)"$'\n'""
 usage="dateYesterday [ --local ] [ --help ]"

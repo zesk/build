@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="text - String. Required. List of color names in a colon separated list."$'\n'""
 base="prompt.sh"
@@ -14,7 +14,7 @@ rawComment="Given a list of color names, generate the color codes in a colon sep
 requires="decorations read inArray decorate listJoin"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="a4bf439a67dd7eaa043b418b6fb13ff52fae8535"
+sourceHash="b61c792ae723865297730f9775c4f0b5fcba937d"
 sourceLine="196"
 stdout="Outputs color *codes* separated by colons."$'\n'""
 summary="Given a list of color names, generate the color codes"

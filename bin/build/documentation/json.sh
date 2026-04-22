@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="json.sh"
@@ -14,7 +14,7 @@ lowerFn="json"
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Summary: JSON pretty"$'\n'"Format something neatly as JSON"$'\n'"Example:     json < inputFile > outputFile"$'\n'"stdin: JSONFile"$'\n'"stdout: JSONFile pretty formatted"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/json.sh"
-sourceHash="e7e9bbb5a5c883cd136dbe34ac5ccb4394f94a5f"
+sourceHash="e4fa7a237368db1e6a6969ecf3a1c6f05241d727"
 sourceLine="258"
 stdin="JSONFile"$'\n'""
 stdout="JSONFile pretty formatted"$'\n'""

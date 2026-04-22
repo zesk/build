@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="contextStart - Directory. Required. Context in which the command should run."$'\n'"command - Callable. Required. Command to run in new context."$'\n'"... - Arguments. Optional. Arguments to the \`command\`."$'\n'""
 base="build.sh"
@@ -13,7 +13,7 @@ lowerFn="buildenvironmentcontext"
 rawComment="Run a command and ensure the build tools context matches the current project"$'\n'"Argument: contextStart - Directory. Required. Context in which the command should run."$'\n'"Argument: command - Callable. Required. Command to run in new context."$'\n'"Argument: ... - Arguments. Optional. Arguments to the \`command\`."$'\n'"Avoid infinite loops here, call down."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceHash="36d6620f5e7ef50da4732294ca63c0ba7d07b1f4"
+sourceHash="01d4aa56fc82af7cb49474878512de1aabd62c60"
 sourceLine="676"
 summary="Run a command and ensure the build tools context matches"
 summaryComputed="true"

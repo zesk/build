@@ -95,28 +95,45 @@ __usageMessage() {
   fi
 }
 
-# IDENTICAL __functionSettings 22
+# IDENTICAL __documentationFile 24
+
+# Summary: Load cached documentation files
+# Argument: home - Directory. BUILD_HOME
+# Argument: functionName - String. Function to fetch documentation file
+# Argument: generatePath - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.
+# Argument: extension - String. File extension. Optional. Default to `md`.
+# Environment: BUILD_DOCUMENTATION_PATH
+# Requires:
+__documentationFile() {
+  local home="$1" && shift
+  local functionName="$1" && shift
+  local generatePath=false && if [ $# -gt 0 ]; then generatePath="$1" && shift; fi
+  local extension="md" && if [ $# -gt 0 ]; then extension="$1" && shift; fi
+
+  export BUILD_DOCUMENTATION_PATH
+  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
+  local docFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
+    docFile="$home/${path%/}/$functionName.$extension"
+    $generatePath || [ -f "$docFile" ] || continue
+    printf "%s\n" "$docFile"
+    return 0
+  done
+  return 1
+}
+
+# IDENTICAL __functionSettings 13
 
 # Summary: Load cached function comment values
 # Argument: home - Directory. BUILD_HOME
 # Argument: functionName - String. Function to fetch settings for
-# Argument: justPath - Boolean. Optional. Pass in `true` to just fetch the file path.
+# Argument: generatePath - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.
 # Environment: BUILD_DOCUMENTATION_PATH
-# Requires:
+# Requires: __documentationFile
 __functionSettings() {
   local home="$1" && shift
   local functionName="$1" && shift
-  local justPath=false && [ $# -eq 0 ] || justPath="$1"
-
-  export BUILD_DOCUMENTATION_PATH
-  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
-  local settingsFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
-    settingsFile="$home/${path%/}/$functionName.sh"
-    $justPath || [ -f "$settingsFile" ] || continue
-    printf "%s\n" "$settingsFile"
-    return 0
-  done
-  return 1
+  local generatePath=false && if [ $# -gt 0 ]; then generatePath="$1" && shift; fi
+  __documentationFile "$home" "$functionName" "$generatePath" "sh"
 }
 
 # IDENTICAL __bashDocumentationCached 30
@@ -158,11 +175,11 @@ __bashDocumentationCached() {
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - String. Optional. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf returnCodeString __help bashDocumentation __bashDocumentationCached
+# Requires: bashFunctionComment decorate read printf returnCodeString helpArgument bashDocumentation __bashDocumentationCached
 bashSimpleDocumentation() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" && shift 3
 
   [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2
@@ -196,7 +213,7 @@ _bashSimpleDocumentation() {
 executableRequire() {
   # IDENTICAL usageFunctionHeader 6
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local usageFunction="${1-}" && shift
   if [ "$(type -t "$usageFunction")" != "function" ]; then
     catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?
@@ -222,7 +239,7 @@ _executableRequire() {
 environmentRequire() {
   # IDENTICAL usageFunctionHeader 6
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local usageFunction="${1-}" && shift
   if [ "$(type -t "$usageFunction")" != "function" ]; then
     catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?

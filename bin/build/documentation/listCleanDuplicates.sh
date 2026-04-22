@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="separator - String. Required. List separator character."$'\n'"listText - String. Required. List to clean duplicates."$'\n'"--removed - Flag. Optional. Show removed items instead of the new list."$'\n'"--test testFunction - Function. Optional. Run this function on each item in the list and if the return code is non-zero, then remove it from the list."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="list.sh"
@@ -13,7 +13,7 @@ lowerFn="listcleanduplicates"
 rawComment="Removes duplicates from a list and maintains ordering."$'\n'"Argument: separator - String. Required. List separator character."$'\n'"Argument: listText - String. Required. List to clean duplicates."$'\n'"Argument: --removed - Flag. Optional. Show removed items instead of the new list."$'\n'"Argument: --test testFunction - Function. Optional. Run this function on each item in the list and if the return code is non-zero, then remove it from the list."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/list.sh"
-sourceHash="41d98a302feb190799f47d4570b57b5beb5b3303"
+sourceHash="3f580df9b039d92b40c8f1a751e6a2027746278d"
 sourceLine="169"
 summary="Removes duplicates from a list and maintains ordering."
 summaryComputed="true"

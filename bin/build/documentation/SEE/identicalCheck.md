@@ -1,0 +1,1 @@
+[identicalCheck]({rel}tools/identical.md#identicalcheck) - When, for whatever reason, you need code to match between ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L84))

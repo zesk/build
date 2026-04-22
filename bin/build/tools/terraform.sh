@@ -15,7 +15,7 @@
 # Argument: --help - Flag. Optional. Display this help.
 aptKeyAddHashicorp() {
   local handler="_${FUNCNAME[0]}"
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
 }
 _aptKeyAddHashicorp() {
@@ -32,7 +32,7 @@ _aptKeyAddHashicorp() {
 # Return Code: 0 - All good to install terraform
 aptKeyRemoveHashicorp() {
   local handler="_${FUNCNAME[0]}"
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" aptKeyRemove hashicorp "$@" || return $?
 }
 _aptKeyRemoveHashicorp() {
@@ -46,7 +46,7 @@ _aptKeyRemoveHashicorp() {
 terraformInstall() {
   local handler="_${FUNCNAME[0]}" binary="terraform"
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   ! executableExists "$binary" || return 0
   if aptIsInstalled; then
     catchReturn "$handler" packageInstall gnupg software-properties-common curl figlet || return $?
@@ -66,7 +66,7 @@ _terraformInstall() {
 terraformUninstall() {
   local handler="_${FUNCNAME[0]}"
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   executableExists terraform || return 0
   catchReturn "$handler" packageWhichUninstall terraform terraform "$@" || return $?
   catchReturn "$handler" aptKeyRemoveHashicorp || return $?

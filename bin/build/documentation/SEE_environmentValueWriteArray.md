@@ -1,1 +1,0 @@
-[environmentValueWriteArray]({rel}environment.md#environmentvaluewritearray) - Write an array value as NAME=([0]="a" [1]="b" [2]="c") ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))

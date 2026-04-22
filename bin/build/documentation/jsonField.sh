@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"handler - Function. Required. Error handler."$'\n'"jsonFile - File. Required. A JSON file to parse"$'\n'"... - Arguments. Optional. Passed directly to jq"$'\n'""
 base="json.sh"
@@ -14,7 +14,7 @@ rawComment="Fetch a non-blank field from a JSON file with error handling"$'\n'"A
 requires="jq executableExists throwEnvironment printf rm decorate head"$'\n'""
 return_code="0 - Field was found and was non-blank"$'\n'"1 - Field was not found or is blank"$'\n'""
 sourceFile="bin/build/tools/json.sh"
-sourceHash="e7e9bbb5a5c883cd136dbe34ac5ccb4394f94a5f"
+sourceHash="e4fa7a237368db1e6a6969ecf3a1c6f05241d727"
 sourceLine="23"
 stderr="error messages"$'\n'""
 stdout="selected field"$'\n'""

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="backgroundColor - String. Optional. Background color."$'\n'""
 base="console.sh"
@@ -13,7 +13,7 @@ lowerFn="consoleconfigurecolormode"
 rawComment="Argument: backgroundColor - String. Optional. Background color."$'\n'"Print the suggested color mode for the current environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/console.sh"
-sourceHash="1eccb7f32254d9dddecdf43da8654cc9ad7cdbc1"
+sourceHash="82d47fdc5820e57d7aeb7f061bb09ecb16c35cd7"
 sourceLine="110"
 summary="Print the suggested color mode for the current environment"
 summaryComputed="true"

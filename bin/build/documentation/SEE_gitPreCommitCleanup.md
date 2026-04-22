@@ -1,1 +1,0 @@
-[gitPreCommitCleanup]({rel}documentation/source/tools/git.md#gitprecommitcleanup) - Clean up after our pre-commit (deletes cache directory) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L998))

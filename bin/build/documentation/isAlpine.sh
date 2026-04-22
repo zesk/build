@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="apk.sh"
@@ -13,7 +13,7 @@ lowerFn="isalpine"
 rawComment="Is this an Alpine system?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/apk.sh"
-sourceHash="0fdfcdc22ffc36f534c87d4fb2d8c20f3da04fa4"
+sourceHash="5bdc3f7dc0004f26659cab9392460974cb8a949b"
 sourceLine="29"
 summary="Is this an Alpine system?"
 summaryComputed="true"

@@ -20,7 +20,7 @@ __mockEnvironmentEmpty() {
 __mockEnvironmentStart() {
   local handler="$1" && shift
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
     local argument="${1-}" && shift
     __mockVariableStart "$argument" "${1-}"
@@ -79,13 +79,13 @@ __mockVariableStop() {
 
 __mockConsoleAnimationStart() {
   local handler="$1" && shift
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local flag && flag=$(validate "$handler" Boolean "flag" "${1-}") || return $?
   __mockVariableStart CI "$(booleanChoose "$flag" "" "testCI")" || return $?
 }
 
 __mockConsoleAnimationStop() {
   local handler="$1" && shift
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   __mockVariableStop CI
 }

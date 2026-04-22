@@ -33,7 +33,7 @@ quoteBashString() {
 # Without arguments, displays help.
 quoteGrepPattern() {
   # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   local value="${1-}"
   value="${value//\\/\\\\}"
   #value="${value//\"/\\\"}"
@@ -65,7 +65,7 @@ _quoteGrepPattern() {
 # Without arguments, displays help.
 escapeDoubleQuotes() {
   # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   while [ $# -gt 0 ]; do
     printf "%s\n" "${1//\"/\\\"}"
     shift
@@ -105,7 +105,7 @@ _escapeBash() {
 # Example:     {fn} "Now I can't not include this in a bash string."
 escapeSingleQuotes() {
   # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   printf "%s\n" "$@" | sed "s/'/\\\'/g"
 }
 _escapeSingleQuotes() {
@@ -118,7 +118,7 @@ _escapeSingleQuotes() {
 # Argument: quote - String. Required. Must match beginning and end of string.
 # Argument: value - String. Required. Value to unquote.
 stringUnquote() {
-  [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local quote="$1" value="$2"
   if [ "$value" != "${value#"$quote"}" ] && [ "$value" != "${value%"$quote"}" ]; then
     value="${value#"$quote"}"

@@ -35,7 +35,7 @@ _characterClassReport() {
 stringValidate() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   local text="${1-}" && shift || throwArgument "$handler" "missing text" || return $?
 
@@ -62,7 +62,7 @@ characterToInteger() {
 
   index=0
   while [ $# -gt 0 ]; do
-    [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+    [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     index=$((index + 1))
     [ "${#1}" = 1 ] || throwArgument "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
     LC_CTYPE=C printf '%d' "'$1" || throwEnvironment "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
@@ -83,7 +83,7 @@ _characterToInteger() {
 # Argument: --help - Flag. Optional. Display this help.
 isCharacterClasses() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   local character="${1-}" class
 
@@ -152,7 +152,7 @@ _characterFromInteger() {
 # Argument: character ... - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter.
 characterClasses() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if [ $# -eq 0 ]; then
     printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
   else
@@ -199,7 +199,7 @@ _characterClasses() {
 # Argument: --help - Flag. Optional. Display this help.
 isCharacterClass() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local class="${1-}"
   case "$class" in alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;; *) throwArgument "$handler" "Invalid class: $class" || return $? ;; esac

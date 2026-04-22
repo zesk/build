@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="script - File. Required. Bash script to fetch requires tokens from."$'\n'""
 base="bash.sh"
@@ -13,7 +13,7 @@ lowerFn="bashgetrequires"
 rawComment="Argument: script - File. Required. Bash script to fetch requires tokens from."$'\n'"Gets a list of the \`Requires:\` comments in a bash file"$'\n'"Returns a unique list of tokens"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
+sourceHash="ce103c0a855c85ae7ea74c3b00899b56536cfe79"
 sourceLine="44"
 summary="Gets a list of the \`Requires:\` comments in a bash"
 summaryComputed="true"

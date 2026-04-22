@@ -64,7 +64,7 @@ _installInstallBuild() {
 # Argument: --help - Flag. Optional. Display this help.
 buildDeprecatedFunctions() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help --only "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument --only "$handler" "$@" || return 0
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   {
     catchReturn "$handler" bashListFunctions "$home/bin/build/tools/deprecated.sh" || return $?
@@ -134,7 +134,7 @@ _buildFunctions() {
 # Argument: --help - Flag. Optional. Display this help.
 buildCacheDirectory() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local suffix
   suffix="$(printf "%s/" ".build" "$@")"
   catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
@@ -152,7 +152,7 @@ _buildCacheDirectory() {
 buildHome() {
   local handler="_${FUNCNAME[0]}"
   export BUILD_HOME
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   if [ -z "${BUILD_HOME-}" ]; then
     local homeEnv="${BASH_SOURCE[0]%/*}/../env/BUILD_HOME.sh"
     if [ -f "$homeEnv" ]; then
@@ -190,11 +190,11 @@ _buildEnvironmentPath() {
 # Output the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: convertValue _buildEnvironmentPath find sort read __help catchEnvironment
+# Requires: convertValue _buildEnvironmentPath find sort read helpArgument catchEnvironment
 buildEnvironmentNames() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   (
     IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
@@ -676,7 +676,7 @@ _buildQuietLog() {
 buildEnvironmentContext() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help "$handler" "$@" || return 0
+  [ $# -eq 0 ] || helpArgument "$handler" "$@" || return 0
 
   local start
   start="$(validate "$handler" Directory "contextStart" "${1-}")" && shift || return $?

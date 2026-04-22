@@ -1,1 +1,0 @@
-[daemontoolsManager]({rel}documentation/source/tools/daemontools.md#daemontoolsmanager) - Runs a daemon which monitors files and operates on services. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L476))

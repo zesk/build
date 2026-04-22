@@ -90,7 +90,7 @@ _awsCredentialsFile() {
 #
 awsIsKeyUpToDate() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   export AWS_ACCESS_KEY_DATE
   catchReturn "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
   decorate expired "${AWS_ACCESS_KEY_DATE-}" "$@"
@@ -116,7 +116,7 @@ _awsIsKeyUpToDate() {
 #
 awsHasEnvironment() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
   catchReturn "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
@@ -136,7 +136,7 @@ awsProfilesList() {
   local handler="_${FUNCNAME[0]}"
   local file
 
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   file=$(catchReturn "$handler" awsCredentialsFile --path) || return $?
   [ -f "$file" ] || return 0
   grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :
@@ -252,7 +252,7 @@ _awsCredentialsRemove() {
 awsCredentialsFromEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   export AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   catchReturn "$handler" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
   awsHasEnvironment || throwEnvironment "$handler" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
@@ -372,7 +372,7 @@ _awsRegionValid() {
 # Without arguments, displays help.
 isS3URL() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
   while [ $# -gt 0 ]; do
     [ "$(urlParseItem scheme "$1")" = "s3" ] || return 1
     shift

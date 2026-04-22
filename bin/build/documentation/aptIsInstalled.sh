@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="apt.sh"
@@ -13,7 +13,7 @@ lowerFn="aptisinstalled"
 rawComment="Is apt-get installed?"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/apt.sh"
-sourceHash="428073076dbd9525b6deeebe2167f1f864af7e52"
+sourceHash="88cf0bf4880cbbb00ac4ecc16ac7dac0654df552"
 sourceLine="25"
 summary="Is apt-get installed?"
 summaryComputed="true"

@@ -22,7 +22,7 @@
 __githubAPI() {
   local handler="$1" query="$2" suffix="${3-}" && shift 3
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ $# -gt 0 ] || throwArgument "$handler" "projectName required" || return $?
 
   if ! packageWhich curl curl; then

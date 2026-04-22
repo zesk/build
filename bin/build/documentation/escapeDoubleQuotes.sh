@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="text - String. Optional. Text to quote"$'\n'""
 base="quote.sh"
@@ -15,7 +15,7 @@ output="Single quotes are prefixed with a backslash"$'\n'""
 rawComment="Quote strings for inclusion in shell quoted strings"$'\n'"Argument: text - String. Optional. Text to quote"$'\n'"Output: Single quotes are prefixed with a backslash"$'\n'"Example:     {fn} \"Now I can't not include this in a bash string.\""$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
-sourceHash="ea3a27e64582997f04005c71fc71250ff1ba01c0"
+sourceHash="3c095cfee529b43ebd935ef3549c279a5af1427c"
 sourceLine="66"
 summary="Quote strings for inclusion in shell quoted strings"
 summaryComputed="true"

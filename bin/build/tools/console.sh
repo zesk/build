@@ -93,7 +93,7 @@ _consoleGetColor() {
 # Return Code: 0 - Success
 # Return Code: 1 - A problem occurred with `consoleGetColor`
 consoleBrightness() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   if ! colorBrightness < <(consoleGetColor "$@") 2>/dev/null; then
     return 1
   fi
@@ -108,7 +108,7 @@ _consoleBrightness() {
 # Print the suggested color mode for the current environment
 #
 consoleConfigureColorMode() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local colorMode="light" color="${1-}" brightness
   if [ -n "$color" ]; then
     brightness=$(colorParse <<<"$color" | colorBrightness)
@@ -141,7 +141,7 @@ _consoleConfigureColorMode() {
 # shellcheck disable=SC2120
 consoleConfigureDecorate() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   local mode && mode=$(catchReturn "$handler" consoleConfigureColorMode "$@") || return $?
   case "$mode" in
@@ -159,7 +159,7 @@ _consoleConfigureDecorate() {
 # Set the title of the window for the console
 consoleSetTitle() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {
@@ -171,7 +171,7 @@ _consoleSetTitle() {
 # Argument: None
 consoleDefaultTitle() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ -t 0 ] || throwEnvironment "$handler" "stdin is not a terminal" || return $?
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
@@ -189,7 +189,7 @@ _consoleDefaultTitle() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 consoleLink() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local link="$1" text="${2-$1}" OSC="\e]" ST="\e\\"
   local OSC8="${OSC}8;;"
   printf -- "${OSC8}%s${ST}%s${OSC8}${ST}" "$link" "$text"
@@ -203,7 +203,7 @@ _consoleLink() {
 # Unfortunately there's no way to test for this feature currently
 consoleLinksSupported() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   export HOSTNAME
   [ -n "${HOSTNAME-}" ] || return 1
   consoleHasAnimation || return 1
@@ -224,7 +224,7 @@ _consoleLinksSupported() {
 # Argument: text - String. Optional. Text to output linked to file.
 consoleFileLink() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   export HOSTNAME HOME
   if ! consoleLinksSupported; then
     printf -- "%s\n" "$(decoratePath "$@")"

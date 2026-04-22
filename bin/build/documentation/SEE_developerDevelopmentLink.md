@@ -1,1 +1,0 @@
-[developerDevelopmentLink]({rel}documentation/source/tools/developer.md#developerdevelopmentlink) - Link a current library with another version being developed nearby ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L221))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-14
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--documentation documentationPath - Directory. Optional. Path to documentation root. Default is \`./documentation/source\`."$'\n'"--source sourcePath - Directory. Optional. Path to source environment files. Defaults to \`\$(buildHome)/bin/env\` if not specified."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -14,7 +14,7 @@ rawComment="Build documentation for ./bin/env (or bin/build/env) directory."$'\n
 return_code="0 - Success"$'\n'"1 - Issue with environment"$'\n'"2 - Argument error"$'\n'""
 see="documentationBuild"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="053022e849a1557d427212d89dc2881e59289681"
+sourceHash="d5058bbc6d4f089e430d7b7f6f0fa84aeacc3113"
 sourceLine="148"
 summary="Build documentation for ./bin/env (or bin/build/env) directory."
 summaryComputed="true"

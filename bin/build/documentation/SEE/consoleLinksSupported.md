@@ -1,0 +1,1 @@
+[consoleLinksSupported]({rel}tools/console.md#consolelinkssupported) - Are console links (likely) supported? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L204))

@@ -4,8 +4,6 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-## Date Functions
-
 {dateAdd}
 
 {dateValid}
@@ -18,7 +16,7 @@
 
 {dateWithinDays}
 
-# Now Relative
+## Now Relative
 
 {dateToday}
 

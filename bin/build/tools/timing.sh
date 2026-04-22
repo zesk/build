@@ -53,7 +53,7 @@ _timing() {
 # Requires: __timestamp returnEnvironment validate date
 timingElapsed() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local start && start=$(validate "$handler" UnsignedInteger timingOffset "${1-}") && shift || return $?
   printf "%d\n" "$(($(__timestamp) - start))"
 }
@@ -75,7 +75,7 @@ _timingElapsed() {
 # Should never fail, unless date is not installed
 timingStart() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   __timestamp
 }
 _timingStart() {
@@ -90,7 +90,7 @@ _timingStart() {
 # Argument: delta - Integer. Milliseconds
 timingFormat() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
     local delta="$1"
     if isUnsignedInteger "$delta"; then

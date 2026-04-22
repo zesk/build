@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="core.sh"
@@ -10,11 +10,11 @@ fn="decorations"
 foundNames=([0]="argument" [1]="requires")
 line="66"
 lowerFn="decorations"
-rawComment="Output a list of build-in decoration styles, one per line"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: __help convertValue"$'\n'""$'\n'""
-requires="__help convertValue"$'\n'""
+rawComment="Output a list of build-in decoration styles, one per line"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: helpArgument convertValue"$'\n'""$'\n'""
+requires="helpArgument convertValue"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="92d19ecf3dc210cf2cf1100feb0f74f4d25f6447"
+sourceHash="4288b1b5dd74b1f4240bb03c3728be0a51c51aa6"
 sourceLine="66"
 summary="Output a list of build-in decoration styles, one per line"
 summaryComputed="true"

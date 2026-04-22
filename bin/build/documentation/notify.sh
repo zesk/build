@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"--title title - String. Optional. Sets the title for the notification."$'\n'"--message message - String. Optional. Display this message (alias is \`-m\`)"$'\n'"--fail failMessage - String. Optional. Display this message in console and dialog upon failure."$'\n'"--sound soundName - String. Optional. Sets the sound played for the notification."$'\n'"--fail-title title - String. Optional. Sets the title for the notification if the binary fails."$'\n'"--fail-sound soundName - String. Optional. Sets the sound played for the notification if the binary fails."$'\n'""
 base="interactive.sh"
@@ -13,7 +13,7 @@ lowerFn="notify"
 rawComment="Notify after running a binary. Uses the \`notify\` hook with some handy parameters which are inherited"$'\n'"between \"success\" and \"failure\":"$'\n'"- Upon success uses: \`--message\` \`--title\` \`--sound\`"$'\n'"- Upon failure uses: \`--fail-message\` \`--fail-title\` \`--fail-sound\`"$'\n'"If a value is not specified for failure, it will use the \`success\` value."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --verbose - Flag. Optional. Be verbose."$'\n'"Argument: --title title - String. Optional. Sets the title for the notification."$'\n'"Argument: --message message - String. Optional. Display this message (alias is \`-m\`)"$'\n'"Argument: --fail failMessage - String. Optional. Display this message in console and dialog upon failure."$'\n'"Argument: --sound soundName - String. Optional. Sets the sound played for the notification."$'\n'"Argument: --fail-title title - String. Optional. Sets the title for the notification if the binary fails."$'\n'"Argument: --fail-sound soundName - String. Optional. Sets the sound played for the notification if the binary fails."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
+sourceHash="378aca49779b1c4a5f70a0c419c2a078d3e0d369"
 sourceLine="137"
 summary="Notify after running a binary. Uses the \`notify\` hook with"
 summaryComputed="true"

@@ -1,1 +1,0 @@
-[consoleDefaultTitle]({rel}documentation/source/tools/console.md#consoledefaulttitle) - Set the title of the window for the console to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L172))

@@ -11,7 +11,7 @@
 # Argument: number - Float. Optional. Floating point number to convert to integer.
 # Convert float to nearest integer (up or down)
 floatRound() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     LC_ALL=C printf '%.0f' "$1"
     shift || :
@@ -25,7 +25,7 @@ _floatRound() {
 # Argument: number - Float. Optional. Floating point number to convert to integer.
 # Convert float to an integer, round down always
 floatTruncate() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     LC_ALL=C printf '%d\n' "${1%.*}"
     shift || :

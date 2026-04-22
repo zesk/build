@@ -206,9 +206,9 @@ Most functions handle help within their argument spinner which processes incomin
         --help) "$handler" 0 && return $? || return $? ;;
     ...
 
-To add `--help` support for simple functions, use the `__help` function:
+To add `--help` support for simple functions, use the `helpArgument` function:
 
-    [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+    [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return 0
 
 The above will add `myCoolScript --help` support for simple functions as well as error handling.
 

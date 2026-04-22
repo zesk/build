@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="x - UnsignedInteger. Required. Column to place the cursor."$'\n'"y - UnsignedInteger. Required. Row to place the cursor."$'\n'""
 base="cursor.sh"
@@ -13,7 +13,7 @@ lowerFn="cursorset"
 rawComment="Move the cursor to x y"$'\n'"Argument: x - UnsignedInteger. Required. Column to place the cursor."$'\n'"Argument: y - UnsignedInteger. Required. Row to place the cursor."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/cursor.sh"
-sourceHash="2dec7314dba47496bd20b7749aaa2d01645c0da7"
+sourceHash="168857d25babe32c4b67235ad26a6f7d090b0a94"
 sourceLine="41"
 summary="Move the cursor to x y"
 summaryComputed="true"

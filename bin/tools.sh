@@ -146,10 +146,10 @@ _executableExists() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - File. Required. One or more files to `realpath`.
-# Requires: executableExists realpath __help bashDocumentation returnArgument
+# Requires: executableExists realpath helpArgument bashDocumentation returnArgument
 fileRealPath() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
   if executableExists realpath; then
     catchReturn "$handler" realpath "$@" || return $?
   else

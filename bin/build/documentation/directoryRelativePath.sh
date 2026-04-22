@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="directory - String. A path to convert."$'\n'""
 base="directory.sh"
@@ -8,13 +8,13 @@ description="Given a path to a file, compute the path back up to the top in reve
 file="bin/build/tools/directory.sh"
 fn="directoryRelativePath"
 foundNames=([0]="argument" [1]="stdout")
-line="287"
+line="291"
 lowerFn="directoryrelativepath"
 rawComment="Given a path to a file, compute the path back up to the top in reverse (../..)"$'\n'"If path is blank, outputs \`.\`."$'\n'"Essentially converts the slash \`/\` to a \`..\`, so convert your source appropriately."$'\n'"     directoryRelativePath \"/\" -> \"..\""$'\n'"     directoryRelativePath \"/a/b/c\" -> ../../.."$'\n'"Argument: directory - String. A path to convert."$'\n'"stdout: Relative paths, one per line"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/directory.sh"
-sourceHash="e3a8c59981053233f360475ab67f48cb580f1f5c"
-sourceLine="287"
+sourceHash="da838a55948477df4605f58aff4c29b4f13319f7"
+sourceLine="291"
 stdout="Relative paths, one per line"$'\n'""
 summary="Given a path to a file, compute the path back"
 summaryComputed="true"

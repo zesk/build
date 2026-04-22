@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="string - String. Required. String to test if it is a bash function. Builtins are supported. \`.\` is explicitly not supported to disambiguate it from the current directory \`.\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="type.sh"
@@ -10,11 +10,11 @@ fn="isFunction"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
 line="177"
 lowerFn="isfunction"
-rawComment="Test if argument are bash functions"$'\n'"Argument: string - String. Required. String to test if it is a bash function. Builtins are supported. \`.\` is explicitly not supported to disambiguate it from the current directory \`.\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - argument is bash function"$'\n'"Return Code: 1 - argument is not a bash function"$'\n'"Requires: catchArgument isUnsignedInteger bashDocumentation type __help"$'\n'""$'\n'""
-requires="catchArgument isUnsignedInteger bashDocumentation type __help"$'\n'""
+rawComment="Test if argument are bash functions"$'\n'"Argument: string - String. Required. String to test if it is a bash function. Builtins are supported. \`.\` is explicitly not supported to disambiguate it from the current directory \`.\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - argument is bash function"$'\n'"Return Code: 1 - argument is not a bash function"$'\n'"Requires: catchArgument isUnsignedInteger bashDocumentation type helpArgument"$'\n'""$'\n'""
+requires="catchArgument isUnsignedInteger bashDocumentation type helpArgument"$'\n'""
 return_code="0 - argument is bash function"$'\n'"1 - argument is not a bash function"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="36a33330145335895a980b5846e9badfaab6d726"
+sourceHash="3df0d84917e775e2aba0d9280d56eb8d73b4a8c3"
 sourceLine="177"
 summary="Test if argument are bash functions"
 summaryComputed="true"

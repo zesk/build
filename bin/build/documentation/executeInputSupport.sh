@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial \`--\`."$'\n'"-- - Alone after the executor forces \`stdin\` to be ignored. The \`--\` flag is also removed from the arguments passed to the executor."$'\n'"... - Any additional arguments are passed directly to the executor"$'\n'""
 base="sugar.sh"
@@ -14,7 +14,7 @@ rawComment="Support arguments and stdin as arguments to an executor"$'\n'"Argume
 requires="catchReturn bashDocumentation"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
-sourceHash="6c1b25e84cf38f47c9e5d60da397593419cd5433"
+sourceHash="36e344d0d5577dc38ae6bfbc9d09545127bec634"
 sourceLine="165"
 summary="Support arguments and stdin as arguments to an executor"
 summaryComputed="true"

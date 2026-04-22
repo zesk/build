@@ -75,7 +75,7 @@ _markdownIndentHeading() {
 #
 markdownRemoveUnfinishedSections() {
   local line section=() foundVar=false foundContent=false
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local lastLine="" line && while IFS='' read -r line; do
     local trimmed && trimmed=$(textTrim "$line")
     if [ "${line:0:1}" = "#" ]; then
@@ -116,7 +116,7 @@ _markdownRemoveUnfinishedSections() {
 # stdin: reads input from stdin
 # stdout: formatted markdown list
 markdownFormatList() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local wordClass='[-.`_A-Za-z0-9[:space:]]' spaceClass='[[:space:]]'
   # shellcheck disable=SC2016
   sed \

@@ -26,7 +26,7 @@ aptKeyAddOpenTofu() {
     --release any
     --source deb-src
   )
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
@@ -42,7 +42,7 @@ _aptKeyAddOpenTofu() {
 # Return Code: 0 - All good to install tofu
 aptKeyRemoveOpenTofu() {
   local handler="_${FUNCNAME[0]}"
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
@@ -59,7 +59,7 @@ _aptKeyRemoveOpenTofu() {
 tofuInstall() {
   local handler="_${FUNCNAME[0]}" binary="tofu"
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   ! executableExists "$binary" || return 0
   catchReturn "$handler" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
   catchReturn "$handler" aptKeyAddOpenTofu || return $?
@@ -80,7 +80,7 @@ _tofuInstall() {
 tofuUninstall() {
   local handler="_${FUNCNAME[0]}"
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" packageWhichUninstall tofu tofu "$@" || return $?
   catchReturn "$handler" aptKeyRemoveOpenTofu || return $?
   catchReturn "$handler" packageUpdate --force || return $?

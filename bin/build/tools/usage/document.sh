@@ -40,7 +40,7 @@ __bashDocumentation() {
   # ********************************************************************************************************************
   local start="$__profile" && [ "$start" != false ] || start="$(timingStart)"
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ $# -ge 2 ] || throwArgument "$handler" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   local functionDefinitionFile="${1-}" functionName="${2-}"

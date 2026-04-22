@@ -104,7 +104,7 @@ _executeCount() {
 # Credits: Eric Pement
 # Depends: awk
 fileReverseLines() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 _fileReverseLines() {
@@ -390,7 +390,7 @@ _fileExtensionLists() {
 cpuLoadAverage() {
   local handler="_${FUNCNAME[0]}"
   local text
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local averages=()
   if [ -f "/proc/loadavg" ]; then
     text="$(cat /proc/loadavg)"

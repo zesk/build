@@ -1,1 +1,0 @@
-[fileLineCount]({rel}documentation/source/tools/file.md#filelinecount) - Outputs the number of lines read from stdin (or supplied ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L693))

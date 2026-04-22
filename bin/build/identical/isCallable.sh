@@ -15,11 +15,11 @@
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command
-# Requires: throwArgument __help isExecutable isFunction
+# Requires: throwArgument helpArgument isExecutable isFunction
 isCallable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if ! isFunction "$1" && ! isExecutable "$1"; then
     return 1
   fi
@@ -34,21 +34,18 @@ _isCallable() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
-# Requires: throwArgument  __help catchEnvironment command
+# Requires: throwArgument  helpArgument type
+# Environment: PATH
 isExecutable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
-  if [ -f "$1" ]; then
-    # Docker has an issue when you mount a local volume inside a container
-    # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
-    # Report *correctly* when you use `ls`.
-    local mode && mode=$(catchEnvironment "$handler" ls -l "$1") || return $?
-    mode="${mode%% *}" && [ "${mode#*x}" != "$mode" ]
+  if [ "${1#/}" != "$1" ] && [ -f "$1" ]; then
+    [ -x "$1" ]
   else
-    [ -n "$(which "$1")" ]
+    muzzle type -P "$1"
   fi
 }
 _isExecutable() {

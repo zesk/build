@@ -18,7 +18,7 @@
 # Credits: Eric Pement
 # Depends: awk
 fileReverseLines() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 _fileReverseLines() {

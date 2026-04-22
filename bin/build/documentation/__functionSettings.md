@@ -4,15 +4,15 @@
 
 ### Usage
 
-    __functionSettings [ home ] [ functionName ] [ justPath ]
+    __functionSettings [ home ] [ functionName ] [ generatePath ]
 
-Requires:
+Load cached function comment values
 
 ### Arguments
 
 - `home` - Directory. BUILD_HOME
 - `functionName` - String. Function to fetch settings for
-- `justPath` - Boolean. Optional. Pass in `true` to just fetch the file path.
+- `generatePath` - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.
 
 ### Return codes
 

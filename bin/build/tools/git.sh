@@ -26,7 +26,7 @@
 # Argument: package - Additional packages to install
 # Summary: Install git if needed
 gitInstall() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   packageWhich git git "$@"
 }
 _gitInstall() {
@@ -39,7 +39,7 @@ _gitInstall() {
 # Argument: package - Additional packages to uninstall
 # Summary: Uninstall git
 gitUninstall() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   packageWhichUninstall git git "$@"
 }
 _gitUninstall() {
@@ -63,7 +63,7 @@ _gitUninstall() {
 gitEnsureSafeDirectory() {
   local handler="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     [ -d "$1" ] || throwArgument "$handler" "$1 is not a directory" || return $?
     if ! git config --global --get safe.directory | grep -q "$1"; then
       catchEnvironment "$handler" git config --global --add safe.directory "$1" || return $?
@@ -124,7 +124,7 @@ gitTagAgain() {
 
   [ $# -gt 0 ] || throwArgument "$handler" "No arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     statusMessage decorate info "Deleting tag $1 ..."
     catchArgument "$handler" gitTagDelete "$1" || return $?
     statusMessage decorate info "Tagging again $1 ..."
@@ -148,7 +148,7 @@ _gitTagAgain() {
 # Argument: --help - Flag. Optional. Display this help.
 gitVersionList() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ -d "./.git" ] || throwEnvironment "$handler" "No .git directory at $(pwd), stopping" || return $?
   catchEnvironment "$handler" git tag | grep -e '^v[0-9.]*$' | textVersionSort "$@" || return $?
 }
@@ -163,7 +163,7 @@ _gitVersionList() {
 # Argument: --help - Flag. Optional. Display this help.
 gitVersionLast() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local skip
   if [ -n "${1-}" ]; then
     skip="$1"
@@ -184,7 +184,7 @@ _gitVersionLast() {
 #
 gitTagVee() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local tagName
   tagName=$(validate "$handler" String "tagName" "${1-}") || return $?
@@ -208,7 +208,7 @@ _gitTagVee() {
 # usually have to `git push --force`
 #
 gitRemoveFileFromHistory() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
 }
 _gitRemoveFileFromHistory() {
@@ -225,7 +225,7 @@ _gitRemoveFileFromHistory() {
 # Credit: Chris Johnsen
 #
 gitRepositoryChanged() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   ! git diff-index --quiet HEAD 2>/dev/null
 }
 _gitRepositoryChanged() {
@@ -244,7 +244,7 @@ _gitRepositoryChanged() {
 # Credit: Chris Johnsen
 #
 gitShowChanges() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   git diff-index --name-only HEAD
 }
 _gitShowChanges() {
@@ -274,7 +274,7 @@ _gitShowChanges() {
 # Credit: Chris Johnsen
 #
 gitShowStatus() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   git diff-index --name-status "$@" HEAD
 }
 _gitShowStatus() {
@@ -293,7 +293,7 @@ _gitShowStatus() {
 # Return Code: 1 - We are NOT, semantically, inside a git hook
 #
 gitInsideHook() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
 }
 _gitInsideHook() {
@@ -306,7 +306,7 @@ _gitInsideHook() {
 # Parses `user@host:path/project.git` and extracts `host`
 #
 gitRemoteHosts() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local remoteUrl host
   while read -r remoteUrl; do
     host=$(urlParseItem host "$remoteUrl") || host=$(urlParseItem host "git://$remoteUrl") || throwArgument "$handler" "Unable to extract host from \"$remoteUrl\"" || return $?
@@ -437,7 +437,7 @@ _gitTagVersion() {
 # See: findFileHome
 gitFindHome() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   __directoryParent "$handler" --pattern ".git" "$@"
 }
 _gitFindHome() {
@@ -659,7 +659,7 @@ _gitMainly() {
 # Get the commit hash
 gitCommitHash() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   catchEnvironment "$handler" git rev-parse --short HEAD || return $?
 }
 _gitCommitHash() {
@@ -672,7 +672,7 @@ _gitCommitHash() {
 # Argument: --help - Flag. Optional. Display this help.
 gitCurrentBranch() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   # git rev-parse --abbrev-ref HEAD
   catchEnvironment "$handler" git symbolic-ref --short HEAD || return $?
 }
@@ -690,7 +690,7 @@ _gitCurrentBranch() {
 # Return Code: 1 - No tags exist
 gitHasAnyRefs() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local count
 
   count=$(catchEnvironment "$handler" git show-ref | grep -c refs/tags) || return $?
@@ -716,7 +716,7 @@ _gitHasAnyRefs() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 gitHookTypes() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
 }
 _gitHookTypes() {
@@ -881,7 +881,7 @@ __gitPreCommitCache() {
 # Return code: 1 - Error, or zero files are available as part of the commit
 gitPreCommitSetup() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local directory total=0
 
@@ -903,7 +903,7 @@ _gitPreCommitSetup() {
 # Argument: --help - Flag. Optional. Display this help.
 gitPreCommitHeader() {
   local handler="_${FUNCNAME[0]}" width=5
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local directory total=0 color
 
@@ -945,7 +945,7 @@ gitPreCommitHasExtension() {
   local directory
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     [ -f "$directory/$1" ] || return 1
     shift
   done
@@ -961,7 +961,7 @@ _gitPreCommitHasExtension() {
 # stdout: String. One per line.
 gitPreCommitExtensionList() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local directory
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   find "$directory" -maxdepth 1 -type f -exec basename {} \; | sort || return $?
@@ -978,7 +978,7 @@ _gitPreCommitExtensionList() {
 # stdout: File. One per line.
 gitPreCommitListExtension() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local directory
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
@@ -997,7 +997,7 @@ _gitPreCommitListExtension() {
 # Argument: --help - Flag. Optional. Display this help.
 gitPreCommitCleanup() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local directory
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler") || return $?
   [ ! -d "$directory" ] || catchEnvironment "$handler" rm -rf "$directory" || return $?
@@ -1018,7 +1018,7 @@ gitBranchExists() {
 
   [ $# -gt 0 ] || throwArgument "$handler" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     if ! gitBranchExistsLocal "$1" && ! gitBranchExistsRemote "$1"; then
       return 1
     fi
@@ -1042,7 +1042,7 @@ gitBranchExistsLocal() {
 
   [ $# -gt 0 ] || throwArgument "$handler" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     branch=$(catchEnvironment "$handler" git branch --list "$1") || return $?
     [ -n "$branch" ] || return 1
     shift
@@ -1070,7 +1070,7 @@ gitBranchExistsRemote() {
 
   [ $# -gt 0 ] || throwArgument "$handler" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     branch=$(catchEnvironment "$handler" git ls-remote --heads "$GIT_REMOTE" "$1") || return $?
     [ -n "$branch" ] || return 1
     shift
@@ -1092,7 +1092,7 @@ _gitBranchExistsRemote() {
 # Argument: --help - Flag. Optional. Display this help.
 gitBranchify() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local version user format branchName currentBranch
 
   export GIT_BRANCH_FORMAT GIT_REMOTE

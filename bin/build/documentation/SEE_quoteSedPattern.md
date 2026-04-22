@@ -1,1 +1,0 @@
-[quoteSedPattern]({rel}documentation/source/tools/quote.md#quotesedpattern) - Quote sed search strings for shell use"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sed.sh#L38))

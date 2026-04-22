@@ -15,7 +15,7 @@
 # shellcheck disable=SC2120
 cursorGet() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   isTTYAvailable || throwEnvironment "$handler" "no tty" || return $?
 
@@ -40,7 +40,7 @@ _cursorGet() {
 # Argument: y - UnsignedInteger. Required. Row to place the cursor.
 cursorSet() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   isTTYAvailable || throwEnvironment "$handler" "no tty" || return $?
 

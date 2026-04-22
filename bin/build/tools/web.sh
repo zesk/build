@@ -95,7 +95,7 @@ _urlContentLength() {
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: url - URL. Required. URL to check.
 hostTTFB() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   curl -L -s -o /dev/null -w "connect=%{time_connect}\n""ttfb: %{time_starttransfer}\n""total: %{time_total} \n" "$@"
 }
 _hostTTFB() {

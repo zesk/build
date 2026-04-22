@@ -1,0 +1,1 @@
+[interactiveOccasionally]({rel}tools/interactive.md#interactiveoccasionally) - Do something the first time and then only occasionally thereafter. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L245))

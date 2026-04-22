@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="value - EmptyString. Required. Value to test."$'\n'"value - EmptyString. The value to test."$'\n'""
 base="type.sh"
@@ -15,7 +15,7 @@ rawComment="Test if an argument is a signed integer"$'\n'"Argument: value - Empt
 return_code="0 - if it is a signed integer"$'\n'"1 - if it is not a signed integer"$'\n'""
 source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
 sourceFile="bin/build/tools/type.sh"
-sourceHash="36a33330145335895a980b5846e9badfaab6d726"
+sourceHash="3df0d84917e775e2aba0d9280d56eb8d73b4a8c3"
 sourceLine="61"
 summary="Test if an argument is a signed integer"
 summaryComputed="true"

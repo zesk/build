@@ -1,1 +1,0 @@
-[documentationBuildEnvironment]({rel}documentation/source/tools/documentation.md#documentationbuildenvironment) - Build documentation for ./bin/env (or bin/build/env) directory. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L148))

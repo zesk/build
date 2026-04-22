@@ -1,1 +1,0 @@
-[packageWhichUninstall]({rel}documentation/source/tools/package.md#packagewhichuninstall) - Install tools using \`apt-get\` if they are not found"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L306))

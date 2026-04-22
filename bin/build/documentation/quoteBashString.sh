@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="text - EmptyString. Required. Text to quote."$'\n'""
 base="quote.sh"
@@ -12,12 +12,12 @@ fn="quoteBashString"
 foundNames=([0]="argument" [1]="output" [2]="depends" [3]="example")
 line="21"
 lowerFn="quotebashstring"
-name="Zesk Build"
+name="#5/571 - quoteBashString"
 output="string quoted and appropriate to assign to a value in the shell"$'\n'""
 rawComment="Quote bash strings for inclusion as single-quoted for eval"$'\n'"Argument: text - EmptyString. Required. Text to quote."$'\n'"Output: string quoted and appropriate to assign to a value in the shell"$'\n'"Depends: sed"$'\n'"Example:     name=\"\$(quoteBashString \"\$name\")\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
-sourceHash="ea3a27e64582997f04005c71fc71250ff1ba01c0"
+sourceHash="3c095cfee529b43ebd935ef3549c279a5af1427c"
 sourceLine="21"
 summary="Quote bash strings for inclusion as single-quoted for eval"
 summaryComputed="true"

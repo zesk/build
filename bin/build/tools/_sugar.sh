@@ -96,11 +96,11 @@ booleanChoose() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Integer. Required. Exit code to return.
 # Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help
+# Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument helpArgument
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
     throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
@@ -119,9 +119,9 @@ _returnClean() {
 # Return Code: Any
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: __help decorate execute __decorateExtensionQuote __decorateExtensionEach
+# Requires: helpArgument decorate execute __decorateExtensionQuote __decorateExtensionEach
 executeEcho() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   printf -- "➡️ %s\n" "$(decorate each quote "$@")" && execute "$@" || return $?
 }
 _executeEcho() {
@@ -135,9 +135,9 @@ _executeEcho() {
 # Argument: binary - Callable. Required. Command to run.
 # Argument: ... - Arguments. Optional. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: returnMessage __help
+# Requires: returnMessage helpArgument
 execute() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   "$@" || returnMessage "$?" "$@" || return $?
 }
 _execute() {
@@ -160,7 +160,7 @@ _execute() {
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then

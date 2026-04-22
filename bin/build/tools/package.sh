@@ -624,7 +624,7 @@ _packageDebugging() {
 # See: platform
 packageManagerDefault() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export BUILD_PACKAGE_MANAGER
   catchReturn "$handler" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
   __packageManagerDefault "${BUILD_PACKAGE_MANAGER-}"
@@ -667,7 +667,7 @@ packageNeedRestartFlag() {
       return 1
     fi
   else
-    [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
     if [ "$1" = "" ]; then
       catchEnvironment "$handler" rm -f "$restartFile" || return $?
     else

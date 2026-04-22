@@ -14,13 +14,14 @@ Features which make it nice:
 - Apparently amazing `tmux` integration
 - Tons of other features
 
-**iTerm2** provides shell integration directly which has been implemented, largely, with this library.
+**iTerm2** provides shell integration directly which has is supported by this library.
 
-You can do some pretty cool things like:
+It allows some pretty cool features:
 
 - Have a color scheme for your project which updates automatically when you are working in that project
 - Display images directly in the console
 - Directly copy the last command or its output without selecting it
+- Update the "badge" interactively to see alternate status from background processes
 
 To integrate, do
 
@@ -29,21 +30,33 @@ To integrate, do
 Most commands take the `--ignore` parameter if you wish to ignore errors when the current terminal is not `iTerm2`.
 
 {isiTerm2}
+
 {iTerm2Init}
+
 {iTerm2Badge}
+
 {iTerm2Attention}
+
 {iTerm2PromptSupport}
+
 {iTerm2Image}
+
 {iTerm2Download}
+
 {iTerm2Version}
+
 {iTerm2Notify}
 
 # iTerm2 Colors
 
 {iTerm2ColorNames}
+
 {iTerm2ColorTypes}
+
 {iTerm2IsColorName}
+
 {iTerm2IsColorType}
+
 {iTerm2SetColors}
 
 # Aliases for iTerm tools

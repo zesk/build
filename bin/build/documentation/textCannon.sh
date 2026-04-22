@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--path cannonPath - Directory. Optional. Run textCannon operation starting in this directory."$'\n'"fromText - Required. String of text to search for."$'\n'"toText - Required. String of text to replace."$'\n'"findArgs ... - Arguments. Optional. Any additional arguments are meant to filter files."$'\n'""
 base="map.sh"
@@ -14,7 +14,7 @@ lowerFn="textcannon"
 rawComment="Summary: Replace text \`fromText\` with \`toText\` in files"$'\n'"Replace text \`fromText\` with \`toText\` in files, using \`findArgs\` to filter files if needed."$'\n'"This can break your files so use with caution. Blank \`searchText\` is **not allowed**."$'\n'"The term \`textCannon\` is not a mistake - it will break something at some point."$'\n'"Example:     {fn} master main ! -path '*/old-version/*')"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --path cannonPath - Directory. Optional. Run textCannon operation starting in this directory."$'\n'"Argument: fromText - Required. String of text to search for."$'\n'"Argument: toText - Required. String of text to replace."$'\n'"Argument: findArgs ... - Arguments. Optional. Any additional arguments are meant to filter files."$'\n'"Return Code: 0 - Success, no files changed"$'\n'"Return Code: 3 - At least one or more files were modified successfully"$'\n'"Return Code: 1 - --path is not a directory"$'\n'"Return Code: 1 - searchText is not blank"$'\n'"Return Code: 1 - \`fileTemporaryName\` failed"$'\n'"Return Code: 2 - Arguments are identical"$'\n'""$'\n'""
 return_code="0 - Success, no files changed"$'\n'"3 - At least one or more files were modified successfully"$'\n'"1 - --path is not a directory"$'\n'"1 - searchText is not blank"$'\n'"1 - \`fileTemporaryName\` failed"$'\n'"2 - Arguments are identical"$'\n'""
 sourceFile="bin/build/tools/map.sh"
-sourceHash="47b2e0d4ee0705157ba8c60aa3bc13f2043e8ca7"
+sourceHash="595efe51c5b190a1402240f2ac82b72d74b894cf"
 sourceLine="250"
 summary="Replace text \`fromText\` with \`toText\` in files"$'\n'""
 usage="textCannon [ --help ] [ --handler handler ] [ --path cannonPath ] fromText toText [ findArgs ... ]"

@@ -1,1 +1,0 @@
-[dockerCompose]({rel}documentation/source/tools/docker-compose.md#dockercompose) - docker compose wrapper with automatic .env support ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L168))

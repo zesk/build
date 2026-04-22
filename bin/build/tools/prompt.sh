@@ -101,7 +101,7 @@ bashUserInput() {
   local handler="_${FUNCNAME[0]}"
   local word="" exitCode=0
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if ! isTTYAvailable; then
     throwEnvironment "$handler" "No TTY available for user input" || return $?
   fi
@@ -195,7 +195,7 @@ _bashPromptColorScheme() {
 # Requires: decorations read inArray decorate listJoin
 bashPromptColorsFormat() {
   local all=("BOLD")
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while read -r color; do all+=("$color"); done < <(decorations)
   local colorArray=() && IFS=":" read -r -a colorArray <<<"$1:::::"
   local index && for index in "${!colorArray[@]}"; do

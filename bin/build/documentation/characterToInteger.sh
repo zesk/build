@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="character - String. Optional. One or more characters to convert to their ASCII equivalent."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="character.sh"
@@ -13,7 +13,7 @@ lowerFn="charactertointeger"
 rawComment="Summary: Convert a character to the corresponding ASCII code"$'\n'"Argument: character - String. Optional. One or more characters to convert to their ASCII equivalent."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Convert one or more characters from their ascii representation to an integer value."$'\n'"Requires a single character to be passed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/character.sh"
-sourceHash="79fa401b4aa7bf5657ce1816c13f7468214fdfbd"
+sourceHash="5a2e05ecbe74faca818a547fd009b4342c8f9e78"
 sourceLine="60"
 summary="Convert a character to the corresponding ASCII code"$'\n'""
 usage="characterToInteger [ character ] [ --help ]"

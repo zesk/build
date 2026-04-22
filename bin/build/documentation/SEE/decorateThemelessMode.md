@@ -1,0 +1,1 @@
+[decorateThemelessMode]({rel}tools/decoration.md#decoratethemelessmode) - Converts decoration style to a mode where the theme can ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L13))

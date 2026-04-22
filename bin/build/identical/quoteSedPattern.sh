@@ -13,9 +13,9 @@
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed bashDocumentation __help
+# Requires: printf sed bashDocumentation helpArgument
 quoteSedPattern() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local value="${1-}"
   value=$(printf -- "%s\n" "$value" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
@@ -32,9 +32,9 @@ _quoteSedPattern() {
 # Output: string quoted and appropriate to insert in a `sed` replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed bashDocumentation __help
+# Requires: printf sed bashDocumentation helpArgument
 quoteSedReplacement() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local value="${1-}" separator="${2-/}"
   value=$(printf -- "%s\n" "$value" | sed 's~\([\&'"$separator"']\)~\\\1~g')
   value="${value//$'\n'/\\n}"

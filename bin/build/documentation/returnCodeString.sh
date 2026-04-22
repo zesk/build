@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="code ... - UnsignedInteger. String. Exit code value to output."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="_sugar.sh"
@@ -13,7 +13,7 @@ lowerFn="returncodestring"
 rawComment="Output the exit code as a string"$'\n'"Argument: code ... - UnsignedInteger. String. Exit code value to output."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: exitCodeToken, one per line"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
+sourceHash="1cf1ee5794e801d06a483b8f311df83c051c18a0"
 sourceLine="59"
 stdout="exitCodeToken, one per line"$'\n'""
 summary="Output the exit code as a string"

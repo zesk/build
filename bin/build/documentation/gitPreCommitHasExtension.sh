@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="extension - String. Optional. Extension to check. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -13,7 +13,7 @@ lowerFn="gitprecommithasextension"
 rawComment="Does this commit have the following file extensions?"$'\n'"Argument: extension - String. Optional. Extension to check. Use \`!\` for blank extension and \`@\` for all extensions. Can specify one or more."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return code: 0 - if all extensions are present"$'\n'"Return code: 1 - if any extension is not present"$'\n'""$'\n'""
 return_code="0 - if all extensions are present"$'\n'"1 - if any extension is not present"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="4f7e4ceea530507ccd2bd4a042d5d5d5b9ef4356"
+sourceHash="72d910edfadc6d7f0d48966788e271372c6d5c66"
 sourceLine="943"
 summary="Does this commit have the following file extensions?"
 summaryComputed="true"

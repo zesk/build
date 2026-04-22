@@ -14,7 +14,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 isArray() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ -n "${1-}" ] || return 1
     case "$(declare -p "${1-}" 2>/dev/null)" in

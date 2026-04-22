@@ -1,1 +1,0 @@
-[bashLintFilesInteractive]({rel}documentation/source/tools/lint.md#bashlintfilesinteractive) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L208))

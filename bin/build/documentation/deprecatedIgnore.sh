@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="deprecated-tools.sh"
@@ -14,7 +14,7 @@ lowerFn="deprecatedignore"
 rawComment="Output a list of tokens for \`find\` to ignore in deprecated calls"$'\n'"Skips dot directories and release notes by default and any file named \`deprecated.sh\` \`deprecated.txt\` or \`deprecated.md\`."$'\n'"Environment: BUILD_RELEASE_NOTES"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deprecated-tools.sh"
-sourceHash="229d07011a43281db43ea65776e6992a397ea5a7"
+sourceHash="1121098df87cee32b55dc85263f73f68977219d8"
 sourceLine="56"
 summary="Output a list of tokens for \`find\` to ignore in"
 summaryComputed="true"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="command - Callable. Required. Thing to muzzle."$'\n'"... - Arguments. Optional. Additional arguments."$'\n'""
 base="sugar.sh"
@@ -14,7 +14,7 @@ lowerFn="muzzlereturn"
 rawComment="Summary: Suppress return codes"$'\n'"Suppress return code without piping. Handy when using diff to generate text"$'\n'"Argument: command - Callable. Required. Thing to muzzle."$'\n'"Argument: ... - Arguments. Optional. Additional arguments."$'\n'"Example:     {fn} diff -U0 \"\$buildDir\""$'\n'"Return Code: 0 - Always"$'\n'""$'\n'""
 return_code="0 - Always"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
-sourceHash="6c1b25e84cf38f47c9e5d60da397593419cd5433"
+sourceHash="36e344d0d5577dc38ae6bfbc9d09545127bec634"
 sourceLine="67"
 summary="Suppress return codes"$'\n'""
 usage="muzzleReturn command [ ... ]"

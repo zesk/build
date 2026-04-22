@@ -7,7 +7,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 environmentApplicationVariables() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
 }
 _environmentApplicationVariables() {
@@ -26,7 +26,7 @@ _environmentApplicationVariables() {
 # Argument: --help - Flag. Optional. Display this help.
 environmentApplicationLoad() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local variables=()
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :

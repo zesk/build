@@ -21,7 +21,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 listJoin() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local IFS="${1-:0:1}"
   shift || :
   printf "%s" "$*"
@@ -39,7 +39,7 @@ _listJoin() {
 # Argument: --help - Flag. Optional. Display this help.
 listRemove() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
   shift 2 || throwArgument "$handler" "Missing arguments" || return $?
@@ -77,7 +77,7 @@ _listRemove() {
 # Add an item to the beginning or end of a text-delimited list
 listContains() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
   [ ${#separator} -eq 1 ] || throwArgument "$handler" "character-length separator required: ${#separator} $(decorate code "$separator")" || return $?
@@ -119,7 +119,7 @@ _listContains() {
 # Add an item to the beginning or end of a text-delimited list
 listAppend() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
   [ ${#separator} -eq 1 ] || throwArgument "$handler" "character-length separator required: ${#separator} $(decorate code "$separator")" || return $?

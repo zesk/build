@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--source source - File. Required. Source file to source upon change."$'\n'"--name name - String. Optional. The name to call this when changes occur."$'\n'"--path path - Directory. Required. OneOrMore. A directory to scan for changes in \`.sh\` files"$'\n'"--file file - File. Required. OneOrMore. A file to watch.å"$'\n'"--stop - Flag. Optional. Stop watching changes and remove all watches."$'\n'"--show - Flag. Optional. Show watched settings and exit."$'\n'"source - File. Optional. If supplied directly on the command line, sets the source."$'\n'"path|file ... - DirectoryOrFile. Optional. If \`source\` supplied, then any other command line argument is treated as a path to scan for changes."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="prompt-modules.sh"
@@ -14,7 +14,7 @@ lowerFn="reloadchanges"
 rawComment="Watch or more directories for changes in a file extension and reload a source file if any changes occur."$'\n'"Argument: --source source - File. Required. Source file to source upon change."$'\n'"Argument: --name name - String. Optional. The name to call this when changes occur."$'\n'"Argument: --path path - Directory. Required. OneOrMore. A directory to scan for changes in \`.sh\` files"$'\n'"Argument: --file file - File. Required. OneOrMore. A file to watch.å"$'\n'"Argument: --stop - Flag. Optional. Stop watching changes and remove all watches."$'\n'"Argument: --show - Flag. Optional. Show watched settings and exit."$'\n'"Argument: source - File. Optional. If supplied directly on the command line, sets the source."$'\n'"Argument: path|file ... - DirectoryOrFile. Optional. If \`source\` supplied, then any other command line argument is treated as a path to scan for changes."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"BUILD_DEBUG: reloadChanges - prompt module will show debugging information"$'\n'"BUILD_DEBUG: reloadChangesProfile - prompt module will show profiling information"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/prompt-modules.sh"
-sourceHash="63eede76c5295636fbb5072c5ff56c4dea30564b"
+sourceHash="88deb9ee5685724c1450f2249c6ebd6a9df5a223"
 sourceLine="82"
 summary="Watch or more directories for changes in a file extension"
 summaryComputed="true"

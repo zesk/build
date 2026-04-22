@@ -18,7 +18,7 @@
 # Return Code: 0 - If installation succeeds
 pythonInstall() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if ! executableExists python; then
     catchReturn "$handler" packageGroupInstall --force "$@" python || return $?
   fi
@@ -31,7 +31,7 @@ _pythonInstall() {
 # Uninstall python
 pythonUninstall() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if executableExists python; then
     catchReturn "$handler" packageGroupUninstall "$@" python || return $?
   fi

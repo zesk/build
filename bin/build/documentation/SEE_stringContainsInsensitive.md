@@ -1,1 +1,0 @@
-[stringContainsInsensitive]({rel}documentation/source/tools/text.md#stringcontainsinsensitive) - Find whether a substring exists in one or more strings"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L439))

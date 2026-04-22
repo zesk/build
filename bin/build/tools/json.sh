@@ -21,7 +21,7 @@
 # Return Code: 1 - Field was not found or is blank
 # Requires: jq executableExists throwEnvironment printf rm decorate head
 jsonField() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "$jsonFile is not a file" || return $?
@@ -47,7 +47,7 @@ _jsonField() {
 # Without arguments, displays help.
 jsonPath() {
   # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
   local paths=()
   while [ $# -gt 0 ]; do
     [ -z "$1" ] || paths+=("$1")
@@ -89,7 +89,7 @@ jsonFileGet() {
   local handler="_${FUNCNAME[0]}"
   local jsonFile path value
 
-  [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   jsonFile=$(validate "$handler" File "jsonFile" "${1-}") && shift || return $?
   path=$(validate "$handler" String "path" "${1-}") && shift || return $?
@@ -111,7 +111,7 @@ jsonFileSet() {
   local handler="_${FUNCNAME[0]}"
   local jsonFile path value
 
-  [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
   executableExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
 
   jsonFile=$(validate "$handler" File "jsonFile" "${1-}") && shift || return $?
@@ -256,7 +256,7 @@ __jsonSetValue() {
 # stdin: JSONFile
 # stdout: JSONFile pretty formatted
 json() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   jq .
 }
 _json() {

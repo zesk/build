@@ -1,1 +1,0 @@
-[bashDebugInterruptFile]({rel}documentation/source/tools/debug.md#bashdebuginterruptfile) - Adds a trap to capture the debugging stack on interrupt ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L187))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="date - String. Required. String in the form \`YYYY-MM-DD\` (e.g. \`2023-10-15\`)"$'\n'"format - String. Optional. Format string for the \`date\` command (e.g. \`%s\`)"$'\n'""
 base="date.sh"
@@ -14,7 +14,7 @@ lowerFn="datetoformat"
 rawComment="Converts a date (\`YYYY-MM-DD\`) to another format."$'\n'"Summary: Platform agnostic date conversion"$'\n'"Compatible with BSD and GNU date."$'\n'"Argument: date - String. Required. String in the form \`YYYY-MM-DD\` (e.g. \`2023-10-15\`)"$'\n'"Argument: format - String. Optional. Format string for the \`date\` command (e.g. \`%s\`)"$'\n'"Example:     dateToFormat 2023-04-20 %s 1681948800"$'\n'"Example:     timestamp=\$(dateToFormat '2023-10-15' %s)"$'\n'"Return Code: 1 - if parsing fails"$'\n'"Return Code: 0 - if parsing succeeds"$'\n'""$'\n'""
 return_code="1 - if parsing fails"$'\n'"0 - if parsing succeeds"$'\n'""
 sourceFile="bin/build/tools/date.sh"
-sourceHash="f5a2a19f38f552df28e9aae96fa09336f3cf3753"
+sourceHash="8b6a5808143207c1b2329179a4d73d95ea46d8cc"
 sourceLine="22"
 summary="Platform agnostic date conversion"$'\n'""
 timestamp=""

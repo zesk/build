@@ -12,7 +12,7 @@
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
@@ -40,12 +40,12 @@ _bashFinalComment() {
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: grep cut fileReverseLines __help
+# Requires: grep cut fileReverseLines helpArgument
 # Requires: bashDocumentation
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   grep -m 1 -B $maxLines -e "^\s*$functionName() {" "$source" | bashFinalComment
   # Explained:
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="host.sh"
@@ -10,11 +10,11 @@ fn="networkNameFull"
 foundNames=([0]="summary" [1]="requires")
 line="13"
 lowerFn="networknamefull"
-rawComment="Summary: Platform-agnostic host name"$'\n'"Get the full hostname on the current platform."$'\n'"Formerly \`hostname\`\`Full\`."$'\n'"Requires: __help __hostname executableRequire catchEnvironment"$'\n'""$'\n'""
-requires="__help __hostname executableRequire catchEnvironment"$'\n'""
+rawComment="Summary: Platform-agnostic host name"$'\n'"Get the full hostname on the current platform."$'\n'"Formerly \`hostname\`\`Full\`."$'\n'"Requires: helpArgument __hostname executableRequire catchEnvironment"$'\n'""$'\n'""
+requires="helpArgument __hostname executableRequire catchEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/host.sh"
-sourceHash="2548308e097038fc9ad06fcb80dc242f2ceb1571"
+sourceHash="c4d99e3fa9a061641119ff582f5b8c9de0ed6f31"
 sourceLine="13"
 summary="Platform-agnostic host name"$'\n'""
 usage="networkNameFull"

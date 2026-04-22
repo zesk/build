@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--delta deltaMilliseconds - PositiveInteger. Optional. Default is 60000."$'\n'"--mark - Flag. Optional. Write the marker which says the"$'\n'"--verbose - Flag. Optional. Be chatty."$'\n'"name - EnvironmentVariable. Required. The global codename for this interaction."$'\n'""
 base="interactive.sh"
@@ -13,7 +13,7 @@ lowerFn="interactiveoccasionally"
 rawComment="Do something the first time and then only occasionally thereafter."$'\n'"This manages a state file compared to the current time and triggers after \`delta\` seconds."$'\n'"Think of it like something that only returns 0 like once every \`delta\` seconds but it's going to happen at minimum \`delta\` seconds, or the next time after that. And the first time as well."$'\n'"Argument: --delta deltaMilliseconds - PositiveInteger. Optional. Default is 60000."$'\n'"Argument: --mark - Flag. Optional. Write the marker which says the"$'\n'"Argument: --verbose - Flag. Optional. Be chatty."$'\n'"Argument: name - EnvironmentVariable. Required. The global codename for this interaction."$'\n'"Return Code: 0 - Do the thing"$'\n'"Return Code: 1 - Do not do the thing"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - Do the thing"$'\n'"1 - Do not do the thing"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="94de87862bd88558374367c517da7467bcaf93f9"
+sourceHash="378aca49779b1c4a5f70a0c419c2a078d3e0d369"
 sourceLine="245"
 summary="Do something the first time and then only occasionally thereafter."
 summaryComputed="true"

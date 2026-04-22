@@ -56,7 +56,7 @@ __bashBuild() {
     printf -- "%s\n" "Unable to source $tools"
     exec bash "$@"
   fi
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local home
   if home=$(userHome); then

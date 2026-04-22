@@ -1,1 +1,0 @@
-[environmentClean]({rel}documentation/source/tools/environment.md#environmentclean) - Clean *most* exported variables from the current context except a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L177))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="colors.sh"
@@ -13,7 +13,7 @@ lowerFn="colorsamplestyles"
 rawComment="Summary: Output colors"$'\n'"Outputs sample sentences for the \`consoleAction\` commands to see what they look like."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="fc21248154005d496fe709e58062054e9ea1b478"
+sourceHash="313fe5b4ec3dfe1711045dafef5293c8f27eb9ea"
 sourceLine="171"
 summary="Output colors"$'\n'""
 usage="colorSampleStyles"

@@ -11,7 +11,7 @@ bashPromptModule_ApplicationPath() {
   local handler="returnMessage"
   local folderIcon="📂"
   local path applicationPath
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   path=$(catchEnvironment "$handler" pwd) || return $?
   applicationPath=$(decoratePath "$path")

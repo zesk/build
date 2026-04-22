@@ -385,7 +385,7 @@ hasHook() {
 testTools() {
   local handler="_${FUNCNAME[0]}"
 
-  __help "$handler" "${1-}" || return 0
+  helpArgument "$handler" "${1-}" || return 0
 
   _deprecated "${FUNCNAME[0]}"
 
@@ -498,7 +498,7 @@ tomorrowDate() {
 # Deprecated: 2026-01
 buildFailed() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local quietLog="${1-}" && shift
   _deprecated "${FUNCNAME[0]}"

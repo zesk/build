@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="prompt-modules.sh"
@@ -15,7 +15,7 @@ rawComment="Watches your HOME directory for \`.\` files which are added and unkn
 requires="sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/prompt-modules.sh"
-sourceHash="63eede76c5295636fbb5072c5ff56c4dea30564b"
+sourceHash="88deb9ee5685724c1450f2249c6ebd6a9df5a223"
 sourceLine="94"
 summary="Watches your HOME directory for \`.\` files which are added"
 summaryComputed="true"

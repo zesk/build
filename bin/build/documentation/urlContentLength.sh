@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"url - URL. Required. URL to fetch the Content-Length."$'\n'""
 base="web.sh"
@@ -14,7 +14,7 @@ lowerFn="urlcontentlength"
 rawComment="Get the size of a remote URL"$'\n'"Depends: curl"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: url - URL. Required. URL to fetch the Content-Length."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/web.sh"
-sourceHash="16f3842ec6f5892421429c63fdf08ae46e06eed8"
+sourceHash="e13b8cb53898482442171ddd6250196c36d71146"
 sourceLine="60"
 summary="Get the size of a remote URL"
 summaryComputed="true"

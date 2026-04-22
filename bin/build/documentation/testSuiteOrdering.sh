@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--cache cacheDirectory - Directory. Optional. Cache directory to use for ordering work."$'\n'"finderFile - File. Required. File to reorder."$'\n'""
 base="test.sh"
@@ -13,7 +13,7 @@ lowerFn="testsuiteordering"
 rawComment="Argument: --cache cacheDirectory - Directory. Optional. Cache directory to use for ordering work."$'\n'"Argument: finderFile - File. Required. File to reorder."$'\n'"stdout: Reordered file."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="a67c5b2c2396821f4e070140f0dabed2cde8ea23"
+sourceHash="57acf358ce9ffa90c756271013459bc2978efa9a"
 sourceLine="495"
 stdout="Reordered file."$'\n'""
 summary="undocumented"

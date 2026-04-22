@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--force - Flag. Optional. Replace the existing file if it exists or create it if it does not."$'\n'"--quiet - Flag. Optional. No status messages."$'\n'"--verbose - Flag. Optional. Display status messages."$'\n'"--value value - String. Optional. Set the value to this fixed string in the file. Only valid when a single \`environmentName\` is used."$'\n'"environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project."$'\n'""
 base="build.sh"
@@ -13,7 +13,7 @@ lowerFn="buildenvironmentadd"
 rawComment="Adds an environment variable file to a project"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --force - Flag. Optional. Replace the existing file if it exists or create it if it does not."$'\n'"Argument: --quiet - Flag. Optional. No status messages."$'\n'"Argument: --verbose - Flag. Optional. Display status messages."$'\n'"Argument: --value value - String. Optional. Set the value to this fixed string in the file. Only valid when a single \`environmentName\` is used."$'\n'"Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceHash="36d6620f5e7ef50da4732294ca63c0ba7d07b1f4"
+sourceHash="01d4aa56fc82af7cb49474878512de1aabd62c60"
 sourceLine="316"
 summary="Adds an environment variable file to a project"
 summaryComputed="true"

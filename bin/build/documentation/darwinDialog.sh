@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--choice choiceText - String. Optional. Title of the thing."$'\n'"--ok - Flag. Optional. Adds \"OK\" as an option."$'\n'"--cancel - Flag. Optional. Adds \"Cancel\" as an option."$'\n'"--default buttonIndex - Integer. Required. The button (0-based index) to make the default button choice."$'\n'"--help - Flag. Optional. Display this help."$'\n'"message ... - String. Required. The message to display in the dialog."$'\n'""
 base="darwin.sh"
@@ -14,7 +14,7 @@ platform="Darwin"$'\n'""
 rawComment="Argument: --choice choiceText - String. Optional. Title of the thing."$'\n'"Argument: --ok - Flag. Optional. Adds \"OK\" as an option."$'\n'"Argument: --cancel - Flag. Optional. Adds \"Cancel\" as an option."$'\n'"Argument: --default buttonIndex - Integer. Required. The button (0-based index) to make the default button choice."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: message ... - String. Required. The message to display in the dialog."$'\n'"Display a dialog using \`osascript\` with the choices provided. Typically this is found on Mac OS X."$'\n'"Outputs the selected button text upon exit."$'\n'"Platform: Darwin"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/darwin.sh"
-sourceHash="ad6864730417464b2d7912acac42a6444bb54718"
+sourceHash="ec705e085d0b6db06177741d264497efd1aa9f27"
 sourceLine="200"
 summary="Display a dialog using \`osascript\` with the choices provided. Typically"
 summaryComputed="true"

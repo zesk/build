@@ -43,7 +43,7 @@ _environmentVariableNameValid() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 environmentSecureVariables() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
 }
 _environmentSecureVariables() {
@@ -131,10 +131,10 @@ _environmentFileShow() {
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Requires: declare grep cut bashDocumentation __help
+# Requires: declare grep cut bashDocumentation helpArgument
 environmentVariables() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   {
     declare -px | grep 'declare -x ' | cut -f 1 -d "=" | cut -f 3 -d " " && declare -ax | grep 'declare -ax ' | cut -f 1 -d '=' | cut -f 3 -d " "
   } | catchReturn "$handler" sort -u || return $?
@@ -159,7 +159,7 @@ _environmentVariables() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 environmentParseVariables() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grepSafe -e '^\(export \)\?\s*[A-Za-z_][A-Za-z_0-9]*=' | grep -v 'read -r' | sed 's/^export[[:space:]][[:space:]]*//g' | cut -f 1 -d = | sort -u
 }
 _environmentParseVariables() {
@@ -176,7 +176,7 @@ _environmentParseVariables() {
 # Argument: keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
 environmentClean() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local finished=false variable keepers=(CI PATH LD_LIBRARY USER HOME PS1 PS2 PS3 PS4 BUILD_HOME "$@")
   keepers+=(__BUILD_DECORATE BUILD_COLORS BUILD_DEBUG BUILD_HOOK_DIRS __BUILD_LOADER)
   while ! $finished; do

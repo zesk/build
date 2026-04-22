@@ -65,7 +65,7 @@ buildQuickTest() {
   local handler="_${FUNCNAME[0]}"
   local home
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
 
   home=$(catchReturn "$handler" buildHome) || return $?
   BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' "$home/bin/test.sh" -c --skip-tag slow --skip-tag package-install "$@"
@@ -81,7 +81,7 @@ buildStagingTest() {
   local handler="_${FUNCNAME[0]}"
   local home
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
 
   home=$(catchReturn "$handler" buildHome) || return $?
   # FIRST occurrence of a flag takes priority.
@@ -101,7 +101,7 @@ buildProductionTest() {
   local handler="_${FUNCNAME[0]}"
   local home
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
 
   home=$(catchReturn "$handler" buildHome) || return $?
   # FIRST occurrence of a flag takes priority.

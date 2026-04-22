@@ -1,1 +1,0 @@
-[fileDirectoryRequire]({rel}directory.md#filedirectoryrequire) - Given a list of files, ensure their parent directories exist ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))

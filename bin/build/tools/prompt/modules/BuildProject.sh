@@ -19,7 +19,7 @@ bashPromptModule_BuildProject() {
   local home here tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion
   export HOME
 
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   local here && here=$(catchReturn "$handler" pwd) || return $?

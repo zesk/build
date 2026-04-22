@@ -15,7 +15,7 @@
 # Argument: binary - String. Required. The binary to look for.
 isVersion() {
   [ $# -gt 0 ] || return 1
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || return 1
     local parts=() && IFS=. read -r -a parts < <(printf "%s\n" "$1") || :
@@ -34,7 +34,7 @@ _isVersion() {
 # stdin: Versions containing a preceding `v` character (optionally)
 # stdout: Versions with the initial `v` (if it exists) removed
 versionNoVee() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     printf "%s\n" "${1#v}"
     shift

@@ -21,7 +21,7 @@ export __CFBundleIdentifier
 # Return Code: 1 - not within the PhpStorm terminal AFAIK
 # See: contextOpen
 isPHPStorm() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local xpc="${XPC_SERVICE_NAME-}" cfb=${__CFBundleIdentifier:-}
   [ "${xpc%%PhpStorm*}" != "${xpc}" ] || [ "${cfb%%PhpStorm*}" != "${cfb}" ]
 }
@@ -39,7 +39,7 @@ _isPHPStorm() {
 # Return Code: 1 - not within the PyCharm terminal AFAIK
 # See: contextOpen
 isPyCharm() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local xpc="${XPC_SERVICE_NAME-}"
   [ "${xpc%%pycharm*}" != "${xpc}" ]
 }
@@ -58,7 +58,7 @@ _isPyCharm() {
 # See: contextOpen
 #
 isVisualStudioCode() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   [ "${VSCODE_SHELL_INTEGRATION-}" = "1" ]
 }
 _isVisualStudioCode() {
@@ -74,7 +74,7 @@ _isVisualStudioCode() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 contextOpen() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   # should maybe make this extensible
   if isPHPStorm; then
     # Hides argument warnings, correctly
@@ -102,7 +102,7 @@ _contextOpen() {
 # Environment: EDITOR - Used as a default editor (first)
 # Environment: VISUAL - Used as another default editor (last)
 contextShow() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   # should maybe make this extensible
   if isPHPStorm; then
     printf "%s\n" phpstorm

@@ -1,1 +1,0 @@
-[buildEnvironmentLoad]({rel}build.md#buildenvironmentload) - Load one or more environment settings from the environment file ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))

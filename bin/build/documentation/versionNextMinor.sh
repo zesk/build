@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="lastVersion - String. Required. Version to calculate the next minor version."$'\n'""
 base="version.sh"
@@ -13,7 +13,7 @@ lowerFn="versionnextminor"
 rawComment="Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1"$'\n'"Argument: lastVersion - String. Required. Version to calculate the next minor version."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="c46a7ad1a2ce9c37037298181de3c3922434f9a1"
+sourceHash="8d1283d5353b479e2bc32aaf234efc0a9cb6570e"
 sourceLine="116"
 summary="Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1"
 summaryComputed="true"

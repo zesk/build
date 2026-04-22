@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"binary - Callable. Required. Command to run."$'\n'"... - Arguments. Optional. Any arguments are passed to \`binary\`."$'\n'""
 base="_sugar.sh"
@@ -10,11 +10,11 @@ fn="execute"
 foundNames=([0]="argument" [1]="requires")
 line="139"
 lowerFn="execute"
-rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: binary - Callable. Required. Command to run."$'\n'"Argument: ... - Arguments. Optional. Any arguments are passed to \`binary\`."$'\n'"Run binary and output failed command upon error"$'\n'"Requires: returnMessage __help"$'\n'""$'\n'""
-requires="returnMessage __help"$'\n'""
+rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: binary - Callable. Required. Command to run."$'\n'"Argument: ... - Arguments. Optional. Any arguments are passed to \`binary\`."$'\n'"Run binary and output failed command upon error"$'\n'"Requires: returnMessage helpArgument"$'\n'""$'\n'""
+requires="returnMessage helpArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
+sourceHash="1cf1ee5794e801d06a483b8f311df83c051c18a0"
 sourceLine="139"
 summary="Run binary and output failed command upon error"
 summaryComputed="true"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="filename - Docker environment file to check for common issues"$'\n'""
 base="convert.sh"
@@ -13,7 +13,7 @@ lowerFn="environmentfileisdocker"
 rawComment="Ensure an environment file is compatible with non-quoted docker environment files"$'\n'"Argument: filename - Docker environment file to check for common issues"$'\n'"Return Code: 1 - if errors occur"$'\n'"Return Code: 0 - if file is valid"$'\n'""$'\n'""
 return_code="1 - if errors occur"$'\n'"0 - if file is valid"$'\n'""
 sourceFile="bin/build/tools/environment/convert.sh"
-sourceHash="44d3bdc0a06188c7f01c1f2158c260a9f896c151"
+sourceHash="3b313a15b9ef0e13f864358aebfe683d919e1efc"
 sourceLine="16"
 summary="Ensure an environment file is compatible with non-quoted docker environment"
 summaryComputed="true"

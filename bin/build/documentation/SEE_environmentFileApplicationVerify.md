@@ -1,1 +1,0 @@
-[environmentFileApplicationVerify]({rel}documentation/source/tools/environment.md#environmentfileapplicationverify) - Check application environment is populated correctly. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L140))

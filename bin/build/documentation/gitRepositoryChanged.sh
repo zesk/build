@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
@@ -15,7 +15,7 @@ rawComment="Return Code: 1 - the repo has NOT been modified"$'\n'"Return Code: 0
 return_code="1 - the repo has NOT been modified"$'\n'"0 - the repo has been modified"$'\n'""
 source="https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="4f7e4ceea530507ccd2bd4a042d5d5d5b9ef4356"
+sourceHash="72d910edfadc6d7f0d48966788e271372c6d5c66"
 sourceLine="227"
 summary="Has a git repository been changed from HEAD?"
 summaryComputed="true"

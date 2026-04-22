@@ -1,1 +1,0 @@
-[notify]({rel}documentation/source/tools/interactive.md#notify) - Notify after running a binary. Uses the \`notify\` hook with ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L137))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--foreground - Flag. Optional. Get the console text color."$'\n'"--background - Flag. Optional. Get the console background color."$'\n'""
 base="console.sh"
@@ -14,7 +14,7 @@ lowerFn="consolegetcolor"
 rawComment="Summary: Get the console foreground or background color"$'\n'"Gets the RGB console color using an \`xterm\` escape sequence supported by some terminals. (usually for background colors)"$'\n'"Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/"$'\n'"Credit: https://stackoverflow.com/questions/16914418/how-to-manipulate-hexadecimal-value-in-bash"$'\n'"Argument: --foreground - Flag. Optional. Get the console text color."$'\n'"Argument: --background - Flag. Optional. Get the console background color."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/console.sh"
-sourceHash="1eccb7f32254d9dddecdf43da8654cc9ad7cdbc1"
+sourceHash="82d47fdc5820e57d7aeb7f061bb09ecb16c35cd7"
 sourceLine="18"
 summary="Get the console foreground or background color"$'\n'""
 usage="consoleGetColor [ --foreground ] [ --background ]"

@@ -17,7 +17,7 @@ environmentFileIsDocker() {
   local file result=0 pattern='\$|="|='"'"
 
   for file in "$@"; do
-    [ "$file" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+    [ "$file" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     if grep -q -E -e "$pattern" "$file"; then
       grep -E -e "$pattern" "$file" 1>&2
       result=1

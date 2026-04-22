@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="file - File. Optional. One or more files, all of which must be empty."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -13,7 +13,7 @@ lowerFn="fileisempty"
 rawComment="Is this an empty (zero-sized) file?"$'\n'"Return Code: 0 - if all files passed in are empty files"$'\n'"Return Code: 1 - if any files passed in are non-empty files"$'\n'"Argument: file - File. Optional. One or more files, all of which must be empty."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - if all files passed in are empty files"$'\n'"1 - if any files passed in are non-empty files"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="7a68c870255c297437371bfaf0f2d87b4eae10f2"
+sourceHash="7e7132935e7a4026938b5792385f9b35d7bd4f35"
 sourceLine="631"
 summary="Is this an empty (zero-sized) file?"
 summaryComputed="true"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"message ... - String. Required. Any message to display as the badge"$'\n'""
 base="iterm2.sh"
@@ -14,7 +14,7 @@ lowerFn="iterm2badge"
 rawComment="Set the badge for the iTerm2 console"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"Argument: message ... - String. Required. Any message to display as the badge"$'\n'"Environment: LC_TERMINAL"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="91a65f03915e4e3420e13242ad0b50d50652de48"
+sourceHash="0527ba47f537e4e6b5039d1b56e7d23b8233bcae"
 sourceLine="664"
 summary="Set the badge for the iTerm2 console"
 summaryComputed="true"

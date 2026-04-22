@@ -1,1 +1,0 @@
-[directoryRequire]({rel}documentation/source/tools/directory.md#directoryrequire) - Given a list of directories, ensure they exist and create ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L190))

@@ -1,0 +1,1 @@
+[environmentFileDockerToBashCompatible]({rel}tools/environment.md#environmentfiledockertobashcompatible) - Ensure an environment file is compatible with non-quoted docker environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L116))

@@ -18,3 +18,7 @@ If no arguments are passed, returns exit code 1.
 - `0` - All arguments are executable binaries
 - `1` - One or or more arguments are not executable binaries
 
+### Environment
+
+- {SEE:PATH.sh}
+

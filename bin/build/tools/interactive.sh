@@ -29,7 +29,7 @@ __interactiveLoader() {
 # Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # Argument: message ... - Display this message while pausing
 pause() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   local prompt="${1-"PAUSE > "}"
   statusMessage printf -- "%s" "$prompt"

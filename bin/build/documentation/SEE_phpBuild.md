@@ -1,1 +1,0 @@
-[phpBuild]({rel}documentation/source/tools/php.md#phpbuild) - Build deployment using composer, adding environment values to .env and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L157))

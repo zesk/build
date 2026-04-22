@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="platform.sh"
@@ -16,7 +16,7 @@ rawComment="Reverses a pipe's input lines to output using an awk trick."$'\n'"No
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="e33c50c2df0999389804156b51677eba562981be"
+sourceHash="097e41ee15602cdab3bc28d8a420362c8b93b425"
 sourceLine="106"
 summary="Reverse output lines"$'\n'""
 usage="fileReverseLines"

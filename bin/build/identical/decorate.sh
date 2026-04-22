@@ -21,10 +21,10 @@
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors.
-# Requires: isPositiveInteger tput __help convertValue
+# Requires: isPositiveInteger tput helpArgument convertValue
 consoleHasColors() {
   # --help is only argument allowed
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   # Values allowed for this global are true and false
   # Important: DO NOT use buildEnvironmentLoad BUILD_COLORS TERM
@@ -71,9 +71,9 @@ __decorate() {
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: __help convertValue
+# Requires: helpArgument convertValue
 decorations() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
     underline no-underline bold no-bold \
     black black-contrast blue cyan green magenta orange red white yellow \
@@ -93,11 +93,11 @@ _decorations() {
 # Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
 # Requires: isFunction catchArgument catchReturn awk
-# Requires: bashDocumentation __help
+# Requires: bashDocumentation helpArgument
 # Requires: _decorateInitialize __decorateStyle __decorate executeInputSupport
 decorate() {
   local handler="_${FUNCNAME[0]}" what="${1-}"
-  [ "$what" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "$what" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
   local style && shift && catchReturn "$handler" _decorateInitialize || return $?
   if ! style=$(__decorateStyle "$what"); then
@@ -129,9 +129,9 @@ _decorate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # shellcheck disable=SC2120
-# Requires: __help
+# Requires: helpArgument
 decorateInitialized() {
-  [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE
   [ -n "${__BUILD_DECORATE-}" ]
 }

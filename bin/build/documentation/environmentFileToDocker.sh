@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="envFile ... - File. Required. One or more files to convert."$'\n'""
 base="convert.sh"
@@ -13,7 +13,7 @@ lowerFn="environmentfiletodocker"
 rawComment="Takes any environment file and makes it docker-compatible"$'\n'"Outputs the compatible env to stdout"$'\n'"Argument: envFile ... - File. Required. One or more files to convert."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/convert.sh"
-sourceHash="44d3bdc0a06188c7f01c1f2158c260a9f896c151"
+sourceHash="3b313a15b9ef0e13f864358aebfe683d919e1efc"
 sourceLine="78"
 summary="Takes any environment file and makes it docker-compatible"
 summaryComputed="true"

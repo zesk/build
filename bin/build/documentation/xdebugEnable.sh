@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="xdebug.sh"
@@ -14,7 +14,7 @@ lowerFn="xdebugenable"
 rawComment="Enable Xdebug on systems that have it"$'\n'"Environment: XDEBUG_ENABLED"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/xdebug.sh"
-sourceHash="f1302586b411d748b631efa99b7e3993391eca86"
+sourceHash="2fc83b70f12c5979d5fb5d8f25133b769c1fa267"
 sourceLine="54"
 summary="Enable Xdebug on systems that have it"
 summaryComputed="true"

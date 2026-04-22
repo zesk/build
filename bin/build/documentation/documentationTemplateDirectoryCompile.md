@@ -4,7 +4,7 @@
 
 ### Usage
 
-    documentationTemplateDirectoryCompile [ --filter filterArgs ... --  ] [ --force ] [ --verbose ] [ --env-file envFile ] [ --md-cache markdownCacheDirectory ] cacheDirectory templateDirectory functionTemplate targetDirectory [ --help ]
+    documentationTemplateDirectoryCompile [ --filter filterArgs ... --  ] [ --force ] [ --verbose ] [ --env-file envFile ] cacheDirectory templateDirectory functionTemplate targetDirectory [ --help ]
 
 Convert a directory of templates for bash functions into full-fledged documentation.
 The process:
@@ -19,7 +19,6 @@ to regenerate each time.
 - `--force` - Flag. Optional. Force generation of files.
 - `--verbose` - Flag. Optional. Output more messages.
 - `--env-file envFile` - File. Optional. One (or more) environment files used during map of `functionTemplate`
-- `--md-cache markdownCacheDirectory` - Directory. Optional. Cache directory where the markdown cache is stored.
 - `cacheDirectory` - Required. The directory where function index exists and additional cache files can be stored.
 - `templateDirectory` - Required. Directory containing documentation templates
 - `functionTemplate` - Required. Function template file to generate documentation for functions

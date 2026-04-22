@@ -1,1 +1,0 @@
-[dockerComposeUninstall]({rel}documentation/source/tools/install.md#dockercomposeuninstall) - Uninstall \`docker-compose\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L62))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="npm.sh"
@@ -13,7 +13,7 @@ lowerFn="npmuninstall"
 rawComment="Core as part of some systems - so this succeeds and it still exists"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/npm.sh"
-sourceHash="2e5170857b1aed1eb3139488279d6a1cad2a31a9"
+sourceHash="50aaed0f2c7f0562ea7c814ae07bd5366f18fb9e"
 sourceLine="68"
 summary="Core as part of some systems - so this succeeds"
 summaryComputed="true"

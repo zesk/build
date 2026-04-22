@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="element - EmptyString. Thing to search for"$'\n'"arrayElement0 ... - Array. Optional. One or more array elements to match"$'\n'""
 base="text.sh"
@@ -14,7 +14,7 @@ lowerFn="inarray"
 rawComment="Check if an element exists in an array"$'\n'"Argument: element - EmptyString. Thing to search for"$'\n'"Argument: arrayElement0 ... - Array. Optional. One or more array elements to match"$'\n'"Example:     if inArray \"\$thing\" \"\${things[@]+\"\${things[@]}\"}\"; then"$'\n'"Example:         things+=(\"\$thing\")"$'\n'"Example:     fi"$'\n'"Return Code: 0 - If element is found in array"$'\n'"Return Code: 1 - If element is NOT found in array"$'\n'"Tested: No"$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - If element is found in array"$'\n'"1 - If element is NOT found in array"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="7f4afd0db4aa281d91724f7bdc480865ea6088e9"
+sourceHash="50153fd5ef57624e1e417cf7f8cf53ca2489a784"
 sourceLine="391"
 summary="Check if an element exists in an array"
 summaryComputed="true"

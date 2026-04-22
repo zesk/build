@@ -1,1 +1,0 @@
-[applicationHomeAliases]({rel}documentation/source/tools/application.md#applicationhomealiases) - \`applicationHome\` bash aliases setup"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/application.sh#L95))

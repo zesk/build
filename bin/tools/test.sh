@@ -25,7 +25,7 @@ buildTestSuite() {
 
   ! consoleHasColors || decorateInitialized || muzzle consoleConfigureDecorate || :
 
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   [ -d "$home/test" ] || throwArgument "$handler" "Missing test directory" || return $?

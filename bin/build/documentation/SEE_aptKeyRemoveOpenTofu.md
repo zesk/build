@@ -1,1 +1,0 @@
-[aptKeyRemoveOpenTofu]({rel}documentation/source/tools/tofu.md#aptkeyremoveopentofu) - Remove keys to disable apt to download tofu from opentofu.org ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L43))

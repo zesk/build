@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="fileName - File. Required. File to search"$'\n'"string ... - String. Required. One or more strings which must be found on at least one line in the file"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--display - String. Optional. Display name for the condition."$'\n'"--debug - Flag. Optional. Debugging enabled for the assertion function."$'\n'"--line lineNumber - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using \`--line-depth\`."$'\n'"--line-depth depth - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function."$'\n'"--stdout-match - String. Optional. One or more strings which must match \`stdout\` output."$'\n'"--stdout-no-match - String. Optional. One or more strings which must match \`stdout\` output."$'\n'"--stderr-ok - Flag. Optional. Output to \`stderr\` will not cause the test to fail."$'\n'"--stderr-match - String. Optional. One or more strings which must match \`stderr\` output. Implies \`--stderr-ok\`"$'\n'"--stderr-no-match - String. Optional. One or more strings which must match NOT \`stderr\` output. Implies \`--stderr-ok\`"$'\n'"--dump - Flag. Optional. Output \`stderr\` and \`stdout\` after test regardless."$'\n'"--dump-binary - Flag. Optional. Output \`stderr\` and \`stdout\` after test regardless, displayed as binary."$'\n'"--plumber - Flag. Optional. Wrap the test call with the \`plumber\` call to detect local leaks."$'\n'"--leak globalName - Zero or more. String. Allow global leaks for these globals when \`--plumber\` is enabled."$'\n'"--skip-plumber - Flag. Optional. Skip plumber check for function calls. When specified with \`--plumber\` the last occurrence on the command line is effective."$'\n'"--head - Flag. Optional. When outputting \`stderr\` or \`stdout\`, output the head of the file."$'\n'"--tail - Flag. Optional. When outputting \`stderr\` or \`stdout\`, output the tail of the file. (Default)"$'\n'""
 base="test.sh"
@@ -16,7 +16,7 @@ rawComment="Assert a file contains one or more strings"$'\n'"Argument: fileName 
 return_code="0 - If the assertion succeeds"$'\n'"1 - If the assertion fails"$'\n'""
 reviewed="2023-11-12"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="a67c5b2c2396821f4e070140f0dabed2cde8ea23"
+sourceHash="57acf358ce9ffa90c756271013459bc2978efa9a"
 sourceLine="1000"
 summary="Assert a file contains one or more strings"
 summaryComputed="true"

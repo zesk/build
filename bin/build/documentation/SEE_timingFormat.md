@@ -1,1 +1,0 @@
-[timingFormat]({rel}documentation/source/tools/timing.md#timingformat) - Format a timing output (milliseconds) as seconds using a decimal ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L91))

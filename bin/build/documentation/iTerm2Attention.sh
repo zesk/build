@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"--verbose | -v - Flag. Optional. Verbose mode. Show what you are doing."$'\n'"action. String. Action to attract attention: \`true\`, \`false\` or \`!\`"$'\n'""
 base="iterm2.sh"
@@ -13,7 +13,7 @@ lowerFn="iterm2attention"
 rawComment="Attract the operator"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing."$'\n'"Argument: action. String. Action to attract attention: \`true\`, \`false\` or \`!\`"$'\n'"Actions:"$'\n'"- \`true\` - start making dock icon bounce"$'\n'"- \`false\` - stop making dock icon bounce"$'\n'"- \`!\` - Show fireworks at cursor"$'\n'"- \`fireworks\` - Show fireworks at cursor"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="91a65f03915e4e3420e13242ad0b50d50652de48"
+sourceHash="0527ba47f537e4e6b5039d1b56e7d23b8233bcae"
 sourceLine="589"
 summary="Attract the operator"
 summaryComputed="true"

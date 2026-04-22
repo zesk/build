@@ -26,7 +26,7 @@
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" execArguments=()
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
   shift
   # __IDENTICAL__ __checkCode__handler 1
   isUnsignedInteger "$code" || throwArgument "$__handler" "Not unsigned integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?

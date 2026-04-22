@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-14
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -8,13 +8,13 @@ description="List functions without documentation pages."$'\n'""
 file="bin/build/tools/documentation.sh"
 fn="documentationIndexUnlinkedFunctions"
 foundNames=([0]="argument")
-line="418"
+line="416"
 lowerFn="documentationindexunlinkedfunctions"
 rawComment="List functions without documentation pages."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="053022e849a1557d427212d89dc2881e59289681"
-sourceLine="418"
+sourceHash="d5058bbc6d4f089e430d7b7f6f0fa84aeacc3113"
+sourceLine="416"
 summary="List functions without documentation pages."
 summaryComputed="true"
 usage="documentationIndexUnlinkedFunctions [ --help ]"

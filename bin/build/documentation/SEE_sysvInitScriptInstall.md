@@ -1,1 +1,0 @@
-[sysvInitScriptInstall]({rel}documentation/source/tools/sysvinit.md#sysvinitscriptinstall) - Install a script to run upon initialization. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sysvinit.sh#L12))

@@ -43,8 +43,6 @@ Run-related:
 - `catchEnvironment handler command ...` - Run `command ...` (with any arguments) and then run `handler` with an
   environment error if it fails.
 
-# Sugar Functions References
-
 ## Sugar utilities
 
 {isBoolean}
@@ -78,6 +76,8 @@ Run-related:
 {returnThrow}
 
 {convertValue}
+
+## Throw and Catch
 
 {catchCode}
 

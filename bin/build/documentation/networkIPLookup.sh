@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="network.sh"
@@ -14,7 +14,7 @@ lowerFn="networkiplookup"
 rawComment="Get the current IP address of a host"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: IP_URL"$'\n'"Environment: IP_URL_FILTER"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/network.sh"
-sourceHash="8d06c6928d269272ddc5a1f8f7328c10b2f0811f"
+sourceHash="23f35705edd9cb61b7c0f0d8c20699a767a97a90"
 sourceLine="75"
 summary="Get the current IP address of a host"
 summaryComputed="true"

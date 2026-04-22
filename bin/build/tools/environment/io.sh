@@ -12,7 +12,7 @@
 # Argument: --help - Flag. Optional. Display this help.
 environmentValueWrite() {
   local handler="_${FUNCNAME[0]}" name
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local value replace="\"$'\n'\""
 
   name=$(validate "$handler" EnvironmentVariable "name" "${1-}") || return $?
@@ -46,7 +46,7 @@ _environmentValueWrite() {
 # Argument: --help - Flag. Optional. Display this help.
 environmentValueWriteArray() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local name value result search="'" replace="'\''"
 
   name=$(validate "$handler" EnvironmentVariable "name" "${1-}") || return $?
@@ -88,7 +88,7 @@ __environmentValueWrite() {
 # Return Code: 0 - If value
 environmentValueRead() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local stateFile name default="${3---}" value
   stateFile=$(validate "$handler" File "stateFile" "${1-}") || return $?
   name=$(validate "$handler" EnvironmentVariable "name" "${2-}") || return $?
@@ -116,7 +116,7 @@ _environmentValueRead() {
 # Argument: --help - Flag. Optional. Display this help.
 environmentValueConvertArray() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local value prefix='([0]="' suffix='")'
 
   value=$(__stringUnquote "${1-}")
@@ -146,7 +146,7 @@ _environmentValueConvertArray() {
 # Outputs array elements, one per line.
 environmentValueReadArray() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local stateFile="${1-}" name value
 
   name=$(validate "$handler" EnvironmentVariable "name" "${2-}") || return $?
@@ -163,7 +163,7 @@ _environmentValueReadArray() {
 # Argument: --help - Flag. Optional. Display this help.
 # List names of environment values set in a bash state file
 environmentNames() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   environmentLines | cut -f 1 -d =
 }
 _environmentNames() {
@@ -177,7 +177,7 @@ _environmentNames() {
 # Argument: --help - Flag. Optional. Display this help.
 # List lines of environment values set in a bash state file
 environmentLines() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grepSafe -e "^[A-Za-z][A-Z0-9_a-z]*="
 }
 _environmentLines() {

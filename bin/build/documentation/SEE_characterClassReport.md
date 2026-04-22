@@ -1,1 +1,0 @@
-[characterClassReport]({rel}documentation/source/tools/character.md#characterclassreport) - Write a report of the character classes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L21))

@@ -1,1 +1,0 @@
-[environmentVariableNameValid]({rel}documentation/source/tools/environment.md#environmentvariablenamevalid) - Validates zero or more environment variable names. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L16))

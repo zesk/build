@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"managerName - String. Required. The node package manager name to check."$'\n'""
 base="node.sh"
@@ -13,7 +13,7 @@ lowerFn="nodepackagemanagervalid"
 rawComment="Is the passed node package manager name valid?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: managerName - String. Required. The node package manager name to check."$'\n'"Without arguments, shows the valid package manager names."$'\n'"Return Code: 0 - Yes, it's a valid package manager name."$'\n'"Return Code: 1 - No, it's not a valid package manager name."$'\n'"Valid names are: npm yarn"$'\n'""$'\n'""
 return_code="0 - Yes, it's a valid package manager name."$'\n'"1 - No, it's not a valid package manager name."$'\n'""
 sourceFile="bin/build/tools/node.sh"
-sourceHash="f8eb21c84bef13ff53bace1996227ce45f26a91d"
+sourceHash="8132e556929eccd9f09b20255ecdb3ce3b714a1e"
 sourceLine="211"
 summary="Is the passed node package manager name valid?"
 summaryComputed="true"

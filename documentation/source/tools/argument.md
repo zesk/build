@@ -1,12 +1,14 @@
-# Common Argument Handling
+# Argument Tools
 
 <!-- TEMPLATE toolHeader 2 -->
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-This is a work in progress and not yet ready for release.
+{helpArgument}
 
-## Sample usage
+## Common argument handling
+
+This is a work in progress and not yet ready for release.
 
 To handle a possible `--help` ending the arguments early:
 

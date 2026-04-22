@@ -4,6 +4,8 @@
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
+## Why use Zesk Build?
+
 The most compelling reason for using this toolkit is **simple, readable** consistency across projects and platforms
 using a tool
 which is universally available on nearly every platform on the planet and uses consistent, tested and documented tools
@@ -16,22 +18,24 @@ credentials synchronized using an add-on library called **Infrastructure**
 which manages infrastructure configuration in the cloud using `Terraform` or `OpenTofu` and deploying of **Development
 Operations** values used for any number of configuration environments.
 
-## Why build it?
+## Why was it built?
 
 Here's a bullet list of reasons:
 
-- Littering of shell scripts in every project, many with similar functionality between projects
-- Rewriting the same shell function in many places
-- Patterns in Bash are consistent
-- System tools and flags used across platforms are inconsistent
+- A littering of shell scripts in every project, many with similar functionality between projects
+- Rewriting the same shell function in many places in many projects created debt to keep projects and code in sync
+- Generally speaking, patterns in Bash are consistent
+- System tools and flags for shell binaries used across platforms are **inconsistent** - this toolkit isolates and
+  minimizes the platform dependencies.
 - Useful to have a toolkit which operates outside the default application languages (isolation, independence)
-- Useful to have a toolkit with few dependencies which can fully configure and set up other platforms in a
-  platform-independent language
+- Useful to have a toolkit with few dependencies which can fully configure and set up **other platforms** in a
+  platform-independent language (Bash)
+- The `iTerm2` integration makes customizing project workflow and color schemes for terminals super simple 
 - No assertion libraries available which work well with Bash
 - No validation libraries available which work well with Bash
-- "Oh yeah, I forgot that timeouts for `read` don't work the same when we switched from `Ubuntu` to `Alpine` distros for our
-  application."
-- `identicalCheck` was written and then became sort of part of the way this toolkit is built. 
+- "Oh yeah, I forgot that timeouts for `read` don't work the same when we switched from `Ubuntu` to `Alpine` distros for
+  our application."
+- `identicalCheck` was written and then became sort of part of the way this toolkit is built.
 - Everyone invents their own decoration libraries so why not us? Wink.
 
 ## Why `bash`?

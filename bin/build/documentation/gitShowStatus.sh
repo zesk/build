@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="git.sh"
@@ -15,7 +15,7 @@ rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Return C
 return_code="0 - the repo has been modified"$'\n'"1 - the repo has NOT bee modified"$'\n'""
 source="https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceHash="4f7e4ceea530507ccd2bd4a042d5d5d5b9ef4356"
+sourceHash="72d910edfadc6d7f0d48966788e271372c6d5c66"
 sourceLine="276"
 summary="Show changed files from HEAD with their status prefix character:"
 summaryComputed="true"

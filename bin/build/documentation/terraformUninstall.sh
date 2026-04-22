@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="package ... - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'""
 base="terraform.sh"
@@ -13,7 +13,7 @@ lowerFn="terraformuninstall"
 rawComment="Remove terraform binary"$'\n'"Argument: package ... - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/terraform.sh"
-sourceHash="abfe10313271e5e1e6f8e72b20a2b69ba9413b83"
+sourceHash="a4f8e3a7c7ca38d2b31358ac40b4ce3eafce0d6f"
 sourceLine="66"
 summary="Remove terraform binary"
 summaryComputed="true"

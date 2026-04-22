@@ -109,7 +109,7 @@ __awsCredentialsHasProfile() {
   local handler="$1" && shift
   local credentials profileName=${1:-default} name value
   local foundValues=()
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   [ -n "$profileName" ] || throwArgument "$handler" "profileName is somehow blank" || return $?
   credentials="$(catchReturn "$handler" awsCredentialsFile)" || return $?
   while read -r name value; do

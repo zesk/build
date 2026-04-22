@@ -29,7 +29,7 @@
 #
 filesRename() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local old new verb
 
@@ -61,7 +61,7 @@ fileModificationTime() {
   local handler="_${FUNCNAME[0]}"
   local argument
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     argument="$1"
     [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
     [ -f "$argument" ] || throwArgument "$handler" "$argument is not a file" || return $?
@@ -88,7 +88,7 @@ fileModificationSeconds() {
   now_="$(catchEnvironment "$handler" date +%s)" || return $?
   local __count=$#
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     local argument
     argument="$(validate "$handler" File "argument #$((__count - $# + 1))" "${1-}")" || return $?
     argument=$(catchEnvironment "$handler" fileModificationTime "$argument") || return $?
@@ -115,7 +115,7 @@ _fileModificationSeconds() {
 #
 fileModificationTimes() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local directory="${1-}" && shift
   [ -d "$directory" ] || throwArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
   # See: platform
@@ -131,7 +131,7 @@ _fileModificationTimes() {
 # Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query
 fileModifiedRecently() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local directory="${1-}" && shift
   [ -d "$directory" ] || throwArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
   fileModificationTimes "$directory" -type f "$@" | sort -rn | head -n 1
@@ -156,7 +156,7 @@ _fileModifiedRecently() {
 # Return Code: 0 - All files exist and `sourceFile` is the oldest file
 #
 fileIsNewest() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   if [ $# -eq 0 ]; then
     return 1
@@ -182,7 +182,7 @@ _fileIsNewest() {
 # Return Code: 0 - All files exist and `sourceFile` is the oldest file
 #
 fileIsOldest() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   if [ $# -eq 0 ]; then
     return 1
   fi
@@ -201,7 +201,7 @@ __gamutFile() {
 
   shift 2 || returnArgument "${FUNCNAME[0]} used incorrectly" || return $?
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local gamutTime="" theFile=""
 
@@ -255,7 +255,7 @@ _fileNewest() {
 #
 fileModifiedSeconds() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local timestamp
 
@@ -275,7 +275,7 @@ _fileModifiedSeconds() {
 # Return Code: 2 - Can not get modification time
 fileModifiedDays() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local timestamp
 
@@ -294,10 +294,10 @@ _fileModifiedDays() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - File. Required. One or more files to `realpath`.
-# Requires: executableExists realpath __help bashDocumentation returnArgument
+# Requires: executableExists realpath helpArgument bashDocumentation returnArgument
 fileRealPath() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
   if executableExists realpath; then
     catchReturn "$handler" realpath "$@" || return $?
   else
@@ -325,7 +325,7 @@ _fileRealPath() {
 # Normalizes segments of `/./` and `/../` in a path without using `fileRealPath`
 # Removes dot and dot-dot paths from a path correctly
 directoryPathSimplify() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local path elements=() segment dot=0 pathResult=() IFS="/"
   while [ $# -gt 0 ]; do
     path="$1"
@@ -364,7 +364,7 @@ _directoryPathSimplify() {
 # Argument: --help - Flag. Optional. Display this help.
 fileSize() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local opts=()
 
@@ -403,7 +403,7 @@ _fileSize() {
 fileType() {
   local t
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     t="$(type -t "$1")" || :
     if [ -z "$t" ]; then
       if [ -L "$1" ]; then
@@ -487,7 +487,7 @@ __fileListColumn() {
 
   shift 2
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || __help "$usageFunction" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "$usageFunction" "$@" || return 0
     # shellcheck disable=SC2012
     if ! result="$(ls -ld "$1" | awk '{ print $'"$column"' }')"; then
       throwEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
@@ -800,12 +800,12 @@ _linkCreate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Optional. Any additional arguments are passed through.
-# Requires: mktemp __help catchEnvironment bashDocumentation
+# Requires: mktemp helpArgument catchEnvironment bashDocumentation
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
 fileTemporaryName() {
   local handler="_${FUNCNAME[0]}"
-  __help "$handler" "$@" || return 0
+  helpArgument "$handler" "$@" || return 0
   handler="$1" && shift
   local debug=",${BUILD_DEBUG-},"
   if [ "${debug#*,temp,}" != "$debug" ]; then

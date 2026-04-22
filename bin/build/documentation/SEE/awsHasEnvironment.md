@@ -1,0 +1,1 @@
+[awsHasEnvironment]({rel}tools/aws.md#awshasenvironment) - Test whether the AWS environment variables are set or not"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L117))

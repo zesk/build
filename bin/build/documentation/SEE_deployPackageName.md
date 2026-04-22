@@ -1,1 +1,0 @@
-[deployPackageName]({rel}documentation/source/tools/deploy.md#deploypackagename) - Outputs the build target name which is based on the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L102))

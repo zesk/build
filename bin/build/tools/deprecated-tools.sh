@@ -55,7 +55,7 @@ _deprecatedFilePrependVersion() {
 # Environment: BUILD_RELEASE_NOTES
 deprecatedIgnore() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   local notes
 

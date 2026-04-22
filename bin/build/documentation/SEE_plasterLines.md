@@ -1,1 +1,0 @@
-[plasterLines]({rel}documentation/source/tools/cursor.md#plasterlines) - Outputs a line and fills the remainder with space ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L263))

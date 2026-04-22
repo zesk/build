@@ -50,7 +50,7 @@ _deprecated() {
 # stdout: - No output from stdout ever from this function
 muzzle() {
   # __IDENTICAL__ __checkHelp1FUNCNAME 1
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   "$@" >/dev/null
 }
 _muzzle() {
@@ -66,7 +66,7 @@ _muzzle() {
 # Return Code: 0 - Always
 muzzleReturn() {
   # __IDENTICAL__ __checkHelp1FUNCNAME 1
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   "$@" || return 0
 }
 _muzzleReturn() {
@@ -86,7 +86,7 @@ _muzzleReturn() {
 returnMap() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then
@@ -129,7 +129,7 @@ _returnMap() {
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" execArguments=()
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
   shift
   # __IDENTICAL__ __checkCode__handler 1
   isUnsignedInteger "$code" || throwArgument "$__handler" "Not unsigned integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?

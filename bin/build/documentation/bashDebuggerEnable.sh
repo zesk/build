@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="debugger.sh"
@@ -14,7 +14,7 @@ rawComment="Enables the debugger immediately"$'\n'"    Usage: bashDebuggerEnable
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashDebug bashDebuggerDisable"$'\n'""
 sourceFile="bin/build/tools/debugger.sh"
-sourceHash="2f829aa199a00fb332fd6b41ece814a617d0375d"
+sourceHash="185c7ac4e173864c2d26787a67fc61c7c86306bd"
 sourceLine="59"
 summary="Enables the debugger immediately"
 summaryComputed="true"

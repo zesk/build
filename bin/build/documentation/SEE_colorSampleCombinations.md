@@ -1,1 +1,0 @@
-[colorSampleCombinations]({rel}documentation/source/tools/decorate.md#colorsamplecombinations) - Show combinations of foreground and background colors in the console. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L137))

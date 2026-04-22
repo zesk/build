@@ -1,1 +1,0 @@
-[dumpEnvironment]({rel}documentation/source/tools/dump.md#dumpenvironment) - Output the environment but try to hide secure value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L330))

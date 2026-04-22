@@ -58,7 +58,7 @@ _deployApplication() {
 #
 deployApplicationVersion() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local p="${1-}" value
   local tryVariables=(APPLICATION_ID APPLICATION_TAG)
   local deployFile
@@ -101,7 +101,7 @@ _deployApplicationVersion() {
 # Environment: BUILD_TARGET
 deployPackageName() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   export BUILD_TARGET
   catchReturn "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
@@ -124,7 +124,7 @@ deployHasVersion() {
   local handler="_${FUNCNAME[0]}"
   local deployHome versionName targetPackage
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   deployHome=$(validate "$handler" Directory deployHome "${1-}") || return $?
   versionName="${2-}"
   [ -n "$versionName" ] || throwArgument "$handler" "blank versionName" || return $?
@@ -145,7 +145,7 @@ _deployHasVersion() {
 _applicationIdLink() {
   local handler="${1-}" fileSuffix="${2-}" && shift 2 || return $?
   [ -n "$fileSuffix" ] || throwArgument "$handler" "Internal fileSuffix is blank" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local deployHome versionName
   deployHome="$(validate "$handler" Directory deployHome "${1-}")" && shift || return $?
   versionName=$(validate "$handler" String "versionName" "${1-}") && shift || return $?

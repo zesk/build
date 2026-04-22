@@ -164,7 +164,7 @@ _nodePackageManager() {
 # Installs the selected package manager for node
 nodePackageManagerInstall() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local manager
 
@@ -184,7 +184,7 @@ _nodePackageManagerInstall() {
 # Installs the selected package manager for node
 nodePackageManagerUninstall() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local manager
 
   manager=$(catchEnvironment "$handler" nodePackageManager) || return $?

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"prefix - EmptyString. Optional. Prefix for all prompts."$'\n'"suffix - EmptyString. Optional. Suffix for all prompts."$'\n'""
 base="prompt.sh"
@@ -13,7 +13,7 @@ lowerFn="bashpromptmarkers"
 rawComment="Set markers for terminal integration"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: prefix - EmptyString. Optional. Prefix for all prompts."$'\n'"Argument: suffix - EmptyString. Optional. Suffix for all prompts."$'\n'"Outputs the current marker settings, one per line (0, 1, or 2 lines will be output)."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="a4bf439a67dd7eaa043b418b6fb13ff52fae8535"
+sourceHash="b61c792ae723865297730f9775c4f0b5fcba937d"
 sourceLine="127"
 summary="Set markers for terminal integration"
 summaryComputed="true"

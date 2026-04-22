@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="directory - Directory. Required. Test if file directory exists (file does not have to exist)"$'\n'""
 base="directory.sh"
@@ -8,13 +8,13 @@ description="Does the file's directory exist?"$'\n'""
 file="bin/build/tools/directory.sh"
 fn="fileDirectoryExists"
 foundNames=([0]="argument")
-line="154"
+line="158"
 lowerFn="filedirectoryexists"
 rawComment="Does the file's directory exist?"$'\n'"Argument: directory - Directory. Required. Test if file directory exists (file does not have to exist)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/directory.sh"
-sourceHash="e3a8c59981053233f360475ab67f48cb580f1f5c"
-sourceLine="154"
+sourceHash="da838a55948477df4605f58aff4c29b4f13319f7"
+sourceLine="158"
 summary="Does the file's directory exist?"
 summaryComputed="true"
 usage="fileDirectoryExists directory"

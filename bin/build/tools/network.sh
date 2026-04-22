@@ -75,7 +75,7 @@ _networkMACAddressList() {
 networkIPLookup() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local url jqFilter
   url=$(catchReturn "$handler" buildEnvironmentGet IP_URL) || return $?

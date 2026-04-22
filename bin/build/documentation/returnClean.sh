@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="exitCode - Integer. Required. Exit code to return."$'\n'"item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr."$'\n'""
 base="_sugar.sh"
@@ -11,11 +11,11 @@ foundNames=([0]="argument" [1]="requires" [2]="group")
 group="Sugar"$'\n'""
 line="101"
 lowerFn="returnclean"
-rawComment="Delete files or directories and return the same exit code passed in."$'\n'"Argument: exitCode - Integer. Required. Exit code to return."$'\n'"Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr."$'\n'"Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help"$'\n'"Group: Sugar"$'\n'""$'\n'""
-requires="isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument __help"$'\n'""
+rawComment="Delete files or directories and return the same exit code passed in."$'\n'"Argument: exitCode - Integer. Required. Exit code to return."$'\n'"Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr."$'\n'"Requires: isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument helpArgument"$'\n'"Group: Sugar"$'\n'""$'\n'""
+requires="isUnsignedInteger returnArgument throwEnvironment bashDocumentation throwArgument helpArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
+sourceHash="1cf1ee5794e801d06a483b8f311df83c051c18a0"
 sourceLine="101"
 summary="Delete files or directories and return the same exit code"
 summaryComputed="true"

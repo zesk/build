@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="integerTimestamp - Integer. Required. Integer. Required. Integer timestamp offset (Seconds since 1/1/1970 UTC, same as \`\$(date +%s)\`)"$'\n'"format - String. Optional. How to output the date (e.g. \`%F\` - no \`+\` is required)"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--local - Flag. Optional. Show the local time, not UTC."$'\n'""
 base="date.sh"
@@ -17,7 +17,7 @@ rawComment="Converts an integer date to a date formatted timestamp (e.g. \`%Y-%m
 requires="throwArgument decorate validate __dateFromTimestamp bashDocumentation"$'\n'""
 return_code="0 - If parsing is successful"$'\n'"1 - If parsing fails"$'\n'""
 sourceFile="bin/build/tools/date.sh"
-sourceHash="f5a2a19f38f552df28e9aae96fa09336f3cf3753"
+sourceHash="8b6a5808143207c1b2329179a4d73d95ea46d8cc"
 sourceLine="75"
 summary="Converts an integer date to a date formatted timestamp (e.g."
 summaryComputed="true"

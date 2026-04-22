@@ -17,12 +17,12 @@
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: catchArgument isUnsignedInteger bashDocumentation __help
+# Requires: catchArgument isUnsignedInteger bashDocumentation helpArgument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
     return 0
@@ -41,12 +41,12 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: catchArgument isUnsignedInteger bashDocumentation type __help
+# Requires: catchArgument isUnsignedInteger bashDocumentation type helpArgument
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac

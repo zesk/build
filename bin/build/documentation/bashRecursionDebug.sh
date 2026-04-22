@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--end - Flag. Optional. Stop testing for recursion."$'\n'""
 base="debug.sh"
@@ -15,7 +15,7 @@ rawComment="Place this in code where you suspect an infinite loop occurs"$'\n'"I
 requires="printf unset  export debuggingStack exit"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="e1803ab132eb8607c3c4f9de4461bcf144668876"
+sourceHash="20094ded2fe440d8caa5368a60b92d19047e793c"
 sourceLine="139"
 summary="Place this in code where you suspect an infinite loop"
 summaryComputed="true"

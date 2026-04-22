@@ -10,12 +10,12 @@
 
 function __faster() {
   # __IDENTICAL__ __checkHelp1FUNCNAME 1
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   local __handler="_${FUNCNAME[0]}"
 
   # __IDENTICAL__ __checkHelp1__handler 1
-  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$__handler" "$@" || return 0
 
   local __count=$# __saved=("$@")
 

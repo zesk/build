@@ -1,1 +1,0 @@
-[gitBranchMergeCurrent]({rel}documentation/source/tools/git.md#gitbranchmergecurrent) - Merge the current branch with another, push to remote, and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1140))

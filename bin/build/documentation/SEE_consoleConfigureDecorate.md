@@ -1,1 +1,0 @@
-[consoleConfigureDecorate]({rel}documentation/source/tools/console.md#consoleconfiguredecorate) - Modify the decoration environment for light or dark. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L142))

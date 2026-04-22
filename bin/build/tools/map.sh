@@ -16,7 +16,7 @@
 # shellcheck disable=SC2120
 mapTokens() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local prefix prefixQ suffix suffixQ removeQuotesPattern argument
 
   prefix="${1-"{"}"

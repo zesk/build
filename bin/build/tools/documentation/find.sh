@@ -22,7 +22,7 @@ __bashDocumentation_FindFunctionDefinition() {
   local handler="_${FUNCNAME[0]}"
   local directory fn
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   directory=$(validate "$handler" Directory "directory" "${1-}") && shift || return $?
   fn=$(validate "$handler" String "fn" "${1-}") && shift || return $?
 

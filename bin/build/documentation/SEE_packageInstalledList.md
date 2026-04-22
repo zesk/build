@@ -1,1 +1,0 @@
-[packageInstalledList]({rel}package.md#packageinstalledlist) - List installed packages on this system using package manager ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))

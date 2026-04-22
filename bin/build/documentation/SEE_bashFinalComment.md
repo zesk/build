@@ -1,1 +1,0 @@
-[bashFinalComment]({rel}documentation/source/tools/bash.md#bashfinalcomment) - Extracts the final comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L555))

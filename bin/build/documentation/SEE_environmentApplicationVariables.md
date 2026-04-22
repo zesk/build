@@ -1,1 +1,0 @@
-[environmentApplicationVariables]({rel}tools/environment.md#environmentapplicationvariables) - List environment variables related to application deployments ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/application.sh#L8))

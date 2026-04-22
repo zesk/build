@@ -19,7 +19,7 @@
 # Example:     BUILD_DEBUG=true # All debugging is enabled
 # Example:     BUILD_DEBUG=handler,bashPrompt # Debug `handler` and `bashPrompt` calls
 buildDebugEnabled() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
   # NOTE: This allows runtime changing of this value
   export BUILD_DEBUG
@@ -86,7 +86,7 @@ __buildDebugDisable() {
 # Example:     buildDebugStop || :. -
 # Requires: buildDebugEnabled
 buildDebugStart() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   if ! buildDebugEnabled "$@"; then
     return 1
   fi
@@ -104,7 +104,7 @@ _buildDebugStart() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 buildDebugStop() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! buildDebugEnabled "$@"; then
     return 1
   fi
@@ -121,7 +121,7 @@ _buildDebugStop() {
 # Useful if you need to temporarily enable or disable it.
 # Depends: -
 isBashDebug() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   case $- in *x*) return 0 ;; esac
   return 1
 }
@@ -141,7 +141,7 @@ bashRecursionDebug() {
 
   export __BUILD_RECURSION
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local cacheFile
 
@@ -273,7 +273,7 @@ __bashDebugInterruptFile() {
 # Outputs `1` always
 # Requires: -
 isErrorExit() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # printf "isErrorExit: %s\n" "$-" 1>&2
   case "$-" in *e* | *E*) return 0 ;; esac
   return 1

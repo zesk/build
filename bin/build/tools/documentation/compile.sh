@@ -17,7 +17,7 @@ __documentationTemplateFileCompile() {
   local start && start=$(timingStart) || return $?
 
   local cacheDirectory="" sourceFile="" functionTemplate="" targetFile=""
-  local forceFlag=false envFiles=() verboseFlag=false compiledTemplateCache=""
+  local forceFlag=false envFiles=() verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -30,7 +30,6 @@ __documentationTemplateFileCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     --verbose) verboseFlag=true ;;
     --force) forceFlag=true ;;
-    --md-cache) shift && compiledTemplateCache=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       # Load arguments one-by-one
       if [ -z "$cacheDirectory" ]; then
@@ -72,7 +71,6 @@ __documentationTemplateFileCompile() {
 
   statusMessage decorate info "Generating $(decorate code "$base") ($(decorate info "$(localePluralWord "$tokenCount" token)) ...")"
 
-  [ -n "$compiledTemplateCache" ] || compiledTemplateCache=$(catchReturn "$handler" directoryRequire "$cacheDirectory/compiledTemplateCache") || returnClean $? "${clean[@]}" || return $?
   # Environment change will affect this template
 
   # Function template change will affect this template
@@ -97,15 +95,14 @@ __documentationTemplateFileCompile() {
       if inArray "$tokenName" "${foundTokens[@]+"${foundTokens[@]}"}"; then
         continue
       fi
-      compiledFunctionTarget="$compiledTemplateCache/$tokenName.md"
+      local compiledFunctionTarget && compiledFunctionTarget="$(__documentationFile "$home" "$tokenName" true)"
       [ -f "$compiledFunctionTarget" ] || forceFlag=true
       if settingsFile=$(__functionSettings "$home" "$tokenName"); then
         settingsFiles+=("$tokenName" "$settingsFile")
         foundTokens+=("$tokenName")
         checkFiles+=("$settingsFile")
       else
-        local sourceCodeFile
-        if ! sourceCodeFile=$(__documentationIndexLookup "$handler" --source "$tokenName"); then
+        local sourceCodeFile && if ! sourceCodeFile=$(__documentationIndexLookup "$handler" --source "$tokenName"); then
           decorate warning "Function definition not found $(decorate code "$tokenName")"
           continue
         fi
@@ -123,10 +120,8 @@ __documentationTemplateFileCompile() {
         set -- "${settingsFiles[@]}"
         while [ $# -gt 1 ]; do
           tokenName="$1" settingsFile="$2" && shift 2
-          compiledFunctionTarget="$compiledTemplateCache/$tokenName.md"
-          {
-            __documentationTemplateSettingsCompile "$handler" "$settingsFile" "$functionTemplate" | textTrimTail | printfOutputSuffix "\n" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" "$settingsFile" "$functionTemplate" || return $?
-          } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" "$settingsFile" "$functionTemplate" ">$compiledFunctionTarget" || return $?
+          local compiledFunctionTarget && compiledFunctionTarget="$(__documentationFile "$home" "$tokenName" true)"
+          __documentationTemplateSettingsCompile "$handler" "$settingsFile" "$functionTemplate" | textTrimTail | printfOutputSuffix "\n" >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" "$settingsFile" "$functionTemplate" || return $?
           environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv" || returnClean $? "${clean[@]}" || return $?
         done
       fi
@@ -134,15 +129,12 @@ __documentationTemplateFileCompile() {
         set -- "${findTokens[@]}"
         while [ $# -gt 1 ]; do
           tokenName="$1" sourceCodeFile="$2" && shift 2
-          compiledFunctionTarget="$compiledTemplateCache/$tokenName.md"
+          local compiledFunctionTarget && compiledFunctionTarget="$(__documentationFile "$home" "$tokenName" true)"
           if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && fileIsNewest "$compiledFunctionTarget" "$sourceCodeFile" "$functionTemplate"; then
             statusMessage decorate info "Skip $tokenName and use cache"
             catchReturn "$handler" touch "$compiledFunctionTarget" || return $?
           else
-            {
-              __documentationTemplateFunctionCompile "$handler" "$tokenName" "$functionTemplate" | textTrimTail || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
-              printf "\n"
-            } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
+            __documentationTemplateFunctionCompile "$handler" "$tokenName" "$functionTemplate" | textTrimTail | printfOutputSuffix "\n" >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
           fi
           environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
         done
@@ -262,7 +254,7 @@ __documentationTemplateDirectoryCompile() {
     --force) passArgs+=("$argument") ;;
     --verbose) verboseFlag=true && passArgs+=("$argument") ;;
     --filter) shift && while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done ;;
-    --md-cache | --env-file) shift && passArgs+=("$argument" "${1-}") ;;
+    --env-file) shift && passArgs+=("$argument" "${1-}") ;;
     *)
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$argument") || return $?

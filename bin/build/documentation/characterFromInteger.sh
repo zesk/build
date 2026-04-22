@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="character.sh"
@@ -15,7 +15,7 @@ rawComment="Given a list of integers, output the character codes associated with
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://mywiki.wooledge.org/BashFAQ/071"$'\n'""
 sourceFile="bin/build/tools/character.sh"
-sourceHash="79fa401b4aa7bf5657ce1816c13f7468214fdfbd"
+sourceHash="5a2e05ecbe74faca818a547fd009b4342c8f9e78"
 sourceLine="118"
 summary="Given a list of integers, output the character codes associated"
 summaryComputed="true"

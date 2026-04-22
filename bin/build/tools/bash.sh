@@ -80,7 +80,7 @@ _bashCheckRequires() {
 # List bash builtin functions, one per line
 # stdout: line:function
 bashBuiltins() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" ":" "." "[" "alias" "bg" "bind" "break" "builtin" "case" "caller" "cd" "command" "compgen" "complete" "continue" "declare" "dirs" "disown" "echo" "enable" "eval" "exec" "exit" "export" "false" "fc" "fg" "getopts" \
     "hash" "help" "history" "if" "jobs" "kill" "let" "local" "logout" "popd" "printf" "pushd" "pwd" "read" "readonly" "return" "set" "shift" "shopt" "source" "suspend" "test" "times" "trap" "true" "type" "typeset" \
     "ulimit" "umask" "unalias" "unset" "until" "wait" "while"
@@ -99,7 +99,7 @@ _bashBuiltins() {
 isBashBuiltin() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || throwArgument "$handler" "Need builtin" || return $?
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   case "${1-}" in
   ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "caller" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "false" | "fc" | "fg" | "getopts")
     return 0
@@ -137,7 +137,7 @@ _isBashBuiltin() {
 bashLibraryHome() {
   local handler="_${FUNCNAME[0]}"
   local home run startDirectory="${2-}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   run=$(validate "$handler" String "libraryRelativePath" "${1-}") || return $?
   [ -n "$startDirectory" ] || startDirectory=$(catchEnvironment "$handler" pwd) || return $?
   startDirectory=$(validate "$handler" Directory "startDirectory" "$startDirectory") || return $?
@@ -294,7 +294,7 @@ _bashFunctionDefined() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 bashStripComments() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed '/^\s*#/d'
 }
 _bashStripComments() {
@@ -497,10 +497,10 @@ _bashCommentVariable() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: head bashFinalComment
-# Requires: __help bashDocumentation
+# Requires: helpArgument bashDocumentation
 bashFileComment() {
   local source="${1-}" lineNumber="${2-}"
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   isUnsignedInteger "$lineNumber" || throwArgument "$handler" "lineNumber is not an unsigned integer: \"$source\" [$lineNumber]" || return $?
   head -n "$((lineNumber + 1))" "$source" | bashFinalComment
 }
@@ -553,7 +553,7 @@ _bashCommentFilter() {
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
@@ -581,12 +581,12 @@ _bashFinalComment() {
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: grep cut fileReverseLines __help
+# Requires: grep cut fileReverseLines helpArgument
 # Requires: bashDocumentation
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   grep -m 1 -B $maxLines -e "^\s*$functionName() {" "$source" | bashFinalComment
   # Explained:
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)

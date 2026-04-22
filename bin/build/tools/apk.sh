@@ -15,7 +15,7 @@
 # Return Code: 1 - System is not an alpine system or apk is not installed
 apkIsInstalled() {
   local handler="_${FUNCNAME[0]}"
-  __help --only "$handler" "$@" || return 0
+  helpArgument --only "$handler" "$@" || return 0
   isAlpine && executableExists apk
 }
 _apkIsInstalled() {
@@ -28,7 +28,7 @@ _apkIsInstalled() {
 # Argument: --help - Flag. Optional. Display this help.
 isAlpine() {
   local handler="_${FUNCNAME[0]}"
-  __help --only "$handler" "$@" || return 0
+  helpArgument --only "$handler" "$@" || return 0
   [ -f /etc/alpine-release ]
 }
 _isAlpine() {
@@ -50,7 +50,7 @@ _isAlpine() {
 alpineContainer() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
   export LC_TERMINAL TERM
   catchReturn "$handler" buildEnvironmentLoad LC_TERMINAL TERM || return $?
   catchEnvironment "$handler" dockerLocalContainer --handler "$handler" --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?

@@ -21,7 +21,7 @@
 # Return Code: 0 - if parsing succeeds
 dateToFormat() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local format="${2-"%F %T"}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
@@ -49,7 +49,7 @@ _dateToFormat() {
 # Return Code: 0 - if parsing succeeds
 # Example:     timestamp=$(dateToTimestamp '2023-10-15')
 dateToTimestamp() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   dateToFormat "$1" %s
 }
 _dateToTimestamp() {
@@ -191,7 +191,7 @@ _dateToday() {
 # Argument: text - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.
 dateValid() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   local date="${1-}"
   catchEnvironment "$handler" [ "${date:4:1}${date:7:1}" = "--" ] || return 1

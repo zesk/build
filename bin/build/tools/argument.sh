@@ -532,7 +532,7 @@ _commentArgumentsRemainder() {
   printf "%s\n" "$stateFile" "$@"
 }
 
-# IDENTICAL __help 57
+# IDENTICAL helpArgument 60
 
 # Simple help argument handler.
 #
@@ -549,30 +549,33 @@ _commentArgumentsRemainder() {
 #
 # Example:     # NOT DEFINED handler
 # Example:
-# Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+# Example:     helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 # Example:     # Argument 1 absolutely exists
-# Example:     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 # Example:
 # Example:     # DEFINED handler
 # Example:
 # Example:     local handler="_${FUNCNAME[0]}"
-# Example:     __help "$handler" "$@" || return 0
-# Example:     [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
-# Example:     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+# Example:     helpArgument "$handler" "$@" || return 0
+# Example:     [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
+# Example:     [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 # Example:
 # Example:     # Blank Arguments for help
-# Example:     [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-# Example:     [ $# -gt 0 ] || __help "$handler" --help || return 0
+# Example:     [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
+# Example:     [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
 #
-# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
-# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
+# DEPRECATED-Example: [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return $?
+# DEPRECATED-Example: [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return $?
 #
-# Requires: throwArgument bashDocumentation ___help
-__help() {
-  [ $# -gt 0 ] || ! ___help 0 || return 0
+# Requires: throwArgument bashDocumentation _helpArgument
+# Return code: 0 - Help was not found or displayed
+# Return code: 1 - Help was found and displayed
+# Return code: 2 - Argument error
+helpArgument() {
+  [ $# -gt 0 ] || ! _helpArgument 0 || return 0
   local flag="--help"
   local handler="${1-}" && shift
   if [ "$handler" = "--only" ]; then
@@ -586,7 +589,7 @@ __help() {
   done
   return 0
 }
-___help() {
+_helpArgument() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

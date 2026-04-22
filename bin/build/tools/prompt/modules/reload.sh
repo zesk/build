@@ -164,7 +164,7 @@ __bashPromptModule_reloadChanges() {
   ! buildDebugEnabled reloadChanges || debug=true
   ! buildDebugEnabled reloadChangesProfile || profile=true
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   export __BASH_PROMPT_RELOAD_CHANGES
   export __BASH_PROMPT_RELOAD_CHANGES_CACHE

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="command ... - Callable. Command to run"$'\n'"--temporary tempPath - Directory. Optional. Use this for the temporary path."$'\n'"--leak envName ... - EnvironmentVariable. Variable name which is OK to leak."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="debug.sh"
@@ -15,7 +15,7 @@ rawComment="Run command and detect any global or local leaks"$'\n'"Requires: dec
 requires="declare diff grep"$'\n'"throwArgument decorate usageArgumentString isCallable"$'\n'"fileTemporaryName textRemoveFields"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="e1803ab132eb8607c3c4f9de4461bcf144668876"
+sourceHash="20094ded2fe440d8caa5368a60b92d19047e793c"
 sourceLine="298"
 summary="Run command and detect any global or local leaks"
 summaryComputed="true"

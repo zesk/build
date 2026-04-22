@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="none"
 base="docker.sh"
@@ -14,7 +14,7 @@ outputs_one_of="\`linux/arm64\`, \`linux/mips64\`, \`linux/amd64\`"$'\n'""
 rawComment="Fetch the default platform for docker"$'\n'"Outputs one of: \`linux/arm64\`, \`linux/mips64\`, \`linux/amd64\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
-sourceHash="3c99deb85dc2d26f1fb9b74fdec2057025f22e92"
+sourceHash="7ff1d9ef9d41486d9537ae6db40de4176c5794ab"
 sourceLine="22"
 summary="Fetch the default platform for docker"
 summaryComputed="true"

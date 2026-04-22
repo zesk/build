@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="functionName - String. Required. Function which should be called somewhere within a file."$'\n'"file - File. Required. File to search for function handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -14,7 +14,7 @@ rawComment="Show function handler in files"$'\n'"Argument: functionName - String
 requires="throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep"$'\n'""
 return_code="0 - Function is used within the file"$'\n'"1 - Function is *not* used within the file"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
+sourceHash="ce103c0a855c85ae7ea74c3b00899b56536cfe79"
 sourceLine="315"
 summary="Show function handler in files"
 summaryComputed="true"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="barText - String. Required. Text to fill line with, repeated. If not specified uses \`-\`"$'\n'"displayText - String. Optional.  Text to display on the line before the fill bar."$'\n'""
 base="line.sh"
@@ -13,7 +13,7 @@ lowerFn="consoleheadingline"
 rawComment="Output a line and fill columns with a character"$'\n'"Argument: barText - String. Required. Text to fill line with, repeated. If not specified uses \`-\`"$'\n'"Argument: displayText - String. Optional.  Text to display on the line before the fill bar."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/line.sh"
-sourceHash="ccbaa0224c3abeac71472c93bd4d77fe170434c0"
+sourceHash="0f11ed0e19d9ca6840a81fdf07b6a1e8ab19a4c1"
 sourceLine="60"
 summary="Output a line and fill columns with a character"
 summaryComputed="true"

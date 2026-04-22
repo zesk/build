@@ -1,0 +1,1 @@
+[installInstallBuild]({rel}tools/build.md#installinstallbuild) - Installs \`install-bin-build.sh\` the first time in a new project, and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L48))

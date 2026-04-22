@@ -1,0 +1,1 @@
+[deprecatedCannonFile]({rel}tools/deprecated.md#deprecatedcannonfile) - Run textCannon using a configuration file or files. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L171))

@@ -90,11 +90,11 @@
 # Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Return Code: 2 - Valid is invalid, output reason to stderr
 # Requires: __validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable __validateTypeType
-# Requires: isFunction throwArgument __help decorate
+# Requires: isFunction throwArgument helpArgument decorate
 validate() {
   local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code -- "$@"))" || return $?
 
   local handler="$1" && shift

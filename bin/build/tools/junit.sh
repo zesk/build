@@ -28,7 +28,7 @@
 # Argument: --help - Flag. Optional. Display this help.
 junitOpen() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagOpen testsuites "$@" name="" tests=0 failures=0 errors=0 skipped=0 assertions=0 time=0 timestamp="$(date +%FT%T)" || return $?
 }
 _junitOpen() {
@@ -41,7 +41,7 @@ _junitOpen() {
 # Argument: --help - Flag. Optional. Display this help.
 junitClose() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagClose testsuites "$@" || return $?
 }
 _junitClose() {
@@ -69,7 +69,7 @@ _junitClose() {
 # Argument: --help - Flag. Optional. Display this help.
 junitSuiteOpen() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagOpen testsuite "$@" name || return $?
 }
 _junitSuiteOpen() {
@@ -82,7 +82,7 @@ _junitSuiteOpen() {
 # Argument: --help - Flag. Optional. Display this help.
 junitSuiteClose() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagClose testsuite "$@" || return $?
 }
 _junitSuiteClose() {
@@ -105,7 +105,7 @@ _junitSuiteClose() {
 #  Example:     </properties>
 junitProperties() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagOpen properties || return $?
   junitPropertyList --handler "$handler" "$@" || return $?
   catchReturn "$handler" __xmlTagClose properties || return $?
@@ -158,7 +158,7 @@ _junitPropertyList() {
 # Argument: --help - Flag. Optional. Display this help.
 junitSystemOutputOpen() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagOpen system-out || return $?
 }
 _junitSystemOutputOpen() {
@@ -171,7 +171,7 @@ _junitSystemOutputOpen() {
 # Argument: --help - Flag. Optional. Display this help.
 junitSystemOutputClose() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagClose system-out || return $?
 }
 _junitSystemOutputClose() {
@@ -184,7 +184,7 @@ _junitSystemOutputClose() {
 # Argument: --help - Flag. Optional. Display this help.
 junitSystemErrorOpen() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagOpen system-err || return $?
 }
 _junitSystemErrorOpen() {
@@ -197,7 +197,7 @@ _junitSystemErrorOpen() {
 # Argument: --help - Flag. Optional. Display this help.
 junitSystemErrorClose() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagClose system-err || return $?
 }
 _junitSystemErrorClose() {
@@ -220,7 +220,7 @@ _junitSystemErrorClose() {
 # Argument: --help - Flag. Optional. Display this help.
 junitTestCaseOpen() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagOpen testcase "$@" || return $?
 }
 _junitTestCaseOpen() {
@@ -233,7 +233,7 @@ _junitTestCaseOpen() {
 # Argument: --help - Flag. Optional. Display this help.
 junitTestCaseClose() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagClose testcase || return $?
 }
 _junitTestCaseClose() {
@@ -245,7 +245,7 @@ _junitTestCaseClose() {
 # Argument: message - Why test was skipped.
 junitTestCaseSkipped() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   [ $# -eq 0 ] || set -- message="$*"
   catchReturn "$handler" __xmlTag skipped "$@" || return $?
 }
@@ -264,7 +264,7 @@ _junitTestCaseSkipped() {
 # - `type=AssertionError`
 junitTestCaseFailureOpen() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if [ $# -gt 0 ]; then
     local message && message="$(validate "$handler" String message "$1")" && shift || return $?
     set -- message="$message" "$@"
@@ -281,7 +281,7 @@ _junitTestCaseFailureOpen() {
 # Argument: --help - Flag. Optional. Display this help.
 junitTestCaseFailureClose() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagClose failure || return $?
 }
 _junitTestCaseFailureClose() {
@@ -294,7 +294,7 @@ _junitTestCaseFailureClose() {
 # Argument: --help - Flag. Optional. Display this help.
 junitTestCaseErrorOpen() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   if [ $# -gt 0 ]; then
     local message && message="$(validate "$handler" String message "$1")" && shift || return $?
     set -- message="$message" "$@"
@@ -311,7 +311,7 @@ _junitTestCaseErrorOpen() {
 # Argument: --help - Flag. Optional. Display this help.
 junitTestCaseErrorClose() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   catchReturn "$handler" __xmlTagClose error || return $?
 }
 _junitTestCaseErrorClose() {

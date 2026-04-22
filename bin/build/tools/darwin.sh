@@ -8,7 +8,7 @@
 
 # Are we on Mac OS X?
 isDarwin() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   [ "$(uname -s)" = "Darwin" ]
 }
 _isDarwin() {
@@ -20,7 +20,7 @@ _isDarwin() {
 # Directory for user sounds
 darwinSoundDirectory() {
   local handler="_${FUNCNAME[0]}" home
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   isDarwin || throwEnvironment "$handler" "Only on Darwin" || return $?
   home=$(catchReturn "$handler" userHome) || return $?
@@ -33,7 +33,7 @@ _darwinSoundDirectory() {
 
 # Is a Darwin sound name valid?
 darwinSoundValid() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   local sound sounds=()
   while read -r sound; do sounds+=("$sound"); done < <(darwinSoundNames)
   while [ $# -gt 0 ]; do
@@ -96,7 +96,7 @@ _darwinSoundInstall() {
 # List valid sound names usable for notifications in Darwin
 darwinSoundNames() {
   local handler="_${FUNCNAME[0]}" soundDirectory
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   soundDirectory=$(catchEnvironment "$handler" darwinSoundDirectory) || return $?
   [ -d "$soundDirectory" ] || throwEnvironment "$handler" "No $soundDirectory" || return $?

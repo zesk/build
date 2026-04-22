@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="libraryRelativePath - Path. Required. Path to library source file."$'\n'"command - Callable. Optional. Command to run after loading the library."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
@@ -14,7 +14,7 @@ rawComment="Summary: Run or source a library"$'\n'"Run or source one or more bas
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="Loads code"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="286d8187414ff4bf8505a905b49ba4ca2b627ae9"
+sourceHash="ce103c0a855c85ae7ea74c3b00899b56536cfe79"
 sourceLine="160"
 summary="Run or source a library"$'\n'""
 usage="bashLibrary libraryRelativePath [ command ] [ --help ]"

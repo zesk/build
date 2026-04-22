@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-14
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 ##
 ##
@@ -10,13 +10,13 @@ description="Looks up information in the function index"$'\n'"##"$'\n'""
 file="bin/build/tools/documentation.sh"
 fn="documentationIndexLookup"
 foundNames=([0]="argument")
-line="350"
+line="348"
 lowerFn="documentationindexlookup"
 rawComment="Looks up information in the function index"$'\n'"##"$'\n'"Argument: --settings - Flag. Optional. \`matchText\` is a function name. Outputs a file name containing function settings"$'\n'"Argument: --comment - Flag. Optional. \`matchText\` is a function name. Outputs a file name containing function settings"$'\n'"Argument: --source - Flag. Optional. \`matchText\` is a function name. Outputs the source code path to where the function is defined"$'\n'"Argument: --line - Flag. Optional. \`matchText\` is a function name. Outputs the source code line where the function is defined"$'\n'"Argument: --combined - Flag. Optional. \`matchText\` is a function name. Outputs the source code path and line where the function is defined as \`path:line\`"$'\n'"Argument: --file - Flag. Optional. \`matchText\` is a file name. Find files which match this base file name."$'\n'"Argument: matchText - String. Token to look up in the index."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="053022e849a1557d427212d89dc2881e59289681"
-sourceLine="350"
+sourceHash="d5058bbc6d4f089e430d7b7f6f0fa84aeacc3113"
+sourceLine="348"
 summary="Looks up information in the function index"
 summaryComputed="true"
 usage="documentationIndexLookup [ --settings ] [ --comment ] [ --source ] [ --line ] [ --combined ] [ --file ] [ matchText ]"

@@ -16,7 +16,7 @@
 # Argument: --help - Flag. Optional. Display this help.
 __documentationTemplateUpdate() {
   local handler="$1" && shift
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local templatePath repairArgs=() failCount=0
   templatePath=$(validate "$handler" Directory "templatePath" "${1-}") && shift || return $?

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-04-22
 # shellcheck disable=SC2034
 argument="command ... - Any command and arguments to run."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="_sugar.sh"
@@ -10,11 +10,11 @@ fn="executeEcho"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
 line="123"
 lowerFn="executeecho"
-rawComment="Output the \`command ...\` to stdout prior to running, then \`execute\` it"$'\n'"Argument: command ... - Any command and arguments to run."$'\n'"Return Code: Any"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: __help decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""$'\n'""
-requires="__help decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""
+rawComment="Output the \`command ...\` to stdout prior to running, then \`execute\` it"$'\n'"Argument: command ... - Any command and arguments to run."$'\n'"Return Code: Any"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: helpArgument decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""$'\n'""
+requires="helpArgument decorate execute __decorateExtensionQuote __decorateExtensionEach"$'\n'""
 return_code="Any"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="ad64f1104aaf90acd5d1ea92a123fe7fc851a0b1"
+sourceHash="1cf1ee5794e801d06a483b8f311df83c051c18a0"
 sourceLine="123"
 summary="Output the \`command ...\` to stdout prior to running, then"
 summaryComputed="true"
