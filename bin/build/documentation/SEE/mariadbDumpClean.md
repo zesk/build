@@ -1,0 +1,1 @@
+[mariadbDumpClean]({rel}tools/mariadb.md#mariadbdumpclean) - Clean mariadb dumps for import"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L125))

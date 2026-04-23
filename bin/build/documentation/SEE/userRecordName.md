@@ -1,0 +1,1 @@
+[userRecordName]({rel}tools/user.md#userrecordname) - Quick user database query of the user name"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L58))

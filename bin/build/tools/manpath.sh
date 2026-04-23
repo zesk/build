@@ -12,7 +12,7 @@
 # Argument: --first - Flag. Optional. Place any paths after this flag first in the list
 # Argument: --last - Flag. Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `MANPATH` environment
-#
+# Environment: MANPATH
 manPathConfigure() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
@@ -32,16 +32,15 @@ _manPathConfigure() {
 # Remove a path from the MANPATH environment variable
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: path - Directory. Required. The path to be removed from the `MANPATH` environment
+# Argument: path ... - Directory. Required. The path to be removed from the `MANPATH` environment
+# Environment: MANPATH
 manPathRemove() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
-  local tempPath
   export MANPATH
-
   catchReturn "$handler" buildEnvironmentLoad MANPATH || return $?
-  tempPath="$(catchEnvironment "$handler" listRemove "$MANPATH" ':' "$@")" || return $?
+  local tempPath && tempPath="$(catchEnvironment "$handler" listRemove "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
 _manPathRemove() {

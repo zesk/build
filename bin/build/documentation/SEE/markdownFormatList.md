@@ -1,0 +1,1 @@
+[markdownFormatList]({rel}tools/markdown.md#markdownformatlist) - Simple function to make list-like things more list-like in Markdown ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L118))

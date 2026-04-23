@@ -1,0 +1,1 @@
+[textReplaceFirst]({rel}tools/text.md#textreplacefirst) - Replaces the first and only the first occurrence of a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L216))

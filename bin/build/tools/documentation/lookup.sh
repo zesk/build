@@ -72,7 +72,7 @@ __documentationIndexLookup() {
   fi
   indexRoot="$cacheDirectory/code.index"
   if [ ! -f "$indexRoot" ]; then
-    throwEnvironment "$handler" "No index exists" || return $?
+    throwEnvironment "$handler" "No index $indexRoot exists" || return $?
   fi
   if [ $# -eq 0 ]; then
     throwArgument "$handler" "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?

@@ -1,0 +1,1 @@
+[executeEcho]({rel}tools/sugar-core.md#executeecho) - Output the \`command ...\` to stdout prior to running, then ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L123))

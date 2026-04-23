@@ -1,0 +1,1 @@
+[userRecordHome]({rel}tools/user.md#userrecordhome) - Quick user database query of the user home directory"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L73))

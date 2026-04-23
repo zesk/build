@@ -1,0 +1,1 @@
+[readlineConfigurationAdd]({rel}tools/readline.md#readlineconfigurationadd) - Add configuration to \`~/.inputrc\` for a key binding ([source](https://github.com/zesk/build/blob/main/bin/build/tools/readline.sh#L13))
