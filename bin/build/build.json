@@ -2,10 +2,10 @@
   "buildFunctions": "685d095a7b4a68ee7692102e55002472266bb479",
   "deprecated": "685d095a7b4a68ee7692102e55002472266bb479",
   "fingerprint": "685d095a7b4a68ee7692102e55002472266bb479",
-  "id": "d574e65a5",
+  "id": "65c04284c",
   "identical": {
     "--internal": "685d095a7b4a68ee7692102e55002472266bb479",
     "default": "685d095a7b4a68ee7692102e55002472266bb479"
   },
-  "version": "v0.42.3"
+  "version": "v0.42.4"
 }
