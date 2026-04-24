@@ -57,3 +57,8 @@ This is universally used throughout.
 ## Deprecated Logging
 
 {_deprecated}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

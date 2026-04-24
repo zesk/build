@@ -1,10 +1,10 @@
 # Dump Tools
 
-Dump things for debugging
-
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
+
+Dump things for debugging
 
 {dumpEnvironmentUnsafe}
 
@@ -21,3 +21,8 @@ Dump things for debugging
 {dumpLoadAverages}
 
 {debuggingStack}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

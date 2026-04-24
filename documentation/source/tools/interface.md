@@ -17,5 +17,12 @@ The following function signatures are used prevalently as callbacks:
 These are all used in [`_installRemotePackage`](../tools/installer.md#_installremotePackage).
 
 {__packageVersionFunction}
+
 {__packageUrlFunction}
+
 {__packageCheckFunction}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

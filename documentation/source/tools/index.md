@@ -25,7 +25,6 @@
     - [MANPATH](./manpath.md) MANPATH manipulation
     - [PATH](./path.md) – PATH manipulation
     - [Prompt](./prompt.md) – Customize your bash prompt easily, adding project customization and extensible prompt
-- [Installer](./installer.md) – Write your own installer scripts for your own software using Zesk Build installation
   tools.
 - [Interactive](./interactive.md) – Interactivity tools for user confirmation, menus, message display
 - [Linting](./lint.md) – Clean and check your **Bash** code.
@@ -161,3 +160,9 @@ Once included, [all functions here](./all.md) are available for use.
 
 - [New uncategorized functions](./todo.md)
 - [Obsolete](./unused.md)
+
+
+<!-- TEMPLATE footer 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

@@ -1,10 +1,10 @@
 # darwin (Mac OS X) Tools
 
-Tools to work with Darwin, Mac OS X's version of UNIX.
-
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
+
+Tools to work with Darwin, Mac OS X's version of UNIX.
 
 {isDarwin}
 
@@ -21,3 +21,8 @@ Tools to work with Darwin, Mac OS X's version of UNIX.
 {darwinSoundNames}
 
 {darwinSoundValid}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

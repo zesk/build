@@ -80,3 +80,8 @@ Any new dot files which appear will then show a warning in your console.
 ## Background Process Tools
 
 {backgroundProcess}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

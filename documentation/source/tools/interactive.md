@@ -39,3 +39,8 @@ Example:
         catchEnvironment "$handler" fileCopy "${args[@]}" || return $?
         catchEnvironment "$handler" service ssh restart || return $?
     fi
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

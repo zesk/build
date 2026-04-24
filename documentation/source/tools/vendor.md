@@ -15,3 +15,8 @@ Vendor is related to specific software vendors and integration with the shell.
 {isPyCharm}
 
 {isVisualStudioCode}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

@@ -53,3 +53,8 @@ For argument validation, use [validate](./validate.md).
 {__usageMessage}
 
 {__usageMessageStyle}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

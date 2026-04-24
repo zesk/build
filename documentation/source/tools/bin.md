@@ -1,7 +1,7 @@
 # Binaries
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 These utilities can be accessed via the shell in the `PATH` by adding:
@@ -51,3 +51,8 @@ Modify the last line of this file when installing at a different project depth:
 
 The `../..` is the relative path from the script to the project root directory. - {SEE:installInstallBuild} will do this
 for you.
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

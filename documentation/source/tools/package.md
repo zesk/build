@@ -57,3 +57,8 @@ A package group represents software which often is installed using different pac
 {packageManagerDefault}
 
 {packageNeedRestartFlag}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

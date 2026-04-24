@@ -44,7 +44,7 @@ _environmentVariableNameValid() {
 # Argument: --help - Flag. Optional. Display this help.
 environmentSecureVariables() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
+  printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR PROMPT_COMMAND
 }
 _environmentSecureVariables() {
   true || environmentSecureVariables --help
@@ -55,9 +55,9 @@ _environmentSecureVariables() {
 # Display and validate application variables.
 # Return Code: 1 - If any required application variables are blank, the function fails with an environment error
 # Return Code: 0 - All required application variables are non-blank
-# Argument: environmentName - EnvironmentVariable. Optional. A required environment variable name
+# Argument: environmentName ... - EnvironmentVariable. Optional. A required environment variable name
 # Argument: -- - Separator. Optional. Separates requires from optional environment variables
-# Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name.
+# Argument: optionalEnvironmentName ... - EnvironmentVariable. Optional. An optional environment variable name.
 environmentFileShow() {
   local handler="_${FUNCNAME[0]}"
   local name
@@ -73,13 +73,8 @@ environmentFileShow() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --)
-      shift
-      break
-      ;;
-    *)
-      extras+=("$(validate "$handler" EnvironmentVariable "variableName" "$argument")") || return $?
-      ;;
+    --) shift && break ;;
+    *) extras+=("$(validate "$handler" EnvironmentVariable "variableName" "$argument")") || return $? ;;
     esac
     shift
   done

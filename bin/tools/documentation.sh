@@ -36,8 +36,9 @@ __buildDocumentationBuildDirectory() {
     source="$documentationSource/$asset"
     target="$home/documentation/.docs/$asset"
 
-    statusMessage --last timingReport "$start" "Copying $asset"
+    local step && step=$(timingStart)
     catchReturn "$handler" cp -Rf "$source" "$target" || return $?
+    statusMessage --last timingReport "$step" "Copied $asset"
   done
   source="$documentationSource/tools"
   target="$home/documentation/.docs/tools"

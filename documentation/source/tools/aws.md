@@ -53,3 +53,8 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 {awsS3Upload}
 
 {awsS3DirectoryDelete}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

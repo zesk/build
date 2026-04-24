@@ -13,3 +13,8 @@ See [xdebug.php](https://github.com/zesk/zesk/blob/master/xdebug.php) for implem
 {xdebugEnable}
 
 {xdebugDisable}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

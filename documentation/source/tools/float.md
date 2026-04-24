@@ -1,7 +1,7 @@
 # Floating-Point Number Functions
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 Bash really is not a huge fan of floating point numbers but once you turn them into integers it works fantastic.
@@ -9,3 +9,9 @@ Bash really is not a huge fan of floating point numbers but once you turn them i
 {floatTruncate}
 
 {floatRound}
+
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

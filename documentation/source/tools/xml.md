@@ -17,3 +17,8 @@ This is a work in progress and may change. (2025-09-29)
 {__xmlAttributeValue}
 
 {__xmlAttributes}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

@@ -1,15 +1,14 @@
 # Environment Tools
 
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 Tools to manipulate environment files in **Bash**:
 
 - Standardizing
 - Application defaults
 - Reading and writing to/from files
--
-
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
-<hr />
 
 ## Environment
 
@@ -72,3 +71,8 @@ Tools to manipulate environment files in **Bash**:
 {environmentFileApplicationMake}
 
 {environmentFileApplicationVerify}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

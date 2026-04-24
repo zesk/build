@@ -27,3 +27,8 @@
 * Environment variables: [`BUILD_NPM_VERSION`](../env/index.md#BUILD_NPM_VERSION)
 
 {npmInstall}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

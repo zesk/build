@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Docs: ./documentation/source/tools/host.md
 # Test: ./test/tools/host-tests.sh
 #
 # host in this context means system host

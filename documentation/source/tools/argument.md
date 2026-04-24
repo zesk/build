@@ -27,3 +27,8 @@ To handle a possible `--help` ending the arguments early:
 {_arguments}
 
 {_argumentReturn}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

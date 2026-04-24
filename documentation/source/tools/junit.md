@@ -41,3 +41,8 @@ These functions are for generating jUnit XML output files:
 {junitPropertyList}
 
 THe intent is to output our test results in a format which is easily consumed and will make it easier to find issues.
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

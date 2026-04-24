@@ -1,28 +1,21 @@
-# Build your own installer
+## Package Installer Core
 
 <!-- TEMPLATE guideHeader 2 -->
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-A utility/internal function called [`_installRemotePackage`](../tools/build.md#_installRemotePackage) allows for
-building of your own installer for a software package. It inherits the capabilities of `install-bin-build.sh`:
+These tools are if you wish to write your own installer for your own software in `bash` using **Zesk Build**'s
+functions – but has no dependencies on **Zesk Build**.
 
-1. Optional version check or version fix
-2. Optional url generator (to check remote package to get the current version first)
-3. Automatic update of installation binary in-place in project
-4. Optional post-installation validation and notices
-5. Local installation for testing and mocking
+Copy `install.sample.sh` and rename, and keep up to date in your own project with
+`bin/build/repair.sh --internal`.
 
-Installation is a download of a `tar.gz` file and then expansion into the application root.
+Your installer will download and install your package as outlined
+in [building your own installer](../guide/installer.md).
 
-When you write an installer, be sure to run `bashCheckRequries` as part of your testing process:
+{_installRemotePackage}
 
-    bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/my-installer.sh" || return $?
-
-This ensures that all dependent functions are included in the installation file (as this is necessary to allow copying
-of the installer script to another project).
-
-*this document is a work in progress and needs to be completed*. TODO
+{installInstallBinary}
 
 <!-- TEMPLATE guideFooter 3 -->
 <hr />

@@ -93,3 +93,8 @@ Check out our [testing guide](../guide/testing.md)
 {returnIdentical}
 
 {returnLeak}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

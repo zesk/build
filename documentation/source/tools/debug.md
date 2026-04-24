@@ -1,7 +1,7 @@
 # Debug Tools
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 ## Debugging
@@ -13,18 +13,23 @@ Known tags are:
 FunctionAttributeList: BUILD_DEBUG
 
 {buildDebugEnabled}
+
 {buildDebugStart}
+
 {buildDebugStop}
 
 ## Bash Debug
 
 {isBashDebug}
+
 {isErrorExit}
 
 ## Debugging tools
 
 {plumber}
+
 {housekeeper}
+
 {outputTrigger}
 
 ## Simple debugger
@@ -32,6 +37,7 @@ FunctionAttributeList: BUILD_DEBUG
 {bashDebug}
 
 {bashDebuggerDisable}
+
 {bashDebuggerEnable}
 
 ## Debug
@@ -39,3 +45,8 @@ FunctionAttributeList: BUILD_DEBUG
 {bashDebugInterruptFile}
 
 {bashRecursionDebug}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

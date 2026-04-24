@@ -1,7 +1,7 @@
 # Decoration and Console Colors
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 For color console support use `decorate style` where `style` is a color name or a _semantic meaning_, each of which
@@ -154,3 +154,8 @@ This should handle reading from `stdin` or arguments and handle either appropria
 {colorParse}
 
 {colorBrightness}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

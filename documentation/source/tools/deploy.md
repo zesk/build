@@ -1,5 +1,9 @@
 # Deploy Functions
 
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 Deployment is the upgrading of an application from one version to another. These functions handle this on a file-level
 with various hooks and ways of backing out of a failed upgrade.
 
@@ -8,10 +12,6 @@ and switching between deployments is intended to be easy and straightforward to 
 
 Applications are served via a link aliased to a directory which then changes based on the current deployment; this
 minimizes moving parts to change deployment code bases.
-
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
-<hr />
 
 ## Deploy Information
 
@@ -99,3 +99,8 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 {__hookDeployFinish}
 
 {__hookDeployRevert}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

@@ -1,13 +1,12 @@
 # Character Functions
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-
-- See [text](./text.md)
-- See [quote](./quote.md)
-- See [sed](./sed.md)
+- See [Text functions](./text.md)
+- See [Quote functions](./quote.md)
+- See [sed functions](./sed.md)
 
 {isCharacterClass}
 
@@ -22,3 +21,8 @@
 {isCharacterClasses}
 
 {stringValidate}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

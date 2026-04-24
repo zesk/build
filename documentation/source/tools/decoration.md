@@ -2,7 +2,7 @@
 
 Typically used to output text to the console using pretty colors and ANSI art.
 
-<!-- TEMPLATE header 2 -->
+<!-- TEMPLATE toolHeader 2 -->
 [⬅ Parent ](../index.md)
 <hr />
 
@@ -23,3 +23,8 @@ Typically used to output text to the console using pretty colors and ANSI art.
 {textAlignRight}
 
 {textAlignLeft}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

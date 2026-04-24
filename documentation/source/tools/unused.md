@@ -218,3 +218,8 @@ Hides these from [New and uncategorized functions](./todo.md)
 {maximumLineLength}
 
 {clearLine}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

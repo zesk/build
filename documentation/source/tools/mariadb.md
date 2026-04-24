@@ -8,6 +8,12 @@
 any installation which is compatible with **MariaDB** or **MySQL**.
 
 {mariadbDump}
+
 {mariadbConnect}
 
 {mariadbDumpClean}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

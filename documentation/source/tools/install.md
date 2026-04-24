@@ -35,3 +35,8 @@ Install software as `root` or superuser.
 {pythonUninstall}
 
 {terraformUninstall}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

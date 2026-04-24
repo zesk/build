@@ -16,3 +16,8 @@ skip directories, create `./etc/bashSanitize.conf` and add file paths to exclude
 {bashLintFilesInteractive}
 
 {bashLint}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

@@ -100,3 +100,8 @@ These hooks interact with `release-new.sh` and deployment tools but are intended
 {__hookTestRunner}
 
 {__hookTestCleanup}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)

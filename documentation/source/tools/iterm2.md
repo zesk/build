@@ -64,3 +64,8 @@ Most commands take the `--ignore` parameter if you wish to ignore errors when th
 These aliases are provided by **iTerm2**.
 
 {iTerm2Aliases}
+
+<!-- TEMPLATE toolFooter 3 -->
+<hr />
+
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
