@@ -24,8 +24,8 @@ So an example environment file is:
     export DOCUMENTATION_CLOUDFRONT_ID
     DOCUMENTATION_CLOUDFRONT_ID="${DOCUMENTATION_CLOUDFRONT_ID-}"
 
-The values for `Type:` match [standard types](../guide/types.md). The `Category:` simply places it that documentation
-category. The behavior here is to set the environment variable to blank unless it is set already. Most project
+The values for `Type:` match [standard types](../guide/types.md). The `Category:` simply places the variable in that documentation
+category. The behavior here is to **set the environment variable to blank** unless it is set already. Most project
 environment variables will follow this pattern unless they are derived from other environment variables and the idea is
 that this value should come from, you know, the environment.
 
