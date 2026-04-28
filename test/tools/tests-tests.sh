@@ -43,6 +43,7 @@ testTestSuite() {
 testReturns() {
   assertExitCode 97 returnAssert || return $?
   assertExitCode 108 returnLeak || return $?
+  assertExitCode 120 returnExit || return $?
   assertExitCode 105 returnIdentical || return $?
 }
 

@@ -606,6 +606,7 @@ All functions in Zesk Build, alphabetically.
 - [returnCode](../tools/sugar-core.md#returncode) - Print one or more return codes by name. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L42))
 - [returnCodeString](../tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L59))
 - [returnEnvironment](../tools/sugar-core.md#returnenvironment) - Return \`environment\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L264))
+- {SEE:returnExit} <!-- later -->
 - [returnIdentical](../tools/assert.md#returnidentical) - Identical return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1503))
 - [returnLeak](../tools/assert.md#returnleak) - Leak return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1518))
 - [returnMap](../tools/sugar.md#returnmap) - map a return value from one value to another ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L86))

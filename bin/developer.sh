@@ -63,9 +63,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
   __buildConfigure() {
     local handler="_${FUNCNAME[0]}"
-    local home
-
-    home=$(catchReturn "$handler" buildHome) || return $?
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
 
     unset BUILD_ENVIRONMENT_DIRS BUILD_HOOK_EXTENSIONS BUILD_RELEASE_NOTES
 

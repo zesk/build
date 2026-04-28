@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"pattern ... - String. Required.\`grep -e\` Pattern to find in files."$'\n'"-- - Delimiter. Required. exception."$'\n'"exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"-- - Delimiter. Required. file."$'\n'"file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""
 base="file.sh"
@@ -8,13 +8,13 @@ description="Find list of files which do NOT match a specific pattern or pattern
 file="bin/build/tools/file.sh"
 fn="fileNotMatches"
 foundNames=([0]="argument")
-line="539"
+line="540"
 lowerFn="filenotmatches"
 rawComment="Find list of files which do NOT match a specific pattern or patterns and output them"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pattern ... - String. Required.\`grep -e\` Pattern to find in files."$'\n'"Argument: -- - Delimiter. Required. exception."$'\n'"Argument: exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"Argument: -- - Delimiter. Required. file."$'\n'"Argument: file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="7e7132935e7a4026938b5792385f9b35d7bd4f35"
-sourceLine="539"
+sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
+sourceLine="540"
 summary="Find list of files which do NOT match a specific"
 summaryComputed="true"
 usage="fileNotMatches [ --help ] pattern ... -- [ exception ... ] -- file ..."

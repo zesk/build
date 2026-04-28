@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="sourceFile - File. Required. File to check"$'\n'"targetFile ... - File. Optional. One or more files to compare. All must exist."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -13,7 +13,7 @@ lowerFn="fileisoldest"
 rawComment="Check to see if the first file is the newest one"$'\n'"If \`sourceFile\` is modified AFTER ALL \`targetFile\`s, return \`0\`\`"$'\n'"Otherwise return \`1\`\`"$'\n'"Argument: sourceFile - File. Required. File to check"$'\n'"Argument: targetFile ... - File. Optional. One or more files to compare. All must exist."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - \`sourceFile\`, 'targetFile' does not exist, or"$'\n'"Return Code: 0 - All files exist and \`sourceFile\` is the oldest file"$'\n'""$'\n'""
 return_code="1 - \`sourceFile\`, 'targetFile' does not exist, or"$'\n'"0 - All files exist and \`sourceFile\` is the oldest file"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="7e7132935e7a4026938b5792385f9b35d7bd4f35"
+sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
 sourceLine="184"
 summary="Check to see if the first file is the newest"
 summaryComputed="true"

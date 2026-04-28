@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="from - Link. Required. Link to rename."$'\n'"to - FileDirectory. Required. New link path."$'\n'""
 base="file.sh"
@@ -14,7 +14,7 @@ rawComment="Rename a link"$'\n'"Argument: from - Link. Required. Link to rename.
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="mv"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="7e7132935e7a4026938b5792385f9b35d7bd4f35"
+sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
 sourceLine="442"
 summary="Rename a link"
 summaryComputed="true"

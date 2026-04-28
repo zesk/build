@@ -10,7 +10,7 @@
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
 buildFunctionsDerivedCompile() {
   local handler="_${FUNCNAME[0]}"
-  local dd=() doFingerprint=()
+  local dd=() fingerprint=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -24,18 +24,11 @@ buildFunctionsDerivedCompile() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --clean | --git | --all) dd+=("$argument") ;;
-    --fingerprint)
-      local home && home=$(catchReturn "$handler" buildHome) || return $?
-      local fingerprint && fingerprint=$(catchReturn "$handler" hookRun --application "$home" application-fingerprint) || return $?
-      local jsonFile && jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
-      local prefix && prefix=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
-      local path && path=$(jsonPath "${prefix}" "buildFunctions") || return $?
-      local savedFingerprint && savedFingerprint=$(jsonFileGet "$jsonFile" "$path") || return $?
-      if [ "$savedFingerprint" = "$fingerprint" ]; then
-        statusMessage --last decorate info "${FUNCNAME[0]} fingerprint matches - no action."
-        return 0
-      fi
-      doFingerprint=("$jsonFile" "$path")
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "buildFunctions") || return "$(convertValue $? 120 0)" ;;
+    --check)
+      [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
+      fingerprint --key "buildFunctions" --check
+      return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -48,10 +41,8 @@ buildFunctionsDerivedCompile() {
   dd+=(--derive buildFunctionSeeTemplate --)
   dd+=(--derive buildFunctionMarkdownDocumentation --)
   catchReturn "$handler" buildFunctionsCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
-  if [ "${#doFingerprint[@]}" -gt 0 ]; then
-    local fingerprint && fingerprint=$(catchReturn "$handler" hookRun --application "$home" application-fingerprint) || return $?
-    catchReturn "$handler" jsonFileSet "${doFingerprint[@]}" "$fingerprint" || return $?
-  fi
+
+  [ -z "$fingerprint" ] || fingerprint --key "buildFunctions" --verbose
 }
 _buildFunctionsDerivedCompile() {
   # __IDENTICAL__ bashDocumentation 1
@@ -217,8 +208,8 @@ buildFunctionsRemoveDeprecated() {
   fi
 }
 _buildFunctionsRemoveDeprecated() {
-  # __IDENTICAL__ buildDocumentation 1
-  buildDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __buildFunctionsLoad() {

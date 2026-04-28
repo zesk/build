@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="manpath.sh"
@@ -8,14 +8,14 @@ description="Cleans the MANPATH and removes non-directory entries and duplicates
 file="bin/build/tools/manpath.sh"
 fn="manPathCleanDuplicates"
 foundNames=([0]="argument" [1]="no_arguments")
-line="60"
+line="59"
 lowerFn="manpathcleanduplicates"
 no_arguments="default"$'\n'""
 rawComment="Cleans the MANPATH and removes non-directory entries and duplicates"$'\n'"Maintains ordering."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"No-Arguments: default"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/manpath.sh"
-sourceHash="9d56bab3d2071cd72051df9852b82cd7d4e3f136"
-sourceLine="60"
+sourceHash="3610cefbf165c42a60f9d8dc4e7f3fbae16965f5"
+sourceLine="59"
 summary="Cleans the MANPATH and removes non-directory entries and duplicates"
 summaryComputed="true"
 usage="manPathCleanDuplicates [ --help ]"

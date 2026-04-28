@@ -86,13 +86,15 @@ Check out our [testing guide](../guide/testing.md)
 
 {mockConsoleAnimationStop}
 
-# Assert return code
+# Generate return codes
 
 {returnAssert}
 
 {returnIdentical}
 
 {returnLeak}
+
+{returnExit}
 
 <!-- TEMPLATE toolFooter 3 -->
 <hr />

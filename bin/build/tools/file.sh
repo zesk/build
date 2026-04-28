@@ -486,11 +486,12 @@ __fileListColumn() {
   local usageFunction="$1" column="${2-}" result
 
   shift 2
+  [ "${1-}" != "--help" ] || helpArgument "$usageFunction" "$@" || return 0
   while [ $# -gt 0 ]; do
-    [ "${1-}" != "--help" ] || helpArgument "$usageFunction" "$@" || return 0
+    local dd && dd=$(validate "$usageFunction" Exists item "$1") || return $?
     # shellcheck disable=SC2012
-    if ! result="$(ls -ld "$1" | awk '{ print $'"$column"' }')"; then
-      throwEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
+    if ! result="$(ls -ld "$dd" | awk '{ print $'"$column"' }')"; then
+      throwEnvironment "$usageFunction" "Running ls -ld \"$dd\"" || return $?
     fi
     printf "%s\n" "$result"
     shift

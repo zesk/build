@@ -1,1 +1,1 @@
-[manPathCleanDuplicates]({rel}tools/manpath.md#manpathcleanduplicates) - Cleans the MANPATH and removes non-directory entries and duplicates ([source](https://github.com/zesk/build/blob/main/bin/build/tools/manpath.sh#L60))
+[manPathCleanDuplicates]({rel}tools/manpath.md#manpathcleanduplicates) - Cleans the MANPATH and removes non-directory entries and duplicates ([source](https://github.com/zesk/build/blob/main/bin/build/tools/manpath.sh#L59))

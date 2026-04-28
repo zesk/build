@@ -21,94 +21,44 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
   # fn: {base}
   __buildIdenticalRepair() {
     local handler="_${FUNCNAME[0]}"
-    local item aa=() home checkFlag=false doFingerprint=true
+    local item aa=() home fingerprint=""
 
     local cleaned=()
     while [ $# -gt 0 ]; do
       local argument="$1"
       case "$1" in
+      --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "repair") || return "$(convertValue $? 120 0)" ;;
       --check)
-        checkFlag=true
+        [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
+        fingerprint --check --key "repair"
+        return $?
         ;;
-      --token)
-        local token
-        shift && token=$(validate "$handler" string "$argument" "${1-}") || return $?
-        cleaned+=("$argument" "$token")
-        doFingerprint=false
-        ;;
-      --internal)
-        cleaned+=("$1")
-        ;;
-      --no-fingerprint) doFingerprint=false ;;
-      *)
-        doFingerprint=false
-        cleaned+=("$1")
-        ;;
+      --token) local token && shift && token=$(validate "$handler" string "$argument" "${1-}") && cleaned+=("$argument" "$token") || return $? ;;
+      --internal) cleaned+=("$1") ;;
+      *) cleaned+=("$1") ;;
       esac
       shift
     done
     if [ "$(buildEnvironmentGet --quiet APPLICATION_CODE)" != "build.zesk.com" ]; then
       aa+=(--exclude "bin/build/tools" --exclude "bin/build/documentation")
     fi
-    if $checkFlag && ! $doFingerprint; then
-      throwArgument "$handler" "Invalid --check with --token" || return $?
-    fi
     set -- "${cleaned[@]+"${cleaned[@]}"}"
     home=$(catchReturn "$handler" buildHome) || return $?
-    catchEnvironment "$handler" muzzle cd "$home" || return $?
-    local done=false
-    while ! $done; do
-      read -r item || done=true
+    catchReturn "$handler" muzzle pushd "$home" || return $?
+    local finished=false && while ! $finished; do
+      read -r item || finished=true
       [ -z "$item" ] || aa+=(--singles "$item")
     done < <(find . -name 'singles.txt' -path '*/identical/*' ! -path "*/.*/*")
-    done=false
-    while ! $done; do
-      read -r item || done=true
+
+    finished=false && while ! $finished; do
+      read -r item || finished=true
       [ -z "$item" ] || aa+=(--repair "$item")
     done < <(find "$home" -type d -name identical ! -path "*/.*/*")
-    # bashDebugInterruptFile --error --interrupt
-    local fingerprint="" jsonFile="" jqPath=""
-    jsonFile="$home/$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
-    [ -f "$jsonFile" ] || doFingerprint=false
 
-    if $doFingerprint; then
-      local prefix
-      prefix=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
-      prefix="${prefix#.}"
-      prefix="${prefix%.}"
-
-      local buildFingerprint argChecksum="default"
-      [ $# -eq 0 ] || argChecksum="$*"
-      local jqPath
-      jqPath=$(catchReturn "$handler" jsonPath "$prefix" "identical" "\"$argChecksum\"") || return $?
-      fingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
-      buildFingerprint="$(catchReturn "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
-      if [ "$fingerprint" = "$buildFingerprint" ]; then
-        if $checkFlag; then
-          printf "%s\n" "$fingerprint"
-        else
-          decorate success "Fingerprint matches [$(decorate success "$fingerprint")] ... skipping."
-        fi
-        return 0
-      else
-        if $checkFlag; then
-          printf "%s\n" "$fingerprint"
-          return 1
-        fi
-        decorate info "Fingerprint mismatch [ $(decorate green "$fingerprint") != $(decorate subtle "$buildFingerprint") ]"
-      fi
-    elif $checkFlag; then
-      catchReturn "$handler" hookRun application-fingerprint || return $?
-      return 0
-    fi
     set -eou pipefail
     catchReturn "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
-    if $doFingerprint; then
-      # Fingerprint has likely changed
-      fingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
-      catchReturn "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-      printf "%s %s\n" "$(decorate success "Fingerprint updated:")" "$(decorate green "$fingerprint")"
-    fi
+
+    [ -z "$fingerprint" ] || fingerprint --cached "$fingerprint" --verbose --key "repair"
   }
   ___buildIdenticalRepair() {
     # __IDENTICAL__ bashDocumentation 1

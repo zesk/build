@@ -21,7 +21,7 @@ set -eou pipefail
 # There are three flags to control the three processes, you can set them using arguments (all three cleanups are by default enabled)
 #
 # Argument: --prefix jsonPrefix - EmptyString. Optional. Use this JSON prefix to update cached values in `APPLICATION_JSON`.
-# Argument: --no-fingerprint - Flag. Optional. Skip the fingerprint computation and caching.
+# Argument: --fingerprint - Fingerprint. Optional. Fingerprint caching.
 # Argument: --no-configuration - Flag. Optional. Do not fix any configuration issues from past versions.
 # Argument: --just-configuration - Flag. Optional. Just fix any configuration issues from past versions. (Sets all other flags to false)
 # Argument: --configuration - Flag. Optional. Do the fix any configuration issues from past versions. (other flags remain unchanged)
@@ -41,9 +41,7 @@ set -eou pipefail
 __deprecatedCleanup() {
   local handler="_${FUNCNAME[0]}"
   local doCannon=true doTokens=true doSpelling=true doConfiguration=true ignoreExtras=() ignoreFlag=false
-  local justCheck=false prefix="" doFingerprint=true
-
-  prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+  local fingerprint=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -62,7 +60,12 @@ __deprecatedCleanup() {
       doSpelling=false
       doTokens=false
       ;;
-    --no-fingerprint) justCheck=false && doFingerprint=false ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "deprecated") || return "$(convertValue $? 120 0)" ;;
+    --check)
+      [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
+      fingerprint --check --key deprecated
+      return $?
+      ;;
     --cannon) doCannon=true ;;
     --no-cannon) doCannon=false ;;
     --just-cannon)
@@ -98,8 +101,6 @@ __deprecatedCleanup() {
       done
       [ $# -eq 0 ] || shift
       ;;
-    --check) justCheck=true && doFingerprint=true ;;
-    --prefix) shift && prefix=$(validate "$argument" "$handler" "${1-}") || return $? ;;
     --ignore) ignoreFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -138,38 +139,6 @@ __deprecatedCleanup() {
 
   home=$(__catch "$handler" buildHome) || return $?
 
-  local fingerprint="" jsonFile="" prefix=""
-
-  if [ $__count -eq 0 ] && $doFingerprint; then
-    fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-    if jsonFile="$home/$(buildEnvironmentGet --quiet APPLICATION_JSON 2>/dev/null)"; then
-      local prefix
-      prefix=$(buildEnvironmentGet APPLICATION_JSON_PREFIX 2>/dev/null) || :
-      prefix="${prefix#.}"
-      prefix="${prefix%.}"
-
-      local jqPath
-      jqPath=$(__catch "$handler" jsonPath "$prefix" "deprecated") || return $?
-      if [ -f "$jsonFile" ]; then
-        local savedFingerprint
-        savedFingerprint=$(catchEnvironment "$handler" jsonFileGet "$jsonFile" "$jqPath") || return $?
-        if [ "$fingerprint" = "$savedFingerprint" ]; then
-          if $justCheck; then
-            printf "%s\n" "$fingerprint"
-          else
-            decorate success "Deprecated already run successfully. $(decorate subtle "$fingerprint")"
-          fi
-          return 0
-        elif ! $justCheck; then
-          decorate error "Files changed: $fingerprint != $savedFingerprint"
-        fi
-      fi
-    fi
-    if $justCheck; then
-      printf "%s\n" "$fingerprint"
-      return 1
-    fi
-  fi
   local returnCode=0
 
   if $doCannon; then
@@ -188,16 +157,11 @@ __deprecatedCleanup() {
     statusMessage --last decorate info "Cleaning up configuration ..."
     __deprecatedConfiguration || returnCode=$?
   fi
-  if [ -f "$jsonFile" ]; then
-    if [ $returnCode -eq 0 ]; then
-      fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-      statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
-      catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-    else
-      statusMessage --last timingReport "$start" "Failures occurred, not caching results."
-    fi
-  fi
+
+  [ -z "$fingerprint" ] || [ "$returnCode" -ne 0 ] || fingerprint --cached "$fingerprint" --verbose --key "deprecated"
+
   statusMessage --last timingReport "$start" "Deprecated process took"
+
   return "$returnCode"
 }
 ___deprecatedCleanup() {

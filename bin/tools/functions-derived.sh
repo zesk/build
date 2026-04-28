@@ -112,8 +112,7 @@ buildFunctionSeeTemplate() {
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   local fn && fn=$(environmentValueRead "$settingsFile" fn) || return $?
-  local documentationPath
-  if ! documentationPath=$(environmentValueRead "$settingsFile" documentationPath); then
+  local documentationPath && if ! documentationPath=$(environmentValueRead "$settingsFile" documentationPath); then
     if ! documentationPath=$(directoryChange "$home" find "documentation/source/tools" -type f -name '*.md' -print0 | xargs -0 grep -l "{$fn}" | sort | head -n 1); then
       decorate warning "No documentationPath found for $fn" || :
     else
@@ -135,7 +134,7 @@ buildFunctionSeeTemplate() {
     catchReturn "$handler" environmentFileLoad "$settingsFile" || return $?
     documentationPath="${documentationPath#documentation/source/}"
     local sourceLink && sourceLink="$(catchReturn "$handler" mapEnvironment <<<"$functionLinkPattern")" || return $?
-    fileDirectoryRequire --handler "$handler" "$targetFile" || return $?
+    catchReturn "$handler" muzzle fileDirectoryRequire --handler "$handler" "$targetFile" || return $?
     documentationPath="$documentationPath" sourceLink="$sourceLink" catchReturn "$handler" mapEnvironment <"$template" >"$targetFile" || return $?
   ) || return $?
 }

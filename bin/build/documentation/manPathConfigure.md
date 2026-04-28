@@ -21,3 +21,7 @@ Modify the MANPATH environment variable to add a path.
 - `1` - Environment error
 - `2` - Argument error
 
+### Environment
+
+- {SEE:MANPATH.sh}
+

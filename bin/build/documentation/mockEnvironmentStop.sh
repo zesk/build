@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="test.sh"
@@ -13,7 +13,7 @@ lowerFn="mockenvironmentstop"
 rawComment="Restore a mocked value. Works solely with the default \`saveGlobalName\` (e.g. \`__MOCK_\${globalName}\`)."$'\n'"Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="57acf358ce9ffa90c756271013459bc2978efa9a"
+sourceHash="78c7da5cbc1777fd8206d96854e19720ad1957a9"
 sourceLine="1452"
 summary="Restore a mocked value. Works solely with the default \`saveGlobalName\`"
 summaryComputed="true"

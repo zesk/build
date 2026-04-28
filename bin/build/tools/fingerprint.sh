@@ -10,6 +10,7 @@
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --cached fingerprint - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.
 # Argument: --verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.
 # Argument: --quiet - Flag. Optional. Be quiet (turns verbose off).
 # Argument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value.
@@ -18,7 +19,7 @@
 # Environment: BUILD_DEBUG
 fingerprint() {
   local handler="_${FUNCNAME[0]}"
-  local key="" verboseFlag=false checkFlag=false prefix=""
+  local key="" verboseFlag=false checkFlag=false prefix="" fingerprint=""
 
   ! buildDebugEnabled fingerprint || verboseFlag=true
 
@@ -34,6 +35,7 @@ fingerprint() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --check) checkFlag=true ;;
+    --cached) shift && fingerprint=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
     --quiet) verboseFlag=false ;;
     --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
@@ -49,18 +51,15 @@ fingerprint() {
   [ -n "$prefix" ] || prefix=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
   [ -n "$key" ] || key="fingerprint"
 
-  local jqPath
-  jqPath=$(catchReturn "$handler" jsonPath "$prefix" "$key") || return $?
+  local jqPath && jqPath=$(catchReturn "$handler" jsonPath "$prefix" "$key") || return $?
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
-  jsonFile="$home/$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local jsonFile && jsonFile="$home/$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
 
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "Missing $(decorate file "$jsonFile")" || return $?
 
-  local savedFingerprint fingerprint
-  savedFingerprint="$(catchReturn "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
-  fingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
+  local savedFingerprint && savedFingerprint="$(catchReturn "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
+  [ -n "$fingerprint" ] || fingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
   if [ "$fingerprint" = "$savedFingerprint" ]; then
     if $checkFlag; then
       printf -- "%s\n" "$fingerprint"
@@ -80,4 +79,40 @@ fingerprint() {
 _fingerprint() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Validates an application fingerprint
+#
+# Example usage:
+#
+#     case "$argument" in
+#     ...
+#     --fingerprint) fingerprint=$(validate "$handler" Fingerprint "fingerprint" "deprecated") || return "$(convertValue $? 120 0)" ;;
+#     ...
+#     esac
+#
+#     [ -z "$fingerprint" ] || fingerprint --cached "$fingerprint" --verbose
+#
+# Return code: 120 - Exit when fingerprint matches.
+# Argument: value - Key value to use. Required.
+__validateTypeFingerprint() {
+  local fingerprint=""
+
+  [ -n "${1-}" ] || _validateThrow "validate Fingerprint requires non-zero key" || return $?
+  export __VALIDATE_FINGERPRINT_CACHE
+  local returnCode=0
+  if [ -n "${__VALIDATE_FINGERPRINT_CACHE-}" ]; then
+    if fingerprint=$(fingerprint --check --cached "$__VALIDATE_FINGERPRINT_CACHE" --key "$1"); then
+      returnExit || returnCode=$?
+    fi
+  else
+    if fingerprint=$(fingerprint --check --key "$1"); then
+      returnExit || returnCode=$?
+    fi
+  fi
+  if [ -n "$fingerprint" ]; then
+    printf "%s\n" "$fingerprint"
+    __VALIDATE_FINGERPRINT_CACHE="$fingerprint"
+  fi
+  return "$returnCode"
 }

@@ -144,10 +144,10 @@ __buildBuild() {
   fi
 
   ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
-  "$home/bin/build/deprecated.sh" || throwEnvironment "$handler" "Deprecated failed" || return $?
+  "$home/bin/build/deprecated.sh" --fingerprint || throwEnvironment "$handler" "Deprecated failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running identical ..."
-  "$home/bin/build/repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
+  "$home/bin/build/repair.sh" --internal --fingerprint || throwEnvironment "$handler" "Identical repair failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running function build ..."
   buildFunctionsDerivedCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?

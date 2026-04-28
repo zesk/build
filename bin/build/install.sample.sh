@@ -575,7 +575,7 @@ _textVersionSort() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL validate 169
+# IDENTICAL validate 170
 
 # Summary: Validate a value by type
 # Argument: handler - Function. Required. Error handler.
@@ -677,12 +677,13 @@ validate() {
     __validateMapper "$type"
     isFunction "$typeFunction" || throwArgument "$handler" "[#$index $name] validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
     # Outputs stdout value if successful
-    if ! "$typeFunction" "$value"; then
+    local returnCode=0 && "$typeFunction" "$value" || returnCode=$?
+    case "$returnCode" in 0) shift 3 ;; 120) return "$returnCode" ;; *)
       local suffix="" ess="s" && [ "${#value}" -ne 1 ] || ess=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
       throwArgument "$handler" "[#$index $name] \"$(decorate code "$value")\" [${#value} char$ess]) is not type $(decorate label "$type")$suffix" || return $?
-    fi
-    shift 3
+      ;;
+    esac
   done
 }
 _validate() {
