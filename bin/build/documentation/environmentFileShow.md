@@ -4,15 +4,15 @@
 
 ### Usage
 
-    environmentFileShow [ environmentName ] [ -- ] [ optionalEnvironmentName ]
+    environmentFileShow [ environmentName ... ] [ -- ] [ optionalEnvironmentName ... ]
 
 Display and validate application variables.
 
 ### Arguments
 
-- `environmentName` - EnvironmentVariable. Optional. A required environment variable name
+- `environmentName ...` - EnvironmentVariable. Optional. A required environment variable name
 - `--` - Separator. Optional. Separates requires from optional environment variables
-- `optionalEnvironmentName` - EnvironmentVariable. Optional. An optional environment variable name.
+- `optionalEnvironmentName ...` - EnvironmentVariable. Optional. An optional environment variable name.
 
 ### Return codes
 

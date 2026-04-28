@@ -69,6 +69,7 @@ Internally the function `_validateTypeMapperDefault` is the default type mapper 
 
 ### Return codes
 
-- `0` - Valid is valid, stdout is a filtered version of the value to be used
-- `2` - Valid is invalid, output reason to stderr
+- `0` - `value` is valid, stdout is a filtered version of the value to be used
+- `2` - `value` is invalid, output reason to stderr
+- `120` - `value` is invalid, return calling function immediately
 

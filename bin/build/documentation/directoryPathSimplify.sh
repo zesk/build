@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="path ... - File. Required. One or more paths to simplify"$'\n'""
 base="file.sh"
@@ -13,7 +13,7 @@ lowerFn="directorypathsimplify"
 rawComment="Argument: path ... - File. Required. One or more paths to simplify"$'\n'"Normalizes segments of \`/./\` and \`/../\` in a path without using \`fileRealPath\`"$'\n'"Removes dot and dot-dot paths from a path correctly"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceHash="7e7132935e7a4026938b5792385f9b35d7bd4f35"
+sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
 sourceLine="327"
 summary="Normalizes segments of \`/./\` and \`/../\` in a path without"
 summaryComputed="true"

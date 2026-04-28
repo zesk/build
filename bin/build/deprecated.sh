@@ -63,7 +63,7 @@ __deprecatedCleanup() {
     --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "deprecated") || return "$(convertValue $? 120 0)" ;;
     --check)
       [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
-      fingerprint --check --key deprecated
+      fingerprint --key "deprecated" --check
       return $?
       ;;
     --cannon) doCannon=true ;;
@@ -158,7 +158,7 @@ __deprecatedCleanup() {
     __deprecatedConfiguration || returnCode=$?
   fi
 
-  [ -z "$fingerprint" ] || [ "$returnCode" -ne 0 ] || fingerprint --cached "$fingerprint" --verbose --key "deprecated"
+  [ -z "$fingerprint" ] || [ "$returnCode" -ne 0 ] || fingerprint --cached "$fingerprint" --key "deprecated" --verbose
 
   statusMessage --last timingReport "$start" "Deprecated process took"
 

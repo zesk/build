@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore."$'\n'""
 base="environment.sh"
@@ -8,13 +8,13 @@ description="Clean *most* exported variables from the current context except a f
 file="bin/build/tools/environment.sh"
 fn="environmentClean"
 foundNames=([0]="argument")
-line="177"
+line="172"
 lowerFn="environmentclean"
 rawComment="Clean *most* exported variables from the current context except a few important ones:"$'\n'"- CI PATH LD_LIBRARY USER HOME PS1 PS2 PS3 PS4 BUILD_HOME"$'\n'"- __BUILD_DECORATE BUILD_COLORS BUILD_DEBUG BUILD_HOOK_DIRS __BUILD_LOADER"$'\n'"Calls unset on any variable in the global environment and exported."$'\n'"Use with caution. Any additional environment variables you wish to preserve, simply pass those on the command line"$'\n'"Argument: keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="4fff2500d71b08fe7a68e307aa2911a2c1d0dd6e"
-sourceLine="177"
+sourceHash="35cdca77b3e2eb9cbbffdcfb5879a32efdbd22a7"
+sourceLine="172"
 summary="Clean *most* exported variables from the current context except a"
 summaryComputed="true"
 usage="environmentClean [ keepEnvironment ]"

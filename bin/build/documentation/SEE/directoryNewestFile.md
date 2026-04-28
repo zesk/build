@@ -1,1 +1,1 @@
-[directoryNewestFile]({rel}tools/directory.md#directorynewestfile) - Find the newest modified file in a directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L717))
+[directoryNewestFile]({rel}tools/directory.md#directorynewestfile) - Find the newest modified file in a directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L718))

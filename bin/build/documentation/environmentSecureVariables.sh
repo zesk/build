@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="environment.sh"
@@ -13,7 +13,7 @@ lowerFn="environmentsecurevariables"
 rawComment="List environment variables related to security"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="4fff2500d71b08fe7a68e307aa2911a2c1d0dd6e"
+sourceHash="35cdca77b3e2eb9cbbffdcfb5879a32efdbd22a7"
 sourceLine="45"
 summary="List environment variables related to security"
 summaryComputed="true"

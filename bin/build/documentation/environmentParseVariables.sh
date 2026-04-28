@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-28
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="environment.sh"
@@ -8,13 +8,13 @@ description="Parse variables from an environment variable stream"$'\n'"Extracts 
 file="bin/build/tools/environment.sh"
 fn="environmentParseVariables"
 foundNames=([0]="stdin" [1]="stdout" [2]="argument")
-line="161"
+line="156"
 lowerFn="environmentparsevariables"
 rawComment="Parse variables from an environment variable stream"$'\n'"Extracts lines with \`NAME=value\`"$'\n'"Details:"$'\n'"- Remove \`export \` from lines"$'\n'"- Skip lines containing \`read -r\`"$'\n'"- Anything before a \`=\` is considered a variable name"$'\n'"- Returns a sorted, unique list"$'\n'"stdin: Environment File"$'\n'"stdout: EnvironmentVariable. One per line."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="4fff2500d71b08fe7a68e307aa2911a2c1d0dd6e"
-sourceLine="161"
+sourceHash="35cdca77b3e2eb9cbbffdcfb5879a32efdbd22a7"
+sourceLine="156"
 stdin="Environment File"$'\n'""
 stdout="EnvironmentVariable. One per line."$'\n'""
 summary="Parse variables from an environment variable stream"

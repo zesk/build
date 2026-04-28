@@ -543,7 +543,7 @@ _returnCodeString() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL validate 170
+# IDENTICAL validate 171
 
 # Summary: Validate a value by type
 # Argument: handler - Function. Required. Error handler.
@@ -623,8 +623,9 @@ _returnCodeString() {
 #
 # Internally the function `_validateTypeMapperDefault` is the default type mapper and does the stringLowercase and alias lookups.
 #
-# Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
-# Return Code: 2 - Valid is invalid, output reason to stderr
+# Return Code: 0 - `value` is valid, stdout is a filtered version of the value to be used
+# Return Code: 2 - `value` is invalid, output reason to stderr
+# Return Code: 120 - `value` is invalid, return calling function immediately
 # Requires: __validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable __validateTypeType
 # Requires: isFunction throwArgument helpArgument decorate
 validate() {
