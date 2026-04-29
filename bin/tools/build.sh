@@ -118,10 +118,11 @@ __buildBuild() {
     shift
   done
 
-  local start
-  start=$(timingStart)
+  local start && start=$(timingStart)
 
   decorateInitialized || statusMessage decorate info "Color mode is " && catchReturn "$handler" consoleConfigureDecorate || return $?
+
+  iTerm2Badge -i "🛠️ Building"
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   catchReturn "$handler" packageInstall || return $?

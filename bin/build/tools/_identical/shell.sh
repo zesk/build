@@ -5,7 +5,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-
 __identicalCheckShell() {
   local handler="$1" && shift
   local argument aa=() pp=() addDefaultPrefixes=true
