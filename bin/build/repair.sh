@@ -19,9 +19,13 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
   # See `identicalCheckShell` for additional arguments and handler.
   # See: identicalCheckShell
   # fn: {base}
+  # Argument: --key - Optional. String. Optional key to go with `--fingerprint` to store the fingerprint key. (Default is `repair`)
+  # Argument: --fingerprint - Flag. String. Cache `application-fingerprint` in `APPLICATION_JSON` file at `APPLICATION_JSON_PREFIX` using `--key`, when it matches do nothing.
+  # See: fingerprint
   __buildIdenticalRepair() {
     local handler="_${FUNCNAME[0]}"
     local item aa=() home fingerprint=""
+    local key="repair"
 
     local cleaned=()
     while [ $# -gt 0 ]; do
@@ -30,9 +34,10 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "repair") || return "$(convertValue $? 120 0)" ;;
       --check)
         [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
-        fingerprint --check --key "repair"
+        fingerprint --check --key "$key"
         return $?
         ;;
+      --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
       --token) local token && shift && token=$(validate "$handler" string "$argument" "${1-}") && cleaned+=("$argument" "$token") || return $? ;;
       --internal) cleaned+=("$1") ;;
       *) cleaned+=("$1") ;;
@@ -58,7 +63,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     set -eou pipefail
     catchReturn "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 
-    [ -z "$fingerprint" ] || fingerprint --cached "$fingerprint" --verbose --key "repair"
+    [ -z "$fingerprint" ] || fingerprint --cached "$fingerprint" --verbose --key "$key"
   }
   ___buildIdenticalRepair() {
     # __IDENTICAL__ bashDocumentation 1

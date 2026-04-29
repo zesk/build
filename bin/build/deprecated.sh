@@ -20,8 +20,8 @@ set -eou pipefail
 #
 # There are three flags to control the three processes, you can set them using arguments (all three cleanups are by default enabled)
 #
-# Argument: --prefix jsonPrefix - EmptyString. Optional. Use this JSON prefix to update cached values in `APPLICATION_JSON`.
-# Argument: --fingerprint - Fingerprint. Optional. Fingerprint caching.
+# Argument: --fingerprint - Flag. String. Cache `application-fingerprint` in `APPLICATION_JSON` file at `APPLICATION_JSON_PREFIX` using `--key`, when it matches do nothing.
+# Argument: --key - Optional. String. Optional key to go with `--fingerprint` to store the fingerprint key. (Default is `deprecated`)
 # Argument: --no-configuration - Flag. Optional. Do not fix any configuration issues from past versions.
 # Argument: --just-configuration - Flag. Optional. Just fix any configuration issues from past versions. (Sets all other flags to false)
 # Argument: --configuration - Flag. Optional. Do the fix any configuration issues from past versions. (other flags remain unchanged)
@@ -41,7 +41,7 @@ set -eou pipefail
 __deprecatedCleanup() {
   local handler="_${FUNCNAME[0]}"
   local doCannon=true doTokens=true doSpelling=true doConfiguration=true ignoreExtras=() ignoreFlag=false
-  local fingerprint=""
+  local fingerprint="" key="deprecated"
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -60,10 +60,11 @@ __deprecatedCleanup() {
       doSpelling=false
       doTokens=false
       ;;
-    --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "deprecated") || return "$(convertValue $? 120 0)" ;;
+    --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "$key") || return "$(convertValue $? 120 0)" ;;
     --check)
       [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
-      fingerprint --key "deprecated" --check
+      fingerprint --key "$key" --check
       return $?
       ;;
     --cannon) doCannon=true ;;
@@ -158,7 +159,7 @@ __deprecatedCleanup() {
     __deprecatedConfiguration || returnCode=$?
   fi
 
-  [ -z "$fingerprint" ] || [ "$returnCode" -ne 0 ] || fingerprint --cached "$fingerprint" --key "deprecated" --verbose
+  [ -z "$fingerprint" ] || [ "$returnCode" -ne 0 ] || fingerprint --cached "$fingerprint" --key "$key" --verbose
 
   statusMessage --last timingReport "$start" "Deprecated process took"
 
