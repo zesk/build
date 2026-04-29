@@ -17,7 +17,6 @@ __identicalCheck() {
   local repairSources=() excludes=() prefixes=() singles=() binary="" ignoreSingles=false
   local findArgs=() extensionText="" skipFiles=() tokens=() tempDirectory=""
   local activeFilePatterns=() prefixPatterns=()
-  local token
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -30,43 +29,22 @@ __identicalCheck() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --watch)
-      catchReturn "$handler" identicalWatch "${__saved[@]}" && return $? || return $?
-      ;;
-    --no-map)
-      mapFile=false
-      ;;
-    --debug)
-      bashDebugInterruptFile --error --interrupt
-      debug=true
-      ;;
-    --cd)
-      shift
-      rootDir=$(validate "$handler" Directory "$argument" "${1-}") || return $?
-      ;;
-    --repair)
-      shift
-      repairSources+=("$(validate "$handler" RealDirectory "repairSource" "${1-}")") || return $?
-      ;;
+    --watch) catchReturn "$handler" identicalWatch "${__saved[@]}" && return $? || return $? ;;
+    --no-map) mapFile=false ;;
+    --ignore-singles) ignoreSingles=true ;;
+    --debug) debug=true && catchReturn "$handler" bashDebugInterruptFile --error --interrupt || return $? ;;
+    --cd) shift && rootDir=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --repair) shift && repairSources+=("$(validate "$handler" RealDirectory "repairSource" "${1-}")") || return $? ;;
     --extension)
-      shift
-      [ ${#findArgs[@]} -eq 0 ] || findArgs+=("-or")
+      shift && [ ${#findArgs[@]} -eq 0 ] || findArgs+=("-or")
       findArgs+=("-name" "*.$(validate "$handler" String "$argument" "${1-}")") || return $?
       extensionText="$extensionText .$1"
       ;;
-    --exec)
-      shift
-      binary=$(validate "$handler" Callable "$argument" "$1") || return $?
-      ;;
-    --skip)
-      shift
-      skipFiles+=("$(validate "$handler" File "$argument" "${1-}")") || return $?
-      ;;
+    --exec) shift && binary=$(validate "$handler" Callable "$argument" "$1") || return $? ;;
+    --skip) shift && skipFiles+=("$(validate "$handler" File "$argument" "${1-}")") || return $? ;;
     --singles)
-      local singleFile
-      shift
-      singleFile=$(validate "$handler" File singlesFile "${1-}") || return $?
-      while read -r single; do
+      shift && local singleFile && singleFile=$(validate "$handler" File singlesFile "${1-}") || return $?
+      local single && while read -r single; do
         single="${single#"${single%%[![:space:]]*}"}"
         single="${single%"${single##*[![:space:]]}"}"
         if [ "${single###}" = "${single}" ]; then
@@ -74,26 +52,12 @@ __identicalCheck() {
         fi
       done <"$singleFile"
       ;;
-    --single)
-      shift
-      singles+=("$1")
-      ;;
-    --prefix)
-      shift
-      prefixes+=("$1")
-      prefixPatterns+=("$(quoteGrepPattern "$1")") || return $?
-      ;;
-    --ignore-singles)
-      ignoreSingles=true
-      ;;
-    --exclude)
-      shift
-      [ -n "$1" ] || throwArgument "$handler" "Empty $(decorate code "$argument") argument" || return $?
-      excludes+=(! -path "$1")
-      ;;
+    --single) shift && singles+=("$1") ;;
+    --prefix) shift && prefixes+=("$1") && prefixPatterns+=("$(quoteGrepPattern "$1")") || return $? ;;
+    --exclude) shift && excludes+=(! -path "$(validate "$handler" String excludePattern "${1-}")") || return $? ;;
     --cache) shift && tempDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --token)
-      shift && token="$(validate "$handler" String "$argument" "${1-}")" || return $?
+      shift && local token && token="$(validate "$handler" String "$argument" "${1-}")" || return $?
       tokens+=("$token") && activeFilePatterns+=("$(quoteGrepPattern "$token")") || return $?
       ;;
     *)
@@ -107,15 +71,14 @@ __identicalCheck() {
   [ ${#findArgs[@]} -gt 0 ] || throwArgument "$handler" "Need to specify at least one --extension" || return $?
   [ ${#prefixes[@]} -gt 0 ] || throwArgument "$handler" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
-  local failureCode exitCode=0 clean=()
+  local exitCode=0
 
   # IDENTICAL startBeginTiming 1
   local start && start=$(timingStart) || return $?
-  failureCode="$(returnCode identical)"
+  local failureCode && failureCode="$(returnCode identical)"
 
   rootDir=$(catchEnvironment "$handler" fileRealPath "$rootDir") || return $?
-  local resultsFile searchFileList clean=()
-
+  local clean=()
   if [ -z "$tempDirectory" ]; then
     tempDirectory="$(fileTemporaryName "$handler" -d)" || return $?
     clean+=("$tempDirectory")
@@ -160,17 +123,21 @@ __identicalCheck() {
 
   local __line=1 searchFile
 
+  local searchHash && searchHash=$(textSHA <"$searchFileList")
   while read -r searchFile; do
     [ -f "$searchFile" ] || throwEnvironment "$handler" "Invalid searchFileList $searchFileList line $__line: $(decorate file "$searchFile")"
     if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
       statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || returnClean $? "${clean[@]}" || return $?
       continue
     fi
-    ! $debug || statusMessage decorate each code _identicalCheckInsideLoop "$handler" "$stateFile" "$searchFile" "${prefixes[@]}"
+    ! $debug || statusMessage decorate each code _identicalCheckInsideLoop "$handler" "$stateFile" "$searchFile" "${prefixes[@]}" "Line #$__line"
     if ! _identicalCheckInsideLoop "$handler" "$debug" "$stateFile" "$searchFile" "${prefixes[@]}"; then
       exitCode="$failureCode"
     fi
     # searchFileList contains absolute paths from __identicalCheckGenerateSearchFiles
+    ((__line++))
+    local checkHash && checkHash=$(textSHA <"$searchFileList")
+    [ "$checkHash" = "$searchHash" ] || throwEnvironment "$handler" "searchFileList $searchFileList changed" || return $?
   done <"$searchFileList"
 
   if [ "$exitCode" -ne 0 ]; then

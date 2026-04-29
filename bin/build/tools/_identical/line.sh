@@ -22,13 +22,15 @@ __identicalCheckInsideLoopLineHandler() {
   local countFile="$tokenDirectory/$count@$token.match"
   local isBadFile=false
 
+  local tokenText && tokenText="$(decorate label "$prefix") $(decorate code "$token") $(decorate value "$count")"
+
   if [ ! -f "$tokenFile" ]; then
     printf -- "%s\n%d\n%s\n" "$count" "$lineNumber" "$searchFile" >"$tokenFile"
     catchReturn "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
     if [ "$token" = "" ]; then
       dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
     fi
-    statusMessage decorate info "$(printf -- "Found %s for %s (in %s)" "$(localePluralWord "$count" line)" "$(decorate code "$token")" "$(decorate file "$searchFile")")" 1>&2
+    statusMessage decorate info "$(printf -- "Found %s for %s (in %s)" "$(localePluralWord "$count" line)" "$tokenText" "$(decorate file "$searchFile")")" 1>&2
     return 0
   fi
 
@@ -62,7 +64,7 @@ __identicalCheckInsideLoopLineHandler() {
       dumpPipe compareFile <"$compareFile" 1>&2
       badFiles+=("$searchFile")
       {
-        statusMessage --last printf -- "%s: %s\n< %s\n" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")"
+        statusMessage --last printf -- "%s: %s\n< %s\n" "$tokenText" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")"
         identicalFindTokens --prefix "$prefix" "$compareFile" | decorate code | decorate wrap "    "
         statusMessage --first decorate reset
       } 1>&2
@@ -73,7 +75,7 @@ __identicalCheckInsideLoopLineHandler() {
     fi
     if ! filesAreIdentical -b "$countFile" "$compareFile"; then
       {
-        statusMessage --last printf -- "[%s] %s\n< %s\n> %s%s\n" "$(decorate code "$token")" "$(decorate error "Token code changed ($count)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")"
+        statusMessage --last printf -- "[%s] %s\n< %s\n> %s%s\n" "$tokenText" "$(decorate error "Token code changed")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")"
         muzzleReturn diff -U3 -b "$countFile" "$compareFile" | decorate diff info subtle | decorate wrap "$(decorate subtle "diff: ")" || :
         if buildDebugEnabled identical-compare; then
           decorate info <"$countFile" | decorate wrap "<: "
@@ -82,7 +84,7 @@ __identicalCheckInsideLoopLineHandler() {
       } 1>&2
       isBadFile=true
     else
-      statusMessage printf -- "%s %s in %s, lines %d-%d" "$(decorate success "Verified")" "$(decorate code "$token")" "$(decorate file "$searchFile")" "$lineNumber" "$((lineNumber + tokenLineCount))" 1>&2
+      statusMessage printf -- "%s %s in %s, lines %d-%d" "$(decorate success "Verified")" "$tokenText" "$(decorate file "$searchFile")" "$lineNumber" "$((lineNumber + tokenLineCount))" 1>&2
     fi
     if $mapFile; then
       rm -rf "$countFile" || return $?

@@ -2,34 +2,36 @@
 #
 # Identical template
 #
-# Original of mapEnvironment (uses bash replace instead of sed)
+# Original of mapEnvironment
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# requires a lot of stuff
-#
 
-# IDENTICAL mapEnvironmentSed EOF
+# IDENTICAL mapEnvironment EOF
 
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Uses environment variables passed as arguments or entire exported environment variables are used and mapped to the destination.
-# TODO: Do this like `mapValue`
+# This one does it like `mapValue`
+# Environment is accessed via arguments passed or entire exported environment value space are and mapped to the destination.
 # See: mapValue
-# Argument: environmentName - String. Optional. Map this value only. If not specified, all environment variables are mapped.
+# Argument: environmentVariableName - String. Optional. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
+# Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
+# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: throwArgument read environmentVariables decorate sed cat rm throwEnvironment catchEnvironment returnClean
-# Requires: validate fileTemporaryName
-mapEnvironmentSed() {
+# Requires: environmentVariables cat throwEnvironment catchEnvironment
+# Requires: throwArgument decorate validate
+# shellcheck disable=SC2120
+mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
-  local __sedFile __prefix='{' __suffix='}'
+
+  local __prefix='{' __suffix='}' __ee=() __searchFilters=() __replaceFilters=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -40,51 +42,57 @@ mapEnvironmentSed() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --prefix)
-      shift
-      __prefix="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
-    --suffix)
-      shift
-      __suffix="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
-    *)
-      break
-      ;;
+    --prefix) shift && __prefix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --suffix) shift && __suffix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --search-filter) shift && __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $? ;;
+    --replace-filter) shift && __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $? ;;
+    --env-file) shift && muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $? ;;
+    *) __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $? ;;
     esac
     shift
   done
 
-  local __ee=("$@") __e __handler="$handler"
-  # Allows the name `handler` to exist as a variable to map
-  unset handler
-
-  if [ $# -eq 0 ]; then
+  # If no environment variables are passed on the command line, then use all of them
+  local __e
+  if [ "${#__ee[@]}" -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  __sedFile=$(fileTemporaryName "$__handler") || return $?
-  catchEnvironment "$__handler" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
-  catchEnvironment "$__handler" sed -f "$__sedFile" || throwEnvironment "$__handler" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
-  catchEnvironment "$__handler" rm -f "$__sedFile" || return $?
+
+  (
+    local __filter __value __handler="$handler"
+    unset handler
+
+    __value="$(catchEnvironment "$__handler" cat)" || return $?
+    if [ $((${#__replaceFilters[@]} + ${#__searchFilters[@]})) -gt 0 ]; then
+      for __e in "${__ee[@]}"; do
+        case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
+        local __search="$__prefix$__e$__suffix"
+        local __replace="${!__e-}"
+        if [ ${#__searchFilters[@]} -gt 0 ]; then
+          for __filter in "${__searchFilters[@]}"; do
+            __search=$(catchEnvironment "$__handler" "$__filter" "$__search") || return $?
+          done
+        fi
+        if [ ${#__replaceFilters[@]} -gt 0 ]; then
+          for __filter in "${__replace[@]}"; do
+            __replace=$(catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
+          done
+        fi
+        __value="${__value//"$__search"/$__replace}"
+      done
+    else
+      for __e in "${__ee[@]}"; do
+        case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
+        local __search="$__prefix$__e$__suffix"
+        local __replace="${!__e-}"
+        __value="${__value//"$__search"/$__replace}"
+      done
+    fi
+    printf "%s\n" "$__value"
+  )
 }
-_mapEnvironmentSed() {
+_mapEnvironment() {
+  decorateInitialized || decorate info --
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Helper function
-# Requires: printf quoteSedPattern quoteSedReplacement
-_mapEnvironmentGenerateSedFile() {
-  local __prefix="${1-}" __suffix="${2-}"
-
-  shift 2
-  while [ $# -gt 0 ]; do
-    case "$1" in
-    *[%{}]* | LD_*) ;; # skips
-    *)
-      printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
-      ;;
-    esac
-    shift
-  done
 }

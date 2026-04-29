@@ -4,17 +4,14 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# In case you forgot, the directory in which this file is named `_identical` and *NOT* `identical`.
-#
-# This is to avoid having this match when doing `identicalRepair` - causes issues.
-#
-# Thanks for your consideration.
+
 
 __identicalCheckShell() {
   local handler="$1" && shift
   local argument aa=() pp=() addDefaultPrefixes=true
+  local prefix="# "
 
-  local internalPrefixes=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''__IDENTICAL__' --prefix '# ''_IDENTICAL_')
+  local internalPrefixes=(--prefix "${prefix}DOC TEMPLATE:" --prefix "${prefix}__IDENTICAL__" --prefix "${prefix}_IDENTICAL_")
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -25,29 +22,19 @@ __identicalCheckShell() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --internal-only)
-      pp=("${internalPrefixes[@]}")
-      addDefaultPrefixes=false
-      ;;
+    --internal-only) pp=("${internalPrefixes[@]}") && addDefaultPrefixes=false ;;
     --internal)
-      if [ "${#pp[@]}" -eq 0 ]; then
-        # Ordering here matters so declare from inside scope to outside scope
-        pp=("${internalPrefixes[@]}")
-      fi
+      # Ordering here matters so declare from inside scope to outside scope
+      [ "${#pp[@]}" -gt 0 ] || pp=("${internalPrefixes[@]}")
       ;;
     --interactive | --ignore-singles | --no-map | --watch | --debug | --verbose)
       aa+=("$argument")
       ;;
-    --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles | --cd)
-      shift
-      aa+=("$argument" "${1-}")
-      ;;
-    *)
-      break
-      ;;
+    --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles | --cd) shift && aa+=("$argument" "${1-}") ;;
+    *) break ;;
     esac
     shift || :
   done
-  ! $addDefaultPrefixes || pp+=(--prefix '# ''IDENTICAL')
+  ! $addDefaultPrefixes || pp+=(--prefix "${prefix}IDENTICAL")
   catchReturn "$handler" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
 }
