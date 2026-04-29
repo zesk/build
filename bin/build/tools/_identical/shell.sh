@@ -22,17 +22,13 @@ __identicalCheckShell() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --internal-only) pp=("${internalPrefixes[@]}") && addDefaultPrefixes=false ;;
-    --internal)
-      # Ordering here matters so declare from inside scope to outside scope
-      [ "${#pp[@]}" -gt 0 ] || pp=("${internalPrefixes[@]}")
-      ;;
-    --interactive | --ignore-singles | --no-map | --watch | --debug | --verbose)
-      aa+=("$argument")
-      ;;
+    # Ordering here matters so declare from inside scope to outside scope
+    --internal) [ "${#pp[@]}" -gt 0 ] || pp=("${internalPrefixes[@]}") ;;
+    --interactive | --ignore-singles | --no-map | --watch | --debug | --verbose) aa+=("$argument") ;;
     --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles | --cd) shift && aa+=("$argument" "${1-}") ;;
     *) break ;;
     esac
-    shift || :
+    shift
   done
   ! $addDefaultPrefixes || pp+=(--prefix "${prefix}IDENTICAL")
   catchReturn "$handler" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
