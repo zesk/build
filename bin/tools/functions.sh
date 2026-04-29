@@ -164,7 +164,7 @@ _buildFunctionsCompile() {
 buildFunctionsRemoveDeprecated() {
   local handler="_${FUNCNAME[0]}"
 
-  local dryRun=false
+  local dryRun=false verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -177,6 +177,7 @@ buildFunctionsRemoveDeprecated() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --verbose) verboseFlag=true ;;
     --dry-run) dryRun=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -186,16 +187,21 @@ buildFunctionsRemoveDeprecated() {
     shift
   done
 
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
   local deprecatedFiles=()
   local fun && while read -r fun; do
     export BUILD_DOCUMENTATION_PATH
     local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
     local path && for path in "${paths[@]}"; do
       local extension && for extension in sh md; do
-        local target="$home/$path/$fun.$extension"
-        if [ -f "$target" ]; then
-          deprecatedFiles+=("$target")
-        fi
+        local prefix && for prefix in "" "SEE/"; do
+          local target="$home/$path/$prefix$fun.$extension"
+          ! $verboseFlag || statusMessage decorate info "Checking $target"
+          if [ -f "$target" ]; then
+            deprecatedFiles+=("$target")
+          fi
+        done
       done
     done
   done < <(catchReturn "$handler" buildDeprecatedFunctions) || return $?
@@ -203,6 +209,7 @@ buildFunctionsRemoveDeprecated() {
     [ "${#deprecatedFiles[@]}" -eq 0 ] && statusMessage --last printf -- "%s\n" "# No deprecated files." || printf -- "git rm -f %s\n" "${deprecatedFiles[@]}" || return $?
   else
     [ "${#deprecatedFiles[@]}" -eq 0 ] || local f && for f in "${deprecatedFiles[@]}"; do
+      ! $verboseFlag || decorate info "Remove \"$f\""
       catchEnvironment "$handler" git rm -f "$f" 2>/dev/null || catchReturn "$handler" rm -f "$f" || return $?
     done
   fi
