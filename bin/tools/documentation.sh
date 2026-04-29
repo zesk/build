@@ -147,7 +147,6 @@ __buildDocumentationBuildContent() {
       ((index++))
     done < <(find "$notesPath" -name "*.md" | textVersionSort -r)
   ) || return $?
-  # shellcheck disable=SC2031
   timestamp="${timestamp-}" version="${version-}" content="$content" mapEnvironment content version timestamp
 }
 
