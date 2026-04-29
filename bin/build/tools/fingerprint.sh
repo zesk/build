@@ -82,7 +82,7 @@ _fingerprint() {
 }
 
 # Validates an application fingerprint
-#
+# fn: validate "$handler" Fingerprint name "value"
 # Example usage:
 #
 #     case "$argument" in

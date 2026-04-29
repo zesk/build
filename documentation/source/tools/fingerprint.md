@@ -6,6 +6,9 @@
 
 {fingerprint}
 
+{__validateTypeFingerprint}
+
+
 <!-- TEMPLATE toolFooter 3 -->
 <hr />
 
