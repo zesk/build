@@ -10,12 +10,13 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --name - String. Optional. Display this help.
-# Argument: --slow slowMilliseconds - UnsignedInteger. Optional. Display output only if the underlying commend exceeds this threshold.
+# Argument: --slow slowMilliseconds - UnsignedInteger. Optional. Display output if the underlying commend takes is slower (longer) than this threshold.
+# Argument: --fast fastMilliseconds - UnsignedInteger. Optional. Display output if the underlying commend runs is faster (shorter) than this threshold.
 # Outputs time as `timingReport`
 timing() {
   local handler="_${FUNCNAME[0]}"
 
-  local name="" slow=""
+  local name="" aa=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -27,7 +28,7 @@ timing() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
-    --slow) shift && slow="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $? ;;
+    --fast | --slow) shift && aa+=("$argument" "${1-}") ;;
     *) break ;;
     esac
     shift
@@ -37,14 +38,72 @@ timing() {
   local start && start=$(timingStart)
   isCallable "${1-}" || throwArgument "$handler" "${1-} must be callable" || return $?
   local exitCode=0 && "$@" || exitCode="$?"
-  if [ "$slow" != "" ]; then
-    local elapsed && elapsed=$(($(timingStart) - start))
-    [ "$elapsed" -gt "$slow" ] || return 0
-  fi
-  catchReturn "$handler" timingReport "$start" "$name" || return $?
+  catchReturn "$handler" timingReport "${aa[@]+"${aa[@]}"}" "$start" "$name" || return $?
   return $exitCode
 }
 _timing() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Outputs the timing optionally prefixed by a message.
+#
+# Summary: Output the time elapsed
+# Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
+# Condition additions `--slow` and `--fast` allow display conditional on the time output.
+# Argument: --slow slowMilliseconds - UnsignedInteger. Optional. Display output if the displayed time is slower (longer) than this threshold.
+# Argument: --fast fastMilliseconds - UnsignedInteger. Optional. Display output if the displayed time is faster (shorter) than this threshold.
+# Argument: --style style - String. Optional. Display the message using this style. Default style is `success`
+# Argument: --color style - String. Optional. Display the message using this style. Default style is `success`. Deprecated 2026-04.
+# Argument: --end endTimestamp - UnsignedInteger. Optional. Use this as the end time to display. Otherwise uses the current time. Unit is milliseconds.
+# Argument: start - UnsignedInteger|EmptyString. Required. Unix timestamp in milliseconds. See `timingStart`. Unit is `milliseconds`. Invalid values do NOT produce an error.
+# Argument: message - Any additional arguments are output before the elapsed value computed
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Return Code: 0 - Exits with exit code zero
+# See: timingStart
+# Example:     init=$(timingStart)
+# Example:     ...
+# Example:     timingReport "$init" "Deploy completed in"
+# Example:     timingReport "$start" --slow 5000 "Reporting should be completed in less than 5 seconds."
+# Example:     timingReport "$start" --fast 1000 --style error "Deployment completed too quickly; please check systems."
+timingReport() {
+  local handler="_${FUNCNAME[0]}"
+
+  local style="success" start="" end="" slow="" fast=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --end) shift && end=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
+    --slow) shift && slow="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $? ;;
+    --fast) shift && fast="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $? ;;
+    --color | --style) shift && style=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    *) start="$argument" && shift && break ;;
+    esac
+    shift
+  done
+
+  if ! isUnsignedInteger "$start"; then catchReturn "$handler" printf "%s %s %s\n" "$*" "$(decorate BOLD red "$start")" "$(decorate warning "(not integer)")" && return $? || return $?; fi
+  local prefix=""
+  [ $# -eq 0 ] || prefix="$(decorate "$style" "$@") "
+  [ -n "$end" ] || end=$(timingStart)
+  local elapsed=$((end - start))
+  [ "$slow" = "" ] || [ "$elapsed" -gt "$slow" ] || return 0
+  [ "$fast" = "" ] || [ "$elapsed" -lt "$fast" ] || return 0
+  [ "$elapsed" -lt 0 ] && printf "%s%s\n" "$prefix" "$(decorate BOLD red "$end - $start => $elapsed NEGATIVE")" || printf "%s%s\n" "$prefix" "$(decorate BOLD magenta "$(timingDuration "$elapsed")") $(decorate subtle "[$elapsed]")"
+}
+_timingReport() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -58,6 +117,8 @@ _timing() {
 # Example:     ...
 # Example:     timingElapsed "$init"
 # Requires: __timestamp returnEnvironment validate date
+# stdout: UnsignedInteger
+# Output: 4232
 timingElapsed() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
@@ -71,7 +132,7 @@ _timingElapsed() {
 
 # Summary: Start a timer
 #
-# Outputs the offset in milliseconds from January 1, 1970.
+# Outputs the offset in milliseconds from midnight UTC January 1, 1970.
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -79,7 +140,11 @@ _timingElapsed() {
 # Example:     ...
 # Example:     timingReport "$init" "Completed in"
 # Requires: __timestamp, returnEnvironment date
-# Should never fail, unless date is not installed
+# Example:     start=$(timingStart) && printf "%d\n" "$start"
+# Example:     1777501474602
+# stdout: UnsignedInteger
+# Output: 1777501474602
+# Only fails if `date` is not installed
 timingStart() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -112,70 +177,6 @@ timingFormat() {
   done
 }
 _timingFormat() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Outputs the timing optionally prefixed by a message.
-#
-# Summary: Output the time elapsed
-# Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
-# Argument: --slow slowMilliseconds - UnsignedInteger. Optional. Display output only if the underlying commend exceeds this threshold.
-# Argument: --style style - String. Optional. Display the message using this style. Default style is `success`
-# Argument: --color style - String. Optional. Display the message using this style. Default style is `success`. Deprecated 2026-04.
-# Argument: --end endTimestamp - UnsignedInteger. Optional. Use this as the end time to display. Otherwise uses the current time. Unit is milliseconds.
-# Argument: start - UnsignedInteger. Required. Unix timestamp milliseconds. See `timingStart`. Unit is `milliseconds`.
-# Argument: message - Any additional arguments are output before the elapsed value computed
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
-# Return Code: 0 - Exits with exit code zero
-# See: timingStart
-# Example:     init=$(timingStart)
-# Example:     ...
-# Example:     timingReport "$init" "Deploy completed in"
-timingReport() {
-  local handler="_${FUNCNAME[0]}"
-
-  local style="success" start="" end="" slow=""
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --end) shift && end=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
-    --slow) shift && slow="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $? ;;
-    --color | --style) shift && style=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-    *) start="$argument" && shift && break ;;
-    esac
-    shift
-  done
-
-  if isUnsignedInteger "$start"; then
-    local prefix=""
-    [ $# -eq 0 ] || prefix="$(decorate "$style" "$@") "
-    [ -n "$end" ] || end=$(timingStart)
-    local delta=$((end - start))
-    [ "$slow" = "" ] || [ "$delta" -gt "$slow" ] || return 0
-    if [ "$delta" -lt 0 ]; then
-      printf "%s%s\n" "$prefix" "$(decorate BOLD red "$end - $start => $delta NEGATIVE")"
-    else
-      local value && value=$(timingDuration "$delta") || :
-      printf "%s%s\n" "$prefix" "$(decorate BOLD magenta "$value") $(decorate subtle "[$delta]")"
-    fi
-  else
-    printf "%s %s %s\n" "$*" "$(decorate BOLD red "$start")" "$(decorate warning "(not integer)")"
-  fi
-}
-_timingReport() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

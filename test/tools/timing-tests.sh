@@ -6,6 +6,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testTimingSlowFlags() {
+  assertExitCode --stdout-match "sleep 1" 0 timing --slow 500 sleep 1 || return $?
+  assertExitCode --stdout-no-match "sleep 1" 0 timing --slow 5000 sleep 1 || return $?
+
+  local start && start=$(timingStart)
+  assertExitCode --stdout-no-match "passed" 0 timingReport --slow 500 "$start" "passed" || return $?
+
+  assertExitCode --stdout-no-match "passed" 0 timingReport --end "$((start + 4999))" --slow 5000 "$start" "passed" || return $?
+  assertExitCode --stdout-match "passed" 0 timingReport --end "$((start + 5001))" --slow 5000 "$start" "passed" || return $?
+
+  assertExitCode --stdout-match "passed" 0 timingReport --end "$((start + 4999))" --fast 5000 "$start" "passed" || return $?
+  assertExitCode --stdout-no-match "passed" 0 timingReport --end "$((start + 5001))" --fast 5000 "$start" "passed" || return $?
+}
+
 __dataTestTimingDuration() {
   cat <<EOF
 0 0ms

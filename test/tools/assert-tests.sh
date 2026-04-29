@@ -11,6 +11,7 @@ testOutputEquals() {
   assertNotExitCode --stderr-ok --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "b" || return $?
 }
 
+# Tag: slow
 testAssertEquality() {
   local errorCode
 

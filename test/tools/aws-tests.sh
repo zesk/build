@@ -110,6 +110,7 @@ _isAWSKeyUpToDateTest() {
   fi
 }
 
+# Tag: slow
 testAWSExpiration() {
   local thisYear thisMonth expirationDays start
   local oldDate
@@ -373,6 +374,7 @@ testAWSCredentialsEdit() {
   mockEnvironmentStop HOME
 }
 
+# Tag: slow
 testAWSProfiles() {
   local handler="returnMessage"
   local list firstName='test-aws' secondName='never-gonna-let-you-down'

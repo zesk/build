@@ -14,6 +14,7 @@ testDecorateDashDashDisappearing() {
   assertEquals "\"Hello\"" "$(decorate quote <<<"Hello")" || return $?
 }
 
+# Tag: slow
 testConsoleTrimWidth() {
   local handler="returnMessage"
   local testLine

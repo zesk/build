@@ -13,11 +13,19 @@ Show elapsed time from a start time
 - `timingOffset` - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.
 - `--help` - Flag. Optional. Display this help.
 
+### Writes to standard output
+
+UnsignedInteger
+
 ### Examples
 
     init=$(timingStart)
     ...
     timingElapsed "$init"
+
+### Sample Output
+
+4232
 
 ### Return codes
 

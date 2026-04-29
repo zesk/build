@@ -16,55 +16,59 @@ __buildDocumentationBuildDirectory() {
   local handler="$1" && shift
   local home="$1" && shift
   local aa=() target
-  local start
+  local start count
 
-  start=$(timingStart)
-  statusMessage decorate notice "Filling in missing files ..."
+  {
+    start=$(timingStart) && statusMessage decorate notice "Filling in missing files ..."
+    # Fill in any missing files
+    local documentationSource="$home/documentation/source"
+    count=0
+    while read -r markdownFile; do
+      target="$home/documentation/.docs${markdownFile#"$documentationSource"}"
+      catchEnvironment "$handler" muzzle fileDirectoryRequire "$target" || return $?
+      if [ ! -f "$target" ]; then
+        catchEnvironment "$handler" cp "$markdownFile" "$target" || return $?
+      fi
+      ((count++))
+    done < <(find "$documentationSource" -name '*.md' ! -path '*/tools/*')
+    statusMessage --last timingReport "$start" "Filled in $count missing files in"
+  }
 
-  # Fill in any missing files
-  local documentationSource="$home/documentation/source"
-  while read -r markdownFile; do
-    target="$home/documentation/.docs${markdownFile#"$documentationSource"}"
-    catchEnvironment "$handler" muzzle fileDirectoryRequire "$target" || return $?
-    if [ ! -f "$target" ]; then
-      catchEnvironment "$handler" cp "$markdownFile" "$target" || return $?
-    fi
-  done < <(find "$documentationSource" -name '*.md' ! -path '*/tools/*')
+  {
 
-  catchReturn "$handler" cp -f "$home/etc/"*.svg "$home/etc/"*.png "$documentationSource/images/" || return $?
-  local asset && for asset in js images; do
-    source="$documentationSource/$asset"
-    target="$home/documentation/.docs/$asset"
+    catchReturn "$handler" cp -f "$home/etc/"*.svg "$home/etc/"*.png "$documentationSource/images/" || return $?
+    local asset && for asset in js images; do
+      source="$documentationSource/$asset"
+      target="$home/documentation/.docs/$asset"
 
-    local step && step=$(timingStart)
-    catchReturn "$handler" cp -Rf "$source" "$target" || return $?
-    statusMessage --last timingReport "$step" "Copied $asset"
-  done
-  source="$documentationSource/tools"
-  target="$home/documentation/.docs/tools"
+      local step && step=$(timingStart) && statusMessage decorate notice "Copying $asset ..."
+      catchReturn "$handler" cp -Rf "$source" "$target" || return $?
+      statusMessage --last timingReport "$step" "Copied $asset"
+    done
+  }
 
-  catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
-  statusMessage --last timingReport "$start" "Filled in missing files in"
+  {
+    source="$documentationSource/tools"
+    target="$home/documentation/.docs/tools"
+    catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
 
-  start=$(timingStart)
-  statusMessage decorate notice "Creating skeleton file structure ..."
-  local markdownFile
-  while read -r markdownFile; do
-    markdownFile=${markdownFile#"$source"}
-    markdownFile="${target}/${markdownFile#/}"
-    if [ ! -f "$markdownFile" ]; then
-      catchEnvironment "$handler" muzzle fileDirectoryRequire "$markdownFile" || return $?
-      catchEnvironment "$handler" touch "$markdownFile" || return $?
-    fi
-  done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
-  statusMessage --last timingReport "$start" "Created skeleton file structure in"
+    start=$(timingStart) && statusMessage decorate notice "Creating skeleton file structure ..."
+    local markdownFile
+    while read -r markdownFile; do
+      markdownFile=${markdownFile#"$source"}
+      markdownFile="${target}/${markdownFile#/}"
+      if [ ! -f "$markdownFile" ]; then
+        catchEnvironment "$handler" muzzle fileDirectoryRequire "$markdownFile" || return $?
+        catchEnvironment "$handler" touch "$markdownFile" || return $?
+      fi
+    done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
+    statusMessage --last timingReport "$start" "Created skeleton file structure in"
+  }
 
   local functionTemplate && functionTemplate="$(catchReturn "$handler" documentationTemplate "function")" || return $?
 
   aa+=(--source "$home/bin")
   aa+=(--target "$target")
-
-  catchReturn "$handler" cp "$home/documentation/template/todo.md" "$source/todo.md" || return $?
 
   aa+=(--template "$source")
   aa+=(--unlinked-source "$source")
@@ -75,7 +79,10 @@ __buildDocumentationBuildDirectory() {
 
   # All functions
   local target=$home/documentation/source/tools/all.md
+
+  catchReturn "$handler" cp "$home/documentation/template/todo.md" "$source/todo.md" || return $?
   catchEnvironment "$handler" cp "$home/documentation/template/all.md" "$target" || return $?
+
   printf "\n" >>"$target"
 
   local fun && while read -r fun; do
@@ -86,18 +93,15 @@ __buildDocumentationBuildDirectory() {
     fi
   done < <(buildFunctions | sort -u) >>"$target"
 
-  #       _                                       _        _   _             ____        _ _     _
-  #    __| | ___   ___ _   _ _ __ ___   ___ _ __ | |_ __ _| |_(_) ___  _ __ | __ ) _   _(_) | __| |
-  #   / _` |/ _ \ / __| | | | '_ ` _ \ / _ \ '_ \| __/ _` | __| |/ _ \| '_ \|  _ \| | | | | |/ _` |
-  #  | (_| | (_) | (__| |_| | | | | | |  __/ | | | || (_| | |_| | (_) | | | | |_) | |_| | | | (_| |
-  #   \__,_|\___/ \___|\__,_|_| |_| |_|\___|_| |_|\__\__,_|\__|_|\___/|_| |_|____/ \__,_|_|_|\__,_|
-  #
+  #  ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+  #  │      _                                       _        _   _             ____        _ _     _     │
+  #  │   __| | ___   ___ _   _ _ __ ___   ___ _ __ | |_ __ _| |_(_) ___  _ __ | __ ) _   _(_) | __| |    │
+  #  │  / _` |/ _ \ / __| | | | '_ ` _ \ / _ \ '_ \| __/ _` | __| |/ _ \| '_ \|  _ \| | | | | |/ _` |    │
+  #  │ | (_| | (_) | (__| |_| | | | | | |  __/ | | | || (_| | |_| | (_) | | | | |_) | |_| | | | (_| |    │
+  #  │  \__,_|\___/ \___|\__,_|_| |_| |_|\___|_| |_|\__\__,_|\__|_|\___/|_| |_|____/ \__,_|_|_|\__,_|    │
+  #  │                                                                                                   │
+  #  └───────────────────────────────────────────────────────────────────────────────────────────────────┘
   catchReturn "$handler" documentationBuild "${aa[@]}" "$@" || return $?
-  #
-  #
-  #
-  #
-  #
 }
 
 __buildDocumentationCleanDirectory() {
@@ -113,31 +117,38 @@ __buildDocumentationCleanDirectory() {
 }
 
 __buildDocumentationBuildRelease() {
-  local handler="$1" home="$2" release currentNotes notesPath
+  local handler="$1" home="$2"
+  local source="$home/documentation/template/release.md"
   local target="$home/documentation/.docs/release/index.md"
+  local currentNotes && currentNotes=$(catchReturn "$handler" releaseNotes --application "$home") || return $?
+  catchReturn "$handler" muzzle fileDirectoryRequire "$target" || return $?
+  __buildDocumentationBuildContent "$handler" "$(dirname "$currentNotes")" <"$source" >"$target"
+  statusMessage --last decorate info "Wrote $(decorate file "$target")"
+}
+
+__buildDocumentationBuildContent() {
+  local handler="$1" notesPath="$2"
   local recentNotes=10 index
 
-  currentNotes=$(catchReturn "$handler" releaseNotes --application "$home") || return $?
-
-  catchReturn "$handler" muzzle fileDirectoryRequire "$target" || return $?
-
-  printf -- "%s\n" "# Release Notes" "" >"$target"
-
-  index=0
-  notesPath=$(dirname "$currentNotes")
-  while IFS="" read -r release; do
-    local version=${release##*/}
-    version="${version%.*}"
-    if [ $index -lt $recentNotes ]; then
-      printf "%s\n" "" "$(markdownIndentHeading <"$release")" >>"$target"
-    elif [ $index -eq $recentNotes ]; then
-      printf -- "%s\n" "" "# Past releases" "" >>"$target"
-    fi
-    if [ $index -ge $recentNotes ]; then
-      printf -- "- [%s](%s)\n" "$version" "./$version.md" >>"$target"
-    fi
-    index=$((index + 1))
-  done < <(find "$notesPath" -name "*.md" | textVersionSort -r)
+  local content && content=$(
+    local index=0
+    local release && while IFS="" read -r release; do
+      local vv=${release##*/}
+      vv="${vv%.*}"
+      if [ "$index" -lt "$recentNotes" ]; then
+        printf "%s\n" "" "$(markdownIndentHeading <"$release")"
+      elif [ "$index" -eq "$recentNotes" ]; then
+        # Between
+        printf -- "%s\n" "" "# Past releases" ""
+      fi
+      if [ "$index" -ge "$recentNotes" ]; then
+        printf -- "- [%s](%s)\n" "$vv" "./$vv.md"
+      fi
+      ((index++))
+    done < <(find "$notesPath" -name "*.md" | textVersionSort -r)
+  ) || return $?
+  # shellcheck disable=SC2031
+  timestamp="${timestamp-}" version="${version-}" content="$content" mapEnvironment content version timestamp
 }
 
 # Build the build documentation
@@ -266,9 +277,6 @@ buildDocumentationBuild() {
   if $updateDerived; then
     local file
 
-    statusMessage --last decorate notice "Updating release page ..."
-    __buildDocumentationBuildRelease "$handler" "$home" || return $?
-
     statusMessage --last decorate notice "Copying all non-tools ..."
     catchReturn "$handler" cp -f "$documentationSource/"*.md "$targetHome/" || return $?
     for file in guide images js release teach; do
@@ -297,6 +305,9 @@ buildDocumentationBuild() {
       --target "$targetEnv"
       "${ea[@]+"${ea[@]}"}")
     catchReturn "$handler" documentationBuildEnvironment "${ea[@]+"${ea[@]}"}" || return $?
+
+    statusMessage --last decorate notice "Updating release page ..."
+    version="$version" timestamp="$timestamp" __buildDocumentationBuildRelease "$handler" "$home" || return $?
   fi
 
   if "$updateReference"; then

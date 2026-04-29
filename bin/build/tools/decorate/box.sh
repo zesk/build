@@ -94,6 +94,18 @@ __decorateExtensionBox() {
   fi
 
   if [ "$argumentWidth" = "auto" ]; then
+    if [ "${#textLines[@]}" -eq 0 ]; then
+      local finished=false && while ! $finished; do
+        local textLine && IFS="" read -r textLine || finished=true
+        textLines+=("$textLine")
+        if [ -z "$maxWidth" ]; then
+          maxWidth="${#textLine}"
+        elif [ ${#textLine} -gt "$maxWidth" ]; then
+          maxWidth="${#textLine}"
+        fi
+      done
+    fi
+    decorate error "maxWidth=$maxWidth"
     width="$((maxWidth + 2))"
   elif [ "$argumentWidth" = "console" ]; then
     width=$(($(consoleColumns) - 2))

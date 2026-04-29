@@ -6,18 +6,28 @@
 
     timingStart [ --help ]
 
-Outputs the offset in milliseconds from January 1, 1970.
-Should never fail, unless date is not installed
+Outputs the offset in milliseconds from midnight UTC January 1, 1970.
+Only fails if `date` is not installed
 
 ### Arguments
 
 - `--help` - Flag. Optional. Display this help.
+
+### Writes to standard output
+
+UnsignedInteger
 
 ### Examples
 
     init=$(timingStart)
     ...
     timingReport "$init" "Completed in"
+    start=$(timingStart) && printf "%d\n" "$start"
+    1777501474602
+
+### Sample Output
+
+1777501474602
 
 ### Return codes
 

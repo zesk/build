@@ -87,26 +87,27 @@ __documentationTemplateFileCompile() {
     local foundTokens=() findTokens=() checkFiles=() specialTokens=() settingsFiles=() settingsFile
     local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-    local tokenName && while read -r tokenName; do
+    local fullTokenName && while read -r fullTokenName; do
+      local tokenName && tokenName=$(basename "${fullTokenName//:/\/}")
       if ! environmentVariableNameValid "$tokenName"; then
         specialTokens+=("$tokenName")
         continue
       fi
-      if inArray "$tokenName" "${foundTokens[@]+"${foundTokens[@]}"}"; then
+      if inArray "$fullTokenName" "${foundTokens[@]+"${foundTokens[@]}"}"; then
         continue
       fi
-      local compiledFunctionTarget && compiledFunctionTarget="$(__documentationFile "$home" "$tokenName" true)"
+      local compiledFunctionTarget && compiledFunctionTarget="$(__documentationFile "$home" "$fullTokenName" true)"
       [ -f "$compiledFunctionTarget" ] || forceFlag=true
       if settingsFile=$(__functionSettings "$home" "$tokenName"); then
         settingsFiles+=("$tokenName" "$settingsFile")
-        foundTokens+=("$tokenName")
+        foundTokens+=("$fullTokenName")
         checkFiles+=("$settingsFile")
       else
         local sourceCodeFile && if ! sourceCodeFile=$(__documentationIndexLookup "$handler" --source "$tokenName"); then
           decorate warning "Function definition not found $(decorate code "$tokenName")"
           continue
         fi
-        foundTokens+=("$tokenName")
+        foundTokens+=("$fullTokenName")
         findTokens+=("$tokenName" "$sourceCodeFile")
         checkFiles+=("$sourceCodeFile")
       fi
@@ -147,7 +148,7 @@ __documentationTemplateFileCompile() {
         #shellcheck source=/dev/null
         source "$compiledFunctionEnv" || throwEnvironment "$handler" "source $compiledFunctionEnv compiled for $targetFile" || return $?
         mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile" || returnClean $? "${clean[@]}" || returnMessage $? "$LINENO:${BASH_SOURCE[0]}" || return $?
-        set +a
+        set +a # UNDO here
       ) || throwEnvironment "$handler" "mapEnvironment $tokenName" || returnClean $? "${clean[@]}" || return $?
     else
       message="Cached"
