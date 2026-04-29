@@ -42,6 +42,8 @@ _deprecated() {
   [ ! -d "$BUILD_HOME" ] || printf -- "$(date "+%F %T"),%s\n%s\n" "$*" "$(debuggingStack)" >>"${BUILD_HOME}/.deprecated"
 }
 
+# IDENTICAL muzzle 16
+
 # Suppress stdout without piping. Handy when you just want a behavior not the output.
 # Argument: command - Callable. Required. Thing to muzzle.
 # Argument: ... - Arguments. Optional. Additional arguments.

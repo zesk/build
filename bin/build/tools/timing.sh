@@ -10,11 +10,13 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --name - String. Optional. Display this help.
+# Argument: --slow slowMilliseconds - UnsignedInteger. Optional. Display output only if the underlying commend exceeds this threshold.
 # Outputs time as `timingReport`
 timing() {
   local handler="_${FUNCNAME[0]}"
 
-  local name=""
+  local name="" slow=""
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -25,6 +27,7 @@ timing() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --slow) shift && slow="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $? ;;
     *) break ;;
     esac
     shift
@@ -34,6 +37,10 @@ timing() {
   local start && start=$(timingStart)
   isCallable "${1-}" || throwArgument "$handler" "${1-} must be callable" || return $?
   local exitCode=0 && "$@" || exitCode="$?"
+  if [ "$slow" != "" ]; then
+    local elapsed && elapsed=$(($(timingStart) - start))
+    [ "$elapsed" -gt "$slow" ] || return 0
+  fi
   catchReturn "$handler" timingReport "$start" "$name" || return $?
   return $exitCode
 }
@@ -113,13 +120,16 @@ _timingFormat() {
 #
 # Summary: Output the time elapsed
 # Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
-# Argument: --color color - Make text this color (default is `green`)
+# Argument: --slow slowMilliseconds - UnsignedInteger. Optional. Display output only if the underlying commend exceeds this threshold.
+# Argument: --style style - String. Optional. Display the message using this style. Default style is `success`
+# Argument: --color style - String. Optional. Display the message using this style. Default style is `success`. Deprecated 2026-04.
+# Argument: --end endTimestamp - UnsignedInteger. Optional. Use this as the end time to display. Otherwise uses the current time. Unit is milliseconds.
+# Argument: start - UnsignedInteger. Required. Unix timestamp milliseconds. See `timingStart`. Unit is `milliseconds`.
+# Argument: message - Any additional arguments are output before the elapsed value computed
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
-# Argument: start - Unix timestamp milliseconds. See `timingStart`.
-# Argument: message - Any additional arguments are output before the elapsed value computed
 # Return Code: 0 - Exits with exit code zero
 # See: timingStart
 # Example:     init=$(timingStart)
@@ -128,7 +138,7 @@ _timingFormat() {
 timingReport() {
   local handler="_${FUNCNAME[0]}"
 
-  local color="green" start=""
+  local style="success" start="" end="" slow=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -141,7 +151,9 @@ timingReport() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --color) shift && color=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --end) shift && end=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
+    --slow) shift && slow="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $? ;;
+    --color | --style) shift && style=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     *) start="$argument" && shift && break ;;
     esac
     shift
@@ -149,9 +161,10 @@ timingReport() {
 
   if isUnsignedInteger "$start"; then
     local prefix=""
-    [ $# -eq 0 ] || prefix="$(decorate "$color" "$@") "
-    local end && end=$(timingStart)
+    [ $# -eq 0 ] || prefix="$(decorate "$style" "$@") "
+    [ -n "$end" ] || end=$(timingStart)
     local delta=$((end - start))
+    [ "$slow" = "" ] || [ "$delta" -gt "$slow" ] || return 0
     if [ "$delta" -lt 0 ]; then
       printf "%s%s\n" "$prefix" "$(decorate BOLD red "$end - $start => $delta NEGATIVE")"
     else
@@ -171,9 +184,9 @@ _timingReport() {
 # Argument: duration - UnsignedInteger. Optional. Timing to output
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --stop stopUnit - String. Optional. Stop displaying fractional output after this unit is displayed.
 timingDuration() {
   local handler="_${FUNCNAME[0]}"
 
