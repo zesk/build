@@ -1,0 +1,6 @@
+description="When true, means the \`.env.local\` file was created by the maintenance hook and should be deleted when maintenance is"$'\n'"no longer enabled."
+descriptionLineCount="2"
+category="Application"
+categoryId="application"
+type="Boolean"
+summary="When true, means the \`.env.local\` file was created by the maintenance hook and should be deleted when maintenance is no longer enabled."

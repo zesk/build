@@ -1,0 +1,6 @@
+description="Timeout in seconds for fetching URLs in \`urlFetch\`"
+descriptionLineCount="1"
+category="Build Configuration"
+categoryId="build-configuration"
+type="PositiveInteger"
+summary="Timeout in seconds for fetching URLs in \`urlFetch\`"

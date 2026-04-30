@@ -1,0 +1,6 @@
+description="Version of composer to use for building vendor directory"
+descriptionLineCount="1"
+category="Installation"
+categoryId="installation"
+type="String"
+summary="Version of composer to use for building vendor directory"

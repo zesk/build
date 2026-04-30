@@ -1,0 +1,6 @@
+description="Sound for notifications. Set to \`-\` for no sound. Defaults to \`zesk-build-notification\`."
+descriptionLineCount="1"
+category="Build Configuration"
+categoryId="build-configuration"
+type="String"
+summary="Sound for notifications. Set to \`-\` for no sound. Defaults to \`zesk-build-notification\`."

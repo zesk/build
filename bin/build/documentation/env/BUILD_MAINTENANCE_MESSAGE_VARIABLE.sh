@@ -1,0 +1,6 @@
+description="Name of the environment variable (if any) which reflects the current maintenance message."$'\n'"Default is \`MAINTENANCE_MESSAGE\` and this is typically added to the \`.env.local\` to a live"$'\n'"application. Your application should monitor these files for changes if they are cached and reload as needed to ensure"$'\n'"these messages are displayed immediately."
+descriptionLineCount="4"
+category="Application"
+categoryId="application"
+type="EnvironmentVariable"
+summary="Name of the environment variable (if any) which reflects the current maintenance message."

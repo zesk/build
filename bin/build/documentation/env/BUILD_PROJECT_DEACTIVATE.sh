@@ -1,0 +1,6 @@
+description="Set this to a function which cleans up the project context and"$'\n'"will be run on \`project-deactivate\` hook which is sourced."
+descriptionLineCount="2"
+category="Application"
+categoryId="application"
+type="Function"
+summary="Set this to a function which cleans up the project context and will be run on \`project-deactivate\` hook which is sourced."

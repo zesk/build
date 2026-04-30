@@ -1,0 +1,6 @@
+description="Location for configuration files"
+descriptionLineCount="1"
+category="Build Configuration"
+categoryId="build-configuration"
+type="Directory"
+summary="Location for configuration files"

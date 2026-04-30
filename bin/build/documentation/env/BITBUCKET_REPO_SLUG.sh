@@ -1,0 +1,6 @@
+description="Defined in BITBUCKET Pipelines, represents the project code name."
+descriptionLineCount="1"
+category="Continuous Integration"
+categoryId="continuous-integration"
+type="String"
+summary="Defined in BITBUCKET Pipelines, represents the project code name."

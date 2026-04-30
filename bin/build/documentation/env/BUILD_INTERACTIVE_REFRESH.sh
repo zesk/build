@@ -1,0 +1,6 @@
+description="When displaying content interactively, how many seconds should elapse before refreshing content?"
+descriptionLineCount="1"
+category="Build Configuration"
+categoryId="build-configuration"
+type="PositiveInteger"
+summary="When displaying content interactively, how many seconds should elapse before refreshing content?"

@@ -1,0 +1,6 @@
+description="Path to the application configuration JSON"
+descriptionLineCount="1"
+category="Application"
+categoryId="application"
+type="ApplicationFile"
+summary="Path to the application configuration JSON"

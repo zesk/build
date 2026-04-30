@@ -1,0 +1,6 @@
+description="This is the version number which can be displayed"
+descriptionLineCount="1"
+category="Deployment"
+categoryId="deployment"
+type="String"
+summary="This is the version number which can be displayed"

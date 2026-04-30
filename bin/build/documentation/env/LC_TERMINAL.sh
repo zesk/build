@@ -1,0 +1,6 @@
+description="LC_TERMINAL typically identifies the terminal application"
+descriptionLineCount="1"
+category="Bash"
+categoryId="bash"
+type="String"
+summary="LC_TERMINAL typically identifies the terminal application"

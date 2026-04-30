@@ -1,0 +1,6 @@
+description="The package manager used for node operations. Usually \`yarn\` or \`npm\`."$'\n'"Default is \`yarn\`."
+descriptionLineCount="2"
+category="Vendor"
+categoryId="vendor"
+type="Executable"
+summary="The package manager used for node operations. Usually \`yarn\` or \`npm\`. Default is \`yarn\`."

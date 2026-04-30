@@ -1,0 +1,6 @@
+description="This is the display name of the application"
+descriptionLineCount="1"
+category="Application"
+categoryId="application"
+type="String"
+summary="This is the display name of the application"

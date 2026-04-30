@@ -1,0 +1,6 @@
+description="Constant for the release notes path. Defaults to \`./docs/release\`."
+descriptionLineCount="1"
+category="Build Configuration"
+categoryId="build-configuration"
+type="ApplicationDirectory"
+summary="Constant for the release notes path. Defaults to \`./docs/release\`."

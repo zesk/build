@@ -1,0 +1,6 @@
+description="Test flags affect controls and how tests are run."
+descriptionLineCount="1"
+category="Testing"
+categoryId="testing"
+type="String"
+summary="Test flags affect controls and how tests are run."

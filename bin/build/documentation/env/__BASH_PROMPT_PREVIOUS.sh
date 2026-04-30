@@ -1,0 +1,6 @@
+description="Previous result code"
+descriptionLineCount="1"
+category="Bash Prompt"
+categoryId="bash-prompt"
+type="Array"
+summary="Previous result code"

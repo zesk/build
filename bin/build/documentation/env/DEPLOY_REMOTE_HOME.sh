@@ -1,0 +1,6 @@
+description="Path on the remote server where the application deployment home is (per application)"
+descriptionLineCount="1"
+category="Deployment"
+categoryId="deployment"
+type="RemoteDirectory"
+summary="Path on the remote server where the application deployment home is (per application)"

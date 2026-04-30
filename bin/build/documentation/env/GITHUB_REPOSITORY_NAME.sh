@@ -1,0 +1,6 @@
+description="Repository name for release"
+descriptionLineCount="1"
+category="Development"
+categoryId="development"
+type="String"
+summary="Repository name for release"

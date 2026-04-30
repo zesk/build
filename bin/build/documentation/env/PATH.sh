@@ -1,0 +1,6 @@
+description="A colon \`:\` separated list of paths to search for executables in \`bash\`."$'\n'"See [\`pathConfigure\`](/tools/platform/#pathconfigure)"
+descriptionLineCount="2"
+category="Bash"
+categoryId="bash"
+type="DirectoryList"
+summary="A colon \`:\` separated list of paths to search for executables in \`bash\`. See [\`pathConfigure\`](/tools/platform/#pathconfigure)"

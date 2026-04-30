@@ -1,0 +1,6 @@
+description="Cached value of the availability of \`/dev/tty\`."$'\n'"Possible values are \`true\` or \`false\` or blank."$'\n'""$'\n'"- \`true\` - \`/dev/tty\` appears to be operating without errors"$'\n'"- \`false\` - \`/dev/tty\` appears to be disconnected and can not be used"$'\n'""$'\n'"This value is set automatically by \`isTTYAvailable\` and caches the value using this environment variable to avoid testing again."
+descriptionLineCount="7"
+category="Internal"
+categoryId="internal"
+type="Boolean"
+summary="Cached value of the availability of \`/dev/tty\`."

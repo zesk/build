@@ -1,0 +1,6 @@
+description="Standard way to express the foreground and background colors"$'\n'""$'\n'"- Format is: \`foregroundColor\` \`;\` \`backgroundColor\`"$'\n'"- \`foregroundColor\` - UnsignedInteger. 0 to 16"$'\n'"- \`backgroundColor\` - UnsignedInteger. 0 to 16"$'\n'""$'\n'"Not referenced in this product; referenced via [rxvt](https://rxvt.sourceforge.net/) and may be honored at some point."
+descriptionLineCount="7"
+category="Decoration"
+categoryId="decoration"
+type="String"
+summary="Standard way to express the foreground and background colors"

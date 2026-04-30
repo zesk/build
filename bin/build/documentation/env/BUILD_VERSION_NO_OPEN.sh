@@ -1,0 +1,6 @@
+description="Constant for whether to open release notes when a version is requested (see \`version-already\`)"
+descriptionLineCount="1"
+category="Build Configuration"
+categoryId="build-configuration"
+type="Boolean"
+summary="Constant for whether to open release notes when a version is requested (see \`version-already\`)"

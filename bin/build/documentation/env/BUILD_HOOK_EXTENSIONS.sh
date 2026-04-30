@@ -1,0 +1,6 @@
+description="List of extensions to run when looking for hooks"
+descriptionLineCount="1"
+category="Application"
+categoryId="application"
+type="ColonDelimitedList"
+summary="List of extensions to run when looking for hooks"

@@ -1,0 +1,6 @@
+description="Version of yarn to install using \`corepack\`"
+descriptionLineCount="1"
+category="Vendor"
+categoryId="vendor"
+type="String"
+summary="Version of yarn to install using \`corepack\`"

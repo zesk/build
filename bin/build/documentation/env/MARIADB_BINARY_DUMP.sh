@@ -1,0 +1,6 @@
+description="MariaDB binary for dump"
+descriptionLineCount="1"
+category="Vendor"
+categoryId="vendor"
+type="Executable"
+summary="MariaDB binary for dump"

@@ -1,0 +1,6 @@
+description="Turn on or off tracking of function assertions within the testing core."$'\n'"If blank, the default behavior is to track; disable it with setting the value to \`false\`."
+descriptionLineCount="2"
+category="Testing"
+categoryId="testing"
+type="Boolean"
+summary="Turn on or off tracking of function assertions within the testing core. If blank, the default behavior is to track; disable it with setting the value to \`false\`."

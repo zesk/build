@@ -1,0 +1,6 @@
+description="The entity which owns or manages the application. Typically the owning company name."$'\n'"This is used in Copyright notices in code and other locations."
+descriptionLineCount="2"
+category="Application"
+categoryId="application"
+type="String"
+summary="The entity which owns or manages the application. Typically the owning company name. This is used in Copyright notices in code and other locations."

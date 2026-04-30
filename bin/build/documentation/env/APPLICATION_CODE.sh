@@ -1,0 +1,6 @@
+description="This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness."
+descriptionLineCount="1"
+category="Application"
+categoryId="application"
+type="String"
+summary="This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness."

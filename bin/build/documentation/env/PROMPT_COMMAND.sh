@@ -1,0 +1,6 @@
+description="Command is run prior to displaying the prompt, receives exit status from prior command"
+descriptionLineCount="1"
+category="Bash"
+categoryId="bash"
+type="Callable"
+summary="Command is run prior to displaying the prompt, receives exit status from prior command"

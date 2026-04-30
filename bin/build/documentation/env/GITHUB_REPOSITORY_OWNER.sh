@@ -1,0 +1,6 @@
+description="Repository owner for release"
+descriptionLineCount="1"
+category="Deployment"
+categoryId="deployment"
+type="String"
+summary="Repository owner for release"

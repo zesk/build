@@ -1,0 +1,6 @@
+description="Is this a production system? e.g. remove unnecessary runtime checks."
+descriptionLineCount="1"
+category="Bash"
+categoryId="bash"
+type="Boolean"
+summary="Is this a production system? e.g. remove unnecessary runtime checks."

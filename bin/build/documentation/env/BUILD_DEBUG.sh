@@ -1,0 +1,6 @@
+description="Constant for turning debugging on during build to find errors in the build scripts."$'\n'"Enable debugging globally in the build scripts. Set to a comma (\`,\`) delimited list string to enable specific debugging, or \`true\` for ALL debugging, \`false\` (or blank) for NO debugging."
+descriptionLineCount="2"
+category="Build Configuration"
+categoryId="build-configuration"
+type="CommaDelimitedList"
+summary="Constant for turning debugging on during build to find errors in the build scripts. Enable debugging globally in the build scripts. Set to a comma (\`,\`) delimited list string to enable specific debugging, or \`true\` for ALL debugging, \`false\` (or blank) for NO debugging."

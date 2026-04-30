@@ -1,0 +1,6 @@
+description="Width for pairs. Defaults to \`40\`."
+descriptionLineCount="1"
+category="Decoration"
+categoryId="decoration"
+type="PositiveInteger"
+summary="Width for pairs. Defaults to \`40\`."

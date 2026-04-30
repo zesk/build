@@ -1,0 +1,6 @@
+description="List of modules to run each prompt command"
+descriptionLineCount="1"
+category="Bash Prompt"
+categoryId="bash-prompt"
+type="Array"
+summary="List of modules to run each prompt command"

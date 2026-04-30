@@ -1,0 +1,6 @@
+description="Default profile for Amazon Web Services"
+descriptionLineCount="1"
+category="Amazon Web Services"
+categoryId="amazon-web-services"
+type="String"
+summary="Default profile for Amazon Web Services"

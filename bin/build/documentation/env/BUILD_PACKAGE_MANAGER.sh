@@ -1,0 +1,6 @@
+description="The default package manager on systems which have more than one package manager available."
+descriptionLineCount="1"
+category="Installation"
+categoryId="installation"
+type="Executable"
+summary="The default package manager on systems which have more than one package manager available."

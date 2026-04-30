@@ -1,0 +1,6 @@
+description=""$'\n'"The platform for \`dockerLocalContainer\`"$'\n'""$'\n'"Contacts of this can be found via \`docker buildx ls\`"$'\n'""$'\n'"Valid values are:"$'\n'""$'\n'"- \`linux/arm64\`"$'\n'"- \`linux/amd64\`"$'\n'"- \`linux/amd64/v2\`"$'\n'"- \`linux/riscv64\`"$'\n'"- \`linux/ppc64le\`"$'\n'"- \`linux/s390x\`"$'\n'"- \`linux/386\`"$'\n'"- \`linux/mips64le\`"$'\n'"- \`linux/mips64\`"$'\n'"- \`linux/arm/v7\`"$'\n'"- \`linux/arm/v6\`"$'\n'""$'\n'"If not specified, uses the default for the current platform."
+descriptionLineCount="20"
+category="Docker"
+categoryId="docker"
+type="String"
+summary=""

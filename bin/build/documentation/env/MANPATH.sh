@@ -1,0 +1,6 @@
+description="A colon \`:\` separated list of paths to search for manual pages."$'\n'"See [\`manPathConfigure\`](/tools/platform/#manpathconfigure)"
+descriptionLineCount="2"
+category="Bash"
+categoryId="bash"
+type="DirectoryList"
+summary="A colon \`:\` separated list of paths to search for manual pages. See [\`manPathConfigure\`](/tools/platform/#manpathconfigure)"

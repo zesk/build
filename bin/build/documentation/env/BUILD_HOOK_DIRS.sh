@@ -1,0 +1,6 @@
+description="List of directories to search for hooks. Defaults to \`bin/hooks:bin/build/hooks\`."$'\n'"Colon (\`:\`) separated list."
+descriptionLineCount="2"
+category="Build Configuration"
+categoryId="build-configuration"
+type="ApplicationDirectoryList"
+summary="List of directories to search for hooks. Defaults to \`bin/hooks:bin/build/hooks\`. Colon (\`:\`) separated list."

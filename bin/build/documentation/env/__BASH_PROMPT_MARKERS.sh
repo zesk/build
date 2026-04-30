@@ -1,0 +1,6 @@
+description="List of markers to identify to the terminal location of the prompt"
+descriptionLineCount="1"
+category="Bash Prompt"
+categoryId="bash-prompt"
+type="Array"
+summary="List of markers to identify to the terminal location of the prompt"

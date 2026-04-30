@@ -1,0 +1,6 @@
+description="The file to generate when generating builds"
+descriptionLineCount="1"
+category="Deployment"
+categoryId="deployment"
+type="String"
+summary="The file to generate when generating builds"

@@ -1,0 +1,6 @@
+description="GitHub Access token expiration date. Invalid AFTER this date."
+descriptionLineCount="1"
+category="Development"
+categoryId="development"
+type="Date"
+summary="GitHub Access token expiration date. Invalid AFTER this date."

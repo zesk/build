@@ -1,0 +1,6 @@
+description="Bash Prompt for terminals"
+descriptionLineCount="1"
+category="Bash"
+categoryId="bash"
+type="String"
+summary="Bash Prompt for terminals"

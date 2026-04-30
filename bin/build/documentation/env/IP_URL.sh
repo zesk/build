@@ -1,0 +1,6 @@
+description="URL to look up IP my address remotely"
+descriptionLineCount="1"
+category="Build Configuration"
+categoryId="build-configuration"
+type="URL"
+summary="URL to look up IP my address remotely"

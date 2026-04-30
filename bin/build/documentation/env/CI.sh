@@ -1,0 +1,6 @@
+description="If this value is non-blank, then console \`statusMessage\`s are just output normally."$'\n'"Continuous Integration - this is set to a non-blank value in:"$'\n'""$'\n'"- Bitbucket pipelines"
+descriptionLineCount="4"
+category="Continuous Integration"
+categoryId="continuous-integration"
+type="String"
+summary="If this value is non-blank, then console \`statusMessage\`s are just output normally."

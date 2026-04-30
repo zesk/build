@@ -1,0 +1,6 @@
+description="Legal copyright holder website for this codebase"
+descriptionLineCount="1"
+category="Application"
+categoryId="application"
+type="URL"
+summary="Legal copyright holder website for this codebase"
