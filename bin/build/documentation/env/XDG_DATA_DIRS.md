@@ -1,0 +1,1 @@
+- `XDG_DATA_DIRS` *DirectoryList*. Search directory for user-specific data files to be stored. `:` separated. [notes](#xdg_data_dirs)

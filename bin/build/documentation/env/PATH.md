@@ -1,0 +1,1 @@
+- `PATH` *DirectoryList*. A colon `:` separated list of paths to search for executables in `bash`. See [`pathConfigure`](/tools/platform/#pathconfigure) [notes](#path)

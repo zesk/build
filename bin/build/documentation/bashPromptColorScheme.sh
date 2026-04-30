@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-30
 # shellcheck disable=SC2034
 argument="colorScheme - String. Optional. Color scheme to choose: \`light\`, \`dark\`, \`forest\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="prompt.sh"

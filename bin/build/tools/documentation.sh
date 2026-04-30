@@ -136,8 +136,26 @@ _documentationTemplate() {
 #
 # Creates a cache at `documentationBuildCache`
 #
-# Argument: --documentation documentationPath - Directory. Optional. Path to documentation root. Default is `./documentation/source`.
-# Argument: --source sourcePath - Directory. Optional. Path to source environment files. Defaults to `$(buildHome)/bin/env` if not specified.
+# Templates used:
+#
+# - `env-more.md`
+# - `env-index.md`
+# - `env-see.md`
+# - `env-more.md`
+# - `env-more-header.md`
+# - `env-more-footer.md`
+#
+# Variables applied to the templates:
+# - `link` `name` `description` `category` `more` `type` `markerName`
+#
+# Argument: --source-path sourcePath - Directory. Optional. Path to source environment files. Defaults to `$(buildHome)/bin/env` if not specified.
+# Argument: --source sourceTemplate - File. Optional. Path to source environment template.
+# Argument: --target targetFile - FileDirectory. Optional. File to generate.
+# Argument: --template-path templatePath - Directory. Optional. Path for source template files.
+# Argument: --clean - Flag. Optional. Delete any generated files.
+# Argument: --force  - Flag. Optional. Force generation of files regardless of cache status.
+# Argument: --verbose - Flag. Optional. Be chatty.
+# Argument: --link linkURI - String. Optional. Sets the `link` variable in templates. Defaults to `/env/`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # See: documentationBuild

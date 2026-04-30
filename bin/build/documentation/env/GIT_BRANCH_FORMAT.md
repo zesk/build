@@ -1,0 +1,1 @@
+- `GIT_BRANCH_FORMAT` *String*.  [notes](#git_branch_format)

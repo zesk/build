@@ -1,0 +1,1 @@
+- `BUILD_DOCKER_PATH` *RemoteDirectory*. Default path for the shell to map the current directory to when launching `dockerLocalContainer` [notes](#build_docker_path)

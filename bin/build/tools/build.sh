@@ -171,6 +171,7 @@ _buildHome() {
 }
 
 # Parent: buildHome
+# Environment: BUILD_ENVIRONMENT_DIRS BUILD_HOME
 _buildEnvironmentPath() {
   local handler="$1" && shift
   local paths=() home
@@ -187,15 +188,17 @@ _buildEnvironmentPath() {
   printf "%s\n" "${paths[@]+"${paths[@]}"}" "$home/bin/build/env"
 }
 
+# Summary: List known environment names
+# Environment:
 # Output the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: convertValue _buildEnvironmentPath find sort read helpArgument catchEnvironment
+# Environment: BUILD_ENVIRONMENT_DIRS BUILD_HOME
 buildEnvironmentNames() {
   local handler="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-
   (
     IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
     for path in "${paths[@]}"; do
@@ -668,11 +671,17 @@ _buildQuietLog() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run a command and ensure the build tools context matches the current project
+# Run a command and ensure the build tools context matches the current project.
+#
+# Useful when you need to ensure the command is run with the correct version of Zesk Build.
+#
 # Argument: contextStart - Directory. Required. Context in which the command should run.
 # Argument: command - Callable. Required. Command to run in new context.
 # Argument: ... - Arguments. Optional. Arguments to the `command`.
+#
 # Avoid infinite loops here, call down.
+#
+# Example:     buildEnvironmentContext "$(pwd)" environmentFileLoad "$(pwd)/.env" --execute timing --slow 500 "$(pwd)/bin/ping.py"
 buildEnvironmentContext() {
   local handler="_${FUNCNAME[0]}"
 

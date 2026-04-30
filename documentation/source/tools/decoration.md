@@ -3,7 +3,7 @@
 Typically used to output text to the console using pretty colors and ANSI art.
 
 <!-- TEMPLATE toolHeader 2 -->
-[⬅ Parent ](../index.md)
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 {consoleLine}

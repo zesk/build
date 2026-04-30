@@ -1,0 +1,1 @@
+- `XDG_CONFIG_DIRS` *DirectoryList*. Search directory for user-specific configuration files to be stored. `:` separated. [notes](#xdg_config_dirs)

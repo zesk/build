@@ -1,0 +1,1 @@
+- `NODE_PACKAGE_MANAGER` *Executable*. The package manager used for node operations. Usually `yarn` or `npm`. Default is `yarn`. [notes](#node_package_manager)

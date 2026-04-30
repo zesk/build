@@ -1,7 +1,7 @@
 # BitBucket Repository Tools
 
 <!-- TEMPLATE toolHeader 2 -->
-[⬅ Parent ](../index.md)
+[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 {bitbucketContainer}

@@ -1,0 +1,1 @@
+- `__BASH_PROMPT_MODULES` *Array*. List of modules to run each prompt command [notes](#__bash_prompt_modules)

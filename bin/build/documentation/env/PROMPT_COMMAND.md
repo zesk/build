@@ -1,0 +1,1 @@
+- `PROMPT_COMMAND` *Callable*. Command is run prior to displaying the prompt, receives exit status from prior command [notes](#prompt_command)

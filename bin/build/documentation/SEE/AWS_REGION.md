@@ -1,0 +1,1 @@
+[AWS_REGION]({rel}/env/#amazon_web_services) - **String**. Region for Amazon Web Services

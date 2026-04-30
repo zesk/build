@@ -1,0 +1,1 @@
+[BUILD_TEST_FLAGS]({rel}/env/#testing) - **String**. Test flags affect controls and how tests are run.

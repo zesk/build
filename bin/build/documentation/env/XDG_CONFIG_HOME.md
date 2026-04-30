@@ -1,0 +1,1 @@
+- `XDG_CONFIG_HOME` *Directory*. Location for configuration files [notes](#xdg_config_home)

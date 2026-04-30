@@ -430,7 +430,7 @@ __buildFunctionsIsComplete() {
     local file fun && read -r file || finished=true
     [ -n "$file" ] || continue
     fun="${file##*/}" && fun="${fun%.sh}"
-    if ! isFunction "$fun"; then
+    if ! isFunction "$fun" && ! muzzle buildEnvironmentGet "$fun" 2>/dev/null; then
       catchReturn "$handler" statusMessage --last decorate error "File $(decorate file "$file") has no matching function $(decorate code "$fun") anymore" || return $?
     fi
   done < <(find "$docPath" -type f -name '*.sh')

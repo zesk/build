@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-04-30
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"prefix - EmptyString. Optional. Prefix for all prompts."$'\n'"suffix - EmptyString. Optional. Suffix for all prompts."$'\n'""
 base="prompt.sh"

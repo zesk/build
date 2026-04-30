@@ -1,0 +1,1 @@
+- `BUILD_NOTIFY_SOUND` *String*. Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notification`. [notes](#build_notify_sound)

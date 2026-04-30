@@ -15,75 +15,51 @@ _documentationTemplateFormatter_builtin() {
 __buildDocumentationBuildDirectory() {
   local handler="$1" && shift
   local home="$1" && shift
-  local aa=() target
-  local start count
+  local start && start=$(timingStart) && statusMessage decorate notice "Copying ..."
 
-  {
-    start=$(timingStart) && statusMessage decorate notice "Filling in missing files ..."
-    # Fill in any missing files
-    local documentationSource="$home/documentation/source"
-    count=0
-    while read -r markdownFile; do
-      target="$home/documentation/.docs${markdownFile#"$documentationSource"}"
-      catchEnvironment "$handler" muzzle fileDirectoryRequire "$target" || return $?
-      if [ ! -f "$target" ]; then
-        catchEnvironment "$handler" cp "$markdownFile" "$target" || return $?
-      fi
-      ((count++))
-    done < <(find "$documentationSource" -name '*.md' ! -path '*/tools/*')
-    statusMessage --last timingReport "$start" "Filled in $count missing files in"
-  }
+  local documentationSource="$home/documentation/source"
+  local templateHome="$home/documentation/template"
+  local source="$documentationSource/tools"
+  local target="$home/documentation/.docs/tools"
 
-  {
-
-    catchReturn "$handler" cp -f "$home/etc/"*.svg "$home/etc/"*.png "$documentationSource/images/" || return $?
-    local asset && for asset in js images; do
-      source="$documentationSource/$asset"
-      target="$home/documentation/.docs/$asset"
-
-      local step && step=$(timingStart) && statusMessage decorate notice "Copying $asset ..."
-      catchReturn "$handler" cp -Rf "$source" "$target" || return $?
-      statusMessage --last timingReport "$step" "Copied $asset"
-    done
-  }
-
-  {
-    source="$documentationSource/tools"
-    target="$home/documentation/.docs/tools"
-    catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
-
-    start=$(timingStart) && statusMessage decorate notice "Creating skeleton file structure ..."
-    local markdownFile
-    while read -r markdownFile; do
-      markdownFile=${markdownFile#"$source"}
-      markdownFile="${target}/${markdownFile#/}"
-      if [ ! -f "$markdownFile" ]; then
-        catchEnvironment "$handler" muzzle fileDirectoryRequire "$markdownFile" || return $?
-        catchEnvironment "$handler" touch "$markdownFile" || return $?
-      fi
-    done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
-    statusMessage --last timingReport "$start" "Created skeleton file structure in"
-  }
+  catchReturn "$handler" cp -f "$home/etc/"*.svg "$home/etc/"*.png "$documentationSource/images/" || return $?
+  catchReturn "$handler" muzzle rm -rf "$home/documentation/.docs" || return $?
+  catchReturn "$handler" statusMessage timing --name "Copied documentation" cp -rf "$documentationSource" "$home/documentation/.docs" || return $?
 
   local functionTemplate && functionTemplate="$(catchReturn "$handler" documentationTemplate "function")" || return $?
 
+  local aa=()
+
+  # Our source code lookup is here
   aa+=(--source "$home/bin")
+
+  # Output generated files here
   aa+=(--target "$target")
 
+  # Directory of files to convert
   aa+=(--template "$source")
+
+  # Functions not documented in the documentation use
+  # `--unlinked-source` and `--unlinked-target` and `--unlinked-template`
   aa+=(--unlinked-source "$source")
   aa+=(--unlinked-template "$source/todo.md" --unlinked-target "$target/todo.md")
-  aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
+
+  # Template generation
+  aa+=(
+    "--function-template" "$functionTemplate"
+    "--page-template" "$templateHome/__main.md"
+  )
+  # See stuff
   aa+=(--see-prefix "./documentation/.docs")
+  # Env stuff
   aa+=(--see-environment-link "/env/index.md")
 
   # All functions
-  local target=$home/documentation/source/tools/all.md
+  local allTarget="$source/all.md"
+  catchEnvironment "$handler" cp "$templateHome/all.md" "$allTarget" || return $?
+  catchReturn "$handler" cp "$templateHome/todo.md" "$source/todo.md" || return $?
 
-  catchReturn "$handler" cp "$home/documentation/template/todo.md" "$source/todo.md" || return $?
-  catchEnvironment "$handler" cp "$home/documentation/template/all.md" "$target" || return $?
-
-  printf "\n" >>"$target"
+  printf "\n" >>"$allTarget"
 
   local fun && while read -r fun; do
     local seeFile && if seeFile=$(__documentationFile "$home" "SEE/$fun"); then
@@ -91,7 +67,7 @@ __buildDocumentationBuildDirectory() {
     else
       printf -- "- {SEE:%s} %s\n" "$fun" "<!-- later -->"
     fi
-  done < <(buildFunctions | sort -u) >>"$target"
+  done < <(buildFunctions | sort -u) >>"$allTarget"
 
   #  ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
   #  │      _                                       _        _   _             ____        _ _     _     │
@@ -252,6 +228,7 @@ buildDocumentationBuild() {
 
   local targetHome="$home/documentation/.docs"
   local documentationSource="$home/documentation/source"
+  local templateHome="$home/documentation/template"
 
   # Ensure we have our target
   catchEnvironment "$handler" muzzle directoryRequire "$targetHome" || return $?
@@ -274,39 +251,20 @@ buildDocumentationBuild() {
   fi
 
   if $updateDerived; then
-    local file
-
-    statusMessage --last decorate notice "Copying all non-tools ..."
-    catchReturn "$handler" cp -f "$documentationSource/"*.md "$targetHome/" || return $?
-    for file in guide images js release teach; do
-      statusMessage decorate notice "Copying $file ..."
-      catchEnvironment "$handler" rm -rf "$targetHome/$file" || return $?
-      cp -rf "$documentationSource/$file" "$targetHome/$file" || return $?
-    done
     local example && example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || throwEnvironment "$handler" "generating example" || return $?
 
-    # Mappable files
-    statusMessage --last decorate notice "Mapping non-tools ..."
-    while IFS="" read -r file; do
-      file=${file#"$documentationSource"}
-      statusMessage decorate notice "Updating $file ..."
-      catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      example="$example" timestamp="$timestamp" version="$version" catchReturn "$handler" mapEnvironment <"$documentationSource/$file" >"$targetHome/$file" || return $?
-    done < <(find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}')
-    statusMessage --last decorate notice "Updating environment variables document ..."
-
-    local targetEnv="$home/documentation/.docs/env/index.md"
-    catchReturn "$handler" fileDirectoryRequire "$targetEnv" || return $?
+    local targetEnv="$home/documentation/source/env/index.md"
+    targetEnv=$(catchReturn "$handler" fileDirectoryRequire "$targetEnv") || return $?
     ea=(--verbose
       --template-path "$home/documentation/template"
-      --source "$home/documentation/source/env/index.md"
+      --source "$templateHome/env-index.md"
       --source-path "$home/bin/build/env"
       --target "$targetEnv"
       "${ea[@]+"${ea[@]}"}")
     catchReturn "$handler" documentationBuildEnvironment "${ea[@]+"${ea[@]}"}" || return $?
 
     statusMessage --last decorate notice "Updating release page ..."
-    version="$version" timestamp="$timestamp" __buildDocumentationBuildRelease "$handler" "$home" || return $?
+    example="$example" version="$version" timestamp="$timestamp" __buildDocumentationBuildRelease "$handler" "$home" || return $?
   fi
 
   if "$updateReference"; then

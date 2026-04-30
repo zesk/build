@@ -1,0 +1,1 @@
+- `__BASH_PROMPT_MARKERS` *Array*. List of markers to identify to the terminal location of the prompt [notes](#__bash_prompt_markers)

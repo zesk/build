@@ -1,0 +1,1 @@
+[BITBUCKET_WORKSPACE]({rel}/env/#continuous_integration) - **String**. Defined in BITBUCKET Pipelines. represents the project workspace.

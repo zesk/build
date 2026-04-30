@@ -1,0 +1,1 @@
+- `APPLICATION_BUILD_DATE` *Date*. Time when a build was initiated, set upon first invocation if not already. [notes](#application_build_date)

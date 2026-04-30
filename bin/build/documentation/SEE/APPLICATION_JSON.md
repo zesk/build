@@ -1,0 +1,1 @@
+[APPLICATION_JSON]({rel}/env/#application) - **ApplicationFile**. Path to the application configuration JSON

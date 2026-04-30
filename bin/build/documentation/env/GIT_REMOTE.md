@@ -1,0 +1,1 @@
+- `GIT_REMOTE` *String*.  [notes](#git_remote)

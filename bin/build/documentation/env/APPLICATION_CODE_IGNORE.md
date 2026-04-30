@@ -1,0 +1,1 @@
+- `APPLICATION_CODE_IGNORE` *ColonDelimitedList*. List of path names to ignore for application code. (e.g. `/vendor/`, `/node_modules/`, etc.) [notes](#application_code_ignore)

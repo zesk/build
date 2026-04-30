@@ -1,0 +1,1 @@
+- `BUILD_PACKAGE_MANAGER` *Executable*. The default package manager on systems which have more than one package manager available. [notes](#build_package_manager)

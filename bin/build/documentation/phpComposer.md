@@ -30,7 +30,3 @@ This tools does not install the `composer` binary into the local environment.
 
 This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.
 
-### Environment
-
-- {SEE:BUILD_COMPOSER_VERSION.sh} - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
-

@@ -20,7 +20,3 @@ Load cached function comment values
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_DOCUMENTATION_PATH.sh}
-

@@ -1,0 +1,1 @@
+- `BUILD_COLORS` *Boolean*. If true then colors are shown, blank means guess the value, false means no colors [notes](#build_colors)

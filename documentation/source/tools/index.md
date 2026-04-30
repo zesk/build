@@ -162,7 +162,9 @@ Once included, [all functions here](./all.md) are available for use.
 - [Obsolete](./unused.md)
 
 
-<!-- TEMPLATE footer 3 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
 
-[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+[⬅ Parent ](../index.md)
+
+Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})

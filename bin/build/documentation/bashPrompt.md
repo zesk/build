@@ -49,7 +49,3 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:PROMPT_COMMAND.sh}
-

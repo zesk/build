@@ -39,7 +39,7 @@ _documentationTemplateFormatter_requires() {
 _documentationTemplateFormatter_see() {
   local eof=false && while ! $eof; do
     local tokens=() && IFS=" " read -d $'\n' -r -a tokens || eof=true
-    [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}" | decorate wrap "{SEE:" "}" | markdownFormatList
+    [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}" | sed 's/.*/{SEE:&}/' | markdownFormatList
   done
 }
 
@@ -99,7 +99,7 @@ _documentationTemplateFormatter_environment() {
     local item ii=() valid=true
     for item in "${items[@]}"; do
       if $valid && environmentVariableNameValid "$item" && muzzle buildEnvironmentFiles "$item" 2>&1; then
-        ii+=("{SEE:$item.sh}")
+        ii+=("{SEE:$item}")
       else
         valid=false
         ii+=("$item")
