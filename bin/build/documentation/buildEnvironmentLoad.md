@@ -25,7 +25,3 @@ Modifies local environment. Not usually run within a subshell.
 - `1` - The environment variable is not found.
 - `0` - The environment variable is found and the file was loaded (which *should* set to the global environment variable named)
 
-### Environment
-
-- {SEE:BUILD_ENVIRONMENT_DIRS.sh} - `:` separated list of paths to load env files
-

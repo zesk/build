@@ -26,8 +26,3 @@ The environment variable(s) requested, one per line
 - `1` - The environment variable is not found.
 - `0` - The environment variable is found and the value was output to `stdout`
 
-### Environment
-
-- $envName
-- {SEE:BUILD_ENVIRONMENT_DIRS.sh} - `:` separated list of paths to load env files
-

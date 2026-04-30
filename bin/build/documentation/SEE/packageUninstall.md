@@ -1,1 +1,2 @@
-[packageUninstall]({rel}tools/package.md#packageuninstall) - Removes packages using package manager"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L524))
+[packageUninstall]({rel}package.md#packageuninstall) - Removes packages using package manager
+ ([source](https://github.com/zesk/build/blob/main/{sourceFile}#L{sourceLine}))

@@ -672,7 +672,7 @@ All functions in Zesk Build, alphabetically.
 - [timingStart](../tools/timing.md#timingstart) - Start a timer"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L148))
 - [tofuInstall](../tools/tofu.md#tofuinstall) - Install tofu binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L59))
 - [tofuUninstall](../tools/tofu.md#tofuuninstall) - Uninstall tofu binary and apt sources keys ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L80))
-- [tools](../tools/build.md#tools) - Run a Zesk Build command or load it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L471))
+- [tools](../tools/build.md#tools) - Run a Zesk Build command or load it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L474))
 - [urlContentLength](../tools/url.md#urlcontentlength) - Get the size of a remote URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L60))
 - [urlFetch](../tools/url.md#urlfetch) - Fetch URL content"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L559))
 - [urlFilter](../tools/url.md#urlfilter) - Open URLs which appear in a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L355))

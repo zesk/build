@@ -20,7 +20,3 @@ Prints the list of functions defined in Zesk Build
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_HOME.sh}
-
