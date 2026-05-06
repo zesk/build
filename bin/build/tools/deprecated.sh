@@ -18,7 +18,6 @@
 #             |_|
 #
 
-
 # Summary: Convert a template file to a documentation file using templates
 #
 # Argument: --env-file envFile - File. Optional. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.

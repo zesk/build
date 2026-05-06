@@ -128,7 +128,7 @@ __documentationSeeTokenGenerate() {
 __documentationBuild() {
   local handler="$1" && shift
 
-  local home &&  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   local company="" applicationName="" docArgs=() companyLink="" applicationName=""
 
