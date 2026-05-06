@@ -1,6 +1,0 @@
-description="Time when a build was initiated, set upon first invocation if not already"
-descriptionLineCount="1"
-category="Deployment"
-categoryId="deployment"
-type="Integer"
-summary="Time when a build was initiated, set upon first invocation if not already"

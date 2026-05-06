@@ -1,1 +1,1 @@
-- `BUILD_CACHE_HOME` *Directory*. Location for the build system cache files. Defaults to `$HOME/.build` and if `$HOME` is not a directory then `$(buildHome)/.build` Cache MAY be deleted at any time. If you need your files to be preserved, store them elsewhere. [notes](#build_cache_home)
+- `BUILD_CACHE_HOME` &mdash; BUILD_CACHE_HOME *Directory*. Location for the build system cache files. Defaults to `$HOME/.build` [notes](#build_cache_home)

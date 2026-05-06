@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Build documentation URL Pattern
 # Links in documentation
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Documentation

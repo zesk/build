@@ -7,11 +7,16 @@
 Mapping in this context refers to replacing tokens in a file from one value to another; useful for simple templates and
 configuration customizations.
 
+{mapFunction}
+
 {mapEnvironment}
+
 {mapValue}
+
 {mapValueTrim}
 
 {isMappable}
+
 {mapTokens}
 
 <!-- TEMPLATE toolFooter 3 -->

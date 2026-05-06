@@ -18,6 +18,10 @@
 
 {buildFunctionsRemoveDeprecated}
 
+{bashDocumentationDeriveFunction}
+
+{bashDocumentationDeriveSee}
+
 {buildToolsCompile}
 
 ## Deployment

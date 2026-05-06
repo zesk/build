@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Docker Image
 # Default docker image to use when launching `dockerLocalContainer`
 # See: dockerLocalContainer
 # Copyright &copy; 2026 Market Acumen, Inc.

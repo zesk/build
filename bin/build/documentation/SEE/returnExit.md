@@ -1,1 +1,20 @@
-[returnExit]({rel}tools/assert.md#returnexit) - Exit return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1533))
+## `returnExit`
+
+> Exit return code
+
+### Usage
+
+    returnExit
+
+Return code is `exit`
+
+> Location: `bin/build/tools/test.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- 120
+

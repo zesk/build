@@ -4,7 +4,7 @@ Inspired by the baskets of `bash` scripts in each project which seemed eerily si
 
 Copyright &copy; 2024-2025 Market Acumen, Inc. All rights reserved.
 
-**Zesk Build** was written
+**{applicationName}** was written
 by [Kent Davidson](https://kentdavidson.com/?crcat=web&crsource=zesk-build&crcpn=about&crkw=Kent+Davidson). Contact him
 via [LinkedIn](https://kentdavidson.com/), via his consulting
 company [Market Acumen, Inc.](https://www.marketacumen.com/?crsource=zesk-build&crcat=code&crkw=about), or

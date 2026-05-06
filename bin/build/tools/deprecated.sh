@@ -18,6 +18,125 @@
 #             |_|
 #
 
+
+# Summary: Convert a template file to a documentation file using templates
+#
+# Argument: --env-file envFile - File. Optional. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
+# Argument: cacheDirectory - Directory. Required. Cache directory where the indexes live.
+# Argument: sourceFile - File. Directory. Required. The document template containing functions to define
+# Argument: functionTemplate - File. Required. The template for individual functions defined in the `documentTemplate`.
+# Argument: targetFile - FileDirectory. Required. Target file to generate
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Convert a template which contains bash functions into full-fledged documentation.
+#
+# The process:
+#
+# 1. `documentTemplate` is scanned for tokens which are assumed to represent Bash functions
+# 1. `functionTemplate` is used to generate the documentation for each function
+# 1. Functions are looked up in `cacheDirectory` using indexing functions and
+# 1. Template used to generate documentation and compiled to `targetFile`
+#
+# `cacheDirectory` is required - build an index using `documentationIndexIndex` prior to using this.
+#
+# See: documentationIndexLookup
+# See: documentationIndexIndex
+# Return Code: 0 - If success
+# Return Code: 1 - Issue with file generation
+# Return Code: 2 - Argument error
+# Requires: catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
+# Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
+# Requires: mapEnvironment textSHA printf
+documentationTemplateFileCompile() {
+  _deprecated "${FUNCNAME[0]}"
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationTemplateFileCompile() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Argument: --filter filterArgs ... --  - Arguments. Optional. Passed to `find` and allows filtering list.
+# Argument: --force - Flag. Optional. Force generation of files.
+# Argument: --verbose - Flag. Optional. Output more messages.
+# Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of `functionTemplate`
+# Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
+# Argument: templateDirectory - Required. Directory containing documentation templates
+# Argument: functionTemplate - Required. Function template file to generate documentation for functions
+# Argument: targetDirectory - Required. Directory to create generated documentation
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Summary: Convert a directory of templates into documentation for Bash functions
+# Convert a directory of templates for bash functions into full-fledged documentation.
+#
+# The process:
+#
+# 1. `templateDirectory` is scanned for files which look like `*.md`
+# 1. `{fn}` is called for each one
+#
+# If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
+# to regenerate each time.
+#
+# See: documentationTemplateCompile
+# Return Code: 0 - If success
+# Return Code: 1 - Any template file failed to generate for any reason
+# Return Code: 2 - Argument error
+#
+documentationTemplateDirectoryCompile() {
+  _deprecated "${FUNCNAME[0]}"
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationTemplateDirectoryCompile() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Deprecated: 2026-05
+# See: documentationMake documentationMaker
+# Build documentation for Bash functions
+#
+# Given that bash is not an ideal template language, caching is mandatory.
+#
+# Uses a cache at `buildCacheDirectory`
+# See: buildCacheDirectory
+#
+# Argument: --commit - Flag. Optional. Commit docs to non-docs branch
+# Argument: --force - Flag. Optional. Force generation, ignore cache directives
+# Argument: --unlinked - Flag. Optional. Show unlinked functions
+# Argument: --unlinked-update - Flag. Optional. Update unlinked document file
+# Argument: --clean - Flag. Optional. Erase the cache before starting.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --company companyName - String. Optional. Company name (uses `BUILD_COMPANY` if not set)
+# Argument: --company-link companyLink - String. Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
+# Argument: --unlinked-source directory - Directory. Optional.
+# Argument: --page-template pageTemplateFile - File. Optional.
+# Argument: --template templateDirectory - Directory. Required. Location of documentation template file to generate documentation.
+# Argument: --source sourceDirectory - Directory. Required. Location of source code. Can specify one or more.
+# Argument: --target targetDirectory - Directory. Required. Location of documentation build target.
+# Argument: --function-template functionTemplateFile - File. Optional.
+# Argument: --unlinked-template unlinkedTemplateFile - File. Optional.
+# Argument: --unlinked-target unlinkedTarget - FileDirectory. Optional.
+# Argument: --see-prefix seePrefix - EmptyString. Optional.
+# Argument: --see-update - Flag. Optional. Update the `see` indexes only.
+# Argument: --unlinked-update - Flag. Optional. Update the unlinked file only.
+# Argument: --index-update - Flag. Optional. Update the documentation indexes only.
+# Argument: --docs-update - Flag. Optional. Update the documentation target only.
+# Artifact: `cacheDirectory` may be created even on non-zero exit code
+# Return Code: 0 - Success
+# Return Code: 1 - Issue with environment
+# Return Code: 2 - Argument error
+# Deprecated: 2026-05
+documentationBuild() {
+  _deprecated "${FUNCNAME[0]}"
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationBuild() {
+  case "${1-}" in 0 | 2 | "") ;; *) hookRunOptional documentation-error "$@" || : ;; esac
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Deprecated: 2026-04
 # See: isUpToDate
 isUpToDate() {

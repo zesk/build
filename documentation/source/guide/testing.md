@@ -4,7 +4,7 @@
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-Zesk Build has a complete testing and assertion platform which allows you to write tests for your Bash scripts with a
+{applicationName} has a complete testing and assertion platform which allows you to write tests for your Bash scripts with a
 lot of extra functionality which makes it easy to use.
 
 ## Basic setup
@@ -96,7 +96,7 @@ If you find you need to turn this functionality off, add the tags to disable the
 
 ## Tagging tests
 
-You can tag tests using the standard Zesk Build documentation. The following flags are honored:
+You can tag tests using the standard {applicationName} documentation. The following flags are honored:
 
 - `Tag` - Tag your tests with any string keyword separated by spaces. These can be used in `testSuite` calls with
   `--tag` or `--skip-tag` (and shown via `--list-tags`)

@@ -1,6 +1,0 @@
-description="Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)"
-descriptionLineCount="1"
-category="Development"
-categoryId="development"
-type="String"
-summary="Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)"

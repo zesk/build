@@ -1,1 +1,26 @@
-[environmentNames]({rel}tools/environment.md#environmentnames) - List names of environment values set in a bash state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/io.sh#L165))
+## `environmentNames`
+
+> List names of environment values set in a bash state
+
+### Usage
+
+    environmentNames [ --help ]
+
+List names of environment values set in a bash state file
+
+> Location: `bin/build/tools/environment/io.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Examples
+
+    environmentNames < "$stateFile"
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

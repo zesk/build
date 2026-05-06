@@ -1,1 +1,1 @@
-- `BUILD_VERSION_NO_OPEN` *Boolean*. Constant for whether to open release notes when a version is requested (see `version-already`) [notes](#build_version_no_open)
+- `BUILD_VERSION_NO_OPEN` &mdash; BUILD_VERSION_NO_OPEN *Boolean*. Constant for whether to open release notes when a version [notes](#build_version_no_open)

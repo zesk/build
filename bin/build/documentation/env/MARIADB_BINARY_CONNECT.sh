@@ -1,6 +1,0 @@
-description="MariaDB binary for database connections"
-descriptionLineCount="1"
-category="Vendor"
-categoryId="vendor"
-type="Executable"
-summary="MariaDB binary for database connections"

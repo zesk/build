@@ -1,1 +1,24 @@
-[sedReplacePattern]({rel}tools/quote.md#sedreplacepattern) - Quote a sed command for search and replace ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sed.sh#L19))
+## `sedReplacePattern`
+
+> Quote a sed command for search and replace
+
+### Usage
+
+    sedReplacePattern searchPattern replacePattern
+
+Quote a sed command for search and replace
+Without arguments, displays help.
+
+> Location: `bin/build/tools/sed.sh`
+
+### Arguments
+
+- `searchPattern` - String. Required. The string to search for.
+- `replacePattern` - String. Required. The replacement to replace with.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

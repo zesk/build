@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
+# Name: Main Cache Directory
+# Summary: Main Cache Directory
 # Base directory for user-specific cache data to be stored
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: Directory
-# See: https://specifications.freedesktop.org/basedir-spec/latest/
+# See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
 
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/HOME.sh"

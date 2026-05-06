@@ -1,5 +1,7 @@
 ## `APPLICATION_VERSION`
 
-> **Type**: *String* • **Category**: *Deployment*
+> **APPLICATION_VERSION** &mdash; This is the version number which can be displayed
+> > **Type**: *String* • **Category**: *Deployment*
 
 This is the version number which can be displayed
+

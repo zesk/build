@@ -14,7 +14,7 @@
 # Argument: repairPath ... - Directory. Required. One or more directories containing IDENTICAL sources for repair.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-__documentationTemplateUpdate() {
+__documentationIdenticalRepair() {
   local handler="$1" && shift
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
@@ -37,7 +37,7 @@ __documentationTemplateUpdate() {
 # Argument: envFile - File. Required. Environment file used as base environment for all template generation.
 # Argument: template - File. Required. Final template file.
 # Argument: todoTemplate - File. Optional. Template file for template.
-__documentationTemplateUpdateUnlinked() {
+__documentationIdenticalRepairUnlinked() {
   local handler="_${FUNCNAME[0]}"
   local maxMissing=50
 
@@ -77,7 +77,7 @@ __documentationTemplateUpdateUnlinked() {
     statusMessage decorate info "Updated $(decorate file "$template") with $total unlinked $(localePlural "$total" function functions)"
   fi
 }
-___documentationTemplateUpdateUnlinked() {
+___documentationIdenticalRepairUnlinked() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -176,7 +176,7 @@ __documentationUnlinked() {
 
   local cacheDirectory
 
-  cacheDirectory="$(catchReturn "$handler" documentationBuildCache)" || return $?
+  cacheDirectory="$(catchReturn "$handler" documentationCache)" || return $?
 
   catchReturn "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
 }
@@ -185,7 +185,8 @@ __documentationTemplateCompile() {
   local saved=("$@")
   local handler="$1" && shift
 
-  local template=""
+  local template="" debugFlag=false
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -197,6 +198,7 @@ __documentationTemplateCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --debug) debugFlag=true ;;
     *)
       template=$(validate "$handler" File "template" "$argument") && shift && break || return $?
       ;;
@@ -213,22 +215,25 @@ __documentationTemplateCompile() {
     while [ $# -gt 0 ]; do
       local envFile="$1"
       [ -f "$envFile" ] || throwArgument "$handler" "Settings file $envFile not found" || return $?
+      ! $debugFlag || statusMessage decorate info "Settings file $envFile" 1>&2
       # shellcheck source=/dev/null
       source "$envFile" || throwEnvironment "$handler" "SOURCE $envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
       shift
     done
+    ! $debugFlag || statusMessage decorate info "Starting formatters" 1>&2
     while read -r token; do
       local value="${!token-}"
       if [ -n "$value" ]; then
         formatter="_documentationTemplateFormatter_${token}"
         if isFunction "$formatter"; then
-          : # printf "%s\n" "Running $formatter on $token" 1>&2
+          ! $debugFlag || statusMessage decorate info "Running $formatter on $token" 1>&2
           declare -x "$token"="$(printf "%s\n" "${!token}" | "$formatter")"
         else
-          : # printf "%s\n" "NOT Running $formatter on $token" 1>&2
+          ! $debugFlag || statusMessage decorate warning "NOT Running $formatter on $token" 1>&2
         fi
       fi
     done < <(mapTokens <"$template" | sort -u)
-    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdownRemoveUnfinishedSections || :
+    ! $debugFlag || statusMessage decorate info "Finished formatters" 1>&2
+    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdownRemoveUnfinishedSections || return $?
   ) || throwEnvironment "$handler" "${FUNCNAME[0]} failed: ${saved[*]}" || return $?
 }

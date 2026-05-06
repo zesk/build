@@ -1,1 +1,22 @@
-[dockerVolumeDelete]({rel}tools/docker.md#dockervolumedelete) - Delete a docker volume ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L310))
+## `dockerVolumeDelete`
+
+> Delete a docker volume
+
+### Usage
+
+    dockerVolumeDelete name
+
+Delete a docker volume
+
+> Location: `bin/build/tools/docker.sh`
+
+### Arguments
+
+- `name` - String. Required. Volume name to delete.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

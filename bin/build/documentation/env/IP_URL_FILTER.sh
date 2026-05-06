@@ -1,6 +1,0 @@
-description="jq filter to parse IP_URL result (assuming JSON)"$'\n'"if blank, no filter is used and raw result is returned"
-descriptionLineCount="2"
-category="Build Configuration"
-categoryId="build-configuration"
-type="String"
-summary="jq filter to parse IP_URL result (assuming JSON) if blank, no filter is used and raw result is returned"

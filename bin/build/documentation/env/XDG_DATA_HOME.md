@@ -1,1 +1,1 @@
-- `XDG_DATA_HOME` *Directory*. Base directory for user-specific data to be stored [notes](#xdg_data_home)
+- `XDG_DATA_HOME` &mdash; XDG_DATA_HOME *Directory*. Data Home Directory [notes](#xdg_data_home)

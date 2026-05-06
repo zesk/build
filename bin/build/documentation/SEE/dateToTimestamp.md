@@ -1,1 +1,30 @@
-[dateToTimestamp]({rel}tools/date.md#datetotimestamp) - Converts a date to an integer timestamp ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L51))
+## `dateToTimestamp`
+
+> Converts a date to an integer timestamp
+
+### Usage
+
+    dateToTimestamp [ date ] [ --help ]
+
+Converts a date to an integer timestamp
+
+> Location: `bin/build/tools/date.sh`
+
+### Arguments
+
+- `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
+- `--help` - Flag. Optional. Display this help.
+
+### Examples
+
+    timestamp=$(dateToTimestamp '2023-10-15')
+
+### Return codes
+
+- `1` - if parsing fails
+- `0` - if parsing succeeds
+
+### Environment
+
+- Compatible with BSD and GNU date.
+

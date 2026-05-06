@@ -1,1 +1,26 @@
-[phpTailLog]({rel}tools/php.md#phptaillog) - Tail the PHP log ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L54))
+## `phpTailLog`
+
+> Tail the PHP log
+
+### Usage
+
+    phpTailLog [ --help ]
+
+Tail the PHP log
+
+> Location: `bin/build/tools/php.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### See Also
+
+- {SEE:tail}
+

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: GitHub Access Token Expiration Date
 # See: githubRelease
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Development

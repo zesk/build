@@ -1,6 +1,0 @@
-description="Search directory for user-specific data files to be stored. \`:\` separated."
-descriptionLineCount="1"
-category="Build Configuration"
-categoryId="build-configuration"
-type="DirectoryList"
-summary="Search directory for user-specific data files to be stored. \`:\` separated."

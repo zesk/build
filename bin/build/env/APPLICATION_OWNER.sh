@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
+# Name: Application Legal Owner
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # Application: ALL
 # Type: String
 # The entity which owns or manages the application. Typically the owning company name.
 # This is used in Copyright notices in code and other locations.
+
 export APPLICATION_OWNER
 # REMOVE {
 __appOwnerLoader() {

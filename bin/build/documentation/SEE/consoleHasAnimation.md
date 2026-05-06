@@ -1,1 +1,21 @@
-[consoleHasAnimation]({rel}tools/decorate.md#consolehasanimation) - Does the console support animation? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L55))
+## `consoleHasAnimation`
+
+> Does the console support animation?
+
+### Usage
+
+    consoleHasAnimation
+
+Does the console support animation?
+
+> Location: `bin/build/tools/colors.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Supports console animation
+- `1` - Does not support console animation
+

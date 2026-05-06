@@ -1,1 +1,23 @@
-[awsRegionValid]({rel}tools/aws.md#awsregionvalid) - Check an AWS region code for validity"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L328))
+## `awsRegionValid`
+
+> Check an AWS region code for validity
+
+### Usage
+
+    awsRegionValid region ... [ --help ]
+
+Checks an AWS region identifier for validity as of September 2024.
+Note that passing no parameters returns success.
+
+> Location: `bin/build/tools/aws.sh`
+
+### Arguments
+
+- `region ...` - String. Required. The AWS Region to validate.
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - All regions are valid AWS region
+- `1` - One or more regions are NOT a valid AWS region
+

@@ -1,1 +1,35 @@
-[gitHookTypes]({rel}tools/git.md#githooktypes) - List current valid git hook types ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L718))
+## `gitHookTypes`
+
+> List current valid git hook types
+
+### Usage
+
+    gitHookTypes [ --help ]
+
+List current valid git hook types
+Hook types:
+- `pre-commit`
+- `pre-push`
+- `pre-merge-commit`
+- `pre-rebase`
+- `pre-receive`
+- `update`
+- `post-update`
+- `post-commit`
+
+> Location: `bin/build/tools/git.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Sample Output
+
+lines:gitHookType
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

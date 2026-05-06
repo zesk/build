@@ -1,6 +1,0 @@
-description="Number of lines of debugging output to send to stderr before stopping"
-descriptionLineCount="1"
-category="Build Configuration"
-categoryId="build-configuration"
-type="PositiveInteger"
-summary="Number of lines of debugging output to send to stderr before stopping"

@@ -1,1 +1,1 @@
-[APPLICATION_TAG]({rel}/env/#deployment) - **String**. This is the full version number including debugging or release identifiers
+[`APPLICATION_TAG` APPLICATION_TAG]({rel}/env/#deployment) - **String**. This is the full version number including debugging or release

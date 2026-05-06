@@ -1,1 +1,31 @@
-[bashMakeExecutable]({rel}tools/bash.md#bashmakeexecutable) - Makes all \`*.sh\` files executable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L124))
+## `bashMakeExecutable`
+
+> Makes all `*.sh` files executable
+
+### Usage
+
+    bashMakeExecutable [ --find findArguments ] [ path ... ]
+
+Makes all `*.sh` files executable
+
+> Location: `bin/build/tools/platform.sh`
+
+### Arguments
+
+- `--find findArguments` - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.
+- `path ...` - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### Environment
+
+- Works from the current directory
+
+### See Also
+
+- {SEE:chmod-sh.sh}
+

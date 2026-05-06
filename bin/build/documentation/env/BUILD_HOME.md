@@ -1,1 +1,1 @@
-- `BUILD_HOME` *Directory*. `BUILD_HOME` is `.` when this code is installed - at `./bin/build`. Usually an absolute path and does NOT end with a trailing slash. This is computed from the current source file using `${BASH_SOURCE[0]}`. [notes](#build_home)
+- `BUILD_HOME` &mdash; BUILD_HOME *Directory*. `BUILD_HOME` is `.` when this code is installed - at [notes](#build_home)

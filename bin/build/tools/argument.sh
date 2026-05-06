@@ -166,7 +166,7 @@ _commentArgumentSpecification() {
   [ -f "$functionDefinitionFile" ] || throwArgument "$handler" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || throwArgument "$handler" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(fileNewest "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
-    catchReturn "$handler" bashDocumentationExtract "$functionName" "$functionDefinitionFile" >"$cacheFile" < <(catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName") || return $?
+    catchReturn "$handler" bashDocumentationExtract --function "$functionName" "$functionDefinitionFile" >"$cacheFile" < <(catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName") || return $?
     for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       catchEnvironment "$handler" printf "" >"$file" || return $?
     done

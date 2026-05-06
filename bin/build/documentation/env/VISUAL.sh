@@ -1,6 +1,0 @@
-description="Binary for viewing files"
-descriptionLineCount="1"
-category="Bash"
-categoryId="bash"
-type="Executable"
-summary="Binary for viewing files"

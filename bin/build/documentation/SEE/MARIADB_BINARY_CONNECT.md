@@ -1,1 +1,1 @@
-[MARIADB_BINARY_CONNECT]({rel}/env/#vendor) - **Executable**. MariaDB binary for database connections
+[`MARIADB_BINARY_CONNECT` MARIADB_BINARY_CONNECT]({rel}/env/#vendor) - **Executable**. MariaDB binary for database connections

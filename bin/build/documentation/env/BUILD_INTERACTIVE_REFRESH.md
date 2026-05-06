@@ -1,1 +1,0 @@
-- `BUILD_INTERACTIVE_REFRESH` *PositiveInteger*. When displaying content interactively, how many seconds should elapse before refreshing content? [notes](#build_interactive_refresh)

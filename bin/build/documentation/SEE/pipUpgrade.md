@@ -1,1 +1,23 @@
-[pipUpgrade]({rel}tools/python.md#pipupgrade) - Utility to upgrade pip correctly ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L48))
+## `pipUpgrade`
+
+> Utility to upgrade pip correctly
+
+### Usage
+
+    pipUpgrade [ --help ] [ --bin binary ]
+
+Utility to upgrade pip correctly
+
+> Location: `bin/build/tools/python.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+- `--bin binary` - Executable. Optional. Binary for `pip`.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

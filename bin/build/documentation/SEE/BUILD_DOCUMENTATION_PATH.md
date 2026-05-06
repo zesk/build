@@ -1,1 +1,1 @@
-[BUILD_DOCUMENTATION_PATH]({rel}/env/#bash) - **DirectoryList**. Search path for documentation settings file. A colon `:` separated list of paths to search for function documentation settings file for `__bashDocumentationCached`
+[`BUILD_DOCUMENTATION_PATH` BUILD_DOCUMENTATION_PATH]({rel}/env/#bash) - **DirectoryList**. Search path for documentation settings file.

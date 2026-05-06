@@ -1,6 +1,0 @@
-description="Version of npm to install using native \`npm\` binary."
-descriptionLineCount="1"
-category="Installation"
-categoryId="installation"
-type="String"
-summary="Version of npm to install using native \`npm\` binary."

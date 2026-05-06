@@ -11,14 +11,19 @@ __addNoteTo() {
   local handler="$1" && shift
   local home="$1" && shift
 
-  local target="$home/bin/build/$1" docTarget="$home/documentation/source/$1"
+  local source="$home/documentation/.template/$1"
+  local target="$home/bin/build/$1"
+  local docTarget="$home/documentation/source/$1"
 
-  statusMessage --last decorate info "Adding note to $1"
-
-  catchEnvironment "$handler" cp "$home/$1" "$target" || return $?
-  catchEnvironment "$handler" printf -- "\n%s" "(this file is a copy - please modify the original)" "" >>"$target" || return $?
-  catchEnvironment "$handler" cp "$target" "$docTarget" || return $?
-  catchEnvironment "$handler" git add "$target" "$docTarget" || return $?
+  if [ -f "$source" ]; then
+    statusMessage --last decorate info "Adding note to $1"
+    catchEnvironment "$handler" cp "$source" "$target" || return $?
+    catchEnvironment "$handler" printf -- "\n%s" "(this file is a copy - please modify the original)" "" >>"$target" || return $?
+    catchEnvironment "$handler" cp "$target" "$docTarget" || return $?
+    catchEnvironment "$handler" git add "$target" "$docTarget" || return $?
+  else
+    statusMessage --last decorate info "No $(decorate file "$source") found"
+  fi
 }
 
 # Distribute the README.md and LICENSE.md files to important places.
@@ -38,10 +43,7 @@ __updateMarkdown() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    --skip-commit)
-      flagSkipCommit=true
-      statusMessage decorate warning "Skipping commit ..."
-      ;;
+    --skip-commit) flagSkipCommit=true && statusMessage decorate warning "Skipping commit ..." ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -56,8 +58,7 @@ __updateMarkdown() {
   __addNoteTo "$handler" "$home" README.md
   __addNoteTo "$handler" "$home" LICENSE.md
 
-  local buildMarker
-  buildMarker=$(catchReturn "$handler" __buildMarker) || return $?
+  local buildMarker && buildMarker=$(catchReturn "$handler" __buildMarker) || return $?
 
   #
   # Disable this to see what environment shows up in commit hooks for GIT*=

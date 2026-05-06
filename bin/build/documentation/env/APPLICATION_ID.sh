@@ -1,6 +1,0 @@
-description="This is the unique hash which represents the source code state (typically a git hash)"
-descriptionLineCount="1"
-category="Deployment"
-categoryId="deployment"
-type="String"
-summary="This is the unique hash which represents the source code state (typically a git hash)"

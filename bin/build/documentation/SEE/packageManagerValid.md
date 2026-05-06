@@ -1,1 +1,23 @@
-[packageManagerValid]({rel}tools/package.md#packagemanagervalid) - Is the package manager supported? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L597))
+## `packageManagerValid`
+
+> Is the package manager supported?
+
+### Usage
+
+    packageManagerValid [ --help ] [ packageManager ]
+
+Is the package manager supported?
+Checks the package manager to be a valid, supported one.
+
+> Location: `bin/build/tools/package.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+- `packageManager` - String. Manager to check.
+
+### Return codes
+
+- `0` - The package manager is valid.
+- `1` - The package manager is not valid.
+

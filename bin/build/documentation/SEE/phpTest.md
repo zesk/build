@@ -1,1 +1,23 @@
-[phpTest]({rel}tools/php.md#phptest) - Test a docker-based PHP application during build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L336))
+## `phpTest`
+
+> Test a docker-based PHP application during build
+
+### Usage
+
+    phpTest [ --env-file envFile ] [ --home homeDirectory ]
+
+Test a docker-based PHP application during build
+
+> Location: `bin/build/tools/php.sh`
+
+### Arguments
+
+- `--env-file envFile` - File. Optional. Environment file to load.
+- `--home homeDirectory` - Directory. Optional. Directory for application home.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

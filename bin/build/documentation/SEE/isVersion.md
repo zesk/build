@@ -1,1 +1,23 @@
-[isVersion]({rel}tools/version.md#isversion) - Check if something matches a version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L16))
+## `isVersion`
+
+> Check if something matches a version
+
+### Usage
+
+    isVersion [ --help ] binary
+
+Check if something matches a version
+
+> Location: `bin/build/tools/version.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+- `binary` - String. Required. The binary to look for.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

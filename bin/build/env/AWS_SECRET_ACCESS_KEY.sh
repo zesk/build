@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: AWS Secret Access Key
 # Private Secret Password for AWS
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Amazon Web Services

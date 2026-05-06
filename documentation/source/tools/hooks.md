@@ -6,7 +6,7 @@
 
 ## Context hook runners
 
-These run within the current project regardless of where Zesk Build is loaded:
+These run within the current project regardless of where {applicationName} is loaded:
 
 {hookVersionCurrent}
 

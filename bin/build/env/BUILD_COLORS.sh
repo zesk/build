@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Build Colors Flag
 # If true then colors are shown, blank means guess the value, false means no colors
 # See: decorate
 # Type: Boolean

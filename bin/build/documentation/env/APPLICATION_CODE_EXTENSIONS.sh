@@ -1,6 +1,0 @@
-description="List of extensions for code in the application. Required."
-descriptionLineCount="1"
-category="Application"
-categoryId="application"
-type="ColonDelimitedList"
-summary="List of extensions for code in the application. Required."

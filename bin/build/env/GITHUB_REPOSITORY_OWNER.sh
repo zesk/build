@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: GitHub Repository Owner
 # See: githubRelease
 # Type: String
 # Copyright &copy; 2026 Market Acumen, Inc.

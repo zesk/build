@@ -1,6 +1,0 @@
-description="Path on the remote server where the application is served"
-descriptionLineCount="1"
-category="Deployment"
-categoryId="deployment"
-type="RemoteDirectory"
-summary="Path on the remote server where the application is served"

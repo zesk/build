@@ -1,1 +1,35 @@
-[dateTomorrow]({rel}tools/date.md#datetomorrow) - Tomorrow's date in UTC"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L145))
+## `dateTomorrow`
+
+> Tomorrow's date in UTC
+
+### Usage
+
+    dateTomorrow [ --local ] [ --help ]
+
+Returns tomorrow's date (UTC time), in `YYYY-MM-DD` format. (same as `%F`)
+
+> Location: `bin/build/tools/date.sh`
+
+### Arguments
+
+- `--local` - Flag. Optional. Local tomorrow
+- `--help` - Flag. Optional. Display this help.
+
+### Examples
+
+    rotated="$log.$(dateTomorrow)"
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### Requires
+
+- {SEE:throwArgument}
+- date
+- {SEE:convertValue}
+- {SEE:dateFromTimestamp}
+- {SEE:bashDocumentation}
+

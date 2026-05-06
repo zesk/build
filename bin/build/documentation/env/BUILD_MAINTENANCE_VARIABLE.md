@@ -1,1 +1,1 @@
-- `BUILD_MAINTENANCE_VARIABLE` *EnvironmentVariable*. The maintenance variable name which enables (or disabled) maintenance mode. [notes](#build_maintenance_variable)
+- `BUILD_MAINTENANCE_VARIABLE` &mdash; BUILD_MAINTENANCE_VARIABLE *EnvironmentVariable*. The maintenance variable name which enables (or disabled) maintenance mode. [notes](#build_maintenance_variable)

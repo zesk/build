@@ -6,7 +6,7 @@
 
 ## Build Application
 
-Configure a project to use **Zesk Build**.
+Configure a project to use **{applicationName}**.
 
 {buildApplicationConfigure}
 
@@ -48,7 +48,7 @@ Configure a project to use **Zesk Build**.
 
 {installInstallBuild}
 
-## Installing Zesk Build
+## Installing {applicationName}
 
 {__installPackageConfiguration}
 

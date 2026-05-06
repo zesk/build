@@ -1,1 +1,27 @@
-[identicalFindTokens]({rel}tools/identical.md#identicalfindtokens) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L127))
+## `identicalFindTokens`
+
+> undocumented
+
+### Usage
+
+    identicalFindTokens --prefix prefix file ...
+
+No documentation for `identicalFindTokens`.
+
+> Location: `bin/build/tools/identical.sh`
+
+### Arguments
+
+- `--prefix prefix` - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
+- `file ...` - File. Required. A file to search for identical tokens.
+
+### Writes to standard output
+
+tokens, one per line
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

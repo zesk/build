@@ -1,1 +1,1 @@
-- `TEST_TRACK_ASSERTIONS` *Boolean*. Turn on or off tracking of function assertions within the testing core. If blank, the default behavior is to track; disable it with setting the value to `false`. [notes](#test_track_assertions)
+- `TEST_TRACK_ASSERTIONS` &mdash; TEST_TRACK_ASSERTIONS *Boolean*. Assertion tracking testing optimization [notes](#test_track_assertions)

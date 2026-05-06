@@ -208,8 +208,8 @@ urlParseItem() {
         # subshell hides variable scope
         (
           local url path name scheme user password host port error=""
-          eval "$(urlParse "$url")" || throwArgument "$handler" "Unable to parse $url" || return $?
-          [ -z "$error" ] || throwArgument "$handler" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
+          eval "$(urlParse "$url")" || throwEnvironment "$handler" "Unable to parse $url" || return $?
+          [ -z "$error" ] || throwEnvironment "$handler" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
           printf "%s\n" "${!component-}"
         ) || return $?
       fi
@@ -246,7 +246,7 @@ urlValid() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
-      urlParse "$1" >/dev/null || return 1
+      urlParse "$1" >/dev/null 2>&1 || return 1
       ;;
     esac
     shift

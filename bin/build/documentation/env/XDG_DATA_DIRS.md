@@ -1,1 +1,1 @@
-- `XDG_DATA_DIRS` *DirectoryList*. Search directory for user-specific data files to be stored. `:` separated. [notes](#xdg_data_dirs)
+- `XDG_DATA_DIRS` &mdash; XDG_DATA_DIRS *DirectoryList*. Data Path Directories [notes](#xdg_data_dirs)

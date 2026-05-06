@@ -1,1 +1,1 @@
-- `APPLICATION_OWNER` *String*. The entity which owns or manages the application. Typically the owning company name. This is used in Copyright notices in code and other locations. [notes](#application_owner)
+- `APPLICATION_OWNER` &mdash; APPLICATION_OWNER *String*. The entity which owns or manages the application. Typically the [notes](#application_owner)

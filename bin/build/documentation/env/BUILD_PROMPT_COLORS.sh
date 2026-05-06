@@ -1,6 +1,0 @@
-description="Colon-separated list of colors for the prompt"$'\n'""$'\n'"Colors are escape codes. Last entry is a reset simply to make environment output less messy."$'\n'""$'\n'"1. Success color"$'\n'"2. Failure color"$'\n'"3. User"$'\n'"4. Host"$'\n'"5. Path"
-descriptionLineCount="9"
-category="Decoration"
-categoryId="decoration"
-type="ColonDelimitedList"
-summary="Colon-separated list of colors for the prompt"

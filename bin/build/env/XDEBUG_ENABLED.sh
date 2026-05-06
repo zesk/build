@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: xDebug Enabled Flag
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Type: Boolean
 # Category: PHP

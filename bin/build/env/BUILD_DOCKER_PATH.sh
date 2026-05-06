@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Docker Mapped Path
 # Default path for the shell to map the current directory to when launching `dockerLocalContainer`
 # See: dockerLocalContainer
 # Copyright &copy; 2026 Market Acumen, Inc.

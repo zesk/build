@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Notification Sound
 # Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notification`.
 # See: darwinNotification
 # Type: String

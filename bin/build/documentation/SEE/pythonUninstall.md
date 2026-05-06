@@ -1,1 +1,22 @@
-[pythonUninstall]({rel}tools/install.md#pythonuninstall) - Uninstall python ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L32))
+## `pythonUninstall`
+
+> Uninstall python
+
+### Usage
+
+    pythonUninstall
+
+Uninstall python
+
+> Location: `bin/build/tools/python.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

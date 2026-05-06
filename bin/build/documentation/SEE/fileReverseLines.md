@@ -1,1 +1,30 @@
-[fileReverseLines]({rel}tools/file.md#filereverselines) - Reverse output lines"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L106))
+## `fileReverseLines`
+
+> Reverse output lines
+
+### Usage
+
+    fileReverseLines
+
+Reverses a pipe's input lines to output using an awk trick.
+
+Not recommended on big files.
+
+> Location: `bin/build/tools/platform.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### Credits
+
+Thanks to [Eric Pement
+](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
+).
+

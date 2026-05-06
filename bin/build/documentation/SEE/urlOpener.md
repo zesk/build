@@ -1,1 +1,32 @@
-[urlOpener]({rel}tools/url.md#urlopener) - URL opener stream filter"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L268))
+## `urlOpener`
+
+> URL opener stream filter
+
+### Usage
+
+    urlOpener [ --exec ] [ --help ]
+
+Open URLs which appear in a stream
+(but continue to output the stream)
+
+> Location: `bin/build/tools/url.sh`
+
+### Arguments
+
+- `--exec` - Executable. Optional. If not supplied uses `urlOpen`.
+- `--help` - Flag. Optional. Display this help.
+
+### Reads standard input
+
+text
+
+### Writes to standard output
+
+text
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

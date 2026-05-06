@@ -1,5 +1,11 @@
 ## `GITHUB_ACCESS_TOKEN`
 
-> **Type**: *String* • **Category**: *Development*
+> **GITHUB_ACCESS_TOKEN** &mdash; Access token used for release
+> > **Type**: *Secret* • **Category**: *Development*
 
 Access token used for release
+
+### See Also
+
+- {SEE:githubRelease}
+

@@ -17,8 +17,8 @@ _documentationTemplateFormatter_return_code() {
 #
 _documentationTemplateFormatter_requires() {
   local eof=false && while ! $eof; do
-    local tokens=() && IFS=" " read -d $'\n' -r -a tokens || eof=true
-    [ "${#tokens[@]}" -eq 0 ] || local token && for token in "${tokens[@]}"; do
+    local requiresTokens=() && IFS=" " read -d $'\n' -r -a requiresTokens || eof=true
+    [ "${#requiresTokens[@]}" -eq 0 ] || local token && for token in "${requiresTokens[@]+"${requiresTokens[@]}"}"; do
       if isFunction "$token"; then
         local f="_documentationTemplateFormatter_builtin"
         if isBashBuiltin "$token" && isFunction "$f"; then
@@ -34,13 +34,40 @@ _documentationTemplateFormatter_requires() {
 }
 
 #
-# Format see blocks as tokens
+# Format see items as a list
 #
 _documentationTemplateFormatter_see() {
   local eof=false && while ! $eof; do
-    local tokens=() && IFS=" " read -d $'\n' -r -a tokens || eof=true
-    [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}" | sed 's/.*/{SEE:&}/' | markdownFormatList
+    local seeTokens=() && IFS=" " read -d $'\n' -r -a seeTokens || eof=true
+    [ "${#seeTokens[@]}" -eq 0 ] || printf "%s\n" "${seeTokens[@]}" | _documentationTemplateFormatterSeeStream | markdownFormatList
   done
+}
+
+#
+# Format see stream
+# stdin: tokens
+# stdout: token markup, one per line
+_documentationTemplateFormatterSeeStream() {
+  local handler="_${FUNCNAME[0]}"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local seeItems=() && while IFS=" " read -r -a seeItems; do
+    local seeItem && for seeItem in "${seeItems[@]+${seeItems[@]}}"; do
+      seeItem="$(textTrim "$seeItem")"
+      if [ -n "$seeItem" ]; then
+        local seeFile && if seeFile=$(__documentationFile "$home" "SEE/$seeItem"); then
+          cat "$seeFile"
+        elif urlValid "$seeItem"; then
+          printf -- "[%s](%s)\n" "$(urlParseItem host "$seeItem")" "$seeItem"
+        else
+          printf -- "{SEE:%s}\n" "$seeItem"
+        fi
+      fi
+    done
+  done
+}
+__documentationTemplateFormatterSeeStream() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -58,10 +85,10 @@ _documentationTemplateFormatter_usage() {
 # BUILD_DEBUG: token2 - description2 ...
 # BUILD_DEBUG:
 _documentationTemplateFormatter_build_debug() {
-  local items=() eof=false blank=false
+  local buildDebugItems=() eof=false blank=false
   while ! $eof; do
-    IFS=' ' read -r -d $'\n' -a items || eof=true
-    if [ ${#items[@]} -eq 0 ]; then
+    IFS=' ' read -r -d $'\n' -a buildDebugItems || eof=true
+    if [ ${#buildDebugItems[@]} -eq 0 ]; then
       if ! $blank; then
         printf -- "\n"
         blank=true
@@ -69,7 +96,7 @@ _documentationTemplateFormatter_build_debug() {
       continue
     fi
     blank=false
-    set -- "${items[@]}"
+    set -- "${buildDebugItems[@]}"
     local item="$1" && shift
     if [ "${1-}" = "-" ]; then
       printf -- "- \`%s\` %s\n" "$item" "$*"
@@ -85,10 +112,10 @@ _documentationTemplateFormatter_build_debug() {
 # Once a non-token is found, rest of the line is output normally
 # Blank lines are preserved but only one sequentially
 _documentationTemplateFormatter_environment() {
-  local items=() eof=false blank=false
+  local environmentItems=() eof=false blank=false
   while ! $eof; do
-    IFS=' ' read -r -d $'\n' -a items || eof=true
-    if [ ${#items[@]} -eq 0 ]; then
+    IFS=' ' read -r -d $'\n' -a environmentItems || eof=true
+    if [ ${#environmentItems[@]} -eq 0 ]; then
       if ! $blank; then
         printf -- "\n"
         blank=true
@@ -97,9 +124,9 @@ _documentationTemplateFormatter_environment() {
     fi
     blank=false
     local item ii=() valid=true
-    for item in "${items[@]}"; do
+    for item in "${environmentItems[@]}"; do
       if $valid && environmentVariableNameValid "$item" && muzzle buildEnvironmentFiles "$item" 2>&1; then
-        ii+=("{SEE:$item}")
+        ii+=("$(_documentationTemplateFormatterSeeStream <<<"$item")")
       else
         valid=false
         ii+=("$item")
@@ -133,19 +160,4 @@ _documentationTemplateFormatter_argument() {
 #
 _documentationTemplateFormatter_depends() {
   decorate wrap "    "
-}
-
-#
-# Format see block
-#
-_documentationTemplateFormatter_see2() {
-  local seeItem seeItems
-  while IFS=" " read -r -a seeItems; do
-    for seeItem in "${seeItems[@]+${seeItems[@]}}"; do
-      seeItem="$(textTrim "$seeItem")"
-      if [ -n "$seeItem" ]; then
-        printf "{SEE:%s}\n" "$seeItem"
-      fi
-    done
-  done
 }

@@ -1,1 +1,1 @@
-[BUILD_INSTALL_URL]({rel}/env/#build_configuration) - **URL**. `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer.
+[`BUILD_INSTALL_URL` BUILD_INSTALL_URL]({rel}/env/#build_configuration) - **URL**. `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer.

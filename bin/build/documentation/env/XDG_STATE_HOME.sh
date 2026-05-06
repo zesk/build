@@ -1,6 +1,0 @@
-description="Base directory for user-specific state files to be stored"
-descriptionLineCount="1"
-category="Build Configuration"
-categoryId="build-configuration"
-type="Directory"
-summary="Base directory for user-specific state files to be stored"

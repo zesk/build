@@ -1,1 +1,24 @@
-[fileCopyWouldChange]({rel}tools/interactive.md#filecopywouldchange) - Check whether copying a file would change it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L70))
+## `fileCopyWouldChange`
+
+> Check whether copying a file would change it
+
+### Usage
+
+    fileCopyWouldChange [ --map ] source destination
+
+Check whether copying a file would change it
+This function does not modify the source or destination.
+
+> Location: `bin/build/tools/interactive.sh`
+
+### Arguments
+
+- `--map` - Flag. Optional. Map environment values into file before copying.
+- `source` - File. Required. Source path
+- `destination` - File. Required. Destination path
+
+### Return codes
+
+- `0` - Something would change
+- `1` - Nothing would change
+

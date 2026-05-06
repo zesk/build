@@ -1,1 +1,22 @@
-[dockerPlatformDefault]({rel}tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
+## `dockerPlatformDefault`
+
+> Fetch the default platform for docker
+
+### Usage
+
+    dockerPlatformDefault
+
+Fetch the default platform for docker
+
+> Location: `bin/build/tools/docker.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

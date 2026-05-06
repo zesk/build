@@ -1,6 +1,0 @@
-description="List of path names to ignore for application code. (e.g. \`/vendor/\`, \`/node_modules/\`, etc.)"
-descriptionLineCount="1"
-category="Application"
-categoryId="application"
-type="ColonDelimitedList"
-summary="List of path names to ignore for application code. (e.g. \`/vendor/\`, \`/node_modules/\`, etc.)"

@@ -233,7 +233,7 @@ unsupported and will cause problems.
 
 ## Use `__functionLoader` for more complex code
 
-Zesk Build has grown in size over time and as such it makes sense to not load *the entire codebase* unless needed.
+{applicationName} has grown in size over time and as such it makes sense to not load *the entire codebase* unless needed.
 
 The function `__functionLoader` was added which runs an internal function which checks whether a primary function is
 defined, and if it is NOT it then loads an entire directory at `./bin/build/tools/libraryName` where `libraryName` is
@@ -256,7 +256,7 @@ This allows us to defer loading of entire modules of code until needed.
 
 ## Standard error codes
 
-Two types of errors prevail in `Zesk Build` and those are:
+Two types of errors prevail in `{applicationName}` and those are:
 
 - **Environment errors** - anything having to do with the system environment, file system, or resources in the system
 - **Argument errors** - anything having to do with bash functions being called incorrectly or with the wrong parameters

@@ -12,8 +12,9 @@
 # Summary: Icon for usage messages
 # - `0` - meaning no error, icon is `🏆`
 # - non-`0` - Error, icon is `❌`
+# Local: icon
 __usageMessageIcon() {
-  [ "$1" -eq 0 ] && printf -- "%s" "🏆" || printf -- "%s" "❌"
+  [ "$1" -eq 0 ] && icon="🏆" || icon="❌"
 }
 
 # Summary: Style usage messages
@@ -23,9 +24,9 @@ __usageMessageIcon() {
 # - `1` - Environment error, style is `error`
 # - `2` - Argument error, style is `red`
 # - `*` - All additional errors, style is `orange`
+# Local: style
 __usageMessageStyle() {
-  local color="info" && case "$1" in 0) ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac && shift
-  decorate "$color" "$@"
+  style="info" && case "$1" in 0) ;; 1) style="error" ;; 2) style="red" ;; *) style="orange" ;; esac && shift
 }
 
 # Output the message for usage consistently
@@ -40,10 +41,14 @@ __usageMessage() {
     [ -n "$suffix" ] || return 0
     __usageMessageStyle "$returnCode" "$suffix"
   elif [ "$returnCode" != 2 ]; then
-    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    [ -z "$suffix" ] || suffix=" $(decorate warning "$suffix")"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
-    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    [ -z "$suffix" ] || suffix=" $(decorate error "$suffix")"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }

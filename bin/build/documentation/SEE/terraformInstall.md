@@ -1,1 +1,22 @@
-[terraformInstall]({rel}tools/install.md#terraforminstall) - Install terraform binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/terraform.sh#L46))
+## `terraformInstall`
+
+> Install terraform binary
+
+### Usage
+
+    terraformInstall [ package ... ]
+
+Install terraform binary
+
+> Location: `bin/build/tools/terraform.sh`
+
+### Arguments
+
+- `package ...` - String. Optional. Additional packages to install using `packageInstall`
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

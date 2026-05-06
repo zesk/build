@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Bitbucket Repository Slug
 # Defined in BITBUCKET Pipelines, represents the project code name.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Continuous Integration

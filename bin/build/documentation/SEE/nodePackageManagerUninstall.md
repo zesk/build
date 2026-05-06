@@ -1,1 +1,22 @@
-[nodePackageManagerUninstall]({rel}tools/node.md#nodepackagemanageruninstall) - Installs the selected package manager for node ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L185))
+## `nodePackageManagerUninstall`
+
+> Installs the selected package manager for node
+
+### Usage
+
+    nodePackageManagerUninstall
+
+Installs the selected package manager for node
+
+> Location: `bin/build/tools/node.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

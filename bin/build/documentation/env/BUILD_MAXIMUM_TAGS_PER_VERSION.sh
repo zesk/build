@@ -1,6 +1,0 @@
-description="Number of versions tags (d0, d1, d2, etc.) to look for before giving up in \`gitTagVersion\`"
-descriptionLineCount="1"
-category="Build Configuration"
-categoryId="build-configuration"
-type="PositiveInteger"
-summary="Number of versions tags (d0, d1, d2, etc.) to look for before giving up in \`gitTagVersion\`"

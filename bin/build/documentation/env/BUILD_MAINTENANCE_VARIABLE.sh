@@ -1,6 +1,0 @@
-description="The maintenance variable name which enables (or disabled) maintenance mode."$'\n'"Default is \`MAINTENANCE\`."$'\n'"This value is set to \`true\` or \`false\`"
-descriptionLineCount="3"
-category="Application"
-categoryId="application"
-type="EnvironmentVariable"
-summary="The maintenance variable name which enables (or disabled) maintenance mode."

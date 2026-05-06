@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: mariadb Connect Executable
 # MariaDB binary for database connections
 # Default: blank
 # Copyright &copy; 2026 Market Acumen, Inc.

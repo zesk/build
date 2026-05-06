@@ -1,1 +1,1 @@
-[APACHE_HOME]({rel}/env/#vendor) - **Directory**. Constant for the Apache configuration home directory.
+[`APACHE_HOME` APACHE_HOME]({rel}/env/#vendor) - **Directory**. Constant for the Apache configuration home directory.

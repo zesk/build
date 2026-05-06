@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-05-03
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
-description="Has a lot of caveats"$'\n'"gitRemoveFileFromHistory path/to/file"$'\n'"usually have to \`git push --force\`"$'\n'""
+derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
+description="Has a lot of caveats"$'\n'""$'\n'"gitRemoveFileFromHistory path/to/file"$'\n'""$'\n'"usually have to \`git push --force\`"$'\n'""$'\n'""
+descriptionLineCount="6"
 file="bin/build/tools/git.sh"
 fn="gitRemoveFileFromHistory"
+fnMarker="gitremovefilefromhistory"
 foundNames=()
 line="210"
-lowerFn="gitremovefilefromhistory"
 rawComment="Has a lot of caveats"$'\n'"gitRemoveFileFromHistory path/to/file"$'\n'"usually have to \`git push --force\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
@@ -18,8 +20,3 @@ sourceLine="210"
 summary="Has a lot of caveats"
 summaryComputed="true"
 usage="gitRemoveFileFromHistory"
-# shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitRemoveFileFromHistory'$'\e''[0m'$'\n'''$'\n''Has a lot of caveats'$'\n''gitRemoveFileFromHistory path/to/file'$'\n''usually have to '$'\e''[[(code)]mgit push --force'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
-# shellcheck disable=SC2016
-helpPlain='Usage: gitRemoveFileFromHistory'$'\n'''$'\n''Has a lot of caveats'$'\n''gitRemoveFileFromHistory path/to/file'$'\n''usually have to git push --force'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-documentationPath="documentation/source/tools/git.md"

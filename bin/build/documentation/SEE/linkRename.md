@@ -1,1 +1,28 @@
-[linkRename]({rel}tools/file.md#linkrename) - Rename a link ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L442))
+## `linkRename`
+
+> Rename a link
+
+### Usage
+
+    linkRename from to
+
+Rename a link
+Renames a link forcing replacement, and works on different versions of `mv` which differs between systems.
+
+> Location: `bin/build/tools/file.sh`
+
+### Arguments
+
+- `from` - Link. Required. Link to rename.
+- `to` - FileDirectory. Required. New link path.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### See Also
+
+- {SEE:mv}
+

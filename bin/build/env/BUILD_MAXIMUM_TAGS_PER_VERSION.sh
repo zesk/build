@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Maximum Git Tags per Version
 # Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitTagVersion`
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Type: PositiveInteger

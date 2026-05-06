@@ -76,6 +76,7 @@ _markdownIndentHeading() {
 markdownRemoveUnfinishedSections() {
   local line section=() foundVar=false foundContent=false
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  local tokenClasses='[_A-Za-z0-9]'
   local lastLine="" line && while IFS='' read -r line; do
     local trimmed && trimmed=$(textTrim "$line")
     if [ "${line:0:1}" = "#" ]; then
@@ -86,11 +87,11 @@ markdownRemoveUnfinishedSections() {
       foundVar=false
       foundContent=false
       section=()
-      ! isMappable "$trimmed" || foundVar=true
+      ! isMappable --token "$tokenClasses" "$trimmed" || foundVar=true
     else
       if [ -n "$trimmed" ]; then
         foundContent=true
-        ! isMappable "$trimmed" || foundVar=true
+        ! isMappable --token "$tokenClasses" "$trimmed" || foundVar=true
       fi
     fi
     [ -z "$trimmed$lastLine" ] || section+=("$line")

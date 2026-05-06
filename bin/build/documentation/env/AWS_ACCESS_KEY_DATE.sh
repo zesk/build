@@ -1,6 +1,0 @@
-description="Date of key expiration which can be checked in pipelines."$'\n'"Not part of the Amazon specification but a good idea to track expiration of keys."
-descriptionLineCount="2"
-category="Amazon Web Services"
-categoryId="amazon-web-services"
-type="Date"
-summary="Date of key expiration which can be checked in pipelines. Not part of the Amazon specification but a good idea to track expiration of keys."

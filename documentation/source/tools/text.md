@@ -76,6 +76,8 @@
 
 {fileFieldMaximum}
 
+{fileUniqueLines}
+
 {fileLineMaximum}
 
 {fileEndsWithNewline}

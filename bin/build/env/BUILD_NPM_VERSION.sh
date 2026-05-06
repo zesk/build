@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: npm Version
 # Version of npm to install using native `npm` binary.
 # See: npmInstall
 # Type: String

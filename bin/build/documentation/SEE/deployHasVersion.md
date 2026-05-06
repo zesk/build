@@ -1,1 +1,23 @@
-[deployHasVersion]({rel}tools/deploy.md#deployhasversion) - Does a deploy version exist? versionName is the version identifier ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L123))
+## `deployHasVersion`
+
+> Does a deploy version exist? versionName is the version identifier
+
+### Usage
+
+    deployHasVersion deployHome versionName
+
+Does a deploy version exist? versionName is the version identifier for deployments
+
+> Location: `bin/build/tools/deploy.sh`
+
+### Arguments
+
+- `deployHome` - Directory. Required. Deployment database home.
+- `versionName` - String. Required. Application ID to look for
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

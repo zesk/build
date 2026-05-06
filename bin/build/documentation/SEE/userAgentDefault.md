@@ -1,1 +1,26 @@
-[userAgentDefault]({rel}tools/url.md#useragentdefault) - Default user agent string for web agents"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L527))
+## `userAgentDefault`
+
+> Default user agent string for web agents
+
+### Usage
+
+    userAgentDefault [ --help ]
+
+A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)
+
+> Location: `bin/build/tools/url.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Writes to standard output
+
+String
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,1 +1,22 @@
-[dockerListContext]({rel}tools/docker.md#dockerlistcontext) - List the files which would be included in the docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L89))
+## `dockerListContext`
+
+> List the files which would be included in the docker
+
+### Usage
+
+    dockerListContext
+
+List the files which would be included in the docker image
+
+> Location: `bin/build/tools/docker.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

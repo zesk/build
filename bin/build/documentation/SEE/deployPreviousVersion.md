@@ -1,1 +1,22 @@
-[deployPreviousVersion]({rel}tools/deploy.md#deploypreviousversion) - Get the previous version of the supplied version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L163))
+## `deployPreviousVersion`
+
+> Get the previous version of the supplied version
+
+### Usage
+
+    deployPreviousVersion deployHome versionName
+
+Get the previous version of the supplied version
+
+> Location: `bin/build/tools/deploy.sh`
+
+### Arguments
+
+- `deployHome` - Directory. Required. Deployment database home.
+- `versionName` - String. Required. Application ID to look for
+
+### Return codes
+
+- `1` - No version exists
+- `2` - Argument error
+

@@ -110,8 +110,7 @@ __bashPrompt() {
     promptFormat="{label}{user}@{host} {directory} {return}{status} "
   fi
 
-  export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
-
+  buildEnvironmentLoad --handler "$handler" PROMPT_COMMAND PS1 __BASH_PROMPT_SLOW __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS || return $?
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
     addArguments=()
@@ -322,6 +321,8 @@ __bashPromptCommand() {
 
   export __BASH_PROMPT_PREVIOUS
 
+  local slow="${__BASH_PROMPT_SLOW-300}"
+
   # Index 0 1 2 3 4
   __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "${__BASH_PROMPT_PREVIOUS[1]-}" "${__BASH_PROMPT_PREVIOUS[2]-}" "${__BASH_PROMPT_PREVIOUS[3]-}" "$exitCode")
   local colors
@@ -363,13 +364,13 @@ __bashPromptCommand() {
       start=$(timingStart)
       set +e
       __bashPromptReturnValue "$exitCode"
-      "$promptCommand"
+      timing --slow "$slow" "$promptCommand"
       ! $debug || timingReport "$start"
     else
       ! $debug || statusMessage decorate warning "Sourcing $(decorate code "$promptCommand")"
       start=$(timingStart)
       # shellcheck source=/dev/null
-      . "$promptCommand"
+      timing --slow "$slow" --name "$promptCommand [slow]" source "$promptCommand"
       ! $debug || timingReport "$start"
     fi
   done

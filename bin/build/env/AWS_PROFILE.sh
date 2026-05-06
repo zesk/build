@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: AWS Profile
 # Default profile for Amazon Web Services
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Amazon Web Services

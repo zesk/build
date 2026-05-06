@@ -1,1 +1,22 @@
-[networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L75))
+## `networkIPLookup`
+
+> Get the current IP address of a host
+
+### Usage
+
+    networkIPLookup [ --help ]
+
+Get the current IP address of a host
+
+> Location: `bin/build/tools/network.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

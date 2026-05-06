@@ -1,1 +1,23 @@
-[characterClasses]({rel}tools/character.md#characterclasses) - List the classes allowed in \`isCharacterClass\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L153))
+## `characterClasses`
+
+> List the classes allowed in `isCharacterClass`
+
+### Usage
+
+    characterClasses [ --help ] [ character ... ]
+
+List the classes allowed in `isCharacterClass`
+
+> Location: `bin/build/tools/character.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+- `character ...` - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

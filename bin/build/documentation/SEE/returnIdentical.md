@@ -1,1 +1,20 @@
-[returnIdentical]({rel}tools/assert.md#returnidentical) - Identical return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1503))
+## `returnIdentical`
+
+> Identical return code
+
+### Usage
+
+    returnIdentical
+
+Return code is `identical`
+
+> Location: `bin/build/tools/test.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- 105
+

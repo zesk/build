@@ -1,1 +1,23 @@
-[filesOpenStatus]({rel}tools/unused.md#filesopenstatus) - Output current open files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L562))
+## `filesOpenStatus`
+
+> Output current open files
+
+### Usage
+
+    filesOpenStatus
+
+Output current open files
+stdout
+
+> Location: `bin/build/tools/debug.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

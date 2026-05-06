@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Build Home Directory
 # `BUILD_HOME` is `.` when this code is installed - at `./bin/build`. Usually an absolute path and does NOT end with a trailing slash.
 # This is computed from the current source file using `${BASH_SOURCE[0]}`.
 # Copyright &copy; 2026 Market Acumen, Inc.

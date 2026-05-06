@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: URL Timeout
 # Timeout in seconds for fetching URLs in `urlFetch`
 # See: urlFetch
 # Copyright &copy; 2026 Market Acumen, Inc.

@@ -20,7 +20,7 @@
 # Argument: --comment - `lookupPattern` is a function name. Find first reference to this function in the documentation index.
 # Argument: cacheDirectory - Directory. Required. Directory where we can store cached information
 # Argument: lookupPattern - String. Required. Token to look up
-# See: _documentationIndexGenerate
+# See: __documentationIndexGenerate
 __documentationIndexLookup() {
   local handler="$1" && shift
   local mode="settings"
@@ -49,7 +49,7 @@ __documentationIndexLookup() {
   done
   local indexDirectory cacheDirectory
   indexDirectory="$(__documentationIndexCache)" || return $?
-  cacheDirectory="$(documentationBuildCache)" || return $?
+  cacheDirectory="$(documentationCache)" || return $?
 
   if [ "$mode" = "file" ]; then
     indexRoot="$indexDirectory/files"

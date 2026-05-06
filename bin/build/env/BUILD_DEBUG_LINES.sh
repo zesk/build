@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Debugging output lines
 # Number of lines of debugging output to send to stderr before stopping
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration

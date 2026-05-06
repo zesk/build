@@ -12,7 +12,7 @@ So as a solution the `identicalCheck` and `identicalRepair` tools were added whi
 ensures everything is kept in sync.
 
 You may define *any* line and count-based token to delimit your code and define as many tokens as needed. Internally,
-Zesk Build uses:
+{applicationName} uses:
 
     # IDENTICAL tokenName 1
     # _IDENTICAL_ tokenName 1

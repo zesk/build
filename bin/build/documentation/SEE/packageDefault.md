@@ -1,1 +1,25 @@
-[packageDefault]({rel}tools/package.md#packagedefault) - Fetch the binary name for the default package in a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L175))
+## `packageDefault`
+
+> Fetch the binary name for the default package in a
+
+### Usage
+
+    packageDefault
+
+Fetch the binary name for the default package in a group
+Groups are:
+- mysql
+- mysqldump
+
+> Location: `bin/build/tools/package.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

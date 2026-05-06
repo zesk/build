@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Bitbucket Workspace
 # Defined in BITBUCKET Pipelines. represents the project workspace.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Continuous Integration

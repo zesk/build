@@ -1,1 +1,25 @@
-[fileModificationTime]({rel}tools/file.md#filemodificationtime) - Fetch the modification time of a file as a timestamp ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L60))
+## `fileModificationTime`
+
+> Fetch the modification time of a file as a timestamp
+
+### Usage
+
+    fileModificationTime [ filename ... ]
+
+Fetch the modification time of a file as a timestamp
+
+> Location: `bin/build/tools/file.sh`
+
+### Arguments
+
+- `filename ...` - File to fetch modification time
+
+### Examples
+
+    fileModificationTime ~/.bash_profile
+
+### Return codes
+
+- `2` - If file does not exist
+- `0` - If file exists and modification times are output, one per line
+

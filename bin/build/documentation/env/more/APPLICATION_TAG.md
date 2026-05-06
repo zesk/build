@@ -1,5 +1,7 @@
 ## `APPLICATION_TAG`
 
-> **Type**: *String* • **Category**: *Deployment*
+> **APPLICATION_TAG** &mdash; This is the full version number including debugging or release
+> > **Type**: *String* • **Category**: *Deployment*
 
 This is the full version number including debugging or release identifiers
+

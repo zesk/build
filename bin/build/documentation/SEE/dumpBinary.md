@@ -1,1 +1,30 @@
-[dumpBinary]({rel}tools/dump.md#dumpbinary) - Dumps output as hex ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L464))
+## `dumpBinary`
+
+> Dumps output as hex
+
+### Usage
+
+    dumpBinary
+
+Dumps output as hex
+
+> Location: `bin/build/tools/dump.sh`
+
+### Arguments
+
+- none
+
+### Reads standard input
+
+binary
+
+### Writes to standard output
+
+formatted output set to ideal `consoleColumns`
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

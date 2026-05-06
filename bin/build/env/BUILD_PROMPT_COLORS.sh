@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Prompt Color List
 # Colon-separated list of colors for the prompt
 # Format: colon-separated-list
 #

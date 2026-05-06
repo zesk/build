@@ -1,4 +1,4 @@
-# Learn features of iTerm2 Integration using Zesk Build
+# Learn features of iTerm2 Integration using {applicationName}
 
 (wip 2025-11)
 
@@ -71,7 +71,7 @@ iTerm2 the way I've set it up. One user has super user access and one does not; 
 In addition to using colors to contextualize my work, I use color schemes to discern project to project so it's clear
 when things are related.
 
-The great news is using **Zesk Build** you can set your terminal color schemes using code in your projects or on your
+The great news is using **{applicationName}** you can set your terminal color schemes using code in your projects or on your
 remote systems. And it provides access to all features in **iTerm2**'s shell extensions.
 
 ### Wow, the colors
@@ -119,11 +119,11 @@ Shell direct:
 Now, add in our `bashPrompt` command and when you change projects (or `cd` into a new project home) ... the color scheme
 changes automatically!
 
-If you do this within the `Zesk Build` source code:
+If you do this within the `{applicationName}` source code:
 
     bashPrompt --skip-prompt bashPromptModule_TermColors
 
-You'll get the `Zesk Build` color scheme:
+You'll get the `{applicationName}` color scheme:
 
 ![iTerm2-Zesk-Build-colorScheme.png](assets/iTerm2-Zesk-Build-colorScheme.png)
 

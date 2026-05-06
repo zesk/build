@@ -1,1 +1,22 @@
-[darwinSoundDirectory]({rel}tools/darwin.md#darwinsounddirectory) - Directory for user sounds ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L21))
+## `darwinSoundDirectory`
+
+> Directory for user sounds
+
+### Usage
+
+    darwinSoundDirectory
+
+Directory for user sounds
+
+> Location: `bin/build/tools/darwin.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

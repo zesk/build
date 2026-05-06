@@ -1,1 +1,1 @@
-- `APPLICATION_CODE` *String*. This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness. [notes](#application_code)
+- `APPLICATION_CODE` &mdash; APPLICATION_CODE *String*. This is the unique code name of the application. Use [notes](#application_code)

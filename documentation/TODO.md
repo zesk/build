@@ -134,8 +134,8 @@
 - dockerVolumeDelete
 - dockerVolumeExists
 - documentationBuild
-- documentationBuildCache
-- documentationBuildEnvironment
+- documentationCache
+- documentationEnvironmentMake
 - _documentationIndexFunctionIterator
 - _documentationIndexGenerate
 - __documentationIndexDocumentation
@@ -146,7 +146,7 @@
 - documentationTemplateCompile
 - documentationTemplateDirectoryCompile
 - documentationTemplateFunctionCompile
-- documentationTemplateUpdate
+- documentationIdenticalRepair
 - documentationUnlinked
 - dotEnvConfigure
 - dotFilesApproved
@@ -442,8 +442,8 @@ On a "2x" machine:
 - dockerVolumeDelete
 - dockerVolumeExists
 - documentationBuild
-- documentationBuildCache
-- documentationBuildEnvironment
+- documentationCache
+- documentationEnvironmentMake
 - _documentationIndexFunctionIterator
 - _documentationIndexGenerate
 - __documentationIndexDocumentation
@@ -454,7 +454,7 @@ On a "2x" machine:
 - documentationTemplateCompile
 - documentationTemplateDirectoryCompile
 - documentationTemplateFunctionCompile
-- documentationTemplateUpdate
+- documentationIdenticalRepair
 - documentationUnlinked
 - dotEnvConfigure
 - dotFilesApproved

@@ -1,4 +1,10 @@
-# v0.42.6
+# v0.43.0
+buildFunctionsCompile|documentationFileCompile|
+buildFunctionSeeTemplate|bashDocumentationDeriveSee|
+buildFunctionMarkdownDocumentation|bashDocumentationDeriveFunction|
+documentationBuildEnvironment|documentationEnvironmentMake|
+documentationBuildCache|documentationCache|
+documentationTemplateUpdate|documentationIdenticalRepair|
 
 # v0.42.5
 

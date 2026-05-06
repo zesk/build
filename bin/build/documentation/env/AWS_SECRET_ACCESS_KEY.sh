@@ -1,6 +1,0 @@
-description="Private Secret Password for AWS"
-descriptionLineCount="1"
-category="Amazon Web Services"
-categoryId="amazon-web-services"
-type="Secret"
-summary="Private Secret Password for AWS"

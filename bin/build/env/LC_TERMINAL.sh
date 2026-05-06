@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Terminal Application
 # LC_TERMINAL typically identifies the terminal application
 # Found: iTerm2
 # Copyright &copy; 2026 Market Acumen, Inc.

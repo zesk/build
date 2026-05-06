@@ -1,1 +1,22 @@
-[nodePackageManagerInstall]({rel}tools/node.md#nodepackagemanagerinstall) - Installs the selected package manager for node ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L165))
+## `nodePackageManagerInstall`
+
+> Installs the selected package manager for node
+
+### Usage
+
+    nodePackageManagerInstall
+
+Installs the selected package manager for node
+
+> Location: `bin/build/tools/node.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

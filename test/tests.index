@@ -14,15 +14,15 @@ testAptKeyAdd suite=apt test/tools/apt-tests.sh  tag=slow
 testAptKeyRingDirectory suite=apt test/tools/apt-tests.sh
 testAptNonInteractive suite=apt test/tools/apt-tests.sh
 testAssertComparisons suite=assert test/tools/assert-tests.sh
-testAssertEquality suite=assert test/tools/assert-tests.sh
+testAssertEquality suite=assert test/tools/assert-tests.sh  tag=slow
 testOutputEquals suite=assert test/tools/assert-tests.sh
 testZeroFile suite=assert test/tools/assert-tests.sh
 testAWSCredentialsEdit suite=aws test/tools/aws-tests.sh
 testAwsEnvironmentFromCredentials suite=aws test/tools/aws-tests.sh  tag=slow
-testAWSExpiration suite=aws test/tools/aws-tests.sh
+testAWSExpiration suite=aws test/tools/aws-tests.sh  tag=slow
 testAWSInstall suite=aws test/tools/aws-tests.sh
 testAWSIPAccess suite=aws test/tools/aws-tests.sh  tag=slow
-testAWSProfiles suite=aws test/tools/aws-tests.sh
+testAWSProfiles suite=aws test/tools/aws-tests.sh  tag=slow
 testAwsRegionValid suite=aws test/tools/aws-tests.sh
 testBashBasics suite=bash test/tools/bash-tests.sh  tag=slow-non-critical
 testBashBuiltins suite=bash test/tools/bash-tests.sh  tag=slow tag=slow-non-critical
@@ -84,7 +84,7 @@ testErrorExit suite=debug test/tools/debug-tests.sh
 testHousekeeper suite=debug test/tools/debug-tests.sh
 testOutputTrigger suite=debug test/tools/debug-tests.sh
 testPlumber suite=debug test/tools/debug-tests.sh
-testConsoleTrimWidth suite=decorate test/tools/decorate-tests.sh
+testConsoleTrimWidth suite=decorate test/tools/decorate-tests.sh  tag=slow
 testDecorateArgs suite=decorate test/tools/decorate-tests.sh
 testDecorateBasics suite=decorate test/tools/decorate-tests.sh
 testDecorateDashDashDisappearing suite=decorate test/tools/decorate-tests.sh
@@ -209,6 +209,7 @@ testCannon suite=map test/tools/map-tests.sh
 testConvertValue suite=map test/tools/map-tests.sh
 testIsMappable suite=map test/tools/map-tests.sh
 testMapEnvironmentBadNames suite=map test/tools/map-tests.sh
+testMapFunction suite=map test/tools/map-tests.sh
 testMapPrefixSuffix suite=map test/tools/map-tests.sh
 testMapTokens suite=map test/tools/map-tests.sh
 testMapValue suite=map test/tools/map-tests.sh

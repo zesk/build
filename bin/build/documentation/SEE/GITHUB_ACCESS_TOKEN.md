@@ -1,1 +1,1 @@
-[GITHUB_ACCESS_TOKEN]({rel}/env/#development) - **String**. Access token used for release
+[`GITHUB_ACCESS_TOKEN` GITHUB_ACCESS_TOKEN]({rel}/env/#development) - **Secret**. Access token used for release

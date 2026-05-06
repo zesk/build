@@ -1,1 +1,1 @@
-[BUILD_TIMESTAMP]({rel}/env/#deployment) - **Integer**. Time when a build was initiated, set upon first invocation if not already
+[`BUILD_TIMESTAMP` BUILD_TIMESTAMP]({rel}/env/#deployment) - **UnsignedInteger**. Time when a build was initiated, set upon first invocation

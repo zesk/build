@@ -1,6 +1,0 @@
-description="Access token used for release"
-descriptionLineCount="1"
-category="Development"
-categoryId="development"
-type="String"
-summary="Access token used for release"

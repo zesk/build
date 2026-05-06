@@ -66,7 +66,10 @@ testMapTokens() {
 testMapPrefixSuffix() {
   local itemIndex=1 binary aa=()
 
-  for binary in mapEnvironment "$(buildHome)/bin/build/map.sh"; do
+  local shortest="" shortestBinary=""
+
+  for binary in mapEnvironment mapEnvironmentFun mapEnvironmenySed "$(buildHome)/bin/build/map.sh"; do
+    local start && start=$(timingStart)
     aa=(--display "$binary")
 
     assertEquals "${aa[@]}" "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world "$binary" --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?
@@ -83,7 +86,14 @@ testMapPrefixSuffix() {
     itemIndex=$((itemIndex + 1))
     assertEquals "${aa[@]}" "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" AME LACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
+    local elapsed && elapsed=$(timingElapsed "$start")
+    if [ -z "$shortest" ] || [ "$elapsed" -lt "$shortest" ]; then
+      shortest="$elapsed"
+      shortestBinary="$binary"
+    fi
+    decorate pair "$binary" "$(timingDuration "$elapsed")"
   done
+  decorate pair "FASTEST: $shortestBinary" "$(timingDuration "$shortest")"
 }
 
 testMapValue() {
@@ -103,6 +113,10 @@ testMapValue() {
 
 testMapEnvironmentBadNames() {
   assertEquals "Lovely" "$(A=L B=v C=y D=l E=e o=o mapEnvironment A B C D E o " " "   " "--bad--" <<<"{A}{o}{B}{E}{D}{C}")" || return $?
+}
+
+testMapEnvironmentFunBadNames() {
+  assertEquals "Lovely" "$(A=L B=v C=y D=l E=e o=o mapEnvironmentFun A B C D E o " " "   " "--bad--" <<<"{A}{o}{B}{E}{D}{C}")" || return $?
 }
 
 testCannon() {
@@ -155,4 +169,48 @@ testConvertValue() {
     IFS=" " read -d '' -r -a args <<<"$arguments"
     assertEquals "$expected" "$(convertValue "${args[@]+"${args[@]}"}")" || return $?
   done < <(__dataConvertValue)
+}
+
+__testMapFunctionFinder() {
+  export MAP_TOKENS MAP_OFFSETS
+  MAP_TOKENS+=("$1")
+  MAP_OFFSETS+=("$2")
+  return 1
+}
+__testMapFunctionReplacer() {
+  local outputs=(world Margaret other things go here)
+  export MAP_TOKENS MAP_OFFSETS
+  local index=${#MAP_TOKENS[@]}
+  MAP_TOKENS+=("$1")
+  MAP_OFFSETS+=("$2")
+  printf -- "%s" "${outputs[$index]}"
+}
+
+testMapFunction() {
+  local handler="returnMessage"
+  local outFile && outFile=$(fileTemporaryName "$handler") || return $?
+
+  mockEnvironmentStart MAP_TOKENS
+  mockEnvironmentStart MAP_OFFSETS
+
+  export MAP_TOKENS=() MAP_OFFSETS=()
+
+  local input="Hello, {noun}, this is {whom}."
+  catchReturn "$handler" mapFunction __testMapFunctionFinder <<<"$input" >"$outFile" || return $?
+  local result && result=$(cat "$outFile") || return $?
+  assertEquals "$input" "$result" || return $?
+  assertEquals "noun whom" "${MAP_TOKENS[*]}" || return $?
+  assertEquals "7 17" "${MAP_OFFSETS[*]}" || return $?
+
+  MAP_TOKENS=() MAP_OFFSETS=()
+
+  local input="Hello, {noun}, this is {whom}."
+  catchReturn "$handler" mapFunction __testMapFunctionReplacer <<<"$input" >"$outFile" || return $?
+  local result && result=$(cat "$outFile") || return $?
+  assertEquals "Hello, world, this is Margaret." "$result" || return $?
+  assertEquals "noun whom" "${MAP_TOKENS[*]}" || return $?
+  assertEquals "7 17" "${MAP_OFFSETS[*]}" || return $?
+
+  mockEnvironmentStop MAP_TOKENS
+  mockEnvironmentStop MAP_OFFSETS
 }

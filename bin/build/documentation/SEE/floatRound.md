@@ -1,1 +1,22 @@
-[floatRound]({rel}tools/float.md#floatround) - Convert float to nearest integer (up or down) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/float.sh#L13))
+## `floatRound`
+
+> Convert float to nearest integer (up or down)
+
+### Usage
+
+    floatRound [ number ]
+
+Convert float to nearest integer (up or down)
+
+> Location: `bin/build/tools/float.sh`
+
+### Arguments
+
+- `number` - Float. Optional. Floating point number to convert to integer.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

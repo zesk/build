@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Maintenance Created Flag
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # When true, means the `.env.local` file was created by the maintenance hook and should be deleted when maintenance is

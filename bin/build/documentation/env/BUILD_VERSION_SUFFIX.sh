@@ -1,6 +1,0 @@
-description="Default suffix used in \`gitTagVersion\`"
-descriptionLineCount="1"
-category="Build Configuration"
-categoryId="build-configuration"
-type="String"
-summary="Default suffix used in \`gitTagVersion\`"

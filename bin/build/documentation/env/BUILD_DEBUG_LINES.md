@@ -1,1 +1,1 @@
-- `BUILD_DEBUG_LINES` *PositiveInteger*. Number of lines of debugging output to send to stderr before stopping [notes](#build_debug_lines)
+- `BUILD_DEBUG_LINES` &mdash; BUILD_DEBUG_LINES *PositiveInteger*. Number of lines of debugging output to send to stderr [notes](#build_debug_lines)

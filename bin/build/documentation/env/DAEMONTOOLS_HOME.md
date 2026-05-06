@@ -1,1 +1,1 @@
-- `DAEMONTOOLS_HOME` *Directory*. Constant for the directory where services are monitored by daemontools [notes](#daemontools_home)
+- `DAEMONTOOLS_HOME` &mdash; DAEMONTOOLS_HOME *Directory*. Constant for the directory where services are monitored by daemontools [notes](#daemontools_home)

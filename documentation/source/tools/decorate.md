@@ -12,7 +12,7 @@ Examples:
     decorate green < "$file"
     decorate info Starting to deploy ...
 
-Zesk Build allows for customizations of all decoration colors to custom values allowing themes to be created.
+{applicationName} allows for customizations of all decoration colors to custom values allowing themes to be created.
 
 {decorate}
 

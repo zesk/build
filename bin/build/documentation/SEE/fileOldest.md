@@ -1,1 +1,23 @@
-[fileOldest]({rel}tools/file.md#fileoldest) - Output the oldest file in the list. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L228))
+## `fileOldest`
+
+> Output the oldest file in the list.
+
+### Usage
+
+    fileOldest file ... [ --help ]
+
+Output the oldest file in the list.
+
+> Location: `bin/build/tools/file.sh`
+
+### Arguments
+
+- `file ...` - File. Required. One or more files to examine
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

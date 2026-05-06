@@ -1,1 +1,25 @@
-[bashPromptMarkers]({rel}tools/prompt.md#bashpromptmarkers) - Set markers for terminal integration ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L127))
+## `bashPromptMarkers`
+
+> Set markers for terminal integration
+
+### Usage
+
+    bashPromptMarkers [ --help ] [ prefix ] [ suffix ]
+
+Set markers for terminal integration
+Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
+
+> Location: `bin/build/tools/prompt.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+- `prefix` - EmptyString. Optional. Prefix for all prompts.
+- `suffix` - EmptyString. Optional. Suffix for all prompts.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

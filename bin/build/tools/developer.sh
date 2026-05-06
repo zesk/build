@@ -88,7 +88,9 @@ _developerUndo() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Track changes to the bash environment. WIth no arguments this function returns the new or changed bash functions, variables, or aliases since marks occurred.
+# Summary: Track changes to the bash environment
+#
+# With no arguments this function returns the new or changed bash functions, variables, or aliases since marks occurred.
 #
 # In general, you will add `{fn} --profile` at the end of your `.bashrc` file, and you will add `{fn} --developer` at the *start* of your `developer.sh` before you define anything.
 #

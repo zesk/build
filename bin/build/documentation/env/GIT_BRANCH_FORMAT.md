@@ -1,1 +1,1 @@
-- `GIT_BRANCH_FORMAT` *String*.  [notes](#git_branch_format)
+- `GIT_BRANCH_FORMAT` &mdash; GIT_BRANCH_FORMAT *String*. undocumented 

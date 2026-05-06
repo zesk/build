@@ -1,1 +1,1 @@
-- `BUILD_MAXIMUM_TAGS_PER_VERSION` *PositiveInteger*. Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitTagVersion` [notes](#build_maximum_tags_per_version)
+- `BUILD_MAXIMUM_TAGS_PER_VERSION` &mdash; BUILD_MAXIMUM_TAGS_PER_VERSION *PositiveInteger*. Number of versions tags (d0, d1, d2, etc.) to look [notes](#build_maximum_tags_per_version)

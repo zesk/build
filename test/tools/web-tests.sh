@@ -22,7 +22,7 @@ testUrlFetch() {
   clean+=("$temp")
   local mm=(--stdout-match "Test file for Zesk Build" --stdout-match "Hello, world.")
 
-  catchReturn "$handler" urlFetch --debug "$remoteURL" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" urlFetch "$remoteURL" || returnClean $? "${clean[@]}" || return $?
   assertExitCode "${mm[@]}" 0 urlFetch "$remoteURL" || returnClean $? "${clean[@]}" || return $?
   catchReturn "$handler" urlFetch "$remoteURL" >"$temp" || returnClean $? "${clean[@]}" || return $?
 

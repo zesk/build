@@ -1,1 +1,1 @@
-- `BUILD_YARN_VERSION` *String*. Version of yarn to install using `corepack` [notes](#build_yarn_version)
+- `BUILD_YARN_VERSION` &mdash; BUILD_YARN_VERSION *String*. Version of yarn to install using `corepack` [notes](#build_yarn_version)

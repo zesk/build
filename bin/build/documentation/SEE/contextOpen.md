@@ -1,1 +1,22 @@
-[contextOpen]({rel}tools/vendor.md#contextopen) - Open a file in a shell using the program we ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L76))
+## `contextOpen`
+
+> Open a file in a shell using the program we
+
+### Usage
+
+    contextOpen [ --help ]
+
+Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
+
+> Location: `bin/build/tools/vendor.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

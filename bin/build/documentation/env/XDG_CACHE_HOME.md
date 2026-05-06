@@ -1,1 +1,1 @@
-- `XDG_CACHE_HOME` *Directory*. Base directory for user-specific cache data to be stored [notes](#xdg_cache_home)
+- `XDG_CACHE_HOME` &mdash; XDG_CACHE_HOME *Directory*. Main Cache Directory [notes](#xdg_cache_home)

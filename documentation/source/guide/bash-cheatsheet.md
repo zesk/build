@@ -1,5 +1,7 @@
 # bash Cheat Sheet
 
+{!skip}
+
 <!-- TEMPLATE guideHeader 2 -->
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />

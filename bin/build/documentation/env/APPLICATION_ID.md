@@ -1,1 +1,1 @@
-- `APPLICATION_ID` *String*. This is the unique hash which represents the source code state (typically a git hash) [notes](#application_id)
+- `APPLICATION_ID` &mdash; APPLICATION_ID *String*. This is the unique hash which represents the source code [notes](#application_id)

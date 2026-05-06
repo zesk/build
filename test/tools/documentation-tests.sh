@@ -51,7 +51,7 @@ testDocumentation() {
     fn="ass""ertNotEquals" # "" hides from bashFindUncaughtAssertions
     local sourceFile
     sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
-    bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
+    bashDocumentationExtract --function "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
     set -a # UNDO ok
     # shellcheck source=/dev/null
     source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
@@ -61,7 +61,7 @@ testDocumentation() {
 
     fn="ass""ertEquals" # "" hides from bashFindUncaughtAssertions
     sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
-    bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
+    bashDocumentationExtract --function "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
     set -a # UNDO ok
     # shellcheck source=/dev/null
     source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || returnUndo $? set +a || return $?
@@ -88,7 +88,7 @@ __isolateTest() {
   fn="ass""ertNotEquals" # "" hides from bashFindUncaughtAssertions
   local sourceFile
   sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
-  bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
+  bashDocumentationExtract --function "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
   set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
@@ -98,7 +98,7 @@ __isolateTest() {
 
   fn="ass""ertEquals" # "" hides from bashFindUncaughtAssertions
   sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
-  bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
+  bashDocumentationExtract --function "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
   set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?

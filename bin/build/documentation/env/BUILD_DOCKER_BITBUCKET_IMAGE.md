@@ -1,1 +1,1 @@
-- `BUILD_DOCKER_BITBUCKET_IMAGE` *String*.  [notes](#build_docker_bitbucket_image)
+- `BUILD_DOCKER_BITBUCKET_IMAGE` &mdash; BUILD_DOCKER_BITBUCKET_IMAGE *String*. undocumented 

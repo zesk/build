@@ -1,1 +1,1 @@
-[GITHUB_REPOSITORY_OWNER]({rel}/env/#deployment) - **String**. Repository owner for release
+[`GITHUB_REPOSITORY_OWNER` GITHUB_REPOSITORY_OWNER]({rel}/env/#deployment:_github) - **String**. Repository owner for release

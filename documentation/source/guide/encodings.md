@@ -1,4 +1,6 @@
-# Zesk Build Encodings
+# {applicationName} Encodings
+
+{!skip}
 
 <!-- TEMPLATE guideHeader 2 -->
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)

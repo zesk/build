@@ -1,5 +1,7 @@
 ## `APACHE_HOME`
 
-> **Type**: *Directory* • **Category**: *Vendor*
+> **APACHE_HOME** &mdash; Constant for the Apache configuration home directory.
+> > **Type**: *Directory* • **Category**: *Vendor*
 
 Constant for the Apache configuration home directory.
+

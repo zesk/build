@@ -1,1 +1,1 @@
-- `BUILD_COMPANY_LINK` *URL*. Legal copyright holder website for this codebase [notes](#build_company_link)
+- `BUILD_COMPANY_LINK` &mdash; BUILD_COMPANY_LINK *URL*. Legal copyright holder website for this codebase [notes](#build_company_link)

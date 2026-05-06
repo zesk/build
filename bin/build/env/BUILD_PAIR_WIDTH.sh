@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Pair Width
 # Width for pairs. Defaults to `40`.
 # See: __decorateExtensionPair
 # Type: PositiveInteger

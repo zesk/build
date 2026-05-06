@@ -1,6 +1,0 @@
-description="Defined in BITBUCKET Pipelines"$'\n'"Typically should match BUILD_HOME"
-descriptionLineCount="2"
-category="Continuous Integration"
-categoryId="continuous-integration"
-type="Directory"
-summary="Defined in BITBUCKET Pipelines Typically should match BUILD_HOME"

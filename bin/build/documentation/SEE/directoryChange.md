@@ -1,1 +1,24 @@
-[directoryChange]({rel}tools/directory.md#directorychange) - Run a command after changing directory to it and then ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L32))
+## `directoryChange`
+
+> Run a command after changing directory to it and then
+
+### Usage
+
+    directoryChange directory command [ ... ]
+
+Run a command after changing directory to it and then returning to the previous directory afterwards.
+
+> Location: `bin/build/tools/directory.sh`
+
+### Arguments
+
+- `directory` - Directory. Required. Directory to change to prior to running command.
+- `command` - Callable. Required. Thing to do in this directory.
+- `...` - Arguments. Optional. Arguments to `command`.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,1 +1,23 @@
-[directoryOldestFile]({rel}tools/directory.md#directoryoldestfile) - Find the oldest modified file in a directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L707))
+## `directoryOldestFile`
+
+> Find the oldest modified file in a directory
+
+### Usage
+
+    directoryOldestFile directory [ --find findArgs ... -- ]
+
+Find the oldest modified file in a directory
+
+> Location: `bin/build/tools/file.sh`
+
+### Arguments
+
+- `directory` - Directory. Required. Directory to search for the oldest file.
+- `--find findArgs ... --` - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,1 +1,1 @@
-[BUILD_PROMPT_COLORS]({rel}/env/#decoration) - **ColonDelimitedList**. Colon-separated list of colors for the prompt
+[`BUILD_PROMPT_COLORS` BUILD_PROMPT_COLORS]({rel}/env/#decoration) - **ColonDelimitedList**. Colon-separated list of colors for the prompt

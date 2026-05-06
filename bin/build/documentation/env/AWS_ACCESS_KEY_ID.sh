@@ -1,6 +1,0 @@
-description="Amazon Web Services IAM Identity"
-descriptionLineCount="1"
-category="Amazon Web Services"
-categoryId="amazon-web-services"
-type="String"
-summary="Amazon Web Services IAM Identity"

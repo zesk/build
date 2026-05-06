@@ -1,1 +1,1 @@
-- `DISPLAY` *String*. Environment variable for X windows display. From the user's perspective, every X server has a display name of the form: `hostname:displaynumber.screennumber` [notes](#display)
+- `DISPLAY` &mdash; DISPLAY *String*. Environment variable for X windows display. [notes](#display)

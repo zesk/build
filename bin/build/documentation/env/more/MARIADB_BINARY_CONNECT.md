@@ -1,5 +1,7 @@
 ## `MARIADB_BINARY_CONNECT`
 
-> **Type**: *Executable* • **Category**: *Vendor*
+> **MARIADB_BINARY_CONNECT** &mdash; MariaDB binary for database connections
+> > **Type**: *Executable* • **Category**: *Vendor*
 
 MariaDB binary for database connections
+

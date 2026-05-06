@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Home for Zesk Build development
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Type: String
 # Category: Development

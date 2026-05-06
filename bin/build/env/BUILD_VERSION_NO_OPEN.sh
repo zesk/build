@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Build Version No Open Flag
 # Constant for whether to open release notes when a version is requested (see `version-already`)
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration

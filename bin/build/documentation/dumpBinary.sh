@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-09
+# Generated on 2026-05-03
 # shellcheck disable=SC2034
 apt_get="xxd"$'\n'""
 argument="none"
 base="dump.sh"
 depends="xxd"$'\n'""
-description="Dumps output as hex"$'\n'""
+derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
+description="Dumps output as hex"$'\n'""$'\n'""
+descriptionLineCount="2"
 file="bin/build/tools/dump.sh"
 fn="dumpBinary"
+fnMarker="dumpbinary"
 foundNames=([0]="depends" [1]="apt_get" [2]="stdin" [3]="stdout")
 line="464"
-lowerFn="dumpbinary"
 rawComment="Dumps output as hex"$'\n'"Depends: xxd"$'\n'"apt-get: xxd"$'\n'"stdin: binary"$'\n'"stdout: formatted output set to ideal \`consoleColumns\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
@@ -22,8 +24,3 @@ stdout="formatted output set to ideal \`consoleColumns\`"$'\n'""
 summary="Dumps output as hex"
 summaryComputed="true"
 usage="dumpBinary"
-# shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdumpBinary'$'\e''[0m'$'\n'''$'\n''Dumps output as hex'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[(code)]mstdin'$'\e''[[(reset)]m:'$'\n''binary'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''formatted output set to ideal '$'\e''[[(code)]mconsoleColumns'$'\e''[[(reset)]m'$'\n'''
-# shellcheck disable=SC2016
-helpPlain='Usage: dumpBinary'$'\n'''$'\n''Dumps output as hex'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''binary'$'\n'''$'\n''Writes to stdout:'$'\n''formatted output set to ideal consoleColumns'$'\n'''
-documentationPath="documentation/source/tools/dump.md"

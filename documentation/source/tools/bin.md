@@ -12,7 +12,7 @@ They are intended to be standalone tools useful for a variety of installation an
 
 - [`repair.sh`](./identical.md#identicalCheckShell) - Similar to [
   `identicalCheckShell`](./identical.md#identicalCheckShell) with some extra functionality.
-- `install-bin-build.sh` - Install or upgrdades current version of Zesk Build in `./bin/build` if it is not installed
+- `install-bin-build.sh` - Install or upgrdades current version of {applicationName} in `./bin/build` if it is not installed
   already. Updates itself if required.
 - [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment) - kind of like
   `envsubst` (hey!)
@@ -26,7 +26,7 @@ They are intended to be standalone tools useful for a variety of installation an
 
 ## Development tools
 
-- `bash-build.sh` - Tool to install `Zesk Build` in a new container, load it and modify the `.bashrc` to load it every
+- `bash-build.sh` - Tool to install `{applicationName}` in a new container, load it and modify the `.bashrc` to load it every
   time
 - `deprecated.sh` - Do a project-wide replacement of deprecated code with modern updates. May modify or break your code.
   example)

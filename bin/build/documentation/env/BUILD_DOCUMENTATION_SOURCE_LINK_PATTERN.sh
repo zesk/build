@@ -1,6 +1,0 @@
-description="Links in documentation"
-descriptionLineCount="1"
-category="Documentation"
-categoryId="documentation"
-type="String"
-summary="Links in documentation"

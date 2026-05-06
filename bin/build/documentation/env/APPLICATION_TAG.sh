@@ -1,6 +1,0 @@
-description="This is the full version number including debugging or release identifiers"
-descriptionLineCount="1"
-category="Deployment"
-categoryId="deployment"
-type="String"
-summary="This is the full version number including debugging or release identifiers"

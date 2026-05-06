@@ -20,8 +20,6 @@
 # Argument: environmentVariableName - String. Optional. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
-# Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
-# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
@@ -31,7 +29,7 @@
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
-  local __prefix='{' __suffix='}' __ee=() __searchFilters=() __replaceFilters=()
+  local __prefix='{' __suffix='}' __ee=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -44,8 +42,6 @@ mapEnvironment() {
     --help) "$handler" 0 && return $? || return $? ;;
     --prefix) shift && __prefix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --suffix) shift && __suffix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-    --search-filter) shift && __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $? ;;
-    --replace-filter) shift && __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $? ;;
     --env-file) shift && muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $? ;;
     *) __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $? ;;
     esac
@@ -59,36 +55,15 @@ mapEnvironment() {
   fi
 
   (
-    local __filter __value __handler="$handler"
+    local __value && __value="$(catchEnvironment "$handler" cat)" || return $?
     unset handler
-
-    __value="$(catchEnvironment "$__handler" cat)" || return $?
-    if [ $((${#__replaceFilters[@]} + ${#__searchFilters[@]})) -gt 0 ]; then
-      for __e in "${__ee[@]}"; do
-        case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
-        local __search="$__prefix$__e$__suffix"
-        local __replace="${!__e-}"
-        if [ ${#__searchFilters[@]} -gt 0 ]; then
-          for __filter in "${__searchFilters[@]}"; do
-            __search=$(catchEnvironment "$__handler" "$__filter" "$__search") || return $?
-          done
-        fi
-        if [ ${#__replaceFilters[@]} -gt 0 ]; then
-          for __filter in "${__replace[@]}"; do
-            __replace=$(catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
-          done
-        fi
-        __value="${__value//"$__search"/$__replace}"
-      done
-    else
-      for __e in "${__ee[@]}"; do
-        case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
-        local __search="$__prefix$__e$__suffix"
-        local __replace="${!__e-}"
-        __value="${__value//"$__search"/$__replace}"
-      done
-    fi
-    printf "%s\n" "$__value"
+    for __e in "${__ee[@]}"; do
+      case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
+      local __search="$__prefix$__e$__suffix"
+      local __replace="${!__e-}"
+      __value="${__value//"$__search"/$__replace}"
+    done
+    printf "%s" "$__value"
   )
 }
 _mapEnvironment() {

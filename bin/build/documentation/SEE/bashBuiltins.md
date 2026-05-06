@@ -1,1 +1,26 @@
-[bashBuiltins]({rel}tools/bash.md#bashbuiltins) - List bash builtin functions, one per line ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L82))
+## `bashBuiltins`
+
+> List bash builtin functions, one per line
+
+### Usage
+
+    bashBuiltins
+
+List bash builtin functions, one per line
+
+> Location: `bin/build/tools/bash.sh`
+
+### Arguments
+
+- none
+
+### Writes to standard output
+
+line:function
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

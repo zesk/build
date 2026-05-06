@@ -1,6 +1,6 @@
-# Zesk Build {version}
+# {applicationName} {version}
 
-Zesk Build is a suite of Bash functions which make software development, deployment, and management easier.
+{applicationName} is a suite of Bash functions which make software development, deployment, and management easier.
 
 Documentation up to date as of {timestamp}.
 
@@ -9,7 +9,7 @@ Documentation up to date as of {timestamp}.
 - [Functions](./tools/index.md) - Tons of handy functions. (`./bin/build/tools/*.sh`)
 - [Scripts and tools](./tools/bin.md) - Scripts universally useful everywhere. (`./bin/build/*.sh`)
 - [Hooks](./tools/hooks.md) - Hooks are a way to customize default behaviors in build scripts. (`./bin/hooks/*.sh`)
-- [Environment Variables](./env/index.md) - All environment variables known by Zesk Build. (`./bin/env/*.sh`)
+- [Environment Variables](./env/index.md) - All environment variables known by {applicationName}. (`./bin/env/*.sh`)
 
 ## Introduction
 
@@ -29,9 +29,9 @@ To install directly from the web:
     mkdir -p bin/build && cd bin/build
     curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/{version}/bin/build/install-bin-build.sh" | bash
 
-Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **Zesk Build** as needed.
+Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **{applicationName}** as needed.
 Do *NOT* commit `bin/build` to your source repository – commit `install-bin-build.sh` and load it as needed. You can
-lock to a version using `install-bin-build.sh --version "$desiredVersion"`. **Zesk Build**'s installer will install
+lock to a version using `install-bin-build.sh --version "$desiredVersion"`. **{applicationName}**'s installer will install
 the **most recent** version without the `--version` argument.
 
 ## Features
@@ -56,7 +56,7 @@ the **most recent** version without the `--version` argument.
 - [Function Reference](./tools/index.md)
 - [Binaries](./tools/bin.md)
 
-## Zesk Build Guides
+## {applicationName} Guides
 
 - [Coding Practices](./guide/coding.md)
 - [Documentation](./guide/documentation.md)
@@ -78,6 +78,6 @@ pre-commit check if possible.
 
 ## Copyright and License
 
-- [About Zesk Build](./about.md)
+- [About {applicationName}](./about.md)
 
 Copyright &copy; 2026 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](./LICENSE.md).

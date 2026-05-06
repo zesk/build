@@ -1,1 +1,25 @@
-[deployPackageName]({rel}tools/deploy.md#deploypackagename) - Outputs the build target name which is based on the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L102))
+## `deployPackageName`
+
+> Outputs the build target name which is based on the
+
+### Usage
+
+    deployPackageName deployHome
+
+Outputs the build target name which is based on the environment `BUILD_TARGET`.
+
+If this is called on a non-deployment system, use the application root instead of
+`deployHome` for compatibility.
+
+> Location: `bin/build/tools/deploy.sh`
+
+### Arguments
+
+- `deployHome` - Directory. Required. Deployment database home.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

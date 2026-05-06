@@ -1,6 +1,0 @@
-description="Is xdebug enabled? The application can honor this environment variable to automatically connect to the debugger."
-descriptionLineCount="1"
-category="PHP"
-categoryId="php"
-type="Boolean"
-summary="Is xdebug enabled? The application can honor this environment variable to automatically connect to the debugger."

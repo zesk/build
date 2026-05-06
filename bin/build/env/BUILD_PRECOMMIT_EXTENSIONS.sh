@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Pre-Commit Extension List
 # List of extensions for which build hooks may be written and run.
 # Presence in this list simply means it may run, not that it is written or runs; add your own
 # `bin/hooks/pre-commit-XXX.sh` to handle a specific file type in your application.

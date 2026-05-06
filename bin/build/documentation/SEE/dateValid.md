@@ -1,1 +1,24 @@
-[dateValid]({rel}tools/date.md#datevalid) - Is a date valid?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L192))
+## `dateValid`
+
+> Is a date valid?
+
+### Usage
+
+    dateValid [ --help ] [ -- ] text
+
+Checks a date syntax and ensures it's a valid calendar date.
+
+> Location: `bin/build/tools/date.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+- `--` - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+- `text` - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,6 +1,0 @@
-description="Default docker image to use when launching \`dockerLocalContainer\`"
-descriptionLineCount="1"
-category="Docker"
-categoryId="docker"
-type="String"
-summary="Default docker image to use when launching \`dockerLocalContainer\`"

@@ -1,5 +1,7 @@
 ## `VISUAL`
 
-> **Type**: *Executable* • **Category**: *Bash*
+> **VISUAL** &mdash; Binary for viewing files
+> > **Type**: *Executable* • **Category**: *Bash*
 
 Binary for viewing files
+

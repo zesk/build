@@ -1,1 +1,24 @@
-[bashLintFilesInteractive]({rel}tools/lint.md#bashlintfilesinteractive) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L208))
+## `bashLintFilesInteractive`
+
+> Run checks interactively until errors are all fixed.
+
+### Usage
+
+    bashLintFilesInteractive [ --exec binary ] [ --delay delaySeconds ] [ fileToCheck ... ]
+
+Run checks interactively until errors are all fixed.
+
+> Location: `bin/build/tools/lint.sh`
+
+### Arguments
+
+- `--exec binary` - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.
+- `--delay delaySeconds` - Integer. Optional. Delay in seconds between checks in interactive mode.
+- `fileToCheck ...` - File. Optional. Shell file to validate.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

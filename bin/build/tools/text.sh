@@ -598,7 +598,51 @@ _stringTrimWords() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Summary: Sorts and makes all file lines unique
+# Remove duplicate lines from an input stream and sort.
+# Argument: -n - Flag. Optional. Numeric sort.
+# Argument: --verbose - Flag. Optional. Be exceptionally wordy.
+# Argument: file - File. Required. File to modify in-place.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+fileUniqueLines() {
+  local handler="_${FUNCNAME[0]}"
+
+  local ff=() files=() verboseFlag=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --verbose) verboseFlag=true ;;
+    -n) ff+=("$argument") ;;
+    *)
+      files+=("$(validate "$handler" File "$argument" "${1-}")") || return $?
+      ;;
+    esac
+    shift
+  done
+  [ "${#files[@]}" -gt 0 ] || throwArgument "$handler" "file is required" || return $?
+  local start && start=$(timingStart)
+  local f && for f in "${files[@]}"; do
+    ! $verboseFlag || statusMessage decorate info "Processing $(decorate file "$f") ..." 1>&2
+    catchReturn "$handler" sort -u "${ff[@]+"${ff[@]}"}" "$f" >"$f.$$" || returnClean $? "$f.$$" || return $?
+    catchReturn "$handler" mv -f "$f.$$" "$f" || returnClean $? "$f.$$" || return $?
+  done
+  ! $verboseFlag || statusMessage timingReport "$start" "Processed $(localePluralWord "${#files[@]}" file) in" 1>&2
+}
+_fileUniqueLines() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
 #
 # Defaults to first field (fieldIndex of `1`), space separator (separatorChar is ` `)

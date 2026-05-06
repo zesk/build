@@ -1,1 +1,1 @@
-- `TERM` *String*. The current terminal type. [notes](#term)
+- `TERM` &mdash; TERM *String*. The current terminal type. [notes](#term)

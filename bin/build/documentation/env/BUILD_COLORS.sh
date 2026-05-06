@@ -1,6 +1,0 @@
-description="If true then colors are shown, blank means guess the value, false means no colors"
-descriptionLineCount="1"
-category="Decoration"
-categoryId="decoration"
-type="Boolean"
-summary="If true then colors are shown, blank means guess the value, false means no colors"

@@ -1,0 +1,1078 @@
+
+## `__BASH_PROMPT_MARKERS`
+
+> **__BASH_PROMPT_MARKERS** &mdash; Bash Prompt escape codes for prompt reporting
+> > **Type**: *Array:EmptyString* • **Category**: *Bash Prompt*
+
+List of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.
+
+### See Also
+
+- {SEE:iTerm2Init}
+- {SEE:bashPrompt}
+
+
+## `__BASH_PROMPT_MODULES`
+
+> **__BASH_PROMPT_MODULES** &mdash; List of functions to run each prompt command
+> > **Type**: *Array:Callable* • **Category**: *Bash Prompt*
+
+List of modules to run each prompt command.
+
+Manage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.
+
+Make your functions *really* fast otherwise the shell becomes sluggish. Also try:
+
+    BUILD_DEBUG=bashPrompt
+
+To report on each command and timing.
+
+An automatic reporting occurs when commands exceed 0.3s.
+
+### See Also
+
+- {SEE:bashPrompt}
+
+
+## `__BASH_PROMPT_PREVIOUS`
+
+> **__BASH_PROMPT_PREVIOUS** &mdash; Previous result code
+> > **Type**: *Array* • **Category**: *Bash Prompt*
+
+Previous result code
+
+### See Also
+
+- {SEE:bashPrompt}
+
+
+## `__BASH_PROMPT_SLOW`
+
+> **__BASH_PROMPT_SLOW** &mdash; Bash Prompt slow timer
+> > **Type**: *PositiveInteger* • **Category**: *Bash Prompt*
+
+Number of milliseconds after which a `bashPrompt` command is considered slow.
+
+### See Also
+
+- {SEE:bashPrompt}
+
+
+## `__BUILD_HAS_TTY`
+
+> **__BUILD_HAS_TTY** &mdash; Cached value of the availability of `/dev/tty`.
+> > **Type**: *Boolean* • **Category**: *Internal*
+
+Cached value of the availability of `/dev/tty`.
+Possible values are `true` or `false` or blank.
+
+- `true` - `/dev/tty` appears to be operating without errors
+- `false` - `/dev/tty` appears to be disconnected and can not be used
+
+This value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.
+
+
+## `APACHE_HOME`
+
+> **APACHE_HOME** &mdash; Constant for the Apache configuration home directory.
+> > **Type**: *Directory* • **Category**: *Vendor*
+
+Constant for the Apache configuration home directory.
+
+
+## `APPLICATION_BUILD_DATE`
+
+> **APPLICATION_BUILD_DATE** &mdash; Time when a build was initiated, set upon first invocation
+> > **Type**: *String* • **Category**: *Deployment*
+
+Time when a build was initiated, set upon first invocation if not already.
+
+
+## `APPLICATION_CODE_EXTENSIONS`
+
+> **APPLICATION_CODE_EXTENSIONS** &mdash; List of extensions for code in the application. Required.
+> > **Type**: *ColonDelimitedList* • **Category**: *Application*
+
+List of extensions for code in the application. Required.
+
+
+## `APPLICATION_CODE_IGNORE`
+
+> **APPLICATION_CODE_IGNORE** &mdash; List of path names to ignore for application code. (e.g.
+> > **Type**: *ColonDelimitedList* • **Category**: *Application*
+
+List of path names to ignore for application code. (e.g. `/vendor/`, `/node_modules/`, etc.)
+
+
+## `APPLICATION_CODE`
+
+> **APPLICATION_CODE** &mdash; This is the unique code name of the application. Use
+> > **Type**: *String* • **Category**: *Application*
+
+This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness.
+
+
+## `APPLICATION_ID`
+
+> **APPLICATION_ID** &mdash; This is the unique hash which represents the source code
+> > **Type**: *String* • **Category**: *Deployment*
+
+This is the unique hash which represents the source code state (typically a git hash)
+
+
+## `APPLICATION_JSON_PREFIX`
+
+> **APPLICATION_JSON_PREFIX** &mdash; Prefix to place we can store things in the JSON
+> > **Type**: *String* • **Category**: *Application*
+
+Prefix to place we can store things in the JSON file (e.g. to set the fingerprint)
+
+
+## `APPLICATION_JSON`
+
+> **APPLICATION_JSON** &mdash; Path to the application configuration JSON
+> > **Type**: *ApplicationFile* • **Category**: *Application*
+
+Path to the application configuration JSON
+
+
+## `APPLICATION_NAME`
+
+> **APPLICATION_NAME** &mdash; This is the display name of the application
+> > **Type**: *String* • **Category**: *Application*
+
+This is the display name of the application
+
+
+## `APPLICATION_OWNER`
+
+> **APPLICATION_OWNER** &mdash; The entity which owns or manages the application. Typically the
+> > **Type**: *String* • **Category**: *Application*
+
+The entity which owns or manages the application. Typically the owning company name.
+This is used in Copyright notices in code and other locations.
+
+
+## `APPLICATION_REMOTE_HOME`
+
+> **APPLICATION_REMOTE_HOME** &mdash; Path on the remote server where the application is served
+> > **Type**: *RemoteDirectory* • **Category**: *Deployment*
+
+Path on the remote server where the application is served
+
+
+## `APPLICATION_TAG`
+
+> **APPLICATION_TAG** &mdash; This is the full version number including debugging or release
+> > **Type**: *String* • **Category**: *Deployment*
+
+This is the full version number including debugging or release identifiers
+
+
+## `APPLICATION_VERSION`
+
+> **APPLICATION_VERSION** &mdash; This is the version number which can be displayed
+> > **Type**: *String* • **Category**: *Deployment*
+
+This is the version number which can be displayed
+
+
+## `AWS_ACCESS_KEY_DATE`
+
+> **AWS_ACCESS_KEY_DATE** &mdash; Date of key expiration which can be checked in pipelines.
+> > **Type**: *Date* • **Category**: *Amazon Web Services*
+
+Date of key expiration which can be checked in pipelines.
+Not part of the Amazon specification but a good idea to track expiration of keys.
+
+
+## `AWS_ACCESS_KEY_ID`
+
+> **AWS_ACCESS_KEY_ID** &mdash; Amazon Web Services IAM Identity
+> > **Type**: *String* • **Category**: *Amazon Web Services*
+
+Amazon Web Services IAM Identity
+
+
+## `AWS_PROFILE`
+
+> **AWS_PROFILE** &mdash; Default profile for Amazon Web Services
+> > **Type**: *String* • **Category**: *Amazon Web Services*
+
+Default profile for Amazon Web Services
+
+
+## `AWS_REGION`
+
+> **AWS_REGION** &mdash; Region for Amazon Web Services
+> > **Type**: *String* • **Category**: *Amazon Web Services*
+
+Region for Amazon Web Services
+
+### See Also
+
+- {SEE:awsIPAccess}
+
+
+## `AWS_SECRET_ACCESS_KEY`
+
+> **AWS_SECRET_ACCESS_KEY** &mdash; Private Secret Password for AWS
+> > **Type**: *Secret* • **Category**: *Amazon Web Services*
+
+Private Secret Password for AWS
+
+
+## `BITBUCKET_CLONE_DIR`
+
+> **BITBUCKET_CLONE_DIR** &mdash; Defined in BITBUCKET Pipelines
+> > **Type**: *Directory* • **Category**: *Continuous Integration*
+
+Defined in BITBUCKET Pipelines
+Typically should match BUILD_HOME
+
+
+## `BITBUCKET_REPO_SLUG`
+
+> **BITBUCKET_REPO_SLUG** &mdash; Defined in BITBUCKET Pipelines, represents the project code name.
+> > **Type**: *String* • **Category**: *Continuous Integration*
+
+Defined in BITBUCKET Pipelines, represents the project code name.
+
+
+## `BITBUCKET_WORKSPACE`
+
+> **BITBUCKET_WORKSPACE** &mdash; Defined in BITBUCKET Pipelines. represents the project workspace.
+> > **Type**: *String* • **Category**: *Continuous Integration*
+
+Defined in BITBUCKET Pipelines. represents the project workspace.
+
+
+## `BUILD_CACHE_HOME`
+
+> **BUILD_CACHE_HOME** &mdash; Location for the build system cache files. Defaults to `$HOME/.build`
+> > **Type**: *Directory* • **Category**: *Build Configuration*
+
+Location for the build system cache files. Defaults to `$HOME/.build` and if `$HOME` is not a directory then `$(buildHome)/.build`
+Cache MAY be deleted at any time. If you need your files to be preserved, store them elsewhere.
+
+
+## `BUILD_COLORS`
+
+> **BUILD_COLORS** &mdash; If true then colors are shown, blank means guess the
+> > **Type**: *Boolean* • **Category**: *Decoration*
+
+If true then colors are shown, blank means guess the value, false means no colors
+
+### See Also
+
+- {SEE:decorate}
+
+
+## `BUILD_COMPANY_LINK`
+
+> **BUILD_COMPANY_LINK** &mdash; Legal copyright holder website for this codebase
+> > **Type**: *URL* • **Category**: *Application*
+
+Legal copyright holder website for this codebase
+
+
+## `BUILD_COMPANY`
+
+> **BUILD_COMPANY** &mdash; Legal copyright holder for this codebase
+> > **Type**: *String* • **Category**: *Application*
+
+Legal copyright holder for this codebase
+
+
+## `BUILD_COMPOSER_VERSION`
+
+> **BUILD_COMPOSER_VERSION** &mdash; Version of composer to use for building vendor directory
+> > **Type**: *String* • **Category**: *Installation*
+
+Version of composer to use for building vendor directory
+
+### See Also
+
+- {SEE:phpComposer}
+
+
+## `BUILD_DEBUG_LINES`
+
+> **BUILD_DEBUG_LINES** &mdash; Number of lines of debugging output to send to stderr
+> > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
+
+Number of lines of debugging output to send to stderr before stopping
+
+
+## `BUILD_DEBUG`
+
+> **BUILD_DEBUG** &mdash; Constant for turning debugging on during build to find errors
+> > **Type**: *CommaDelimitedList* • **Category**: *Build Configuration*
+
+Constant for turning debugging on during build to find errors in the build scripts.
+Enable debugging globally in the build scripts. Set to a comma (`,`) delimited list string to enable specific debugging, or `true` for ALL debugging, `false` (or blank) for NO debugging.
+
+
+## `BUILD_DEVELOPMENT_HOME`
+
+> **BUILD_DEVELOPMENT_HOME** &mdash; Directory where Zesk Build is being developed in the file
+> > **Type**: *String* • **Category**: *Development*
+
+Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)
+
+### See Also
+
+- {SEE:buildDevelopmentLink}
+
+
+## `BUILD_DOCKER_IMAGE`
+
+> **BUILD_DOCKER_IMAGE** &mdash; Default docker image to use when launching `dockerLocalContainer`
+> > **Type**: *String* • **Category**: *Docker*
+
+Default docker image to use when launching `dockerLocalContainer`
+
+### See Also
+
+- {SEE:dockerLocalContainer}
+
+
+## `BUILD_DOCKER_PATH`
+
+> **BUILD_DOCKER_PATH** &mdash; Default path for the shell to map the current directory
+> > **Type**: *RemoteDirectory* • **Category**: *Docker*
+
+Default path for the shell to map the current directory to when launching `dockerLocalContainer`
+
+### See Also
+
+- {SEE:dockerLocalContainer}
+
+
+## `BUILD_DOCKER_PLATFORM`
+
+> **BUILD_DOCKER_PLATFORM** &mdash; The platform for `dockerLocalContainer`
+> > **Type**: *String* • **Category**: *Docker*
+
+The platform for `dockerLocalContainer`
+
+Contacts of this can be found via `docker buildx ls`
+
+Valid values are:
+
+- `linux/arm64`
+- `linux/amd64`
+- `linux/amd64/v2`
+- `linux/riscv64`
+- `linux/ppc64le`
+- `linux/s390x`
+- `linux/386`
+- `linux/mips64le`
+- `linux/mips64`
+- `linux/arm/v7`
+- `linux/arm/v6`
+
+If not specified, uses the default for the current platform.
+
+### See Also
+
+- {SEE:dockerLocalContainer}
+- {SEE:dockerPlatformDefault}
+
+
+## `BUILD_DOCUMENTATION_PATH`
+
+> **BUILD_DOCUMENTATION_PATH** &mdash; Search path for documentation settings file.
+> > **Type**: *DirectoryList* • **Category**: *Bash*
+
+Search path for documentation settings file.
+A colon `:` separated list of paths to search for function documentation settings file for `__bashDocumentationCached`
+
+### See Also
+
+- {SEE:__bashDocumentationCached}
+
+
+## `BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN`
+
+> **BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN** &mdash; Links in documentation
+> > **Type**: *String* • **Category**: *Documentation*
+
+Links in documentation
+
+
+## `BUILD_ENVIRONMENT_DIRS`
+
+> **BUILD_ENVIRONMENT_DIRS** &mdash; Search directory for environment definition files. `:` separated.
+> > **Type**: *DirectoryList* • **Category**: *Build Configuration*
+
+Search directory for environment definition files. `:` separated.
+Note these should be *in addition* to the default environment variables ALWAYS located at `$(buildHome)/bin/build/env`
+THe default is `$(buildHome)/bin/env`. Make sure to append to this as a `:`-list.
+
+
+## `BUILD_HOME`
+
+> **BUILD_HOME** &mdash; `BUILD_HOME` is `.` when this code is installed - at
+> > **Type**: *Directory* • **Category**: *Build Configuration*
+
+`BUILD_HOME` is `.` when this code is installed - at `./bin/build`. Usually an absolute path and does NOT end with a trailing slash.
+This is computed from the current source file using `${BASH_SOURCE[0]}`.
+
+
+## `BUILD_HOOK_DIRS`
+
+> **BUILD_HOOK_DIRS** &mdash; List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.
+> > **Type**: *ApplicationDirectoryList* • **Category**: *Build Configuration*
+
+List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.
+Colon (`:`) separated list.
+
+
+## `BUILD_HOOK_EXTENSIONS`
+
+> **BUILD_HOOK_EXTENSIONS** &mdash; List of extensions to run when looking for hooks
+> > **Type**: *ColonDelimitedList* • **Category**: *Application*
+
+List of extensions to run when looking for hooks
+
+
+## `BUILD_INSTALL_URL`
+
+> **BUILD_INSTALL_URL** &mdash; `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer.
+> > **Type**: *URL* • **Category**: *Build Configuration*
+
+`BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer.
+
+
+## `BUILD_MAINTENANCE_CREATED_FILE`
+
+> **BUILD_MAINTENANCE_CREATED_FILE** &mdash; When true, means the `.env.local` file was created by the
+> > **Type**: *Boolean* • **Category**: *Application*
+
+When true, means the `.env.local` file was created by the maintenance hook and should be deleted when maintenance is
+no longer enabled.
+
+
+## `BUILD_MAINTENANCE_MESSAGE_VARIABLE`
+
+> **BUILD_MAINTENANCE_MESSAGE_VARIABLE** &mdash; Name of the environment variable (if any) which reflects the
+> > **Type**: *EnvironmentVariable* • **Category**: *Application*
+
+Name of the environment variable (if any) which reflects the current maintenance message.
+Default is `MAINTENANCE_MESSAGE` and this is typically added to the `.env.local` to a live
+application. Your application should monitor these files for changes if they are cached and reload as needed to ensure
+these messages are displayed immediately.
+
+
+## `BUILD_MAINTENANCE_VARIABLE`
+
+> **BUILD_MAINTENANCE_VARIABLE** &mdash; The maintenance variable name which enables (or disabled) maintenance mode.
+> > **Type**: *EnvironmentVariable* • **Category**: *Application*
+
+The maintenance variable name which enables (or disabled) maintenance mode.
+Default is `MAINTENANCE`.
+This value is set to `true` or `false`
+
+
+## `BUILD_MAXIMUM_TAGS_PER_VERSION`
+
+> **BUILD_MAXIMUM_TAGS_PER_VERSION** &mdash; Number of versions tags (d0, d1, d2, etc.) to look
+> > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
+
+Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitTagVersion`
+
+### See Also
+
+- {SEE:gitTagVersion}
+
+
+## `BUILD_NOTIFY_SOUND`
+
+> **BUILD_NOTIFY_SOUND** &mdash; Sound for notifications. Set to `-` for no sound. Defaults
+> > **Type**: *String* • **Category**: *Build Configuration*
+
+Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notification`.
+
+### See Also
+
+- {SEE:darwinNotification}
+
+
+## `BUILD_NPM_VERSION`
+
+> **BUILD_NPM_VERSION** &mdash; Version of npm to install using native `npm` binary.
+> > **Type**: *String* • **Category**: *Installation*
+
+Version of npm to install using native `npm` binary.
+
+### See Also
+
+- {SEE:npmInstall}
+
+
+## `BUILD_PACKAGE_MANAGER`
+
+> **Package Manager Binary** &mdash; The default package manager on systems which have more than
+> > **Type**: *Executable* • **Category**: *Installation*
+
+The default package manager on systems which have more than one package manager available.
+
+
+## `BUILD_PAIR_WIDTH`
+
+> **BUILD_PAIR_WIDTH** &mdash; Width for pairs. Defaults to `40`.
+> > **Type**: *PositiveInteger* • **Category**: *Decoration*
+
+Width for pairs. Defaults to `40`.
+
+### See Also
+
+- {SEE:__decorateExtensionPair}
+
+
+## `BUILD_PRECOMMIT_EXTENSIONS`
+
+> **BUILD_PRECOMMIT_EXTENSIONS** &mdash; List of extensions for which build hooks may be written
+> > **Type**: *List* • **Category**: *Build Configuration*
+
+List of extensions for which build hooks may be written and run.
+Presence in this list simply means it may run, not that it is written or runs; add your own
+`bin/hooks/pre-commit-XXX.sh` to handle a specific file type in your application.
+
+Currently:
+
+- `sh` - Bash
+- `PHP` - PHP
+- `js` - JavaScript
+- `json` - JSON
+- `md` - Markdown
+- `yml` - Yet Another Markup Language
+- `txt` - Text files
+- `py` - Python
+- `go` - Golang
+- `rs` - Rust
+- `css` - CSS
+- `less`, `sass`, `scss` - Compiled stylesheets
+
+
+## `BUILD_PROJECT_DEACTIVATE`
+
+> **BUILD_PROJECT_DEACTIVATE** &mdash; Set this to a function which cleans up the project
+> > **Type**: *Function* • **Category**: *Application*
+
+Set this to a function which cleans up the project context and
+will be run on `project-deactivate` hook which is sourced.
+
+
+## `BUILD_PROMPT_COLORS`
+
+> **BUILD_PROMPT_COLORS** &mdash; Colon-separated list of colors for the prompt
+> > **Type**: *ColonDelimitedList* • **Category**: *Decoration*
+
+Colon-separated list of colors for the prompt
+
+Colors are escape codes. Last entry is a reset simply to make environment output less messy.
+
+1. Success color
+2. Failure color
+3. User
+4. Host
+5. Path
+
+### See Also
+
+- {SEE:bashPrompt}
+
+
+## `BUILD_RELEASE_NOTES`
+
+> **BUILD_RELEASE_NOTES** &mdash; Constant for the release notes path. Defaults to `./docs/release`.
+> > **Type**: *ApplicationDirectory* • **Category**: *Build Configuration*
+
+Constant for the release notes path. Defaults to `./docs/release`.
+
+
+## `BUILD_TARGET`
+
+> **BUILD_TARGET** &mdash; The file to generate when generating builds
+> > **Type**: *String* • **Category**: *Deployment*
+
+The file to generate when generating builds
+
+
+## `BUILD_TERM_COLORS_STATE`
+
+> **BUILD_TERM_COLORS_STATE** &mdash; State to store state of current terminal color state
+> > **Type**: *String* • **Category**: *Application*
+
+State to store state of current terminal color state
+
+### See Also
+
+- {SEE:bashPromptModule_TermColors}
+
+
+## `BUILD_TEST_FLAGS`
+
+> **BUILD_TEST_FLAGS** &mdash; Test flags affect controls and how tests are run.
+> > **Type**: *String* • **Category**: *Testing*
+
+Test flags affect controls and how tests are run.
+
+
+## `BUILD_TEXT_BINARY`
+
+> **BUILD_TEXT_BINARY** &mdash; Binary used to generate `decorate big`
+> > **Type**: *Callable* • **Category**: *Decoration*
+
+Binary used to generate `decorate big`
+
+### See Also
+
+- {SEE:decorate}
+- {SEE:big}
+- {SEE:__aptStandardPackages}
+- {SEE:__apkStandardPackages}
+- {SEE:__brewStandardPackages}
+
+
+## `BUILD_TIMESTAMP`
+
+> **BUILD_TIMESTAMP** &mdash; Time when a build was initiated, set upon first invocation
+> > **Type**: *UnsignedInteger* • **Category**: *Deployment*
+
+Time when a build was initiated, set upon first invocation if not already
+
+
+## `BUILD_URL_BINARY`
+
+> **BUILD_URL_BINARY** &mdash; Binary used in __urlOpen
+> > **Type**: *Callable* • **Category**: *Decoration*
+
+Binary used in __urlOpen
+
+### See Also
+
+- {SEE:urlOpen}
+
+
+## `BUILD_URL_TIMEOUT`
+
+> **BUILD_URL_TIMEOUT** &mdash; Timeout in seconds for fetching URLs in `urlFetch`
+> > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
+
+Timeout in seconds for fetching URLs in `urlFetch`
+
+### See Also
+
+- {SEE:urlFetch}
+
+
+## `BUILD_VERSION_NO_OPEN`
+
+> **BUILD_VERSION_NO_OPEN** &mdash; Constant for whether to open release notes when a version
+> > **Type**: *Boolean* • **Category**: *Build Configuration*
+
+Constant for whether to open release notes when a version is requested (see `version-already`)
+
+
+## `BUILD_VERSION_SUFFIX`
+
+> **BUILD_VERSION_SUFFIX** &mdash; Default suffix used in `gitTagVersion`
+> > **Type**: *String* • **Category**: *Build Configuration*
+
+Default suffix used in `gitTagVersion`
+
+### See Also
+
+- {SEE:gitTagVersion}
+
+
+## `BUILD_YARN_VERSION`
+
+> **BUILD_YARN_VERSION** &mdash; Version of yarn to install using `corepack`
+> > **Type**: *String* • **Category**: *Vendor*
+
+Version of yarn to install using `corepack`
+
+### See Also
+
+- {SEE:yarnInstall}
+
+
+## `CI`
+
+> **CI** &mdash; If this value is non-blank, then console `statusMessage`s are just
+> > **Type**: *String* • **Category**: *Continuous Integration*
+
+If this value is non-blank, then console `statusMessage`s are just output normally.
+Continuous Integration - this is set to a non-blank value in:
+
+- Bitbucket pipelines
+
+### See Also
+
+- {SEE:statusMessage}
+- {SEE:consoleHasAnimation}
+
+
+## `COLORFGBG`
+
+> **COLORFGBG** &mdash; Standard way to express the foreground and background colors
+> > **Type**: *String* • **Category**: *Decoration*
+
+Standard way to express the foreground and background colors
+
+- `foregroundColor` - UnsignedInteger. 0 to 16
+- `backgroundColor` - UnsignedInteger. 0 to 16
+
+Not referenced in this product; referenced via [rxvt](https://rxvt.sourceforge.net/) and may be honored at some point.
+
+
+## `DAEMONTOOLS_HOME`
+
+> **DAEMONTOOLS_HOME** &mdash; Constant for the directory where services are monitored by daemontools
+> > **Type**: *Directory* • **Category**: *Vendor*
+
+Constant for the directory where services are monitored by daemontools
+
+
+## `DEPLOY_REMOTE_HOME`
+
+> **DEPLOY_REMOTE_HOME** &mdash; Path on the remote server where the application deployment home
+> > **Type**: *RemoteDirectory* • **Category**: *Deployment*
+
+Path on the remote server where the application deployment home is (per application)
+
+
+## `DEPLOY_USER_HOSTS`
+
+> **DEPLOY_USER_HOSTS** &mdash; A list of one ore more user@host for installation of
+> > **Type**: *String* • **Category**: *Deployment*
+
+A list of one ore more user@host for installation of the application
+
+### See Also
+
+- {SEE:deployApplication}
+
+
+## `DEPLOYMENT`
+
+> **DEPLOYMENT** &mdash; Target deployment for this code
+> > **Type**: *String* • **Category**: *Deployment*
+
+Target deployment for this code
+
+
+## `DISPLAY`
+
+> **DISPLAY** &mdash; Environment variable for X windows display.
+> > **Type**: *String* • **Category**: *Bash*
+
+Environment variable for X windows display.
+From the user's perspective, every X server has a display name of the form: `hostname:displaynumber.screennumber`
+
+
+## `EDITOR`
+
+> **EDITOR** &mdash; Binary for editing files
+> > **Type**: *Callable* • **Category**: *Bash*
+
+Binary for editing files
+
+
+## `GIT_OPEN_LINKS`
+
+> **GIT_OPEN_LINKS** &mdash; Open links from git remotes in `gitCommit`
+> > **Type**: *Boolean* • **Category**: *Development*
+
+Open links from git remotes in `gitCommit`
+
+### See Also
+
+- {SEE:gitCommit}
+- {SEE:gitCommit}
+
+
+## `GITHUB_ACCESS_TOKEN_EXPIRE`
+
+> **GITHUB_ACCESS_TOKEN_EXPIRE** &mdash; GitHub Access token expiration date. Invalid AFTER this date.
+> > **Type**: *Date* • **Category**: *Development*
+
+GitHub Access token expiration date. Invalid AFTER this date.
+
+### See Also
+
+- {SEE:githubRelease}
+
+
+## `GITHUB_ACCESS_TOKEN`
+
+> **GITHUB_ACCESS_TOKEN** &mdash; Access token used for release
+> > **Type**: *Secret* • **Category**: *Development*
+
+Access token used for release
+
+### See Also
+
+- {SEE:githubRelease}
+
+
+## `GITHUB_REPOSITORY_NAME`
+
+> **GITHUB_REPOSITORY_NAME** &mdash; Repository name for release
+> > **Type**: *String* • **Category**: *Development*
+
+Repository name for release
+
+### See Also
+
+- {SEE:githubRelease}
+
+
+## `GITHUB_REPOSITORY_OWNER`
+
+> **GITHUB_REPOSITORY_OWNER** &mdash; Repository owner for release
+> > **Type**: *String* • **Category**: *Deployment: GitHub*
+
+Repository owner for release
+
+### See Also
+
+- {SEE:githubRelease}
+
+
+## `HOME`
+
+> **HOME** &mdash; Current user's home directory.
+> > **Type**: *Directory* • **Category**: *Bash*
+
+Current user's home directory.
+
+
+## `IP_URL_FILTER`
+
+> **IP_URL_FILTER** &mdash; jq filter to parse IP_URL result (assuming JSON)
+> > **Type**: *String* • **Category**: *Build Configuration*
+
+jq filter to parse IP_URL result (assuming JSON)
+if blank, no filter is used and raw result is returned
+
+### See Also
+
+- {SEE:networkIPLookup}
+
+
+## `IP_URL`
+
+> **IP_URL** &mdash; URL to look up IP my address remotely
+> > **Type**: *URL* • **Category**: *Build Configuration*
+
+URL to look up IP my address remotely
+
+### See Also
+
+- {SEE:networkIPLookup}
+
+
+## `LC_TERMINAL`
+
+> **LC_TERMINAL** &mdash; LC_TERMINAL typically identifies the terminal application
+> > **Type**: *String* • **Category**: *Bash*
+
+LC_TERMINAL typically identifies the terminal application
+
+
+## `MANPATH`
+
+> **MANPATH** &mdash; A colon `:` separated list of paths to search for
+> > **Type**: *DirectoryList* • **Category**: *Bash*
+
+A colon `:` separated list of paths to search for manual pages.
+See [`manPathConfigure`](/tools/platform/#manpathconfigure)
+
+### See Also
+
+- {SEE:manPathConfigure}
+
+
+## `MARIADB_BINARY_CONNECT`
+
+> **MARIADB_BINARY_CONNECT** &mdash; MariaDB binary for database connections
+> > **Type**: *Executable* • **Category**: *Vendor*
+
+MariaDB binary for database connections
+
+
+## `MARIADB_BINARY_DUMP`
+
+> **MARIADB_BINARY_DUMP** &mdash; MariaDB binary for dump
+> > **Type**: *Executable* • **Category**: *Vendor*
+
+MariaDB binary for dump
+
+
+## `NODE_PACKAGE_MANAGER`
+
+> **node Package Manager** &mdash; The package manager used for node operations. Usually `yarn` or
+> > **Type**: *Executable* • **Category**: *Vendor*
+
+The package manager used for node operations. Usually `yarn` or `npm`.
+Default is `yarn`.
+
+
+## `PATH`
+
+> **Executable Search Path** &mdash; A colon `:` separated list of paths to search for
+> > **Type**: *DirectoryList* • **Category**: *Bash*
+
+A colon `:` separated list of paths to search for executables in `bash`.
+See [`pathConfigure`](/tools/platform/#pathconfigure)
+
+### See Also
+
+- {SEE:pathConfigure}
+
+
+## `PRODUCTION`
+
+> **PRODUCTION** &mdash; Is this a production system? e.g. remove unnecessary runtime checks.
+> > **Type**: *Boolean* • **Category**: *Bash*
+
+Is this a production system? e.g. remove unnecessary runtime checks.
+
+
+## `PROMPT_COMMAND`
+
+> **PROMPT_COMMAND** &mdash; Command is run before displaying the prompt, receives exit status
+> > **Type**: *Callable* • **Category**: *Bash*
+
+Command is run before displaying the prompt, receives exit status from the prior command.
+
+### See Also
+
+- {SEE:bashPrompt}
+
+
+## `PS1`
+
+> **PS1** &mdash; Bash Prompt for terminals
+> > **Type**: *String* • **Category**: *Bash*
+
+Bash Prompt for terminals
+
+### See Also
+
+- {SEE:bashPrompt}
+
+
+## `SHFMT_ARGUMENTS`
+
+> **SHFMT_ARGUMENTS** &mdash; Arguments passed to shfmt when running as a pre-commit hook
+> > **Type**: *Array* • **Category**: *Bash*
+
+Arguments passed to shfmt when running as a pre-commit hook
+
+### See Also
+
+- {SEE:pre-commit-sh.sh}
+
+
+## `TERM`
+
+> **TERM** &mdash; The current terminal type.
+> > **Type**: *String* • **Category**: *Bash*
+
+The current terminal type.
+
+
+## `TEST_TRACK_ASSERTIONS`
+
+> **TEST_TRACK_ASSERTIONS** &mdash; Assertion tracking testing optimization
+> > **Type**: *Boolean* • **Category**: *Testing*
+
+Assertion tracking testing optimization
+Turn on or off tracking of function assertions within the testing core.
+If blank, the default behavior is to track; disable it with setting the value to `false`.
+
+### See Also
+
+- {SEE:testSuite}
+- {SEE:assert.sh}
+
+
+## `VISUAL`
+
+> **VISUAL** &mdash; Binary for viewing files
+> > **Type**: *Executable* • **Category**: *Bash*
+
+Binary for viewing files
+
+
+## `XDEBUG_ENABLED`
+
+> **XDEBUG_ENABLED** &mdash; Is xdebug enabled? The application can honor this environment variable
+> > **Type**: *Boolean* • **Category**: *PHP*
+
+Is xdebug enabled? The application can honor this environment variable to automatically connect to the debugger.
+
+### See Also
+
+- [github.com](https://github.com/zesk/zesk/blob/master/xdebug.php)
+
+
+## `XDG_CACHE_HOME`
+
+> **XDG_CACHE_HOME** &mdash; Main Cache Directory
+> > **Type**: *Directory* • **Category**: *Build Configuration*
+
+Base directory for user-specific cache data to be stored
+See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+
+
+## `XDG_CONFIG_DIRS`
+
+> **XDG_CONFIG_DIRS** &mdash; Configuration Path Directories
+> > **Type**: *DirectoryList* • **Category**: *Build Configuration*
+
+Search directory for user-specific configuration files to be stored. `:` separated.
+See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+
+
+## `XDG_CONFIG_HOME`
+
+> **XDG_CONFIG_HOME** &mdash; Main Configuration Path
+> > **Type**: *Directory* • **Category**: *Build Configuration*
+
+Location for configuration files
+See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+
+
+## `XDG_DATA_DIRS`
+
+> **XDG_DATA_DIRS** &mdash; Data Path Directories
+> > **Type**: *DirectoryList* • **Category**: *Build Configuration*
+
+Search directory for user-specific data files to be stored. `:` separated.
+See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+
+
+## `XDG_DATA_HOME`
+
+> **XDG_DATA_HOME** &mdash; Data Home Directory
+> > **Type**: *Directory* • **Category**: *Build Configuration*
+
+Base directory for user-specific data to be stored.
+See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+
+
+## `XDG_STATE_HOME`
+
+> **XDG_STATE_HOME** &mdash; State Home Directory
+> > **Type**: *Directory* • **Category**: *Build Configuration*
+
+Base directory for user-specific state files to be stored
+See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+

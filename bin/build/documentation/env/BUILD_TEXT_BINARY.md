@@ -1,1 +1,1 @@
-- `BUILD_TEXT_BINARY` *Callable*. Binary used to generate `decorate big` [notes](#build_text_binary)
+- `BUILD_TEXT_BINARY` &mdash; BUILD_TEXT_BINARY *Callable*. Binary used to generate `decorate big` [notes](#build_text_binary)

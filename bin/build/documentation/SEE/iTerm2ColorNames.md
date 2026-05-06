@@ -1,1 +1,22 @@
-[iTerm2ColorNames]({rel}tools/iterm2.md#iterm2colornames) - Solely the color names (e.g blue), not anything else ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L194))
+## `iTerm2ColorNames`
+
+> Solely the color names (e.g blue), not anything else
+
+### Usage
+
+    iTerm2ColorNames [ --help ]
+
+Solely the color names (e.g blue), not anything else
+
+> Location: `bin/build/tools/iterm2.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

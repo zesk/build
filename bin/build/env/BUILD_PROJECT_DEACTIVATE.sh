@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Project Deactivation Function
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Type: Function
 # Category: Application

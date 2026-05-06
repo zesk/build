@@ -1,1 +1,25 @@
-[phpUninstall]({rel}tools/install.md#phpuninstall) - Uninstall \`php\`"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php.sh#L40))
+## `phpUninstall`
+
+> Uninstall `php`
+
+### Usage
+
+    phpUninstall [ package ]
+
+Uninstall `php`
+
+If this fails it will output the installation log.
+
+When this tool succeeds the `php` binary is no longer available in the local operating system.
+
+> Location: `bin/build/tools/php.sh`
+
+### Arguments
+
+- `package` - Additional packages to install
+
+### Return codes
+
+- `1` - If uninstallation fails
+- `0` - If uninstallation succeeds
+

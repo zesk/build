@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Maintenance Variable Name
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # Type: EnvironmentVariable

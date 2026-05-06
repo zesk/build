@@ -1,1 +1,1 @@
-- `BUILD_TARGET` *String*. The file to generate when generating builds [notes](#build_target)
+- `BUILD_TARGET` &mdash; BUILD_TARGET *String*. The file to generate when generating builds [notes](#build_target)

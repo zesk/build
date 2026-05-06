@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Build Hook Directory List
 # List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.
 # Colon (`:`) separated list.
 # Copyright &copy; 2026 Market Acumen, Inc.

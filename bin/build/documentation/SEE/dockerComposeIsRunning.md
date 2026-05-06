@@ -1,1 +1,21 @@
-[dockerComposeIsRunning]({rel}tools/docker-compose.md#dockercomposeisrunning) - Is docker compose currently running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L85))
+## `dockerComposeIsRunning`
+
+> Is docker compose currently running?
+
+### Usage
+
+    dockerComposeIsRunning [ --help ]
+
+Is docker compose currently running?
+
+> Location: `bin/build/tools/docker-compose.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `1` - Not running
+- `0` - Running
+

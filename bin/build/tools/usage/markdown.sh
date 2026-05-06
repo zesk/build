@@ -21,13 +21,14 @@ __bashDocumentationMarkdown() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
     *)
       [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
       [ -n "$template" ] || template=$(catchReturn "$handler" documentationTemplate function) || return $?
       local settingsFile && if ! settingsFile=$(__functionSettings "$home" "$argument"); then
         throwEnvironment "$handler" "No settings for $argument" || return $?
       fi
-      documentationTemplateCompile --handler "$handler" "$template" "$settingsFile" || return $?
+      identical=IDENTICAL documentationTemplateCompile --handler "$handler" "$template" "$settingsFile" || return $?
       ;;
     esac
     shift

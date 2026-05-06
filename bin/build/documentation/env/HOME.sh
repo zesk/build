@@ -1,6 +1,0 @@
-description="Current user's home directory."
-descriptionLineCount="1"
-category="Bash"
-categoryId="bash"
-type="Directory"
-summary="Current user's home directory."

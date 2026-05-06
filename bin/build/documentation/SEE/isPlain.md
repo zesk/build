@@ -1,1 +1,22 @@
-[isPlain]({rel}tools/text.md#isplain) - Check if text contains plain text only (no ANSI escape ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L90))
+## `isPlain`
+
+> Check if text contains plain text only (no ANSI escape
+
+### Usage
+
+    isPlain text
+
+Check if text contains plain text only (no ANSI escape codes, etc.)
+Without arguments, displays help.
+
+> Location: `bin/build/tools/text.sh`
+
+### Arguments
+
+- `text` - String. Required. Text to search for mapping tokens.
+
+### Return codes
+
+- `0` - Text is plain
+- `1` - Text contains non-plain characters
+

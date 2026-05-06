@@ -19,7 +19,7 @@ remember which is which:
 
 And you supply a pattern to match to remove.
 
-Where do I use this? A simple search of Zesk Build code shows:
+Where do I use this? A simple search of {applicationName} code shows:
 
 ### Faster `dirname`
 

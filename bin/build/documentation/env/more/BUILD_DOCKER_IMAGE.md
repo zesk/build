@@ -1,5 +1,11 @@
 ## `BUILD_DOCKER_IMAGE`
 
-> **Type**: *String* • **Category**: *Docker*
+> **BUILD_DOCKER_IMAGE** &mdash; Default docker image to use when launching `dockerLocalContainer`
+> > **Type**: *String* • **Category**: *Docker*
 
 Default docker image to use when launching `dockerLocalContainer`
+
+### See Also
+
+- {SEE:dockerLocalContainer}
+

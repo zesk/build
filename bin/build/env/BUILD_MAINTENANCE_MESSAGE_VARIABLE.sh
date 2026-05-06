@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Maintenance Variable Message Name
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # Name of the environment variable (if any) which reflects the current maintenance message.

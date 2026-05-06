@@ -1,1 +1,22 @@
-[gitHasAnyRefs]({rel}tools/git.md#githasanyrefs) - Does git have any tags?"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L691))
+## `gitHasAnyRefs`
+
+> Does git have any tags?
+
+### Usage
+
+    gitHasAnyRefs [ --help ]
+
+Do any tags exist at all in `git`?
+May need to `git pull --tags`, or no tags exist.
+
+> Location: `bin/build/tools/git.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - At least one tag exists
+- `1` - No tags exist
+

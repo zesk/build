@@ -1,1 +1,1 @@
-- `__BASH_PROMPT_MARKERS` *Array*. List of markers to identify to the terminal location of the prompt [notes](#__bash_prompt_markers)
+- `__BASH_PROMPT_MARKERS` &mdash; __BASH_PROMPT_MARKERS *Array:EmptyString*. Bash Prompt escape codes for prompt reporting [notes](#__bash_prompt_markers)

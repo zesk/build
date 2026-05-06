@@ -1,1 +1,22 @@
-[dockerComposeCommandList]({rel}tools/docker-compose.md#dockercomposecommandlist) - List of docker compose commands ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L107))
+## `dockerComposeCommandList`
+
+> List of docker compose commands
+
+### Usage
+
+    dockerComposeCommandList [ --help ]
+
+List of docker compose commands
+
+> Location: `bin/build/tools/docker-compose.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

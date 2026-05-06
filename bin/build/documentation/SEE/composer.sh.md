@@ -1,1 +1,0 @@
-[composer.sh]({rel}#phpcomposer) - Run Composer commands on code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php-composer.sh#L31))

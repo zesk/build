@@ -1,1 +1,1 @@
-- `BUILD_PROJECT_DEACTIVATE` *Function*. Set this to a function which cleans up the project context and will be run on `project-deactivate` hook which is sourced. [notes](#build_project_deactivate)
+- `BUILD_PROJECT_DEACTIVATE` &mdash; BUILD_PROJECT_DEACTIVATE *Function*. Set this to a function which cleans up the project [notes](#build_project_deactivate)

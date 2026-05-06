@@ -1,1 +1,26 @@
-[iTerm2Version]({rel}tools/iterm2.md#iterm2version) - Output the iTerm2 version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L717))
+## `iTerm2Version`
+
+> Output the iTerm2 version
+
+### Usage
+
+    iTerm2Version
+
+Output the iTerm2 version
+
+> Location: `bin/build/tools/iterm2.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### Requires
+
+- stty
+

@@ -131,8 +131,8 @@ iTerm2PromptSupport() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
-  catchEnvironment "$handler" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
-  catchEnvironment "$handler" bashPrompt --skip-prompt --last __iTerm2UpdateState || return $?
+  timing catchEnvironment "$handler" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
+  timing catchEnvironment "$handler" bashPrompt --skip-prompt --last __iTerm2UpdateState || return $?
 }
 _iTerm2PromptSupport() {
   # __IDENTICAL__ bashDocumentation 1
@@ -857,8 +857,7 @@ iTerm2Init() {
   fi
 
   # iTerm2 customizations
-  local ii=()
-  ! $ignoreErrors || ii=(--ignore)
+  local ii=() && ! $ignoreErrors || ii=(--ignore)
   catchEnvironment "$handler" iTerm2PromptSupport "${ii[@]+"${ii[@]}"}" || return $?
 
   export BUILD_HOOK_DIRS

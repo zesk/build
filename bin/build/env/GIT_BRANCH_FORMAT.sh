@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Git Branch Format String
 # See: gitBranchify
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Development

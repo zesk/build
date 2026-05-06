@@ -4,8 +4,8 @@
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-These tools are if you wish to write your own installer for your own software in `bash` using **Zesk Build**'s
-functions – but has no dependencies on **Zesk Build**.
+These tools are if you wish to write your own installer for your own software in `bash` using **{applicationName}**'s
+functions – but has no dependencies on **{applicationName}**.
 
 Copy `install.sample.sh` and rename, and keep up to date in your own project with
 `bin/build/repair.sh --internal`.

@@ -1,1 +1,23 @@
-[sysvInitScriptUninstall]({rel}tools/sysvinit.md#sysvinitscriptuninstall) - Remove an initialization script ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sysvinit.sh#L63))
+## `sysvInitScriptUninstall`
+
+> Remove an initialization script
+
+### Usage
+
+    sysvInitScriptUninstall binary [ --help ]
+
+Remove an initialization script
+
+> Location: `bin/build/tools/sysvinit.sh`
+
+### Arguments
+
+- `binary` - String. Required. Basename of installed script to remove.
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

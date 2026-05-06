@@ -1,1 +1,22 @@
-[isDarwin]({rel}tools/darwin.md#isdarwin) - Are we on Mac OS X? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L10))
+## `isDarwin`
+
+> Are we on Mac OS X?
+
+### Usage
+
+    isDarwin
+
+Are we on Mac OS X?
+
+> Location: `bin/build/tools/darwin.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

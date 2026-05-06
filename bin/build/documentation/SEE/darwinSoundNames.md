@@ -1,1 +1,22 @@
-[darwinSoundNames]({rel}tools/darwin.md#darwinsoundnames) - List valid sound names usable for notifications in Darwin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L97))
+## `darwinSoundNames`
+
+> List valid sound names usable for notifications in Darwin
+
+### Usage
+
+    darwinSoundNames
+
+List valid sound names usable for notifications in Darwin
+
+> Location: `bin/build/tools/darwin.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

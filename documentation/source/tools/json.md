@@ -4,7 +4,7 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-Depends on `jq` which is also recommended for Zesk Build.
+Depends on `jq` which is also recommended for {applicationName}.
 
 {json}
 

@@ -6,7 +6,7 @@
 
 ## Debugging
 
-The global `BUILD_DEBUG` can be set to a comma-delimited list of values to enable debugging for areas of Zesk Build.
+The global `BUILD_DEBUG` can be set to a comma-delimited list of values to enable debugging for areas of {applicationName}.
 
 Known tags are:
 

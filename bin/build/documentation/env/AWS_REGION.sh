@@ -1,6 +1,0 @@
-description="Region for Amazon Web Services"
-descriptionLineCount="1"
-category="Amazon Web Services"
-categoryId="amazon-web-services"
-type="String"
-summary="Region for Amazon Web Services"

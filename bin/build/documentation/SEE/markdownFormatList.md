@@ -1,1 +1,35 @@
-[markdownFormatList]({rel}tools/markdown.md#markdownformatlist) - Simple function to make list-like things more list-like in Markdown ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L118))
+## `markdownFormatList`
+
+> Simple function to make list-like things more list-like in Markdown
+
+### Usage
+
+    markdownFormatList
+
+Simple function to make list-like things more list-like in Markdown
+
+1. Remove all trailing spaces from all lines
+2. remove leading "dash space" if it exists (`- `)
+3. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
+4. Prefix each line with a "dash space" (`- `)
+
+> Location: `bin/build/tools/markdown.sh`
+
+### Arguments
+
+- none
+
+### Reads standard input
+
+reads input from stdin
+
+### Writes to standard output
+
+formatted markdown list
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,6 +1,0 @@
-description="The current terminal type."
-descriptionLineCount="1"
-category="Bash"
-categoryId="bash"
-type="String"
-summary="The current terminal type."

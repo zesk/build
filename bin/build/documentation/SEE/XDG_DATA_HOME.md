@@ -1,1 +1,1 @@
-[XDG_DATA_HOME]({rel}/env/#build_configuration) - **Directory**. Base directory for user-specific data to be stored
+[`XDG_DATA_HOME` XDG_DATA_HOME]({rel}/env/#build_configuration) - **Directory**. Data Home Directory

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
+# Name: Filter for IP Lookup
 # jq filter to parse IP_URL result (assuming JSON)
 # if blank, no filter is used and raw result is returned
 # See: networkIPLookup
-# Type: String
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: String

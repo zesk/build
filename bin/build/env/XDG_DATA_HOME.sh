@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# Base directory for user-specific data to be stored
+# Name: Data Home Directory
+# Summary: Data Home Directory
+# Base directory for user-specific data to be stored.
+# See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: Directory
-# See: https://specifications.freedesktop.org/basedir-spec/latest/
 
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/HOME.sh"

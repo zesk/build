@@ -1,1 +1,21 @@
-[gitShowChanges]({rel}tools/git.md#gitshowchanges) - Show changed files from HEAD ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L246))
+## `gitShowChanges`
+
+> Show changed files from HEAD
+
+### Usage
+
+    gitShowChanges [ --help ]
+
+Show changed files from HEAD
+
+> Location: `bin/build/tools/git.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - the repo has been modified
+- `1` - the repo has NOT bee modified
+

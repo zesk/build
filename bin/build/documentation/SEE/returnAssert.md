@@ -1,1 +1,20 @@
-[returnAssert]({rel}tools/assert.md#returnassert) - Assertion return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1488))
+## `returnAssert`
+
+> Assertion return code
+
+### Usage
+
+    returnAssert
+
+Return code is `assert`
+
+> Location: `bin/build/tools/test.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- 97
+

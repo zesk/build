@@ -1,1 +1,22 @@
-[junitTestCaseClose]({rel}tools/junit.md#junittestcaseclose) - Close tag for \`testcase\` - Test case ([source](https://github.com/zesk/build/blob/main/bin/build/tools/junit.sh#L234))
+## `junitTestCaseClose`
+
+> Close tag for `testcase` - Test case
+
+### Usage
+
+    junitTestCaseClose [ --help ]
+
+Close tag for `testcase` - Test case
+
+> Location: `bin/build/tools/junit.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Shell Formatting Arguments
 # Arguments passed to shfmt when running as a pre-commit hook
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash

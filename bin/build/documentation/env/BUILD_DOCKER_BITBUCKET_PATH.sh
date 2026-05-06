@@ -1,6 +1,0 @@
-description=""
-descriptionLineCount="1"
-category="Continuous Integration"
-categoryId="continuous-integration"
-type="RemoteDirectory"
-summary=""

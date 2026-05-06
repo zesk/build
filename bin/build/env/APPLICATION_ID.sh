@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Application ID
 # This is the unique hash which represents the source code state (typically a git hash)
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Deployment

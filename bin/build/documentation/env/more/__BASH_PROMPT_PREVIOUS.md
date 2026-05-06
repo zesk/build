@@ -1,5 +1,11 @@
 ## `__BASH_PROMPT_PREVIOUS`
 
-> **Type**: *Array* • **Category**: *Bash Prompt*
+> **__BASH_PROMPT_PREVIOUS** &mdash; Previous result code
+> > **Type**: *Array* • **Category**: *Bash Prompt*
 
 Previous result code
+
+### See Also
+
+- {SEE:bashPrompt}
+

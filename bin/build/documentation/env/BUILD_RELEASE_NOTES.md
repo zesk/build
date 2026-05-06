@@ -1,1 +1,1 @@
-- `BUILD_RELEASE_NOTES` *ApplicationDirectory*. Constant for the release notes path. Defaults to `./docs/release`. [notes](#build_release_notes)
+- `BUILD_RELEASE_NOTES` &mdash; BUILD_RELEASE_NOTES *ApplicationDirectory*. Constant for the release notes path. Defaults to `./docs/release`. [notes](#build_release_notes)

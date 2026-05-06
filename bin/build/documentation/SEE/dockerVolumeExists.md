@@ -1,1 +1,22 @@
-[dockerVolumeExists]({rel}tools/docker.md#dockervolumeexists) - Does a docker volume exist with name? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L297))
+## `dockerVolumeExists`
+
+> Does a docker volume exist with name?
+
+### Usage
+
+    dockerVolumeExists name
+
+Does a docker volume exist with name?
+
+> Location: `bin/build/tools/docker.sh`
+
+### Arguments
+
+- `name` - String. Required.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

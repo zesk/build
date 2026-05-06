@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: User Home
 # Current user's home directory.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash

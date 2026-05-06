@@ -1,1 +1,1 @@
-[XDG_CONFIG_HOME]({rel}/env/#build_configuration) - **Directory**. Location for configuration files
+[`XDG_CONFIG_HOME` XDG_CONFIG_HOME]({rel}/env/#build_configuration) - **Directory**. Main Configuration Path

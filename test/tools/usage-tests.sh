@@ -72,7 +72,7 @@ testFunctionNewline() {
 
   local functionName="__errorHandler"
   local sourceFile="$home/bin/identical/arguments.sh"
-  bashDocumentationExtract "$functionName" "$sourceFile" >"$variablesFile" < <(bashFunctionComment "$sourceFile" "$functionName")
+  bashDocumentationExtract --function "$functionName" "$sourceFile" >"$variablesFile" < <(bashFunctionComment "$sourceFile" "$functionName")
   dumpPipe variables <"$variablesFile"
 
   (

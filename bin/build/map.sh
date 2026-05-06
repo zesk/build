@@ -174,7 +174,7 @@ __usageMessage() {
   fi
 }
 
-# IDENTICAL __documentationFile 24
+# IDENTICAL __documentationFile 26
 
 # Summary: Load cached documentation files
 # Argument: home - Directory. BUILD_HOME
@@ -190,9 +190,11 @@ __documentationFile() {
   local extension="md" && if [ $# -gt 0 ]; then extension="$1" && shift; fi
 
   export BUILD_DOCUMENTATION_PATH
-  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
+  local paths=() && IFS=":" read -r -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
   local docFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
-    docFile="$home/${path%/}/$functionName.$extension"
+    [ -n "$path" ] || continue
+    path="${path#"$home/"}" && [ "${path[0]}" = "/" ] || path="${home%/}/${path%/}"
+    docFile="$path/$functionName.$extension"
     $generatePath || [ -f "$docFile" ] || continue
     printf "%s\n" "$docFile"
     return 0
@@ -282,7 +284,7 @@ _bashSimpleDocumentation() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 48
+# IDENTICAL bashFunctionComment 81
 
 # Extracts the final comment from a stream
 # DOC TEMPLATE: --help 1
@@ -290,19 +292,52 @@ _bashSimpleDocumentation() {
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
+  fileReverseLines | bashFirstComment | bashRemoveCommentCharacter | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
-  # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
-  # - `sed 1d` - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
-  # - `sed -n` - disables automatic printing
-  # - `sed -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
-  # - `sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' - trim comment character and first space after
-  # - Why the odd $'\n'? See https://stackoverflow.com/questions/15467616/sed-gives-me-unexpected-eof-pending-s-error-and-i-have-no-idea-why ... On BSD sed you must use newlines between statements.
-  # - fileReverseLines - File is back to normal
+  # - `fileReverseLines` - First reversal to get that comment, file lines are reverse ordered
+  # - `bashFirstComment` - Gets first comment
+  # - `bashRemoveCommentCharacter` - Removes comment characters
+  # - `fileReverseLines` - File is back to normal
 }
 _bashFinalComment() {
   ! false || bashFinalComment --help
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Extracts the first comment from a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Requires: fileReverseLines sed cut grep convertValue
+bashFirstComment() {
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'
+  # Explained:
+  # - Remove internal tokens
+  # - `sed 1d` - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
+  # - `sed -n` - disables automatic printing
+  # - `sed -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
+  # - Why the odd $'\n'? See https://stackoverflow.com/questions/15467616/sed-gives-me-unexpected-eof-pending-s-error-and-i-have-no-idea-why ... On BSD sed you must use newlines between statements.
+}
+_bashFirstComment() {
+  ! false || bashFirstComment --help
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Extracts the first comment from a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Requires: fileReverseLines sed cut grep convertValue
+bashRemoveCommentCharacter() {
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//'
+  # Explained:
+  # - `sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' - trim comment character and first space after
+}
+_bashRemoveCommentCharacter() {
+  ! false || bashRemoveCommentCharacter --help
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -526,7 +561,7 @@ _isFunction() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ returnCodeString 15
+# _IDENTICAL_ returnCodeString 17
 
 # Output the exit code as a string
 #
@@ -535,6 +570,7 @@ _isFunction() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # stdout: exitCodeToken, one per line
+# See: returnCode
 returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
@@ -542,6 +578,7 @@ _returnCodeString() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+clear
 
 # IDENTICAL validate 171
 
@@ -1147,7 +1184,7 @@ _environmentVariables() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 88
+# IDENTICAL mapEnvironment 63
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -1160,8 +1197,6 @@ _environmentVariables() {
 # Argument: environmentVariableName - String. Optional. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
-# Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
-# Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
@@ -1171,7 +1206,7 @@ _environmentVariables() {
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
-  local __prefix='{' __suffix='}' __ee=() __searchFilters=() __replaceFilters=()
+  local __prefix='{' __suffix='}' __ee=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -1184,8 +1219,6 @@ mapEnvironment() {
     --help) "$handler" 0 && return $? || return $? ;;
     --prefix) shift && __prefix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --suffix) shift && __suffix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-    --search-filter) shift && __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $? ;;
-    --replace-filter) shift && __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $? ;;
     --env-file) shift && muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $? ;;
     *) __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $? ;;
     esac
@@ -1199,36 +1232,15 @@ mapEnvironment() {
   fi
 
   (
-    local __filter __value __handler="$handler"
+    local __value && __value="$(catchEnvironment "$handler" cat)" || return $?
     unset handler
-
-    __value="$(catchEnvironment "$__handler" cat)" || return $?
-    if [ $((${#__replaceFilters[@]} + ${#__searchFilters[@]})) -gt 0 ]; then
-      for __e in "${__ee[@]}"; do
-        case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
-        local __search="$__prefix$__e$__suffix"
-        local __replace="${!__e-}"
-        if [ ${#__searchFilters[@]} -gt 0 ]; then
-          for __filter in "${__searchFilters[@]}"; do
-            __search=$(catchEnvironment "$__handler" "$__filter" "$__search") || return $?
-          done
-        fi
-        if [ ${#__replaceFilters[@]} -gt 0 ]; then
-          for __filter in "${__replace[@]}"; do
-            __replace=$(catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
-          done
-        fi
-        __value="${__value//"$__search"/$__replace}"
-      done
-    else
-      for __e in "${__ee[@]}"; do
-        case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
-        local __search="$__prefix$__e$__suffix"
-        local __replace="${!__e-}"
-        __value="${__value//"$__search"/$__replace}"
-      done
-    fi
-    printf "%s\n" "$__value"
+    for __e in "${__ee[@]}"; do
+      case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
+      local __search="$__prefix$__e$__suffix"
+      local __replace="${!__e-}"
+      __value="${__value//"$__search"/$__replace}"
+    done
+    printf "%s" "$__value"
   )
 }
 _mapEnvironment() {

@@ -8,6 +8,8 @@
 
 {description}
 
+> Location: `{file}`
+
 ### Arguments
 
 {argument}
@@ -69,5 +71,3 @@ File `{file}`, function `{fn}` was reviewed {reviewed}.
 ### Errors
 
 {error}
-
-- Location: `{file}`

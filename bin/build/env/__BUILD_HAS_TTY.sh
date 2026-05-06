@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: TTY Cached Result
 # Cached value of the availability of `/dev/tty`.
 # Possible values are `true` or `false` or blank.
 #

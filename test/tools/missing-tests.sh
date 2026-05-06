@@ -91,15 +91,15 @@ testEverythingElse() {
   ## DOCUMENTATION
 
   #  documentationBuild
-  #  documentationBuildCache
-  #  documentationBuildEnvironment
+  #  documentationCache
+  #  documentationEnvironmentMake
   #  documentationIndexDocumentation
   #  documentationIndexLookup
   #  documentationTemplate
   #  documentationTemplateCompile
   #  documentationTemplateDirectoryCompile
   #  documentationTemplateFunctionCompile
-  #  documentationTemplateUpdate
+  #  documentationIdenticalRepair
   #  documentationUnlinked
   #  dotEnvConfigure
   #  dotFilesApproved

@@ -1,1 +1,1 @@
-[APPLICATION_OWNER]({rel}/env/#application) - **String**. The entity which owns or manages the application. Typically the owning company name. This is used in Copyright notices in code and other locations.
+[`APPLICATION_OWNER` APPLICATION_OWNER]({rel}/env/#application) - **String**. The entity which owns or manages the application. Typically the

@@ -1,6 +1,0 @@
-description="Legal copyright holder for this codebase"
-descriptionLineCount="1"
-category="Application"
-categoryId="application"
-type="String"
-summary="Legal copyright holder for this codebase"

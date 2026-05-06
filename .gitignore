@@ -23,11 +23,9 @@
 /etc/packages/
 /.idea/*/
 ORIGINALS/
-/documentation/.docs/
+/documentation/.*/
 /documentation/mkdocs.yml
-/documentation/.site/
 /documentation/source/*.csv
 /.interrupt.log
-/.venv/
 /.env-ATTIC/
 /test-results/

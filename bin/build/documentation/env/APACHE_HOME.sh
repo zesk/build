@@ -1,6 +1,0 @@
-description="Constant for the Apache configuration home directory."
-descriptionLineCount="1"
-category="Vendor"
-categoryId="vendor"
-type="Directory"
-summary="Constant for the Apache configuration home directory."

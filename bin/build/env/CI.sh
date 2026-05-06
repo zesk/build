@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Continuous Integration
 # If this value is non-blank, then console `statusMessage`s are just output normally.
 # See: statusMessage
 # See: consoleHasAnimation

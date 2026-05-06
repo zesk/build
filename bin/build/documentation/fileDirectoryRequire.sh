@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-05-03
 # shellcheck disable=SC2034
 argument="--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"--owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'"fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)"$'\n'""
 base="directory.sh"
-description="Given a list of files, ensure their parent directories exist"$'\n'"Creates the directories for all files passed in."$'\n'""
+derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
+description="Given a list of files, ensure their parent directories exist"$'\n'""$'\n'"Creates the directories for all files passed in."$'\n'""$'\n'""
+descriptionLineCount="4"
 example="    logFile=./.build/\$me.log"$'\n'"    fileDirectoryRequire \"\$logFile\""$'\n'""
 file="bin/build/tools/directory.sh"
 fn="fileDirectoryRequire"
+fnMarker="filedirectoryrequire"
 foundNames=([0]="example" [1]="argument" [2]="requires")
 line="119"
 logFile=""
-lowerFn="filedirectoryrequire"
 rawComment="Given a list of files, ensure their parent directories exist"$'\n'"Creates the directories for all files passed in."$'\n'"Example:     logFile=./.build/\$me.log"$'\n'"Example:     {fn} \"\$logFile\""$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'"Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)"$'\n'"Requires: chmod throwArgument usageArgumentString decorate catchEnvironment dirname"$'\n'""$'\n'""
 requires="chmod throwArgument usageArgumentString decorate catchEnvironment dirname"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
@@ -21,8 +23,3 @@ sourceLine="119"
 summary="Given a list of files, ensure their parent directories exist"
 summaryComputed="true"
 usage="fileDirectoryRequire [ --handler handler ] [ --help ] [ --mode fileMode ] [ --owner ownerName ] fileDirectory ..."
-# shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileDirectoryRequire'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --mode fileMode ]'$'\e''[0m '$'\e''[[(blue)]m[ --owner ownerName ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfileDirectory ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--handler handler  '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--mode fileMode    '$'\e''[[(value)]mString. Optional. Enforce the directory mode for '$'\e''[[(code)]mmkdir --mode'$'\e''[[(reset)]m and '$'\e''[[(code)]mchmod'$'\e''[[(reset)]m. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to '$'\e''[[(code)]m-'$'\e''[[(reset)]m to reset to no value.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--owner ownerName  '$'\e''[[(value)]mString. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to '$'\e''[[(code)]m-'$'\e''[[(reset)]m to reset to no value.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mfileDirectory ...  '$'\e''[[(value)]mFileDirectory. Required. Test if file directory exists (file does not have to exist)'$'\e''[[(reset)]m'$'\n'''$'\n''Given a list of files, ensure their parent directories exist'$'\n''Creates the directories for all files passed in.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    logFile=./.build/$me.log'$'\n''    fileDirectoryRequire "$logFile"'$'\n'''
-# shellcheck disable=SC2016
-helpPlain='Usage: fileDirectoryRequire [ --handler handler ] [ --help ] [ --mode fileMode ] [ --owner ownerName ] fileDirectory ...'$'\n'''$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --mode fileMode    String. Optional. Enforce the directory mode for mkdir --mode and chmod. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to - to reset to no value.'$'\n''    --owner ownerName  String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to - to reset to no value.'$'\n''    fileDirectory ...  FileDirectory. Required. Test if file directory exists (file does not have to exist)'$'\n'''$'\n''Given a list of files, ensure their parent directories exist'$'\n''Creates the directories for all files passed in.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    logFile=./.build/$me.log'$'\n''    fileDirectoryRequire "$logFile"'$'\n'''
-documentationPath="documentation/source/tools/directory.md"

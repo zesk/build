@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Yarn Version
 # Version of yarn to install using `corepack`
 # See: yarnInstall
 # Type: String

@@ -1,1 +1,30 @@
-[fileLineMaximum]({rel}tools/text.md#filelinemaximum) - Outputs the maximum line length passed into stdin ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L632))
+## `fileLineMaximum`
+
+> Outputs the maximum line length passed into stdin
+
+### Usage
+
+    fileLineMaximum
+
+Outputs the maximum line length passed into stdin
+
+> Location: `bin/build/tools/text.sh`
+
+### Arguments
+
+- none
+
+### Reads standard input
+
+Lines are read from standard in and line length is computed for each line
+
+### Writes to standard output
+
+`UnsignedInteger`
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

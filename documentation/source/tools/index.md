@@ -1,6 +1,7 @@
 # Tools
 
-[All function index](./all.md)
+- [All functions](./all.md)
+- [All environment variables](./all.md)
 
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
@@ -19,13 +20,13 @@
 - [Application](./application.md) – Remember your application home directory upon login
 - [Approve](./approve.md) – Interactively load `bash` code (with permission)
 - [Binaries (direct)](./bin.md)
-- [Completion](./completion.md) – Add completions for Zesk Build
+- [Completion](./completion.md) – Add completions for {applicationName}
 - [Dump](./dump.md) – Dump the environment, files, binary data, or stack information easily and securely.
 - [Developer](./developer.md) – Tools for your `developer.sh`
     - [MANPATH](./manpath.md) MANPATH manipulation
     - [PATH](./path.md) – PATH manipulation
     - [Prompt](./prompt.md) – Customize your bash prompt easily, adding project customization and extensible prompt
-  tools.
+      tools.
 - [Interactive](./interactive.md) – Interactivity tools for user confirmation, menus, message display
 - [Linting](./lint.md) – Clean and check your **Bash** code.
   commands.
@@ -161,10 +162,7 @@ Once included, [all functions here](./all.md) are available for use.
 - [New uncategorized functions](./todo.md)
 - [Obsolete](./unused.md)
 
-
 <!-- TEMPLATE footer 5 -->
 <hr />
 
 [⬅ Parent ](../index.md)
-
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})

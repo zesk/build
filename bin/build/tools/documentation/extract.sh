@@ -17,43 +17,12 @@ __bashDocumentationSettingsHeader() {
   catchReturn "$handler" __dumpSimpleValue "fn" "$fn" || return $?
 }
 
-# Argument: handler - Required. Function.
-# Argument: definitionFile - Required. File.
-__bashDocumentationSettingsFileDetails() {
-  local handler="$1" && shift
-
-  local definitionFile && definitionFile=$(validate "$handler" RealFile "definitionFile" "${1-}") && shift || return $?
-  local lineNumber="${1-}"
-
-  local home && home=$(catchReturn "$handler" buildHome) || return $?
-
-  local file="${definitionFile#"${home%/}"/}"
-  catchReturn "$handler" __dumpSimpleValue "file" "$file" || return $?
-  if [ -z "$lineNumber" ]; then
-    lineNumber="$(grep -n -e "^$fn()" "$definitionFile" | cut -f 1 -d :)" || lineNumber=""
-  fi
-  [ -z "$lineNumber" ] || catchReturn "$handler" __dumpSimpleValue "line" "$lineNumber" || return $?
-  catchReturn "$handler" __dumpSimpleValue "sourceFile" "$file" || return $?
-  catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
-  catchReturn "$handler" __dumpSimpleValue "sourceHash" "$(textSHA <"$definitionFile")" || return $?
-  catchReturn "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
-}
-
 # Caching version - __bashDocumentationExtractDirect does the actual work
-# Argument: handler - Function. Required.
-# Argument: function - String. Required.
-# Argument: sourceFile - File. Required.
-# Argument: --generate - Flag. Optional. Generate cached files.
-# Argument: --no-cache - Flag. Optional. Skip any attempt to cache anything.
-# Argument: --cache - Flag. Optional. Force use of cache.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# BUILD_DEBUG: usage-cache-skip - Skip caching by default (override with `--cache`)
 __bashDocumentationExtract() {
   local __saved=("$@") __count=$#
 
   local handler="$1" && shift
-  local generateCache=false fn="" source="" checkCache=true
+  local generateCache=false fn="" source="" checkCache=true derivations=() lineNumber=""
 
   ! buildDebugEnabled usage-cache-skip || checkCache=false
 
@@ -68,8 +37,11 @@ __bashDocumentationExtract() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --line) shift && lineNumber=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --generate) generateCache=true ;;
-    --no-cache) checkCache=false ;;
+    --no-cache) checkCache=false && generateCache=false ;;
+    --function) derivations+=("return_code" "fn" "lowerFn" "fnMarker" "argument" "usage") ;;
+    --environment) derivations+=("env" "envMarker") ;;
     --cache) checkCache=true ;;
     *)
       if [ -z "$fn" ]; then
@@ -77,29 +49,32 @@ __bashDocumentationExtract() {
       elif [ -z "$source" ]; then
         source=$(validate "$handler" File "source" "${1-}") || return $?
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        break
       fi
       ;;
     esac
     shift
   done
 
+  [ -n "$fn" ] || throwArgument "$handler" "fn is required" || return $?
+  [ -n "$source" ] || throwArgument "$handler" "source is required" || return $?
+
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local definitionFile && definitionFile=$(__functionSettings "$home" "$fn" true) || return $?
-  if $generateCache; then
-    if __bashDocumentationExtractCheckCache "$handler" "$source" "$definitionFile"; then
+  if $generateCache || $checkCache; then
+    local definitionFile && definitionFile=$(__functionSettings "$home" "$fn" true) || return $?
+    if $generateCache; then
+      if __bashDocumentationExtractCheckCache "$handler" "$source" "$definitionFile"; then
+        return 0
+      fi
+      __bashDocumentationExtractGenerateCache "$handler" "$definitionFile" "$fn" "$source" "$lineNumber" "${derivations[@]+"${derivations[@]}"}" || return $?
+    elif [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
+      catchEnvironment "$handler" cat "$definitionFile" || return $?
       return 0
     fi
-    __bashDocumentationExtractGenerateCache "$handler" "$source" "$definitionFile" "$fn" || return $?
-  elif $checkCache && [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
-    catchEnvironment "$handler" cat "$definitionFile" || return $?
-    return 0
   else
-    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@" || return $?
+    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$lineNumber" "${derivations[@]+"${derivations[@]}"}" || return $?
   fi
-
 }
 
 __bashDocumentationExtractCheckCache() {
@@ -124,13 +99,21 @@ __bashDocumentationExtractCheckCache() {
   return 1
 }
 
+# Argument: handler - Function. Required.
+# Argument: sourceFile - File. Required.
+# Argument: definitionFile - FileDirectory. Required. Target file to generate
+# Argument: fn - String. Required. Item name
+# Argument: lineNumber - EmptyString. Required. Output this prefix to the resulting file
+# Argument: derivations ... - String. Optional. Allow derived variables with these names.
 __bashDocumentationExtractGenerateCache() {
   local handler="$1" && shift
-  local source="$1" && shift
   local definitionFile="$1" && shift
   local fn="$1" && shift
+  local source="$1" && shift
+  local lineNumber="$1" && shift
 
-  local variableList="sourceFile,fn,usage,argument,description,usage,summary,file,base,sourceHash,foundNames"
+  local variableList="sourceFile,argument,description,summary,file,base,sourceHash,foundNames,summaryComputed"
+  variableList="$variableList,derivations,descriptionLineCount"
 
   catchEnvironment "$handler" muzzle fileDirectoryRequire "$definitionFile" || return $?
   catchEnvironment "$handler" touch "$definitionFile" || return $?
@@ -140,10 +123,10 @@ __bashDocumentationExtractGenerateCache() {
     extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
     extras+=("# Generated on $(dateToday)")
     catchReturn "$handler" environmentClean || return $?
-    local uncompiled="${definitionFile%.sh}.sh.uncompiled"
+    local uncompiled="${definitionFile%.sh}.sh.$$.uncompiled"
     local clean=("$uncompiled" "$uncompiled.finished")
     bashRecursionDebug || return $?
-    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
+    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$lineNumber" "$@" | printfOutputPrefix "%s\n" "${extras[@]}" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
     bashRecursionDebug --end || return $?
     catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" | catchEnvironment "$handler" tee "$uncompiled.finished" || returnClean $? "${clean[@]}" || $?
     if ! grep -q '^sourceFile=' "$uncompiled.finished"; then
@@ -152,7 +135,7 @@ __bashDocumentationExtractGenerateCache() {
       dumpPipe uncompiled < <(grep source <"$uncompiled") 1>&2 || return $?
       dumpPipe compiled <"$uncompiled.finished" 1>&2 || return $?
       decorate warning "RUN with --debug"
-      environmentCompile --debug --keep-comments --parse --variables "$variableList" <"$uncompiled" 1>&2
+      environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" 1>&2
       throwEnvironment "$handler" "Final $definitionFile does not contain sourceFile=?" || returnClean $? "${clean[@]}" || return $?
     fi
     catchEnvironment "$handler" mv -f "$uncompiled.finished" "$definitionFile" || returnClean $? "${clean[@]}" || $?
@@ -163,12 +146,18 @@ __bashDocumentationExtractGenerateCache() {
 # Argument: handler - Function. Required.
 # Argument: function - String. Required.
 # Argument: sourceFile - File. Required.
-# Argument: prefix ... - String. Optional. Output this prefix to the resulting file
+# Argument: lineNumber - EmptyString. Required. Output this prefix to the resulting file
+# Argument: derivations ... - String. Optional. Allow derived variables with these names.
 __bashDocumentationExtractDirect() {
   local __saved=("$@") __count=$#
   local handler="$1" && shift
   local fn="$1" && shift
   local source="$1" && shift
+  local lineNumber="$1" && shift
+
+  local derivations=("$@")
+
+  local mapNames=("fn") simpleNames=("name" "fn" "env" "summary" "category" "type")
 
   # ********************************************************************************************************************
   # Configure your profiling flags as desired using whatever global needed
@@ -180,27 +169,32 @@ __bashDocumentationExtractDirect() {
   local __profile="false" __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
   if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
   # ********************************************************************************************************************
-  catchEnvironment "$handler" printf -- "%s\n" "$@" || return $?
-  # subshell to hide exports
-  local dumper line
+
+  # subshell to hide exports?
+  local dumper=""
   export fn base
 
-  local mapNames=("fn") simpleNames=("fn")
   local desc=() lastName="" foundNames=() lastName="" values=() rawComment="" finished=false
   __bashDocumentationSettingsHeader "$handler" "$fn" || return $?
   # Read comment (stripped of #) from stdin
   while ! $finished; do
-    IFS= read -r line || finished=true
-    [ -n "$line" ] || continue
+    local line && IFS="" read -r line || finished=true
+    if [ -z "$line" ]; then
+      [ "${#desc[@]}" -gt 0 ] || continue
+      [ -n "${desc[$((${#desc[@]} - 1))]}" ] || continue
+      desc+=("")
+      continue
+    fi
     rawComment="$rawComment$line"$'\n'
-    local name="${line%%:*}" value cleanName
-    cleanName="$(catchReturn "$handler" tr '[:upper:]' '[:lower:]' <<<"${name//[- ]/_}")" || return $?
+    local name="${line%%:*}"
+    local cleanName && cleanName="$(catchReturn "$handler" tr '[:upper:]' '[:lower:]' <<<"${name//[- ]/_}")" || return $?
     __profileLabel="$cleanName"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
 
+    local value=""
     if ! environmentVariableNameValid "$cleanName" || [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
       # no colon or ends with colon *or* starts with :
       # strip starting colon (end colon STAYS)
@@ -208,41 +202,41 @@ __bashDocumentationExtractDirect() {
       if [ "${#desc[@]}" -gt 0 ] || [ "$(textTrim "$value")" != "" ]; then
         desc+=("$value")
       fi
-    else
-      value="${line#*:}"
-      value="${value# }"
-      name="$cleanName"
-      case "$name" in
-      ":sourceFile") name="${name:1}" && source="$value" ;;
-      ":sourceLine") name="${name:1}" ;;
-      esac
-      case "$name" in
-      "shellcheck") continue ;;
-      "description")
-        value="$(catchReturn "$handler" textTrim "$value")" || return $?
-        [ -z "$value" ] || desc+=("$value")
-        continue
-        ;;
-      esac
-      if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
-        dumper=__dumpNameValueAppend
-        if ! inArray "$lastName" "${foundNames[@]+${foundNames[@]}}"; then
-          foundNames+=("$lastName")
-          inArray "$lastName" "${simpleNames[@]}" && dumper=__dumpSimpleValue || dumper=__dumpNameValue
-        fi
-        catchReturn "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
-        values=()
-      fi
-      : "$fn"
-      if [ "${value#*{}" != "$value" ]; then
-        value="$(catchReturn "$handler" mapEnvironment "${mapNames[@]}" <<<"$value")" || return $?
-      fi
-      values+=("$value")
-      lastName="$name"
+      continue
     fi
+    value="${line#*:}"
+    value="${value# }"
+    name="$cleanName"
+    case "$name" in
+    ":sourceFile") name="${name:1}" && source="$value" ;;
+    ":sourceLine") name="${name:1}" && lineNumber="$name" ;;
+    esac
+    case "$name" in
+    "shellcheck") continue ;;
+    "description")
+      value="$(catchReturn "$handler" textTrim "$value")" || return $?
+      [ -z "$value" ] || desc+=("$value")
+      continue
+      ;;
+    esac
+    if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
+      dumper=__dumpNameValueAppend
+      if ! inArray "$lastName" "${foundNames[@]+${foundNames[@]}}"; then
+        foundNames+=("$lastName")
+        inArray "$lastName" "${simpleNames[@]}" && dumper=__dumpSimpleValue || dumper=__dumpNameValue
+      fi
+      catchReturn "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
+      values=()
+    fi
+    : "$fn"
+    if [ "${value#*{}" != "$value" ]; then
+      value="$(catchReturn "$handler" mapEnvironment "${mapNames[@]}" <<<"$value")" || return $?
+    fi
+    values+=("$value")
+    lastName="$name"
   done
   if [ -f "$source" ]; then
-    __bashDocumentationSettingsFileDetails "$handler" "$source" || return $?
+    __bashDocumentationSettingsFileDetails "$handler" "$source" "$lineNumber" || return $?
   elif [ -n "$source" ]; then
     throwArgument "$handler" "source is not a file: $source" || return $?
   fi
@@ -256,6 +250,7 @@ __bashDocumentationExtractDirect() {
   fi
   if [ "${#desc[@]}" -gt 0 ]; then
     catchReturn "$handler" __dumpNameValue "description" "${desc[@]}" || return $?
+    catchReturn "$handler" __dumpSimpleValue "descriptionLineCount" "${#desc[@]}" || return $?
     if ! inArray "summary" "${foundNames[@]+"${foundNames[@]}"}"; then
       local summary
       summary="$(stringTrimWords 10 "${desc[0]}")"
@@ -269,26 +264,37 @@ __bashDocumentationExtractDirect() {
     catchReturn "$handler" __dumpNameValue "description" "No documentation for \`$fn\`." || return $?
     catchReturn "$handler" __dumpSimpleValue "summary" "undocumented" || return $?
   fi
-  if ! inArray "return_code" "${foundNames[@]+"${foundNames[@]}"}"; then
-    catchReturn "$handler" __dumpNameValue "return_code" '0 - Success' '1 - Environment error' '2 - Argument error' || return $?
+  local code="return_code"
+  if inArray "$code" "${derivations[@]}" && ! inArray "$code" "${foundNames[@]+"${foundNames[@]}"}"; then
+    catchReturn "$handler" __dumpNameValue "$code" '0 - Success' '1 - Environment error' '2 - Argument error' || return $?
   fi
-  if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
-    catchReturn "$handler" __dumpSimpleValue "fn" "$fn" || return $?
-  fi
-  catchReturn "$handler" __dumpSimpleValue "lowerFn" "$(stringLowercase "$fn")" || return $?
-  if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
-    catchReturn "$handler" __dumpSimpleValue "argument" "none" || return $?
-    if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
-      catchReturn "$handler" __dumpAliasedValue "usage" "fn" || return $?
+  for code in fn env; do
+    if inArray "$code" "${derivations[@]}" && ! inArray "$code" "${foundNames[@]+"${foundNames[@]}"}"; then
+      catchReturn "$handler" __dumpSimpleValue "$code" "$fn" || return $?
+    fi
+  done
+  for code in fnMarker envMarker; do
+    if inArray "$code" "${derivations[@]}" && ! inArray "$code" "${foundNames[@]+"${foundNames[@]}"}"; then
+      catchReturn "$handler" __dumpSimpleValue "$code" "$(stringLowercase "${fn//[^[:alnum:]]/_}")" || return $?
+    fi
+  done
+  code="argument"
+  if inArray "$code" "${derivations[@]}" && ! inArray "$code" "${foundNames[@]+${foundNames[@]}}"; then
+    catchReturn "$handler" __dumpSimpleValue "$code" "none" || return $?
+    code="usage"
+    if inArray "$code" "${derivations[@]}" && ! inArray "$code" "${foundNames[@]+${foundNames[@]}}"; then
+      catchReturn "$handler" __dumpSimpleValue "$code" "$fn" || return $?
     fi
   else
-    if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
+    code="usage"
+    if inArray "$code" "${derivations[@]}" && ! inArray "$code" "${foundNames[@]+"${foundNames[@]}"}"; then
       # lazy
-      catchReturn "$handler" printf "%s\n" "export usage; usage=\"\$fn\$(__bashDocumentationDefaultArguments \"\$argument\")\"" || return $?
+      catchReturn "$handler" printf "%s\n" "export $code; $code=\"\$fn\$(__bashDocumentationDefaultArguments \"\$argument\")\"" || return $?
     fi
   fi
   catchReturn "$handler" __dumpNameValue "rawComment" "$rawComment" || return $?
   catchReturn "$handler" __dumpArrayValue "foundNames" "${foundNames[@]+"${foundNames[@]}"}" || return $?
+  catchReturn "$handler" __dumpArrayValue "derivations" "${derivations[@]+"${derivations[@]}"}" || return $?
 
   unset rawComment
   # IDENTICAL profileFunctionTail 6
@@ -299,4 +305,26 @@ __bashDocumentationExtractDirect() {
   fi
   # ********************************************************************************************************************
   return 0
+}
+
+# Argument: handler - Required. Function.
+# Argument: definitionFile - Required. File.
+__bashDocumentationSettingsFileDetails() {
+  local handler="$1" && shift
+
+  local definitionFile && definitionFile=$(validate "$handler" RealFile "definitionFile" "${1-}") && shift || return $?
+  local lineNumber="${1-}"
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local file="${definitionFile#"${home%/}"/}"
+  catchReturn "$handler" __dumpSimpleValue "file" "$file" || return $?
+  if [ -z "$lineNumber" ]; then
+    lineNumber="$(grep -n -e "^$fn()" "$definitionFile" | cut -f 1 -d :)" || lineNumber=""
+  fi
+  [ -z "$lineNumber" ] || catchReturn "$handler" __dumpSimpleValue "line" "$lineNumber" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceFile" "$file" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceHash" "$(textSHA <"$definitionFile")" || return $?
+  catchReturn "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
 }

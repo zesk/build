@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Text Executable
 # Binary used to generate `decorate big`
 # See: decorate big
 # See: __aptStandardPackages

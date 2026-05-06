@@ -8,6 +8,7 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
+
   # Zesk Build Development
   # - `buildPR` - Open URL to a new Pull Request
   # - `buildFunctionsDerivedCompile` - Compile the usage directory `./bin/build/documentation/` and derived files.
@@ -109,6 +110,24 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
       "$m"
       colorSampleSemanticStyles
     done
+  }
+
+  processWatcher() {
+    local handler="_${FUNCNAME[0]}"
+    local uid && uid=$(id -u) || return $?
+    local token && token="$(validate "$handler" String "token" "${1-:15}")" && shift || return $?
+    local threshold && threshold="$(validate "$handler" UnsignedInteger "threshold" "${1-:15}")" || return $?
+    while true; do
+      local processCount && processCount="$(pgrep -u "$uid" "$token" | grep -v "$$" | fileLineCount)" || return $?
+      if [ "$processCount" -gt "$threshold" ]; then
+        decorate info "$token $(decorate error "$processCount") > $(decorate value "$threshold")"
+      fi
+      sleep 1 || break
+    done
+  }
+  _processWatcher() {
+    # __IDENTICAL__ bashDocumentation 1
+    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   # Undo Zesk Build project configuration

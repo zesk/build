@@ -1,1 +1,23 @@
-[consoleGetColor]({rel}tools/console.md#consolegetcolor) - Get the console foreground or background color"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L18))
+## `consoleGetColor`
+
+> Get the console foreground or background color
+
+### Usage
+
+    consoleGetColor [ --foreground ] [ --background ]
+
+Gets the RGB console color using an `xterm` escape sequence supported by some terminals. (usually for background colors)
+
+> Location: `bin/build/tools/console.sh`
+
+### Arguments
+
+- `--foreground` - Flag. Optional. Get the console text color.
+- `--background` - Flag. Optional. Get the console background color.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

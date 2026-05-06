@@ -1,6 +1,0 @@
-description="Search directory for environment definition files. \`:\` separated."$'\n'"Note these should be *in addition* to the default environment variables ALWAYS located at \`\$(buildHome)/bin/build/env\`"$'\n'"THe default is \`\$(buildHome)/bin/env\`. Make sure to append to this as a \`:\`-list."
-descriptionLineCount="3"
-category="Build Configuration"
-categoryId="build-configuration"
-type="DirectoryList"
-summary="Search directory for environment definition files. \`:\` separated."

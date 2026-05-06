@@ -1,1 +1,30 @@
-[textTrimBoth]({rel}tools/text.md#texttrimboth) - Trim whitespace from beginning and end of a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L235))
+## `textTrimBoth`
+
+> Trim whitespace from beginning and end of a stream
+
+### Usage
+
+    textTrimBoth [ --help ]
+
+Trim whitespace from beginning and end of a stream
+
+> Location: `bin/build/tools/text.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Reads standard input
+
+Reads lines from stdin until EOF
+
+### Writes to standard output
+
+Outputs modified lines
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

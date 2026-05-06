@@ -546,7 +546,7 @@ _bashCommentFilter() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 48
+# IDENTICAL bashFunctionComment 81
 
 # Extracts the final comment from a stream
 # DOC TEMPLATE: --help 1
@@ -554,19 +554,52 @@ _bashCommentFilter() {
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
+  fileReverseLines | bashFirstComment | bashRemoveCommentCharacter | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
-  # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
-  # - `sed 1d` - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
-  # - `sed -n` - disables automatic printing
-  # - `sed -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
-  # - `sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' - trim comment character and first space after
-  # - Why the odd $'\n'? See https://stackoverflow.com/questions/15467616/sed-gives-me-unexpected-eof-pending-s-error-and-i-have-no-idea-why ... On BSD sed you must use newlines between statements.
-  # - fileReverseLines - File is back to normal
+  # - `fileReverseLines` - First reversal to get that comment, file lines are reverse ordered
+  # - `bashFirstComment` - Gets first comment
+  # - `bashRemoveCommentCharacter` - Removes comment characters
+  # - `fileReverseLines` - File is back to normal
 }
 _bashFinalComment() {
   ! false || bashFinalComment --help
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Extracts the first comment from a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Requires: fileReverseLines sed cut grep convertValue
+bashFirstComment() {
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  grep -v -e '\(shellcheck \| IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'
+  # Explained:
+  # - Remove internal tokens
+  # - `sed 1d` - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
+  # - `sed -n` - disables automatic printing
+  # - `sed -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
+  # - Why the odd $'\n'? See https://stackoverflow.com/questions/15467616/sed-gives-me-unexpected-eof-pending-s-error-and-i-have-no-idea-why ... On BSD sed you must use newlines between statements.
+}
+_bashFirstComment() {
+  ! false || bashFirstComment --help
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Extracts the first comment from a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Requires: fileReverseLines sed cut grep convertValue
+bashRemoveCommentCharacter() {
+  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//'
+  # Explained:
+  # - `sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' - trim comment character and first space after
+}
+_bashRemoveCommentCharacter() {
+  ! false || bashRemoveCommentCharacter --help
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

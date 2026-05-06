@@ -1,1 +1,22 @@
-[deprecatedTokensFile]({rel}tools/deprecated.md#deprecatedtokensfile) - Run deprecated tokens file search ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deprecated-tools.sh#L89))
+## `deprecatedTokensFile`
+
+> Run deprecated tokens file search
+
+### Usage
+
+    deprecatedTokensFile
+
+Run deprecated tokens file search
+
+> Location: `bin/build/tools/deprecated-tools.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

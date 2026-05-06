@@ -1,5 +1,7 @@
 ## `APPLICATION_REMOTE_HOME`
 
-> **Type**: *RemoteDirectory* • **Category**: *Deployment*
+> **APPLICATION_REMOTE_HOME** &mdash; Path on the remote server where the application is served
+> > **Type**: *RemoteDirectory* • **Category**: *Deployment*
 
 Path on the remote server where the application is served
+

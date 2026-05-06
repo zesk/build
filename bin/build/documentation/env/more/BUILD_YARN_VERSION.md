@@ -1,5 +1,11 @@
 ## `BUILD_YARN_VERSION`
 
-> **Type**: *String* • **Category**: *Vendor*
+> **BUILD_YARN_VERSION** &mdash; Version of yarn to install using `corepack`
+> > **Type**: *String* • **Category**: *Vendor*
 
 Version of yarn to install using `corepack`
+
+### See Also
+
+- {SEE:yarnInstall}
+

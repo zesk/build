@@ -1,1 +1,30 @@
-[bashFinalComment]({rel}tools/bash.md#bashfinalcomment) - Extracts the final comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L555))
+## `bashFinalComment`
+
+> Extracts the final comment from a stream
+
+### Usage
+
+    bashFinalComment [ --help ]
+
+Extracts the final comment from a stream
+
+> Location: `bin/build/tools/bash.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### Requires
+
+- {SEE:fileReverseLines}
+- sed
+- cut
+- grep
+- {SEE:convertValue}
+

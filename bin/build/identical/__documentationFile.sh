@@ -23,9 +23,11 @@ __documentationFile() {
   local extension="md" && if [ $# -gt 0 ]; then extension="$1" && shift; fi
 
   export BUILD_DOCUMENTATION_PATH
-  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
+  local paths=() && IFS=":" read -r -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
   local docFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
-    docFile="$home/${path%/}/$functionName.$extension"
+    [ -n "$path" ] || continue
+    path="${path#"$home/"}" && [ "${path[0]}" = "/" ] || path="${home%/}/${path%/}"
+    docFile="$path/$functionName.$extension"
     $generatePath || [ -f "$docFile" ] || continue
     printf "%s\n" "$docFile"
     return 0

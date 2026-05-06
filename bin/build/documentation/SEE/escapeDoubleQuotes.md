@@ -1,1 +1,31 @@
-[escapeDoubleQuotes]({rel}tools/quote.md#escapedoublequotes) - Quote strings for inclusion in shell quoted strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L66))
+## `escapeDoubleQuotes`
+
+> Quote strings for inclusion in shell quoted strings
+
+### Usage
+
+    escapeDoubleQuotes [ text ]
+
+Quote strings for inclusion in shell quoted strings
+Without arguments, displays help.
+
+> Location: `bin/build/tools/quote.sh`
+
+### Arguments
+
+- `text` - String. Optional. Text to quote
+
+### Examples
+
+    escapeDoubleQuotes "Now I can't not include this in a bash string."
+
+### Sample Output
+
+Single quotes are prefixed with a backslash
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,1 +1,20 @@
-[contextShow]({rel}tools/vendor.md#contextshow) - Show the current editor being used as a text string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L104))
+## `contextShow`
+
+> Show the current editor being used as a text string
+
+### Usage
+
+    contextShow
+
+Show the current editor being used as a text string
+
+> Location: `bin/build/tools/vendor.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `1` - If no editor or running program can be determined
+

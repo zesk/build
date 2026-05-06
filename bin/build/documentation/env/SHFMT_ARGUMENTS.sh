@@ -1,6 +1,0 @@
-description="Arguments passed to shfmt when running as a pre-commit hook"
-descriptionLineCount="1"
-category="Bash"
-categoryId="bash"
-type="Array"
-summary="Arguments passed to shfmt when running as a pre-commit hook"

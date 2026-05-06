@@ -1,1 +1,31 @@
-[consoleTrimWidth]({rel}tools/text.md#consoletrimwidth) - Truncate console output width"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L908))
+## `consoleTrimWidth`
+
+> Truncate console output width
+
+### Usage
+
+    consoleTrimWidth width [ text ]
+
+Truncate console output width
+
+> Location: `bin/build/tools/text.sh`
+
+### Arguments
+
+- `width` - UnsignedInteger. Required. Width to maintain.
+- `text` - String. Optional. Text to trim to a console width.
+
+### Reads standard input
+
+String. Optional. Text to trim to a console width.
+
+### Writes to standard output
+
+String. Console string trimmed to the width requested.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

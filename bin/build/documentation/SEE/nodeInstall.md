@@ -1,1 +1,22 @@
-[nodeInstall]({rel}tools/node.md#nodeinstall) - Install nodejs ([source](https://github.com/zesk/build/blob/main/bin/build/tools/node.sh#L9))
+## `nodeInstall`
+
+> Install nodejs
+
+### Usage
+
+    nodeInstall
+
+Install nodejs
+
+> Location: `bin/build/tools/node.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

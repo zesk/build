@@ -137,7 +137,6 @@ bashLintFiles() {
     shift
   done
 
-  catchReturn "$handler" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
   statusMessage --first decorate info "Checking all shell scripts ..."
 
   local source=none

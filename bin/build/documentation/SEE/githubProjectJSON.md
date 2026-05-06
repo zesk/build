@@ -1,1 +1,22 @@
-[githubProjectJSON]({rel}tools/github.md#githubprojectjson) - Get a project JSON structure ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L133))
+## `githubProjectJSON`
+
+> Get a project JSON structure
+
+### Usage
+
+    githubProjectJSON
+
+Get a project JSON structure
+
+> Location: `bin/build/tools/github.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Git Open Links Flag
 # See: gitCommit
 # Type: Boolean
 # Open links from git remotes in `gitCommit`

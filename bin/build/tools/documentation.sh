@@ -44,13 +44,15 @@ __documentationLoader() {
 # - `example` - An example of usage (code, many)
 # - `depends` - Any dependencies (list)
 #
-# Summary: Generate a set of name/value pairs to document bash functions
-# Argument: handler - Function. Required.
-# Argument: function - String. Required.
+# Summary: Generate a set of name/value pairs to document bash entities
+# Argument: fn - String. Required. Name of `fn`
 # Argument: sourceFile - File. Required.
+# Argument: sourceLine - PositiveInteger. Optional.
 # Argument: --generate - Flag. Optional. Generate cached files.
 # Argument: --no-cache - Flag. Optional. Skip any attempt to cache anything.
 # Argument: --cache - Flag. Optional. Force use of cache.
+# Argument: --function - Flag. Optional. Function derivations `return_code` `fn` `lowerFn` `fnMarker` `argument` `usage`
+# Argument: --environment - Flag. Optional. Environment variable derivations `env` `envMarker`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Pipe stripped comments to extract information
@@ -63,43 +65,34 @@ _bashDocumentationExtract() {
   bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Build documentation for Bash functions
+# Summary: Make documentation for Bash functions
 #
-# Given that bash is not an ideal template language, caching is mandatory.
+# Must faster than `documentationBuild` and intended to replace it.
 #
-# Uses a cache at `buildCacheDirectory`
-# See: buildCacheDirectory
+# Uses cached files at `BUILD_DOCUMENTATION_PATH`, assumes documentation cache structure:
 #
-# Argument: --commit - Flag. Optional. Commit docs to non-docs branch
-# Argument: --force - Flag. Optional. Force generation, ignore cache directives
-# Argument: --unlinked - Flag. Optional. Show unlinked functions
-# Argument: --unlinked-update - Flag. Optional. Update unlinked document file
+# - `$docHome/functionName.md` - Markdown documentation
+# - `$docHome/SEE/functionName.md` - Markdown documentation for `{SEE:functionName}`
+# - `$docHome/functionName.sh` - `functionName` settings
+# - `$docHome/env/environmentName.md` - Markdown documentation for `environmentName` environment variable
+# - `$docHome/env/environmentName.sh` - `environmentName` environment variable settings
+# - `$docHome/env/more/environmentName.md` - Additional Markdown documentation for `environmentName` environment variable
+# - `$docHome/SEE/environmentName.md` - See link to `environmentName`
+#
 # Argument: --clean - Flag. Optional. Erase the cache before starting.
+#
+# Argument: --template templateDirectory - Directory. Required. Location of additional documentation template files to generate documentation.
+# Argument: --source sourceDirectory - Directory. Required. Location of documentation source markdown.
+# Argument: --target targetDirectory - Directory. Required. Location of documentation build target.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: --company companyName - String. Optional. Company name (uses `BUILD_COMPANY` if not set)
-# Argument: --company-link companyLink - String. Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
-# Argument: --unlinked-source directory - Directory. Optional.
-# Argument: --page-template pageTemplateFile - File. Optional.
-# Argument: --template templateDirectory - Directory. Required. Location of documentation template file to generate documentation.
-# Argument: --source sourceDirectory - Directory. Required. Location of source code. Can specify one or more.
-# Argument: --target targetDirectory - Directory. Required. Location of documentation build target.
-# Argument: --function-template functionTemplateFile - File. Optional.
-# Argument: --unlinked-template unlinkedTemplateFile - File. Optional.
-# Argument: --unlinked-target unlinkedTarget - FileDirectory. Optional.
-# Argument: --see-prefix seePrefix - EmptyString. Optional.
-# Argument: --see-update - Flag. Optional. Update the `see` indexes only.
-# Argument: --unlinked-update - Flag. Optional. Update the unlinked file only.
-# Argument: --index-update - Flag. Optional. Update the documentation indexes only.
-# Argument: --docs-update - Flag. Optional. Update the documentation target only.
-# Artifact: `cacheDirectory` may be created even on non-zero exit code
 # Return Code: 0 - Success
 # Return Code: 1 - Issue with environment
 # Return Code: 2 - Argument error
-documentationBuild() {
+documentationMake() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_documentationBuild() {
+_documentationMake() {
   case "${1-}" in 0 | 2 | "") ;; *) hookRunOptional documentation-error "$@" || : ;; esac
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -132,50 +125,78 @@ _documentationTemplate() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Build documentation for ./bin/env (or bin/build/env) directory.
+# Summary: Build documentation files for environment variables
 #
-# Creates a cache at `documentationBuildCache`
+# Build documentation for `./bin/env` (or `bin/build/env`) directory.
 #
-# Templates used:
+# Creates a cache at `documentationCache`
 #
-# - `env-more.md`
-# - `env-index.md`
-# - `env-see.md`
-# - `env-more.md`
-# - `env-more-header.md`
-# - `env-more-footer.md`
+# Environment template files used:
 #
-# Variables applied to the templates:
+# - `line.md`
+# - `see.md`
+# - `more.md`
+# - `more-header.md`
+# - `more-footer.md`
+#
+# Variables applied to the environment template files:
+#
 # - `link` `name` `description` `category` `more` `type` `markerName`
 #
-# Argument: --source-path sourcePath - Directory. Optional. Path to source environment files. Defaults to `$(buildHome)/bin/env` if not specified.
-# Argument: --source sourceTemplate - File. Optional. Path to source environment template.
-# Argument: --target targetFile - FileDirectory. Optional. File to generate.
-# Argument: --template-path templatePath - Directory. Optional. Path for source template files.
-# Argument: --clean - Flag. Optional. Delete any generated files.
-# Argument: --force  - Flag. Optional. Force generation of files regardless of cache status.
+# Documentation Files generated:
+#
+# - `ENV_NAME.md` - Documentation page for `ENV_NAME`
+# - `SEE/ENV_NAME.md` - `{SEE:ENV_NAME}` content
+# - `env/ENV_NAME.sh` - Settings extracted from environment file.
+# - `env/ENV_NAME.md` - Documentation line for `ENV_NAME`
+# - `env/more/ENV_NAME.md` - Documentation more for `ENV_NAME`. Only created if needed.
+#
+# Documentation settings extracted:
+#
+# - `name` - `String`. Display environment name.
+# - `description` - `String`. Text description of the environment variable, many lines long and can include detailed example and markup.
+# - `descriptionLineCount` - `PositiveInteger`. Number of lines in the description.
+# - `summary` - `String`. Short description of the environment variable.
+# - `category` - `String`. Main category for this environment variable.
+# - `categoryId` - `String`. Category converted to stringLowercase and spaces replaced with underscores.
+# - `type` - `Type`. Data type for this environment variable.
+#
+# Where `ENV_NAME` matches the found environment source file without the `.sh`.
+#
+# Target templates created:
+#
+# - `categories.txt`
+# - `environmentCategoryList.md`
+# - `environmentCategoryTotal.md`
+# - `environmentMore.md`
+#
+# Argument: --source sourcePath - Directory. Optional. Path to source environment files (`*.sh` files). Defaults to `$(buildHome)/bin/env` if not specified.
+# Argument: --template templatePath - Directory. Optional. Path for environment template files.
+# Argument: --target targetPath - Directory. Optional. Path for generated documentation files.
+# Argument: --clean - Flag. Optional. Delete any generated files amd exit.
+# Argument: --force - Flag. Optional. Force generation of files regardless of cache status.
 # Argument: --verbose - Flag. Optional. Be chatty.
 # Argument: --link linkURI - String. Optional. Sets the `link` variable in templates. Defaults to `/env/`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# See: documentationBuild
+# Environment: BUILD_DOCUMENTATION_PATH
 #
 # Return Code: 0 - Success
 # Return Code: 1 - Issue with environment
 # Return Code: 2 - Argument error
-documentationBuildEnvironment() {
+documentationEnvironmentMake() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_documentationBuildEnvironment() {
+_documentationEnvironmentMake() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Get the cache directory for the documentation
+# Get the default cache directory for the documentation
 # Argument: suffix - String. Optional. Directory suffix - created if does not exist.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-documentationBuildCache() {
+documentationCache() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local code && code=$(catchReturn "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
@@ -189,7 +210,7 @@ documentationBuildCache() {
     catchReturn "$handler" buildCacheDirectory "$suffix" || return $?
   fi
 }
-_documentationBuildCache() {
+_documentationCache() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -199,80 +220,10 @@ _documentationBuildCache() {
 # Argument: repairPath ... - Directory. Required. One or more directories containing IDENTICAL sources for repair.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-documentationTemplateUpdate() {
+documentationIdenticalRepair() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_documentationTemplateUpdate() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Summary: Convert a template file to a documentation file using templates
-#
-# Argument: --env-file envFile - File. Optional. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
-# Argument: cacheDirectory - Directory. Required. Cache directory where the indexes live.
-# Argument: sourceFile - File. Directory. Required. The document template containing functions to define
-# Argument: functionTemplate - File. Required. The template for individual functions defined in the `documentTemplate`.
-# Argument: targetFile - FileDirectory. Required. Target file to generate
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# Convert a template which contains bash functions into full-fledged documentation.
-#
-# The process:
-#
-# 1. `documentTemplate` is scanned for tokens which are assumed to represent Bash functions
-# 1. `functionTemplate` is used to generate the documentation for each function
-# 1. Functions are looked up in `cacheDirectory` using indexing functions and
-# 1. Template used to generate documentation and compiled to `targetFile`
-#
-# `cacheDirectory` is required - build an index using `documentationIndexIndex` prior to using this.
-#
-# See: documentationIndexLookup
-# See: documentationIndexIndex
-# Return Code: 0 - If success
-# Return Code: 1 - Issue with file generation
-# Return Code: 2 - Argument error
-# Requires: catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
-# Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
-# Requires: mapEnvironment textSHA printf
-documentationTemplateFileCompile() {
-  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
-}
-_documentationTemplateFileCompile() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Argument: --filter filterArgs ... --  - Arguments. Optional. Passed to `find` and allows filtering list.
-# Argument: --force - Flag. Optional. Force generation of files.
-# Argument: --verbose - Flag. Optional. Output more messages.
-# Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of `functionTemplate`
-# Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
-# Argument: templateDirectory - Required. Directory containing documentation templates
-# Argument: functionTemplate - Required. Function template file to generate documentation for functions
-# Argument: targetDirectory - Required. Directory to create generated documentation
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# Summary: Convert a directory of templates into documentation for Bash functions
-# Convert a directory of templates for bash functions into full-fledged documentation.
-#
-# The process:
-#
-# 1. `templateDirectory` is scanned for files which look like `*.md`
-# 1. `{fn}` is called for each one
-#
-# If the `cacheDirectory` is supplied, it's used to store values and hashes of the various files to avoid having
-# to regenerate each time.
-#
-# See: documentationTemplateCompile
-# Return Code: 0 - If success
-# Return Code: 1 - Any template file failed to generate for any reason
-# Return Code: 2 - Argument error
-#
-documentationTemplateDirectoryCompile() {
-  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
-}
-_documentationTemplateDirectoryCompile() {
+_documentationIdenticalRepair() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -371,9 +322,13 @@ _documentationIndexLookup() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Generate the documentation index (e.g. functions defined in the documentation)
-# Argument: cacheDirectory - Required. Cache directory where the index will be created.
-# Argument: documentationSource ... - OneOrMore. Documentation source path to find tokens and their definitions.
+# Generate the documentation index
+# Indexes where functions are defined in documentation (e.g. `*.md` files - markdown files).
+# Finds the appropriate token `{funcName}` and generates an index for linking or other purposes.
+#
+# Argument: --target targetDirectory - Directory. Optional. Directory where the index will be created. Uses `documentationCache` if not specified.
+# Argument: documentationSource ... - Directory. OneOrMore. Documentation source path to find tokens and their definitions.
+# Argument: --verbose - Flag. Optional. Extrapolate needlessly.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - If success
@@ -383,6 +338,21 @@ documentationIndexDocumentation() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationIndexDocumentation() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Generate a function index for bash files.
+#
+# Argument: codePath ... - Directory. Required. OneOrMore. Path where code (`.sh` files) is stored (should remain identical between invocations)
+# Argument: --target targetPath - Optional. Location to store the index file, called `code.index`.
+# Argument: --verbose - Flag. Optional. Talk voluminously.
+# See: __documentationIndexLookup
+# Requires: __pcregrep
+documentationIndexGenerate() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationIndexGenerate() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -429,21 +399,22 @@ ___bashDocumentation_FindFunctionDefinitions() {
 }
 
 # List functions without documentation pages.
+# Argument: indexPath - Directory. Required. Index path.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 documentationIndexUnlinkedFunctions() {
-  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$(buildCacheDirectory)" "$@"
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationIndexUnlinkedFunctions() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Document a function and generate a function template (markdown). To custom format any
+# Document an item and generate a template (markdown). To custom format any
 # of the fields in this, write functions in the form `_documentationTemplateFormatter_${name}` such that
-# name matches the variable name (stringLowercase alphanumeric characters and underscores).
+# name matches the variable name (lower case alphanumeric characters and underscores).
 #
-# Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
+# Filter functions should modify the input/output pipe; an example can be found by looking at
 # sample function `_documentationTemplateFormatter_return_code`.
 #
 # See: _documentationTemplateFormatter_return_code
@@ -451,12 +422,160 @@ _documentationIndexUnlinkedFunctions() {
 # Argument: settingsFile - Required. Settings file to be loaded.
 # Return Code: 0 - Success
 # Return Code: 1 - Template file not found
-# Short description: Simple bash function documentation
-#
+# Short description: Simple markdown documentation templates
 documentationTemplateCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationTemplateCompile() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Generate documentation using source markdown and a mapping function.
+#
+# Argument: --verbose - Flag. Optional. Be wordy.
+# Argument: --default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`
+# Argument: sourcePath - Exists. Required. File or directory to convert.
+# Argument: targetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.
+# Argument: mapFunction ... - Function. Optional. Mapping function to use, and any arguments.
+# Return Code: 0 - Success
+# Return Code: 1 - Template file not found
+documentationMaker() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationMaker() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Extract and build the documentation settings cache
+# Argument: --clean - Flag. Optional. Clean everything and then exit.
+# Argument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
+# Argument: --all - Flag. Optional. Do everything regardless of cache state.
+# Argument: --derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files.
+# Argument: functionName ... - String. Optional. Specific functions to compile.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+buildFunctionsCompile() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_buildFunctionsCompile() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Generate markdown documentation page
+#
+# Generate function derived files.
+#
+# File(s) are generated next to `settingsFile`.
+#
+# - `--check` checks to see if the file needs to be generated or updated. Returns 0 if up to date.
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --check - Flag. Optional. Check to see if an update is needed
+# Argument: settingsFile - File. Required. Settings file for function to document.
+bashDocumentationDeriveFunction() {
+  local handler="_${FUNCNAME[0]}"
+
+  local settingsFile="" checkFlag=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --template) shift && template=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --check) checkFlag=true ;;
+    *) settingsFile=$(validate "$handler" File "settingsFile" "$argument") && shift && break || return $? ;;
+    esac
+    shift
+  done
+  [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument: $*" || return $?
+  [ -n "$settingsFile" ] || throwArgument "$handler" "Missing settingsFile" || return $?
+
+  local fn && fn=$(environmentValueRead "$settingsFile" fn) || return $?
+  local targetFile && targetFile="$(dirname "$settingsFile")/${fn}.md"
+  local template && [ -n "$template" ] || template=$(catchReturn "$handler" documentationTemplate function) || return $?
+  if $checkFlag; then
+    local sourceFile && sourceFile=$(environmentValueRead "$settingsFile" sourceFile) || return $?
+    if [ -f "$targetFile" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile"; then
+      catchReturn "$handler" touch "$targetFile" || return $?
+      return 0
+    fi
+    return 1
+  fi
+  catchReturn "$handler" bashDocumentationMarkdown --template "$template" "$fn" >"$targetFile" || return $?
+}
+_bashDocumentationDeriveFunction() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Generate SEE markdown content
+# Generate `SEE/{fn}.md` - Derived file generator.
+# File is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --check - Flag. Optional. Check to see if an update is needed
+# Argument: settingsFile - File. Required. Settings file for function to document.
+bashDocumentationDeriveSee() {
+  local handler="_${FUNCNAME[0]}"
+
+  local settingsFile="" checkFlag=false template=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
+    --check) checkFlag=true ;;
+    *) settingsFile=$(validate "$handler" File "settingsFile" "$argument") && shift && break || return $? ;;
+    esac
+    shift
+  done
+  [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument: $*" || return $?
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local fn && fn=$(environmentValueRead "$settingsFile" fn) || return $?
+  local documentationPath && if ! documentationPath=$(environmentValueRead "$settingsFile" documentationPath); then
+    if ! documentationPath=$(directoryChange "$home" find "documentation/source/tools" -type f -name '*.md' -print0 | xargs -0 grep -l "{$fn}" | sort | head -n 1); then
+      decorate warning "No documentationPath found for $fn" || :
+    else
+      environmentValueWrite "documentationPath" "$documentationPath" >>"$settingsFile"
+    fi
+  fi
+  local targetFile && targetFile="$(__documentationFile "$home" "SEE/$fn" true)"
+  [ -n "$template" ] || template=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
+  if $checkFlag; then
+    if [ -f "$targetFile" ] && [ -f "$documentationPath" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile" "$documentationPath"; then
+      catchReturn "$handler" touch "$targetFile" || return $?
+      return 0
+    fi
+    return 1
+  fi
+  (
+    catchReturn "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
+    local functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
+    catchReturn "$handler" environmentFileLoad "$settingsFile" || return $?
+    documentationPath="${documentationPath#documentation/source/}"
+    local sourceLink && sourceLink="$(catchReturn "$handler" mapEnvironment <<<"$functionLinkPattern")" || return $?
+    catchReturn "$handler" muzzle fileDirectoryRequire --handler "$handler" "$targetFile" || return $?
+    documentationPath="$documentationPath" sourceLink="$sourceLink" catchReturn "$handler" mapEnvironment <"$template" >"$targetFile" || return $?
+  ) || return $?
+}
+_bashDocumentationDeriveSee() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

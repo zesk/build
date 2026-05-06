@@ -1,1 +1,1 @@
-[VISUAL]({rel}/env/#bash) - **Executable**. Binary for viewing files
+[`VISUAL` VISUAL]({rel}/env/#bash) - **Executable**. Binary for viewing files

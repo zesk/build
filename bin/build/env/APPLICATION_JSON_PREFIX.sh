@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Application JSON Prefix
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Type: String
 # Category: Application

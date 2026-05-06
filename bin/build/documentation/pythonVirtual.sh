@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-04-22
+# Generated on 2026-05-03
 # shellcheck disable=SC2034
 argument="--application directory - Directory. Required. Path to project location."$'\n'"--require requirements - File. Optional. Requirements file for project."$'\n'"pipPackage ... - String. Optional. One or more pip packages to install in the virtual environment."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""
 base="python.sh"
-description="Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them."$'\n'"When completed, a directory \`.venv\` exists in your project containing dependencies."$'\n'""
+derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
+description="Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them."$'\n'""$'\n'"When completed, a directory \`.venv\` exists in your project containing dependencies."$'\n'""$'\n'""
+descriptionLineCount="4"
 file="bin/build/tools/python.sh"
 fn="pythonVirtual"
+fnMarker="pythonvirtual"
 foundNames=([0]="argument")
 line="300"
-lowerFn="pythonvirtual"
 rawComment="Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them."$'\n'"Argument: --application directory - Directory. Required. Path to project location."$'\n'"Argument: --require requirements - File. Optional. Requirements file for project."$'\n'"Argument: pipPackage ... - String. Optional. One or more pip packages to install in the virtual environment."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"When completed, a directory \`.venv\` exists in your project containing dependencies."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/python.sh"
@@ -18,8 +20,3 @@ sourceLine="300"
 summary="Set up a virtual environment for a project and install"
 summaryComputed="true"
 usage="pythonVirtual --application directory [ --require requirements ] [ pipPackage ... ] [ --help ] [ --handler handler ]"
-# shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mpythonVirtual'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]m--application directory'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --require requirements ]'$'\e''[0m '$'\e''[[(blue)]m[ pipPackage ... ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]m--application directory  '$'\e''[[(value)]mDirectory. Required. Path to project location.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--require requirements   '$'\e''[[(value)]mFile. Optional. Requirements file for project.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mpipPackage ...           '$'\e''[[(value)]mString. Optional. One or more pip packages to install in the virtual environment.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help                   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--handler handler        '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n'''$'\n''Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them.'$'\n''When completed, a directory '$'\e''[[(code)]m.venv'$'\e''[[(reset)]m exists in your project containing dependencies.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
-# shellcheck disable=SC2016
-helpPlain='Usage: pythonVirtual --application directory [ --require requirements ] [ pipPackage ... ] [ --help ] [ --handler handler ]'$'\n'''$'\n''    --application directory  Directory. Required. Path to project location.'$'\n''    --require requirements   File. Optional. Requirements file for project.'$'\n''    pipPackage ...           String. Optional. One or more pip packages to install in the virtual environment.'$'\n''    --help                   Flag. Optional. Display this help.'$'\n''    --handler handler        Function. Optional. Use this error handler instead of the default error handler.'$'\n'''$'\n''Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them.'$'\n''When completed, a directory .venv exists in your project containing dependencies.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-documentationPath="documentation/source/tools/python.md"

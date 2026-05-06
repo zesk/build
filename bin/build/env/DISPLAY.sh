@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: X Display
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash
 # Type: String

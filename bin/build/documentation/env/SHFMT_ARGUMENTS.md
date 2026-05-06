@@ -1,1 +1,1 @@
-- `SHFMT_ARGUMENTS` *Array*. Arguments passed to shfmt when running as a pre-commit hook [notes](#shfmt_arguments)
+- `SHFMT_ARGUMENTS` &mdash; SHFMT_ARGUMENTS *Array*. Arguments passed to shfmt when running as a pre-commit hook [notes](#shfmt_arguments)

@@ -1,6 +1,0 @@
-description="Environment variable for X windows display."$'\n'"From the user's perspective, every X server has a display name of the form: \`hostname:displaynumber.screennumber\`"
-descriptionLineCount="2"
-category="Bash"
-categoryId="bash"
-type="String"
-summary="Environment variable for X windows display. From the user's perspective, every X server has a display name of the form: \`hostname:displaynumber.screennumber\`"

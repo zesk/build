@@ -1,1 +1,22 @@
-[iTerm2Notify]({rel}tools/iterm2.md#iterm2notify) - Sends a notification message via Mac OS X from iTerm2 ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L781))
+## `iTerm2Notify`
+
+> Sends a notification message via Mac OS X from iTerm2
+
+### Usage
+
+    iTerm2Notify message
+
+Sends a notification message via Mac OS X from iTerm2
+
+> Location: `bin/build/tools/iterm2.sh`
+
+### Arguments
+
+- `message` - String. Required. Text to display.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

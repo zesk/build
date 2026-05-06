@@ -1,6 +1,0 @@
-description="Binary used to generate \`decorate big\`"
-descriptionLineCount="1"
-category="Decoration"
-categoryId="decoration"
-type="Callable"
-summary="Binary used to generate \`decorate big\`"

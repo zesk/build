@@ -1,1 +1,21 @@
-[isBitBucketPipeline]({rel}tools/bitbucket.md#isbitbucketpipeline) - Are we currently in the BitBucket pipeline? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bitbucket.sh#L84))
+## `isBitBucketPipeline`
+
+> Are we currently in the BitBucket pipeline?
+
+### Usage
+
+    isBitBucketPipeline
+
+Are we currently in the BitBucket pipeline?
+
+> Location: `bin/build/tools/bitbucket.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - is BitBucket pipeline
+- `1` - Not a BitBucket pipeline
+

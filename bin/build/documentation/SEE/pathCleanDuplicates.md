@@ -1,1 +1,24 @@
-[pathCleanDuplicates]({rel}tools/path.md#pathcleanduplicates) - Cleans the path and removes non-directory entries and duplicates ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L95))
+## `pathCleanDuplicates`
+
+> Cleans the path and removes non-directory entries and duplicates
+
+### Usage
+
+    pathCleanDuplicates [ --help ]
+
+Cleans the path and removes non-directory entries and duplicates
+
+Maintains ordering.
+
+> Location: `bin/build/tools/path.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

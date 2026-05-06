@@ -1,1 +1,1 @@
-- `XDEBUG_ENABLED` *Boolean*. Is xdebug enabled? The application can honor this environment variable to automatically connect to the debugger. [notes](#xdebug_enabled)
+- `XDEBUG_ENABLED` &mdash; XDEBUG_ENABLED *Boolean*. Is xdebug enabled? The application can honor this environment variable [notes](#xdebug_enabled)

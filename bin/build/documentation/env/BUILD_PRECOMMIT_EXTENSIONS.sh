@@ -1,6 +1,0 @@
-description="List of extensions for which build hooks may be written and run."$'\n'"Presence in this list simply means it may run, not that it is written or runs; add your own"$'\n'"\`bin/hooks/pre-commit-XXX.sh\` to handle a specific file type in your application."$'\n'""$'\n'"Currently:"$'\n'""$'\n'"- \`sh\` - Bash"$'\n'"- \`PHP\` - PHP"$'\n'"- \`js\` - JavaScript"$'\n'"- \`json\` - JSON"$'\n'"- \`md\` - Markdown"$'\n'"- \`yml\` - Yet Another Markup Language"$'\n'"- \`txt\` - Text files"$'\n'"- \`py\` - Python"$'\n'"- \`go\` - Golang"$'\n'"- \`rs\` - Rust"$'\n'"- \`css\` - CSS"$'\n'"- \`less\`, \`sass\`, \`scss\` - Compiled stylesheets"
-descriptionLineCount="18"
-category="Build Configuration"
-categoryId="build-configuration"
-type="List"
-summary="List of extensions for which build hooks may be written and run."

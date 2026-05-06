@@ -1,5 +1,7 @@
 # This is the Bash FAQ, version 4.15, for Bash version 5.1.
 
+{!skip}
+
 <!-- TEMPLATE guideHeader 2 -->
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
@@ -1391,6 +1393,7 @@ New things in ksh-93 present in bash-4.3:
 Section D:  Why does bash do some things differently than other Unix shells?
 
 ### D1) Why does bash run a different version of `command` than
+
 `which command` says it will?
 
 On many systems, `which` is actually a csh script that assumes
@@ -1530,6 +1533,7 @@ environment, or as `cshtobash ~/.login` to convert your login
 environment.
 
 ### D5) How can I pipe standard output and standard error from one command to
+
 another, like csh does with `|&`?
 
 Use
@@ -1540,6 +1544,7 @@ file descriptor 1 points to the pipe when it is duplicated onto file
 descriptor 2.
 
 ### D6) Now that I've converted from ksh to bash, are there equivalents to
+
 ksh features like autoloaded functions and the `whence` command?
 
 There are features in ksh-88 and ksh-93 that do not have direct bash
@@ -1614,6 +1619,7 @@ As of bash-3.1, bash does not report SIGPIPE errors by default. You
 can build a version of bash that will report such errors.
 
 ### E3) When I have terminal escape sequences in my prompt, why does bash
+
 wrap lines at the wrong column?
 
 Readline, the line editing library that bash uses, does not know
@@ -1630,6 +1636,7 @@ Use the \[ escape to begin a sequence of non-printing characters,
 and the \] escape to signal the end of such a sequence.
 
 ### E4) If I pipe the output of a command into `read variable`, why doesn't
+
 the output show up in $variable when the read command finishes?
 
 This has to do with the parent-child relationship between Unix
@@ -1699,6 +1706,7 @@ and, where process substitution is available,
 read A B C D < <(IFS=.; echo $(/usr/local/bin/ipaddr))
 
 ### E5) I have a bunch of shell scripts that use backslash-escaped characters
+
 in arguments to `echo`. Bash doesn't interpret these characters. Why
 not, and how can I make it understand them?
 
@@ -1792,6 +1800,7 @@ The POSIX.2 interpretation committee has confirmed this:
 http://www.pasc.org/interps/unofficial/db/p1003.2/pasc-1003.2-173.html
 
 ### E9) Why does the pattern matching expression [A-Z]* match files beginning
+
 with every letter except `z`?
 
 Bash-2.03, Bash-2.05 and later versions honor the current locale setting
@@ -2021,6 +2030,7 @@ cmdtool. If this works, you can put the assignment to TERMCAP
 in your bashrc file.
 
 ### F2) I built bash on Solaris 2. Why do globbing expansions and filename
+
 completion chop off the first few characters of each filename?
 
 This is the consequence of building bash on SunOS 5 and linking
@@ -2041,6 +2051,7 @@ put /usr/ccs/bin and /opt/SUNWspro/bin into your $PATH before
 /usr/ucb.
 
 ### F3) Why does bash dump core after I interrupt username completion or
+
 `~user` tilde expansion on a machine running NIS?
 
 This is a famous and long-standing bug in the SunOS YP (sorry, NIS)
@@ -2075,6 +2086,7 @@ change the line kill character to control-u, type
 where the `^` and `U` can be two separate characters.
 
 ### F5) Why does bash report syntax errors when my C News scripts use a
+
 redirection before a subshell command?
 
 The actual command in question is something like
@@ -2125,6 +2137,7 @@ to the beginning of /etc/inputrc, or bracket the key bindings in
 	$endif
 
 ### F7) Why do bash-2.05a and bash-2.05b fail to compile `printf.def` on
+
 HP/UX 11.x?
 
 HP/UX's support for long double is imperfect at best.
@@ -2179,6 +2192,7 @@ The script examples/scripts.noah/meta.bash encapsulates the bind
 commands in a shell function.
 
 ### G2) How do I write a function `x` to replace builtin command `x`, but
+
 still invoke the command from within the function?
 
 This is why the `command` and `builtin` builtins exist. The
@@ -2200,6 +2214,7 @@ This could also be written using `command` instead of `builtin`;
 the version above is marginally more efficient.
 
 ### G3) How can I find the value of a shell variable whose name is the value
+
 of another shell variable?
 
 Versions of Bash newer than Bash-2.0 support this directly. You can use
@@ -2234,6 +2249,7 @@ This is not the same thing as ksh93 `nameref` variables, though the syntax
 is similar. Namerefs are available bash version 4.3, and work as in ksh93.
 
 ### G4) How can I make the bash `time` reserved word print timing output that
+
 looks like the output from my system's /usr/bin/time?
 
 The bash command timing code looks for a variable `TIMEFORMAT` and
@@ -2299,6 +2315,7 @@ The script examples/functions/lowercase, originally written by John DuBois,
 will do the trick. The converse is left as an exercise.
 
 ### G8) How can I write a filename expansion (globbing) pattern that will match
+
 all files in the current directory except "." and ".."?
 
 You must have set the `extglob` shell option using `shopt -s extglob` to use
@@ -2317,6 +2334,7 @@ with `..`)
 Section H:  Where do I go from here?
 
 ### H1) How do I report bugs in bash, and where should I look for fixes and
+
 advice?
 
 Use the `bashbug` script to report bugs. It is built and

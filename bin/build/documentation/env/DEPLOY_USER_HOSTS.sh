@@ -1,6 +1,0 @@
-description="A list of one ore more user@host for installation of the application"
-descriptionLineCount="1"
-category="Deployment"
-categoryId="deployment"
-type="String"
-summary="A list of one ore more user@host for installation of the application"

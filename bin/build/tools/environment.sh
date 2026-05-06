@@ -172,13 +172,13 @@ _environmentParseVariables() {
 environmentClean() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
-  local finished=false variable keepers=(CI PATH LD_LIBRARY USER HOME PS1 PS2 PS3 PS4 BUILD_HOME "$@")
-  keepers+=(__BUILD_DECORATE BUILD_COLORS BUILD_DEBUG BUILD_HOOK_DIRS __BUILD_LOADER)
-  while ! $finished; do
-    read -r variable || finished=true
-    [ -n "$variable" ] || continue
-    ! inArray "$variable" "${keepers[@]}" || continue
-    unset "${variable?}" 2>/dev/null || :
+  local ___finished=false ___keepers=(CI PATH LD_LIBRARY USER HOME PS1 PS2 PS3 PS4 BUILD_HOME "$@")
+  ___keepers+=(__BUILD_DECORATE BUILD_COLORS BUILD_DEBUG BUILD_HOOK_DIRS __BUILD_LOADER ___finished ___variable ___keepers)
+  while ! $___finished; do
+    local ___variable && read -r ___variable || ___finished=true
+    [ -n "$___variable" ] || continue
+    ! inArray "$___variable" "${___keepers[@]}" || continue
+    unset "${___variable?}" 2>/dev/null || :
   done < <(environmentVariables)
 }
 _environmentClean() {

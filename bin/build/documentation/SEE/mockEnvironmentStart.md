@@ -1,1 +1,25 @@
-[mockEnvironmentStart]({rel}tools/assert.md#mockenvironmentstart) - Fake a value for testing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1440))
+## `mockEnvironmentStart`
+
+> Fake a value for testing
+
+### Usage
+
+    mockEnvironmentStart globalName [ value ] [ ... ] [ --help ]
+
+Fake a value for testing
+
+> Location: `bin/build/tools/test.sh`
+
+### Arguments
+
+- `globalName` - EnvironmentVariable. Required. Global to change temporarily to a value.
+- `value` - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.
+- `...` - Continue passing pairs of globalName value to mock additional values.
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

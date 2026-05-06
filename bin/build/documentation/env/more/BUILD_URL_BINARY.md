@@ -1,5 +1,11 @@
 ## `BUILD_URL_BINARY`
 
-> **Type**: *Callable* • **Category**: *Decoration*
+> **BUILD_URL_BINARY** &mdash; Binary used in __urlOpen
+> > **Type**: *Callable* • **Category**: *Decoration*
 
 Binary used in __urlOpen
+
+### See Also
+
+- {SEE:urlOpen}
+

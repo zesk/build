@@ -4,7 +4,7 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-## Zesk Build Development
+## {applicationName} Development
 
 {buildDevelopmentLink}
 

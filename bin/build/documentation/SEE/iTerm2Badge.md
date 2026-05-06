@@ -1,1 +1,23 @@
-[iTerm2Badge]({rel}tools/iterm2.md#iterm2badge) - Set the badge for the iTerm2 console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L664))
+## `iTerm2Badge`
+
+> Set the badge for the iTerm2 console
+
+### Usage
+
+    iTerm2Badge [ --ignore | -i ] message ...
+
+Set the badge for the iTerm2 console
+
+> Location: `bin/build/tools/iterm2.sh`
+
+### Arguments
+
+--ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+- `message ...` - String. Required. Any message to display as the badge
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

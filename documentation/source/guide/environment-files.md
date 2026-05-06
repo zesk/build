@@ -10,12 +10,12 @@ them.
 
 > Docker-compatible Environment file
 
-    NAME=Zesk Build
+    NAME={applicationName}
     ITEMS=(1 2 3 4)
 
 > Bash-compatible Environment file
 
-    NAME="Zesk Build"
+    NAME="{applicationName}"
     export ITEMS=(1 2 3 4)
 
 Given that your project may use one or both, we support *any* implementation when possible.

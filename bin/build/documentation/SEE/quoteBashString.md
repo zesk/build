@@ -1,1 +1,30 @@
-[quoteBashString]({rel}tools/quote.md#quotebashstring) - Quote bash strings for inclusion as single-quoted for eval ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L21))
+## `quoteBashString`
+
+> Quote bash strings for inclusion as single-quoted for eval
+
+### Usage
+
+    quoteBashString text
+
+Quote bash strings for inclusion as single-quoted for eval
+
+> Location: `bin/build/tools/quote.sh`
+
+### Arguments
+
+- `text` - EmptyString. Required. Text to quote.
+
+### Examples
+
+    name="$(quoteBashString "$name")"
+
+### Sample Output
+
+string quoted and appropriate to assign to a value in the shell
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

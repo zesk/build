@@ -1,6 +1,0 @@
-description="Default path for the shell to map the current directory to when launching \`dockerLocalContainer\`"
-descriptionLineCount="1"
-category="Docker"
-categoryId="docker"
-type="RemoteDirectory"
-summary="Default path for the shell to map the current directory to when launching \`dockerLocalContainer\`"

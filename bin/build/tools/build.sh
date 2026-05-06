@@ -536,7 +536,7 @@ _tools() {
 # Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentGet() {
-  local handler="_${FUNCNAME[0]}" ll=()
+  local handler="_${FUNCNAME[0]}" ll=() suffix=""
 
   [ $# -gt 0 ] || throwArgument "$handler" "Requires at least one environment variable" || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -554,7 +554,8 @@ buildEnvironmentGet() {
     --quiet) ll+=("$argument") ;;
     *)
       catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
-      printf "%s\n" "${!argument-}"
+      printf "%s%s" "${!argument-}" "$suffix"
+      suffix=$'\n'
       ;;
     esac
     shift
@@ -675,7 +676,7 @@ _buildQuietLog() {
 #
 # Useful when you need to ensure the command is run with the correct version of Zesk Build.
 #
-# Argument: contextStart - Directory. Required. Context in which the command should run.
+# Argument: startDirectory - Directory. Required. Context in which the command should run.
 # Argument: command - Callable. Required. Command to run in new context.
 # Argument: ... - Arguments. Optional. Arguments to the `command`.
 #
@@ -685,22 +686,45 @@ _buildQuietLog() {
 buildEnvironmentContext() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || helpArgument "$handler" "$@" || return 0
+  local verboseFlag=false command="" startDirectory=""
 
-  local start
-  start="$(validate "$handler" Directory "contextStart" "${1-}")" && shift || return $?
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --verbose) verboseFlag=true ;;
+    *)
+      if [ -z "$startDirectory" ]; then
+        startDirectory="$(validate "$handler" Directory "contextStart" "$argument")" || return $?
+      else
+        command=$(validate "$handler" Callable "command" "$argument") || return $?
+        shift && break
+      fi
+      ;;
+    esac
+    shift
+  done
+  [ -n "$startDirectory" ] || throwArgument "$handler" "startDirectory required" || return $?
+  [ -n "$command" ] || throwArgument "$handler" "command required" || return $?
 
   local codeHome home binTools="bin/build/tools.sh"
   codeHome=$(catchReturn "$handler" buildHome) || return $?
-  home=$(catchEnvironment "$handler" bashLibraryHome "$binTools" "$start") || return $?
+  home=$(catchEnvironment "$handler" bashLibraryHome "$binTools" "$startDirectory") || return $?
 
   if [ "$codeHome" != "$home" ]; then
-    decorate warning "Build home is $(decorate code "$codeHome") - running locally at $(decorate code "$home")"
-    [ -x "$home/$binTools" ] || throwEnvironment "Not executable $home/$binTools" || return $?
-    catchEnvironment "$handler" "$home/$binTools" "$@" || return $?
+    ! $verboseFlag || statusMessage decorate warning "Build home is $(decorate code "$codeHome") - running locally at $(decorate code "$home")"
+    [ -x "$home/$binTools" ] || throwEnvironment "$handler" "Not executable $home/$binTools" || return $?
+    catchEnvironment "$handler" "$home/$binTools" "$command" "$@" || return $?
     return 0
   fi
-  catchEnvironment "$handler" "$@" || return $?
+  catchEnvironment "$handler" "$command" "$@" || return $?
 }
 _buildEnvironmentContext() {
   # __IDENTICAL__ bashDocumentation 1

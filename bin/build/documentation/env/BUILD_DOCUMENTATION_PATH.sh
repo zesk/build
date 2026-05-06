@@ -1,6 +1,0 @@
-description="Search path for documentation settings file."$'\n'"A colon \`:\` separated list of paths to search for function documentation settings file for \`__bashDocumentationCached\`"
-descriptionLineCount="2"
-category="Bash"
-categoryId="bash"
-type="DirectoryList"
-summary="Search path for documentation settings file. A colon \`:\` separated list of paths to search for function documentation settings file for \`__bashDocumentationCached\`"

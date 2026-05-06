@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Docker Platform
 # See: dockerLocalContainer
 # Category: Docker
 # Copyright &copy; 2026 Market Acumen, Inc.

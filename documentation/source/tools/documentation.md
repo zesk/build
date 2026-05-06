@@ -8,9 +8,9 @@
 
 {documentationBuild}
 
-{documentationBuildCache}
+{documentationCache}
 
-{documentationBuildEnvironment}
+{documentationEnvironmentMake}
 
 {documentationTemplate}
 
@@ -26,7 +26,7 @@
 
 ## Generating documentation
 
-{documentationTemplateUpdate}
+{documentationIdenticalRepair}
 
 {documentationTemplateCompile}
 

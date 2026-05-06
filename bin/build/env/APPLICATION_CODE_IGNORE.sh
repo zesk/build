@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Application Code Ignore Paths
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Type: ColonDelimitedList
 # Category: Application

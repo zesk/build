@@ -1,1 +1,22 @@
-[characterFromInteger]({rel}tools/character.md#characterfrominteger) - Given a list of integers, output the character codes associated ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L118))
+## `characterFromInteger`
+
+> Given a list of integers, output the character codes associated
+
+### Usage
+
+    characterFromInteger [ --help ]
+
+Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
+
+> Location: `bin/build/tools/character.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

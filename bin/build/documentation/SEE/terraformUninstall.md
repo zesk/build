@@ -1,1 +1,22 @@
-[terraformUninstall]({rel}tools/install.md#terraformuninstall) - Remove terraform binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/terraform.sh#L66))
+## `terraformUninstall`
+
+> Remove terraform binary
+
+### Usage
+
+    terraformUninstall [ package ... ]
+
+Remove terraform binary
+
+> Location: `bin/build/tools/terraform.sh`
+
+### Arguments
+
+- `package ...` - String. Optional. Additional packages to uninstall using `packageUninstall`
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

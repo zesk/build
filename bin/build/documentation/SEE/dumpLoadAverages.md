@@ -1,1 +1,22 @@
-[dumpLoadAverages]({rel}tools/dump.md#dumploadaverages) - Print the load averages ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L383))
+## `dumpLoadAverages`
+
+> Print the load averages
+
+### Usage
+
+    dumpLoadAverages [ --help ]
+
+Print the load averages
+
+> Location: `bin/build/tools/dump.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

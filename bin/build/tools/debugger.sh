@@ -8,11 +8,12 @@
 # Docs: o ./documentation/source/tools/debug.md
 # Test: o ./test/tools/debug-tests.sh
 
-# {fn}: Simple debugger to walk through a program
+# Summary: Bash debugger
+# `{fn}`: Simple debugger to walk through a program.
 #
-#     Usage: {fn} [ --help ] commandToDebug ...
-#
-# Argument: commandToDebug - Callable. Required. Command to debug.
+# Argument: commandToDebug ... - Callable. Required. Command to debug.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 #
 # Debugger accepts the following keystrokes:
 #
@@ -48,7 +49,8 @@ _bashDebug() {
   bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Enables the debugger immediately
+# Summary: Enable the debugger
+# Enables the debugger immediately.
 #
 #     Usage: bashDebuggerEnable [ --help ]
 #
@@ -82,7 +84,8 @@ _bashDebuggerEnable() {
   bashSimpleDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Disables the debugger immediately
+# Summary: Disable the debugger
+# Disables the debugger immediately.
 # Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 #
 #     Usage: bashDebuggerDisable [ --help ]
@@ -116,8 +119,7 @@ _bashDebugWatch() {
   [ "${#__BUILD_BASH_DEBUG_WATCH[@]}" -gt 0 ] || return 0
   local __item __index=0
   for __item in "${__BUILD_BASH_DEBUG_WATCH[@]}"; do
-    local __value
-    if ! __value="$(eval "printf \"%s\n\" \"$__item\"" 2>/dev/null)"; then
+    local __value && if ! __value="$(eval "printf \"%s\n\" \"$__item\"" 2>/dev/null)"; then
       __value="$(decorate red "unbound")"
     else
       __value="\"$(decorate code "$__value")\""
@@ -196,16 +198,16 @@ _bashDebugTrap() {
 
   _bashDebugWatch
   printf -- "%s %s\n" "$(decorate green ">")" "$(decorate code "$BASH_COMMAND")"
-  local __error="" __exitCode=0
+  local __error="" __returnCode=0
   while read -n 1 -s -r -p "${__error}bashDebug $(decorate code "[$__BUILD_BASH_DEBUG_LAST]")> " __cmd </dev/tty; do
     local __aa=("$__cmd")
-    __exitCode=0
+    __returnCode=0
     case "$__cmd" in
     "." | " " | "" | $'\r')
       __cmd="${__BUILD_BASH_DEBUG_LAST:0:1}"
       if [ -z "$__cmd" ]; then
         __error="$(decorate error "No last command")"
-        __exitCode=1
+        __returnCode=1
         __aa=()
       else
         # Repeat last command
@@ -215,33 +217,19 @@ _bashDebugTrap() {
       ;;
     esac
     statusMessage printf -- "Execute: $(decorate code "$__cmd")"
-    [ "${#__aa[@]}" -eq 0 ] || __bashDebugExecuteCommand "${__aa[@]}" || __exitCode=$?
-    case $__exitCode in
-    0)
-      # Continue code execution
-      __error=""
-      __exitCode=0
-      break
-      ;;
-    1)
-      # Read another debugger command
-      ;;
-    2)
-      # Skip next command
-      __error=""
-      __exitCode=1
-      break
-      ;;
-    3)
-      # Debugger was terminated
-      # Restore Application FDs
-      exec 0<&30 1>&31 2>&32
-      return 0
-      ;;
+    [ "${#__aa[@]}" -eq 0 ] || __bashDebugExecuteCommand "${__aa[@]}" || __returnCode=$?
+    case $__returnCode in
+    # Continue code execution
+    0) __error="" && __returnCode=0 && break ;;
+    # Read another debugger command
+    1) ;;
+    # Skip next command
+    2) __error="" && __returnCode=1 && break ;;
+    # Debugger was terminated
+    # Restore Application FDs
+    3) exec 0<&30 1>&31 2>&32 && return 0 ;;
     esac
-    if [ -n "$__error" ]; then
-      __error="${__error% } "
-    fi
+    [ -z "$__error" ] || __error="$(__usageMessageIcon "$__returnCode") ${__error% } "
     statusMessage printf -- ""
   done
   # Save debugger FDs for later
@@ -250,7 +238,7 @@ _bashDebugTrap() {
   # Restore Application FDs
   exec 0<&30 1>&31 2>&32
 
-  return $__exitCode
+  return $__returnCode
 }
 
 __bashDebugExecuteCommand() {

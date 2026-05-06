@@ -18,14 +18,10 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Requires: catchReturn catchEnvironment muzzle pushd cd printf textVersionSort popd bashDocumentation
 # Summary: {base} hook
 __hookVersionCurrent() {
-  export BUILD_RELEASE_NOTES
   local handler="_${FUNCNAME[0]}"
-  local home
 
-  home=$(catchReturn "$handler" buildHome) || return $?
-
-  local notes
-  notes=$(catchReturn "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local notes && notes=$(catchReturn "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
   pathIsAbsolute "$notes" || notes="$home/$notes"
   catchEnvironment "$handler" muzzle pushd "$notes" || return $?
   find . -mindepth 1 -maxdepth 1 -name '*.md' | cut -c 3- | sed 's/.md//g' | textVersionSort -r | head -n 1 || :

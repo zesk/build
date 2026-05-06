@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Manual Pages Path
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash
 # Type: DirectoryList

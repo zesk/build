@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Terminal Foreground and Background
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Standard way to express the foreground and background colors
 #

@@ -1,1 +1,22 @@
-[gitCommitHash]({rel}tools/git.md#gitcommithash) - Get the commit hash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L660))
+## `gitCommitHash`
+
+> Get the commit hash
+
+### Usage
+
+    gitCommitHash
+
+Get the commit hash
+
+> Location: `bin/build/tools/git.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

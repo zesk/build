@@ -1,10 +1,10 @@
-# Why Zesk Build
+# Why {applicationName}
 
 <!-- TEMPLATE guideHeader 2 -->
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-## Why use Zesk Build?
+## Why use {applicationName}?
 
 The most compelling reason for using this toolkit is **simple, readable** consistency across projects and platforms
 using a tool
@@ -12,7 +12,7 @@ which is universally available on nearly every platform on the planet and uses c
 which are open source.
 
 If you live in your shell, and use **Bash** – we recommend you check out the [functionality](../tools/all.md) which is
-offered and see if it will work for your projects. **Zesk Build** eats its own dog food so this tool is used in
+offered and see if it will work for your projects. **{applicationName}** eats its own dog food so this tool is used in
 production environments and configures remote pipelines identically, delivers credentials to developers and keeps our
 credentials synchronized using an add-on library called **Infrastructure**
 which manages infrastructure configuration in the cloud using `Terraform` or `OpenTofu` and deploying of **Development

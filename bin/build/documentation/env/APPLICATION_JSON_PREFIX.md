@@ -1,1 +1,1 @@
-- `APPLICATION_JSON_PREFIX` *String*. Prefix to place we can store things in the JSON file (e.g. to set the fingerprint) [notes](#application_json_prefix)
+- `APPLICATION_JSON_PREFIX` &mdash; APPLICATION_JSON_PREFIX *String*. Prefix to place we can store things in the JSON [notes](#application_json_prefix)

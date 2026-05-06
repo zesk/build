@@ -1,1 +1,23 @@
-[daemontoolsRestart]({rel}tools/daemontools.md#daemontoolsrestart) - Restart the daemontools processes from scratch. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L393))
+## `daemontoolsRestart`
+
+> Restart the daemontools processes from scratch.
+
+### Usage
+
+    daemontoolsRestart
+
+Restart the daemontools processes from scratch.
+Dangerous. Stops any running services and restarts them.
+
+> Location: `bin/build/tools/daemontools.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

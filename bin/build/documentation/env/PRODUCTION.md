@@ -1,1 +1,1 @@
-- `PRODUCTION` *Boolean*. Is this a production system? e.g. remove unnecessary runtime checks. [notes](#production)
+- `PRODUCTION` &mdash; PRODUCTION *Boolean*. Is this a production system? e.g. remove unnecessary runtime checks. [notes](#production)

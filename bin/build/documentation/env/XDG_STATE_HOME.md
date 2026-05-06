@@ -1,1 +1,1 @@
-- `XDG_STATE_HOME` *Directory*. Base directory for user-specific state files to be stored [notes](#xdg_state_home)
+- `XDG_STATE_HOME` &mdash; XDG_STATE_HOME *Directory*. State Home Directory [notes](#xdg_state_home)

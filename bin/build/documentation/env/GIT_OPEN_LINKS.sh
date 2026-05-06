@@ -1,6 +1,0 @@
-description="Open links from git remotes in \`gitCommit\`"
-descriptionLineCount="1"
-category="Development"
-categoryId="development"
-type="Boolean"
-summary="Open links from git remotes in \`gitCommit\`"

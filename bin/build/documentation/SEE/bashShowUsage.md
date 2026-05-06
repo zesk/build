@@ -1,1 +1,35 @@
-[bashShowUsage]({rel}tools/bash.md#bashshowusage) - Show function handler in files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L315))
+## `bashShowUsage`
+
+> Show function handler in files
+
+### Usage
+
+    bashShowUsage functionName file [ --help ]
+
+Show function handler in files
+This check is simplistic and does not verify actual coverage or code paths.
+
+> Location: `bin/build/tools/bash.sh`
+
+### Arguments
+
+- `functionName` - String. Required. Function which should be called somewhere within a file.
+- `file` - File. Required. File to search for function handler.
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Function is used within the file
+- `1` - Function is *not* used within the file
+
+### Requires
+
+- {SEE:throwArgument}
+- {SEE:decorate}
+- usageArgumentString
+- usageArgumentFile
+- {SEE:quoteGrepPattern}
+- {SEE:bashStripComments}
+- cat
+- grep
+

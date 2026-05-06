@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+# Name: Application Build Date
 # Time when a build was initiated, set upon first invocation if not already.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Deployment
-# Type: Date
+# Type: String
 
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/BUILD_TIMESTAMP.sh"

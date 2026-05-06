@@ -1,6 +1,0 @@
-description="\`BUILD_INSTALL_URL\` for \`installInstallBuild\` - source URL for a raw installer."
-descriptionLineCount="1"
-category="Build Configuration"
-categoryId="build-configuration"
-type="URL"
-summary="\`BUILD_INSTALL_URL\` for \`installInstallBuild\` - source URL for a raw installer."

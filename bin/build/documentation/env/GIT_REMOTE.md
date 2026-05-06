@@ -1,1 +1,1 @@
-- `GIT_REMOTE` *String*.  [notes](#git_remote)
+- `GIT_REMOTE` &mdash; GIT_REMOTE *String*. undocumented 

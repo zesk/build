@@ -1,1 +1,23 @@
-[sysvInitScriptInstall]({rel}tools/sysvinit.md#sysvinitscriptinstall) - Install a script to run upon initialization. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sysvinit.sh#L12))
+## `sysvInitScriptInstall`
+
+> Install a script to run upon initialization.
+
+### Usage
+
+    sysvInitScriptInstall binary [ --help ]
+
+Install a script to run upon initialization.
+
+> Location: `bin/build/tools/sysvinit.sh`
+
+### Arguments
+
+- `binary` - String. Required. Binary to install at startup.
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

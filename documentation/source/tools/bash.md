@@ -28,6 +28,10 @@
 
 {bashFileComment}
 
+{bashFirstComment}
+
+{bashRemoveCommentCharacter}
+
 {bashFinalComment}
 
 {bashFunctionDefined}

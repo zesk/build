@@ -1,1 +1,22 @@
-[evalCheck]({rel}tools/test.md#evalcheck) - Check files to ensure \`eval\`s in code have been checked ([source](https://github.com/zesk/build/blob/main/bin/build/tools/security.sh#L60))
+## `evalCheck`
+
+> Check files to ensure `eval`s in code have been checked
+
+### Usage
+
+    evalCheck
+
+Check files to ensure `eval`s in code have been checked
+
+> Location: `bin/build/tools/security.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

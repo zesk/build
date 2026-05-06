@@ -1,1 +1,1 @@
-- `AWS_ACCESS_KEY_DATE` *Date*. Date of key expiration which can be checked in pipelines. Not part of the Amazon specification but a good idea to track expiration of keys. [notes](#aws_access_key_date)
+- `AWS_ACCESS_KEY_DATE` &mdash; AWS_ACCESS_KEY_DATE *Date*. Date of key expiration which can be checked in pipelines. [notes](#aws_access_key_date)

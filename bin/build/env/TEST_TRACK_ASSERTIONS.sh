@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Name: Track Assertions Flag
+# Assertion tracking testing optimization
 # Turn on or off tracking of function assertions within the testing core.
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Testing

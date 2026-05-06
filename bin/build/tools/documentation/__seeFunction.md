@@ -1,1 +1,1 @@
-[{fn}]({rel}{documentationPath}#{lowerFn}) - {summary} ([source]({sourceLink}))
+[{fn}]({rel}{documentationPath}#{fnMarker}) - {summary} ([source]({sourceLink}))

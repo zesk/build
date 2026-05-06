@@ -1,5 +1,11 @@
 ## `BUILD_DOCKER_PATH`
 
-> **Type**: *RemoteDirectory* • **Category**: *Docker*
+> **BUILD_DOCKER_PATH** &mdash; Default path for the shell to map the current directory
+> > **Type**: *RemoteDirectory* • **Category**: *Docker*
 
 Default path for the shell to map the current directory to when launching `dockerLocalContainer`
+
+### See Also
+
+- {SEE:dockerLocalContainer}
+

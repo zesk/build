@@ -1,6 +1,0 @@
-description="Binary for editing files"
-descriptionLineCount="1"
-category="Bash"
-categoryId="bash"
-type="Callable"
-summary="Binary for editing files"

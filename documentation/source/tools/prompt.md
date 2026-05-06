@@ -12,7 +12,7 @@ The prompt supports a few things:
 
 Tools to work with the shell prompt `PS1`
 
-- `bashPromptModule_BuildProject` is a module for `bashPrompt` which deactivates and activates your Zesk Build project
+- `bashPromptModule_BuildProject` is a module for `bashPrompt` which deactivates and activates your {applicationName} project
   depending on your current
   directory
 - `bashPromptModule_ApplicationPath` is a module for `bashPrompt` which displays the current application/path as a badge

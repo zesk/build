@@ -1,1 +1,22 @@
-[xdebugInstall]({rel}tools/xdebug.md#xdebuginstall) - Install the xdebug PHP Debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/xdebug.sh#L16))
+## `xdebugInstall`
+
+> Install the xdebug PHP Debugger
+
+### Usage
+
+    xdebugInstall [ --help ]
+
+Install the xdebug PHP Debugger
+
+> Location: `bin/build/tools/xdebug.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

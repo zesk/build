@@ -1,1 +1,22 @@
-[yumIsInstalled]({rel}tools/yum.md#yumisinstalled) - Is yum installed? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/yum.sh#L14))
+## `yumIsInstalled`
+
+> Is yum installed?
+
+### Usage
+
+    yumIsInstalled [ --help ]
+
+Is yum installed?
+
+> Location: `bin/build/tools/yum.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

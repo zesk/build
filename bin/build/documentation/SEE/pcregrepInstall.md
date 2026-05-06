@@ -1,1 +1,22 @@
-[pcregrepInstall]({rel}tools/pcregrep.md#pcregrepinstall) - Install pcregrep binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/pcregrep.sh#L11))
+## `pcregrepInstall`
+
+> Install pcregrep binary
+
+### Usage
+
+    pcregrepInstall [ --help ]
+
+Install pcregrep binary
+
+> Location: `bin/build/tools/pcregrep.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

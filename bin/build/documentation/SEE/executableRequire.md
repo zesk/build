@@ -1,1 +1,23 @@
-[executableRequire]({rel}tools/usage.md#executablerequire) - Check that one or more binaries are installed"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L213))
+## `executableRequire`
+
+> Check that one or more binaries are installed
+
+### Usage
+
+    executableRequire usageFunction binary
+
+Requires the binaries to be found via `which`
+
+Runs `handler` on failure
+
+> Location: `bin/build/tools/usage.sh`
+
+### Arguments
+
+- `usageFunction` - Required. `bash` function already defined to output handler
+- `binary` - Required. Binary which must have a `which` path.
+
+### Return codes
+
+- `1` - If any `binary` is not available within the current path
+

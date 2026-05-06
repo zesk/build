@@ -1,1 +1,21 @@
-[apkIsInstalled]({rel}tools/apk.md#apkisinstalled) - Is this an Alpine system and is apk installed? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apk.sh#L16))
+## `apkIsInstalled`
+
+> Is this an Alpine system and is apk installed?
+
+### Usage
+
+    apkIsInstalled [ --help ]
+
+Is this an Alpine system and is apk installed?
+
+> Location: `bin/build/tools/apk.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - System is an alpine system and apk is installed
+- `1` - System is not an alpine system or apk is not installed
+

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Docker Path for Bitbucket Containers
 # See: bitbucketContainer
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Continuous Integration: BitBucket

@@ -1,1 +1,29 @@
-[environmentFileBashCompatibleToDocker]({rel}tools/environment.md#environmentfilebashcompatibletodocker) - Ensure an environment file is compatible with non-quoted docker environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/convert.sh#L178))
+## `environmentFileBashCompatibleToDocker`
+
+> Ensure an environment file is compatible with non-quoted docker environment
+
+### Usage
+
+    environmentFileBashCompatibleToDocker [ filename ]
+
+Ensure an environment file is compatible with non-quoted docker environment files
+
+> Location: `bin/build/tools/environment/convert.sh`
+
+### Arguments
+
+- `filename` - File. Optional. Docker environment file to check for common issues
+
+### Reads standard input
+
+text - Environment file to convert. (Optional)
+
+### Writes to standard output
+
+text - Only if stdin is supplied and no `filename` arguments.
+
+### Return codes
+
+- `1` - if errors occur
+- `0` - if file is valid
+

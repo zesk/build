@@ -1,5 +1,7 @@
 ## `MARIADB_BINARY_DUMP`
 
-> **Type**: *Executable* • **Category**: *Vendor*
+> **MARIADB_BINARY_DUMP** &mdash; MariaDB binary for dump
+> > **Type**: *Executable* • **Category**: *Vendor*
 
 MariaDB binary for dump
+

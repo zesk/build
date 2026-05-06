@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
+# Name: node Package Manager
 # Category: Vendor
 # Type: Executable
 # The package manager used for node operations. Usually `yarn` or `npm`.

@@ -1,0 +1,1 @@
+[`__BASH_PROMPT_SLOW` __BASH_PROMPT_SLOW]({rel}/env/#bash_prompt) - **PositiveInteger**. Bash Prompt slow timer

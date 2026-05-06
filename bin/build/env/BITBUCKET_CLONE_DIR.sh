@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Bitbucket Clone Directory
 # Defined in BITBUCKET Pipelines
 # Typically should match BUILD_HOME
 # Copyright &copy; 2026 Market Acumen, Inc.

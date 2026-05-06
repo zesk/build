@@ -1,6 +1,0 @@
-description="State to store state of current terminal color state"
-descriptionLineCount="1"
-category="Application"
-categoryId="application"
-type="String"
-summary="State to store state of current terminal color state"

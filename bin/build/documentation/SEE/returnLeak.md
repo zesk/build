@@ -1,1 +1,20 @@
-[returnLeak]({rel}tools/assert.md#returnleak) - Leak return code"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1518))
+## `returnLeak`
+
+> Leak return code
+
+### Usage
+
+    returnLeak
+
+Return code is `leak`
+
+> Location: `bin/build/tools/test.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- 108
+

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: AWS Access Key
 # Amazon Web Services IAM Identity
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Amazon Web Services

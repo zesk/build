@@ -1,1 +1,22 @@
-[consoleSetTitle]({rel}tools/console.md#consolesettitle) - Set the title of the window for the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L160))
+## `consoleSetTitle`
+
+> Set the title of the window for the console
+
+### Usage
+
+    consoleSetTitle
+
+Set the title of the window for the console
+
+> Location: `bin/build/tools/console.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

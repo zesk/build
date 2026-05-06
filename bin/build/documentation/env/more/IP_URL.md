@@ -1,5 +1,11 @@
 ## `IP_URL`
 
-> **Type**: *URL* • **Category**: *Build Configuration*
+> **IP_URL** &mdash; URL to look up IP my address remotely
+> > **Type**: *URL* • **Category**: *Build Configuration*
 
 URL to look up IP my address remotely
+
+### See Also
+
+- {SEE:networkIPLookup}
+

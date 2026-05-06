@@ -1,1 +1,31 @@
-[bashListFunctions]({rel}tools/bash.md#bashlistfunctions) - List functions in a given shell file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L360))
+## `bashListFunctions`
+
+> List functions in a given shell file
+
+### Usage
+
+    bashListFunctions [ --help ] [ file ] [ --help ]
+
+List functions in a given shell file
+
+> Location: `bin/build/tools/bash.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+- `file` - File. Optional. File(s) to list bash functions defined within.
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+### Requires
+
+- {SEE:__bashListFunctions}
+- {SEE:throwArgument}
+- {SEE:decorate}
+- usageArgumentFile
+

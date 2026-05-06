@@ -1,1 +1,1 @@
-[BUILD_HOOK_EXTENSIONS]({rel}/env/#application) - **ColonDelimitedList**. List of extensions to run when looking for hooks
+[`BUILD_HOOK_EXTENSIONS` BUILD_HOOK_EXTENSIONS]({rel}/env/#application) - **ColonDelimitedList**. List of extensions to run when looking for hooks

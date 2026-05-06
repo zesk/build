@@ -1,5 +1,11 @@
 ## `BUILD_COMPOSER_VERSION`
 
-> **Type**: *String* • **Category**: *Installation*
+> **BUILD_COMPOSER_VERSION** &mdash; Version of composer to use for building vendor directory
+> > **Type**: *String* • **Category**: *Installation*
 
 Version of composer to use for building vendor directory
+
+### See Also
+
+- {SEE:phpComposer}
+

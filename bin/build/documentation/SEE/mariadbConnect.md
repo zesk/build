@@ -1,1 +1,24 @@
-[mariadbConnect]({rel}tools/mariadb.md#mariadbconnect) - Connect to a mariadb-type database using a URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/mariadb.sh#L143))
+## `mariadbConnect`
+
+> Connect to a mariadb-type database using a URL
+
+### Usage
+
+    mariadbConnect [ dsn ] [ binary ] [ --print ]
+
+Connect to a mariadb-type database using a URL
+
+> Location: `bin/build/tools/mariadb.sh`
+
+### Arguments
+
+- `dsn` - URL. Database to connect to. All arguments after this are passed to `binary`.
+- `binary` - Callable. Executable to connect to the database.
+- `--print` - Flag. Optional. Just print the statement instead of running it.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

@@ -29,21 +29,32 @@ _bashDocumentationMarkdown() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Summary: Universal error handler for functions (with formatting)
+# Summary: Universal function documentation
 #
 # Actual function is called `{functionName}`.
 #
-# Argument: functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`.
+# Argument: functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`. (Both SLOW!)
 # Argument: functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-# Argument: exitCode - Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-# Argument: message - String. Optional. A message.
+# Argument: returnCode - Integer. Required. The return code to output.
+# Argument: message - String. Optional. A message to output relating to the return code.
 #
 # Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
 #
 # Simplifies documentation and keeps it with the code.
 #
-# Environment: *BUILD_DEBUG* - Add `fast-usage` to make this quicker when you do not care about usage/failure.
+# Example: goldenGoose() {
+# Example:    local handler="_${FUNCNAME[0]}"
+# Example:    local home && home=$(catchReturn "$handler" buildHome) || return $?
+# Example:    ...
+# Example: }
+# Example: _goldenGoose() {
+# Example:   # __IDENTICAL__ bashDocumentation 1
+# Example:   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+# Example: }
+#
+# Environment: BUILD_DEBUG
 # BUILD_DEBUG: fast-usage - `bashDocumentation` does not output formatted help for performance reasons
+# BUILD_DEBUG: usage-cache-skip - Skip all caching and generate from scratch
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 bashDocumentation() {
   #  bashSimpleDocumentation "$@"
@@ -59,8 +70,9 @@ _bashDocumentation() {
 # Summary: Icon for usage messages
 # - `0` - meaning no error, icon is `🏆`
 # - non-`0` - Error, icon is `❌`
+# Local: icon
 __usageMessageIcon() {
-  [ "$1" -eq 0 ] && printf -- "%s" "🏆" || printf -- "%s" "❌"
+  [ "$1" -eq 0 ] && icon="🏆" || icon="❌"
 }
 
 # Summary: Style usage messages
@@ -70,9 +82,9 @@ __usageMessageIcon() {
 # - `1` - Environment error, style is `error`
 # - `2` - Argument error, style is `red`
 # - `*` - All additional errors, style is `orange`
+# Local: style
 __usageMessageStyle() {
-  local color="info" && case "$1" in 0) ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac && shift
-  decorate "$color" "$@"
+  style="info" && case "$1" in 0) ;; 1) style="error" ;; 2) style="red" ;; *) style="orange" ;; esac && shift
 }
 
 # Output the message for usage consistently
@@ -88,14 +100,18 @@ __usageMessage() {
     __usageMessageStyle "$returnCode" "$suffix"
   elif [ "$returnCode" != 2 ]; then
     [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
     [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 
-# IDENTICAL __documentationFile 24
+# IDENTICAL __documentationFile 26
 
 # Summary: Load cached documentation files
 # Argument: home - Directory. BUILD_HOME
@@ -111,9 +127,11 @@ __documentationFile() {
   local extension="md" && if [ $# -gt 0 ]; then extension="$1" && shift; fi
 
   export BUILD_DOCUMENTATION_PATH
-  local paths && IFS=":" read -r -d $'\n' -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
+  local paths=() && IFS=":" read -r -a paths <<<"${BUILD_DOCUMENTATION_PATH-"bin/build/documentation"}"
   local docFile="" path && for path in "${paths[@]+"${paths[@]}"}"; do
-    docFile="$home/${path%/}/$functionName.$extension"
+    [ -n "$path" ] || continue
+    path="${path#"$home/"}" && [ "${path[0]}" = "/" ] || path="${home%/}/${path%/}"
+    docFile="$path/$functionName.$extension"
     $generatePath || [ -f "$docFile" ] || continue
     printf "%s\n" "$docFile"
     return 0
@@ -168,7 +186,8 @@ __bashDocumentationCached() {
   ) || return $?
 }
 
-# Output a simple error message for a function
+# Summary: Simpler `bashDocumentation`
+# Output a simple error message for a function.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: source - File. Required. File where documentation exists.

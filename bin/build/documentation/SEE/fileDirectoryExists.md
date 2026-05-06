@@ -1,1 +1,22 @@
-[fileDirectoryExists]({rel}tools/file.md#filedirectoryexists) - Does the file's directory exist? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/directory.sh#L158))
+## `fileDirectoryExists`
+
+> Does the file's directory exist?
+
+### Usage
+
+    fileDirectoryExists directory
+
+Does the file's directory exist?
+
+> Location: `bin/build/tools/directory.sh`
+
+### Arguments
+
+- `directory` - Directory. Required. Test if file directory exists (file does not have to exist)
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

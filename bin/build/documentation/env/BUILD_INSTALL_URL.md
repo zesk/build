@@ -1,1 +1,1 @@
-- `BUILD_INSTALL_URL` *URL*. `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer. [notes](#build_install_url)
+- `BUILD_INSTALL_URL` &mdash; BUILD_INSTALL_URL *URL*. `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer. [notes](#build_install_url)

@@ -1,6 +1,0 @@
-description="Constant for the directory where services are monitored by daemontools"
-descriptionLineCount="1"
-category="Vendor"
-categoryId="vendor"
-type="Directory"
-summary="Constant for the directory where services are monitored by daemontools"

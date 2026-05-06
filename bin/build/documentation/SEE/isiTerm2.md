@@ -1,1 +1,23 @@
-[isiTerm2]({rel}tools/iterm2.md#isiterm2) - Is the current console iTerm2? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L36))
+## `isiTerm2`
+
+> Is the current console iTerm2?
+
+### Usage
+
+    isiTerm2 [ --help ]
+
+Is the current console iTerm2?
+Succeeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`
+
+> Location: `bin/build/tools/iterm2.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

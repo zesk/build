@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Name: Prompt command previous result
 # Previous result code
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash Prompt

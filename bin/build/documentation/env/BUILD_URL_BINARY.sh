@@ -1,6 +1,0 @@
-description="Binary used in __urlOpen"
-descriptionLineCount="1"
-category="Decoration"
-categoryId="decoration"
-type="Callable"
-summary="Binary used in __urlOpen"

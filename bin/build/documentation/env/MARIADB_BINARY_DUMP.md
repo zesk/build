@@ -1,1 +1,1 @@
-- `MARIADB_BINARY_DUMP` *Executable*. MariaDB binary for dump [notes](#mariadb_binary_dump)
+- `MARIADB_BINARY_DUMP` &mdash; MARIADB_BINARY_DUMP *Executable*. MariaDB binary for dump [notes](#mariadb_binary_dump)

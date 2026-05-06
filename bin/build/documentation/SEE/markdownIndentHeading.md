@@ -1,1 +1,22 @@
-[markdownIndentHeading]({rel}tools/markdown.md#markdownindentheading) - Add an indent to all markdown headings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L15))
+## `markdownIndentHeading`
+
+> Add an indent to all markdown headings
+
+### Usage
+
+    markdownIndentHeading
+
+Add an indent to all markdown headings
+
+> Location: `bin/build/tools/markdown.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

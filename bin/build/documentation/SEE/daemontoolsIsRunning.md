@@ -1,1 +1,22 @@
-[daemontoolsIsRunning]({rel}tools/daemontools.md#daemontoolsisrunning) - Is daemontools running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/daemontools.sh#L243))
+## `daemontoolsIsRunning`
+
+> Is daemontools running?
+
+### Usage
+
+    daemontoolsIsRunning [ --help ]
+
+Is daemontools running?
+
+> Location: `bin/build/tools/daemontools.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
