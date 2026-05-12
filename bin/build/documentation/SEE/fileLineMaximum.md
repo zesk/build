@@ -4,7 +4,7 @@
 
 ### Usage
 
-    fileLineMaximum
+    fileLineMaximum [ --help ]
 
 Outputs the maximum line length passed into stdin
 
@@ -12,7 +12,7 @@ Outputs the maximum line length passed into stdin
 
 ### Arguments
 
-- none
+- `--help` - Flag. Optional. Display this help.
 
 ### Reads standard input
 

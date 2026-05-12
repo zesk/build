@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-11
+# Generated on 2026-05-12
 # shellcheck disable=SC2034
-argument=$'needle - String. Required.\nhaystack - String. Required.\n'
+argument="needle - String. Required."$'\n'"haystack - String. Required."$'\n'""
 base="text.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Outputs the integer offset of `needle` if found as substring in `haystack` (case-insensitive)\nIf `haystack` is not found, -1 is output\n\n'
+description="Outputs the integer offset of \`needle\` if found as substring in \`haystack\` (case-insensitive)"$'\n'"If \`haystack\` is not found, -1 is output"$'\n'""$'\n'""
 descriptionLineCount="3"
 file="bin/build/tools/text.sh"
 fn="stringOffsetInsensitive"
 fnMarker="stringoffsetinsensitive"
 foundNames=([0]="argument" [1]="stdout")
-line="1088"
-rawComment=$'Outputs the integer offset of `needle` if found as substring in `haystack` (case-insensitive)\nIf `haystack` is not found, -1 is output\nArgument: needle - String. Required.\nArgument: haystack - String. Required.\nstdout: `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+line="1081"
+rawComment="Outputs the integer offset of \`needle\` if found as substring in \`haystack\` (case-insensitive)"$'\n'"If \`haystack\` is not found, -1 is output"$'\n'"Argument: needle - String. Required."$'\n'"Argument: haystack - String. Required."$'\n'"stdout: \`Integer\`. The offset at which the \`needle\` was found in \`haystack\`. Outputs -1 if not found."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="91ca86fbe4b525bcb3ac16ba8f966d90f969a4c2"
-sourceLine="1088"
-stdout=$'`Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.\n'
+sourceHash="b913e34543d2ae704942cadce5473f26955cd42e"
+sourceLine="1081"
+stdout="\`Integer\`. The offset at which the \`needle\` was found in \`haystack\`. Outputs -1 if not found."$'\n'""
 summary="Outputs the integer offset of \`needle\` if found as substring"
 summaryComputed="true"
 usage="stringOffsetInsensitive needle haystack"

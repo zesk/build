@@ -1,14 +1,14 @@
 # Release notes
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE header 2 -->
+[⬅ Parent ](../index.md)
 <hr />
 
 {releaseNotes}
 
 Built on **{timestamp}**.
 
-<!-- TEMPLATE toolFooter 3 -->
+<!-- TEMPLATE footer 5 -->
 <hr />
 
-[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+[⬅ Parent ](../index.md)

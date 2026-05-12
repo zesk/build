@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-11
+# Generated on 2026-05-12
 # shellcheck disable=SC2034
-argument=$'startLine - Integer. Required. Starting line number.\nendLine - Integer. Required. Ending line number.\n--help - Flag. Optional. Display this help.\n'
+argument="startLine - Integer. Required. Starting line number."$'\n'"endLine - Integer. Required. Ending line number."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="text.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Extract a range of lines from a file\n\n'
+description="Extract a range of lines from a file"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/text.sh"
 fn="fileExtractLines"
 fnMarker="fileextractlines"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="27"
-rawComment=$'Extract a range of lines from a file\nArgument: startLine - Integer. Required. Starting line number.\nArgument: endLine - Integer. Required. Ending line number.\nArgument: --help - Flag. Optional. Display this help.\nstdin: Reads lines until EOF\nstdout: Outputs the selected lines only\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Extract a range of lines from a file"$'\n'"Argument: startLine - Integer. Required. Starting line number."$'\n'"Argument: endLine - Integer. Required. Ending line number."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Reads lines until EOF"$'\n'"stdout: Outputs the selected lines only"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceHash="91ca86fbe4b525bcb3ac16ba8f966d90f969a4c2"
+sourceHash="b913e34543d2ae704942cadce5473f26955cd42e"
 sourceLine="27"
-stdin=$'Reads lines until EOF\n'
-stdout=$'Outputs the selected lines only\n'
+stdin="Reads lines until EOF"$'\n'""
+stdout="Outputs the selected lines only"$'\n'""
 summary="Extract a range of lines from a file"
 summaryComputed="true"
 usage="fileExtractLines startLine endLine [ --help ]"
