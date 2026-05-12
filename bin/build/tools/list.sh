@@ -14,6 +14,8 @@
 #
 # Environment: PATH MANPATH
 
+# IDENTICAL listJoin 17
+
 # Output a list of items joined by a character
 # Output: text
 # Argument: separator - EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.

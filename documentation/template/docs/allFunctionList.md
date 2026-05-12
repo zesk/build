@@ -1,698 +1,20257 @@
-- {SEE:alpineContainer}
-- {SEE:apkIsInstalled}
-- {SEE:applicationHome}
-- {SEE:applicationHomeAliases}
-- {SEE:approveBashSource}
-- {SEE:approvedSources}
-- {SEE:aptIsInstalled}
-- {SEE:aptKeyAdd}
-- {SEE:aptKeyAddHashicorp}
-- {SEE:aptKeyAddOpenTofu}
-- {SEE:aptKeyRemove}
-- {SEE:aptKeyRemoveHashicorp}
-- {SEE:aptKeyRemoveOpenTofu}
-- {SEE:aptKeyRingDirectory}
-- {SEE:aptNonInteractive}
-- {SEE:aptSourcesDirectory}
-- {SEE:assertContains}
-- {SEE:assertDirectoryDoesNotExist}
-- {SEE:assertDirectoryEmpty}
-- {SEE:assertDirectoryExists}
-- {SEE:assertDirectoryNotEmpty}
-- {SEE:assertEquals}
-- {SEE:assertExitCode}
-- {SEE:assertFileContains}
-- {SEE:assertFileDoesNotContain}
-- {SEE:assertFileDoesNotExist}
-- {SEE:assertFileExists}
-- {SEE:assertFileSize}
-- {SEE:assertGreaterThan}
-- {SEE:assertGreaterThanOrEqual}
-- {SEE:assertLessThan}
-- {SEE:assertLessThanOrEqual}
-- {SEE:assertNotContains}
-- {SEE:assertNotEquals}
-- {SEE:assertNotExitCode}
-- {SEE:assertNotFileSize}
-- {SEE:assertNotZeroFileSize}
-- {SEE:assertOutputContains}
-- {SEE:assertOutputDoesNotContain}
-- {SEE:assertOutputEquals}
-- {SEE:assertStatistics}
-- {SEE:assertStringEmpty}
-- {SEE:assertStringNotEmpty}
-- {SEE:assertZeroFileSize}
-- {SEE:awsCredentialsAdd}
-- {SEE:awsCredentialsFile}
-- {SEE:awsCredentialsFromEnvironment}
-- {SEE:awsCredentialsHasProfile}
-- {SEE:awsCredentialsRemove}
-- {SEE:awsEnvironmentFromCredentials}
-- {SEE:awsHasEnvironment}
-- {SEE:awsInstall}
-- {SEE:awsIPAccess}
-- {SEE:awsIsKeyUpToDate}
-- {SEE:awsProfilesList}
-- {SEE:awsRegionValid}
-- {SEE:awsS3DirectoryDelete}
-- {SEE:awsS3Upload}
-- {SEE:awsSecurityGroupIPModify}
-- {SEE:backgroundProcess}
-- {SEE:bashBuiltins}
-- {SEE:bashCheckRequires}
-- {SEE:bashCommentFilter}
-- {SEE:bashCommentVariable}
-- {SEE:bashCoverage}
-- {SEE:bashCoverageReport}
-- {SEE:bashDebug}
-- {SEE:bashDebuggerDisable}
-- {SEE:bashDebuggerEnable}
-- {SEE:bashDebugInterruptFile}
-- {SEE:bashDocumentation}
-- {SEE:bashDocumentationDeriveFunction}
-- {SEE:bashDocumentationDeriveSee}
-- {SEE:bashDocumentationExtract}
-- {SEE:bashDocumentationMarkdown}
-- {SEE:bashFileComment}
-- {SEE:bashFinalComment}
-- {SEE:bashFindUncaughtAssertions}
-- {SEE:bashFirstComment}
-- {SEE:bashFunctionComment}
-- {SEE:bashFunctionCommentVariable}
-- {SEE:bashFunctionDefined}
-- {SEE:bashGetRequires}
-- {SEE:bashLibrary}
-- {SEE:bashLibraryHome}
-- {SEE:bashLint}
-- {SEE:bashLintFiles}
-- {SEE:bashLintFilesInteractive}
-- {SEE:bashListFunctions}
-- {SEE:bashMakeExecutable}
-- {SEE:bashPrompt}
-- {SEE:bashPromptColorScheme}
-- {SEE:bashPromptColorsFormat}
-- {SEE:bashPromptMarkers}
-- {SEE:bashPromptModule_dotFilesWatcher}
-- {SEE:bashPromptModule_TermColors}
-- {SEE:bashRecursionDebug}
-- {SEE:bashRemoveCommentCharacter}
-- {SEE:bashSanitize}
-- {SEE:bashShowUsage}
-- {SEE:bashSimpleDocumentation}
-- {SEE:bashSourcePath}
-- {SEE:bashStripComments}
-- {SEE:bashUserInput}
-- {SEE:bitbucketContainer}
-- {SEE:bitbucketGetVariable}
-- {SEE:bitbucketPRNewURL}
-- {SEE:booleanChoose}
-- {SEE:booleanParse}
-- {SEE:brewInstall}
-- {SEE:buildApplicationConfigure}
-- {SEE:buildCacheDirectory}
-- {SEE:buildCompletion}
-- {SEE:buildDebugEnabled}
-- {SEE:buildDebugStart}
-- {SEE:buildDebugStop}
-- {SEE:buildDeprecatedFunctions}
-- {SEE:buildDevelopmentLink}
-- {SEE:buildEnvironmentAdd}
-- {SEE:buildEnvironmentContext}
-- {SEE:buildEnvironmentFiles}
-- {SEE:buildEnvironmentGet}
-- {SEE:buildEnvironmentGetDirectory}
-- {SEE:buildEnvironmentLoad}
-- {SEE:buildEnvironmentNames}
-- {SEE:buildFunctions}
-- {SEE:buildHome}
-- {SEE:buildQuietLog}
-- {SEE:catchArgument}
-- {SEE:catchCode}
-- {SEE:catchEnvironment}
-- {SEE:catchEnvironmentQuiet}
-- {SEE:catchReturn}
-- {SEE:characterClasses}
-- {SEE:characterClassReport}
-- {SEE:characterFromInteger}
-- {SEE:characterToInteger}
-- {SEE:colorBrightness}
-- {SEE:colorFormat}
-- {SEE:colorMultiply}
-- {SEE:colorNormalize}
-- {SEE:colorParse}
-- {SEE:colorSampleCodes}
-- {SEE:colorSampleCombinations}
-- {SEE:colorSampleSemanticStyles}
-- {SEE:colorSampleStyles}
-- {SEE:colorScheme}
-- {SEE:confirmMenu}
-- {SEE:confirmYesNo}
-- {SEE:consoleBrightness}
-- {SEE:consoleColumns}
-- {SEE:consoleConfigureColorMode}
-- {SEE:consoleConfigureDecorate}
-- {SEE:consoleDefaultTitle}
-- {SEE:consoleFileLink}
-- {SEE:consoleGetColor}
-- {SEE:consoleHasAnimation}
-- {SEE:consoleHasColors}
-- {SEE:consoleHeadingLine}
-- {SEE:consoleLine}
-- {SEE:consoleLineFill}
-- {SEE:consoleLink}
-- {SEE:consoleLinksSupported}
-- {SEE:consolePlainLength}
-- {SEE:consoleRows}
-- {SEE:consoleSetTitle}
-- {SEE:consoleToPlain}
-- {SEE:consoleTrimWidth}
-- {SEE:contextOpen}
-- {SEE:contextShow}
-- {SEE:convertValue}
-- {SEE:cpuCount}
-- {SEE:cpuLoadAverage}
-- {SEE:crontabApplicationUpdate}
-- {SEE:cursorGet}
-- {SEE:cursorSet}
-- {SEE:daemontoolsExecute}
-- {SEE:daemontoolsHome}
-- {SEE:daemontoolsInstall}
-- {SEE:daemontoolsInstallService}
-- {SEE:daemontoolsIsRunning}
-- {SEE:daemontoolsManager}
-- {SEE:daemontoolsProcessIds}
-- {SEE:daemontoolsRemoveService}
-- {SEE:daemontoolsRestart}
-- {SEE:daemontoolsTerminate}
-- {SEE:darwinDialog}
-- {SEE:darwinNotification}
-- {SEE:darwinSoundDirectory}
-- {SEE:darwinSoundInstall}
-- {SEE:darwinSoundNames}
-- {SEE:darwinSoundValid}
-- {SEE:dateAdd}
-- {SEE:dateFromTimestamp}
-- {SEE:dateToday}
-- {SEE:dateToFormat}
-- {SEE:dateTomorrow}
-- {SEE:dateToTimestamp}
-- {SEE:dateValid}
-- {SEE:dateWithinDays}
-- {SEE:dateYesterday}
-- {SEE:debuggingStack}
-- {SEE:decorate}
-- {SEE:decorateInitialized}
-- {SEE:decoratePath}
-- {SEE:decorateStyle}
-- {SEE:decorateThemed}
-- {SEE:decorateThemelessMode}
-- {SEE:decorations}
-- {SEE:deployApplication}
-- {SEE:deployApplicationVersion}
-- {SEE:deployBuildEnvironment}
-- {SEE:deployHasVersion}
-- {SEE:deployLink}
-- {SEE:deployMigrateDirectoryToLink}
-- {SEE:deployMove}
-- {SEE:deployNextVersion}
-- {SEE:deployPackageName}
-- {SEE:deployPreviousVersion}
-- {SEE:deployRemoteFinish}
-- {SEE:deployToRemote}
-- {SEE:deprecatedCannon}
-- {SEE:deprecatedCannonFile}
-- {SEE:deprecatedFilePrependVersion}
-- {SEE:deprecatedFind}
-- {SEE:deprecatedIgnore}
-- {SEE:deprecatedTokensFile}
-- {SEE:developerAnnounce}
-- {SEE:developerDevelopmentLink}
-- {SEE:developerTrack}
-- {SEE:developerUndo}
-- {SEE:directoryChange}
-- {SEE:directoryClobber}
-- {SEE:directoryIsEmpty}
-- {SEE:directoryNewestFile}
-- {SEE:directoryOldestFile}
-- {SEE:directoryParent}
-- {SEE:directoryPathSimplify}
-- {SEE:directoryRelativePath}
-- {SEE:directoryRequire}
-- {SEE:directoryWatch}
-- {SEE:dockerCompose}
-- {SEE:dockerComposeCommandList}
-- {SEE:dockerComposeInstall}
-- {SEE:dockerComposeIsRunning}
-- {SEE:dockerComposeUninstall}
-- {SEE:dockerComposeWrapper}
-- {SEE:dockerImages}
-- {SEE:dockerInside}
-- {SEE:dockerListContext}
-- {SEE:dockerLocalContainer}
-- {SEE:dockerPlatformDefault}
-- {SEE:dockerVolumeDelete}
-- {SEE:dockerVolumeExists}
-- {SEE:documentationCache}
-- {SEE:documentationEnvironmentMake}
-- {SEE:documentationIdenticalRepair}
-- {SEE:documentationIndexDocumentation}
-- {SEE:documentationIndexGenerate}
-- {SEE:documentationIndexLookup}
-- {SEE:documentationIndexUnlinkedFunctions}
-- {SEE:documentationMake}
-- {SEE:documentationMaker}
-- {SEE:documentationMkdocs}
-- {SEE:documentationTemplate}
-- {SEE:documentationTemplateCompile}
-- {SEE:documentationTemplateFunctionCompile}
-- {SEE:documentationUnlinked}
-- {SEE:dotFilesApproved}
-- {SEE:dotFilesApprovedFile}
-- {SEE:dumpBinary}
-- {SEE:dumpEnvironment}
-- {SEE:dumpEnvironmentUnsafe}
-- {SEE:dumpFile}
-- {SEE:dumpHex}
-- {SEE:dumpLoadAverages}
-- {SEE:dumpPipe}
-- {SEE:environmentApplicationLoad}
-- {SEE:environmentApplicationVariables}
-- {SEE:environmentClean}
-- {SEE:environmentCompile}
-- {SEE:environmentFileApplicationMake}
-- {SEE:environmentFileApplicationVerify}
-- {SEE:environmentFileBashCompatibleToDocker}
-- {SEE:environmentFileDockerToBashCompatible}
-- {SEE:environmentFileIsDocker}
-- {SEE:environmentFileLoad}
-- {SEE:environmentFileShow}
-- {SEE:environmentFileToBashCompatible}
-- {SEE:environmentFileToDocker}
-- {SEE:environmentLines}
-- {SEE:environmentLoad}
-- {SEE:environmentNames}
-- {SEE:environmentOutput}
-- {SEE:environmentParseVariables}
-- {SEE:environmentRequire}
-- {SEE:environmentSecureVariables}
-- {SEE:environmentValueConvertArray}
-- {SEE:environmentValueRead}
-- {SEE:environmentValueReadArray}
-- {SEE:environmentValueWrite}
-- {SEE:environmentValueWriteArray}
-- {SEE:environmentVariableNameValid}
-- {SEE:environmentVariables}
-- {SEE:escapeBash}
-- {SEE:escapeDoubleQuotes}
-- {SEE:escapeQuotes}
-- {SEE:escapeSingleQuotes}
-- {SEE:evalCheck}
-- {SEE:executableExists}
-- {SEE:executableRequire}
-- {SEE:execute}
-- {SEE:executeCount}
-- {SEE:executeEcho}
-- {SEE:executeInputSupport}
-- {SEE:executeLoop}
-- {SEE:fileCopy}
-- {SEE:fileCopyWouldChange}
-- {SEE:fileDirectoryExists}
-- {SEE:fileDirectoryRequire}
-- {SEE:fileEndsWithNewline}
-- {SEE:fileExtensionLists}
-- {SEE:fileExtractLines}
-- {SEE:fileFieldMaximum}
-- {SEE:fileGroup}
-- {SEE:fileIsEmpty}
-- {SEE:fileIsNewest}
-- {SEE:fileIsOldest}
-- {SEE:fileLineCount}
-- {SEE:fileLineMaximum}
-- {SEE:fileMatches}
-- {SEE:fileModificationSeconds}
-- {SEE:fileModificationTime}
-- {SEE:fileModificationTimes}
-- {SEE:fileModifiedDays}
-- {SEE:fileModifiedRecently}
-- {SEE:fileModifiedSeconds}
-- {SEE:fileNewest}
-- {SEE:fileNotMatches}
-- {SEE:fileOldest}
-- {SEE:fileOwner}
-- {SEE:fileRealPath}
-- {SEE:fileReverseLines}
-- {SEE:filesAreIdentical}
-- {SEE:fileSize}
-- {SEE:filesOpenStatus}
-- {SEE:filesRename}
-- {SEE:fileTeeAtomic}
-- {SEE:fileTemporaryName}
-- {SEE:fileType}
-- {SEE:fileUniqueLines}
-- {SEE:fingerprint}
-- {SEE:floatRound}
-- {SEE:floatTruncate}
-- {SEE:gitBranchExists}
-- {SEE:gitBranchExistsLocal}
-- {SEE:gitBranchExistsRemote}
-- {SEE:gitBranchify}
-- {SEE:gitBranchMergeCurrent}
-- {SEE:gitCommit}
-- {SEE:gitCommitHash}
-- {SEE:gitCurrentBranch}
-- {SEE:gitEnsureSafeDirectory}
-- {SEE:gitFindHome}
-- {SEE:gitHasAnyRefs}
-- {SEE:gitHookTypes}
-- {SEE:githubLatest}
-- {SEE:githubLatestRelease}
-- {SEE:githubProjectJSON}
-- {SEE:githubPublishDate}
-- {SEE:githubRelease}
-- {SEE:githubURLParse}
-- {SEE:gitInsideHook}
-- {SEE:gitInstall}
-- {SEE:gitInstallHook}
-- {SEE:gitInstallHooks}
-- {SEE:gitMainly}
-- {SEE:gitPreCommitCleanup}
-- {SEE:gitPreCommitExtensionList}
-- {SEE:gitPreCommitHasExtension}
-- {SEE:gitPreCommitHeader}
-- {SEE:gitPreCommitListExtension}
-- {SEE:gitPreCommitSetup}
-- {SEE:gitRemoteHosts}
-- {SEE:gitRemoveFileFromHistory}
-- {SEE:gitRepositoryChanged}
-- {SEE:gitShowChanges}
-- {SEE:gitShowStatus}
-- {SEE:gitTagAgain}
-- {SEE:gitTagDelete}
-- {SEE:gitTagVee}
-- {SEE:gitTagVersion}
-- {SEE:gitUninstall}
-- {SEE:gitVersionLast}
-- {SEE:gitVersionList}
-- {SEE:grepSafe}
-- {SEE:groupID}
-- {SEE:helpArgument}
-- {SEE:hookExists}
-- {SEE:hookFind}
-- {SEE:hookRun}
-- {SEE:hookRunOptional}
-- {SEE:hookSource}
-- {SEE:hookSourceOptional}
-- {SEE:hookVersionCurrent}
-- {SEE:hookVersionLive}
-- {SEE:hostTTFB}
-- {SEE:housekeeper}
-- {SEE:identicalCheck}
-- {SEE:identicalCheckShell}
-- {SEE:identicalFindTokens}
-- {SEE:identicalRepair}
-- {SEE:identicalWatch}
-- {SEE:inArray}
-- {SEE:incrementor}
-- {SEE:installInstallBinary}
-- {SEE:installInstallBuild}
-- {SEE:integerClamp}
-- {SEE:interactiveCountdown}
-- {SEE:interactiveManager}
-- {SEE:interactiveOccasionally}
-- {SEE:isAlpine}
-- {SEE:isArray}
-- {SEE:isBashBuiltin}
-- {SEE:isBashDebug}
-- {SEE:isBitBucketPipeline}
-- {SEE:isBoolean}
-- {SEE:isCallable}
-- {SEE:isCharacterClass}
-- {SEE:isCharacterClasses}
-- {SEE:isDarwin}
-- {SEE:isDockerComposeCommand}
-- {SEE:isErrorExit}
-- {SEE:isExecutable}
-- {SEE:isFunction}
-- {SEE:isInteger}
-- {SEE:isiTerm2}
-- {SEE:isMappable}
-- {SEE:isNumber}
-- {SEE:isPHPStorm}
-- {SEE:isPlain}
-- {SEE:isPositiveInteger}
-- {SEE:isPyCharm}
-- {SEE:isS3URL}
-- {SEE:isTrue}
-- {SEE:isTTYAvailable}
-- {SEE:isType}
-- {SEE:isUnsignedInteger}
-- {SEE:isUnsignedNumber}
-- {SEE:isValidateType}
-- {SEE:isVersion}
-- {SEE:isVisualStudioCode}
-- {SEE:iTerm2Aliases}
-- {SEE:iTerm2Attention}
-- {SEE:iTerm2Badge}
-- {SEE:iTerm2ColorNames}
-- {SEE:iTerm2ColorTypes}
-- {SEE:iTerm2Download}
-- {SEE:iTerm2Image}
-- {SEE:iTerm2Init}
-- {SEE:iTerm2IsColorName}
-- {SEE:iTerm2IsColorType}
-- {SEE:iTerm2Notify}
-- {SEE:iTerm2PromptSupport}
-- {SEE:iTerm2SetColors}
-- {SEE:iTerm2Version}
-- {SEE:json}
-- {SEE:jsonField}
-- {SEE:jsonFileGet}
-- {SEE:jsonFileSet}
-- {SEE:jsonPath}
-- {SEE:jsonSetValue}
-- {SEE:junitClose}
-- {SEE:junitOpen}
-- {SEE:junitProperties}
-- {SEE:junitPropertyList}
-- {SEE:junitSuiteClose}
-- {SEE:junitSuiteOpen}
-- {SEE:junitSystemErrorClose}
-- {SEE:junitSystemErrorOpen}
-- {SEE:junitSystemOutputClose}
-- {SEE:junitSystemOutputOpen}
-- {SEE:junitTestCaseClose}
-- {SEE:junitTestCaseErrorClose}
-- {SEE:junitTestCaseErrorOpen}
-- {SEE:junitTestCaseFailureClose}
-- {SEE:junitTestCaseFailureOpen}
-- {SEE:junitTestCaseOpen}
-- {SEE:junitTestCaseSkipped}
-- {SEE:labeledBigText}
-- {SEE:linkCreate}
-- {SEE:linkRename}
-- {SEE:listAppend}
-- {SEE:listCleanDuplicates}
-- {SEE:listContains}
-- {SEE:listJoin}
-- {SEE:listRemove}
-- {SEE:localePlural}
-- {SEE:localePluralWord}
-- {SEE:logDirectoryRotate}
-- {SEE:logRotate}
-- {SEE:manPathCleanDuplicates}
-- {SEE:manPathConfigure}
-- {SEE:manPathRemove}
-- {SEE:mapEnvironment}
-- {SEE:mapFunction}
-- {SEE:mapTokens}
-- {SEE:mapValue}
-- {SEE:mapValueTrim}
-- {SEE:mariadbConnect}
-- {SEE:mariadbDump}
-- {SEE:mariadbDumpClean}
-- {SEE:mariadbInstall}
-- {SEE:mariadbUninstall}
-- {SEE:markdownCheckIndex}
-- {SEE:markdownFormatList}
-- {SEE:markdownIndentHeading}
-- {SEE:markdownRemoveUnfinishedSections}
-- {SEE:markdownToConsole}
-- {SEE:mockConsoleAnimationStart}
-- {SEE:mockConsoleAnimationStop}
-- {SEE:mockEnvironmentStart}
-- {SEE:mockEnvironmentStop}
-- {SEE:muzzle}
-- {SEE:muzzleReturn}
-- {SEE:networkIPList}
-- {SEE:networkIPLookup}
-- {SEE:networkMACAddressList}
-- {SEE:networkNameFull}
-- {SEE:nodeInstall}
-- {SEE:nodePackageManager}
-- {SEE:nodePackageManagerInstall}
-- {SEE:nodePackageManagerUninstall}
-- {SEE:nodePackageManagerValid}
-- {SEE:nodeUninstall}
-- {SEE:notify}
-- {SEE:npmInstall}
-- {SEE:npmUninstall}
-- {SEE:outputTrigger}
-- {SEE:packageAvailableList}
-- {SEE:packageDefault}
-- {SEE:packageGroupInstall}
-- {SEE:packageGroupUninstall}
-- {SEE:packageGroupWhich}
-- {SEE:packageInstall}
-- {SEE:packageInstalledList}
-- {SEE:packageIsInstalled}
-- {SEE:packageManagerDefault}
-- {SEE:packageManagerValid}
-- {SEE:packageMapping}
-- {SEE:packageNeedRestartFlag}
-- {SEE:packageUninstall}
-- {SEE:packageUpdate}
-- {SEE:packageUpgrade}
-- {SEE:packageWhich}
-- {SEE:packageWhichUninstall}
-- {SEE:pathCleanDuplicates}
-- {SEE:pathConfigure}
-- {SEE:pathIsAbsolute}
-- {SEE:pathRemove}
-- {SEE:pathShow}
-- {SEE:pause}
-- {SEE:pcregrepBinary}
-- {SEE:pcregrepInstall}
-- {SEE:phpBuild}
+- [alpineContainer]({rel}tools/apk.md#alpinecontainer) - Open an Alpine container shell ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apk.sh#L50))## `apkIsInstalled`
+- 
+- > Is this an Alpine system and is apk installed?
+- 
+- ### Usage
+- 
+-     apkIsInstalled [ --help ]
+- 
+- Is this an Alpine system and is apk installed?
+- 
+- > Location: `bin/build/tools/apk.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - System is an alpine system and apk is installed
+- - `1` - System is not an alpine system or apk is not installed
+- 
+- ## `applicationHome`
+- 
+- > Set, or cd to current application home directory.
+- 
+- ### Usage
+- 
+-     applicationHome [ --help ] [ directory ] [ --go ]
+- 
+- Set, or cd to current application home directory.
+- 
+- > Location: `bin/build/tools/application.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `directory` - Directory. Optional. Set the application home to this directory.
+- - `--go` - Flag. Optional. Change to the current saved application home directory.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `applicationHomeAliases`
+- 
+- > `applicationHome` bash aliases setup
+- 
+- ### Usage
+- 
+-     applicationHomeAliases [ goAlias ] [ setAlias ]
+- 
+- Set aliases `G` and `g` (defaults) to aliases of `applicationHome`
+- Localize as you wish for your own shell
+- 
+- > Location: `bin/build/tools/application.sh`
+- 
+- ### Arguments
+- 
+- - `goAlias` - String. Alias for `applicationHome --go`. Default is `g`.
+- - `setAlias` - String. Alias for `applicationHome`. Default is `G`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `approveBashSource`
+- 
+- > Loads files or a directory of `.sh` files using `source`
+- 
+- ### Usage
+- 
+-     approveBashSource directoryOrFile [ --info ] [ --no-info ] [ --verbose ] [ --clear ] [ --prefix ]
+- 
+- Loads files or a directory of `.sh` files using `source` to make the code available.
+- Has security implications. Use with caution and ensure your directory is protected.
+- Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
+- Stale files are ones which no longer are associated with a file's current fingerprint.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `directoryOrFile` - Exists. Required. Directory or file to `source` `.sh` files found.
+- - `--info` - Flag. Optional. Show user what they should do (press a key).
+- - `--no-info` - Flag. Optional. Hide user info (what they should do ... press a key)
+- - `--verbose` - Flag. Optional. Show what is done as status messages.
+- - `--clear` - Flag. Optional. Clear the approval status for file given.
+- - `--prefix` - String. Optional. Display this text before each status messages.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:XDG_STATE_HOME.sh}
+- 
+- ## `approvedSources`
+- 
+- > List approved Bash script sources which can be loaded automatically
+- 
+- ### Usage
+- 
+-     approvedSources [ --debug ] [ --no-delete ] [ --delete ]
+- 
+- List approved Bash script sources which can be loaded automatically by project hooks.
+- 
+- Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
+- Stale files are ones which no longer are associated with a file's current fingerprint.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ## `aptIsInstalled`
+- 
+- > Is apt-get installed?
+- 
+- ### Usage
+- 
+-     aptIsInstalled
+- 
+- Is apt-get installed?
+- 
+- > Location: `bin/build/tools/apt.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `aptKeyAdd`
+- 
+- > Add keys to enable apt to download terraform directly from
+- 
+- ### Usage
+- 
+-     aptKeyAdd [ --title keyTitle ] --name keyName --url remoteUrl [ --help ]
+- 
+- Add keys to enable apt to download terraform directly from hashicorp.com
+- 
+- > Location: `bin/build/tools/apt.sh`
+- 
+- ### Arguments
+- 
+- - `--title keyTitle` - String. Optional. Title of the key.
+- - `--name keyName` - String. Required. Name of the key used to generate file names.
+- - `--url remoteUrl` - URL. Required. Remote URL of gpg key.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - if environment is awry
+- - `0` - Apt key is installed AOK
+- 
+- ## `aptKeyAddHashicorp`
+- 
+- > Add keys to enable apt to download terraform directly from
+- 
+- ### Usage
+- 
+-     aptKeyAddHashicorp [ --help ]
+- 
+- Add keys to enable apt to download terraform directly from hashicorp.com
+- 
+- > Location: `bin/build/tools/terraform.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - if environment is awry
+- - `0` - All good to install terraform
+- 
+- ## `aptKeyAddOpenTofu`
+- 
+- > Add keys to enable apt to download tofu directly from
+- 
+- ### Usage
+- 
+-     aptKeyAddOpenTofu [ --help ]
+- 
+- Add keys to enable apt to download tofu directly from opentofu.org
+- 
+- > Location: `bin/build/tools/tofu.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - if environment is awry
+- - `0` - All good to install terraform
+- 
+- ### See Also
+- 
+- - {SEE:aptKeyRemoveOpenTofu}
+- 
+- ## `aptKeyRemove`
+- 
+- > Remove apt keys
+- 
+- ### Usage
+- 
+-     aptKeyRemove keyName [ --skip ] [ --help ]
+- 
+- Remove apt keys
+- 
+- > Location: `bin/build/tools/apt.sh`
+- 
+- ### Arguments
+- 
+- - `keyName` - String. Required. One or more key names to remove.
+- - `--skip` - Flag. Optional. a Do not do `apt-get update` afterwards to update the database.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - if environment is awry
+- - `0` - Apt key was removed AOK
+- 
+- ## `aptKeyRemoveHashicorp`
+- 
+- > Add keys to enable apt to download terraform directly from
+- 
+- ### Usage
+- 
+-     aptKeyRemoveHashicorp [ --help ]
+- 
+- Add keys to enable apt to download terraform directly from hashicorp.com
+- 
+- > Location: `bin/build/tools/terraform.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - if environment is awry
+- - `0` - All good to install terraform
+- 
+- ➡️ "catchReturn" "_bashDocumentationDeriveFunction" "bashDocumentationMarkdown" "aptKeyRemoveOpenTofu" ""
+- ## `aptKeyRemoveOpenTofu`
+- 
+- > Remove keys to disable apt to download tofu from opentofu.org
+- 
+- ### Usage
+- 
+-     aptKeyRemoveOpenTofu [ --help ]
+- 
+- Remove keys to disable apt to download tofu from opentofu.org
+- 
+- > Location: `bin/build/tools/tofu.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - Environment problems
+- - `0` - All good to install tofu
+- 
+- ### See Also
+- 
+- - ## `aptKeyAddOpenTofu`
+- 
+- ## `aptKeyRingDirectory`
+- 
+- > Get key ring directory path
+- 
+- ### Usage
+- 
+-     aptKeyRingDirectory
+- 
+- Get key ring directory path
+- 
+- > Location: `bin/build/tools/apt.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `aptNonInteractive`
+- 
+- > Run apt-get non-interactively
+- 
+- ### Usage
+- 
+-     aptNonInteractive [ ... ]
+- 
+- Run apt-get non-interactively
+- 
+- > Location: `bin/build/tools/apt.sh`
+- 
+- ### Arguments
+- 
+- - `...` - Arguments. Pass through arguments to `apt-get`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- [aptSourcesDirectory]({rel}tools/apt.md#aptsourcesdirectory) - Get APT source list path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apt.sh#L57))## `assertContains`
+- 
+- > Assert one string contains another (case-sensitive)
+- 
+- ### Usage
+- 
+-     assertContains [ needle ] [ haystack ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert one string contains another (case-sensitive)
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `needle` - String. Text we are looking for.
+- - `haystack ... - String. One or more strings to find `needle` in` - it must be found in all haystacks.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Return codes
+- 
+- - `0` - The assertion succeeded
+- - `1` - Assertion failed
+- - `2` - Bad arguments
+- 
+- ## `assertDirectoryDoesNotExist`
+- 
+- > Test that a directory does not exist
+- 
+- ### Usage
+- 
+-     assertDirectoryDoesNotExist directory [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Test that a directory does not exist
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Required. Directory that should NOT exist
+- - `message ...` - String. Optional. An error message if this fails
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Return codes
+- 
+- - `0` - If the assertion succeeds
+- - `1` - If the assertion fails
+- 
+- ### Environment
+- 
+- - - This fails if `directory` is anything at all, even a non-directory (such as a link)
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertDirectoryDoesNotExist` was reviewed 2023-11-12
+- .
+- 
+- ## `assertDirectoryEmpty`
+- 
+- > Test that a directory exists
+- 
+- ### Usage
+- 
+-     assertDirectoryEmpty [ directory ] [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Test that a directory exists
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Directory that should exist and be empty
+- - `message ...` - String. Optional. An error message if this fails
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertDirectoryExists "$HOME" "HOME not found"
+- 
+- ### Return codes
+- 
+- - `0` - If the assertion succeeds
+- - `1` - If the assertion fails
+- 
+- ### Environment
+- 
+- - - This fails if `directory` is anything but a `directory`
+- 
+- ## `assertDirectoryExists`
+- 
+- > Test that a directory exists
+- 
+- ### Usage
+- 
+-     assertDirectoryExists directory [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Test that a directory exists
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Required. Directory that should exist
+- - `message ...` - String. Optional. An error message if this fails
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertDirectoryExists "$HOME" "HOME not found"
+- 
+- ### Return codes
+- 
+- - `0` - If the assertion succeeds
+- - `1` - If the assertion fails
+- 
+- ### Environment
+- 
+- - - This fails if `directory` is anything but a `directory`
+- 
+- ## `assertDirectoryNotEmpty`
+- 
+- > Test that a directory does not exist
+- 
+- ### Usage
+- 
+-     assertDirectoryNotEmpty [ directory ] [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Test that a directory does not exist
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Directory that should exist and not be empty
+- - `message ...` - String. Optional. An error message if this fails
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Return codes
+- 
+- - `0` - If the assertion succeeds
+- - `1` - If the assertion fails
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertDirectoryNotEmpty` was reviewed 2023-11-12
+- .
+- 
+- ## `assertEquals`
+- 
+- > Assert two strings are equal.
+- 
+- ### Usage
+- 
+-     assertEquals expected actual [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert two strings are equal.
+- 
+- If this fails it will output an error and exit.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `expected` - String. Required. Expected string.
+- - `actual` - String. Required. Actual string
+- - `message ...` - String. Optional. Message to output if the assertion fails
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertEquals "$(textAlignRight 4 "hi")" "  hi" "textAlignRight not working"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertEquals` was reviewed 2023-11-12
+- .
+- 
+- ## `assertExitCode`
+- 
+- > Assert a process runs and exits with the correct exit
+- 
+- ### Usage
+- 
+-     assertExitCode expectedExitCode command [ arguments ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert a process runs and exits with the correct exit code.
+- 
+- If this fails it will output an error and exit.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `expectedExitCode` - UnsignedInteger. Required. A numeric exit code expected from the command.
+- - `command` - Callable. Required. The command to run
+- - `arguments` - Arguments. Optional. Any arguments to pass to the command to run
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Return codes
+- 
+- - `0` - If the process exits with the provided exit code
+- - `1` - If the process exits with a different exit code
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertExitCode` was reviewed 2023-11-12
+- .
+- 
+- ## `assertFileContains`
+- 
+- > Assert a file contains one or more strings
+- 
+- ### Usage
+- 
+-     assertFileContains fileName string ... [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert a file contains one or more strings
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `fileName` - File. Required. File to search
+- - `string ...` - String. Required. One or more strings which must be found on at least one line in the file
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertFileContains $logFile Success
+-     assertFileContains $logFile "is up to date"
+- 
+- ### Return codes
+- 
+- - `0` - If the assertion succeeds
+- - `1` - If the assertion fails
+- 
+- ### Environment
+- 
+- - If the file does not exist, this will fail.
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertFileContains` was reviewed 2023-11-12
+- .
+- 
+- ## `assertFileDoesNotContain`
+- 
+- > Assert a file does not contains any occurrence of one
+- 
+- ### Usage
+- 
+-     assertFileDoesNotContain fileName string ... [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert a file does not contains any occurrence of one or more strings
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `fileName` - File. Required. File to search
+- - `string ...` - String. Required. One or more strings which must NOT be found anywhere in `fileName`
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertFileDoesNotContain $logFile error Error ERROR
+-     assertFileDoesNotContain $logFile warning Warning WARNING
+- 
+- ### Return codes
+- 
+- - `1` - If the assertions fails
+- - `0` - If the assertion succeeds
+- 
+- ### Environment
+- 
+- - If the file does not exist, this will fail.
+- 
+- ## `assertFileDoesNotExist`
+- 
+- > Test that a file does not exist
+- 
+- ### Usage
+- 
+-     assertFileDoesNotExist item [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Test that a file does not exist
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `item` - String. Required. File that should NOT exist
+- - `message ...` - String. Optional. An error message if this fails
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Return codes
+- 
+- - `0` - If the assertion succeeds
+- - `1` - If the assertion fails
+- 
+- ### Environment
+- 
+- - - This fails if `file` is anything at all, even a non-file (such as a link)
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertFileDoesNotExist` was reviewed 2023-11-12
+- .
+- 
+- ## `assertFileExists`
+- 
+- > Test that a file exists
+- 
+- ### Usage
+- 
+-     assertFileExists item ... [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Test that a file exists
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `item ...` - File. Required. One or more files which MUST exist.
+- - `message ...` - String. Optional. An error message if this fails
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertDirectoryExists "$HOME" "HOME not found"
+- 
+- ### Return codes
+- 
+- - `0` - If the assertion succeeds
+- - `1` - If the assertion fails
+- 
+- ### Environment
+- 
+- - - This fails if `file` is anything but a `file`
+- 
+- ## `assertFileSize`
+- 
+- > Assert a file has an expected size in bytes
+- 
+- ### Usage
+- 
+-     assertFileSize expectedSize fileName ... [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert a file has an expected size in bytes
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `expectedSize` - PositiveInteger. Required. Integer file size which `fileName` should be, in bytes.
+- - `fileName ...` - File. Required. One ore more file which should be `expectedSize` bytes in size.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertFileSize 22 .config
+-     assertFileSize 0 .env
+- 
+- ### Return codes
+- 
+- - `1` - If the assertions fails
+- - `0` - If the assertion succeeds
+- 
+- ### Environment
+- 
+- - If the file does not exist, this will fail.
+- 
+- ## `assertGreaterThan`
+- 
+- > Assert `leftValue > rightValue`
+- 
+- ### Usage
+- 
+-     assertGreaterThan [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] leftValue rightValue [ message ]
+- 
+- Assert `leftValue > rightValue`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `leftValue` - Integer. Required. Value to compare on the left hand side of the comparison
+- - `rightValue` - Integer. Required. Value to compare on the right hand side of the comparison
+- - `message` - Message to output if the assertion fails
+- 
+- ### Examples
+- 
+-     assertGreaterThan 3 "$found"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertGreaterThan` was reviewed 2023-11-14
+- .
+- 
+- ## `assertGreaterThanOrEqual`
+- 
+- > Assert actual value is greater than or equal to expected value
+- 
+- ### Usage
+- 
+-     assertGreaterThanOrEqual [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] leftValue rightValue [ message ]
+- 
+- Assert `leftValue >= rightValue`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `leftValue` - Integer. Required. Value to compare on the left hand side of the comparison
+- - `rightValue` - Integer. Required. Value to compare on the right hand side of the comparison
+- - `message` - Message to output if the assertion fails
+- 
+- ### Examples
+- 
+-     assertGreaterThanOrEqual 3 $found
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12
+- .
+- 
+- ## `assertLessThan`
+- 
+- > Assert `leftValue < rightValue`
+- 
+- ### Usage
+- 
+-     assertLessThan [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] leftValue rightValue [ message ]
+- 
+- Assert `leftValue < rightValue`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `leftValue` - Integer. Required. Value to compare on the left hand side of the comparison
+- - `rightValue` - Integer. Required. Value to compare on the right hand side of the comparison
+- - `message` - Message to output if the assertion fails
+- 
+- ### Examples
+- 
+-     assertLessThan 3 $found
+- 
+- ### Return codes
+- 
+- - `0` - expected less than to actual
+- - `1` - expected greater than or equal to actual, or invalid numbers
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertLessThan` was reviewed 2023-11-12
+- .
+- 
+- ## `assertLessThanOrEqual`
+- 
+- > Assert `leftValue <= rightValue`
+- 
+- ### Usage
+- 
+-     assertLessThanOrEqual [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] leftValue rightValue [ message ]
+- 
+- Assert `leftValue <= rightValue`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `leftValue` - Integer. Required. Value to compare on the left hand side of the comparison
+- - `rightValue` - Integer. Required. Value to compare on the right hand side of the comparison
+- - `message` - Message to output if the assertion fails
+- 
+- ### Examples
+- 
+-     assertLessThanOrEqual 3 $found
+- 
+- ### Return codes
+- 
+- - `0` - expected less than or equal to actual
+- - `1` - expected greater than actual, or invalid numbers
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertLessThanOrEqual` was reviewed 2026-02-02
+- .
+- 
+- ## `assertNotContains`
+- 
+- > Assert one string does not contains another (case-sensitive)
+- 
+- ### Usage
+- 
+-     assertNotContains [ needle ] [ haystack ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert one string does not contains another (case-sensitive)
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `needle` - String. Text we are looking for.
+- - `haystack ... - String. One or more strings to find `needle` in` - it must be found in no haystacks.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Return codes
+- 
+- - `0` - The assertion succeeded
+- - `1` - Assertion failed
+- - `2` - Bad arguments
+- 
+- ### See Also
+- 
+- - ## `assertContains`
+- 
+- ## `assertNotEquals`
+- 
+- > Assert two strings are not equal
+- 
+- ### Usage
+- 
+-     assertNotEquals [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] expected actual [ message ]
+- 
+- Assert two strings are not equal.
+- 
+- If this fails it will output an error and exit.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `expected` - String. Required. Expected string.
+- - `actual` - Required. Actual string.
+- - `message` - Message to output if the assertion fails. Optional.
+- 
+- ### Examples
+- 
+-     assertNotEquals "$(uname -s)" "FreeBSD" "Not compatible with FreeBSD"
+-     Single quote break-s
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertNotEquals` was reviewed 2023-11-12
+- .
+- 
+- ## `assertNotExitCode`
+- 
+- > Assert a process runs and exits with an exit code
+- 
+- ### Usage
+- 
+-     assertNotExitCode [ expectedExitCode ] [ command ] [ arguments ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert a process runs and exits with an exit code which does not match the passed in exit code.
+- 
+- If this fails it will output an error and exit.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `expectedExitCode` - UnsignedInteger. A numeric exit code not expected from the command.
+- - `command` - Callable. The command to run
+- - `arguments` - Arguments. Optional. Any arguments to pass to the command to run
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Return codes
+- 
+- - `0` - If the process exits with a different exit code
+- - `1` - If the process exits with the provided exit code
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertNotExitCode` was reviewed 2023-11-12
+- .
+- 
+- ## `assertNotFileSize`
+- 
+- > Assert a file does NOT have an expected size in
+- 
+- ### Usage
+- 
+-     assertNotFileSize [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] expectedSize fileName ...
+- 
+- Assert a file does NOT have an expected size in bytes
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `expectedSize` - PositiveInteger. Required. Integer file size which `fileName` should NOT be, in bytes.
+- - `fileName ...` - File. Required. One ore more file which should NOT be `expectedSize` bytes in size.
+- 
+- ### Examples
+- 
+-     assertNotFileSize 22 .config
+-     assertNotFileSize 0 .env
+- 
+- ### Return codes
+- 
+- - `1` - If the assertions fails
+- - `0` - If the assertion succeeds
+- 
+- ### Environment
+- 
+- - If the file does not exist, this will fail.
+- 
+- ## `assertNotZeroFileSize`
+- 
+- > Assert a file is non-empty (non-zero sized)
+- 
+- ### Usage
+- 
+-     assertNotZeroFileSize [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] - fileName ...
+- 
+- Assert a file is non-empty (non-zero sized)
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `fileName ...` - File. Required. One ore more file which should NOT be zero bytes in size.
+- 
+- ### Examples
+- 
+-     assertNotZeroFileSize 22 .config
+-     assertNotZeroFileSize 0 .env
+- 
+- ### Return codes
+- 
+- - `1` - If the assertions fails
+- - `0` - If the assertion succeeds
+- 
+- ### Environment
+- 
+- - If the file does not exist, this will fail.
+- 
+- ## `assertOutputContains`
+- 
+- > Run a command and expect the output to contain the
+- 
+- ### Usage
+- 
+-     assertOutputContains expected binary [ ... ] [ --exit ] [ --stderr ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Run a command and expect the output to contain the occurrence of a string.
+- 
+- If this fails it will output the command result to stdout.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `expected` - String. Required. A string to expect in the output
+- - `binary` - Callable. Required. Binary to run and evaluate output
+- - `...` - Arguments. Optional. Any additional arguments to `binary`.
+- - `--exit` - Assert exit status of process to be this number
+- - `--stderr` - Also include standard error in output checking
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertOutputContains Success complex-thing.sh --dry-run
+- 
+- ### Return codes
+- 
+- - `0` - If the output contains at least one occurrence of the string
+- - `1` - If output does not contain string
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertOutputContains` was reviewed 2023-11-12
+- .
+- 
+- ## `assertOutputDoesNotContain`
+- 
+- > Run a command and expect the output to not contain
+- 
+- ### Usage
+- 
+-     assertOutputDoesNotContain expected binary [ ... ] [ --exit ] [ --stderr ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Run a command and expect the output to not contain the occurrence of a string.
+- 
+- If this fails it will output the command result to stdout.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `expected` - String. Required. A string NOT to expect in the output
+- - `binary` - Callable. Required. Binary to run and evaluate output
+- - `...` - Arguments. Optional. Any additional arguments to `binary`.
+- - `--exit` - Assert exit status of process to be this number
+- - `--stderr` - Also include standard error in output checking
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertOutputDoesNotContain Success complex-thing.sh --dry-run
+- 
+- ### Return codes
+- 
+- - `0` - If the output contains at least one occurrence of the string
+- - `1` - If output does not contain string
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12
+- .
+- 
+- ## `assertOutputEquals`
+- 
+- > Assert output of a binary equals a string
+- 
+- ### Usage
+- 
+-     assertOutputEquals [ expected ] binary [ ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
+- 
+- Assert output of a binary equals a string
+- 
+- If this fails it will output an error and exit.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `expected` - EmptyString. Expected string to match output.
+- - `binary` - Callable. Required. Binary to run and evaluate output
+- - `...` - Arguments. Optional. Any additional arguments to `binary`.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- 
+- ### Examples
+- 
+-     assertOutputEquals "2023" date +%Y
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertOutputEquals` was reviewed 2023-11-12
+- .
+- 
+- ## `assertStatistics`
+- 
+- > Output assertion counts
+- 
+- ### Usage
+- 
+-     assertStatistics [ --reset ] [ --total ] [ --help ]
+- 
+- Output the total number of assertion failures and assertion successes, separated by a space and terminated with a newline
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--reset` - Flag. Optional. Reset statistics to zero.
+- - `--total` - Flag. Optional. Just output the total.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- UnsignedInteger. 2 lines.
+- 
+- ### Examples
+- 
+-     read -r failures successes < <(assertStatistics) || return $?
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `assertStringEmpty`
+- 
+- > Assert a string is empty.
+- 
+- ### Usage
+- 
+-     assertStringEmpty [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] [ string ... ]
+- 
+- Assert a string is empty.
+- 
+- If this fails it will output an error and exit.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `string ...` - Empty strings
+- 
+- ### Examples
+- 
+-     assertEquals "$(textAlignRight 4 "hi")" "  hi" "textAlignRight not working"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertStringEmpty` was reviewed 2023-11-12
+- .
+- 
+- ## `assertStringNotEmpty`
+- 
+- > Assert a string is non-empty.
+- 
+- ### Usage
+- 
+-     assertStringNotEmpty [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] [ string ... ]
+- 
+- Assert a string is non-empty.
+- 
+- If this fails it will output an error and exit.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `string ...` - Not empty strings
+- 
+- ### Examples
+- 
+-     assertStringNotEmpty "$string"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Review Status
+- 
+- File `bin/build/tools/test.sh`, function `assertStringNotEmpty` was reviewed 2023-11-12
+- .
+- 
+- ## `assertZeroFileSize`
+- 
+- > Assert a file is empty (zero sized)
+- 
+- ### Usage
+- 
+-     assertZeroFileSize [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] - fileName ...
+- 
+- Assert a file is empty (zero sized)
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--display` - String. Optional. Display name for the condition.
+- - `--debug` - Flag. Optional. Debugging enabled for the assertion function.
+- - `--line lineNumber` - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+- - `--line-depth depth` - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+- - `--stdout-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stdout-no-match` - String. Optional. One or more strings which must match `stdout` output.
+- - `--stderr-ok` - Flag. Optional. Output to `stderr` will not cause the test to fail.
+- - `--stderr-match` - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+- - `--stderr-no-match` - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
+- - `--dump` - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+- - `--dump-binary` - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+- - `--plumber` - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+- - `--leak globalName` - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+- - `--skip-plumber` - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
+- - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+- - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+- - `fileName ...` - File. Required. One ore more file which should be zero bytes in size.
+- 
+- ### Examples
+- 
+-     assertZeroFileSize .config
+-     assertZeroFileSize /var/www/log/error.log
+- 
+- ### Return codes
+- 
+- - `1` - If the assertions fails
+- - `0` - If the assertion succeeds
+- 
+- ### Environment
+- 
+- - If the file does not exist, this will fail.
+- 
+- ## `awsCredentialsAdd`
+- 
+- > Write an AWS profile to the AWS credentials file
+- 
+- ### Usage
+- 
+-     awsCredentialsAdd [ --profile profileName ] [ --force ] [ --comments ] [ --help ] [ key ] [ secret ]
+- 
+- Write the credentials to the AWS credentials file.
+- 
+- If the AWS credentials file is not found, it is created
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
+- - `--force` - Flag. Optional. Write the credentials file even if the profile already exists
+- - `--comments` - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
+- - `--help` - Flag. Optional. Display this help.
+- - `key` - The AWS_ACCESS_KEY_ID to write
+- - `secret` - The AWS_SECRET_ACCESS_KEY to write
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsCredentialsFile`
+- 
+- > Get the path to the AWS credentials file
+- 
+- ### Usage
+- 
+-     awsCredentialsFile [ --help ] [ --verbose ] [ --create ] [ --home homeDirectory ]
+- 
+- Get the credentials file path, optionally outputting errors
+- 
+- Pass a true-ish value to output warnings to stderr on failure
+- 
+- Pass any value to output warnings if the environment or file is not found; otherwise
+- output the credentials file path.
+- 
+- If not found, returns with exit code 1.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--verbose` - Flag. Optional. Verbose mode
+- - `--create` - Flag. Optional. Create the directory and file if it does not exist
+- - `--home homeDirectory` - Directory. Optional. Home directory to use instead of `$HOME`.
+- 
+- ### Examples
+- 
+-     credentials=$(awsCredentialsFile) || throwEnvironment "$handler" "No credentials file found" || return $?
+- 
+- ### Return codes
+- 
+- - `1` - If `$HOME` is not a directory or credentials file does not exist
+- - `0` - If credentials file is found and output to stdout
+- 
+- ## `awsCredentialsFromEnvironment`
+- 
+- > Write an AWS profile to the AWS credentials file
+- 
+- ### Usage
+- 
+-     awsCredentialsFromEnvironment [ --profile profileName ] [ --force ] [ --help ]
+- 
+- Write the credentials to the AWS credentials file.
+- 
+- If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+- If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
+- - `--force` - Flag. Optional. Write the credentials file even if the profile already exists
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsCredentialsHasProfile`
+- 
+- > Get credentials and output environment variables for AWS authentication
+- 
+- ### Usage
+- 
+-     awsCredentialsHasProfile [ profileName ] [ --help ]
+- 
+- Extract a profile from a credentials file
+- 
+- If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+- If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `profileName` - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     setFile=$(fileTemporaryName "$handler") || return $?
+-     if awsEnvironment "$profile" > "$setFile"; then
+-     eval $(cat "$setFile")
+-     rm "$setFile"
+-     else
+-     decorate error "Need $profile profile in aws credentials file"`
+-     exit 1
+-     fi
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsCredentialsRemove`
+- 
+- > Remove credentials from the AWS credentials file
+- 
+- ### Usage
+- 
+-     awsCredentialsRemove [ --profile profileName ] [ --comments ] [ profileName ] [ --help ]
+- 
+- Remove credentials from the AWS credentials file
+- 
+- If the AWS credentials file is not found, succeeds.
+- 
+- You can supply the profile using the `--profile` or directly, but just one.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--profile profileName` - String. Optional. The credentials profile to remove.
+- - `--comments` - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
+- - `profileName` - String. Optional. The credentials profile to remove.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsEnvironmentFromCredentials`
+- 
+- > Get credentials and output environment variables for AWS authentication
+- 
+- ### Usage
+- 
+-     awsEnvironmentFromCredentials [ profileName ] [ --profile profileName ] [ --comments ] [ --help ]
+- 
+- Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
+- 
+- If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
+- If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
+- 
+- Both forms can be used, but the profile should be supplied once and only once.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `profileName` - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+- - `--profile profileName` - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+- - `--comments` - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     setFile=$(fileTemporaryName "$handler") || return $?
+-     if awsEnvironment "$profile" > "$setFile"; then
+-     eval $(cat "$setFile")
+-     rm "$setFile"
+-     else
+-     decorate error "Need $profile profile in aws credentials file"`
+-     exit 1
+-     fi
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsHasEnvironment`
+- 
+- > Test whether the AWS environment variables are set or not
+- 
+- ### Usage
+- 
+-     awsHasEnvironment [ --help ]
+- 
+- This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
+- Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     if awsHasEnvironment; then
+-     ...
+-     fi
+- 
+- ### Return codes
+- 
+- - `0` - If environment needs to be updated
+- - `1` - If the environment seems to be set already
+- 
+- ## `awsInstall`
+- 
+- > aws Command-Line install
+- 
+- ### Usage
+- 
+-     awsInstall
+- 
+- aws Command-Line install
+- 
+- Installs x86 or aarch64 binary based on `HOSTTYPE`.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:packageInstall}
+- - {SEE:urlFetch}
+- 
+- ## `awsIPAccess`
+- 
+- > Grant access to AWS security group for this IP only using Amazon IAM credentials
+- 
+- ### Usage
+- 
+-     awsIPAccess [ --profile profileName ] --services service0,service1,... [ --id developerId ] --group securityGroup [ --ip ip ] [ --revoke ] [ --help ]
+- 
+- Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
+- Use this during deployment to grant temporary access to your systems during deployment only.
+- Build scripts should have a `awsIPAccess --revoke` step afterward, always.
+- services are looked up in /etc/services and match /tcp services only for port selection
+- 
+- If no `/etc/services` matches the default values are supported within the script: `mysql`,`postgres`,`ssh`,`http`,`https`
+- You can also simply supply a list of port numbers, and mix and match: `--services ssh,http,3306,12345` is valid
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--profile profileName` - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
+- --services service0,service1,- `...` - List. Required. List of services to add or remove (service names or port numbers)
+- - `--id developerId` - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
+- - `--group securityGroup` - String.  String. Required. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
+- - `--ip ip` - IP. Optional. Specify bn IP manually (uses networkIPLookup tool from tools.sh by default)
+- - `--revoke` - Flag. Optional. Remove permissions
+- - `--help` - Flag. Optional. Show this help
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsIsKeyUpToDate`
+- 
+- > Test whether the AWS keys do not need to be updated
+- 
+- ### Usage
+- 
+-     awsIsKeyUpToDate [ upToDateDays ]
+- 
+- For security we gotta update our keys every 90 days
+- 
+- This value would be better encrypted and tied to the AWS_ACCESS_KEY_ID so developers
+- can not just update the value to avoid the security issue.
+- 
+- This tool checks the environment `AWS_ACCESS_KEY_DATE` and ensures it's within `upToDateDays` of today; if not this fails.
+- 
+- It will also fail if:
+- 
+- - `upToDateDays` is less than zero or greater than 366
+- - `AWS_ACCESS_KEY_DATE` is empty or has an invalid value
+- 
+- Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `AWS_ACCESS_KEY_DATE` has not exceeded the number of days.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `upToDateDays` - PositiveInteger.
+- 
+- ### Examples
+- 
+-     if ! awsIsKeyUpToDate 90; then
+-         decorate big Failed, update key and reset date
+-         exit 99
+-     fi
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsProfilesList`
+- 
+- > List AWS profiles available in the credentials file
+- 
+- ### Usage
+- 
+-     awsProfilesList [ --help ]
+- 
+- List AWS profiles available in the credentials file
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `awsCredentialsFile`
+- 
+- ## `awsRegionValid`
+- 
+- > Check an AWS region code for validity
+- 
+- ### Usage
+- 
+-     awsRegionValid region ... [ --help ]
+- 
+- Checks an AWS region identifier for validity as of September 2024.
+- Note that passing no parameters returns success.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `region ...` - String. Required. The AWS Region to validate.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - All regions are valid AWS region
+- - `1` - One or more regions are NOT a valid AWS region
+- 
+- ## `awsS3DirectoryDelete`
+- 
+- > Delete a directory remotely on S3
+- 
+- ### Usage
+- 
+-     awsS3DirectoryDelete [ --help ] [ --handler handler ] [ --show ] url ...
+- 
+- Delete a directory remotely on S3
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--show` - Flag. Optional. Show what would change, do not change anything.
+- - `url ...` - URL. Required. AWS S3 URL to delete
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsS3Upload`
+- 
+- > Upload a set of files or directories to S3.
+- 
+- ### Usage
+- 
+-     awsS3Upload [ --help ] [ --handler handler ] --target target item [ --profile profileName ]
+- 
+- Upload a set of files or directories to S3.
+- Creates a `manifest.json` file at target with structure:
+- 
+- - hostname - host name which sent results
+- - created - Milliseconds creation time
+- - createdString - Milliseconds creation time in current locale language
+- - arguments - arguments to this function
+- 
+- Creates a `files.json` with a list of files as well at `target`.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--target target` - Required. S3 URL. S3 URL to upload to (with path)
+- - `item` - Required. A file or directory to upload to S3. All files and directories are uploaded as the same name in the top-level directory target.
+- - `--profile profileName` - String. Optional. S3 Profile to use when using S3
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `awsSecurityGroupIPModify`
+- 
+- > Modify an EC2 Security Group
+- 
+- ### Usage
+- 
+-     awsSecurityGroupIPModify --remove [ --add ] [ --register ] --group group [ --region region ] --port port --description description --ip ip [ --help ]
+- 
+- Usages can be
+- 
+-     awsSecurityGroupIPModify --add --group group [ --region region ] --port port --description description --ip ip
+-     awsSecurityGroupIPModify --remove --group group [ --region region ] --description description
+- 
+- Modify an EC2 Security Group and add or remove an IP/port combination to the group.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `--remove - Flag. Optional. Remove instead of add` - only `group`, and `description` required.
+- - `--add` - Flag. Optional. Add to security group (default).
+- - `--register` - Flag. Optional. Add it if not already added.
+- - `--group group` - String. Required. Security Group ID
+- - `--region region` - String. Optional. AWS region, defaults to `AWS_REGION`. Must be supplied.
+- - `--port port` - Required. for `--add` only. Integer. service port
+- - `--description description` - String. Required. Description to identify this record.
+- - `--ip ip` - Required. for `--add` only. String. IP Address to add or remove.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `backgroundProcess`
+- 
+- > Background process manager for shell (UNSTABLE)
+- 
+- ### Usage
+- 
+-     backgroundProcess [ --verbose ] [ --report ] [ --summary ] [ --monitor ] [ --watch ] [ --verbose-toggle ] [ --terminate ] [ --go ] [ --new-only ] [ --stop stopSeconds ] [ --wait waitSeconds ] [ --frequency checkSeconds ] condition ... -- command ... [ --help ]
+- 
+- > UNSTABLE: Seems this does not handle long processes well which do not quit quickly. Need to improve testing. Use
+- > at your own risk. (2026-01-12 KMD)
+- 
+- Run a single process in the background continuously until a condition is met.
+- 
+- `condition` and `command` required when an action flag is not specified.
+- 
+- Action flags:
+- 
+-     --go --report --monitor --verbose-toggle --stop-all --summary
+- 
+- This can be used to run processes on your code in the background.
+- 
+- The `condition` should output *any* form of output which, when it changes (or exits non-zero), will require the `command` to be run.
+- As long as the `condition` remains the same between calls, `command` is not run.
+- 
+- Once `command` is run the process is monitored; and every `stopSeconds` seconds `condition` is run again - if `condition` changes
+- between the starting value and the new value then the command is terminated. The manager waits `waitSeconds` and then runs `command`
+- again. (Capturing `condition` at the start.)
+- 
+- If `condition` exits zero – then it is simply run every `checkSeconds` seconds to see if `command` needs to be run again.
+- 
+- This allows you to have background processes which, while you edit your code, for example, will pause momentarily while you edit and not use up
+- all of your available CPU.
+- 
+- To see status, try:
+- 
+-     backgroundProcess --summary
+-     backgroundProcess --report
+-     backgroundProcess --monitor
+-     backgroundProcess --watch
+- 
+- > Location: `bin/build/tools/prompt-modules.sh`
+- 
+- ### Arguments
+- 
+- - `--verbose` - Flag. Optional. Be verbose.
+- - `--report` - Flag. Optional. Show a long report of all processes.
+- - `--summary` - Flag. Optional. Show a summary of all processes.
+- - `--monitor` - Flag. Optional. Interactively show report and refresh.
+- - `--watch` - Flag. Optional. Repeat showing summary.
+- - `--verbose-toggle` - Flag. Optional. Toggle the global verbose reporting.
+- - `--terminate` - Flag. Optional. Terminate all processes and delete all background process records.
+- - `--go` - Flag. Optional. Check all process states and update them.
+- - `--new-only` - Flag. Optional. Output a message for new processes only.
+- - `--stop stopSeconds` - PositiveInteger. Optional. Check every stop seconds after starting to see if should be stopped.
+- - `--wait waitSeconds` - PositiveInteger. Optional. After stopping, wait this many seconds before trying again.
+- - `--frequency checkSeconds` - PositiveInteger. Optional. Check condition at this frequency.
+- - `condition ...` - Callable. Required. Condition to test. Output of this is compared to see if we should stop process and restart it.
+- - `--` - Delimiter. Required. Separates command.
+- - `command ...` - Callable. Required. Function to run in the background.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashBuiltins`
+- 
+- > List bash builtin functions, one per line
+- 
+- ### Usage
+- 
+-     bashBuiltins
+- 
+- List bash builtin functions, one per line
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Writes to standard output
+- 
+- line:function
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashCheckRequires`
+- 
+- > Checks a bash script to ensure all requirements are met,
+- 
+- ### Usage
+- 
+-     bashCheckRequires [ --help ] [ --ignore prefix. String. Optional. Ignore exact function names. ] [ --ignore-prefix prefix ] [ --report ] [ --require ] [ --unused ]
+- 
+- Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
+- Scans a bash script for lines which look like:
+- 
+- Each requirement token is:
+- 
+- - a bash function which MUST be defined
+- - a shell script (executable) which must be present
+- 
+- If all requirements are met, exit status of 0.
+- If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- --ignore prefix. String. Optional. Ignore exact function names.
+- - `--ignore-prefix prefix` - String. Optional. Ignore function names which match the prefix and do not check them.
+- - `--report` - Flag. Optional. Output a report of various functions and handler after processing is complete.
+- - `--require` - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
+- - `--unused` - Flag. Optional. Check for unused functions and report on them.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - token1
+- - token2
+- 
+- ## `bashCommentFilter`
+- 
+- > Filter comments from a bash stream
+- 
+- ### Usage
+- 
+-     bashCommentFilter [ --help ] [ --only ] [ file ]
+- 
+- Filter comments from a bash stream
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--only` - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)
+- - `file` - File. Optional. File(s) to filter.
+- 
+- ### Reads standard input
+- 
+- a bash file
+- 
+- ### Writes to standard output
+- 
+- bash file without line-comments `#`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashCommentVariable`
+- 
+- > Gets a list of the variable values from a bash
+- 
+- ### Usage
+- 
+-     bashCommentVariable variableName [ --prefix ] [ --insensitive | -i ] [ --help ]
+- 
+- Gets a list of the variable values from a bash function comment
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `variableName` - String. Required. Get this variable value.
+- - `--prefix` - Flag. Optional. Find variables with the prefix `variableName`
+- --insensitive |- ` -i` - Flag. Optional. Match case insensitive.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Comment source (`# ` removed)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashCoverage`
+- 
+- > Collect code coverage statistics for a code sample
+- 
+- ### Usage
+- 
+-     bashCoverage [ --target reportFile ] thingToRun
+- 
+- Collect code coverage statistics for a code sample
+- Convert resulting files using `bashCoverageReport`
+- 
+- > Location: `bin/build/tools/coverage.sh`
+- 
+- ### Arguments
+- 
+- - `--target reportFile` - File. Optional. Write coverage data to this file.
+- - `thingToRun` - Callable. Required. Function to run and collect coverage data.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:bashCoverageReport}
+- 
+- ## `bashCoverageReport`
+- 
+- > Experimental. Likely abandon.
+- 
+- ### Usage
+- 
+-     bashCoverageReport [ --cache cacheDirectory ] [ --target targetDirectory ] statsFile
+- 
+- Generate a coverage report using the coverage statistics file
+- 
+- *This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.*
+- 
+- > Location: `bin/build/tools/coverage.sh`
+- 
+- ### Arguments
+- 
+- - `--cache cacheDirectory` - Optional. Directory.
+- - `--target targetDirectory` - Optional. Directory.
+- - `statsFile` - File. Required.
+- 
+- ### Reads standard input
+- 
+- Accepts a stats file
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashDebug`
+- 
+- > Bash debugger
+- 
+- ### Usage
+- 
+-     bashDebug commandToDebug ... [ --help ]
+- 
+- `bashDebug`: Simple debugger to walk through a program.
+- 
+- Debugger accepts the following keystrokes:
+- 
+- ### Flow control
+- 
+- - `.` or ` ` or Return - Repeat last flow command
+- 
+- - `j`         - Skip next command (jump over)
+- - `s` or `n`  - Step to next command (step)
+- - `i` or `d`  - Step into next command (follow)
+- - `q`         - Quit debugger (and continue execution)
+- - `!`         - Enter a command to execute
+- 
+- ### Watching
+- 
+- - `w`         - Enter a watch expression
+- - `u`         - Remove a watch expression
+- 
+- ### Utilities
+- 
+- `k`         - Display call stack
+- `*`         - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
+- `h` or `?`  - This help
+- 
+- > Location: `bin/build/tools/debugger.sh`
+- 
+- ### Arguments
+- 
+- - `commandToDebug ...` - Callable. Required. Command to debug.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashDebuggerDisable`
+- 
+- > Disable the debugger
+- 
+- ### Usage
+- 
+-     bashDebuggerDisable [ --help ]
+- 
+- Disables the debugger immediately.
+- Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
+- 
+- > Location: `bin/build/tools/debugger.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `bashDebug`
+- 
+- ## `bashDebuggerEnable`
+- 
+- > Enable the debugger
+- 
+- ### Usage
+- 
+-     bashDebuggerEnable [ --help ]
+- 
+- Enables the debugger immediately.
+- 
+- Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
+- 
+- > Location: `bin/build/tools/debugger.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `bashDebug`
+- 
+- ## `bashDebugInterruptFile`
+- 
+- > Adds a trap to capture the debugging stack on interrupt
+- 
+- ### Usage
+- 
+-     bashDebugInterruptFile [ --help ] [ --handler handler ] [ --error ] [ --clear ] [ --interrupt ] [ --already-error ]
+- 
+- Adds a trap to capture the debugging stack on interrupt
+- Use this in a bash script which runs forever or runs in an infinite loop to
+- determine where the problem or loop exists.
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--error` - Flag. Add ERR trap.
+- - `--clear` - Flag. Remove all traps.
+- - `--interrupt` - Flag. Add INT trap.
+- - `--already-error` - Flag. If the signals are already installed, then throw an error. Otherwise exits 0.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashDocumentation`
+- 
+- > Universal function documentation
+- 
+- ### Arguments
+- 
+- - `functionDefinitionFile` - File. Required. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`. (Both SLOW!)
+- - `functionName` - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+- - `returnCode` - Integer. Required. The return code to output.
+- - `message` - String. Optional. A message to output relating to the return code.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `fast-usage` - `bashDocumentation` does not output formatted help for performance reasons
+- - `usage-cache-skip` - Skip all caching and generate from scratch
+- - `handler` - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashDocumentationDeriveFunction`
+- 
+- > Generate markdown documentation page
+- 
+- ### Usage
+- 
+-     bashDocumentationDeriveFunction [ --help ] [ --check ] settingsFile
+- 
+- Generate function derived files.
+- 
+- File(s) are generated next to `settingsFile`.
+- 
+- - `--check` checks to see if the file needs to be generated or updated. Returns 0 if up to date.
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--check` - Flag. Optional. Check to see if an update is needed
+- - `settingsFile` - File. Required. Settings file for function to document.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashDocumentationDeriveSee`
+- 
+- > Generate SEE markdown content
+- 
+- ### Usage
+- 
+-     bashDocumentationDeriveSee [ --help ] [ --check ] settingsFile
+- 
+- Generate `SEE/bashDocumentationDeriveSee.md` - Derived file generator.
+- File is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--check` - Flag. Optional. Check to see if an update is needed
+- - `settingsFile` - File. Required. Settings file for function to document.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashDocumentationExtract`
+- 
+- > Generate a set of name/value pairs to document bash entities
+- 
+- ### Usage
+- 
+-     bashDocumentationExtract [ --generate ] [ --no-cache | --cache ] [ --help ] handler function sourceFile
+-     
+- Extract documentation variables from a comment stripped of the '# ' prefixes.
+- 
+- A few special values are generated/computed:
+- 
+- - `description` - Any line in the comment which is not in variable is appended to the field `description`
+- - `fn` - The function name (no parenthesis or anything)
+- - `base` - The basename of the file
+- - `file` - The relative path name of the file from the application root
+- - `summary` - Defaults to first ten words of `description`
+- - `exit_code` - Defaults to `0 - Always succeeds`
+- - `reviewed`  - Defaults to `Never`
+- - `environment"  - Defaults to `No environment dependencies or modifications.`
+- 
+- Otherwise the assumed variables (in addition to above) to define functions are:
+- 
+- - `argument` - Individual arguments
+- - `usage` - Canonical usage example (code)
+- - `example` - An example of usage (code, many)
+- - `depends` - Any dependencies (list)
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `fn` - String. Required. Name of `fn`
+- - `sourceFile` - File. Required.
+- - `sourceLine` - PositiveInteger. Optional.
+- - `--generate` - Flag. Optional. Generate cached files.
+- - `--no-cache` - Flag. Optional. Skip any attempt to cache anything.
+- - `--cache` - Flag. Optional. Force use of cache.
+- - `--function` - Flag. Optional. Function derivations `return_code` `fn` `lowerFn` `fnMarker` `argument` `usage`
+- - `--environment` - Flag. Optional. Environment variable derivations `env` `envMarker`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Pipe stripped comments to extract information
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `usage-cache-skip` - Skip caching by default (override with `--cache`)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashDocumentationMarkdown`
+- 
+- > Output documentation for a function in Markdown format
+- 
+- ### Usage
+- 
+-     bashDocumentationMarkdown functionName [ --help ]
+- 
+- Output documentation for a function in Markdown format
+- 
+- > Location: `bin/build/tools/usage.sh`
+- 
+- ### Arguments
+- 
+- - `functionName` - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashFileComment`
+- 
+- > Extract a bash comment from a file. Excludes lines containing
+- 
+- ### Usage
+- 
+-     bashFileComment source lineNumber [ --help ]
+- 
+- Extract a bash comment from a file. Excludes lines containing the following tokens:
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `source` - File. Required. File where the function is defined.
+- - `lineNumber` - String. Required. Previously computed line number of the function.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - head
+- - {SEE:bashFinalComment}
+- - {SEE:helpArgument}
+- - {SEE:bashDocumentation}
+- 
+- ## `bashFinalComment`
+- 
+- > Extracts the final comment from a stream
+- 
+- ### Usage
+- 
+-     bashFinalComment [ --help ]
+- 
+- Extracts the final comment from a stream
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:fileReverseLines}
+- - sed
+- - cut
+- - grep
+- - {SEE:convertValue}
+- 
+- ## `bashFindUncaughtAssertions`
+- 
+- > Search bash files for assertions which do not terminate a
+- 
+- ### Usage
+- 
+-     bashFindUncaughtAssertions [ --help ] [ --handler handler ] [ --exclude path ] [ --exec binary ] [ directory ] [ --list ]
+- 
+- Search bash files for assertions which do not terminate a function and are likely an error
+- 
+- > Location: `bin/build/tools/lint.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--exclude path` - String. Optional. Exclude paths which contain this string
+- - `--exec binary` - Executable. Optional. For each failed file run this command.
+- - `directory` - Directory. Optional. Where to search for files to check.
+- - `--list` - Flag. Optional. List files which fail. (Default is simply to exit silently.)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashFirstComment`
+- 
+- > Extracts the first comment from a stream
+- 
+- ### Usage
+- 
+-     bashFirstComment [ --help ]
+- 
+- Extracts the first comment from a stream
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:fileReverseLines}
+- - sed
+- - cut
+- - grep
+- - {SEE:convertValue}
+- 
+- ## `bashFunctionComment`
+- 
+- > Extract a bash comment from a file. Excludes lines containing
+- 
+- ### Usage
+- 
+-     bashFunctionComment source functionName [ --help ]
+- 
+- Extract a bash comment from a file. Excludes lines containing the following tokens:
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `source` - File. Required. File where the function is defined.
+- - `functionName` - String. Required. The name of the bash function to extract the documentation for.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - grep
+- - cut
+- - {SEE:fileReverseLines}
+- - {SEE:helpArgument}
+- - {SEE:bashDocumentation}
+- 
+- ## `bashFunctionCommentVariable`
+- 
+- > Gets a list of the variable values from a bash
+- 
+- ### Usage
+- 
+-     bashFunctionCommentVariable source functionName variableName [ --prefix ] [ --i | --insensitive ] [ --help ]
+- 
+- Gets a list of the variable values from a bash function comment
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `source` - File. Required. File where the function is defined.
+- - `functionName` - String. Required. The name of the bash function to extract the documentation for.
+- - `variableName` - string. Required. Get this variable value
+- - `--prefix` - flag. Optional. Find variables with the prefix `variableName`
+- --i |- ` --insensitive` - Flag. Optional. Case-insensitive match.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashFunctionDefined`
+- 
+- > Is a function defined in a bash source file?
+- 
+- ### Usage
+- 
+-     bashFunctionDefined functionName file ... [ --help ]
+- 
+- Is a function defined in a bash source file?
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `functionName` - String. Required. Name of function to check.
+- - `file ...` - File. Required. One or more files to check if a function is defined within.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashGetRequires`
+- 
+- > Gets a list of the `Requires:` comments in a bash
+- 
+- ### Usage
+- 
+-     bashGetRequires script
+- 
+- Gets a list of the `Requires:` comments in a bash file
+- Returns a unique list of tokens
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `script` - File. Required. Bash script to fetch requires tokens from.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashLibrary`
+- 
+- > Run or source a library
+- 
+- ### Usage
+- 
+-     bashLibrary libraryRelativePath [ command ] [ --help ]
+- 
+- Run or source one or more bash scripts and load any defined functions into the current context.
+- Has security implications - only load trusted code sources and prevent user injection of bash source code into your applications.
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `libraryRelativePath` - Path. Required. Path to library source file.
+- - `command` - Callable. Optional. Command to run after loading the library.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashLibraryHome`
+- 
+- > Output the home for a library in the parent path
+- 
+- ### Usage
+- 
+-     bashLibraryHome libraryRelativePath [ startDirectory ] [ --help ]
+- 
+- This function searches for a library located at the current path and searches upwards until it is found.
+- A simple example is `bin/build/tools.sh` for this library which will generally give you an application root if this library
+- is properly installed. You can use this for any application to find a library's home directory.
+- 
+- Note that the `libraryRelativePath` given must be both executable and a file.
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `libraryRelativePath` - RelativeFile. Required. Path of file to find from the home directory. Must also be executable.
+- - `startDirectory` - Directory. Optional. Place to start searching. Uses `pwd` if not specified.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- Parent path where `libraryRelativePath` exists
+- 
+- ### Examples
+- 
+-     libFound=$(bashLibraryHome "bin/watcher/server.py")
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashLint`
+- 
+- > Check bash files for common errors
+- 
+- ### Usage
+- 
+-     bashLint [ --help ] [ --fix ] [ --verbose ] [ script ]
+- 
+- Run `shellcheck` and `bash -n` on a set of bash files.
+- 
+- This can be run on any directory tree to test scripts in any application.
+- 
+- Shell comments must not be immediately after a function end, e.g. this is invalid:
+- 
+-     myFunc() {
+-     }
+-     # Hey
+- 
+- > Location: `bin/build/tools/lint.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--fix` - Flag. Optional. Fix files when possible.
+- - `--verbose` - Flag. Optional. Be verbose.
+- - `script` - File. Optional. Shell script to validate
+- 
+- ### Examples
+- 
+-     bashLint goo.sh
+- 
+- ### Sample Output
+- 
+- This outputs `statusMessage`s to `stdout` and errors to `stderr`.
+- 
+- ### Return codes
+- 
+- - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
+- - `1` - One or more files did not pass
+- 
+- ### See Also
+- 
+- - {SEE:shellcheck}
+- - {SEE:bashSanitize}
+- 
+- ## `bashLintFiles`
+- 
+- > Check files for the existence of a string
+- 
+- ### Usage
+- 
+-     bashLintFiles [ --verbose ] [ --fix ] [ --interactive ] [ --exec binary ] [ --delay ] [ findArgs ]
+- 
+- Run `bashLint` on a set of bash files.
+- 
+- > Location: `bin/build/tools/lint.sh`
+- 
+- ### Arguments
+- 
+- - `--verbose` - Flag. Optional. Verbose mode.
+- - `--fix` - Flag. Optional. Fix errors when possible.
+- - `--interactive` - Flag. Optional. Interactive mode on fixing errors.
+- - `--exec binary` - Run binary with files as an argument for any failed files. Only works if you pass in item names.
+- - `--delay` - Integer. Optional. Delay between checks in interactive mode.
+- - `findArgs` - Additional find arguments for .sh files (or exclude directories).
+- 
+- ### Examples
+- 
+-     if bashLintFiles; then git commit -m "saving things" -a; fi
+- 
+- ### Sample Output
+- 
+- This outputs `statusMessage`s to `stdout` and errors to `stderr`.
+- 
+- ### Return codes
+- 
+- - `0` - All found files pass `shellcheck` and `bash -n`
+- - `1` - One or more files did not pass
+- 
+- ### Environment
+- 
+- - This operates in the current working directory
+- 
+- ## `bashLintFilesInteractive`
+- 
+- > Run checks interactively until errors are all fixed.
+- 
+- ### Usage
+- 
+-     bashLintFilesInteractive [ --exec binary ] [ --delay delaySeconds ] [ fileToCheck ... ]
+- 
+- Run checks interactively until errors are all fixed.
+- 
+- > Location: `bin/build/tools/lint.sh`
+- 
+- ### Arguments
+- 
+- - `--exec binary` - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.
+- - `--delay delaySeconds` - Integer. Optional. Delay in seconds between checks in interactive mode.
+- - `fileToCheck ...` - File. Optional. Shell file to validate.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashListFunctions`
+- 
+- > List functions in a given shell file
+- 
+- ### Usage
+- 
+-     bashListFunctions [ --help ] [ file ] [ --help ]
+- 
+- List functions in a given shell file
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `file` - File. Optional. File(s) to list bash functions defined within.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:__bashListFunctions}
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - usageArgumentFile
+- 
+- ## `bashMakeExecutable`
+- 
+- > Makes all `*.sh` files executable
+- 
+- ### Usage
+- 
+-     bashMakeExecutable [ --find findArguments ] [ path ... ]
+- 
+- Makes all `*.sh` files executable
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `--find findArguments` - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.
+- - `path ...` - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - Works from the current directory
+- 
+- ### See Also
+- 
+- - {SEE:chmod-sh.sh}
+- 
+- ## `bashPrompt`
+- 
+- > Bash prompt creates the `PS1` prompt with the following extra
+- 
+- ### Usage
+- 
+-     bashPrompt [ module ] [ --remove module ] [ --reset ] [ --list ] [ --first ] [ --last ] [ --order order ] [ --format promptFormat ] [ --success successText ] [ --failure failureText ] [ --label promptLabel ] [ --colors colorsText ] [ --skip-prompt ] [ --help ]
+- 
+- Bash prompt creates the `PS1` prompt with the following extra features:
+- 
+- - Easy colorization
+- - Easy customization
+- - Return code of prior command dynamically displayed in following prompt
+- - Easily extend your bash prompt with modules
+- 
+- ### PROMPT MODULES
+- 
+- Modules are any binary or executable to run each prompt, and can be added, removed or managed here.
+- 
+- ## COLORS
+- 
+- The `--colors` are currently a `:`-separated list of color **names** (not escape codes), in order:
+- 
+- 1. Success color (Array index 0)
+- 2. Failure color (Array index 1)
+- 3. User color (Array index 2)
+- 4. Host color (Array index 3)
+- 5. Directory color (Array index 4)
+- 
+- ### Arguments
+- 
+- - `module` - Callable. Optional. Module to enable or disable.
+- - `--remove module` - Callable. Optional. Remove the module specified (should match exactly)
+- - `--reset` - Flag. Optional. Remove all prompt modules.
+- - `--list` - Flag. Optional. List the current modules. Modules are also added or removed, otherwise no changes are made.
+- - `--first` - Flag. Optional. Add all subsequent modules first to the list.
+- - `--last` - Flag. Optional. Add all subsequent modules last to the list.
+- - `--order order` - UnsignedInteger. Optional. Set the order index for this prompt. 0 is first, higher numbers are later.
+- - `--format promptFormat` - String. Optional. Display this label on each prompt.
+- - `--success successText` - EmptyString. Optional. Text to display in the prompt when the previous command succeeded.
+- - `--failure failureText` - EmptyString. Optional. Text to display in the prompt when the previous command failed.
+- - `--label promptLabel` - String. Optional. The prompt format string. See PROMPT FORMATTING below
+- - `--colors colorsText` - String. Optional. Set the prompt colors. See COLORS below.
+- - `--skip-prompt` - Flag. Optional. Do not modify the prompt.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `bashPrompt` - Debug prompt command execution
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashPromptColorScheme`
+- 
+- > Color schemes for prompts
+- 
+- ### Usage
+- 
+-     bashPromptColorScheme [ colorScheme ] [ --help ]
+- 
+- Color schemes for prompts
+- Options are:
+- - forest
+- - light (default)
+- - dark
+- 
+- > Location: `bin/build/tools/prompt.sh`
+- 
+- ### Arguments
+- 
+- - `colorScheme` - String. Optional. Color scheme to choose: `light`, `dark`, `forest`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashPromptColorsFormat`
+- 
+- > Given a list of color names, generate the color codes
+- 
+- ### Usage
+- 
+-     bashPromptColorsFormat text
+- 
+- Given a list of color names, generate the color codes in a colon separated list
+- 
+- > Location: `bin/build/tools/prompt.sh`
+- 
+- ### Arguments
+- 
+- - `text` - String. Required. List of color names in a colon separated list.
+- 
+- ### Writes to standard output
+- 
+- Outputs color *codes* separated by colons.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashPromptMarkers`
+- 
+- > Set markers for terminal integration
+- 
+- ### Usage
+- 
+-     bashPromptMarkers [ --help ] [ prefix ] [ suffix ]
+- 
+- Set markers for terminal integration
+- Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
+- 
+- > Location: `bin/build/tools/prompt.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `prefix` - EmptyString. Optional. Prefix for all prompts.
+- - `suffix` - EmptyString. Optional. Suffix for all prompts.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashPromptModule_dotFilesWatcher`
+- 
+- > Watches your HOME directory for `.` files which are added
+- 
+- ### Usage
+- 
+-     bashPromptModule_dotFilesWatcher
+- 
+- Watches your HOME directory for `.` files which are added and unknown to you.
+- 
+- > Location: `bin/build/tools/prompt-modules.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Examples
+- 
+-     bashPrompt bashPromptModule_dotFilesWatcher
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashPromptModule_TermColors`
+- 
+- > Sets the console colors based on the project you are
+- 
+- ### Usage
+- 
+-     bashPromptModule_TermColors
+- 
+- Sets the console colors based on the project you are currently in.
+- Define your color configuration file (values of `bg=FFF` etc. one per line, comments allowed)
+- 
+- Will fill in missing bright or non-bright colors which are unspecified. (`blue` implies `br_blue` and so on)
+- 
+- Sets `decorateStyle` for valid styles
+- 
+- Support for iTerm2 is built-in and automatic
+- 
+- > Location: `bin/build/tools/prompt.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `term-colors` - When `bashPromptModule_TermColors` is enabled, will show colors and how they are applied
+- 
+- ### Examples
+- 
+-     bashPrompt --order 80 bashPromptModule_TermColors
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:buildHome}
+- - {SEE:statusMessage}
+- - {SEE:buildEnvironmentGetDirectory}
+- - {SEE:directoryRequire}
+- - {SEE:textSHA}
+- - --cachedecorate
+- - {SEE:buildDebugEnabled}
+- - {SEE:iTerm2SetColors}
+- - {SEE:consoleConfigureColorMode}
+- 
+- ### See Also
+- 
+- - {SEE:consoleConfigureColorMode}
+- 
+- ## `bashRecursionDebug`
+- 
+- > Place this in code where you suspect an infinite loop
+- 
+- ### Usage
+- 
+-     bashRecursionDebug [ --end ]
+- 
+- Place this in code where you suspect an infinite loop occurs
+- It will fail upon a second call; to reset call with `--end`
+- When called twice, fails on the second invocation and dumps a call stack to stderr.
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `--end` - Flag. Optional. Stop testing for recursion.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - __BUILD_RECURSION
+- 
+- ## `bashRemoveCommentCharacter`
+- 
+- > Extracts the first comment from a stream
+- 
+- ### Usage
+- 
+-     bashRemoveCommentCharacter [ --help ]
+- 
+- Extracts the first comment from a stream
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:fileReverseLines}
+- - sed
+- - cut
+- - grep
+- - {SEE:convertValue}
+- 
+- ## `bashSanitize`
+- 
+- > Sanitize bash files for code quality.
+- 
+- ### Usage
+- 
+-     bashSanitize [ --help ] [ -- ] [ --home home ] [ --interactive ] [ --check checkDirectory ] [ ... ]
+- 
+- Sanitize bash files for code quality.
+- 
+- used in find `find ... ! -path '*LINE*'` and in grep -e 'LINE'
+- TODO - use one mechanism for bashSanitize.conf format
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--` - Flag. Optional. Interactive mode on fixing errors.
+- - `--home home` - Directory. Optional. Sanitize files starting here. (Defaults to `buildHome`)
+- - `--interactive` - Flag. Optional. Interactive mode on fixing errors.
+- - `--check checkDirectory` - Directory. Optional. Check shell scripts in this directory for common errors.
+- - `...` - Additional arguments are passed to `bashLintFiles` `validateFileContents`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashShowUsage`
+- 
+- > Show function handler in files
+- 
+- ### Usage
+- 
+-     bashShowUsage functionName file [ --help ]
+- 
+- Show function handler in files
+- This check is simplistic and does not verify actual coverage or code paths.
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `functionName` - String. Required. Function which should be called somewhere within a file.
+- - `file` - File. Required. File to search for function handler.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Function is used within the file
+- - `1` - Function is *not* used within the file
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - usageArgumentString
+- - usageArgumentFile
+- - {SEE:quoteGrepPattern}
+- - {SEE:bashStripComments}
+- - cat
+- - grep
+- 
+- ## `bashSimpleDocumentation`
+- 
+- > Simpler `bashDocumentation`
+- 
+- ### Usage
+- 
+-     bashSimpleDocumentation [ --help ] source function returnCode [ message ... ]
+- 
+- Output a simple error message for a function.
+- 
+- > Location: `bin/build/tools/usage.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `source` - File. Required. File where documentation exists.
+- - `function` - String. Required. Function to document.
+- - `returnCode` - UnsignedInteger. Required. Exit code to return.
+- - `message ...` - String. Optional. Message to display to the user.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashSourcePath`
+- 
+- > Load a directory of bash scripts
+- 
+- ### Usage
+- 
+-     bashSourcePath [ --exclude pattern ] directory ... [ --help ]
+- 
+- Load a directory of bash scripts, excluding any dot directories (`*/.*/*`), and optionally any additional
+- files if you use `--exclude`. But recursively loads scripts in sorted alphabetic order within the directory until one fails.
+- All files must be executable.
+- Load a directory of `.sh` files using `source` to make the code available.
+- Has security implications. Use with caution and ensure your directory is protected.
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--exclude pattern` - String. Optional. String passed to `! -path pattern` in `find`
+- - `directory ...` - Directory. Required. Directory to `source` all `.sh` files used.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashStripComments`
+- 
+- > Pipe to strip comments from a bash file
+- 
+- ### Usage
+- 
+-     bashStripComments [ --help ]
+- 
+- Removes literally any line which begins with zero or more whitespace characters and then a `#`.
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bashUserInput`
+- 
+- > Prompt the user properly honoring any attached console.
+- 
+- ### Usage
+- 
+-     bashUserInput [ --help ] [ ... ]
+- 
+- Prompt the user properly honoring any attached console.
+- 
+- Arguments are the same as `read`, except:
+- 
+- `-r` is implied and does not need to be specified
+- 
+- > Location: `bin/build/tools/prompt.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `...` - Arguments. Optional. Identical arguments to `read` (but includes `-r`)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:read}
+- 
+- ## `bitbucketContainer`
+- 
+- > Run the default build container for build testing on BitBucket
+- 
+- ### Usage
+- 
+-     bitbucketContainer envFile [ extraArgs ... ]
+- 
+- Run the default build container for build testing on BitBucket
+- 
+- > Location: `bin/build/tools/bitbucket.sh`
+- 
+- ### Arguments
+- 
+- - `envFile` - File. Required. One or more environment files which are suitable to load for docker; must be valid
+- - `extraArgs ...` - Arguments. Optional. The first non-file argument to `bitbucketContainer` is passed directly through to `docker run` as arguments
+- 
+- ### Return codes
+- 
+- - `1` - If already inside docker, or the environment file passed is not valid
+- - `0` - Success
+- - `Any` - `docker run` error code is returned if non-zero
+- 
+- ## `bitbucketGetVariable`
+- 
+- > Fetch a value from the pipelines YAML file
+- 
+- ### Usage
+- 
+-     bitbucketGetVariable [ varName ] [ defaultValue ]
+- 
+- Fetch a value from the pipelines YAML file
+- 
+- Assumes current working directory is project root.
+- 
+- Simple get value of a variable from the `bitbucket-pipelines.yml` file. It's important to note that
+- this does not parse the YML. This is useful if
+- you have a database container as part of your build configuration which requires a root password
+- required in other scripts; this means you do not have to replicate the value which can lead to errors.
+- 
+- An example `bitbucket-pipelines.yml` file may have a header which looks like this:
+- 
+-     definitions:
+-     caches:
+-     services:
+-         mariadb:
+-         variables:
+- 
+- On this file, the value of `$(bitbucketGetVariable MARIADB_ROOT_PASSWORD)` is `super-secret`; it uses `grep` and `sed` to extract the value.
+- 
+- > Location: `bin/build/tools/bitbucket.sh`
+- 
+- ### Arguments
+- 
+- - `varName` - Name of the value to extract from `bitbucket-pipelines.yml`
+- - `defaultValue` - Value if not found in pipelines
+- 
+- ### Examples
+- 
+-     MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(bitbucketGetVariable MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `bitbucketPRNewURL`
+- 
+- > Compute the URL to create a new PR
+- 
+- ### Usage
+- 
+-     bitbucketPRNewURL [ organization ] [ repository ]
+- 
+- Compute the URL to create a new PR
+- 
+- > Location: `bin/build/tools/bitbucket.sh`
+- 
+- ### Arguments
+- 
+- - `organization` - String. Organization name.
+- - `repository` - String. Repository name.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `booleanChoose`
+- 
+- > Boolean selector
+- 
+- ### Usage
+- 
+-     booleanChoose testValue [ trueChoice ] [ falseChoice ]
+- 
+- Boolean selector
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `testValue` - Boolean. Required. Test value
+- - `trueChoice` - EmptyString. Optional. Value to output when testValue is `true`
+- - `falseChoice` - EmptyString. Optional. Value to output when testValue is `false`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `booleanParse`
+- 
+- > Parses text and determines if it's true-ish
+- 
+- ### Usage
+- 
+-     booleanParse
+- 
+- Parses text and determines if it's true-ish
+- 
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - true
+- - `1` - false
+- - `2` - Neither
+- - `0` - Text is plain
+- - `1` - Text contains non-plain characters
+- 
+- ### Requires
+- 
+- - {SEE:stringLowercase}
+- - {SEE:helpArgument}
+- 
+- ## `brewInstall`
+- 
+- > Install Homebrew
+- 
+- ### Usage
+- 
+-     brewInstall [ --help ]
+- 
+- Install Homebrew
+- 
+- > Location: `bin/build/tools/brew.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildApplicationConfigure`
+- 
+- > Configure project for Zesk Build
+- 
+- ### Usage
+- 
+-     buildApplicationConfigure --non-interactive [ --owner ownerName ] [ --name applicationName ] [ --code codeName ] [ --help ]
+- 
+- Set up a new project for Zesk Build
+- - Creates shell development environment
+- - Registers git hooks
+- - Configures base environment variables
+- EXPERIMENTAL - not finished yet.
+- 
+- > Location: `bin/build/tools/application.sh`
+- 
+- ### Arguments
+- 
+- - `--non-interactive` - Flag. Optional. Do not prompt for input and fail if input is required.
+- - `--owner ownerName` - String. Optional. The `APPLICATION_OWNER`.
+- - `--name applicationName` - String. Optional. The `APPLICATION_NAME`.
+- - `--code codeName` - String. Optional. The `APPLICATION_CODE`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildCacheDirectory`
+- 
+- > Path to cache directory for build system.
+- 
+- ### Usage
+- 
+-     buildCacheDirectory [ pathSegment ] [ --help ]
+- 
+- Path to cache directory for build system.
+- 
+- Defaults to `$XDG_CACHE_HOME/.build` unless `$XDG_CACHE_HOME` is not a directory.
+- 
+- Appends any passed in arguments as path segments.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `pathSegment` - One or more directory or file path, concatenated as path segments using `/`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     logFile=$(buildCacheDirectory test.log)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildCompletion`
+- 
+- > Completion for Zesk Build (EXPERIMENTAL)
+- 
+- ### Usage
+- 
+-     buildCompletion [ --quiet ] [ --alias name ] [ --reload-alias name ] [ --help ]
+- 
+- Add completion handler for Zesk Build to Bash (EXPERIMENTAL)
+- This has the side effect of turning on the shell option `expand_aliases`
+- 
+- > Location: `bin/build/tools/completion.sh`
+- 
+- ### Arguments
+- 
+- - `--quiet` - Flag. Optional. Do not output any messages to stdout.
+- - `--alias name` - String. Optional. The name of the alias to create.
+- - `--reload-alias name` - String. Optional. The name of the alias which reloads Zesk Build. (source)
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildDebugEnabled`
+- 
+- > Is build debugging enabled?
+- 
+- ### Usage
+- 
+-     buildDebugEnabled [ moduleName ]
+- 
+- Is build debugging enabled?
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `moduleName` - String. Optional. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
+- 
+- ### Examples
+- 
+-     BUILD_DEBUG=false # All debugging disabled
+-     BUILD_DEBUG= # All debugging disabled
+-     unset BUILD_DEBUG # All debugging is disabled
+-     BUILD_DEBUG=true # All debugging is enabled
+-     BUILD_DEBUG=handler,bashPrompt # Debug `handler` and `bashPrompt` calls
+- 
+- ### Return codes
+- 
+- - `1` - Debugging is not enabled (for any module)
+- - `0` - Debugging is enabled
+- 
+- ## `buildDebugStart`
+- 
+- > Start build debugging if it is enabled.
+- 
+- ### Usage
+- 
+-     buildDebugStart [ moduleName ]
+- 
+- Start build debugging if it is enabled.
+- This does `set -x` which traces and outputs every shell command
+- Use it to debug when you can not figure out what is happening internally.
+- 
+- `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
+- Example:     buildDebugStart || :
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `moduleName` - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.
+- 
+- ### Examples
+- 
+-     # ... complex code here
+-     buildDebugStop || :. -
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:buildDebugEnabled}
+- 
+- ## `buildDebugStop`
+- 
+- > Stop build debugging if it is enabled
+- 
+- ### Usage
+- 
+-     buildDebugStop [ --help ]
+- 
+- Stop build debugging if it is enabled
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:buildDebugEnabled}
+- 
+- ### See Also
+- 
+- - ## `buildDebugStart`
+- 
+- ## `buildDeprecatedFunctions`
+- 
+- > List all functions which are currently deprecated in Zesk Build
+- 
+- ### Usage
+- 
+-     buildDeprecatedFunctions [ --help ]
+- 
+- List all functions which are currently deprecated in Zesk Build
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- String
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildDevelopmentLink`
+- 
+- > Add a development link to the local version of Zesk
+- 
+- ### Usage
+- 
+-     buildDevelopmentLink [ --copy ] [ --reset ]
+- 
+- Add a development link to the local version of Zesk Build for testing in local projects.
+- 
+- Copies or updates `$BUILD_HOME/bin/build` in current project.
+- 
+- Useful when you want to test a fix on a current project.
+- 
+- > Location: `bin/build/tools/developer.sh`
+- 
+- ### Arguments
+- 
+- - `--copy - Flag. Optional. Copy the files instead of creating a link` - more compatible with Docker but slower and requires synchronization.
+- - `--reset` - Flag. Optional. Revert the link and reinstall using the original binary.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildEnvironmentAdd`
+- 
+- > Adds an environment variable file to a project
+- 
+- ### Usage
+- 
+-     buildEnvironmentAdd [ --help ] [ --force ] [ --quiet ] [ --verbose ] [ --value value ] environmentName ...
+- 
+- Adds an environment variable file to a project
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--force` - Flag. Optional. Replace the existing file if it exists or create it if it does not.
+- - `--quiet` - Flag. Optional. No status messages.
+- - `--verbose` - Flag. Optional. Display status messages.
+- - `--value value` - String. Optional. Set the value to this fixed string in the file. Only valid when a single `environmentName` is used.
+- - `environmentName ...` - EnvironmentName. Required. One or more environment variable names to add to this project.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildEnvironmentContext`
+- 
+- > Run a command and ensure the build tools context matches
+- 
+- ### Usage
+- 
+-     buildEnvironmentContext startDirectory command [ ... ]
+- 
+- Run a command and ensure the build tools context matches the current project.
+- 
+- Useful when you need to ensure the command is run with the correct version of Zesk Build.
+- 
+- Avoid infinite loops here, call down.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `startDirectory` - Directory. Required. Context in which the command should run.
+- - `command` - Callable. Required. Command to run in new context.
+- - `...` - Arguments. Optional. Arguments to the `command`.
+- 
+- ### Examples
+- 
+-     buildEnvironmentContext "$(pwd)" environmentFileLoad "$(pwd)/.env" --execute timing --slow 500 "$(pwd)/bin/ping.py"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildEnvironmentFiles`
+- 
+- > Determine the environment file names for environment variables
+- 
+- ### Usage
+- 
+-     buildEnvironmentFiles [ envName ] [ --application applicationHome ] [ --help ] [ --handler handler ]
+- 
+- Determine the environment file names for environment variables
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `envName` - String. Optional. Name of the environment value to find
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildEnvironmentGet`
+- 
+- > Load and print one or more environment settings
+- 
+- ### Usage
+- 
+-     buildEnvironmentGet [ envName ] [ --application applicationHome ] [ --quiet ]
+- 
+- Load and print one or more environment settings
+- 
+- If BOTH files exist, both are sourced, so application environments should anticipate values
+- created by build's default.
+- Modifies local environment. Not usually run within a subshell.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `envName` - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+- - `--quiet` - Flag. Optional. No error is displayed when an environment variable does not exist, but return code 1 is returned.
+- 
+- ### Writes to standard output
+- 
+- The environment variable(s) requested, one per line
+- 
+- ### Return codes
+- 
+- - `1` - The environment variable is not found.
+- - `0` - The environment variable is found and the value was output to `stdout`
+- 
+- ## `buildEnvironmentGetDirectory`
+- 
+- > Load and print one or more environment settings which represents
+- 
+- ### Usage
+- 
+-     buildEnvironmentGetDirectory [ envName ] [ --subdirectory subdirectory ] [ --mode fileMode ] [ --owner ownerName ] [ --no-create ]
+- 
+- Load and print one or more environment settings which represents a directory which should be created.
+- 
+- If BOTH files exist, both are sourced, so application environments should anticipate values
+- created by build's default.
+- 
+- Modifies local environment. Not usually run within a subshell.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `envName` - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+- - `--subdirectory subdirectory` - String. Optional. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
+- - `--mode fileMode` - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.
+- - `--owner ownerName` - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.
+- - `--no-create` - Flag. Optional. Do not create the subdirectory if it does not exist.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildEnvironmentLoad`
+- 
+- > Load one or more environment settings from the environment file
+- 
+- ### Usage
+- 
+-     buildEnvironmentLoad [ envName ] [ --application applicationHome ] [ --all ] [ --print ] [ --quiet ] [ --help ]
+- 
+- Load one or more environment settings from the environment file path.
+- 
+- If BOTH files exist, both are sourced, so application environments should anticipate values
+- created by build's default.
+- 
+- Modifies local environment. Not usually run within a subshell.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `envName` - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+- - `--all` - Flag. Optional. Load all environment variables defined in BUILD_ENVIRONMENT_DIRS.
+- - `--print` - Flag. Print the environment file loaded first.
+- - `--quiet` - Flag. Optional. No error is displayed when an environment variable does not exist, but return code 1 is returned.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - The environment variable is not found.
+- - `0` - The environment variable is found and the file was loaded (which *should* set to the global environment variable named)
+- 
+- ## `buildEnvironmentNames`
+- 
+- > List known environment names
+- 
+- ### Usage
+- 
+-     buildEnvironmentNames [ --help ]
+- 
+- Environment:
+- Output the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildFunctions`
+- 
+- > Prints the list of functions defined in Zesk Build
+- 
+- ### Usage
+- 
+-     buildFunctions [ --help ] [ --deprecated ] [ --help ]
+- 
+- Prints the list of functions defined in Zesk Build
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--deprecated` - Flag. Optional. Include all deprecated functions as well.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildHome`
+- 
+- > Prints the build home directory (usually same as the application
+- 
+- ### Usage
+- 
+-     buildHome [ --help ]
+- 
+- Prints the build home directory (usually same as the application root)
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `buildQuietLog`
+- 
+- > Generate the path for a quiet log in the build
+- 
+- ### Usage
+- 
+-     buildQuietLog name [ --no-create ]
+- 
+- Generate the path for a quiet log in the build cache directory, creating it if necessary.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `name` - String. Required. The log file name to create. Trims leading `_` if present.
+- - `--no-create` - Flag. Optional. Do not require creation of the directory where the log file will appear.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `catchArgument`
+- 
+- > Run `command`, upon failure run `handler` with an argument error
+- 
+- ### Usage
+- 
+-     catchArgument handler command ... [ ... ]
+- 
+- Run `command`, upon failure run `handler` with an argument error
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - String. Required. Failure command
+- - `command ...` - Callable. Required. Command to run.
+- - `...` - Arguments. Optional. Arguments to `command`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:catchCode}
+- 
+- ## `catchCode`
+- 
+- > Run `command`, handle failure with `handler` with `code` and `command`
+- 
+- ### Usage
+- 
+-     catchCode code handler command ... [ ... ]
+- 
+- Run `command`, handle failure with `handler` with `code` and `command` as error
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `code` - UnsignedInteger. Required. Exit code to return
+- - `handler` - Function. Required. Failure command, passed remaining arguments and error code.
+- - `command ...` - Callable. Required. Command to run.
+- - `...` - Arguments. Optional. Arguments to `command`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:isUnsignedInteger}
+- - {SEE:returnArgument}
+- - {SEE:isFunction}
+- - {SEE:isCallable}
+- 
+- ## `catchEnvironment`
+- 
+- > Run `command`, upon failure run `handler` with an environment error
+- 
+- ### Usage
+- 
+-     catchEnvironment handler command ... [ ... ]
+- 
+- Run `command`, upon failure run `handler` with an environment error
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - String. Required. Failure command
+- - `command ...` - Callable. Required. Command to run.
+- - `...` - Arguments. Optional. Arguments to `command`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:catchCode}
+- 
+- ## `catchEnvironmentQuiet`
+- 
+- > Run `handler` with an environment error
+- 
+- ### Usage
+- 
+-     catchEnvironmentQuiet handler quietLog command ...
+- 
+- Run `handler` with an environment error
+- 
+- > Location: `bin/build/tools/sugar.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - Function. Required. Failure command
+- - `quietLog` - File. Required. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
+- - `command ...` - Callable. Required. Thing to run and append output to `quietLog`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:isFunction}
+- - {SEE:returnArgument}
+- - {SEE:debuggingStack}
+- - {SEE:throwEnvironment}
+- 
+- ## `catchReturn`
+- 
+- > Run binary and catch errors with handler
+- 
+- ### Usage
+- 
+-     catchReturn handler binary ...
+- 
+- Run binary and catch errors with handler
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - Function. Required. Error handler.
+- - `binary ...` - Executable. Required. Any arguments are passed to `binary`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:returnArgument}
+- 
+- ## `characterClasses`
+- 
+- > List the classes allowed in `isCharacterClass`
+- 
+- ### Usage
+- 
+-     characterClasses [ --help ] [ character ... ]
+- 
+- List the classes allowed in `isCharacterClass`
+- 
+- > Location: `bin/build/tools/character.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `character ...` - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `characterClassReport`
+- 
+- > Write a report of the character classes
+- 
+- ### Usage
+- 
+-     characterClassReport [ --class ] [ --char ] [ --help ]
+- 
+- Write a report of the character classes
+- 
+- > Location: `bin/build/tools/character.sh`
+- 
+- ### Arguments
+- 
+- - `--class` - Flag. Optional. Show class and then characters in that class.
+- - `--char` - Flag. Optional. Show characters and then class for that character.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `characterFromInteger`
+- 
+- > Given a list of integers, output the character codes associated
+- 
+- ### Usage
+- 
+-     characterFromInteger [ --help ]
+- 
+- Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
+- 
+- > Location: `bin/build/tools/character.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `characterToInteger`
+- 
+- > Convert a character to the corresponding ASCII code
+- 
+- ### Usage
+- 
+-     characterToInteger [ character ] [ --help ]
+- 
+- Convert one or more characters from their ascii representation to an integer value.
+- Requires a single character to be passed
+- 
+- > Location: `bin/build/tools/character.sh`
+- 
+- ### Arguments
+- 
+- - `character` - String. Optional. One or more characters to convert to their ASCII equivalent.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorBrightness`
+- 
+- > Return an integer between 0 and 100
+- 
+- ### Usage
+- 
+-     colorBrightness [ --help ] [ redValue ] [ greenValue ] [ blueValue ]
+- 
+- Return an integer between 0 and 100
+- Colors are between 0 and 255
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `redValue` - Integer. Optional. Red RGB value (0-255)
+- - `greenValue` - Integer. Optional. Red RGB value (0-255)
+- - `blueValue` - Integer. Optional. Red RGB value (0-255)
+- 
+- ### Reads standard input
+- 
+- 3 integer values [ Optional ]
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorFormat`
+- 
+- > Take r g b decimal values and convert them to
+- 
+- ### Usage
+- 
+-     colorFormat [ format ] [ red ] [ green ] [ blue ] [ --help ]
+- 
+- Take r g b decimal values and convert them to hex color values
+- Takes arguments or stdin values in groups of 3.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `format` - String. Optional. Formatting string.
+- - `red` - UnsignedInteger. Optional. Red component.
+- - `green` - UnsignedInteger. Optional. Blue component.
+- - `blue` - UnsignedInteger. Optional. Green component.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- list:UnsignedInteger
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorMultiply`
+- 
+- > Multiply color values by a factor and return the new
+- 
+- ### Usage
+- 
+-     colorMultiply factor redValue greenValue blueValue [ --help ]
+- 
+- Multiply color values by a factor and return the new values
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `factor` - floatValue. Required. Red RGB value (0-255)
+- - `redValue` - Integer. Required. Red RGB value (0-255)
+- - `greenValue` - Integer. Required. Red RGB value (0-255)
+- - `blueValue` - Integer. Required. Red RGB value (0-255)
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - bc
+- 
+- ## `colorNormalize`
+- 
+- > Redistribute color values to make brightness adjustments more balanced
+- 
+- ### Usage
+- 
+-     colorNormalize [ --help ]
+- 
+- Redistribute color values to make brightness adjustments more balanced
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorParse`
+- 
+- > Parse a color and output R G B decimal values
+- 
+- ### Usage
+- 
+-     colorParse [ color ] [ --help ]
+- 
+- Parse a color and output R G B decimal values
+- Takes arguments or stdin.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `color` - String. Optional. Color to parse.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- list:colors
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorSampleCodes`
+- 
+- > Alternate color output
+- 
+- ### Usage
+- 
+-     colorSampleCodes [ --help ]
+- 
+- If you want to explore what colors are available in your terminal, try this.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorSampleCombinations`
+- 
+- > Show combinations of foreground and background colors in the console.
+- 
+- ### Usage
+- 
+-     colorSampleCombinations [ --help ]
+- 
+- Show combinations of foreground and background colors in the console.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorSampleSemanticStyles`
+- 
+- > Output colors
+- 
+- ### Usage
+- 
+-     colorSampleSemanticStyles
+- 
+- Outputs sample sentences for the `action` commands to see what they look like.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorSampleStyles`
+- 
+- > Output colors
+- 
+- ### Usage
+- 
+-     colorSampleStyles
+- 
+- Outputs sample sentences for the `consoleAction` commands to see what they look like.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `colorScheme`
+- 
+- > Set the terminal color scheme to the specification
+- 
+- ### Usage
+- 
+-     colorScheme [ --help ] [ --handler handler ] [ --debug ]
+- 
+- Set the terminal color scheme to the specification
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--debug` - Flag. Optional. Show additional debugging information.
+- 
+- ### Reads standard input
+- 
+- Scheme definition with `colorName=colorValue` on each line
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `confirmMenu`
+- 
+- > Ask the user for a menu of options
+- 
+- ### Usage
+- 
+-     confirmMenu --choice choiceCharacter [ --default default ] --result resultFile [ --attempts attemptCount ] [ --timeout timeoutSeconds ] [ --prompt promptString ] [ message ]
+- 
+- Ask the user for a menu of options
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--choice choiceCharacter` - String. Required. Character to accept.
+- - `--default default` - String. Optional. Character to choose when there is a timeout or other failure.
+- - `--result resultFile` - File. Required. File to write the result to.
+- - `--attempts attemptCount` - PositiveInteger. Optional. Number of attempts to try and get valid unput from the user.
+- - `--timeout timeoutSeconds` - PositiveInteger. Optional. Number of seconds to wait for user input before stopping.
+- - `--prompt promptString` - String. Optional. String to suffix the prompt with (usually tells the user what to do)
+- - `message` - String. Optional. Display this message as the confirmation menu.
+- 
+- ### Return codes
+- 
+- - `interrupt` - Attempts exceeded
+- - `timeout` - Timeout
+- 
+- ## `confirmYesNo`
+- 
+- > Read user input and return success on yes
+- 
+- ### Usage
+- 
+-     confirmYesNo [ --default defaultValue ] [ --attempts attempts ] [ --timeout seconds ] [ --info ] [ --yes ] [ --no ] [ --help ] [ --handler handler ] [ message ... ]
+- 
+- Read user input and return 0 if the user says yes, or non-zero if they say no
+- Example: Will time out after 10 seconds, regardless (user must make valid input in that time):
+- Example:
+- Example:
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--default defaultValue` - Boolean. Optional. Value to return if no value given by user
+- - `--attempts attempts` - PositiveInteger. Optional. User can give us a bad response this many times before we return the default.
+- - `--timeout seconds` - PositiveInteger. Optional. Wait this long before choosing the default. If no default, default is --no.
+- - `--info` - Flag. Optional. Add `Type Y or N` as instructions to the user.
+- - `--yes` - Flag. Optional. Short for `--default yes`
+- - `--no` - Flag. Optional. Short for `--default no`
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `message ...` - String. Any additional arguments are considered part of the message.
+- 
+- ### Examples
+- 
+-     confirmYesNo --timeout 10 "Stop the timer!"
+- 
+- ### Return codes
+- 
+- - `0` - Yes
+- - `1` - No
+- 
+- ## `consoleBrightness`
+- 
+- > Output the brightness of the background color of the console as a number between 0 and 100
+- 
+- ### Usage
+- 
+-     consoleBrightness [ --foreground ] [ --background ]
+- 
+- Fetch the brightness of the console using `consoleGetColor`
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - `--foreground` - Flag. Optional. Get the console text color.
+- - `--background` - Flag. Optional. Get the console background color.
+- 
+- ### Sample Output
+- 
+- Integer. between 0 and 100.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - A problem occurred with `consoleGetColor`
+- 
+- ### See Also
+- 
+- - {SEE:consoleGetColor}
+- 
+- ## `consoleColumns`
+- 
+- > Column count in current console
+- 
+- ### Usage
+- 
+-     consoleColumns [ --help ]
+- 
+- Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- Integer
+- 
+- ### Examples
+- 
+-     textRepeat $(consoleColumns)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - - `COLUMNS` - May be defined after calling this
+- - - `LINES` - May be defined after calling this
+- 
+- ### See Also
+- 
+- - {SEE:stty}
+- 
+- ## `consoleConfigureColorMode`
+- 
+- > Print the suggested color mode for the current environment
+- 
+- ### Usage
+- 
+-     consoleConfigureColorMode [ backgroundColor ]
+- 
+- Print the suggested color mode for the current environment
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - `backgroundColor` - String. Optional. Background color.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleConfigureDecorate`
+- 
+- > Modify the decoration environment for light or dark.
+- 
+- ### Usage
+- 
+-     consoleConfigureDecorate [ backgroundColor ] [ --help ]
+- 
+- Modify the decoration environment for light or dark.
+- 
+- Run this at the top of your script for best results.
+- 
+- Update the color scheme for a light or dark scheme
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - `backgroundColor` - String. Optional. Background color.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleDefaultTitle`
+- 
+- > Set the title of the window for the console to
+- 
+- ### Usage
+- 
+-     consoleDefaultTitle [ None ]
+- 
+- Set the title of the window for the console to "user@hostname: pwd"
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - None
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleFileLink`
+- 
+- > Output a local file link to the console
+- 
+- ### Usage
+- 
+-     consoleFileLink [ --no-app ] fileName [ text ]
+- 
+- Output a local file link to the console
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - `--no-app` - Flag. Optional. Do not map the application path in `decoratePath`
+- - `fileName` - String. Required. File path to output.
+- - `text` - String. Optional. Text to output linked to file.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleGetColor`
+- 
+- > Get the console foreground or background color
+- 
+- ### Usage
+- 
+-     consoleGetColor [ --foreground ] [ --background ]
+- 
+- Gets the RGB console color using an `xterm` escape sequence supported by some terminals. (usually for background colors)
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - `--foreground` - Flag. Optional. Get the console text color.
+- - `--background` - Flag. Optional. Get the console background color.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleHasAnimation`
+- 
+- > Does the console support animation?
+- 
+- ### Usage
+- 
+-     consoleHasAnimation
+- 
+- Does the console support animation?
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Supports console animation
+- - `1` - Does not support console animation
+- 
+- ## `consoleHasColors`
+- 
+- > Sets the environment variable `BUILD_COLORS` if not set, uses `TERM`
+- 
+- ### Usage
+- 
+-     consoleHasColors [ --help ]
+- 
+- Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
+- 
+- > Location: `bin/build/tools/decorate/core.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Console or output supports colors
+- - `1` - Colors are likely not supported by console
+- 
+- ### Requires
+- 
+- - {SEE:isPositiveInteger}
+- - tput
+- - {SEE:helpArgument}
+- - {SEE:convertValue}
+- 
+- ## `consoleHeadingLine`
+- 
+- > Output a line and fill columns with a character
+- 
+- ### Usage
+- 
+-     consoleHeadingLine barText [ displayText ]
+- 
+- Output a line and fill columns with a character
+- 
+- > Location: `bin/build/tools/decorate/line.sh`
+- 
+- ### Arguments
+- 
+- - `barText` - String. Required. Text to fill line with, repeated. If not specified uses `-`
+- - `displayText` - String. Optional.  Text to display on the line before the fill bar.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleLine`
+- 
+- > Output a bar as wide as the console
+- 
+- ### Usage
+- 
+-     consoleLine [ alternateChar ] [ offset ]
+- 
+- Output a bar as wide as the console using the `=` symbol.
+- 
+- > Location: `bin/build/tools/decorate/line.sh`
+- 
+- ### Arguments
+- 
+- - `alternateChar` - String. Optional. Use an alternate character or string output
+- - `offset` - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is `0`)
+- 
+- ### Examples
+- 
+-     decorate success $(consoleLine =-)
+-     decorate success $(consoleLine "- Success ")
+-     decorate magenta $(consoleLine +-)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `consoleColumns`
+- 
+- ## `consoleLineFill`
+- 
+- > Clear a line in the console
+- 
+- ### Usage
+- 
+-     consoleLineFill [ textToOutput ]
+- 
+- Clears current line of text in the console
+- 
+- Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
+- 
+- Intended to be run on an interactive console. Should support $(tput cols).
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `textToOutput` - String. Optional. Text to display on the new cleared line.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleLink`
+- 
+- > console hyperlinks
+- 
+- ### Usage
+- 
+-     consoleLink link [ text ] [ --help ]
+- 
+- Output a hyperlink to the console
+- OSC 8 standard for terminals
+- No way to test ability, I think. Maybe `tput`.
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - `link` - EmptyString. Required. Link to output.
+- - `text` - String. Optional. Text to display, if none then uses `link`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleLinksSupported`
+- 
+- > Are console links (likely) supported?
+- 
+- ### Usage
+- 
+-     consoleLinksSupported
+- 
+- Are console links (likely) supported?
+- Unfortunately there's no way to test for this feature currently
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consolePlainLength`
+- 
+- > Length of an unformatted string
+- 
+- ### Usage
+- 
+-     consolePlainLength [ text ]
+- 
+- Length of an unformatted string
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Optional. text to determine the plaintext length of. If not supplied reads from standard input.
+- 
+- ### Reads standard input
+- 
+- A file to determine the plain-text length
+- 
+- ### Writes to standard output
+- 
+- `UnsignedInteger`. Length of the plain characters in the input arguments.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleRows`
+- 
+- > Row count in current console
+- 
+- ### Usage
+- 
+-     consoleRows [ --help ]
+- 
+- Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     tail -n $(consoleRows) "$file"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - - `COLUMNS` - May be defined after calling this
+- - - `LINES` - May be defined after calling this
+- 
+- ### See Also
+- 
+- - {SEE:stty}
+- 
+- ## `consoleSetTitle`
+- 
+- > Set the title of the window for the console
+- 
+- ### Usage
+- 
+-     consoleSetTitle
+- 
+- Set the title of the window for the console
+- 
+- > Location: `bin/build/tools/console.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `consoleToPlain`
+- 
+- > Strip ANSI console escape sequences from a file
+- 
+- ### Usage
+- 
+-     consoleToPlain [ None. ]
+- 
+- Strip ANSI console escape sequences from a file
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - None.
+- 
+- ### Reads standard input
+- 
+- arbitrary text which may contain ANSI escape sequences for the terminal
+- 
+- ### Writes to standard output
+- 
+- the same text with those ANSI escape sequences removed
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - None.
+- 
+- ### Credits
+- 
+- Thanks to [commandlinefu tripleee
+- ](https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc
+- ).
+- 
+- ## `consoleTrimWidth`
+- 
+- > Truncate console output width
+- 
+- ### Usage
+- 
+-     consoleTrimWidth width [ text ]
+- 
+- Truncate console output width
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `width` - UnsignedInteger. Required. Width to maintain.
+- - `text` - String. Optional. Text to trim to a console width.
+- 
+- ### Reads standard input
+- 
+- String. Optional. Text to trim to a console width.
+- 
+- ### Writes to standard output
+- 
+- String. Console string trimmed to the width requested.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `contextOpen`
+- 
+- > Open a file in a shell using the program we
+- 
+- ### Usage
+- 
+-     contextOpen [ --help ]
+- 
+- Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
+- 
+- > Location: `bin/build/tools/vendor.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `contextShow`
+- 
+- > Show the current editor being used as a text string
+- 
+- ### Usage
+- 
+-     contextShow
+- 
+- Show the current editor being used as a text string
+- 
+- > Location: `bin/build/tools/vendor.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `1` - If no editor or running program can be determined
+- 
+- ## `convertValue`
+- 
+- > map a value from one value to another given from-to
+- 
+- ### Usage
+- 
+-     convertValue [ --help ] [ value ] [ from ] [ to ] [ ... ]
+- 
+- map a value from one value to another given from-to pairs
+- 
+- Prints the mapped value to stdout
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `value` - String. A value.
+- - `from` - String. When value matches `from`, instead print `to`
+- - `to` - String. The value to print when `from` matches `value`
+- - `...` - String. Optional. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `cpuCount`
+- 
+- > Return integer count of CPUs on this system
+- 
+- ### Usage
+- 
+-     cpuCount [ --handler handler ] [ --help ]
+- 
+- Return integer count of CPUs on this system
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- PositiveInteger
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `cpuLoadAverage`
+- 
+- > Get the load average using uptime
+- 
+- ### Usage
+- 
+-     cpuLoadAverage [ --help ]
+- 
+- Get the load average using uptime
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- lines:Number
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - uptime
+- 
+- ## `crontabApplicationUpdate`
+- 
+- > Application-specific crontab management
+- 
+- ### Usage
+- 
+-     crontabApplicationUpdate [ --env-file environmentFile ] [ --show ] [ --user user ] [ --mapper envMapper ]
+- 
+- Keep crontab synced with files and environment files in an application folder structure.
+- 
+- Structure is:
+- 
+- - `appPath/application1/.env`
+- - `appPath/application1/.env.local`
+- - `appPath/application1/etc/user.crontab`
+- 
+- Search for `user.crontab` in `applicationPath` and when found, assign `APPLICATION_NAME` to the top-level directory name
+- and `APPLICATION_PATH` to the top-level directory path and then map the file using the environment files given.
+- Any `.env` or `.env.local` files found at `$applicationPath/` will be included for each file generation.
+- 
+- Feasibly for each file, the following environment files are loaded:
+- 
+- 1. `rootEnv`
+- 2. `applicationPath/applicationName/.env`
+- 3. `applicationPath/applicationName/.env.local`
+- 
+- Any files not found are skipped. Note that environment values are not carried between applications.
+- 
+- > Location: `bin/build/tools/crontab.sh`
+- 
+- ### Arguments
+- 
+- - `--env-file environmentFile` - Top-level environment file to pass variables into the user `crontab` template
+- - `--show` - Show the crontab instead of installing it
+- - `--user user` - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.
+- - `--mapper envMapper` - Binary. Optional. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
+- 
+- ### Examples
+- 
+-     crontabApplicationUpdate --env-file /etc/myCoolApp.conf --user www-data /var/www/applications
+-     crontabApplicationUpdate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:whoami}
+- 
+- ## `cursorGet`
+- 
+- > Get the current cursor position
+- 
+- ### Usage
+- 
+-     cursorGet
+- 
+- Get the current cursor position
+- Output is <x> <newline> <y> <newline>
+- 
+- > Location: `bin/build/tools/cursor.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Writes to standard output
+- 
+- UnsignedInteger
+- 
+- ### Examples
+- 
+-     IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `cursorSet`
+- 
+- > Move the cursor to x y
+- 
+- ### Usage
+- 
+-     cursorSet x y
+- 
+- Move the cursor to x y
+- 
+- > Location: `bin/build/tools/cursor.sh`
+- 
+- ### Arguments
+- 
+- - `x` - UnsignedInteger. Required. Column to place the cursor.
+- - `y` - UnsignedInteger. Required. Row to place the cursor.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsExecute`
+- 
+- > Launch the daemontools daemon
+- 
+- ### Usage
+- 
+-     daemontoolsExecute [ --help ]
+- 
+- Launch the daemontools daemon
+- Do not use this for production
+- Run the daemontools root daemon
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsHome`
+- 
+- > Print the daemontools service home path
+- 
+- ### Usage
+- 
+-     daemontoolsHome
+- 
+- Print the daemontools service home path
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - success
+- - `1` - No environment file found
+- 
+- ## `daemontoolsInstall`
+- 
+- > Install daemontools and dependencies
+- 
+- ### Usage
+- 
+-     daemontoolsInstall
+- 
+- Install daemontools and dependencies
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsInstallService`
+- 
+- > Install a daemontools service which runs a binary as the
+- 
+- ### Usage
+- 
+-     daemontoolsInstallService [ --home serviceHome ] serviceFile [ serviceName ] [ --name serviceName ] [ --log logHome ] [ --escalate ] [ --log-arguments ... -- ] [ --arguments ... -- ] [ -- ... ]
+- 
+- Install a daemontools service which runs a binary as the file owner.
+- 
+- Installs a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - `--home serviceHome` - Path. Optional. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
+- - `serviceFile` - Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
+- - `serviceName` - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
+- - `--name serviceName` - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
+- - `--log logHome` - Path. Optional. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
+- - `--escalate` - Flag. Optional. Only if the source file is owned by a non-root user.
+- - `--log-arguments ... --` - ArgumentsList. Optional. List of arguments for the logger.
+- - `--arguments ... --` - ArgumentsList. Optional. List of arguments for the service.
+- - `-- ...` - Arguments. Optional. List of arguments for the service.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsIsRunning`
+- 
+- > Is daemontools running?
+- 
+- ### Usage
+- 
+-     daemontoolsIsRunning [ --help ]
+- 
+- Is daemontools running?
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsManager`
+- 
+- > Runs a daemon which monitors files and operates on services.
+- 
+- ### Usage
+- 
+-     daemontoolsManager [ --home serviceHome ] [ --interval intervalSeconds ] [ --stat statFile ] [ --chirp chirpSeconds ] [ --action actions ] service0 file1
+- 
+- Runs a daemon which monitors files and operates on services.
+- 
+- To request a specific action write the file with the action as the first line.
+- 
+- Allows control across user boundaries. (e.g. user can control root services)
+- 
+- Specify actions more than once on the command line to specify more than one set of permissions.
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - `--home serviceHome` - Directory. Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.
+- - `--interval intervalSeconds` - PositiveInteger. Optional. Number of seconds to check for presence of the file. Defaults to 10.
+- - `--stat statFile` - FileDirectory. Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.
+- - `--chirp chirpSeconds` - PositiveInteger. Optional. Output a message saying we're alive every `chirpSeconds` seconds.
+- - `--action actions` - String. Optional. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.
+- - `service0` - Directory. Required. Service to control (e.g. `/etc/service/application/`)
+- - `file1` - File. Required. Absolute path to a file. Presence of  `file` triggers `action`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsProcessIds`
+- 
+- > List any processes associated with daemontools supervisors
+- 
+- ### Usage
+- 
+-     daemontoolsProcessIds
+- 
+- List any processes associated with daemontools supervisors
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsRemoveService`
+- 
+- > Remove a daemontools service by name
+- 
+- ### Usage
+- 
+-     daemontoolsRemoveService serviceName
+- 
+- Remove a daemontools service by name
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - `serviceName` - String. Required. Service name to remove.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsRestart`
+- 
+- > Restart the daemontools processes from scratch.
+- 
+- ### Usage
+- 
+-     daemontoolsRestart
+- 
+- Restart the daemontools processes from scratch.
+- Dangerous. Stops any running services and restarts them.
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `daemontoolsTerminate`
+- 
+- > Terminate daemontools as gracefully as possible
+- 
+- ### Usage
+- 
+-     daemontoolsTerminate [ --timeout seconds ]
+- 
+- Terminate daemontools as gracefully as possible
+- 
+- > Location: `bin/build/tools/daemontools.sh`
+- 
+- ### Arguments
+- 
+- - `--timeout seconds` - Integer. Optional.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - usageArgumentInteger
+- - {SEE:throwEnvironment}
+- - {SEE:catchEnvironment}
+- - {SEE:validate}
+- - {SEE:statusMessage}
+- - svscanboot
+- - id
+- - svc
+- - svstat
+- 
+- ## `darwinDialog`
+- 
+- > Display a dialog using `osascript` with the choices provided. Typically
+- 
+- ### Usage
+- 
+-     darwinDialog [ --choice choiceText ] [ --ok ] [ --cancel ] --default buttonIndex [ --help ] message ...
+- 
+- Display a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.
+- Outputs the selected button text upon exit.
+- 
+- > Location: `bin/build/tools/darwin.sh`
+- 
+- ### Arguments
+- 
+- - `--choice choiceText` - String. Optional. Title of the thing.
+- - `--ok` - Flag. Optional. Adds "OK" as an option.
+- - `--cancel` - Flag. Optional. Adds "Cancel" as an option.
+- - `--default buttonIndex` - Integer. Required. The button (0-based index) to make the default button choice.
+- - `--help` - Flag. Optional. Display this help.
+- - `message ...` - String. Required. The message to display in the dialog.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `darwinNotification`
+- 
+- > Display a notification for the user
+- 
+- ### Usage
+- 
+-     darwinNotification [ --title ] [ --debug ] [ --sound soundName ] [ message ... ]
+- 
+- Display a notification for the user
+- 
+- > Location: `bin/build/tools/darwin.sh`
+- 
+- ### Arguments
+- 
+- - `--title` - String. Optional. Title of the notification.
+- - `--debug` - Flag. Optional. Output the osascript as `darwinNotification.debug` at the application root after this call.
+- - `--sound soundName` - String. Optional. Sound to play with the notification. Represents a sound base name found in `/Library/Sounds/`.
+- - `message ...` - String. Optional. Message to display to the user in the dialog.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `darwinSoundDirectory`
+- 
+- > Directory for user sounds
+- 
+- ### Usage
+- 
+-     darwinSoundDirectory
+- 
+- Directory for user sounds
+- 
+- > Location: `bin/build/tools/darwin.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `darwinSoundInstall`
+- 
+- > Install a sound file for notifications
+- 
+- ### Usage
+- 
+-     darwinSoundInstall [ --help ] soundFile ... [ --create ]
+- 
+- Install a sound file for notifications
+- 
+- > Location: `bin/build/tools/darwin.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `soundFile ...` - File. Required. Sound file(s) to install in user library.
+- - `--create` - Flag. Optional. Create sound directory if it does not exist.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `darwinSoundNames`
+- 
+- > List valid sound names usable for notifications in Darwin
+- 
+- ### Usage
+- 
+-     darwinSoundNames
+- 
+- List valid sound names usable for notifications in Darwin
+- 
+- > Location: `bin/build/tools/darwin.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `darwinSoundValid`
+- 
+- > Is a Darwin sound name valid?
+- 
+- ### Usage
+- 
+-     darwinSoundValid
+- 
+- Is a Darwin sound name valid?
+- 
+- > Location: `bin/build/tools/darwin.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dateAdd`
+- 
+- > Add or subtract days from a text date
+- 
+- ### Usage
+- 
+-     dateAdd [ --days delta ] [ timestamp ... ]
+- 
+- Add or subtract days from a text date
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `--days delta` - SignedInteger. Number of days to add (or subtract - use a negative number). Affects all timestamps *after* it.
+- - `timestamp ...` - Date. Timestamp to update.
+- 
+- ### Writes to standard output
+- 
+- Date with days added to it
+- 
+- ### Examples
+- 
+-     newYearsEve=$(dateAdd --days -1 "2025-01-01")
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dateFromTimestamp`
+- 
+- > Converts an integer date to a date formatted timestamp (e.g.
+- 
+- ### Usage
+- 
+-     dateFromTimestamp integerTimestamp [ format ] [ --help ] [ --local ]
+- 
+- Converts an integer date to a date formatted timestamp (e.g. `%Y-%m-%d %H:%M:%S`)
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `integerTimestamp` - Integer. Required. Integer. Required. Integer timestamp offset (Seconds since 1/1/1970 UTC, same as `$(date +%s)`)
+- - `format` - String. Optional. How to output the date (e.g. `%F` - no `+` is required)
+- - `--help` - Flag. Optional. Display this help.
+- - `--local` - Flag. Optional. Show the local time, not UTC.
+- 
+- ### Examples
+- 
+-     dateFromTimestamp 1681966800 %F
+-     dateField=$(dateFromTimestamp $init %Y)
+- 
+- ### Return codes
+- 
+- - `0` - If parsing is successful
+- - `1` - If parsing fails
+- 
+- ### Environment
+- 
+- - Compatible with BSD and GNU date.
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - {SEE:validate}
+- - {SEE:__dateFromTimestamp}
+- - {SEE:bashDocumentation}
+- 
+- ## `dateToday`
+- 
+- > Today's date in UTC
+- 
+- ### Usage
+- 
+-     dateToday [ --local ] [ --help ]
+- 
+- Returns the current date, in YYYY-MM-DD format. (same as `%F`)
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `--local` - Flag. Optional. Local today.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     date="$(dateToday)"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - Compatible with BSD and GNU date.
+- 
+- ## `dateToFormat`
+- 
+- > Platform agnostic date conversion
+- 
+- ### Usage
+- 
+-     dateToFormat date [ format ]
+- 
+- Converts a date (`YYYY-MM-DD`) to another format.
+- 
+- Compatible with BSD and GNU date.
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `date` - String. Required. String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
+- - `format` - String. Optional. Format string for the `date` command (e.g. `%s`)
+- 
+- ### Examples
+- 
+-     dateToFormat 2023-04-20 %s 1681948800
+-     timestamp=$(dateToFormat '2023-10-15' %s)
+- 
+- ### Return codes
+- 
+- - `1` - if parsing fails
+- - `0` - if parsing succeeds
+- 
+- ## `dateTomorrow`
+- 
+- > Tomorrow's date in UTC
+- 
+- ### Usage
+- 
+-     dateTomorrow [ --local ] [ --help ]
+- 
+- Returns tomorrow's date (UTC time), in `YYYY-MM-DD` format. (same as `%F`)
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `--local` - Flag. Optional. Local tomorrow
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     rotated="$log.$(dateTomorrow)"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - date
+- - {SEE:convertValue}
+- - {SEE:dateFromTimestamp}
+- - {SEE:bashDocumentation}
+- 
+- ## `dateToTimestamp`
+- 
+- > Converts a date to an integer timestamp
+- 
+- ### Usage
+- 
+-     dateToTimestamp [ date ] [ --help ]
+- 
+- Converts a date to an integer timestamp
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     timestamp=$(dateToTimestamp '2023-10-15')
+- 
+- ### Return codes
+- 
+- - `1` - if parsing fails
+- - `0` - if parsing succeeds
+- 
+- ### Environment
+- 
+- - Compatible with BSD and GNU date.
+- 
+- ## `dateValid`
+- 
+- > Is a date valid?
+- 
+- ### Usage
+- 
+-     dateValid [ --help ] [ -- ] text
+- 
+- Checks a date syntax and ensures it's a valid calendar date.
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--` - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+- - `text` - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dateWithinDays`
+- 
+- > Is a date in the past beyond its expiration date?
+- 
+- ### Usage
+- 
+-     dateWithinDays keyDate [ upToDateDays ] [ --name name ] [ --help ]
+- 
+- stdout: Two tokens on a single line:
+- 
+- This tool checks the `keyDate` and checks if it is within `days` of today; if not this fails.
+- 
+- It will also fail if:
+- 
+- - `keyDate` is empty or has an invalid value
+- - `upToDateDays` is less than zero
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `keyDate` - Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
+- - `upToDateDays` - Integer. Optional. Days that key expires after `keyDate`. Default is 90.
+- - `--name name` - String. Optional. Name of the expiring item for error messages.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- - UnsignedInteger. Days until expiration.
+- - UnsignedInteger. Expiration timestamp.
+- 
+- ### Examples
+- 
+-     if ! dateWithinDays "$AWS_ACCESS_KEY_DATE" 90; then
+-       decorate big Failed, update key and reset date
+-       exit 99
+-     fi
+- 
+- ### Return codes
+- 
+- - `0` - The date has not expired.
+- - `1` - The date has expired.
+- - `2` - The date is incorrectly formatted.
+- - `2` - Argument error.
+- 
+- ## `dateYesterday`
+- 
+- > Yesterday's date (UTC time)
+- 
+- ### Usage
+- 
+-     dateYesterday [ --local ] [ --help ]
+- 
+- Returns yesterday's date, in `YYYY-MM-DD` format. (same as `%F`)
+- 
+- > Location: `bin/build/tools/date.sh`
+- 
+- ### Arguments
+- 
+- - `--local` - Flag. Optional. Local yesterday
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     rotated="$log.$(dateYesterday --local)"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - date
+- - {SEE:convertValue}
+- - {SEE:dateFromTimestamp}
+- - {SEE:bashDocumentation}
+- 
+- ## `debuggingStack`
+- 
+- > Dump the function and include stacks and the current environment
+- 
+- ### Usage
+- 
+-     debuggingStack [ -x ] [ --me ] [ --exit ]
+- 
+- Dump the function and include stacks and the current environment
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - `-x` - Flag. Optional. Show exported variables. (verbose)
+- - `--me` - Flag. Optional. Show calling function call stack frame.
+- - `--exit` - Flag. Optional. Exit with code 0 after output.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `debuggingStack` - `debuggingStack` shows arguments passed (extra) and exports (optional flag) ALWAYS
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `decorate`
+- 
+- > Singular decoration function
+- 
+- ### Usage
+- 
+-     decorate style [ text ... ]
+- 
+- Singular decoration function
+- You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
+- 
+- > Location: `bin/build/tools/decorate/core.sh`
+- 
+- ### Arguments
+- 
+- - `style` - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration
+- - `text ...` - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
+- 
+- ### Writes to standard output
+- 
+- Decorated text
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:isFunction}
+- - {SEE:catchArgument}
+- - {SEE:catchReturn}
+- - awk
+- - {SEE:bashDocumentation}
+- - {SEE:helpArgument}
+- - {SEE:_decorateInitialize}
+- - {SEE:__decorateStyle}
+- - {SEE:__decorate}
+- - {SEE:executeInputSupport}
+- 
+- ## `decorateInitialized`
+- 
+- > Is the decorate color system initialized yet?
+- 
+- ### Usage
+- 
+-     decorateInitialized [ --help ]
+- 
+- Is the decorate color system initialized yet?
+- Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
+- 
+- > Location: `bin/build/tools/decorate/core.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:helpArgument}
+- 
+- ## `decoratePath`
+- 
+- > Display file paths and replace prefixes with icons
+- 
+- ### Usage
+- 
+-     decoratePath [ --help ] [ --path pathName=icon ] [ --no-app ] [ --skip-app ] [ path ]
+- 
+- Replace an absolute path prefix with an icon if it matches `HOME`, `BUILD_HOME` or `TMPDIR`
+- Icons used:
+- - 💣 - `TMPDIR`
+- - 🍎 - `BUILD_HOME`
+- - 🏠 - `HOME`
+- 
+- > Location: `bin/build/tools/decorate/path.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- --path pathName=- `icon` - Flag. Optional. Add an additional path mapping to icon.
+- - `--no-app` - Flag. Optional. Do not map `BUILD_HOME`.
+- - `--skip-app` - Flag. Optional. Synonym for `--no-app`.
+- - `path` - String. Path to display and replace matching paths with icons.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `decorateStyle`
+- 
+- > Get or modify a decoration style
+- 
+- ### Usage
+- 
+-     decorateStyle style [ newFormat ]
+- 
+- When `newFormat` is blank, retrieves the format style.
+- Otherwise sets the new style.
+- 
+- > Location: `bin/build/tools/decorate/style.sh`
+- 
+- ### Arguments
+- 
+- - `style` - String. Required. The style to fetch or replace.
+- - `newFormat` - String. Optional. The new style formatting options as a string in the form `escapeCodes label`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `decorateThemed`
+- 
+- > Applies the current theme to text rendered using `decorateThemelessMode`
+- 
+- ### Usage
+- 
+-     decorateThemed [ --help ]
+- 
+- Applies the current theme to text rendered using `decorateThemelessMode`
+- 
+- > Location: `bin/build/tools/decorate/theme.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Text to apply current theme to
+- 
+- ### Writes to standard output
+- 
+- Console-ready text
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `decorateThemelessMode`
+- 
+- > Converts decoration style to a mode where the theme can
+- 
+- ### Usage
+- 
+-     decorateThemelessMode [ --end ] [ --help ]
+- 
+- Converts decoration style to a mode where the theme can be applied later to text which is formatted.
+- All decorate calls made after this call will output with special codes not to be displayed to the user.
+- 
+- > Location: `bin/build/tools/decorate/theme.sh`
+- 
+- ### Arguments
+- 
+- - `--end` - Flag. Optional. End themeless mode.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - __BUILD_DECORATE
+- 
+- ### See Also
+- 
+- - ## `decorateThemed`
+- 
+- ## `decorations`
+- 
+- > Output a list of build-in decoration styles, one per line
+- 
+- ### Usage
+- 
+-     decorations [ --help ]
+- 
+- Output a list of build-in decoration styles, one per line
+- 
+- > Location: `bin/build/tools/decorate/core.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:helpArgument}
+- - {SEE:convertValue}
+- 
+- ## `deployApplication`
+- 
+- > Deploy an application from a deployment repository
+- 
+- ### Usage
+- 
+-     deployApplication [ --help ] [ --first ] [ --revert ] --home deployHome --id applicationId --application applicationPath [ --target targetPackage ] [ --message message ]
+- 
+- This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. This help.
+- - `--first` - Flag. Optional. The first deployment has no prior version and can not be reverted.
+- - `--revert` - Flag. Optional. Means this is part of the undo process of a deployment.
+- - `--home deployHome` - Directory. Required. Path where the deployments database is on system.
+- - `--id applicationId` - String. Required. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
+- - `--application applicationPath` - FileDirectory. Required. Path on the  system where the application is live
+- - `--target targetPackage` - Filename. Optional. Package name, defaults to `BUILD_TARGET`
+- - `--message message` - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.
+- 
+- ### Examples
+- 
+- deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:deployToRemote}
+- 
+- ## `deployApplicationVersion`
+- 
+- > Extracts version from an application either from `.deploy` files or
+- 
+- ### Usage
+- 
+-     deployApplicationVersion applicationHome
+- 
+- Extracts version from an application either from `.deploy` files or from the the `.env` if
+- that does not exist.
+- 
+- Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `applicationHome` - Directory. Required. Application home to get the version from.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployBuildEnvironment`
+- 
+- > Deploy to a host
+- 
+- ### Usage
+- 
+-     deployBuildEnvironment [ --env-file envFile ] [ --debug ] [ --first ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]
+- 
+- Deploy to a host
+- 
+- Loads `./.build.env` if it exists.
+- Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.
+- 
+- > Location: `bin/build/tools/deployment.sh`
+- 
+- ### Arguments
+- 
+- - `--env-file envFile - File. Optional. Environment file to load` - can handle any format.
+- - `--debug` - Flag. Optional. Enable debugging.
+- - `--first` - Flag. Optional. When it is the first deployment, use this flag.
+- - `--home deployPath` - Directory. Required. Path where the deployments database is on remote system. Uses
+- - `--id applicationId` - String. Required. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_ID` environment.
+- - `--application applicationPath` - String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_HOME` environment.
+- - `--target targetPackage` - Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployHasVersion`
+- 
+- > Does a deploy version exist? versionName is the version identifier
+- 
+- ### Usage
+- 
+-     deployHasVersion deployHome versionName
+- 
+- Does a deploy version exist? versionName is the version identifier for deployments
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `deployHome` - Directory. Required. Deployment database home.
+- - `versionName` - String. Required. Application ID to look for
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployLink`
+- 
+- > Link deployment to new version of the application
+- 
+- ### Usage
+- 
+-     deployLink applicationLinkPath [ applicationPath ]
+- 
+- Link new version of application.
+- 
+- When called, current directory is the **new** application and the `applicationLinkPath` which is
+- passed as an argument is the place where the **new** application should be linked to
+- in order to activate it.
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `applicationLinkPath` - Path. Required. Path where the link is created.
+- - `applicationPath` - Path. Optional. Path where the link will point to. If not supplied uses current working directory.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - PWD
+- 
+- ## `deployMigrateDirectoryToLink`
+- 
+- > Automatically convert application deployments using non-links to links.
+- 
+- ### Usage
+- 
+-     deployMigrateDirectoryToLink deployHome applicationPath
+- 
+- Automatically convert application deployments using non-links to links.
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `deployHome` - Directory. Required. Deployment database home.
+- - `applicationPath` - Directory. Required. Application target path.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployMove`
+- 
+- > Safe application deployment by moving
+- 
+- ### Usage
+- 
+-     deployMove applicationPath
+- 
+- Safe application deployment by moving
+- 
+- Deploy current application to target path
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `applicationPath` - Directory. Required. Application target path.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployNextVersion`
+- 
+- > Get the next version of the supplied version
+- 
+- ### Usage
+- 
+-     deployNextVersion deployHome versionName
+- 
+- Get the next version of the supplied version
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `deployHome` - Directory. Required. Deployment database home.
+- - `versionName` - String. Required. Application ID to look for
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployPackageName`
+- 
+- > Outputs the build target name which is based on the
+- 
+- ### Usage
+- 
+-     deployPackageName deployHome
+- 
+- Outputs the build target name which is based on the environment `BUILD_TARGET`.
+- 
+- If this is called on a non-deployment system, use the application root instead of
+- `deployHome` for compatibility.
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `deployHome` - Directory. Required. Deployment database home.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployPreviousVersion`
+- 
+- > Get the previous version of the supplied version
+- 
+- ### Usage
+- 
+-     deployPreviousVersion deployHome versionName
+- 
+- Get the previous version of the supplied version
+- 
+- > Location: `bin/build/tools/deploy.sh`
+- 
+- ### Arguments
+- 
+- - `deployHome` - Directory. Required. Deployment database home.
+- - `versionName` - String. Required. Application ID to look for
+- 
+- ### Return codes
+- 
+- - `1` - No version exists
+- - `2` - Argument error
+- 
+- ## `deployRemoteFinish`
+- 
+- > This is **run on the remote system** after deployment; environment
+- 
+- ### Usage
+- 
+-     deployRemoteFinish [ --debug ] [ --deploy ] [ --revert ] [ --cleanup ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]
+- 
+- This is **run on the remote system** after deployment; environment files are correct.
+- It is run inside the deployment home directory in the new application folder.
+- 
+- Current working directory on deploy is `deployHome/applicationId/app`.
+- Current working directory on cleanup is `applicationHome/`
+- Current working directory on undo is `applicationHome/`
+- Note that these MAY be the same or different directories depending on how the application is linked to the deployment
+- 
+- > Location: `bin/build/tools/deployment.sh`
+- 
+- ### Arguments
+- 
+- - `--debug` - Enable debugging. Defaults to `BUILD_DEBUG`
+- - `--deploy - Flag. Optional. default setting` - handles the remote deploy.
+- - `--revert` - Flag. Optional. Revert changes just made.
+- - `--cleanup` - Flag. Optional. Cleanup after success.
+- - `--home deployPath` - Directory. Required. Path where the deployments database is on remote system.
+- - `--id applicationId` - String. Required. Should match `APPLICATION_ID` in `.env`
+- - `--application applicationPath` - String. Required. Path on the remote system where the application is live
+- - `--target targetPackage` - Filename. Optional. Package name, defaults to `app.tar.gz`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deployToRemote`
+- 
+- > Deploy current application to one or more hosts
+- 
+- ### Usage
+- 
+-     deployToRemote [ --target target ] [ --deploy ] [ --cleanup ] [ --revert ] [ --commands ] [ --skip-ssh-host ] [ --add-ssh-host ] [ --debug ] --versions --id applicationId --application applicationPath userAtHost [ --help ]
+- 
+- Deploy current application to host at applicationPath.
+- 
+- If this fails it will output the installation log.
+- 
+- When this tool succeeds the application:
+- 
+- - `--deploy` - has been deployed in the remote systems successfully but temporary files may still exist
+- - `--revert` - No changes should have occurred on the remote host (not guaranteed)
+- - `--cleanup` - has been installed in the remote systems successfully
+- 
+- Operation:
+- 
+- ## Deploy `--deploy` Operation
+- 
+- - On each host, `app.tar.gz` is uploaded to the `applicationPath` first
+- - On each host, via the shell, change to the `applicationPath` directory
+- - Decompress the application package, and run the `deploy-remote-finish.sh` script
+- 
+- ## Cleanup `--cleanup` Operation
+- 
+- - On each host, via the shell, change to the `applicationPath` directory
+- - Run the `deploy-remote-finish.sh` script which ...
+- - Deletes the application package if it still exists, and runs the `deploy-cleanup` hook
+- 
+- ## Undo `--revert` Operation
+- 
+- - On each host, via the shell, change to the `applicationPath` directory
+- - Run the `deploy-remote-finish.sh` script which ...
+- - Deploys the prior version in the same manner, and ... <!-- needs expansion TODO -->
+- - Runs the `deploy-revert` hook afterwards
+- 
+- The `userAtHost` can be passed as follows:
+- 
+-     deployDeployAction --deploy 5125ab12 /var/www/DEPLOY/coolApp/ /var/www/apps/coolApp/ "www-data@host0 www-data@host1 stageuser@host3" "www-data@host4"
+- 
+- > Location: `bin/build/tools/deployment.sh`
+- 
+- ### Arguments
+- 
+- - `--target target` - String. Optional. Build target file base name, defaults to `app.tar.gz`
+- - `--deploy` - Default. Flag. deploy an application to a remote host
+- - `--cleanup` - Flag. Optional. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
+- - `--revert` - Flag. Optional. Reverses a deployment
+- - `--commands` - Flag. Optional. Display commands sent to server but do not execute them. For debugging or testing. Implies --skip-ssh-host
+- - `--skip-ssh-host` - Flag. Optional. Do not add ssh hosts to known hosts file.
+- - `--add-ssh-host` - Flag. Optional. Add hosts to known hosts file in SSH if not already added.
+- - `--debug` - Flag. Optional. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
+- - `--versions - deployHome` - Path. Required. Remote path where we can store deployment state files.
+- - `--id applicationId` - String. Required. The application package will contain a `.env` with `APPLICATION_ID` set to this Value
+- - `--application applicationPath` - Path. Required. Path where the application will be deployed
+- - `userAtHost` - Strings. Required. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `ssh` - Debug ssh commands with verbose options
+- - `ssh-debug` - Debug ssh commands with LOTS of verbose options
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Local cache
+- 
+- `deployHome` is considered a state directory so removing entries in this should be managed separately.
+- 
+- ## `deprecatedCannon`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     deprecatedCannon [ --path cannonPath ] findArgumentFunction search replace [ extraCannonArguments ]
+- 
+- No documentation for `deprecatedCannon`.
+- 
+- > Location: `bin/build/tools/deprecated-tools.sh`
+- 
+- ### Arguments
+- 
+- - `--path cannonPath` - Directory. Optional. Run textCannon operation starting in this directory.
+- - `findArgumentFunction` - Function. Required. Find arguments (for `find`) for cannon.
+- - `search` - String. Required. String to search for
+- - `replace` - EmptyString. Required. Replacement string.
+- - `extraCannonArguments` - Arguments. Optional. Any additional arguments are passed to `cannon`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deprecatedCannonFile`
+- 
+- > Run textCannon using a configuration file or files.
+- 
+- ### Usage
+- 
+-     deprecatedCannonFile findArgumentFunction cannonFile
+- 
+- Run textCannon using a configuration file or files.
+- Comment lines (First character is `#`) are considered the current "state" (e.g. version) and are displayed during processing.
+- 
+- Sample file:
+- 
+-     # v0.25.0
+-     timingStart|timingStart
+-     timingReport|timingReport
+-     bashUserInput|bashUserInput
+- 
+-     # v0.24.0
+-     listJoin|listJoin
+-     mapTokens|mapTokens
+- 
+- > Location: `bin/build/tools/deprecated-tools.sh`
+- 
+- ### Arguments
+- 
+- - `findArgumentFunction` - Function. Required. Find arguments (for `find`) for cannon.
+- - `cannonFile` - File. Required. One or more files delimited with `|` characters, one per line `search|replace|findArguments|...`. If not files are supplied then pipe file via stdin.
+- 
+- ### Return codes
+- 
+- - `0` - No changes were made in any files.
+- - `1` - changes were made in at least one file.
+- 
+- ## `deprecatedFilePrependVersion`
+- 
+- > Take a deprecated.txt file and add a comment with the
+- 
+- ### Usage
+- 
+-     deprecatedFilePrependVersion target version
+- 
+- Take a deprecated.txt file and add a comment with the current version number to the top
+- 
+- > Location: `bin/build/tools/deprecated-tools.sh`
+- 
+- ### Arguments
+- 
+- - `target` - File. Required. File to update.
+- - `version` - String. Required. Version to place at the top of the file.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deprecatedFind`
+- 
+- > Find files which match a token or tokens
+- 
+- ### Usage
+- 
+-     deprecatedFind findArgumentFunction search [ --path cannonPath ]
+- 
+- Find files which match a token or tokens
+- 
+- > Location: `bin/build/tools/deprecated-tools.sh`
+- 
+- ### Arguments
+- 
+- - `findArgumentFunction` - Function. Required. Find arguments (for `find`) for `textCannon`.
+- - `search` - String. Required. String to search for (one or more)
+- - `--path cannonPath` - Directory. Optional. Run `textCannon` operation starting in this directory.
+- 
+- ### Return codes
+- 
+- - `0` - One of the search tokens was found in a file (which matches find arguments)
+- - `1` - Search tokens were not found in any file (which matches find arguments)
+- 
+- ### See Also
+- 
+- - ## `buildHome`
+- 
+- ## `deprecatedIgnore`
+- 
+- > Output a list of tokens for `find` to ignore in
+- 
+- ### Usage
+- 
+-     deprecatedIgnore
+- 
+- Output a list of tokens for `find` to ignore in deprecated calls
+- Skips dot directories and release notes by default and any file named `deprecated.sh` `deprecated.txt` or `deprecated.md`.
+- 
+- > Location: `bin/build/tools/deprecated-tools.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `deprecatedTokensFile`
+- 
+- > Run deprecated tokens file search
+- 
+- ### Usage
+- 
+-     deprecatedTokensFile
+- 
+- Run deprecated tokens file search
+- 
+- > Location: `bin/build/tools/deprecated-tools.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `developerAnnounce`
+- 
+- > Announce a list of functions now available
+- 
+- ### Usage
+- 
+-     developerAnnounce
+- 
+- Announce a list of functions now available
+- 
+- > Location: `bin/build/tools/developer.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `developerDevelopmentLink`
+- 
+- > Link a current library with another version being developed nearby
+- 
+- ### Usage
+- 
+-     developerDevelopmentLink [ --copy ] [ --reset ] [ --development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path. ] --version-json jsonFile [ --version-selector jsonFile ] --variable variableNameValue [ --binary ] [ --composer composerPackage ] --path applicationPath
+- 
+- Link a current library with another version being developed nearby using a link
+- Does not work inside docker containers unless you explicitly do some magic with paths (maybe we will add this)
+- 
+- > Location: `bin/build/tools/developer.sh`
+- 
+- ### Arguments
+- 
+- - `--copy - Flag. Optional. Copy the files instead of creating a link` - more compatible with Docker but slower and requires synchronization.
+- - `--reset` - Flag. Optional. Revert the link and reinstall using the original binary.
+- --development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path.
+- - `--version-json jsonFile` - ApplicationFile. Required. The library JSON file to check.
+- - `--version-selector jsonFile` - String. Optional. Query to extract version from JSON file (defaults to `.version`). API.
+- - `--variable variableNameValue` - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to. API.
+- - `--binary` - String. Optional. The binary to install the library remotely if needed to revert back. API.
+- - `--composer composerPackage` - String. Optional. The composer package to convert to a link (or copy.). API.
+- - `--path applicationPath` - ApplicationDirectory. Required. The library path to convert to a link (or copy). API.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `buildDevelopmentLink`
+- 
+- ## `developerTrack`
+- 
+- > Track changes to the bash environment
+- 
+- ### Usage
+- 
+-     developerTrack [ --verbose ] [ --list ] [ --profile ] [ --developer ]
+- 
+- With no arguments this function returns the new or changed bash functions, variables, or aliases since marks occurred.
+- 
+- In general, you will add `developerTrack --profile` at the end of your `.bashrc` file, and you will add `developerTrack --developer` at the *start* of your `developer.sh` before you define anything.
+- 
+- > Location: `bin/build/tools/developer.sh`
+- 
+- ### Arguments
+- 
+- - `--verbose` - Flag. Optional. Be verbose about what the function is doing.
+- - `--list` - Flag. Optional. Show the list of what has changed since the first invocation.
+- - `--profile` - Flag. Optional. Mark the end of profile definitions.
+- - `--developer` - Flag. Optional. Mark the start of developer definitions.
+- 
+- ### Writes to standard output
+- 
+- list of function|alias|environment
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `developerUndo`
+- 
+- > Undo a set of developer functions or aliases
+- 
+- ### Usage
+- 
+-     developerUndo
+- 
+- Undo a set of developer functions or aliases
+- 
+- > Location: `bin/build/tools/developer.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Reads standard input
+- 
+- List of functions and aliases to remove from the current environment
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryChange`
+- 
+- > Run a command after changing directory to it and then
+- 
+- ### Usage
+- 
+-     directoryChange directory command [ ... ]
+- 
+- Run a command after changing directory to it and then returning to the previous directory afterwards.
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Required. Directory to change to prior to running command.
+- - `command` - Callable. Required. Thing to do in this directory.
+- - `...` - Arguments. Optional. Arguments to `command`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryClobber`
+- 
+- > Copy directory over another sort-of-atomically
+- 
+- ### Usage
+- 
+-     directoryClobber source target
+- 
+- Copy directory over another sort-of-atomically
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `source` - Directory. Required. target
+- - `target` - FileDirectory. Required.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryIsEmpty`
+- 
+- > Does a directory exist and is it empty?
+- 
+- ### Usage
+- 
+-     directoryIsEmpty [ directory ]
+- 
+- Does a directory exist and is it empty?
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Optional. Directory to check if empty.
+- 
+- ### Return codes
+- 
+- - `2` - Directory does not exist
+- - `1` - Directory is not empty
+- - `0` - Directory is empty
+- 
+- ## `directoryNewestFile`
+- 
+- > Find the newest modified file in a directory
+- 
+- ### Usage
+- 
+-     directoryNewestFile directory [ --find findArgs ... -- ]
+- 
+- Find the newest modified file in a directory
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Required. Directory to search for the newest file.
+- - `--find findArgs ... --` - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryOldestFile`
+- 
+- > Find the oldest modified file in a directory
+- 
+- ### Usage
+- 
+-     directoryOldestFile directory [ --find findArgs ... -- ]
+- 
+- Find the oldest modified file in a directory
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Required. Directory to search for the oldest file.
+- - `--find findArgs ... --` - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryParent`
+- 
+- > Finds a file above `startingDirectory`, uses `testExpression` to test (defaults
+- 
+- ### Usage
+- 
+-     directoryParent startingDirectory --pattern filePattern [ --test testExpression ]
+- 
+- Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `startingDirectory` - Required. EmptyString|RealDirectory. Uses the current directory if blank.
+- - `--pattern filePattern` - RelativePath. Required. The file or directory to find the home for.
+- - `--test testExpression` - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryPathSimplify`
+- 
+- > Normalizes segments of `/./` and `/../` in a path without
+- 
+- ### Usage
+- 
+-     directoryPathSimplify path ...
+- 
+- Normalizes segments of `/./` and `/../` in a path without using `fileRealPath`
+- Removes dot and dot-dot paths from a path correctly
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `path ...` - File. Required. One or more paths to simplify
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryRelativePath`
+- 
+- > Given a path to a file, compute the path back
+- 
+- ### Usage
+- 
+-     directoryRelativePath [ directory ]
+- 
+- Given a path to a file, compute the path back up to the top in reverse (../..)
+- If path is blank, outputs `.`.
+- 
+- Essentially converts the slash `/` to a `..`, so convert your source appropriately.
+- 
+-      directoryRelativePath "/" -> ".."
+-      directoryRelativePath "/a/b/c" -> ../../..
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - String. A path to convert.
+- 
+- ### Writes to standard output
+- 
+- Relative paths, one per line
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `directoryRequire`
+- 
+- > Given a list of directories, ensure they exist and create
+- 
+- ### Usage
+- 
+-     directoryRequire [ directoryPath ... ] [ --help ] [ --mode fileMode ] [ --owner ownerName ]
+- 
+- Given a list of directories, ensure they exist and create them if they do not.
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `directoryPath ...` - One or more directories to create
+- - `--help` - Flag. Optional. Display this help.
+- - `--mode fileMode` - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
+- - `--owner ownerName` - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
+- 
+- ### Examples
+- 
+-     directoryRequire "$cachePath"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - usageArgumentFunction
+- - usageArgumentString
+- - {SEE:decorate}
+- - {SEE:catchEnvironment}
+- - dirname
+- - chmod
+- - chown
+- 
+- ## `directoryWatch`
+- 
+- > Watch a directory
+- 
+- ### Usage
+- 
+-     directoryWatch [ --help ] [ --handler handler ] [ --verbose ] [ --file modifiedFile ] [ --modified modifiedTimestamp ] [ --timeout secondsToRun ] [ --state stateFile ] directory [ findArguments ... ]
+- 
+- Watch a directory
+- 
+- > Location: `bin/build/tools/watch.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--verbose` - Flag. Optional. Be verbose.
+- - `--file modifiedFile` - File. Optional. Last known modified file in this directory.
+- - `--modified modifiedTimestamp` - UnsignedInteger. Optional. Last known modification timestamp in this directory.
+- - `--timeout secondsToRun` - UnsignedInteger. Optional. Last known modification timestamp in this directory.
+- - `--state stateFile` - File. Optional. Output of `fileModificationTimes` will be saved here (and modified)
+- - `directory` - Directory. Required. Directory to watch
+- - `findArguments ...` - Arguments. Optional. Passed to find to filter the files examined.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerCompose`
+- 
+- > docker compose wrapper with automatic .env support
+- 
+- ### Usage
+- 
+-     dockerCompose [ --help ] [ --handler handler ] [ --production ] [ --staging ] [ --deployment deploymentName ] [ --volume ] [ --build ] [ --clean ] [ --keep ] [ --default-env | --env environmentNameValue ] [ --env environmentNameValue ] [ --arg environmentNameValue ] [ composeCommand ]
+- 
+- docker compose wrapper with automatic .env support
+- 
+- Environment files are managed automatically by this function (with backups).
+- Environment files are named in stringUppercase after the deployment as `.DEPLOYMENT.env` in the home directory
+- 
+- So, `.STAGING.env` and `.PRODUCTION.env` are the default environments. They are copied into `.env` with any additional required
+- default environment variables (including `DEPLOYMENT=`), and then this `.env` file serves as the basis for both the
+- `docker-compose.yml` generation (any variable defined here is mapped into this file - by default) and ultimately may be
+- copied into the container as configuration settings.
+- 
+- Custom deployment settings can be set up using the `--deployment deploymentName` argument.
+- 
+- Volume name, by default is named after the directory name of the project suffixed with `_database_data`.
+- 
+- > Location: `bin/build/tools/docker-compose.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--production` - Flag. Production container build. Shortcut for `--deployment production` (uses `.PRODUCTION.env`)
+- - `--staging` - Flag. Staging container build. Shortcut for `--deployment staging` (uses `.STAGING.env`)
+- - `--deployment deploymentName` - String. Deployment name to use. (uses `.$(stringUppercase "$deploymentName").env`)
+- - `--volume` - String. Name of the volume associated with the container to preserve or delete.
+- - `--build` - Flag. `build` command with volume management
+- - `--clean` - Flag. Delete the volume prior to building.
+- - `--keep` - Flag. Keep the volume during build.
+- --default-env |- ` --env environmentNameValue` - EnvironmentNameValue. An environment variable name and value (in the form `NAME=value` to require in the `.env` file.
+- - `--env environmentNameValue` - EnvironmentNameValue. An environment variable name and value (in the form `NAME=value` to require in the `.env` file. If set already in the file or in the environment then has no effect.
+- - `--arg environmentNameValue` - EnvironmentNameValue. Passed as an ARG to the build environment – a variable name and value (in the form `NAME=value` to require in the `.env` file. If set already in the file or in the environment then has no effect.
+- - `composeCommand` - You can send any compose command and arguments thereafter are passed to `docker compose`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerComposeCommandList`
+- 
+- > List of docker compose commands
+- 
+- ### Usage
+- 
+-     dockerComposeCommandList [ --help ]
+- 
+- List of docker compose commands
+- 
+- > Location: `bin/build/tools/docker-compose.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerComposeInstall`
+- 
+- > Install `docker-compose`
+- 
+- ### Usage
+- 
+-     dockerComposeInstall [ package ]
+- 
+- Install `docker-compose`
+- 
+- If this fails it will output the installation log.
+- 
+- When this tool succeeds the `docker-compose` binary is available in the local operating system.
+- 
+- > Location: `bin/build/tools/docker-compose.sh`
+- 
+- ### Arguments
+- 
+- - `package` - Additional packages to install (using `pipInstall`)
+- 
+- ### Return codes
+- 
+- - `1` - If installation fails
+- - `0` - If installation succeeds
+- 
+- ### See Also
+- 
+- - {SEE:pipInstall}
+- 
+- ## `dockerComposeIsRunning`
+- 
+- > Is docker compose currently running?
+- 
+- ### Usage
+- 
+-     dockerComposeIsRunning [ --help ]
+- 
+- Is docker compose currently running?
+- 
+- > Location: `bin/build/tools/docker-compose.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - Not running
+- - `0` - Running
+- 
+- ## `dockerComposeUninstall`
+- 
+- > Uninstall `docker-compose`
+- 
+- ### Usage
+- 
+-     dockerComposeUninstall
+- 
+- Uninstalls `docker-compose`
+- 
+- > Location: `bin/build/tools/docker-compose.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Writes to standard error
+- 
+- Upon failure error log is output
+- 
+- ### Return codes
+- 
+- - `1` - If installation fails
+- - `0` - If installation succeeds
+- 
+- ## `dockerComposeWrapper`
+- 
+- > Wrapper for `docker-compose` or `docker compose`
+- 
+- ### Usage
+- 
+-     dockerComposeWrapper [ ... ]
+- 
+- Wrapper for `docker-compose` or `docker compose`
+- 
+- > Location: `bin/build/tools/docker-compose.sh`
+- 
+- ### Arguments
+- 
+- - `...` - Arguments. Passed to `docker compose` command or equivalent
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerImages`
+- 
+- > List docker images which are currently pulled
+- 
+- ### Usage
+- 
+-     dockerImages [ --filter reference ]
+- 
+- List docker images which are currently pulled
+- 
+- > Location: `bin/build/tools/docker.sh`
+- 
+- ### Arguments
+- 
+- - `--filter reference` - String. Optional. Filter list by reference provided.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerInside`
+- 
+- > Are we inside a docker container right now?
+- 
+- ### Usage
+- 
+-     dockerInside
+- 
+- Are we inside a docker container right now?
+- 
+- > Location: `bin/build/tools/docker.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Yes
+- - `1` - No
+- 
+- ## `dockerListContext`
+- 
+- > List the files which would be included in the docker
+- 
+- ### Usage
+- 
+-     dockerListContext
+- 
+- List the files which would be included in the docker image
+- 
+- > Location: `bin/build/tools/docker.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerLocalContainer`
+- 
+- > Run a build container using given docker image.
+- 
+- ### Usage
+- 
+-     dockerLocalContainer [ --help ] [ --handler handler ] [ --image imageName ] [ --path imageApplicationPath ] [ --platform platform ] [ --env-file envFile ] [ --env envVariable=envValue ] [ extraArgs ]
+- 
+- Run a build container using given docker image.
+- 
+- Runs ARM64 by default.
+- 
+- - `BUILD_DOCKER_PLATFORM` defaults to `linux/arm64` – affects which image platform is used.
+- 
+- > Location: `bin/build/tools/docker.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--image imageName` - String. Optional. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
+- - `--path imageApplicationPath` - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
+- - `--platform platform` - String. Optional. Platform to run (arm vs intel).
+- - `--env-file envFile` - File. Optional. One or more environment files which are suitable to load for docker; must be valid
+- --env envVariable=- `envValue` - File. Optional. One or more environment variables to set.
+- - `extraArgs` - Mixed. Optional. The first non-file argument to `dockerLocalContainer` is passed directly through to `docker run` as arguments
+- 
+- ### Return codes
+- 
+- - `1` - If already inside docker, or the environment file passed is not valid
+- - `0` - Success
+- - `Any` - `docker run` error code is returned if non-zero
+- 
+- ## `dockerPlatformDefault`
+- 
+- > Fetch the default platform for docker
+- 
+- ### Usage
+- 
+-     dockerPlatformDefault
+- 
+- Fetch the default platform for docker
+- 
+- > Location: `bin/build/tools/docker.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerVolumeDelete`
+- 
+- > Delete a docker volume
+- 
+- ### Usage
+- 
+-     dockerVolumeDelete name
+- 
+- Delete a docker volume
+- 
+- > Location: `bin/build/tools/docker.sh`
+- 
+- ### Arguments
+- 
+- - `name` - String. Required. Volume name to delete.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dockerVolumeExists`
+- 
+- > Does a docker volume exist with name?
+- 
+- ### Usage
+- 
+-     dockerVolumeExists name
+- 
+- Does a docker volume exist with name?
+- 
+- > Location: `bin/build/tools/docker.sh`
+- 
+- ### Arguments
+- 
+- - `name` - String. Required.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationCache`
+- 
+- > Get the default cache directory for the documentation
+- 
+- ### Usage
+- 
+-     documentationCache [ suffix ] [ --help ]
+- 
+- Get the default cache directory for the documentation
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `suffix - String. Optional. Directory suffix` - created if does not exist.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationEnvironmentMake`
+- 
+- > Build documentation files for environment variables
+- 
+- ### Usage
+- 
+-     documentationEnvironmentMake [ --source sourcePath ] [ --template templatePath ] [ --target targetPath ] [ --clean ] [ --force ] [ --verbose ] [ --link linkURI ] [ --help ]
+- 
+- Build documentation for `./bin/env` (or `bin/build/env`) directory.
+- 
+- Creates a cache at `documentationCache`
+- 
+- Environment template files used:
+- 
+- - `line.md`
+- - `see.md`
+- - `more.md`
+- - `more-header.md`
+- - `more-footer.md`
+- 
+- Variables applied to the environment template files:
+- 
+- - `link` `name` `description` `category` `more` `type` `markerName`
+- 
+- Documentation Files generated:
+- 
+- - `ENV_NAME.md` - Documentation page for `ENV_NAME`
+- - `SEE/ENV_NAME.md` - `{SEE:ENV_NAME}` content
+- - `env/ENV_NAME.sh` - Settings extracted from environment file.
+- - `env/ENV_NAME.md` - Documentation line for `ENV_NAME`
+- - `env/more/ENV_NAME.md` - Documentation more for `ENV_NAME`. Only created if needed.
+- 
+- Documentation settings extracted:
+- 
+- - `name` - `String`. Display environment name.
+- - `description` - `String`. Text description of the environment variable, many lines long and can include detailed example and markup.
+- - `descriptionLineCount` - `PositiveInteger`. Number of lines in the description.
+- - `summary` - `String`. Short description of the environment variable.
+- - `category` - `String`. Main category for this environment variable.
+- - `categoryId` - `String`. Category converted to stringLowercase and spaces replaced with underscores.
+- - `type` - `Type`. Data type for this environment variable.
+- 
+- Where `ENV_NAME` matches the found environment source file without the `.sh`.
+- 
+- Target templates created:
+- 
+- - `categories.txt`
+- - `environmentCategoryList.md`
+- - `environmentCategoryTotal.md`
+- - `environmentMore.md`
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--source sourcePath` - Directory. Optional. Path to source environment files (`*.sh` files). Defaults to `$(buildHome)/bin/env` if not specified.
+- - `--template templatePath` - Directory. Optional. Path for environment template files.
+- - `--target targetPath` - Directory. Optional. Path for generated documentation files.
+- - `--clean` - Flag. Optional. Delete any generated files amd exit.
+- - `--force` - Flag. Optional. Force generation of files regardless of cache status.
+- - `--verbose` - Flag. Optional. Be chatty.
+- - `--link linkURI` - String. Optional. Sets the `link` variable in templates. Defaults to `/env/`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Issue with environment
+- - `2` - Argument error
+- 
+- ## `documentationFileCompile`
+- 
+- > Extract and build the documentation settings cache
+- 
+- ### Usage
+- 
+-     documentationFileCompile [ --clean ] [ --git ] [ --all ] [ --derive command ... -- ] [ functionName ... ] [ --help ]
+- 
+- Extract and build the documentation settings cache
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--clean` - Flag. Optional. Clean everything and then exit.
+- - `--git` - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
+- - `--all` - Flag. Optional. Do everything regardless of cache state.
+- - `--derive command ... --` - CommandList. Optional. Run this command on each changed settings file to generate derived files.
+- - `functionName ...` - String. Optional. Specific functions to compile.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationIdenticalRepair`
+- 
+- > Map template files using our identical functionality
+- 
+- ### Usage
+- 
+-     documentationIdenticalRepair templatePath [ --help ]
+- 
+- Map template files using our identical functionality
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `templatePath` - Directory. Required. Path to the templates to repair.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationIndexDocumentation`
+- 
+- > Generate the documentation index
+- 
+- ### Arguments
+- 
+- - `--target targetDirectory` - Directory. Optional. Directory where the index will be created. Uses `documentationCache` if not specified.
+- - `documentationSource ...` - Directory. OneOrMore. Documentation source path to find tokens and their definitions.
+- - `--verbose` - Flag. Optional. Extrapolate needlessly.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - If success
+- - `1` - Issue with file generation
+- - `2` - Argument error
+- 
+- ## `documentationIndexGenerate`
+- 
+- > Generate a function index for bash files.
+- 
+- ### Usage
+- 
+-     documentationIndexGenerate codePath ... [ --target targetPath ] [ --verbose ]
+- 
+- Generate a function index for bash files.
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `codePath ...` - Directory. Required. OneOrMore. Path where code (`.sh` files) is stored (should remain identical between invocations)
+- - `--target targetPath` - Optional. Location to store the index file, called `code.index`.
+- - `--verbose` - Flag. Optional. Talk voluminously.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:__pcregrep}
+- 
+- ### See Also
+- 
+- - {SEE:__documentationIndexLookup}
+- 
+- ## `documentationIndexLookup`
+- 
+- > Looks up information in the function index
+- 
+- ### Usage
+- 
+-     documentationIndexLookup [ --settings ] [ --comment ] [ --source ] [ --line ] [ --combined ] [ --file ] [ matchText ]
+- 
+- Looks up information in the function index
+- ##
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--settings` - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings
+- - `--comment` - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings
+- - `--source` - Flag. Optional. `matchText` is a function name. Outputs the source code path to where the function is defined
+- - `--line` - Flag. Optional. `matchText` is a function name. Outputs the source code line where the function is defined
+- - `--combined` - Flag. Optional. `matchText` is a function name. Outputs the source code path and line where the function is defined as `path:line`
+- - `--file` - Flag. Optional. `matchText` is a file name. Find files which match this base file name.
+- - `matchText` - String. Token to look up in the index.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationIndexUnlinkedFunctions`
+- 
+- > List functions without documentation pages.
+- 
+- ### Usage
+- 
+-     documentationIndexUnlinkedFunctions indexPath [ --help ]
+- 
+- List functions without documentation pages.
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `indexPath` - Directory. Required. Index path.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationMake`
+- 
+- > Make documentation for Bash functions
+- 
+- ### Usage
+- 
+-     documentationMake [ --clean ] --template templateDirectory --source sourceDirectory --target targetDirectory [ --help ]
+- 
+- Must faster than `documentationBuild` and intended to replace it.
+- 
+- Uses cached files at `BUILD_DOCUMENTATION_PATH`, assumes documentation cache structure:
+- 
+- - `$docHome/functionName.md` - Markdown documentation
+- - `$docHome/SEE/functionName.md` - Markdown documentation for `{SEE:functionName}`
+- - `$docHome/functionName.sh` - `functionName` settings
+- - `$docHome/env/environmentName.md` - Markdown documentation for `environmentName` environment variable
+- - `$docHome/env/environmentName.sh` - `environmentName` environment variable settings
+- - `$docHome/env/more/environmentName.md` - Additional Markdown documentation for `environmentName` environment variable
+- - `$docHome/SEE/environmentName.md` - See link to `environmentName`
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--clean` - Flag. Optional. Erase the cache before starting.
+- - `--template templateDirectory` - Directory. Required. Location of additional documentation template files to generate documentation.
+- - `--source sourceDirectory` - Directory. Required. Location of documentation source markdown.
+- - `--target targetDirectory` - Directory. Required. Location of documentation build target.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Issue with environment
+- - `2` - Argument error
+- 
+- ## `documentationMaker`
+- 
+- > Generate documentation using source markdown and a mapping function.
+- 
+- ### Usage
+- 
+-     documentationMaker [ --verbose ] [ --default defaultValue ] sourcePath [ targetPath ] [ mapFunction ... ]
+- 
+- Generate documentation using source markdown and a mapping function.
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--verbose` - Flag. Optional. Be wordy.
+- - `--default defaultValue` - EmptyString. Optional. Pass `--default` flag to `mapFunction`
+- - `sourcePath` - Exists. Required. File or directory to convert.
+- - `targetPath` - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.
+- - `mapFunction ...` - Function. Optional. Mapping function to use, and any arguments.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Template file not found
+- 
+- ## `documentationMkdocs`
+- 
+- > Build documentation using mkdocs and a template
+- 
+- ### Usage
+- 
+-     documentationMkdocs [ --path documentationPath ] [ --template yamlTemplate ]
+- 
+- Build documentation using mkdocs and a template
+- 
+- > Location: `bin/build/tools/mkdocs.sh`
+- 
+- ### Arguments
+- 
+- - `--path documentationPath` - Directory. Optional. Directory where documentation root exists.
+- - `--template yamlTemplate` - File. Optional. Name of mkdocs.yml template file to generate final file. Default is `mkdocs.template.yml`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationTemplate`
+- 
+- > Get an internal template name
+- 
+- ### Usage
+- 
+-     documentationTemplate [ --help ]
+- 
+- Get an internal template name
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `documentationTemplateCompile`
+- 
+- > Document an item and generate a template (markdown). To custom
+- 
+- ### Arguments
+- 
+- - `template` - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`
+- - `settingsFile` - Required. Settings file to be loaded.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Template file not found
+- 
+- ### See Also
+- 
+- - {SEE:_documentationTemplateFormatter_return_code}
+- 
+- ## `documentationTemplateFunctionCompile`
+- 
+- > Generate a function documentation block using `functionTemplate` for `functionName`
+- 
+- ### Usage
+- 
+-     documentationTemplateFunctionCompile [ --env-file envFile ] functionName functionTemplate [ --help ]
+- 
+- Requires function indexes to be generated in the documentation cache.
+- 
+- Generate documentation for a single function.
+- 
+- Template is output to stdout.
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--env-file envFile` - File. Optional. One (or more) environment files used during map of `functionTemplate`
+- - `functionName` - Required. The function name to document.
+- - `functionTemplate` - Required. The template for individual functions.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - If success
+- - `1` - Issue with file generation
+- - `2` - Argument error
+- 
+- ## `documentationUnlinked`
+- 
+- > List unlinked functions in documentation index
+- 
+- ### Usage
+- 
+-     documentationUnlinked [ --help ]
+- 
+- List unlinked functions in documentation index
+- 
+- > Location: `bin/build/tools/documentation.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dotFilesApproved`
+- 
+- > Lists of dot files which can be added to the
+- 
+- ### Usage
+- 
+-     dotFilesApproved [ listType ]
+- 
+- Lists of dot files which can be added to the dotFilesApprovedFile
+- If none specified, returns `bash` list.
+- Special value `all` returns all values
+- 
+- > Location: `bin/build/tools/prompt-modules.sh`
+- 
+- ### Arguments
+- 
+- - `listType` - String. Optional. One of `all`, `bash`, `git`, `darwin`, or `mysql`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dotFilesApprovedFile`
+- 
+- > The dot files approved file. Add files to this to
+- 
+- ### Usage
+- 
+-     dotFilesApprovedFile [ --help ]
+- 
+- The dot files approved file. Add files to this to approve.
+- 
+- > Location: `bin/build/tools/prompt-modules.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dumpBinary`
+- 
+- > Dumps output as hex
+- 
+- ### Usage
+- 
+-     dumpBinary
+- 
+- Dumps output as hex
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Reads standard input
+- 
+- binary
+- 
+- ### Writes to standard output
+- 
+- formatted output set to ideal `consoleColumns`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dumpEnvironment`
+- 
+- > Output the environment but try to hide secure value
+- 
+- ### Usage
+- 
+-     dumpEnvironment [ --maximum-length maximumLength ] [ --skip-env environmentVariable ] [ --show-skipped ] [ --secure-match matchString ] [ --secure-suffix secureSuffix  ] [ --help ]
+- 
+- Output the environment but try to hide secure value
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - `--maximum-length maximumLength` - PositiveInteger. Optional. The maximum number of characters to output for each environment variable.
+- - `--skip-env environmentVariable` - EnvironmentVariable. Optional. Skip this environment variable (must match exactly).
+- - `--show-skipped` - Flag. Show skipped environment variables.
+- - `--secure-match matchString` - String. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a `secret` `key` and `password`. If one value is specified the list is reset to zero. To show all variables pass a blank or `-` value here.
+- - `--secure-suffix secureSuffix ` - EmptyString. Optional. Suffix to display after hidden arguments.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dumpEnvironmentUnsafe`
+- 
+- > Output the environment shamelessly (not secure, not recommended)
+- 
+- ### Usage
+- 
+-     dumpEnvironmentUnsafe [ --maximum-length maximumLength ] [ --skip-env environmentVariable ] [ --show-skipped ] [ --help ]
+- 
+- Output the environment shamelessly (not secure, not recommended)
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - `--maximum-length maximumLength` - PositiveInteger. Optional. The maximum number of characters to output for each environment variable.
+- - `--skip-env environmentVariable` - EnvironmentVariable. Optional. Skip this environment variable (must match exactly).
+- - `--show-skipped` - Flag. Show skipped environment variables.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dumpFile`
+- 
+- > Output a file for debugging
+- 
+- ### Usage
+- 
+-     dumpFile [ fileName0 ] [ --symbol symbolString ] [ --lines lineCount ] [ --help ]
+- 
+- Output a file for debugging
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - `fileName0` - File. Optional. File to dump.
+- - `--symbol symbolString` - String. Optional. Prefix for each output line.
+- - `--lines lineCount` - PositiveInteger. Optional. Number of lines to output.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- text (optional)
+- 
+- ### Writes to standard output
+- 
+- formatted text (optional)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dumpHex`
+- 
+- > Output to hex
+- 
+- ### Usage
+- 
+-     dumpHex [ --size size ]
+- 
+- Output to hex
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - `--size size` - Integer. Output at most size bytes of data.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dumpLoadAverages`
+- 
+- > Print the load averages
+- 
+- ### Usage
+- 
+-     dumpLoadAverages [ --help ]
+- 
+- Print the load averages
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `dumpPipe`
+- 
+- > Dump a pipe with a title and stats
+- 
+- ### Usage
+- 
+-     dumpPipe [ --symbol symbol ] [ --tail ] [ --head ] [ --lines ] [ --vanish file ] [ name ]
+- 
+- Dump a pipe with a title and stats
+- 
+- > Location: `bin/build/tools/dump.sh`
+- 
+- ### Arguments
+- 
+- - `--symbol symbol` - String. Optional. Symbol to place before each line. (Blank is ok).
+- - `--tail` - Flag. Optional. Show the tail of the file and not the head when not enough can be shown.
+- - `--head` - Flag. Optional. Show the head of the file when not enough can be shown. (default)
+- - `--lines` - UnsignedInteger. Optional. Number of lines to show.
+- - `--vanish file` - UnsignedInteger. Optional. Number of lines to show.
+- - `name` - String. Optional. The item name or title of this output.
+- 
+- ### Reads standard input
+- 
+- text
+- 
+- ### Writes to standard output
+- 
+- formatted text for debugging
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentApplicationLoad`
+- 
+- > Loads application environment variables, set them to their default values
+- 
+- ### Usage
+- 
+-     environmentApplicationLoad [ --help ]
+- 
+- Loads application environment variables, set them to their default values if needed, and outputs the list of variables and values.
+- 
+- > Location: `bin/build/tools/environment/application.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentApplicationVariables`
+- 
+- > List environment variables related to application deployments
+- 
+- ### Usage
+- 
+-     environmentApplicationVariables [ --help ]
+- 
+- List environment variables related to application deployments
+- 
+- > Location: `bin/build/tools/environment/application.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentClean`
+- 
+- > Clean *most* exported variables from the current context except a
+- 
+- ### Usage
+- 
+-     environmentClean [ keepEnvironment ]
+- 
+- Clean *most* exported variables from the current context except a few important ones:
+- - CI PATH LD_LIBRARY USER HOME PS1 PS2 PS3 PS4 BUILD_HOME
+- - __BUILD_DECORATE BUILD_COLORS BUILD_DEBUG BUILD_HOOK_DIRS __BUILD_LOADER
+- Calls unset on any variable in the global environment and exported.
+- Use with caution. Any additional environment variables you wish to preserve, simply pass those on the command line
+- 
+- > Location: `bin/build/tools/environment.sh`
+- 
+- ### Arguments
+- 
+- - `keepEnvironment` - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentCompile`
+- 
+- > Compile an environment file to evaluated names and values
+- 
+- ### Usage
+- 
+-     environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --variables ] [ --parse ] environmentFile
+- 
+- Load an environment file and evaluate it using bash and output the changed environment variables after running
+- Do not perform this operation on files which are untrusted.
+- 
+- > Location: `bin/build/tools/environment/compile.sh`
+- 
+- ### Arguments
+- 
+- - `--underscore` - Flag. Optional. Include environment variables which begin with underscore `_`.
+- - `--secure` - Flag. Optional. Include environment variables which are in `environmentSecureVariables`
+- - `--keep-comments` - Flag. Keep all comments in the source
+- - `--variables` - CommaDelimitedList. Optional. Always output the value of these variables.
+- - `--parse` - Flag. Optional. Parse the file for things which look like variables to output (basically `^foo=`)
+- - `environmentFile` - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible).
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentFileApplicationMake`
+- 
+- > Create environment file `.env` for build.
+- 
+- ### Usage
+- 
+-     environmentFileApplicationMake [ --help ] [ requiredVariable ... ] [ -- ] [ optionalVariable ... ]
+- 
+- Create environment file `.env` for build.
+- 
+- Note that this does NOT change or modify the current environment.
+- 
+- > Location: `bin/build/tools/environment/application.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `requiredVariable ...` - EnvironmentVariable. Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+- - `--` - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment. Should appear once and only once.
+- - `optionalVariable ...` - EnvironmentVariable. Optional. One or more environment variables which are included if blank or not
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentFileApplicationVerify`
+- 
+- > Check application environment is populated correctly.
+- 
+- ### Usage
+- 
+-     environmentFileApplicationVerify [ --help ] [ requiredEnvironment ... ] [ -- ] [ optionalEnvironment ... ]
+- 
+- Check application environment is populated correctly.
+- Also verifies that `environmentApplicationVariables` and `environmentApplicationLoad` are defined.
+- 
+- > Location: `bin/build/tools/environment/application.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `requiredEnvironment ...` - EnvironmentName. Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+- - `--` - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment
+- - `optionalEnvironment ...` - EnvironmentName. Optional. One or more environment variables which are included if blank or not
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentFileBashCompatibleToDocker`
+- 
+- > Ensure an environment file is compatible with non-quoted docker environment
+- 
+- ### Usage
+- 
+-     environmentFileBashCompatibleToDocker [ filename ]
+- 
+- Ensure an environment file is compatible with non-quoted docker environment files
+- 
+- > Location: `bin/build/tools/environment/convert.sh`
+- 
+- ### Arguments
+- 
+- - `filename` - File. Optional. Docker environment file to check for common issues
+- 
+- ### Reads standard input
+- 
+- text - Environment file to convert. (Optional)
+- 
+- ### Writes to standard output
+- 
+- text - Only if stdin is supplied and no `filename` arguments.
+- 
+- ### Return codes
+- 
+- - `1` - if errors occur
+- - `0` - if file is valid
+- 
+- ## `environmentFileDockerToBashCompatible`
+- 
+- > Ensure an environment file is compatible with non-quoted docker environment
+- 
+- ### Usage
+- 
+-     environmentFileDockerToBashCompatible [ filename ... ]
+- 
+- Ensure an environment file is compatible with non-quoted docker environment files
+- May take a list of files to convert or stdin piped in
+- 
+- Outputs bash-compatible entries to stdout
+- Any output to stdout is considered valid output
+- Any output to stderr is errors in the file but is written to be compatible with a bash
+- 
+- > Location: `bin/build/tools/environment/convert.sh`
+- 
+- ### Arguments
+- 
+- - `filename ...` - File. Optional. Docker environment file to convert.
+- 
+- ### Reads standard input
+- 
+- An environment file of any format
+- 
+- ### Writes to standard output
+- 
+- Environment file in Bash-compatible format
+- 
+- ### Return codes
+- 
+- - `1` - if errors occur
+- - `0` - if file is valid
+- 
+- ## `environmentFileIsDocker`
+- 
+- > Ensure an environment file is compatible with non-quoted docker environment
+- 
+- ### Usage
+- 
+-     environmentFileIsDocker [ filename ]
+- 
+- Ensure an environment file is compatible with non-quoted docker environment files
+- 
+- > Location: `bin/build/tools/environment/convert.sh`
+- 
+- ### Arguments
+- 
+- - `filename` - Docker environment file to check for common issues
+- 
+- ### Return codes
+- 
+- - `1` - if errors occur
+- - `0` - if file is valid
+- 
+- ## `environmentFileLoad`
+- 
+- > Safely load an environment file (no code execution)
+- 
+- ### Usage
+- 
+-     environmentFileLoad [ --prefix ] --require [ --optional ] [ --verbose ] environmentFile [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]
+- 
+- Safely load an environment file (no code execution)
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `--prefix` - EnvironmentVariable|Blank. Optional. All subsequent environment variables are prefixed with this prefix.
+- - `--require` - Flag. Optional. All subsequent environment files on the command line will be required.
+- - `--optional` - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
+- - `--verbose` - Flag. Optional. Output errors with variables in files.
+- - `environmentFile` - Required. Environment file to load. For `--optional` files the directory must exist.
+- - `--ignore environmentName` - String. Optional. Environment value to ignore on load.
+- - `--secure environmentName` - String. Optional. If found in a loaded file, entire file fails.
+- - `--secure-defaults` - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
+- - `--execute arguments ...` - Callable. Optional. All additional arguments are passed to callable after loading environment files.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `2` - if file does not exist; outputs an error
+- - `0` - if files are loaded successfully
+- 
+- ## `environmentFileShow`
+- 
+- > Display and validate application variables.
+- 
+- ### Usage
+- 
+-     environmentFileShow [ environmentName ... ] [ -- ] [ optionalEnvironmentName ... ]
+- 
+- Display and validate application variables.
+- 
+- > Location: `bin/build/tools/environment.sh`
+- 
+- ### Arguments
+- 
+- - `environmentName ...` - EnvironmentVariable. Optional. A required environment variable name
+- - `--` - Separator. Optional. Separates requires from optional environment variables
+- - `optionalEnvironmentName ...` - EnvironmentVariable. Optional. An optional environment variable name.
+- 
+- ### Return codes
+- 
+- - `1` - If any required application variables are blank, the function fails with an environment error
+- - `0` - All required application variables are non-blank
+- 
+- ## `environmentFileToBashCompatible`
+- 
+- > Takes any environment file and makes it bash-compatible
+- 
+- ### Usage
+- 
+-     environmentFileToBashCompatible [ filename ... ]
+- 
+- Takes any environment file and makes it bash-compatible
+- 
+- Outputs the compatible env to stdout
+- 
+- > Location: `bin/build/tools/environment/convert.sh`
+- 
+- ### Arguments
+- 
+- - `filename ...` - File. Optional. One or more files to convert.
+- 
+- ### Reads standard input
+- 
+- environment file
+- 
+- ### Writes to standard output
+- 
+- bash-compatible environment statements
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentFileToDocker`
+- 
+- > Takes any environment file and makes it docker-compatible
+- 
+- ### Usage
+- 
+-     environmentFileToDocker envFile ...
+- 
+- Takes any environment file and makes it docker-compatible
+- 
+- Outputs the compatible env to stdout
+- 
+- > Location: `bin/build/tools/environment/convert.sh`
+- 
+- ### Arguments
+- 
+- - `envFile ...` - File. Required. One or more files to convert.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentLines`
+- 
+- > List lines of environment values set in a bash state
+- 
+- ### Usage
+- 
+-     environmentLines [ --help ]
+- 
+- List lines of environment values set in a bash state file
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     environmentLines < "$stateFile"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentLoad`
+- 
+- > Safely load an environment from stdin (no code execution)
+- 
+- ### Usage
+- 
+-     environmentLoad [ --verbose ] [ --debug ] [ --prefix ] [ --context ] [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]
+- 
+- Safely load an environment from stdin (no code execution)
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `--verbose` - Flag. Optional. Output errors with variables.
+- - `--debug` - Flag. Optional. Debugging mode, for developers probably.
+- - `--prefix` - String. Optional. Prefix each environment variable defined with this string. e.g. `NAME` -> `DSN_NAME` for `--prefix DSN_`
+- - `--context` - String. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)
+- - `--ignore environmentName` - String. Optional. Environment value to ignore on load.
+- - `--secure environmentName` - String. Optional. If found, entire load fails.
+- - `--secure-defaults` - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
+- - `--execute arguments ...` - Callable. Optional. All additional arguments are passed to callable after loading environment.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `2` - if file does not exist; outputs an error
+- - `0` - if files are loaded successfully
+- 
+- ## `environmentNames`
+- 
+- > List names of environment values set in a bash state
+- 
+- ### Usage
+- 
+-     environmentNames [ --help ]
+- 
+- List names of environment values set in a bash state file
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     environmentNames < "$stateFile"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentOutput`
+- 
+- > Output all exported environment variables, hiding secure ones and ones
+- 
+- ### Usage
+- 
+-     environmentOutput [ --underscore ] [ --skip-prefix prefixString ] [ --secure ] [ variable ... ]
+- 
+- Output all exported environment variables, hiding secure ones and ones prefixed with underscore.
+- Any values which contain a newline are also skipped.
+- 
+- > Location: `bin/build/tools/environment.sh`
+- 
+- ### Arguments
+- 
+- - `--underscore` - Flag. Optional. Include environment variables which begin with underscore `_`.
+- - `--skip-prefix prefixString` - String. Optional. Skip environment variables which begin with this exact prefix (case-sensitive).
+- - `--secure` - Flag. Optional. Include environment variables which are in `environmentSecureVariables`
+- - `variable ...` - String. Optional. Output these variables explicitly.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - {SEE:environmentSecureVariables}
+- - {SEE:grepSafe}
+- - env
+- - {SEE:textRemoveFields}
+- 
+- ### See Also
+- 
+- - {SEE:environmentSecureVariables}
+- 
+- ## `environmentParseVariables`
+- 
+- > Parse variables from an environment variable stream
+- 
+- ### Usage
+- 
+-     environmentParseVariables [ --help ]
+- 
+- Parse variables from an environment variable stream
+- 
+- Extracts lines with `NAME=value`
+- 
+- Details:
+- - Remove `export ` from lines
+- - Skip lines containing `read -r`
+- - Anything before a `=` is considered a variable name
+- - Returns a sorted, unique list
+- 
+- > Location: `bin/build/tools/environment.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Environment File
+- 
+- ### Writes to standard output
+- 
+- EnvironmentVariable. One per line.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentRequire`
+- 
+- > Requires environment variables to be set and non-blank
+- 
+- ### Usage
+- 
+-     environmentRequire usageFunction [ environmentVariable ]
+- 
+- Requires environment variables to be set and non-blank
+- 
+- > Location: `bin/build/tools/usage.sh`
+- 
+- ### Arguments
+- 
+- - `usageFunction` - Required. `bash` function already defined to output handler
+- - `environmentVariable` - String. Optional. One or more environment variables which should be set and non-empty.
+- 
+- ### Return codes
+- 
+- - `0` - All environment variables are set and non-empty
+- - `1` - If any `environmentVariable` variables are not set or are empty.
+- 
+- ## `environmentSecureVariables`
+- 
+- > List environment variables related to security
+- 
+- ### Usage
+- 
+-     environmentSecureVariables [ --help ]
+- 
+- List environment variables related to security
+- 
+- > Location: `bin/build/tools/environment.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentValueConvertArray`
+- 
+- > Convert an array value which was loaded already
+- 
+- ### Usage
+- 
+-     environmentValueConvertArray encodedValue [ --help ]
+- 
+- Convert an array value which was loaded already
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `encodedValue` - String. Required. Value to convert to tokens, one per line
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- Array values separated by newlines
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentValueRead`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     environmentValueRead stateFile name [ default ] [ --help ]
+- 
+- No documentation for `environmentValueRead`.
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `stateFile` - EnvironmentFile. Required. File to read a value from.
+- - `name` - EnvironmentVariable. Required. Variable to read.
+- - `default` - EmptyString. Optional. Default value of the environment variable if it does not exist.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - If value is not found and no default argument is supplied (2 arguments)
+- - `0` - If value
+- 
+- ## `environmentValueReadArray`
+- 
+- > Read an array value from a state file
+- 
+- ### Usage
+- 
+-     environmentValueReadArray stateFile name [ --help ]
+- 
+- Read an array value from a state file
+- Outputs array elements, one per line.
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `stateFile` - File. Required. File to access, must exist.
+- - `name` - EnvironmentVariable. Required. Name to read.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentValueWrite`
+- 
+- > Write a value to a state file as NAME="value"
+- 
+- ### Usage
+- 
+-     environmentValueWrite name [ value ] [ ... ] [ --help ]
+- 
+- Write a value to a state file as NAME="value"
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `name` - String. Required. Name to write.
+- - `value` - EmptyString. Optional. Value to write.
+- - `...` - EmptyString. Optional. Additional values, when supplied, write this value as an array.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentValueWriteArray`
+- 
+- > Write an array value as NAME=([0]="a" [1]="b" [2]="c")
+- 
+- ### Usage
+- 
+-     environmentValueWriteArray [ --help ] [ value ... ] [ --help ]
+- 
+- Write an array value as NAME=([0]="a" [1]="b" [2]="c")
+- Supports empty arrays
+- Bash outputs on different versions:
+- 
+-     declare -a foo='([0]="a" [1]="b" [2]="c")'
+-     declare -a foo=([0]="a" [1]="b" [2]="c")
+- 
+- > Location: `bin/build/tools/environment/io.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `value ...` - Arguments. Optional. Array values as arguments.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentVariableNameValid`
+- 
+- > Validates zero or more environment variable names.
+- 
+- ### Usage
+- 
+-     environmentVariableNameValid variableName ... [ --help ]
+- 
+- Validates zero or more environment variable names.
+- 
+- - alpha
+- - digit
+- - underscore
+- 
+- First letter MUST NOT be a digit
+- 
+- > Location: `bin/build/tools/environment.sh`
+- 
+- ### Arguments
+- 
+- - `variableName ...` - String. Required. Exit status 0 if all variables names are valid ones.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `environmentVariables`
+- 
+- > Output a list of environment variables and ignore function definitions
+- 
+- ### Usage
+- 
+-     environmentVariables
+- 
+- Output a list of environment variables and ignore function definitions
+- 
+- both `set` and `env` output functions and this is an easy way to just output
+- exported variables
+- 
+- > Location: `bin/build/tools/environment.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `escapeBash`
+- 
+- > Converts strings to shell escaped strings
+- 
+- ### Usage
+- 
+-     escapeBash [ string ]
+- 
+- Converts strings to shell escaped strings
+- 
+- > Location: `bin/build/tools/quote.sh`
+- 
+- ### Arguments
+- 
+- - `string` - String. Optional. String to convert to a bash-compatible string.
+- 
+- ### Reads standard input
+- 
+- text - Optional.
+- 
+- ### Writes to standard output
+- 
+- bash-compatible string
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `escapeDoubleQuotes`
+- 
+- > Quote strings for inclusion in shell quoted strings
+- 
+- ### Usage
+- 
+-     escapeDoubleQuotes [ text ]
+- 
+- Quote strings for inclusion in shell quoted strings
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/quote.sh`
+- 
+- ### Arguments
+- 
+- - `text` - String. Optional. Text to quote
+- 
+- ### Examples
+- 
+-     escapeDoubleQuotes "Now I can't not include this in a bash string."
+- 
+- ### Sample Output
+- 
+- Single quotes are prefixed with a backslash
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `escapeQuotes`
+- 
+- > Quote strings for inclusion in shell quoted strings
+- 
+- ### Usage
+- 
+-     escapeQuotes [ text ]
+- 
+- Quote strings for inclusion in shell quoted strings
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `text` - Text to quote
+- 
+- ### Writes to standard output
+- 
+- The input text properly quoted
+- 
+- ### Examples
+- 
+-     escapeQuotes "Now I can't not include this in a bash string."
+- 
+- ### Sample Output
+- 
+- Single quotes are prefixed with a backslash
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `escapeSingleQuotes`
+- 
+- > Quote strings for inclusion in shell quoted strings
+- 
+- ### Usage
+- 
+-     escapeSingleQuotes [ text ]
+- 
+- Quote strings for inclusion in shell quoted strings
+- 
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/quote.sh`
+- 
+- ### Arguments
+- 
+- - `text` - Text to quote
+- 
+- ### Examples
+- 
+-     escapeSingleQuotes "Now I can't not include this in a bash string."
+- 
+- ### Sample Output
+- 
+- Single quotes are prefixed with a backslash
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `evalCheck`
+- 
+- > Check files to ensure `eval`s in code have been checked
+- 
+- ### Usage
+- 
+-     evalCheck
+- 
+- Check files to ensure `eval`s in code have been checked
+- 
+- > Location: `bin/build/tools/security.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `executableExists`
+- 
+- > Does a binary exist in the PATH?
+- 
+- ### Usage
+- 
+-     executableExists [ --any ] binary ... [ --help ]
+- 
+- Does a binary exist in the PATH?
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `--any` - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
+- - `binary ...` - String. Required. One or more Binaries to find in the system `PATH`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     executableExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
+-     executableExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
+-     executableExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
+- 
+- ### Return codes
+- 
+- - `0` - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
+- - `1` - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
+- 
+- ## `executableRequire`
+- 
+- > Check that one or more binaries are installed
+- 
+- ### Usage
+- 
+-     executableRequire usageFunction binary
+- 
+- Requires the binaries to be found via `which`
+- 
+- Runs `handler` on failure
+- 
+- > Location: `bin/build/tools/usage.sh`
+- 
+- ### Arguments
+- 
+- - `usageFunction` - Required. `bash` function already defined to output handler
+- - `binary` - Required. Binary which must have a `which` path.
+- 
+- ### Return codes
+- 
+- - `1` - If any `binary` is not available within the current path
+- 
+- ## `execute`
+- 
+- > Run binary and output failed command upon error
+- 
+- ### Usage
+- 
+-     execute [ --help ] binary [ ... ]
+- 
+- Run binary and output failed command upon error
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `binary` - Callable. Required. Command to run.
+- - `...` - Arguments. Optional. Any arguments are passed to `binary`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:returnMessage}
+- - {SEE:helpArgument}
+- 
+- ## `executeCount`
+- 
+- > Run a binary count times
+- 
+- ### Usage
+- 
+-     executeCount [ count ] [ binary ] [ args ... ]
+- 
+- Run a binary count times
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `count` - The number of times to run the binary
+- - `binary` - The binary to run
+- - `args ...` - Any arguments to pass to the binary each run
+- 
+- ### Return codes
+- 
+- - `0` - success
+- - `2` - `count` is not an unsigned number
+- - `Any` - If `binary` fails, the exit code is returned
+- 
+- ## `executeEcho`
+- 
+- > Output the `command ...` to stdout prior to running, then
+- 
+- ### Usage
+- 
+-     executeEcho [ command ... ] [ --help ]
+- 
+- Output the `command ...` to stdout prior to running, then `execute` it
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `command ...` - Any command and arguments to run.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - Any
+- 
+- ### Requires
+- 
+- - {SEE:helpArgument}
+- - {SEE:decorate}
+- - {SEE:execute}
+- - {SEE:__decorateExtensionQuote}
+- - {SEE:__decorateExtensionEach}
+- 
+- ## `executeInputSupport`
+- 
+- > Support arguments and stdin as arguments to an executor
+- 
+- ### Usage
+- 
+-     executeInputSupport [ --help ] [ executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`. ] [ -- ] [ ... ]
+- 
+- Support arguments and stdin as arguments to an executor
+- 
+- > Location: `bin/build/tools/sugar.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - executor ... -- Required. The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
+- - `--` - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
+- - `...` - Any additional arguments are passed directly to the executor
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:catchReturn}
+- - {SEE:bashDocumentation}
+- 
+- ## `executeLoop`
+- 
+- > Run checks interactively until errors are all fixed.
+- 
+- ### Usage
+- 
+-     executeLoop loopCallable [ --delay delaySeconds ] [ --until exitCode ] [ --title title ] [ arguments ... ]
+- 
+- Run checks interactively until errors are all fixed.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `loopCallable` - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
+- - `--delay delaySeconds` - Integer. Optional. Delay in seconds between checks in interactive mode.
+- - `--until exitCode` - Integer. Optional. Check until exit code matches this.
+- - `--title title` - String. Optional. Display this title instead of the command.
+- - `arguments ...` - Optional. Arguments. Arguments to `loopCallable`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileCopy`
+- 
+- > Copy file from source to destination
+- 
+- ### Usage
+- 
+-     fileCopy [ --map ] [ --escalate ] source destination
+- 
+- Copy file from source to destination
+- 
+- Supports mapping the file using the current environment, or escalated privileges.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--map` - Flag. Optional. Map environment values into file before copying.
+- - `--escalate` - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges.
+- - `source` - File. Required. Source path
+- - `destination` - File. Required. Destination path
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Failed
+- 
+- ## `fileCopyWouldChange`
+- 
+- > Check whether copying a file would change it
+- 
+- ### Usage
+- 
+-     fileCopyWouldChange [ --map ] source destination
+- 
+- Check whether copying a file would change it
+- This function does not modify the source or destination.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--map` - Flag. Optional. Map environment values into file before copying.
+- - `source` - File. Required. Source path
+- - `destination` - File. Required. Destination path
+- 
+- ### Return codes
+- 
+- - `0` - Something would change
+- - `1` - Nothing would change
+- 
+- ## `fileDirectoryExists`
+- 
+- > Does the file's directory exist?
+- 
+- ### Usage
+- 
+-     fileDirectoryExists directory
+- 
+- Does the file's directory exist?
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `directory` - Directory. Required. Test if file directory exists (file does not have to exist)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileDirectoryRequire`
+- 
+- > Given a list of files, ensure their parent directories exist
+- 
+- ### Usage
+- 
+-     fileDirectoryRequire [ --handler handler ] [ --help ] [ --mode fileMode ] [ --owner ownerName ] fileDirectory ...
+- 
+- Given a list of files, ensure their parent directories exist
+- 
+- Creates the directories for all files passed in.
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--help` - Flag. Optional. Display this help.
+- - `--mode fileMode` - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
+- - `--owner ownerName` - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
+- - `fileDirectory ...` - FileDirectory. Required. Test if file directory exists (file does not have to exist)
+- 
+- ### Examples
+- 
+-     logFile=./.build/$me.log
+-     fileDirectoryRequire "$logFile"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - chmod
+- - {SEE:throwArgument}
+- - usageArgumentString
+- - {SEE:decorate}
+- - {SEE:catchEnvironment}
+- - dirname
+- 
+- ## `fileEndsWithNewline`
+- 
+- > Does a file end with a newline or is empty?
+- 
+- ### Usage
+- 
+-     fileEndsWithNewline file ...
+- 
+- Does a file end with a newline or is empty?
+- 
+- Typically used to determine if a newline is needed before appending a file.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `file ...` - File. Required. File to check if the last character is a newline.
+- 
+- ### Return codes
+- 
+- - `0` - All files ends with a newline
+- - `1` - One or more files ends with a non-newline
+- 
+- ## `fileExtensionLists`
+- 
+- > Generates a directory containing files with `extension` as the file
+- 
+- ### Usage
+- 
+-     fileExtensionLists [ --clean ] directory [ file0 ... ] [ --help ]
+- 
+- Generates a directory containing files with `extension` as the file names.
+- All files passed to this are added to the `@` file, the `!` file is used for files without extensions.
+- Extension parsing is done by removing the final dot from the filename:
+- - `foo.sh` -> `"sh"`
+- - `foo.tar.gz` -> `"gz"`
+- - `foo.` -> `"!"``
+- - `foo-bar` -> `"!"``
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `--clean` - Flag. Optional. Clean directory of all files first.
+- - `directory` - Directory. Required. Directory to create extension lists.
+- - `file0 ...` - String. Optional. List of files to add to the extension list.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileExtractLines`
+- 
+- > Extract a range of lines from a file
+- 
+- ### Usage
+- 
+-     fileExtractLines startLine endLine [ --help ]
+- 
+- Extract a range of lines from a file
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `startLine` - Integer. Required. Starting line number.
+- - `endLine` - Integer. Required. Ending line number.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Reads lines until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs the selected lines only
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileFieldMaximum`
+- 
+- > Given an input file, determine the maximum length of fieldIndex,
+- 
+- ### Usage
+- 
+-     fileFieldMaximum fieldIndex [ separatorChar ]
+- 
+- Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
+- 
+- Defaults to first field (fieldIndex of `1`), space separator (separatorChar is ` `)
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `fieldIndex` - UnsignedInteger. Required. The field to compute the maximum length for
+- - `separatorChar` - String. Optional. The separator character to delineate fields. Uses space if not supplied.
+- 
+- ### Reads standard input
+- 
+- Lines are read from standard in and line length is computed for each line
+- 
+- ### Writes to standard output
+- 
+- `UnsignedInteger`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileGroup`
+- 
+- > Get the file group name
+- 
+- ### Usage
+- 
+-     fileGroup [ file ] [ --help ]
+- 
+- Get the file group name
+- Outputs the file group for each file passed on the command line
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file` - File to get the owner for
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Unable to access file
+- 
+- ## `fileIsEmpty`
+- 
+- > Is this an empty (zero-sized) file?
+- 
+- ### Usage
+- 
+-     fileIsEmpty [ file ] [ --help ]
+- 
+- Is this an empty (zero-sized) file?
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file` - File. Optional. One or more files, all of which must be empty.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - if all files passed in are empty files
+- - `1` - if any files passed in are non-empty files
+- 
+- ## `fileIsNewest`
+- 
+- > Check to see if the first file is the newest
+- 
+- ### Usage
+- 
+-     fileIsNewest sourceFile [ targetFile ... ] [ --help ]
+- 
+- Check to see if the first file is the newest one
+- 
+- If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+- Otherwise return `1``
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `sourceFile` - File. Required. File to check
+- - `targetFile ...` - File. Optional. One or more files to compare. All must exist.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - `sourceFile`, 'targetFile' does not exist, or
+- - `0` - All files exist and `sourceFile` is the oldest file
+- 
+- ## `fileIsOldest`
+- 
+- > Check to see if the first file is the newest
+- 
+- ### Usage
+- 
+-     fileIsOldest sourceFile [ targetFile ... ] [ --help ]
+- 
+- Check to see if the first file is the newest one
+- 
+- If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
+- Otherwise return `1``
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `sourceFile` - File. Required. File to check
+- - `targetFile ...` - File. Optional. One or more files to compare. All must exist.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - `sourceFile`, 'targetFile' does not exist, or
+- - `0` - All files exist and `sourceFile` is the oldest file
+- 
+- ## `fileLineCount`
+- 
+- > Outputs the number of lines read from stdin (or supplied
+- 
+- ### Usage
+- 
+-     fileLineCount [ --help ] [ --handler handler ] [ file ]
+- 
+- Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately.
+- This is essentially a wrapper around `wc -l` which strips whitespace and does type checking.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `file` - File. Optional. Output line count for each file specified. If no files specified, uses stdin.
+- 
+- ### Reads standard input
+- 
+- Lines are read from standard in and counted
+- 
+- ### Writes to standard output
+- 
+- UnsignedInteger
+- `UnsignedInteger`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileLineMaximum`
+- 
+- > Outputs the maximum line length passed into stdin
+- 
+- ### Usage
+- 
+-     fileLineMaximum
+- 
+- Outputs the maximum line length passed into stdin
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Reads standard input
+- 
+- Lines are read from standard in and line length is computed for each line
+- 
+- ### Writes to standard output
+- 
+- `UnsignedInteger`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileMatches`
+- 
+- > Find one or more patterns in a list of files,
+- 
+- ### Usage
+- 
+-     fileMatches [ --help ] pattern ... -- [ exception ... ] -- file ...
+- 
+- Find one or more patterns in a list of files, with a list of file name pattern exceptions.
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `pattern ...` - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
+- - `--` - Delimiter. Required. exception.
+- - `exception ...` - String. Optional. `grep -e` File pattern which should be ignored.
+- - `--` - Delimiter. Required. file.
+- - `file ...` - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileModificationSeconds`
+- 
+- > Fetch the modification time in seconds from now of a
+- 
+- ### Usage
+- 
+-     fileModificationSeconds [ filename ... ]
+- 
+- Fetch the modification time in seconds from now of a file as a timestamp
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `filename ...` - File to fetch modification time
+- 
+- ### Examples
+- 
+-     fileModificationTime ~/.bash_profile
+- 
+- ### Return codes
+- 
+- - `2` - If file does not exist
+- - `0` - If file exists and modification times are output, one per line
+- 
+- ## `fileModificationTime`
+- 
+- > Fetch the modification time of a file as a timestamp
+- 
+- ### Usage
+- 
+-     fileModificationTime [ filename ... ]
+- 
+- Fetch the modification time of a file as a timestamp
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `filename ...` - File to fetch modification time
+- 
+- ### Examples
+- 
+-     fileModificationTime ~/.bash_profile
+- 
+- ### Return codes
+- 
+- - `2` - If file does not exist
+- - `0` - If file exists and modification times are output, one per line
+- 
+- ## `fileModificationTimes`
+- 
+- > Lists files in a directory recursively along with their modification
+- 
+- ### Usage
+- 
+-     fileModificationTimes directory [ findArgs ]
+- 
+- Lists files in a directory recursively along with their modification time in seconds.
+- 
+- Output is unsorted.
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `directory - Directory. Required. Must exists` - directory to list.
+- - `findArgs` - Arguments. Optional. Optional additional arguments to modify the find query
+- 
+- ### Examples
+- 
+- fileModificationTimes $myDir ! -path "*/.*/*"
+- 
+- ### Sample Output
+- 
+- 1705347087 bin/build/tools.sh
+- 1704312758 bin/build/deprecated.sh
+- 1705442647 bin/build/build.json
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileModifiedDays`
+- 
+- > Prints days (integer) since modified
+- 
+- ### Usage
+- 
+-     fileModifiedDays file ... [ --help ]
+- 
+- Prints days (integer) since modified
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file ...` - File. Required. One or more files to examine
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `2` - Can not get modification time
+- 
+- ## `fileModifiedRecently`
+- 
+- > List the most recently modified file in a directory prefixed
+- 
+- ### Usage
+- 
+-     fileModifiedRecently directory [ findArgs ]
+- 
+- List the most recently modified file in a directory prefixed with the timestamp
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `directory - Directory. Required. Must exists` - directory to list.
+- - `findArgs` - Arguments. Optional. Optional additional arguments to modify the find query
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileModifiedSeconds`
+- 
+- > Prints seconds since modified
+- 
+- ### Usage
+- 
+-     fileModifiedSeconds file ... [ --help ]
+- 
+- Prints seconds since modified
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file ...` - File. Required. One or more files to examine
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `2` - Can not get modification time
+- 
+- ## `fileNewest`
+- 
+- > Output the newest file in the list
+- 
+- ### Usage
+- 
+-     fileNewest file ... [ --help ]
+- 
+- Output the newest file in the list
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file ...` - File. Required. One or more files to examine
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileNotMatches`
+- 
+- > Find list of files which do NOT match a specific
+- 
+- ### Usage
+- 
+-     fileNotMatches [ --help ] pattern ... -- [ exception ... ] -- file ...
+- 
+- Find list of files which do NOT match a specific pattern or patterns and output them
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `pattern ...` - String. Required.`grep -e` Pattern to find in files.
+- - `--` - Delimiter. Required. exception.
+- - `exception ...` - String. Optional. `grep -e` File pattern which should be ignored.
+- - `--` - Delimiter. Required. file.
+- - `file ...` - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileOldest`
+- 
+- > Output the oldest file in the list.
+- 
+- ### Usage
+- 
+-     fileOldest file ... [ --help ]
+- 
+- Output the oldest file in the list.
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file ...` - File. Required. One or more files to examine
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileOwner`
+- 
+- > Get the file owner name
+- 
+- ### Usage
+- 
+-     fileOwner [ file ] [ --help ]
+- 
+- Get the file owner name
+- Outputs the file owner for each file passed on the command line
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file` - File to get the owner for
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Unable to access file
+- 
+- ## `fileRealPath`
+- 
+- > Find the full, actual path of a file avoiding symlinks
+- 
+- ### Usage
+- 
+-     fileRealPath file ...
+- 
+- Find the full, actual path of a file avoiding symlinks or redirection.
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file ...` - File. Required. One or more files to `realpath`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:executableExists}
+- - realpath
+- - {SEE:helpArgument}
+- - {SEE:bashDocumentation}
+- - {SEE:returnArgument}
+- 
+- ### See Also
+- 
+- - {SEE:readlink}
+- - {SEE:realpath}
+- 
+- ## `fileReverseLines`
+- 
+- > Reverse output lines
+- 
+- ### Usage
+- 
+-     fileReverseLines
+- 
+- Reverses a pipe's input lines to output using an awk trick.
+- 
+- Not recommended on big files.
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Credits
+- 
+- Thanks to [Eric Pement
+- ](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
+- ).
+- 
+- ## `filesAreIdentical`
+- 
+- > Are files identical?
+- 
+- ### Usage
+- 
+-     filesAreIdentical [ -b ] [ -B ] [ -i ] [ -w ] [ -I pattern ] source target ... [ --help ]
+- 
+- Are files identical?
+- 
+- > Location: `bin/build/tools/diff.sh`
+- 
+- ### Arguments
+- 
+- - `-b` - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal.
+- - `-B` - Flag. Causes chunks that include only blank lines to be ignored.
+- - `-i` - Flag. Ignores the case of letters.  E.g., "A" will compare equal to "a".
+- - `-w` - Flag. Ignores all blanks and tabs.
+- - `-I pattern` - String. Optional. Ignore lines which match extended regular expression `pattern`.
+- - `source` - File. Required. File to compare to.
+- - `target ...` - File. Required. Target file to compare to. Additional files are compared to `source`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Files are identical
+- - `1` - Files differ
+- - `2` - Argument error
+- 
+- ## `fileSize`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     fileSize [ file ... ] [ --help ]
+- 
+- No documentation for `fileSize`.
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `file ...` - Optional. One or more files to get size of.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- File. One or more files to get size of.
+- 
+- ### Writes to standard output
+- 
+- UnsignedInteger
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- 
+- ## `filesOpenStatus`
+- 
+- > Output current open files
+- 
+- ### Usage
+- 
+-     filesOpenStatus
+- 
+- Output current open files
+- stdout
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `filesRename`
+- 
+- > Rename a list of files usually to back them up temporarily
+- 
+- ### Usage
+- 
+-     filesRename oldSuffix newSuffix actionVerb file ...
+- 
+- Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
+- 
+- If files do not exist, does nothing
+- 
+- Used to move files, temporarily, sometimes and then move back easily.
+- 
+- Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `oldSuffix` - String. Required. Old suffix to look rename from.
+- - `newSuffix` - String. Required. New suffix to rename to.
+- - `actionVerb` - String. Required. Description to output for found files.
+- - `file ...` - String. Required. One or more files to rename, if found, renaming occurs.
+- 
+- ### Examples
+- 
+-     filesRename "" ".$$.backup" hiding etc/app.json etc/config.json
+-     ...
+-     filesRename ".$$.backup" "" restoring etc/app.json etc/config.json
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileTeeAtomic`
+- 
+- > tee but atomic (EXPERIMENTAL)
+- 
+- ### Usage
+- 
+-     fileTeeAtomic [ -a ] target [ --help ]
+- 
+- Write to a file in a single operation to avoid invalid files
+- EXPERIMENTAL not a lot of testing of this don't use quite yet.
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `-a` - Flag. Optional. Append target (atomically as well).
+- - `target` - File. Required. File to target
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Piped to a temporary file until EOF and then moved to target
+- 
+- ### Writes to standard output
+- 
+- A copy of stdin
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileTemporaryName`
+- 
+- > Wrapper for `mktemp`. Generate a temporary file name, and fail
+- 
+- ### Usage
+- 
+-     fileTemporaryName handler [ --help ] [ ... ]
+- 
+- Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - Function. Required. Function to call on failure. Function Type: returnMessage
+- - `--help` - Flag. Optional. Display this help.
+- - `...` - Arguments. Optional. Any additional arguments are passed through.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `temp` - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - mktemp
+- - {SEE:helpArgument}
+- - {SEE:catchEnvironment}
+- - {SEE:bashDocumentation}
+- 
+- ## `fileType`
+- 
+- > Better type handling of shell objects
+- 
+- ### Usage
+- 
+-     fileType [ item ] [ --help ]
+- 
+- Better type handling of shell objects
+- 
+- Outputs one of `type` output or enhancements:
+- - `builtin`, `function`, `alias`, `file`
+- - `link-directory`, `link-file`, `link-dead`, `directory`, `integer`, `unknown`
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `item` - String. Optional. Thing to classify
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fileUniqueLines`
+- 
+- > Sorts and makes all file lines unique
+- 
+- ### Usage
+- 
+-     fileUniqueLines [ -n ] [ --verbose ] file [ --help ]
+- 
+- Remove duplicate lines from an input stream and sort.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `-n` - Flag. Optional. Numeric sort.
+- - `--verbose` - Flag. Optional. Be exceptionally wordy.
+- - `file` - File. Required. File to modify in-place.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `fingerprint`
+- 
+- > Update file from `APPLICATION_JSON` with application fingerprint.
+- 
+- ### Usage
+- 
+-     fingerprint [ --help ] [ --handler handler ] [ --cached fingerprint ] [ --verbose ] [ --quiet ] [ --check ] [ --key ]
+- 
+- Update file from `APPLICATION_JSON` with application fingerprint.
+- 
+- > Location: `bin/build/tools/fingerprint.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--cached fingerprint` - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.
+- - `--verbose` - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.
+- - `--quiet` - Flag. Optional. Be quiet (turns verbose off).
+- - `--check` - Flag. Optional. Check if the fingerprint is up to date and output the current value.
+- - `--key` - String. Optional. Update this key in the JSON file.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `fingerprint` - By default be verbose even if the flag is not specified. (Use `--quiet` to silence if needed)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `floatRound`
+- 
+- > Convert float to nearest integer (up or down)
+- 
+- ### Usage
+- 
+-     floatRound [ number ]
+- 
+- Convert float to nearest integer (up or down)
+- 
+- > Location: `bin/build/tools/float.sh`
+- 
+- ### Arguments
+- 
+- - `number` - Float. Optional. Floating point number to convert to integer.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `floatTruncate`
+- 
+- > Convert float to an integer, round down always
+- 
+- ### Usage
+- 
+-     floatTruncate [ number ]
+- 
+- Convert float to an integer, round down always
+- 
+- > Location: `bin/build/tools/float.sh`
+- 
+- ### Arguments
+- 
+- - `number` - Float. Optional. Floating point number to convert to integer.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitBranchExists`
+- 
+- > Does a branch exist locally or remotely?
+- 
+- ### Usage
+- 
+-     gitBranchExists branch ... [ --help ]
+- 
+- Does a branch exist locally or remotely?
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `branch ...` - String. Required. List of branch names to check.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - All branches passed exist
+- - `1` - At least one branch does not exist locally or remotely
+- 
+- ## `gitBranchExistsLocal`
+- 
+- > Does a branch exist locally?
+- 
+- ### Usage
+- 
+-     gitBranchExistsLocal branch ... [ --help ]
+- 
+- Does a branch exist locally?
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `branch ...` - String. Required. List of branch names to check.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - All branches exist
+- - `1` - At least one branch does not exist locally
+- 
+- ## `gitBranchExistsRemote`
+- 
+- > Does a branch exist remotely?
+- 
+- ### Usage
+- 
+-     gitBranchExistsRemote branch ... [ --help ]
+- 
+- Does a branch exist remotely?
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `branch ...` - String. Required. List of branch names to check.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - All branches exist on the remote
+- - `1` - At least one branch does not exist remotely
+- 
+- ## `gitBranchify`
+- 
+- > Check out a branch with the current version and optional
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - BUILD_BRANCH_FORMAT
+- 
+- ## `gitBranchMergeCurrent`
+- 
+- > Merge the current branch with another, push to remote, and
+- 
+- ### Usage
+- 
+-     gitBranchMergeCurrent branch [ --skip-ip ] [ --comment ] [ --help ]
+- 
+- Merge the current branch with another, push to remote, and then return to the original branch.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `branch` - String. Required. Branch to merge the current branch with.
+- - `--skip-ip` - Boolean. Optional. Do not add the IP address to the comment.
+- - `--comment` - String. Optional. Comment for merge commit.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitCommit`
+- 
+- > Commits all files added to git and also update release
+- 
+- ### Usage
+- 
+-     gitCommit [ --last ] [ -- ] [ --help ] [ comment ]
+- 
+- Commits all files added to git and also update release notes with comment
+- 
+- Comment wisely. Does not duplicate comments. Check your release notes.
+- 
+- Example:
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--last` - Flag. Optional. Append last comment
+- - `--` - Flag. Optional. Skip updating release notes with comment.
+- - `--help` - Flag. Optional. I need somebody.
+- - `comment` - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message.
+- 
+- ### Examples
+- 
+-     c last
+-     c --last
+-     c --
+- ... are all equivalent.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitCommitHash`
+- 
+- > Get the commit hash
+- 
+- ### Usage
+- 
+-     gitCommitHash
+- 
+- Get the commit hash
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitCurrentBranch`
+- 
+- > Get the current branch name
+- 
+- ### Usage
+- 
+-     gitCurrentBranch [ --help ]
+- 
+- Get the current branch name
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitEnsureSafeDirectory`
+- 
+- > When running git operations on a deployment host, at times
+- 
+- ### Usage
+- 
+-     gitEnsureSafeDirectory [ --help ] directory
+- 
+- When running git operations on a deployment host, at times it's necessary to
+- add the current directory (or a directory) to the git `safe.directory` directive.
+- 
+- This adds the directory passed to that directory in the local user's environment
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `directory` - Directory. Required. The directory to add to the `git` `safe.directory` configuration directive
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `2` - Argument is not a valid directory
+- - `Other` - git config error codes
+- 
+- ## `gitFindHome`
+- 
+- > Finds `.git` directory above or at `startingDirectory`
+- 
+- ### Usage
+- 
+-     gitFindHome [ startingDirectory ]
+- 
+- Finds `.git` directory above or at `startingDirectory`
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `startingDirectory` - Directory. Optional.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:findFileHome}
+- 
+- ## `gitHasAnyRefs`
+- 
+- > Does git have any tags?
+- 
+- ### Usage
+- 
+-     gitHasAnyRefs [ --help ]
+- 
+- Do any tags exist at all in `git`?
+- May need to `git pull --tags`, or no tags exist.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - At least one tag exists
+- - `1` - No tags exist
+- 
+- ## `gitHookTypes`
+- 
+- > List current valid git hook types
+- 
+- ### Usage
+- 
+-     gitHookTypes [ --help ]
+- 
+- List current valid git hook types
+- Hook types:
+- - `pre-commit`
+- - `pre-push`
+- - `pre-merge-commit`
+- - `pre-rebase`
+- - `pre-receive`
+- - `update`
+- - `post-update`
+- - `post-commit`
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Sample Output
+- 
+- lines:gitHookType
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `githubLatest`
+- 
+- > Get the latest JSON structure
+- 
+- ### Usage
+- 
+-     githubLatest projectName
+- 
+- Get the latest JSON structure
+- 
+- > Location: `bin/build/tools/github.sh`
+- 
+- ### Arguments
+- 
+- - `projectName` - String. Required. Github project name in the form of `owner/repository`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `githubLatestRelease`
+- 
+- > Get the latest release version
+- 
+- ### Usage
+- 
+-     githubLatestRelease projectName
+- 
+- Get the latest release version
+- 
+- > Location: `bin/build/tools/github.sh`
+- 
+- ### Arguments
+- 
+- - `projectName` - String. Required. Github project name in the form of `owner/repository`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `githubProjectJSON`
+- 
+- > Get a project JSON structure
+- 
+- ### Usage
+- 
+-     githubProjectJSON
+- 
+- Get a project JSON structure
+- 
+- > Location: `bin/build/tools/github.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `githubPublishDate`
+- 
+- > Output the publish date for the latest release of ownerRepository
+- 
+- ### Usage
+- 
+-     githubPublishDate [ ownerRepository ]
+- 
+- Output the publish date for the latest release of ownerRepository
+- 
+- > Location: `bin/build/tools/github.sh`
+- 
+- ### Arguments
+- 
+- - `ownerRepository` - String. Github `owner/repository` string
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `githubRelease`
+- 
+- > Generate a release on GitHub using API
+- 
+- ### Usage
+- 
+-     githubRelease [ --help ] [ --handler handler ] [ --token token ] [ --owner owner ] [ --name name ] [ --expire expireString ] descriptionFilePath releaseName commitish
+- 
+- Use GitHub API to generate a release
+- 
+- GitHub MUST have two sets of credentials enabled:
+- 
+- - The SSH key for the deployment robot should have push access to the repository on GitHub to enable releases (git handles this)
+- - The `token` must have the permission to create releases for this repository
+- 
+- Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
+- 
+- > Location: `bin/build/tools/github.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--token token` - String. Optional. Uses `GITHUB_ACCESS_TOKEN` if not supplied. Access token for GitHub REST API.
+- - `--owner owner` - String. Optional. Uses `GITHUB_REPOSITORY_OWNER` if not supplied. Repository owner of release.
+- - `--name name` - String. Optional. Uses `GITHUB_REPOSITORY_NAME` if not supplied. Repository name to release.
+- - `--expire expireString` - String. Optional. Uses `GITHUB_ACCESS_TOKEN_EXPIRE` if not supplied. Expiration time for the token.
+- - `descriptionFilePath` - File. Required. File which exists. Path to file containing release notes (typically markdown)
+- - `releaseName` - String. Required. Name of the release (e.g. `v1.0.0`)
+- - `commitish` - String. Required. The GIT short SHA tag for the release
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `githubURLParse`
+- 
+- > Parse a GitHub URL and return the owner and project
+- 
+- ### Usage
+- 
+-     githubURLParse url
+- 
+- Parse a GitHub URL and return the owner and project name
+- 
+- > Location: `bin/build/tools/github.sh`
+- 
+- ### Arguments
+- 
+- - `url` - URL. Required. URL to parse.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitInsideHook`
+- 
+- > Are we currently inside a git hook?
+- 
+- ### Usage
+- 
+-     gitInsideHook
+- 
+- Are we currently inside a git hook?
+- 
+- Tests non-blank strings in our environment.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - We are, semantically, inside a git hook
+- - `1` - We are NOT, semantically, inside a git hook
+- 
+- ### Environment
+- 
+- - GIT_EXEC_PATH - Must be set to pass
+- - GIT_INDEX_FILE - Must be set to pass
+- 
+- ## `gitInstall`
+- 
+- > Install git if needed
+- 
+- ### Usage
+- 
+-     gitInstall [ package ]
+- 
+- Installs the `git` binary
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `package` - Additional packages to install
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitInstallHook`
+- 
+- > Install the most recent version of this hook and RUN
+- 
+- ### Usage
+- 
+-     gitInstallHook [ --application ] [ --copy ] [ hook ] [ --help ]
+- 
+- Install the most recent version of this hook and RUN IT in place if it has changed.
+- You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
+- When running within your hook, pass additional arguments so they can be preserved:
+- 
+-     gitInstallHook --application "$myHome" pre-commit "$@" || return $?
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--application` - Directory. Optional. Path to application home.
+- - `--copy` - Flag. Optional. Do not execute the hook if it has changed.
+- - `hook` - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - the file was not updated
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - BUILD-HOME - The default application home directory used for `.git` and build hooks.
+- 
+- ## `gitInstallHooks`
+- 
+- > Install one or more git hooks from Zesk Build hooks.
+- 
+- ### Usage
+- 
+-     gitInstallHooks [ --copy ] [ --verbose ] [ --application home ] [ hookName ] [ --help ]
+- 
+- Install one or more git hooks from Zesk Build hooks.
+- Zesk Build hooks are named `git-hookName.sh` in `bin/hooks/` so `git-pre-commit.sh` will be installed as the `pre-commit` hook for git.
+- 
+- Hook types:
+- - `pre-commit`
+- - `pre-push`
+- - `pre-merge-commit`
+- - `pre-rebase`
+- - `pre-receive`
+- - `update`
+- - `post-update`
+- - `post-commit`
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--copy` - Flag. Optional. Copy the hook but do not execute it.
+- - `--verbose` - Flag. Optional. Be verbose about what is done.
+- - `--application home` - Directory. Optional. Set the application home directory to this prior to looking for hooks.
+- - `hookName` - String. Optional. A hook or hook names to install. See `gitHookTypes`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `gitHookTypes`
+- 
+- ## `gitMainly`
+- 
+- > Merge `staging` and `main` branches of a git repository into
+- 
+- ### Usage
+- 
+-     gitMainly
+- 
+- Merge `staging` and `main` branches of a git repository into the current branch.
+- 
+- Will merge `origin/staging` and `origin/main` after doing a `--pull` for both of them
+- 
+- Current repository should be clean and have no modified files.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `1` - Already in main, staging, or HEAD, or git merge failed
+- - `0` - git merge succeeded
+- 
+- ## `gitPreCommitCleanup`
+- 
+- > Clean up after our pre-commit (deletes cache directory)
+- 
+- ### Usage
+- 
+-     gitPreCommitCleanup [ --help ]
+- 
+- Clean up after our pre-commit (deletes cache directory)
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitPreCommitExtensionList`
+- 
+- > List the extensions available.
+- 
+- ### Usage
+- 
+-     gitPreCommitExtensionList [ --help ]
+- 
+- List the extensions available.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- String. One per line.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitPreCommitHasExtension`
+- 
+- > Does this commit have the following file extensions?
+- 
+- ### Usage
+- 
+-     gitPreCommitHasExtension [ extension ] [ --help ]
+- 
+- Does this commit have the following file extensions?
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `extension` - String. Optional. Extension to check. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - if all extensions are present
+- - `1` - if any extension is not present
+- 
+- ## `gitPreCommitHeader`
+- 
+- > Output a display for pre-commit files changed.
+- 
+- ### Usage
+- 
+-     gitPreCommitHeader [ extension ] [ --help ]
+- 
+- Output a display for pre-commit files changed.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `extension` - String. Optional. Extension to display
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitPreCommitListExtension`
+- 
+- > List the file(s) of an extension.
+- 
+- ### Usage
+- 
+-     gitPreCommitListExtension [ extension ] [ --help ]
+- 
+- List the file(s) of an extension.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `extension` - String. Optional. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- File. One per line.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitPreCommitSetup`
+- 
+- > Set up a pre-commit hook and create a cache of
+- 
+- ### Usage
+- 
+-     gitPreCommitSetup [ --help ]
+- 
+- Set up a pre-commit hook and create a cache of our files by extension.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - One or more files are available as part of the commit
+- - `1` - Error, or zero files are available as part of the commit
+- 
+- ### See Also
+- 
+- - ## `gitPreCommitCleanup`
+- 
+- ## `gitRemoteHosts`
+- 
+- > List remote hosts for the current git repository
+- 
+- ### Usage
+- 
+-     gitRemoteHosts
+- 
+- List remote hosts for the current git repository
+- Parses `user@host:path/project.git` and extracts `host`
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitRemoveFileFromHistory`
+- 
+- > Has a lot of caveats
+- 
+- ### Usage
+- 
+-     gitRemoveFileFromHistory
+- 
+- Has a lot of caveats
+- 
+- gitRemoveFileFromHistory path/to/file
+- 
+- usually have to `git push --force`
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitRepositoryChanged`
+- 
+- > Has a git repository been changed from HEAD?
+- 
+- ### Usage
+- 
+-     gitRepositoryChanged
+- 
+- Has a git repository been changed from HEAD?
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `1` - the repo has NOT been modified
+- - `0` - the repo has been modified
+- 
+- ## `gitShowChanges`
+- 
+- > Show changed files from HEAD
+- 
+- ### Usage
+- 
+-     gitShowChanges [ --help ]
+- 
+- Show changed files from HEAD
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - the repo has been modified
+- - `1` - the repo has NOT bee modified
+- 
+- ## `gitShowStatus`
+- 
+- > Show changed files from HEAD with their status prefix character:
+- 
+- ### Usage
+- 
+-     gitShowStatus [ --help ]
+- 
+- Show changed files from HEAD with their status prefix character:
+- 
+- - ' ' = unmodified
+- - `M` = modified
+- - `A` = added
+- - `D` = deleted
+- - `R` = renamed
+- - `C` = copied
+- - `U` = updated but unmerged
+- 
+- (See `man git` for more details on status flags)
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - the repo has been modified
+- - `1` - the repo has NOT bee modified
+- 
+- ## `gitTagAgain`
+- 
+- > Remove a tag everywhere and tag again on the current
+- 
+- ### Usage
+- 
+-     gitTagAgain [ tag ]
+- 
+- Remove a tag everywhere and tag again on the current branch
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `tag` - String. Optional. The tag to tag again.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitTagDelete`
+- 
+- > Delete git tag locally and at origin
+- 
+- ### Usage
+- 
+-     gitTagDelete [ --help ] [ tag ]
+- 
+- Delete git tag locally and at origin
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `tag` - The tag to delete locally and at origin
+- 
+- ### Return codes
+- 
+- - `argument` - Any stage fails will result in this exit code. Partial deletion may occur.
+- 
+- ## `gitTagVee`
+- 
+- > Given a tag in the form "1.1.3" convert it to
+- 
+- ### Usage
+- 
+-     gitTagVee
+- 
+- Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
+- Delete the old tag as well
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitTagVersion`
+- 
+- > Generates a git tag for a build version, so `v1.0d1`,
+- 
+- ### Usage
+- 
+-     gitTagVersion [ --suffix versionSuffix ]
+- 
+- Generates a git tag for a build version, so `v1.0d1`, `v1.0d2`, for version `v1.0`.
+- Tag a version of the software in git and push tags to origin.
+- If this fails it will output the installation log.
+- When this tool succeeds the git repository contains a tag with the suffix and an index which represents the build index.
+- 
+- - `d` - for **development**
+- - `s` - for **staging**
+- - `rc` - for **release candidate**
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitUninstall`
+- 
+- > Uninstall git
+- 
+- ### Usage
+- 
+-     gitUninstall [ package ]
+- 
+- Uninstalls the `git` binary
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `package` - Additional packages to uninstall
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitVersionLast`
+- 
+- > Get the last reported version.
+- 
+- ### Usage
+- 
+-     gitVersionLast [ ignorePattern ] [ --help ]
+- 
+- Get the last reported version.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `ignorePattern` - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `gitVersionList`
+- 
+- > Fetches a list of tags from git and filters those
+- 
+- ### Usage
+- 
+-     gitVersionList [ --help ]
+- 
+- Fetches a list of tags from git and filters those which start with v and a digit and returns
+- them sorted by version correctly.
+- 
+- > Location: `bin/build/tools/git.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - If the `.git` directory does not exist
+- - `0` - Success
+- 
+- ## `grepSafe`
+- 
+- > `grep` but returns 0 when nothing matches
+- 
+- ### Usage
+- 
+-     grepSafe [ --help ] [ ... ]
+- 
+- `grep` but returns 0 when nothing matches
+- 
+- Allow blank files or no matches:
+- 
+- - `grep` - returns 1 - no lines selected
+- - `grep` - returns 0 - lines selected
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `...` - Arguments. Passed directly to `grep`.
+- 
+- ### Return codes
+- 
+- - `0` - Normal operation
+- 
+- ### Requires
+- 
+- - grep
+- - {SEE:returnMap}
+- 
+- ### See Also
+- 
+- - {SEE:grep}
+- 
+- ## `groupID`
+- 
+- > Convert a group name to a group ID
+- 
+- ### Usage
+- 
+-     groupID groupName
+- 
+- Convert a group name to a group ID
+- 
+- > Location: `bin/build/tools/group.sh`
+- 
+- ### Arguments
+- 
+- - `groupName` - String. Required. Group name to convert to a group ID
+- 
+- ### Writes to standard output
+- 
+- `Integer`. One line for each group name passed as an argument.
+- 
+- ### Return codes
+- 
+- - `0` - All groups were found in the database and IDs were output successfully
+- - `1` - Any group is not found in the database.
+- - `2` - Argument errors (blank argument)
+- 
+- ## `helpArgument`
+- 
+- > Simple help argument handler.
+- 
+- ### Usage
+- 
+-     helpArgument [ --only ] handlerFunction [ arguments ... ]
+- 
+- Simple help argument handler.
+- 
+- Easy `--help` handler for any function useful when it's the only option.
+- 
+- Useful for utilities which single argument types, single arguments, and no arguments (except for `--help`)
+- 
+- Oddly one of the few functions we can not offer the `--help` flag for.
+- Without arguments, displays help.
+- 
+- Example:
+- Example:
+- Example:
+- Example:
+- 
+- > Location: `bin/build/tools/argument.sh`
+- 
+- ### Arguments
+- 
+- - `--only` - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+- - `handlerFunction` - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+- - `arguments ...` - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
+- 
+- ### Examples
+- 
+-     # NOT DEFINED handler
+-     helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+-     [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+-     [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+-     # Argument 1 absolutely exists
+-     [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+-     # DEFINED handler
+-     local handler="_${FUNCNAME[0]}"
+-     helpArgument "$handler" "$@" || return 0
+-     [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
+-     [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
+-     [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+-     # Blank Arguments for help
+-     [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
+-     [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
+- 
+- ### Return codes
+- 
+- - `0` - Help was not found or displayed
+- - `1` - Help was found and displayed
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:bashDocumentation}
+- - {SEE:_helpArgument}
+- 
+- ## `hookExists`
+- 
+- > Determine if a hook exists
+- 
+- ### Usage
+- 
+-     hookExists [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] [ hookName0 ]
+- 
+- Does a hook exist in the local project?
+- 
+- Check if one or more hook exists. All hooks must exist to succeed.
+- 
+- > Location: `bin/build/tools/hook.sh`
+- 
+- ### Arguments
+- 
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+- - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+- - `--next scriptName` - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
+- - `hookName0` - one or more hook names which must exist
+- 
+- ### Return codes
+- 
+- - `0` - If all hooks exist
+- 
+- ## `hookFind`
+- 
+- > Find the path to a hook binary file
+- 
+- ### Usage
+- 
+-     hookFind [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] hookName0 [ hookName1 ]
+- 
+- Does a hook exist in the local project?
+- 
+- Find the path to a hook. The search path is:
+- 
+- - `./bin/hooks/`
+- - `./bin/build/hooks/`
+- 
+- If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
+- 
+- > Location: `bin/build/tools/hook.sh`
+- 
+- ### Arguments
+- 
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+- - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+- - `--next scriptName` - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
+- - `hookName0` - String. Required. Hook to locate
+- - `hookName1` - String. Optional. Additional hooks to locate.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `hookRun`
+- 
+- > Run a project hook
+- 
+- ### Usage
+- 
+-     hookRun [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] hookName [ ... ] [ --help ]
+- 
+- Run a hook in the project located at `./bin/hooks/`
+- 
+- See (Hooks documentation)[../hooks/index.md] for standard hooks.
+- 
+- Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
+- So the hook for `version-current` would be a file at:
+- 
+-     bin/hooks/version-current.sh
+- 
+- Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
+- 
+- Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
+- 
+- > Location: `bin/build/tools/hook.sh`
+- 
+- ### Arguments
+- 
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+- - `--next scriptName` - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
+- - `hookName` - String. Required. Hook name to run.
+- - `...` - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `hook` - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
+- 
+- ### Examples
+- 
+-     version="$(hookRun version-current)"
+- 
+- ### Return codes
+- 
+- - `Any` - The hook exit code is returned if it is run
+- - `1` - is returned if the hook is not found
+- 
+- ### See Also
+- 
+- - {SEE:hooks.md}
+- - {SEE:hookRunOptional}
+- - {SEE:hookSource}
+- - {SEE:hookSourceOptional}
+- 
+- ## `hookRunOptional`
+- 
+- > Identical to `hookRun` but returns exit code zero if the
+- 
+- ### Usage
+- 
+-     hookRunOptional [ --next scriptName ] [ --application applicationHome ] [ --extensions extensionList ] hookName [ ... ] [ --help ]
+- 
+- Identical to `hookRun` but returns exit code zero if the hook does not exist.
+- 
+- > Location: `bin/build/tools/hook.sh`
+- 
+- ### Arguments
+- 
+- - `--next scriptName` - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+- - `hookName` - String. Required. Hook name to run.
+- - `...` - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `hook` - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
+- 
+- ### Examples
+- 
+-     version="$(hookRunOptional version-current)"
+- 
+- ### Return codes
+- 
+- - `Any` - The hook exit code is returned if it is run
+- - `1` - is returned if the hook is not found
+- 
+- ### See Also
+- 
+- - {SEE:hooks.md}
+- - ## `hookRun`
+- 
+- ## `hookSource`
+- 
+- > Run a project hook
+- 
+- ### Usage
+- 
+-     hookSource [ --application applicationHome ] [ --extensions extensionList ] hookName ...
+- 
+- Run a hook in the project located at `./bin/hooks/`
+- 
+- See (Hooks documentation)[../hooks/index.md] for standard hooks.
+- 
+- Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.
+- So the hook for `version-current` would be a file at:
+- 
+-     bin/hooks/version-current.sh
+- 
+- Sample hooks (scripts) can be found in the build source code at `./bin/hooks/`.
+- 
+- Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
+- 
+- > Location: `bin/build/tools/hook.sh`
+- 
+- ### Arguments
+- 
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+- - `hookName ...` - String. Required. Hook to source.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `hook` - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
+- 
+- ### Examples
+- 
+-     version="$(hookSource version-current)"
+- 
+- ### Return codes
+- 
+- - `Any` - The hook exit code is returned if it is run
+- - `1` - is returned if the hook is not found
+- 
+- ### See Also
+- 
+- - {SEE:hooks.md}
+- - ## `hookRunOptional`
+- 
+- ## `hookSourceOptional`
+- 
+- > Identical to `hookRun` but returns exit code zero if the
+- 
+- ### Usage
+- 
+-     hookSourceOptional [ --application applicationHome ] [ --extensions extensionList ] hookName ...
+- 
+- Identical to `hookRun` but returns exit code zero if the hook does not exist.
+- 
+- > Location: `bin/build/tools/hook.sh`
+- 
+- ### Arguments
+- 
+- - `--application applicationHome` - Path. Optional. Directory of alternate application home.
+- - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+- - `hookName ...` - String. Required. Hook to source (if it exists).
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `hook` - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
+- 
+- ### Examples
+- 
+-     hookSourceOptional test-cleanup
+- 
+- ### Return codes
+- 
+- - `Any` - The hook exit code is returned if it is run
+- - `0` - is returned if the hook is not found
+- 
+- ### See Also
+- 
+- - {SEE:hooks.md}
+- - ## `hookRun`
+- 
+- ## `hookVersionCurrent`
+- 
+- > Application current version
+- 
+- ### Usage
+- 
+-     hookVersionCurrent [ --help ] [ --application application ]
+- 
+- Application current version
+- 
+- Extracts the version from the repository
+- 
+- > Location: `bin/build/tools/hooks.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--application application` - Directory. Optional. Application home directory.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `hookVersionLive`
+- 
+- > Application deployed version
+- 
+- ### Usage
+- 
+-     hookVersionLive [ --help ] [ --application application ]
+- 
+- Application deployed version
+- 
+- > Location: `bin/build/tools/hooks.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--application application` - Directory. Optional. Application home directory.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `hostTTFB`
+- 
+- > Fetch Time to First Byte and other stats
+- 
+- ### Usage
+- 
+-     hostTTFB [ --help ] url
+- 
+- Fetch Time to First Byte and other stats
+- 
+- > Location: `bin/build/tools/web.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `url` - URL. Required. URL to check.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `housekeeper`
+- 
+- > Run a command and ensure files are not modified
+- 
+- ### Usage
+- 
+-     housekeeper [ --ignore grepPattern ] [ --temporary temporaryPath ] [ --cache cacheDirectory ] [ --overhead ] [ --path path ] [ path ] [ callable ] [ --help ] [ --handler handler ]
+- 
+- Run a command and ensure files are not modified
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `--ignore grepPattern` - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
+- - `--temporary temporaryPath` - Directory. Optional. Use this as a temporary directory instead of the default.
+- - `--cache cacheDirectory` - Directory. Optional. Directory used to cache information between calls; if supplied for similar calls saves time in subsequent calls.
+- - `--overhead` - Flag. Optional. Report on timing used by this function.
+- - `--path path` - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.
+- - `path` - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.
+- - `callable` - Callable. Optional. Program to run and watch directory before and after.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `identicalCheck`
+- 
+- > When, for whatever reason, you need code to match between
+- 
+- ### Usage
+- 
+-     identicalCheck --extension extension --prefix prefix [ --exclude pattern ] [ --cd directory ] [ --repair directory ] [ --skip file ] [ --ignore-singles ] [ --no-map ] [ --debug ] [ --help ] [ --singles singlesFiles ] [ --single singleToken ] [ --token token ] [ token ... ]
+- 
+- When, for whatever reason, you need code to match between files, add a comment in the form:
+- 
+-     # IDENTICAL tokenName n
+- 
+- Where `tokenName` is unique to your project, `n` is the number of lines to match. All found sets of lines in this form
+- must match each other set of lines with the same prefix, otherwise errors and details about failures are printed to stdout.
+- 
+- The command to then check would be:
+- 
+-     identicalCheck --extension sh --prefix '# IDENTICAL'
+- 
+- This is largely useful for projects in which specific functions are replicated between scripts for code independence, yet
+- should remain identical.
+- 
+- Mapping also automatically handles file names and paths, so using the token `__FILE__` within your identical source
+- will convert to the target file's application path:
+- 
+- - `__FULL__` - Full path to file
+- - `__EXTENSION__` - The file extension (`sh`)
+- - `__BASE__` - Just file name and extension
+- - `__FILE__` - The application file
+- - `__NAME__` - Just the file name without extension
+- - `__DIRECTORY__` - Application directory (also `__DIR__`)
+- 
+- Failures are considered:
+- 
+- - Partial success, but warnings occurred with an invalid number in a file
+- - Two code instances with the same token were found which were not identical
+- - Two code instances with the same token were found which have different line counts
+- 
+- This is best used as a pre-commit check, for example.
+- 
+- > Location: `bin/build/tools/identical.sh`
+- 
+- ### Arguments
+- 
+- - `--extension extension` - String. Required. One or more extensions to search for in the current directory.
+- - `--prefix prefix` - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
+- - `--exclude pattern` - String. Optional. One or more patterns of paths to exclude. Similar to pattern used in `find`.
+- - `--cd directory` - Directory. Optional. Change to this directory before running. Defaults to current directory.
+- - `--repair directory` - Directory. Optional. Any files in onr or more directories can be used to repair other files.
+- - `--skip file` - Directory. Optional. Ignore this file for repairs.
+- - `--ignore-singles` - Flag. Optional. Skip the check to see if single entries exist.
+- - `--no-map` - Flag. Optional. Do not map __FULL__, __EXTENSION__, __BASE__, __FILE__, __NAME__, __DIR__, __DIRECTORY__  tokens.
+- - `--debug` - Flag. Optional. Additional debugging information is output.
+- - `--help` - Flag. Optional. This help.
+- - `--singles singlesFiles` - File. Optional. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
+- - `--single singleToken` - String. Optional. One or more tokens which cam be singles.
+- - `--token token` - String. Optional. Replace this token (only). May be specified more than once. Old method, deprecated but here for compatibility.
+- - `token ...` - String. Optional. Replace this token (only). May be specified more than once.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `identical-compare` - Show verbose comparisons when things differ between identical sections
+- 
+- ### Return codes
+- 
+- - `2` - Argument error
+- - `0` - Success, everything matches
+- - `100` - Failures
+- 
+- ### See Also
+- 
+- - ## `identicalWatch`
+- 
+- ## `identicalCheckShell`
+- 
+- > Identical check for shell files
+- 
+- ### Usage
+- 
+-     identicalCheckShell [ --help ] [ --singles singlesFiles ] [ --single singleToken ] [ --repair directory ] [ --internal-only ] [ --interactive ] [ ... ]
+- 
+- Identical check for shell files
+- 
+- Looks for up to three tokens in code:
+- 
+- - `# ``IDENTICAL tokenName 1`
+- - `# ``_IDENTICAL_ tokenName 1`, and
+- - `# ``DOC`` TEMPLATE: tokenName 1`
+- 
+- This allows for overlapping identical sections within templates with the intent:
+- 
+- - `IDENTICAL` - used in most cases (not internal)
+- - `_IDENTICAL_` - used in templates which must be included in IDENTICAL templates
+- - `__IDENTICAL__` - used in templates which must be included in _IDENTICAL_ templates
+- - `DOC`` TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator
+- 
+- > Location: `bin/build/tools/identical.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--singles singlesFiles` - File. Optional. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
+- - `--single singleToken` - String. Optional. One or more tokens which cam be singles.
+- - `--repair directory` - Directory. Optional. Any files in onr or more directories can be used to repair other files.
+- - `--internal-only` - Flag. Optional. Just do `--internal` repairs.
+- - `--interactive` - Flag. Optional. Interactive mode on fixing errors.
+- - `...` - Arguments. Optional. Additional arguments are passed directly to `identicalCheck`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `identicalFindTokens`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     identicalFindTokens --prefix prefix file ...
+- 
+- No documentation for `identicalFindTokens`.
+- 
+- > Location: `bin/build/tools/identical.sh`
+- 
+- ### Arguments
+- 
+- - `--prefix prefix` - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
+- - `file ...` - File. Required. A file to search for identical tokens.
+- 
+- ### Writes to standard output
+- 
+- tokens, one per line
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `identicalRepair`
+- 
+- > Repair an identical `token` in `destination` from `source`
+- 
+- ### Usage
+- 
+-     identicalRepair --prefix prefix token source destination [ --stdout ]
+- 
+- Repair an identical `token` in `destination` from `source`
+- 
+- > Location: `bin/build/tools/identical.sh`
+- 
+- ### Arguments
+- 
+- - `--prefix prefix` - Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL}`) (may specify more than one)
+- - `token` - String. Required. The token to repair.
+- - `source` - File. Required. The token file source. First occurrence is used.
+- - `destination` - File. Required. The token file to repair. Can be same as `source`.
+- - `--stdout` - Flag. Optional. Output changed file to `stdout`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `identicalWatch`
+- 
+- > Watch a project for changes and propagate them immediately upon
+- 
+- ### Usage
+- 
+-     identicalWatch [ --help ] [ --handler handler ] ...
+- 
+- Watch a project for changes and propagate them immediately upon save. Can be quite dangerous so use with caution.
+- Still a known bug which trims the last end bracket from files
+- 
+- > Location: `bin/build/tools/identical.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `...` - Arguments. Required. Arguments to `identicalCheck` for your watch.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `inArray`
+- 
+- > Check if an element exists in an array
+- 
+- ### Usage
+- 
+-     inArray [ element ] [ arrayElement0 ... ]
+- 
+- Check if an element exists in an array
+- 
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `element` - EmptyString. Thing to search for
+- - `arrayElement0 ...` - Array. Optional. One or more array elements to match
+- 
+- ### Examples
+- 
+-     if inArray "$thing" "${things[@]+"${things[@]}"}"; then
+-         things+=("$thing")
+-     fi
+- 
+- ### Return codes
+- 
+- - `0` - If element is found in array
+- - `1` - If element is NOT found in array
+- 
+- ## `incrementor`
+- 
+- > Set or increment a incrementor state based on a state
+- 
+- ### Usage
+- 
+-     incrementor [ count ] [ variable ] [ --path cacheDirectory ] [ --reset ] [ --separator ] [ --line ]
+- 
+- Set or increment a incrementor state based on a state directory. If no numeric value is supplied the default is to increment the current value and output it.
+- New values are set to 0 by default so will output `1` upon first handler.
+- If no variable name is supplied it uses the default variable name `default`.
+- 
+- Variable names can contain alphanumeric characters, underscore, or dash.
+- 
+- The special count `?` is used to query variables directly by name without modifying them.
+- Passing `?` on the command line without any name arguments will output all incrementors active using the `--separator` and `--line` markers.
+- 
+- Sets `default` incrementor to 1 and outputs `1`
+- 
+-     incrementor 1
+- 
+- Increments the `kitty` counter and outputs `1` on first call and `n + 1` for each subsequent call.
+- 
+-     incrementor kitty
+- 
+- Sets `kitty` incrementor to 2 and outputs `2`
+- 
+-     incrementor 2 kitty
+- 
+- Dumps the current incrementors:
+- 
+-     incrementor ?
+-     default 1
+-     kitty 2
+- 
+- The default cache `--path` is placed within the `buildCacheDirectory`.
+- 
+- > Location: `bin/build/tools/utilities.sh`
+- 
+- ### Arguments
+- 
+- - `count` - Integer. Optional. Sets the value for any following named variables to this value.
+- - `variable` - String. Optional. Variable to change or increment.
+- - `--path cacheDirectory` - Directory. Optional. Use this directory path as the state directory.
+- - `--reset` - Flag. Optional. Reset all counters to zero.
+- - `--separator` - String. Optional. When dumping all variables use this as the separator between name and value. (Default is space: `"  "`)
+- - `--line` - String. Optional. When dumping all variables use this as the separator between values. (Default is newline: `$'\n'`)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `buildCacheDirectory`
+- 
+- ## `installInstallBinary`
+- 
+- > Installs an installer the first time in a new project,
+- 
+- ### Usage
+- 
+-     installInstallBinary [ --diff ] [ --url ] [ --url-function ] --source [ --local ] --bin [ path ] [ applicationHome ] [ --help ]
+- 
+- Installs an installer the first time in a new project, and modifies it to work in the application path.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--diff` - Flag. Optional. Show differences between new and old files if changed.
+- - `--url` - URL. Optional. A remote URL to download the installation script.
+- - `--url-function` - Callable. Optional. Fetch the remote URL where the installation script is found.
+- - `--source` - File. Required. The local copy of the `--bin` file.
+- - `--local` - Flag. Optional. Use local copy `--bin` instead of downloaded version.
+- - `--bin` - String. Required. Name of the installer file.
+- - `path` - Directory. Optional. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
+- - `applicationHome` - Directory. Optional. Path to the application home directory. Default is current directory.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `installInstallBuild`
+- 
+- > Installs `install-bin-build.sh` the first time in a new project, and
+- 
+- ### Usage
+- 
+-     installInstallBuild [ --help ] [ --diff ] [ --local ] [ path ] [ applicationHome ] [ --help ]
+- 
+- Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. This help.
+- - `--diff` - Flag. Optional. Show differences between new and old files if changed.
+- - `--local` - Flag. Optional. Use local copy of `install-bin-build.sh` instead of downloaded version.
+- - `path` - Directory. Optional. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
+- - `applicationHome` - Directory. Optional. Path to the application home directory. Default is current directory.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `integerClamp`
+- 
+- > Clamp digits between two integers
+- 
+- ### Usage
+- 
+-     integerClamp [ minimum ] [ maximum ] [ --help ]
+- 
+- Clamp digits between two integers
+- Reads stdin digits, one per line, and outputs only integer values between $min and $max
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `minimum` - Integer|Empty. Minimum integer value to output.
+- - `maximum` - Integer|Empty. Maximum integer value to output.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `interactiveCountdown`
+- 
+- > Display a message and count down display
+- 
+- ### Usage
+- 
+-     interactiveCountdown [ --help ] [ --badge text ] [ --prefix prefix ] counter binary [ ... ]
+- 
+- Display a message and count down display
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--badge text` - String. Display this text as decorate at
+- - `--prefix prefix` - String.
+- - `counter` - Integer. Required. Count down from.
+- - `binary` - Callable. Required. Run this with any additional arguments when the countdown is completed.
+- - `...` - Arguments. Optional. Passed to binary.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `interactiveManager`
+- 
+- > Run checks interactively until errors are all fixed.
+- 
+- ### Usage
+- 
+-     interactiveManager loopCallable [ --exec binary ] [ --delay delaySeconds ] [ fileToCheck ... ]
+- 
+- Run checks interactively until errors are all fixed.
+- Not ready for prime time yet - written not tested.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `loopCallable` - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
+- - `--exec binary` - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.
+- - `--delay delaySeconds` - Integer. Optional. Delay in seconds between checks in interactive mode.
+- - `fileToCheck ...` - File. Optional. Shell file to validate. May also supply file names via stdin.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `interactiveOccasionally`
+- 
+- > Do something the first time and then only occasionally thereafter.
+- 
+- ### Usage
+- 
+-     interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verbose ] name
+- 
+- Do something the first time and then only occasionally thereafter.
+- This manages a state file compared to the current time and triggers after `delta` seconds.
+- Think of it like something that only returns 0 like once every `delta` seconds but it's going to happen at minimum `delta` seconds, or the next time after that. And the first time as well.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--delta deltaMilliseconds` - PositiveInteger. Optional. Default is 60000.
+- - `--mark` - Flag. Optional. Write the marker which says the
+- - `--verbose` - Flag. Optional. Be chatty.
+- - `name` - EnvironmentVariable. Required. The global codename for this interaction.
+- 
+- ### Return codes
+- 
+- - `0` - Do the thing
+- - `1` - Do not do the thing
+- - `2` - Argument error
+- 
+- ## `isAlpine`
+- 
+- > Is this an Alpine system?
+- 
+- ### Usage
+- 
+-     isAlpine [ --help ]
+- 
+- Is this an Alpine system?
+- 
+- > Location: `bin/build/tools/apk.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isArray`
+- 
+- > Is a variable declared as an array?
+- 
+- ### Usage
+- 
+-     isArray variableName [ --help ]
+- 
+- Is a variable declared as an array?
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `variableName` - String. Required. Variable name to check.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isBashBuiltin`
+- 
+- > Is a token a bash builtin?
+- 
+- ### Usage
+- 
+-     isBashBuiltin builtin
+- 
+- Useful for introspection or validation - checks if a token is a bash built-in (e.g. `cd`) vs. a binary on the system (`/bin/cd`).
+- Implementation taken directly from the Bash man page.
+- 
+- > Location: `bin/build/tools/bash.sh`
+- 
+- ### Arguments
+- 
+- - `builtin` - String. Required. String to check if it's a bash builtin.
+- 
+- ### Return codes
+- 
+- - `0` - Yes, this string is a bash builtin command.
+- - `1` - No, this is not a bash builtin command
+- 
+- ## `isBashDebug`
+- 
+- > Returns whether the shell has the debugging flag set
+- 
+- ### Usage
+- 
+-     isBashDebug
+- 
+- Returns whether the shell has the debugging flag set
+- 
+- Useful if you need to temporarily enable or disable it.
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isBitBucketPipeline`
+- 
+- > Are we currently in the BitBucket pipeline?
+- 
+- ### Usage
+- 
+-     isBitBucketPipeline
+- 
+- Are we currently in the BitBucket pipeline?
+- 
+- > Location: `bin/build/tools/bitbucket.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - is BitBucket pipeline
+- - `1` - Not a BitBucket pipeline
+- 
+- ## `isBoolean`
+- 
+- > Boolean test
+- 
+- ### Usage
+- 
+-     isBoolean [ --help ] [ value ]
+- 
+- Boolean test
+- If you want "true-ish" use `isTrue`.
+- Returns 0 if `value` is boolean `false` oHar `true`.
+- Is this a boolean? (`true` or `false`)
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `value` - String. Optional. Value to check if it is a boolean.
+- 
+- ### Return codes
+- 
+- - `0` - if value is a boolean
+- - `1` - if value is not a boolean
+- 
+- ### Requires
+- 
+- - {SEE:bashDocumentation}
+- 
+- ### See Also
+- 
+- - ## `isTrue`
+- 
+- ## `isCallable`
+- 
+- > Test if all arguments are callable as a command
+- 
+- ### Usage
+- 
+-     isCallable string
+- 
+- Test if all arguments are callable as a command
+- If no arguments are passed, returns exit code 1.
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `string` - EmptyString. Required. Path to binary to test if it is executable.
+- 
+- ### Return codes
+- 
+- - `0` - All arguments are callable as a command
+- - `1` - One or or more arguments are callable as a command
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:helpArgument}
+- - {SEE:isExecutable}
+- - {SEE:isFunction}
+- 
+- ## `isCharacterClass`
+- 
+- > Poor-man's bash character class matching
+- 
+- ### Usage
+- 
+-     isCharacterClass className [ character ... ] [ --help ]
+- 
+- Poor-man's bash character class matching
+- 
+- Returns true if all `characters` are of `className`
+- 
+- `className` can be one of:
+-     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
+-     print   punct   space   upper   word    xdigit
+- 
+- > Location: `bin/build/tools/character.sh`
+- 
+- ### Arguments
+- 
+- - `className` - String. Required. Class to check.
+- - `character ...` - String. Optional. Characters to test.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isCharacterClasses`
+- 
+- > Does this character match one or more character classes?
+- 
+- ### Usage
+- 
+-     isCharacterClasses character [ class ... ] [ --help ]
+- 
+- Does this character match one or more character classes?
+- 
+- > Location: `bin/build/tools/character.sh`
+- 
+- ### Arguments
+- 
+- - `character` - Required. Single character to test.
+- - `class ...` - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isDarwin`
+- 
+- > Are we on Mac OS X?
+- 
+- ### Usage
+- 
+-     isDarwin
+- 
+- Are we on Mac OS X?
+- 
+- > Location: `bin/build/tools/darwin.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isDockerComposeCommand`
+- 
+- > Is this a docker compose command?
+- 
+- ### Usage
+- 
+-     isDockerComposeCommand command [ --help ]
+- 
+- Is this a docker compose command?
+- 
+- > Location: `bin/build/tools/docker-compose.sh`
+- 
+- ### Arguments
+- 
+- - `command` - String. Required. The command to test.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Yes, it is.
+- - `1` - No, it is not.
+- 
+- ### See Also
+- 
+- - ## `dockerComposeCommandList`
+- 
+- ## `isErrorExit`
+- 
+- > Returns whether the shell has the error exit flag set
+- 
+- ### Usage
+- 
+-     isErrorExit
+- 
+- Returns whether the shell has the error exit flag set
+- 
+- Useful if you need to temporarily enable or disable it.
+- 
+- October 2024 - Does appear to be inherited by subshells
+- 
+-     set -e
+-     printf "$(isErrorExit; printf %d $?)"
+- 
+- Outputs `1` always
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - -
+- 
+- ## `isExecutable`
+- 
+- > Test if all arguments are executable binaries
+- 
+- ### Usage
+- 
+-     isExecutable string
+- 
+- Test if all arguments are executable binaries
+- If no arguments are passed, returns exit code 1.
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `string` - String. Required. Path to binary to test if it is executable.
+- 
+- ### Return codes
+- 
+- - `0` - All arguments are executable binaries
+- - `1` - One or or more arguments are not executable binaries
+- 
+- ## `isFunction`
+- 
+- > Test if argument are bash functions
+- 
+- ### Usage
+- 
+-     isFunction string [ --help ]
+- 
+- Test if argument are bash functions
+- If no arguments are passed, returns exit code 1.
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `string` - String. Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - argument is bash function
+- - `1` - argument is not a bash function
+- 
+- ## `isInteger`
+- 
+- > Test if an argument is a signed integer
+- 
+- ### Usage
+- 
+-     isInteger value [ value ]
+- 
+- Test if an argument is a signed integer
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `value` - EmptyString. Required. Value to test.
+- - `value` - EmptyString. The value to test.
+- 
+- ### Return codes
+- 
+- - `0` - if it is a signed integer
+- - `1` - if it is not a signed integer
+- 
+- ### Credits
+- 
+- Thanks to [F. Hauri - Give Up GitHub (isuint_Case)
+- ](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+- ).
+- 
+- ## `isiTerm2`
+- 
+- > Is the current console iTerm2?
+- 
+- ### Usage
+- 
+-     isiTerm2 [ --help ]
+- 
+- Is the current console iTerm2?
+- Succeeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isMappable`
+- 
+- > Check if text contains mappable tokens
+- 
+- ### Usage
+- 
+-     isMappable [ --help ] [ --prefix ] [ --suffix ] [ --token ] [ text ]
+- 
+- Check if text contains mappable tokens
+- If any text passed contains a token which can be mapped, succeed.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--prefix` - String. Optional. Token prefix defaults to `{`.
+- - `--suffix` - String. Optional. Token suffix defaults to `}`.
+- - `--token` - String. Optional. Classes permitted in a token
+- - `text` - String. Optional. Text to search for mapping tokens.
+- 
+- ### Return codes
+- 
+- - `0` - Text contains mapping tokens
+- - `1` - Text does not contain mapping tokens
+- 
+- ## `isNumber`
+- 
+- > Test if an argument is a floating point number
+- 
+- ### Usage
+- 
+-     isNumber value
+- 
+- Test if an argument is a floating point number
+- (`1e3` notation NOT supported)
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `value` - EmptyString. Required. Value to test.
+- 
+- ### Return codes
+- 
+- - `0` - if it is a floating point number
+- - `1` - if it is not a floating point number
+- 
+- ### Credits
+- 
+- Thanks to [F. Hauri - Give Up GitHub (isnum_Case)
+- ](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+- ).
+- 
+- ## `isPHPStorm`
+- 
+- > Are we within the JetBrains PHPStorm terminal?
+- 
+- ### Usage
+- 
+-     isPHPStorm [ --help ]
+- 
+- Are we within the JetBrains PHPStorm terminal?
+- 
+- > Location: `bin/build/tools/vendor.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - within the PhpStorm terminal
+- - `1` - not within the PhpStorm terminal AFAIK
+- 
+- ### See Also
+- 
+- - ## `contextOpen`
+- 
+- ## `isPlain`
+- 
+- > Check if text contains plain text only (no ANSI escape
+- 
+- ### Usage
+- 
+-     isPlain text
+- 
+- Check if text contains plain text only (no ANSI escape codes, etc.)
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `text` - String. Required. Text to search for mapping tokens.
+- 
+- ### Return codes
+- 
+- - `0` - Text is plain
+- - `1` - Text contains non-plain characters
+- 
+- ## `isPositiveInteger`
+- 
+- > Test if an argument is a positive integer (non-zero)
+- 
+- ### Usage
+- 
+-     isPositiveInteger value [ --help ]
+- 
+- Test if an argument is a positive integer (non-zero)
+- Takes one argument only.
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `value` - EmptyString. Required. Value to check if it is an unsigned integer
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - if it is a positive integer
+- - `1` - if it is not a positive integer
+- 
+- ### Requires
+- 
+- - {SEE:catchArgument}
+- - {SEE:isUnsignedInteger}
+- - {SEE:bashDocumentation}
+- - {SEE:helpArgument}
+- 
+- ## `isPyCharm`
+- 
+- > Are we within the JetBrains PyCharm terminal?
+- 
+- ### Usage
+- 
+-     isPyCharm [ --help ]
+- 
+- Are we within the JetBrains PyCharm terminal?
+- 
+- > Location: `bin/build/tools/vendor.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - within the PyCharm terminal
+- - `1` - not within the PyCharm terminal AFAIK
+- 
+- ### See Also
+- 
+- - ## `contextOpen`
+- 
+- ## `isS3URL`
+- 
+- > Is the URL passed in a S3 URL?
+- 
+- ### Usage
+- 
+-     isS3URL [ value ]
+- 
+- Is the URL passed in a S3 URL?
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/aws.sh`
+- 
+- ### Arguments
+- 
+- - `value` - EmptyString. Value to check.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isTrue`
+- 
+- > True-ish
+- 
+- ### Usage
+- 
+-     isTrue [ --help ] [ value ... ]
+- 
+- True-ish
+- Succeeds when all arguments are "true"-ish
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `value ...` - EmptyString. One or more values to test.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isTTYAvailable`
+- 
+- > Quiet test for a TTY
+- 
+- ### Usage
+- 
+-     isTTYAvailable [ --help ]
+- 
+- Returns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HAS_TTY` to avoid running the test each call.ZL
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - - `__BUILD_HAS_TTY` - Cached value of `false` or `true`. Any other value forces computation during this call.
+- 
+- ### See Also
+- 
+- - {SEE:stty}
+- - {SEE:/dev/tty}
+- 
+- ## `isType`
+- 
+- > Bash types beyond `type -t`
+- 
+- ### Usage
+- 
+-     isType
+- 
+- Bash types beyond `type -t`
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isUnsignedInteger`
+- 
+- > Is value an unsigned integer?
+- 
+- ### Usage
+- 
+-     isUnsignedInteger [ value ]
+- 
+- Test if a value is a 0 or greater integer. Leading "+" is ok.
+- 
+- > Location: `bin/build/tools/example.sh`
+- 
+- ### Arguments
+- 
+- - `value` - EmptyString. Value to test if it is an unsigned integer.
+- 
+- ### Return codes
+- 
+- - `0` - if it is an unsigned integer
+- - `1` - if it is not an unsigned integer
+- 
+- ### Requires
+- 
+- - {SEE:returnMessage}
+- 
+- ### Credits
+- 
+- Thanks to [F. Hauri - Give Up GitHub (isnum_Case)
+- ](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+- ).
+- 
+- ## `isUnsignedNumber`
+- 
+- > Test if an argument is a positive floating point number
+- 
+- ### Usage
+- 
+-     isUnsignedNumber value
+- 
+- Test if an argument is a positive floating point number
+- (`1e3` notation NOT supported)
+- 
+- > Location: `bin/build/tools/type.sh`
+- 
+- ### Arguments
+- 
+- - `value` - EmptyString. Required. Value to test.
+- 
+- ### Return codes
+- 
+- - `0` - if it is a number equal to or greater than zero
+- - `1` - if it is not a number equal to or greater than zero
+- 
+- ### Credits
+- 
+- Thanks to [F. Hauri - Give Up GitHub (isnum_Case)
+- ](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+- ).
+- 
+- ## `isValidateType`
+- 
+- > Are all arguments passed a valid validate type?
+- 
+- ### Usage
+- 
+-     isValidateType [ --help ] [ type ]
+- 
+- Are all arguments passed a valid validate type?
+- 
+- > Location: `bin/build/tools/validate.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `type` - String. Optional. Type to validate as `validate` type.
+- 
+- ### Examples
+- 
+-     isValidateType string || returnMessage 1 "string is not a type."
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isVersion`
+- 
+- > Check if something matches a version
+- 
+- ### Usage
+- 
+-     isVersion [ --help ] binary
+- 
+- Check if something matches a version
+- 
+- > Location: `bin/build/tools/version.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `binary` - String. Required. The binary to look for.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `isVisualStudioCode`
+- 
+- > Are we within the Microsoft Visual Studio Code terminal?
+- 
+- ### Usage
+- 
+-     isVisualStudioCode [ --help ]
+- 
+- Are we within the Microsoft Visual Studio Code terminal?
+- 
+- > Location: `bin/build/tools/vendor.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - within the Visual Studio Code terminal
+- - `1` - not within the Visual Studio Code terminal AFAIK
+- 
+- ### See Also
+- 
+- - ## `contextOpen`
+- 
+- ## `iTerm2Aliases`
+- 
+- > Installs iTerm2 aliases which are:
+- 
+- ### Usage
+- 
+-     iTerm2Aliases [ --help ]
+- 
+- Installs iTerm2 aliases which are:
+- 
+- - `it2check` - Check compatibility of these scripts (non-zero exit means non-compatible)
+- - `imgcat` - Take an image file and output it to the console
+- - `imgls` - List a directory and show thumbnails (in the console)
+- - `it2attention` - Get attention from the operator
+- - `it2getvar` - Get a variable value
+- - `it2dl` - Download a file to the operator system's configured download folder
+- - `it2ul` - Upload a file from the operator system to the remote
+- - `it2copy` - Copy to clipboard from file or stdin
+- - `it2setcolor` - Set console colors interactively
+- - `it2setkeylabel` - Set key labels interactively
+- - `it2universion` - Set, push, or pop Unicode version
+- 
+- Internally supported:
+- 
+- - `imgcat` = `iTerm2Image`
+- - `it2attention` - `iTerm2Attention`
+- - `it2dl` - `iTerm2Download`
+- - `it2setcolor` - `iTerm2SetColors`
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2Attention`
+- 
+- > Attract the operator
+- 
+- ### Usage
+- 
+-     iTerm2Attention [ --ignore | -i ] [ --verbose | -v ] [ action. String. Action to attract attention: `true`, `false` or `!` ]
+- 
+- Attract the operator
+- Actions:
+- - `true` - start making dock icon bounce
+- - `false` - stop making dock icon bounce
+- - `!` - Show fireworks at cursor
+- - `fireworks` - Show fireworks at cursor
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+- --verbose |- ` -v` - Flag. Optional. Verbose mode. Show what you are doing.
+- - action. String. Action to attract attention: `true`, `false` or `!`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2Badge`
+- 
+- > Set the badge for the iTerm2 console
+- 
+- ### Usage
+- 
+-     iTerm2Badge [ --ignore | -i ] message ...
+- 
+- Set the badge for the iTerm2 console
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+- - `message ...` - String. Required. Any message to display as the badge
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2ColorNames`
+- 
+- > Solely the color names (e.g blue), not anything else
+- 
+- ### Usage
+- 
+-     iTerm2ColorNames [ --help ]
+- 
+- Solely the color names (e.g blue), not anything else
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2ColorTypes`
+- 
+- > Colors for various UI elements
+- 
+- ### Usage
+- 
+-     iTerm2ColorTypes
+- 
+- Colors for various UI elements
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2Download`
+- 
+- > Download an file from remote to terminal host
+- 
+- ### Usage
+- 
+-     iTerm2Download [ file ] [ --name name ] [ --ignore | -i ]
+- 
+- Download an file from remote to terminal host
+- Argument:
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `file` - File. Optional. File to download.
+- - `--name name` - String. Optional. Target name of the file once downloaded.
+- --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+- 
+- ### Reads standard input
+- 
+- file
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2Image`
+- 
+- > Output an image to the console
+- 
+- ### Usage
+- 
+-     iTerm2Image [ --width width ] [ --height height ] [ --preserve-aspect-ratio ] [ --scale ] [ --ignore | -i ]
+- 
+- Output an image to the console
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `--width width` - PositiveInteger. Width in columns to display image.
+- - `--height height` - PositiveInteger. Height in rows to display image.
+- - `--preserve-aspect-ratio` - Flag. Preserve the aspect ratio.
+- - `--scale` - Flag. Do not preserve the aspect ratio, scale the image.
+- --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+- 
+- ### Writes to standard output
+- 
+- No output, however, if in an iTerm2 terminal it will display an image in the console at the cursor position
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2Init`
+- 
+- > Add iTerm2 support to console
+- 
+- ### Usage
+- 
+-     iTerm2Init [ --ignore | -i ]
+- 
+- Add iTerm2 support to console
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `iTerm2Aliases`
+- 
+- ## `iTerm2IsColorName`
+- 
+- > Is it a color name?
+- 
+- ### Usage
+- 
+-     iTerm2IsColorName [ --help ]
+- 
+- Is it a color name?
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2IsColorType`
+- 
+- > This is faster than inArray etc.
+- 
+- ### Usage
+- 
+-     iTerm2IsColorType
+- 
+- This is faster than inArray etc.
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2Notify`
+- 
+- > Sends a notification message via Mac OS X from iTerm2
+- 
+- ### Usage
+- 
+-     iTerm2Notify message
+- 
+- Sends a notification message via Mac OS X from iTerm2
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `message` - String. Required. Text to display.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2PromptSupport`
+- 
+- > Add support for iTerm2 to bashPrompt
+- 
+- ### Usage
+- 
+-     iTerm2PromptSupport [ --help ]
+- 
+- Add support for iTerm2 to bashPrompt
+- If you are wondering what this does - it delimits the prompt, your command, and the output in the console so iTerm2 can be nice and let you
+- select it.
+- It also reports the host, user and current directory back to iTerm2 on every prompt command.
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - __ITERM2_HOST
+- - __ITERM2_HOST_TIME
+- 
+- ### Requires
+- 
+- - {SEE:catchEnvironment}
+- - {SEE:muzzle}
+- - {SEE:bashPrompt}
+- - {SEE:bashPromptMarkers}
+- - iTerm2UpdateState
+- - {SEE:__iTerm2_mark}
+- - {SEE:__iTerm2_suffix}
+- - {SEE:__iTerm2UpdateState}
+- 
+- ### See Also
+- 
+- - ## `bashPrompt`
+- 
+- ## `iTerm2SetColors`
+- 
+- > Set terminal colors
+- 
+- ### Usage
+- 
+-     iTerm2SetColors [ --verbose | -v ] [ --skip-errors ] [ --ignore | -i ] colorSetting ...
+- 
+- Set terminal colors
+- 
+- Color names permitted are:
+- - fg bg bold link selbg selfg curbg curfg underline tab
+- - black red green yellow blue magenta cyan white
+- - br_black br_red br_green br_yellow br_blue br_magenta br_cyan br_white
+- 
+- colorFormat is one of:
+- - `RGB` - Three hex [0-9A-F] values (hex3)
+- - `RRGGBB` - Six hex values (like CSS colors) (hex6)
+- - `cs:hex3` or `cs:hex6` - Where cs is one of `srgb`, `rgb`, or `p3`
+- 
+- Color spaces:
+- - `srgb` - The default color space
+- - 1rgb - Apple's device-independent colorspace
+- - `p3` - Apple's large-gamut colorspace
+- If no arguments are supplied which match a valid color setting values are read one-per-line from stdin.
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- --verbose |- ` -v` - Flag. Optional. Verbose mode. Show what you are doing.
+- - `--skip-errors - Flag. Optional. Skip errors in color settings and continue` - if loading a file containing a color scheme will load most of the file and skip any color settings with errors.
+- --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+- - `colorSetting ...` - String. Required. colorName=colorFormat string
+- 
+- ### Reads standard input
+- 
+- `colorName=colorFormat`. One per line. Only if no arguments passed with `colorSetting` format.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `iTerm2Version`
+- 
+- > Output the iTerm2 version
+- 
+- ### Usage
+- 
+-     iTerm2Version
+- 
+- Output the iTerm2 version
+- 
+- > Location: `bin/build/tools/iterm2.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - stty
+- 
+- ## `json`
+- 
+- > JSON pretty
+- 
+- ### Usage
+- 
+-     json [ --help ]
+- 
+- Format something neatly as JSON
+- 
+- > Location: `bin/build/tools/json.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- JSONFile
+- 
+- ### Writes to standard output
+- 
+- JSONFile pretty formatted
+- 
+- ### Examples
+- 
+-     json < inputFile > outputFile
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `jsonField`
+- 
+- > Fetch a non-blank field from a JSON file with error
+- 
+- ### Usage
+- 
+-     jsonField [ --help ] handler jsonFile [ ... ]
+- 
+- Fetch a non-blank field from a JSON file with error handling
+- 
+- > Location: `bin/build/tools/json.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `handler` - Function. Required. Error handler.
+- - `jsonFile` - File. Required. A JSON file to parse
+- - `...` - Arguments. Optional. Passed directly to jq
+- 
+- ### Writes to standard output
+- 
+- selected field
+- 
+- ### Writes to standard error
+- 
+- error messages
+- 
+- ### Return codes
+- 
+- - `0` - Field was found and was non-blank
+- - `1` - Field was not found or is blank
+- 
+- ## `jsonFileGet`
+- 
+- > Get a value in a JSON file
+- 
+- ### Usage
+- 
+-     jsonFileGet jsonFile path
+- 
+- Get a value in a JSON file
+- 
+- > Location: `bin/build/tools/json.sh`
+- 
+- ### Arguments
+- 
+- - `jsonFile` - File. Required. File to get value from.
+- - `path` - String. Required. dot-separated path to get
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `jsonFileSet`
+- 
+- > Set or delete a value in a JSON file
+- 
+- ### Usage
+- 
+-     jsonFileSet jsonFile path [ value ... ]
+- 
+- Set or delete a value in a JSON file
+- 
+- > Location: `bin/build/tools/json.sh`
+- 
+- ### Arguments
+- 
+- - `jsonFile` - File. Required. File to get value from.
+- - `path` - String. Required. dot-separated path to modify (e.g. `extra.fingerprint`)
+- - `value ...` - EmptyString. Optional. Value to set. If more than one value is set, value is set to an array value. If no value passed, the key is deleted. **Note the difference between a blank argument and NO argument.**
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `jsonPath`
+- 
+- > Generate `jq` paths
+- 
+- ### Usage
+- 
+-     jsonPath [ path ]
+- 
+- Generate a path for a JSON structure for use in `jq` queries
+- 
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/json.sh`
+- 
+- ### Arguments
+- 
+- - `path` - String. Output a json path separated by dots.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `jsonSetValue`
+- 
+- > Sets the value of a variable in a JSON file
+- 
+- ### Usage
+- 
+-     jsonSetValue [ --filter ] [ --status ] [ --quiet ] [ --generator ] [ --value ] [ --key ] key file
+- 
+- Sets the value of a variable in a JSON file
+- 
+- > Location: `bin/build/tools/json.sh`
+- 
+- ### Arguments
+- 
+- - `--filter` - Function. Optional. Run value through this filter prior to inserting into the JSON file.
+- - `--status` - Flag. Optional. When set, returns `0` when the value was updated successfully and `$(returnCode identical)` when the values is the same
+- - `--quiet` - Flag. Optional. Do not output anything to `stdout` and just do the action and exit.
+- - `--generator` - Function. Optional. Function to generate the value. Defaults to `hookVersionCurrent`.
+- - `--value` - String. Optional. Value to set in JSON file. (Skips generation)
+- - `--key` - String. Optional. Key to set in JSON file. Defaults to `version`.
+- - `key` - Required. If not specified as `--key`, specify it here.
+- - `file` - File. Required. Modify and update this file
+- 
+- ### Return codes
+- 
+- - `0` - File was updated successfully.
+- - `1` - Environment error
+- - `2` - Argument error
+- - `105` - Identical files (only when --status is passed)
+- 
+- ## `junitClose`
+- 
+- > Close tag for `testsuites`
+- 
+- ### Usage
+- 
+-     junitClose [ --help ]
+- 
+- Close tag for `testsuites`
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitOpen`
+- 
+- > Open tag for `testsuites`
+- 
+- ### Usage
+- 
+-     junitOpen [ nameValue ... ] [ --help ]
+- 
+- Open tag for `testsuites`
+- 
+- Attributes:
+- - `name=Test run`
+- - `tests=8`
+- - `failures=1`
+- - `errors=1`
+- - `skipped=1`
+- - `assertions=20`
+- - `time=16.082687`
+- - `timestamp=2021-04-02T15:48:23`
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `nameValue ...` - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     <testsuites name="Test run" tests="8" failures="1" errors="1" skipped="1"
+-                assertions="20" time="16.082687" timestamp="2021-04-02T15:48:23">
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitProperties`
+- 
+- > Full properties output. Properties are output depending on content containing
+- 
+- ### Usage
+- 
+-     junitProperties
+- 
+- Full properties output. Properties are output depending on content containing a newline or not.
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitPropertyList`
+- 
+- > Output list of `property` tags
+- 
+- ### Usage
+- 
+-     junitPropertyList [ --help ] [ nameValue ... ]
+- 
+- Output list of `property` tags
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `nameValue ...` - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitSuiteClose`
+- 
+- > Close tag for `testsuite`
+- 
+- ### Usage
+- 
+-     junitSuiteClose [ --help ]
+- 
+- Close tag for `testsuite`
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitSuiteOpen`
+- 
+- > Open tag for `testsuite`
+- 
+- ### Usage
+- 
+-     junitSuiteOpen [ nameValue ... ] [ --help ]
+- 
+- Open tag for `testsuite`
+- 
+- Attributes:
+- - `name=Tests.Registration`
+- - `tests=8`
+- - `failures=1`
+- - `errors=1`
+- - `skipped=1`
+- - `assertions=20`
+- - `time=16.082687`
+- - `timestamp=2021-04-02T15:48:23`
+- - `file=tests/registration.code`
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `nameValue ...` - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     <testsuite name="Tests.Registration" tests="8" failures="1" errors="1" skipped="1"
+-          assertions="20" time="16.082687" timestamp="2021-04-02T15:48:23"
+-          file="tests/registration.code">
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitSystemErrorClose`
+- 
+- > Close tag for `system-err` - test errors
+- 
+- ### Usage
+- 
+-     junitSystemErrorClose [ --help ]
+- 
+- Close tag for `system-err` - test errors
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitSystemErrorOpen`
+- 
+- > Open tag for `system-err` - test errors
+- 
+- ### Usage
+- 
+-     junitSystemErrorOpen [ --help ]
+- 
+- Open tag for `system-err` - test errors
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitSystemOutputClose`
+- 
+- > Close tag for `system-out` - test output
+- 
+- ### Usage
+- 
+-     junitSystemOutputClose [ --help ]
+- 
+- Close tag for `system-out` - test output
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitSystemOutputOpen`
+- 
+- > Open tag for `system-out` - test output
+- 
+- ### Usage
+- 
+-     junitSystemOutputOpen [ --help ]
+- 
+- Open tag for `system-out` - test output
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitTestCaseClose`
+- 
+- > Close tag for `testcase` - Test case
+- 
+- ### Usage
+- 
+-     junitTestCaseClose [ --help ]
+- 
+- Close tag for `testcase` - Test case
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitTestCaseErrorClose`
+- 
+- > Close tag for `error` - test error output
+- 
+- ### Usage
+- 
+-     junitTestCaseErrorClose [ --help ]
+- 
+- Close tag for `error` - test error output
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitTestCaseErrorOpen`
+- 
+- > Open tag for `error` - test error output
+- 
+- ### Usage
+- 
+-     junitTestCaseErrorOpen [ --help ]
+- 
+- Open tag for `error` - test error output
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitTestCaseFailureClose`
+- 
+- > Close tag for `failure` - test failed
+- 
+- ### Usage
+- 
+-     junitTestCaseFailureClose [ --help ]
+- 
+- Close tag for `failure` - test failed
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitTestCaseFailureOpen`
+- 
+- > Open tag for `failure` - test failed
+- 
+- ### Usage
+- 
+-     junitTestCaseFailureOpen [ message ]
+- 
+- Open tag for `failure` - test failed
+- Argument ... - String. Optional. Name/value tag attributes
+- Attributes:
+- - `type=AssertionError`
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `message` - Optional. String. Why failure occurred.
+- 
+- ### Examples
+- 
+-     <failure message="Expected value did not match." type="AssertionError">
+-         Failure description or stack trace
+-     </failure>
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitTestCaseOpen`
+- 
+- > Open tag for `testcase` - Test case
+- 
+- ### Usage
+- 
+-     junitTestCaseOpen [ nameValue ... ] [ --help ]
+- 
+- Open tag for `testcase` - Test case
+- 
+- - `name=testCase1`
+- - `classname=Tests.Registration`
+- - `assertions=2`
+- - `time=2.436`
+- - `file=tests/registration.code`
+- - `line=24`
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `nameValue ...` - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     <testcase name="testCase1" classname="Tests.Registration" assertions="2"
+-         time="2.436" file="tests/registration.code" line="24"/>
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `junitTestCaseSkipped`
+- 
+- > Output test skipped XML
+- 
+- ### Usage
+- 
+-     junitTestCaseSkipped [ message ]
+- 
+- Output test skipped XML
+- 
+- > Location: `bin/build/tools/junit.sh`
+- 
+- ### Arguments
+- 
+- - `message` - Why test was skipped.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `labeledBigText`
+- 
+- > Outputs a label before a decorate big for output.
+- 
+- ### Usage
+- 
+-     labeledBigText [ --top ] [ --bottom ] [ --prefix prefixText ] [ --tween tweenText ] [ --suffix suffixText ] label text
+- 
+- Outputs a label before a decorate big for output.
+- 
+- This function will strip any ANSI from the label to calculate correct string sizes.
+- 
+- > Location: `bin/build/tools/decorate/big.sh`
+- 
+- ### Arguments
+- 
+- - `--top` - Flag. Optional. Place label at the top.
+- - `--bottom` - Flag. Optional. Place label at the bottom.
+- - `--prefix prefixText` - String. Optional. Optional prefix on each line.
+- - `--tween tweenText` - String. Optional. Optional between text after label and before `decorate big` on each line (allows coloring or other decorations).
+- - `--suffix suffixText` - String. Optional. Optional suffix on each line.
+- - `label` - String. Required. Label to place on the left of big text.
+- - `text` - String. Required. Text for `decorate big`.
+- 
+- ### Examples
+- 
+-     > bin/build/tools.sh labeledBigText --top "Neat: " Done
+-     Neat: ▛▀▖
+-           ▌ ▌▞▀▖▛▀▖▞▀▖
+-           ▌ ▌▌ ▌▌ ▌▛▀
+-           ▀▀ ▝▀ ▘ ▘▝▀▘
+-     > bin/build/tools.sh labeledBigText --bottom "Neat: " Done
+-           ▛▀▖
+-           ▌ ▌▞▀▖▛▀▖▞▀▖
+-           ▌ ▌▌ ▌▌ ▌▛▀
+-     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `linkCreate`
+- 
+- > Create a link
+- 
+- ### Usage
+- 
+-     linkCreate [ target ] linkName
+- 
+- Create a link
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `target` - Exists. File. Source file name or path.
+- - `linkName` - String. Required. Link short name, created next to `target`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `linkRename`
+- 
+- > Rename a link
+- 
+- ### Usage
+- 
+-     linkRename from to
+- 
+- Rename a link
+- Renames a link forcing replacement, and works on different versions of `mv` which differs between systems.
+- 
+- > Location: `bin/build/tools/file.sh`
+- 
+- ### Arguments
+- 
+- - `from` - Link. Required. Link to rename.
+- - `to` - FileDirectory. Required. New link path.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:mv}
+- 
+- ## `listAppend`
+- 
+- > Add an item to a character-delimited list.
+- 
+- ### Usage
+- 
+-     listAppend listValue separator [ --first ] [ --last ] [ item ] [ --help ]
+- 
+- Add an item to a list IFF it does not exist in the list already
+- Add an item to the beginning or end of a text-delimited list
+- 
+- > Location: `bin/build/tools/list.sh`
+- 
+- ### Arguments
+- 
+- - `listValue` - Required. List value to modify.
+- - `separator` - Required. Separator string for item values (typically `:`)
+- - `--first` - Flag. Optional. Place any items after this flag first in the list
+- - `--last` - Flag. Optional. Place any items after this flag last in the list. Default.
+- - `item` - the value to be added to the `listValue`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `listCleanDuplicates`
+- 
+- > Removes duplicates from a list and maintains ordering.
+- 
+- ### Usage
+- 
+-     listCleanDuplicates separator listText [ --removed ] [ --test testFunction ] [ --help ]
+- 
+- Removes duplicates from a list and maintains ordering.
+- 
+- > Location: `bin/build/tools/list.sh`
+- 
+- ### Arguments
+- 
+- - `separator` - String. Required. List separator character.
+- - `listText` - String. Required. List to clean duplicates.
+- - `--removed` - Flag. Optional. Show removed items instead of the new list.
+- - `--test testFunction` - Function. Optional. Run this function on each item in the list and if the return code is non-zero, then remove it from the list.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `listContains`
+- 
+- > Does a character-delimited list contain item(s)?
+- 
+- ### Usage
+- 
+-     listContains listValue separator [ item ... ] [ --help ]
+- 
+- Return code 0 IFF all items are found in the list. If any item is not found, returns code 1.
+- If no items are passed in the return value is 0 (true).
+- Add an item to the beginning or end of a text-delimited list
+- 
+- > Location: `bin/build/tools/list.sh`
+- 
+- ### Arguments
+- 
+- - `listValue` - Required. List value to search.
+- - `separator` - Required. Separator string for item values (typically `:`)
+- - `item ...` - Optional. the item to be searched for in the `listValue`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - All items are found in the `listValue`
+- - `1` - One or more items were NOT found in the `listValue`
+- 
+- ## `listJoin`
+- 
+- > Output a list of items joined by a character
+- 
+- ### Usage
+- 
+-     listJoin separator [ text0 ... ] [ --help ]
+- 
+- Output a list of items joined by a character
+- 
+- > Location: `bin/build/tools/list.sh`
+- 
+- ### Arguments
+- 
+- - `separator` - EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.
+- - `text0 ...` - String. Optional. One or more strings to join
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Sample Output
+- 
+- text
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `listRemove`
+- 
+- > Remove one or more items from a text-delimited list
+- 
+- ### Usage
+- 
+-     listRemove listValue separator [ item ] [ --help ]
+- 
+- Remove one or more items from a text-delimited list
+- 
+- > Location: `bin/build/tools/list.sh`
+- 
+- ### Arguments
+- 
+- - `listValue` - Required. List value to modify.
+- - `separator` - Required. Separator string for item values (typically `:`)
+- - `item` - the item to be removed from the `listValue`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `localePlural`
+- 
+- > Outputs the `singular` value to standard out when the value
+- 
+- ### Usage
+- 
+-     localePlural number singular [ localePlural ]
+- 
+- Outputs the `singular` value to standard out when the value of `number` is one.
+- Otherwise, outputs the `localePlural` value to standard out.
+- 
+- Example:
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `number` - Number. Required. An integer or floating point number
+- - `singular` - String. Required. The singular form of a noun
+- - `localePlural` - String. Optional. The localePlural form of a noun. If not specified uses `singular` plus an ess.
+- 
+- ### Writes to standard output
+- 
+- `String`. The localePlural form for non-1 values. e.g. `$(localePlural 2 potato potatoes)` = `potatoes`
+- 
+- ### Examples
+- 
+-     count=$(fileLineCount "$foxSightings") || return $?
+-     printf "We saw %d %s.\n" "$count" "$(localePlural "$count" fox foxes)"
+-     n=$(($(date +%s)) - start))
+-     printf "That took %d %s" "$n" "$(localePlural "$n" second seconds)"
+- 
+- ### Return codes
+- 
+- - `1` - If count is non-numeric
+- - `0` - If count is numeric
+- 
+- ## `localePluralWord`
+- 
+- > Plural word which includes the numeric prefix and the noun.
+- 
+- ### Usage
+- 
+-     localePluralWord number singular [ localePlural ]
+- 
+- Plural word which includes the numeric prefix and the noun.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `number` - Number. Required. An integer or floating point number
+- - `singular` - String. Required. The singular form of a noun
+- - `localePlural` - String. Optional. The localePlural form of a noun. If not specified uses `singular` plus an ess.
+- 
+- ### Writes to standard output
+- 
+- `String`. The number (direct) and the localePlural form for non-1 values. e.g. `$(localePluralWord 2 potato potatoes)` = `2 potatoes`
+- 
+- ### Examples
+- 
+-     count=$(fileLineCount "$foxSightings") || return $?
+-     printf "We saw %s.\n" "$(localePluralWord "$count" fox foxes)"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `logDirectoryRotate`
+- 
+- > Rotate log files
+- 
+- ### Usage
+- 
+-     logDirectoryRotate [ --help ] [ --dry-run ] [ --cull cullCount ] logPath count
+- 
+- For all log files in logPath with extension `.log`, rotate them safely.
+- 
+- > Location: `bin/build/tools/log.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--dry-run` - Flag. Optional. Do not change anything.
+- - `--cull cullCount` - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.
+- - `logPath` - Directory. Required. Path where log files exist. Looks for files which match `*.log`.
+- - `count` - PositiveInteger. Required. Integer of log files to maintain.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:logRotate}
+- 
+- ## `logRotate`
+- 
+- > Rotate a log file
+- 
+- ### Usage
+- 
+-     logRotate [ --help ] [ --dry-run ] [ --cull cullCount ] logFile count
+- 
+- Rotates a log file by adding a digit to the end numerically, and moves logs such that the most recent
+- log backup suffix is `.1` and the oldest log backup suffix is `.count`.
+- 
+- Backs up files as:
+- 
+-     logFile
+-     logFile.1
+-     logFile.2
+-     logFile.3
+- 
+- `--cull` will delete `cullCount` files in addition to the backup files if they exist. This is useful if you change this number
+- from a higher to a lower number and want the extra files deleted.
+- 
+- But maintains file descriptors for `logFile`.
+- 
+- > Location: `bin/build/tools/log.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--dry-run` - Flag. Optional. Do not change anything.
+- - `--cull cullCount` - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.
+- - `logFile` - File. Required. A log file which exists.
+- - `count` - PositiveInteger. Required. Integer of log file backups to maintain.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `manPathCleanDuplicates`
+- 
+- > Cleans the MANPATH and removes non-directory entries and duplicates
+- 
+- ### Usage
+- 
+-     manPathCleanDuplicates [ --help ]
+- 
+- Cleans the MANPATH and removes non-directory entries and duplicates
+- 
+- Maintains ordering.
+- 
+- > Location: `bin/build/tools/manpath.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `manPathConfigure`
+- 
+- > Modify the MANPATH environment variable to add a path.
+- 
+- ### Usage
+- 
+-     manPathConfigure [ --help ] [ --first ] [ --last ] [ path ]
+- 
+- Modify the MANPATH environment variable to add a path.
+- 
+- > Location: `bin/build/tools/manpath.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--first` - Flag. Optional. Place any paths after this flag first in the list
+- - `--last` - Flag. Optional. Place any paths after this flag last in the list. Default.
+- - `path` - the path to be added to the `MANPATH` environment
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:manPathRemove}
+- 
+- ## `manPathRemove`
+- 
+- > Remove a path from the MANPATH environment variable
+- 
+- ### Usage
+- 
+-     manPathRemove [ --help ] path ...
+- 
+- Remove a path from the MANPATH environment variable
+- 
+- > Location: `bin/build/tools/manpath.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `path ...` - Directory. Required. The path to be removed from the `MANPATH` environment
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mapEnvironment`
+- 
+- > Convert tokens in files to environment variable values
+- 
+- ### Arguments
+- 
+- - `environmentVariableName` - String. Optional. Map this value only. If not specified, all environment variables are mapped.
+- - `--prefix` - String. Optional. Prefix character for tokens, defaults to `{`.
+- - `--suffix` - String. Optional. Suffix character for tokens, defaults to `}`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:environmentVariables}
+- - cat
+- - {SEE:throwEnvironment}
+- - {SEE:catchEnvironment}
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - {SEE:validate}
+- 
+- ### See Also
+- 
+- - ## `mapValue`
+- 
+- ## `mapEnvironmentFun`
+- 
+- > Convert tokens in files to environment variable values
+- 
+- ### Arguments
+- 
+- - `environmentName` - String. Optional. Map this value only. If not specified, all environment variables are mapped.
+- - `--env-file envFile` - File. Optional. Load this environment file prior to processing input.
+- - `--prefix` - String. Optional. Prefix character for tokens, defaults to `{`.
+- - `--suffix` - String. Optional. Suffix character for tokens, defaults to `}`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - {SEE:validate}
+- 
+- ### See Also
+- 
+- - ## `mapEnvironment`
+- 
+- - ## `mapValue`
+- 
+- ## `mapEnvironmentSed`
+- 
+- > Convert tokens in files to environment variable values
+- 
+- ### Arguments
+- 
+- - `environmentName` - String. Optional. Map this value only. If not specified, all environment variables are mapped.
+- - `--prefix` - String. Optional. Prefix character for tokens, defaults to `{`.
+- - `--suffix` - String. Optional. Suffix character for tokens, defaults to `}`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `mapValue`
+- 
+- ## `mapFunction`
+- 
+- > Convert tokens in input to values
+- 
+- ### Return codes
+- 
+- - `120` - Map function exited early
+- - `130` - User interrupt (exits early)
+- - `141` - System interrupt (exits early)
+- 
+- ### Requires
+- 
+- - cat
+- - {SEE:throwEnvironment}
+- - {SEE:catchEnvironment}
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - {SEE:validate}
+- 
+- ### See Also
+- 
+- - ## `mapValue`
+- 
+- ## `mapTokens`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     mapTokens [ `prefix` ] [ `suffix` ]
+- 
+- No documentation for `mapTokens`.
+- 
+- > Location: `bin/build/tools/map.sh`
+- 
+- ### Arguments
+- 
+- - `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
+- - `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - None.
+- 
+- ## `mapValue`
+- 
+- > Maps a string using an environment file
+- 
+- ### Usage
+- 
+-     mapValue [ --help ] [ --handler handler ] mapFile [ value ] [ --prefix ] [ --suffix ] [ --search-filter ] [ --replace-filter ]
+- 
+- Maps a string using an environment file
+- 
+- > Location: `bin/build/tools/map.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `mapFile` - File. Required. a file containing bash environment definitions
+- - `value` - String. Optional. One or more values to map using said environment file
+- - `--prefix` - String. Optional. Token prefix defaults to `{`.
+- - `--suffix` - String. Optional. Token suffix defaults to `}`.
+- - `--search-filter` - Zero or more. Callable. Filter for search tokens. (e.g. `stringLowercase`)
+- - `--replace-filter` - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mapValueTrim`
+- 
+- > Maps a string using an environment file
+- 
+- ### Usage
+- 
+-     mapValueTrim mapFile [ value ]
+- 
+- Maps a string using an environment file
+- 
+- > Location: `bin/build/tools/map.sh`
+- 
+- ### Arguments
+- 
+- - `mapFile` - File. Required. a file containing bash environment definitions
+- - `value` - String. Optional. One or more values to map using said environment file.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mariadbConnect`
+- 
+- > Connect to a mariadb-type database using a URL
+- 
+- ### Usage
+- 
+-     mariadbConnect [ dsn ] [ binary ] [ --print ]
+- 
+- Connect to a mariadb-type database using a URL
+- 
+- > Location: `bin/build/tools/mariadb.sh`
+- 
+- ### Arguments
+- 
+- - `dsn` - URL. Database to connect to. All arguments after this are passed to `binary`.
+- - `binary` - Callable. Executable to connect to the database.
+- - `--print` - Flag. Optional. Just print the statement instead of running it.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mariadbDump`
+- 
+- > Dump a MariaDB database to raw SQL
+- 
+- ### Usage
+- 
+-     mariadbDump [ --help ] [ --print ] [ --binary ] [ --lock ] [ --password password ] [ --user user ] [ --host host ] [ --port port ]
+- 
+- Dump a MariaDB database to raw SQL
+- 
+- > Location: `bin/build/tools/mariadb.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--print` - Flag. Optional. Show the command.
+- - `--binary` - Executable. Optional. The binary to use to do the dump. Defaults to `MARIADB_BINARY_DUMP`.
+- - `--lock` - Flag. Optional. Lock the database during dump
+- - `--password password` - String. Optional. Password to connect
+- - `--user user` - String. Optional. User to connect
+- - `--host host` - String. Optional. Host to connect
+- - `--port port` - Integer. Optional. Port to connect
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mariadbDumpClean`
+- 
+- > Clean mariadb dumps for import
+- 
+- ### Usage
+- 
+-     mariadbDumpClean
+- 
+- Clean mariadb dumps of the dreaded code `/*!999999\- enable the sandbox mode */`
+- - [Official documentation](https://mariadb.org/mariadb-dump-file-compatibility-change/)
+- 
+- > Location: `bin/build/tools/mariadb.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Reads standard input
+- 
+- mariadbDump
+- 
+- ### Writes to standard output
+- 
+- mariadbDump (cleaned)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mariadbInstall`
+- 
+- > Install `mariadb`
+- 
+- ### Usage
+- 
+-     mariadbInstall
+- 
+- Install `mariadb`
+- 
+- When this tool succeeds the `mariadb` binary is available in the local operating system.
+- 
+- > Location: `bin/build/tools/mariadb.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `1` - If installation fails
+- - `0` - If installation succeeds
+- 
+- ## `mariadbUninstall`
+- 
+- > Uninstall `mariadb`
+- 
+- ### Usage
+- 
+-     mariadbUninstall
+- 
+- Uninstall `mariadb`
+- 
+- When this tool succeeds the `mariadb` binary will no longer be available in the local operating system.
+- 
+- > Location: `bin/build/tools/mariadb.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `1` - If uninstallation fails
+- - `0` - If uninstallation succeeds
+- 
+- ## `markdownCheckIndex`
+- 
+- > Displays any markdown files next to the given index file
+- 
+- ### Usage
+- 
+-     markdownCheckIndex indexFile ... [ --help ] [ --handler handler ]
+- 
+- Displays any markdown files next to the given index file which are not found within the index file as links.
+- 
+- > Location: `bin/build/tools/markdown.sh`
+- 
+- ### Arguments
+- 
+- - `indexFile ...` - File. Required. One or more index files to check.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `markdownFormatList`
+- 
+- > Simple function to make list-like things more list-like in Markdown
+- 
+- ### Usage
+- 
+-     markdownFormatList
+- 
+- Simple function to make list-like things more list-like in Markdown
+- 
+- 1. Remove all trailing spaces from all lines
+- 2. remove leading "dash space" if it exists (`- `)
+- 3. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
+- 4. Prefix each line with a "dash space" (`- `)
+- 
+- > Location: `bin/build/tools/markdown.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Reads standard input
+- 
+- reads input from stdin
+- 
+- ### Writes to standard output
+- 
+- formatted markdown list
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `markdownIndentHeading`
+- 
+- > Add an indent to all markdown headings
+- 
+- ### Usage
+- 
+-     markdownIndentHeading
+- 
+- Add an indent to all markdown headings
+- 
+- > Location: `bin/build/tools/markdown.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `markdownRemoveUnfinishedSections`
+- 
+- > Given a file containing Markdown, remove header and any section
+- 
+- ### Arguments
+- 
+- - None
+- 
+- ### Examples
+- 
+-     markdownRemoveUnfinishedSections < inputFile > outputFile
+-     map.sh < $templateFile | markdownRemoveUnfinishedSections
+- 
+- ### Return codes
+- 
+- - 0
+- 
+- ### Environment
+- 
+- - None
+- 
+- ## `markdownToConsole`
+- 
+- > Converts backticks, bold and italic to console colors.
+- 
+- ### Usage
+- 
+-     markdownToConsole [ --help ]
+- 
+- Converts backticks, bold and italic to console colors.
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Markdown
+- 
+- ### Writes to standard output
+- 
+- decorated console output
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mockConsoleAnimationStart`
+- 
+- > Fake `consoleHasAnimation` for testing
+- 
+- ### Usage
+- 
+-     mockConsoleAnimationStart [ true | false ] [ --help ]
+- 
+- Fake `consoleHasAnimation` for testing
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - true |- ` false` - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mockConsoleAnimationStop`
+- 
+- > Stop faking `consoleHasAnimation` for testing
+- 
+- ### Usage
+- 
+-     mockConsoleAnimationStop [ --help ]
+- 
+- Stop faking `consoleHasAnimation` for testing
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mockEnvironmentStart`
+- 
+- > Fake a value for testing
+- 
+- ### Usage
+- 
+-     mockEnvironmentStart globalName [ value ] [ ... ] [ --help ]
+- 
+- Fake a value for testing
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `globalName` - EnvironmentVariable. Required. Global to change temporarily to a value.
+- - `value` - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.
+- - `...` - Continue passing pairs of globalName value to mock additional values.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `mockEnvironmentStop`
+- 
+- > Restore a mocked value. Works solely with the default `saveGlobalName`
+- 
+- ### Arguments
+- 
+- - `globalName ...` - EnvironmentVariable. Required. Global to restore from the mocked saved value.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `muzzle`
+- 
+- > Suppress stdout without piping. Handy when you just want a
+- 
+- ### Usage
+- 
+-     muzzle command [ ... ]
+- 
+- Suppress stdout without piping. Handy when you just want a behavior not the output.
+- 
+- > Location: `bin/build/tools/sugar.sh`
+- 
+- ### Arguments
+- 
+- - `command` - Callable. Required. Thing to muzzle.
+- - `...` - Arguments. Optional. Additional arguments.
+- 
+- ### Writes to standard output
+- 
+- - No output from stdout ever from this function
+- 
+- ### Examples
+- 
+-     muzzle pushd "$buildDir"
+-     catchEnvironment "$handler" phpBuild || returnUndo $? muzzle popd || return $?
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `muzzleReturn`
+- 
+- > Suppress return codes
+- 
+- ### Usage
+- 
+-     muzzleReturn command [ ... ]
+- 
+- Suppress return code without piping. Handy when using diff to generate text
+- 
+- > Location: `bin/build/tools/sugar.sh`
+- 
+- ### Arguments
+- 
+- - `command` - Callable. Required. Thing to muzzle.
+- - `...` - Arguments. Optional. Additional arguments.
+- 
+- ### Examples
+- 
+-     muzzleReturn diff -U0 "$buildDir"
+- 
+- ### Return codes
+- 
+- - `0` - Always
+- 
+- ## `networkIPList`
+- 
+- > List IPv4 Addresses associated with this system using `ifconfig`
+- 
+- ### Usage
+- 
+-     networkIPList [ --install ] [ --help ]
+- 
+- List IPv4 Addresses associated with this system using `ifconfig`
+- 
+- > Location: `bin/build/tools/network.sh`
+- 
+- ### Arguments
+- 
+- - `--install` - Flag. Optional. Install any packages required to get `ifconfig` installed first.
+- - `--help` - Flag. Optional. This help.
+- 
+- ### Sample Output
+- 
+- lines:IPv4
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `networkIPLookup`
+- 
+- > Get the current IP address of a host
+- 
+- ### Usage
+- 
+-     networkIPLookup [ --help ]
+- 
+- Get the current IP address of a host
+- 
+- > Location: `bin/build/tools/network.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `networkMACAddressList`
+- 
+- > List MAC addresses associated with this system using `ifconfig`
+- 
+- ### Usage
+- 
+-     networkMACAddressList [ --install ] [ --help ]
+- 
+- List MAC addresses associated with this system using `ifconfig`
+- 
+- > Location: `bin/build/tools/network.sh`
+- 
+- ### Arguments
+- 
+- - `--install` - Flag. Optional. Install any packages required to get `ifconfig` installed first.
+- - `--help` - Flag. Optional. This help.
+- 
+- ### Sample Output
+- 
+- lines:IPv4
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `networkNameFull`
+- 
+- > Platform-agnostic host name
+- 
+- ### Usage
+- 
+-     networkNameFull
+- 
+- Get the full hostname on the current platform.
+- Formerly `hostname``Full`.
+- 
+- > Location: `bin/build/tools/host.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:helpArgument}
+- - {SEE:__hostname}
+- - {SEE:executableRequire}
+- - {SEE:catchEnvironment}
+- 
+- ## `nodeInstall`
+- 
+- > Install nodejs
+- 
+- ### Usage
+- 
+-     nodeInstall
+- 
+- Install nodejs
+- 
+- > Location: `bin/build/tools/node.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `nodePackageManager`
+- 
+- > Run an action using the current node package manager
+- 
+- ### Usage
+- 
+-     nodePackageManager [ action ] ...
+- 
+- Run an action using the current node package manager
+- Provides an abstraction to libraries to support any node package manager.
+- Optionally will output the current node package manager when no arguments are passed.
+- 
+- > Location: `bin/build/tools/node.sh`
+- 
+- ### Arguments
+- 
+- - `action` - String. Optional. Action to perform: install run update uninstall
+- - `...` - Arguments. Required. Passed to the node package manager. Required. when action is provided.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `nodePackageManagerInstall`
+- 
+- > Installs the selected package manager for node
+- 
+- ### Usage
+- 
+-     nodePackageManagerInstall
+- 
+- Installs the selected package manager for node
+- 
+- > Location: `bin/build/tools/node.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `nodePackageManagerUninstall`
+- 
+- > Installs the selected package manager for node
+- 
+- ### Usage
+- 
+-     nodePackageManagerUninstall
+- 
+- Installs the selected package manager for node
+- 
+- > Location: `bin/build/tools/node.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `nodePackageManagerValid`
+- 
+- > Is the passed node package manager name valid?
+- 
+- ### Usage
+- 
+-     nodePackageManagerValid [ --help ] managerName
+- 
+- Is the passed node package manager name valid?
+- Without arguments, shows the valid package manager names.
+- 
+- > Location: `bin/build/tools/node.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `managerName` - String. Required. The node package manager name to check.
+- 
+- ### Return codes
+- 
+- - `0` - Yes, it's a valid package manager name.
+- - `1` - No, it's not a valid package manager name.
+- 
+- ## `nodeUninstall`
+- 
+- > Uninstall nodejs
+- 
+- ### Usage
+- 
+-     nodeUninstall
+- 
+- Uninstall nodejs
+- 
+- > Location: `bin/build/tools/node.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `notify`
+- 
+- > Notify after running a binary. Uses the `notify` hook with
+- 
+- ### Usage
+- 
+-     notify [ --help ] [ --handler handler ] [ --verbose ] [ --title title ] [ --message message ] [ --fail failMessage ] [ --sound soundName ] [ --fail-title title ] [ --fail-sound soundName ]
+- 
+- Notify after running a binary. Uses the `notify` hook with some handy parameters which are inherited
+- between "success" and "failure":
+- 
+- If a value is not specified for failure, it will use the `success` value.
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--verbose` - Flag. Optional. Be verbose.
+- - `--title title` - String. Optional. Sets the title for the notification.
+- - `--message message` - String. Optional. Display this message (alias is `-m`)
+- - `--fail failMessage` - String. Optional. Display this message in console and dialog upon failure.
+- - `--sound soundName` - String. Optional. Sets the sound played for the notification.
+- - `--fail-title title` - String. Optional. Sets the title for the notification if the binary fails.
+- - `--fail-sound soundName` - String. Optional. Sets the sound played for the notification if the binary fails.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `npmInstall`
+- 
+- > Install NPM in the build environment
+- 
+- ### Usage
+- 
+-     npmInstall [ --version versionCode ]
+- 
+- Install NPM in the build environment
+- If this fails it will output the installation log.
+- When this tool succeeds the `npm` binary is available in the local operating system.
+- 
+- > Location: `bin/build/tools/npm.sh`
+- 
+- ### Arguments
+- 
+- - `--version versionCode` - String. Optional. Install this version of python.
+- 
+- ### Return codes
+- 
+- - `1` - If installation of npm fails
+- - `0` - If npm is already installed or installed without error
+- 
+- ## `npmUninstall`
+- 
+- > Core as part of some systems - so this succeeds
+- 
+- ### Usage
+- 
+-     npmUninstall
+- 
+- Core as part of some systems - so this succeeds and it still exists
+- 
+- > Location: `bin/build/tools/npm.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `outputTrigger`
+- 
+- > Check output for content and trigger environment error if found
+- 
+- ### Usage
+- 
+-     outputTrigger [ --help ] [ --verbose ] [ --name name ] [ message ... ]
+- 
+- Check output for content and trigger environment error if found
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Help
+- - `--verbose` - Flag. Optional. Verbose messages when no errors exist.
+- - `--name name` - String. Optional. Name for verbose mode.
+- - `message ...` - Optional. Optional. Message for verbose mode.
+- 
+- ### Reads standard input
+- 
+- Any content
+- 
+- ### Writes to standard output
+- 
+- Same content
+- 
+- ### Examples
+- 
+-     source "$include" > >(outputTrigger source "$include") || return $?
+- 
+- ### Return codes
+- 
+- - `0` - If no content is read from `stdin`
+- - `1` - If any content is read from `stdin` (and output to `stdout`)
+- - `2` - Argument error
+- 
+- ## `packageAvailableList`
+- 
+- > List installed packages on this system using package manager
+- 
+- ### Usage
+- 
+-     packageAvailableList
+- 
+- List installed packages on this system using package manager
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageDefault`
+- 
+- > Fetch the binary name for the default package in a
+- 
+- ### Usage
+- 
+-     packageDefault
+- 
+- Fetch the binary name for the default package in a group
+- Groups are:
+- - mysql
+- - mysqldump
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageGroupInstall`
+- 
+- > Install a package group
+- 
+- ### Usage
+- 
+-     packageGroupInstall group
+- 
+- Install a package group
+- Any unrecognized groups are installed using the name as-is.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `group` - String. Required. Currently allowed: "python"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageGroupUninstall`
+- 
+- > Uninstall a package group
+- 
+- ### Usage
+- 
+-     packageGroupUninstall group
+- 
+- Uninstall a package group
+- Any unrecognized groups are uninstalled using the name as-is.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `group` - String. Required. Currently allowed: "python"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageGroupWhich`
+- 
+- > Install a package group to have a binary installed
+- 
+- ### Usage
+- 
+-     packageGroupWhich binary group
+- 
+- Install a package group to have a binary installed
+- Any unrecognized groups are installed using the name as-is.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `binary` - String. Required. Binary which will exist in PATH after `group` is installed if it does not exist.
+- - `group` - String. Required. Package group.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageInstall`
+- 
+- > Install packages using a package manager
+- 
+- ### Usage
+- 
+-     packageInstall [ package ] [ --verbose ] [ --manager packageManager ] [ --force ] [ --show-log ]
+- 
+- Install packages using a package manager.
+- 
+- Supported managers:
+- - apk
+- - apt-get
+- - brew
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `package` - One or more packages to install
+- - `--verbose` - Flag. Optional. Display progress to the terminal.
+- - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
+- - `--force` - Flag. Optional. Force even if it was updated recently.
+- - `--show-log` - Flag. Optional. Show package manager logs.
+- 
+- ### Examples
+- 
+-     packageInstall shellcheck
+- 
+- ### Return codes
+- 
+- - `0` - If `apk` is not installed, returns 0.
+- - `1` - If `apk` fails to install the packages
+- 
+- ## `packageInstalledList`
+- 
+- > List installed packages on this system using package manager
+- 
+- ### Usage
+- 
+-     packageInstalledList
+- 
+- List installed packages on this system using package manager
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageIsInstalled`
+- 
+- > Is a package installed?
+- 
+- ### Usage
+- 
+-     packageIsInstalled package
+- 
+- Is a package installed?
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `package` - String. Required. One or more packages to check if they are installed
+- 
+- ### Return codes
+- 
+- - `1` - If any packages are not installed
+- - `0` - All packages are installed
+- 
+- ## `packageManagerDefault`
+- 
+- > Determine the default package manager on this platform.
+- 
+- ### Usage
+- 
+-     packageManagerDefault
+- 
+- Determine the default package manager on this platform.
+- Output is one of:
+- - apk apt brew port
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:platform}
+- 
+- ## `packageManagerValid`
+- 
+- > Is the package manager supported?
+- 
+- ### Usage
+- 
+-     packageManagerValid [ --help ] [ packageManager ]
+- 
+- Is the package manager supported?
+- Checks the package manager to be a valid, supported one.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `packageManager` - String. Manager to check.
+- 
+- ### Return codes
+- 
+- - `0` - The package manager is valid.
+- - `1` - The package manager is not valid.
+- 
+- ## `packageMapping`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     packageMapping [ packageName ] [ --manager packageManager ]
+- 
+- No documentation for `packageMapping`.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `packageName` - A simple package name which will be expanded to specific platform or package-manager specific package names
+- - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageNeedRestartFlag`
+- 
+- > INTERNAL - has `packageUpdate` set the `restart` flag at some
+- 
+- ### Usage
+- 
+-     packageNeedRestartFlag [ value ]
+- 
+- INTERNAL - has `packageUpdate` set the `restart` flag at some point?
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `value` - Set the restart flag to this value (blank to remove)
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageUninstall`
+- 
+- > Removes packages using package manager
+- 
+- ### Usage
+- 
+-     packageUninstall package [ --manager packageManager ]
+- 
+- Removes packages using the current package manager.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `package` - String. Required. One or more packages to uninstall
+- - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
+- 
+- ### Examples
+- 
+-     packageUninstall shellcheck
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageUpdate`
+- 
+- > Update packages lists and sources
+- 
+- ### Usage
+- 
+-     packageUpdate [ --help ] [ --verbose ] [ --manager packageManager ] [ --force ]
+- 
+- Update packages lists and sources
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--verbose` - Flag. Optional. Display progress to the terminal.
+- - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
+- - `--force` - Flag. Optional. Force even if it was updated recently.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageUpgrade`
+- 
+- > Upgrade packages lists and sources
+- 
+- ### Usage
+- 
+-     packageUpgrade [ --help ] [ --verbose ] [ --manager packageManager ] [ --force ]
+- 
+- Upgrade packages lists and sources
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--verbose` - Flag. Optional. Display progress to the terminal.
+- - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
+- - `--force` - Flag. Optional. Force even if it was updated recently.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `packageWhich`
+- 
+- > Install tools using `apt-get` if they are not found
+- 
+- ### Usage
+- 
+-     packageWhich [ --manager packageManager ] binary [ packageName ... ]
+- 
+- Installs an apt package if a binary does not exist in the which path.
+- The assumption here is that `packageInstallPackage` will install the desired `binary`.
+- 
+- Confirms that `binary` is installed after installation succeeds.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
+- - `binary` - String. Required. The binary to look for
+- - `packageName ...` - String. Optional. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.
+- 
+- ### Examples
+- 
+-     packageWhich mariadb mariadb-client
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - Technically this will install the binary and any related files as a package.
+- 
+- ## `packageWhichUninstall`
+- 
+- > Install tools using `apt-get` if they are not found
+- 
+- ### Usage
+- 
+-     packageWhichUninstall [ --manager packageManager ] binary packageInstallPackage
+- 
+- Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)
+- The assumption here is that `packageUninstall` will install the desired `binary`.
+- 
+- Confirms that `binary` is installed after installation succeeds.
+- 
+- > Location: `bin/build/tools/package.sh`
+- 
+- ### Arguments
+- 
+- - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
+- - `binary` - String. Required. The binary to look for.
+- - `packageInstallPackage` - String. Required. The package name to uninstall if the binary is found in the `$PATH`.
+- 
+- ### Examples
+- 
+-     packageWhichUninstall mariadb mariadb-client
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - Technically this will uninstall the binary and any related files as a package.
+- 
+- ## `pathCleanDuplicates`
+- 
+- > Cleans the path and removes non-directory entries and duplicates
+- 
+- ### Usage
+- 
+-     pathCleanDuplicates [ --help ]
+- 
+- Cleans the path and removes non-directory entries and duplicates
+- 
+- Maintains ordering.
+- 
+- > Location: `bin/build/tools/path.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pathConfigure`
+- 
+- > Modify the PATH environment variable to add a path.
+- 
+- ### Usage
+- 
+-     pathConfigure [ --help ] [ --first ] [ --last ] [ path ]
+- 
+- Modify the PATH environment variable to add a path.
+- 
+- > Location: `bin/build/tools/path.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--first` - Flag. Optional. Place any paths after this flag first in the list
+- - `--last` - Flag. Optional. Place any paths after this flag last in the list. Default.
+- - `path` - the path to be added to the `PATH` environment
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pathIsAbsolute`
+- 
+- > Is a path an absolute path?
+- 
+- ### Usage
+- 
+-     pathIsAbsolute [ path ]
+- 
+- Is a path an absolute path?
+- 
+- > Location: `bin/build/tools/directory.sh`
+- 
+- ### Arguments
+- 
+- - `path` - String. Optional. Path to check.
+- 
+- ### Return codes
+- 
+- - `0` - if all paths passed in are absolute paths (begin with `/`).
+- - `1` - one ore more paths are not absolute paths
+- 
+- ## `pathRemove`
+- 
+- > Remove a path from the PATH environment variable
+- 
+- ### Usage
+- 
+-     pathRemove [ --help ] [ path ]
+- 
+- Remove a path from the PATH environment variable
+- 
+- > Location: `bin/build/tools/path.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `path` - Requires. String. The path to be removed from the `PATH` environment.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pathShow`
+- 
+- > Show the path and where binaries are found
+- 
+- ### Usage
+- 
+-     pathShow [ --help ] [ binary ]
+- 
+- Show the path and where binaries are found
+- 
+- > Location: `bin/build/tools/path.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `binary` - Executable. Optional. Display where this executable appears in the path.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pause`
+- 
+- > Pause for user input
+- 
+- ### Usage
+- 
+-     pause [ --help ] [ -- ] [ message ... ]
+- 
+- Pause for user input
+- 
+- > Location: `bin/build/tools/interactive.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--` - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+- - `message ...` - Display this message while pausing
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pcregrepBinary`
+- 
+- > The name of the `pcregrep` binary on this operating system
+- 
+- ### Usage
+- 
+-     pcregrepBinary [ --help ]
+- 
+- The name of the `pcregrep` binary on this operating system
+- 
+- > Location: `bin/build/tools/pcregrep.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- String. Name of binary for pcregrep.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pcregrepInstall`
+- 
+- > Install pcregrep binary
+- 
+- ### Usage
+- 
+-     pcregrepInstall [ --help ]
+- 
+- Install pcregrep binary
+- 
+- > Location: `bin/build/tools/pcregrep.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `phpBuild`
+- 
+- > Build deployment using composer, adding environment values to .env and
+- 
+- ### Usage
+- 
+-     phpBuild [ --skip-tag | --no-tag ] [ --name tarFileName ] [ --composer arg ] [ --help ] [ environmentVariable ... ] -- file1 file2 dir3 ...
+- 
+- Build deployment using composer, adding environment values to .env and packaging vendor and additional
+- files into target file, usually `BUILD_TARGET`
+- 
+- Override target file generated with environment variable `BUILD_TARGET` which must ae set during build
+- and on remote systems during deployment.
+- 
+- Files are specified from the application root directory.
+- 
+- `phpBuild` generates the `.build.env` file, which contains the current environment and:
+- 
+- - BUILD_TARGET
+- - BUILD_START_TIMESTAMP
+- - APPLICATION_TAG
+- - APPLICATION_ID
+- 
+- > Location: `bin/build/tools/php.sh`
+- 
+- ### Arguments
+- 
+- --skip-tag |- ` --no-tag` - Flag. Optional. Do not tag the release.
+- - `--name tarFileName` - String. Optional. Set BUILD_TARGET via command line (wins)
+- - `--composer arg` - Argument. Optional. Supply one or more arguments to `phpComposer` command. (Use multiple times)
+- - `--help` - Flag. Optional. Display this help.
+- - `environmentVariable ...` - EnvironmentVariable. Optional. Environment variables to build into the deployed .env file
+- - `--` - Separator. Required. Separates environment variables to file list
+- - `file1 file2 dir3 ...` - File|Directory. Required. List of files and directories to build into the application package.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:BUILD_TARGET.sh}
+- 
 - {SEE:phpComposer}
-- {SEE:phpComposerInstall}
-- {SEE:phpComposerSetVersion}
-- {SEE:phpIniFile}
-- {SEE:phpInstall}
-- {SEE:phpLog}
-- {SEE:phpTailLog}
-- {SEE:phpTest}
-- {SEE:phpUninstall}
-- {SEE:pipeRunner}
-- {SEE:pipInstall}
-- {SEE:pipUninstall}
-- {SEE:pipUpgrade}
-- {SEE:pipWrapper}
-- {SEE:plasterLines}
-- {SEE:plumber}
-- {SEE:printfOutputEmpty}
-- {SEE:printfOutputPrefix}
-- {SEE:printfOutputSuffix}
-- {SEE:processMemoryUsage}
-- {SEE:processOpenPipes}
-- {SEE:processVirtualMemoryAllocation}
-- {SEE:processWait}
-- {SEE:pythonInstall}
-- {SEE:pythonPackageInstalled}
-- {SEE:pythonUninstall}
-- {SEE:pythonVirtual}
-- {SEE:quoteBashString}
-- {SEE:quoteGrepPattern}
-- {SEE:quoteSedPattern}
-- {SEE:quoteSedReplacement}
-- {SEE:readlineConfigurationAdd}
-- {SEE:releaseNew}
-- {SEE:releaseNotes}
-- {SEE:reloadChanges}
-- {SEE:returnArgument}
-- {SEE:returnAssert}
-- {SEE:returnClean}
-- {SEE:returnCode}
-- {SEE:returnCodeString}
-- {SEE:returnEnvironment}
-- {SEE:returnExit}
-- {SEE:returnIdentical}
-- {SEE:returnLeak}
-- {SEE:returnMap}
-- {SEE:returnMessage}
-- {SEE:returnThrow}
-- {SEE:returnUndo}
-- {SEE:rsyncInstall}
-- {SEE:sedReplacePattern}
-- {SEE:serviceToPort}
-- {SEE:serviceToStandardPort}
-- {SEE:sshKnownHostAdd}
-- {SEE:sshKnownHostRemove}
-- {SEE:sshKnownHostsFile}
-- {SEE:sshSetup}
-- {SEE:statusMessage}
-- {SEE:stringBegins}
-- {SEE:stringBeginsInsensitive}
-- {SEE:stringContains}
-- {SEE:stringContainsInsensitive}
-- {SEE:stringFound}
-- {SEE:stringFoundInsensitive}
-- {SEE:stringHideNewlines}
-- {SEE:stringLowercase}
-- {SEE:stringOffset}
-- {SEE:stringOffsetInsensitive}
-- {SEE:stringRandom}
-- {SEE:stringTrimWords}
-- {SEE:stringUnquote}
-- {SEE:stringUppercase}
-- {SEE:stringValidate}
-- {SEE:sysvInitScriptInstall}
-- {SEE:sysvInitScriptUninstall}
-- {SEE:tarCreate}
-- {SEE:tarExtractPattern}
-- {SEE:terraformInstall}
-- {SEE:terraformUninstall}
-- {SEE:testSuite}
-- {SEE:testSuiteFunctionTested}
-- {SEE:testSuiteOrdering}
-- {SEE:textAlignLeft}
-- {SEE:textAlignRight}
-- {SEE:textCannon}
-- {SEE:textRemoveFields}
-- {SEE:textRepeat}
-- {SEE:textReplace}
-- {SEE:textReplaceFirst}
-- {SEE:textSHA}
-- {SEE:textSingleBlankLines}
-- {SEE:textTrim}
-- {SEE:textTrimBoth}
-- {SEE:textTrimHead}
-- {SEE:textTrimLeft}
-- {SEE:textTrimRight}
-- {SEE:textTrimTail}
-- {SEE:textVersionSort}
-- {SEE:throwArgument}
-- {SEE:throwEnvironment}
-- {SEE:timing}
-- {SEE:timingDuration}
-- {SEE:timingElapsed}
-- {SEE:timingFormat}
-- {SEE:timingReport}
-- {SEE:timingStart}
-- {SEE:tofuInstall}
-- {SEE:tofuUninstall}
-- {SEE:tools}
-- {SEE:urlContentLength}
-- {SEE:urlFetch}
-- {SEE:urlFilter}
-- {SEE:urlMatchesLocalFileSize}
-- {SEE:urlOpen}
-- {SEE:urlOpener}
-- {SEE:urlParse}
-- {SEE:urlParseItem}
-- {SEE:urlSchemeDefaultPort}
-- {SEE:urlValid}
-- {SEE:userAgentDefault}
-- {SEE:userHome}
-- {SEE:userRecord}
-- {SEE:userRecordHome}
-- {SEE:userRecordName}
-- {SEE:validate}
-- {SEE:validateTypeList}
-- {SEE:versionNextMinor}
-- {SEE:versionNoVee}
-- {SEE:websiteScrape}
-- {SEE:xdebugDisable}
-- {SEE:xdebugEnable}
-- {SEE:xdebugInstall}
-- {SEE:yarnInstall}
-- {SEE:yumIsInstalled}
+- ## `phpComposerInstall`
+- 
+- > Install composer for PHP
+- 
+- ### Usage
+- 
+-     phpComposerInstall
+- 
+- Install composer for PHP
+- 
+- > Location: `bin/build/tools/php-composer.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `phpComposerSetVersion`
+- 
+- > For any project, ensures the `version` field in `composer.json` matches
+- 
+- ### Usage
+- 
+-     phpComposerSetVersion [ --version ] [ --home ] [ --status ] [ --quiet ]
+- 
+- For any project, ensures the `version` field in `composer.json` matches `hookRun version-current`
+- 
+- Run as a commit hook for any PHP project or as part of your build or development process
+- 
+- Typically the version is copied in without the leading `v`.
+- 
+- > Location: `bin/build/tools/php-composer.sh`
+- 
+- ### Arguments
+- 
+- - `--version` - String. Use this version instead of current version.
+- - `--home` - Directory. Optional. Use this directory for the location of `composer.json`.
+- - `--status` - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same
+- - `--quiet` - Flag. Optional. Do not output anything to stdout and just do the action and exit.
+- 
+- ### Return codes
+- 
+- - `0` - File was updated successfully.
+- - `1` - Environment error
+- - `2` - Argument error
+- - `105` - Identical files (only when --status is passed)
+- 
+- ## `phpIniFile`
+- 
+- > Outputs the path to the PHP ini file
+- 
+- ### Usage
+- 
+-     phpIniFile
+- 
+- Outputs the path to the PHP ini file
+- 
+- > Location: `bin/build/tools/php.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `phpInstall`
+- 
+- > Install `php`
+- 
+- ### Usage
+- 
+-     phpInstall [ package ]
+- 
+- Install `php`
+- 
+- If this fails it will output the installation log.
+- 
+- When this tool succeeds the `php` binary is available in the local operating system.
+- 
+- > Location: `bin/build/tools/php.sh`
+- 
+- ### Arguments
+- 
+- - `package` - Additional packages to install
+- 
+- ### Return codes
+- 
+- - `1` - If installation fails
+- - `0` - If installation succeeds
+- 
+- ## `phpLog`
+- 
+- > Outputs the path to the PHP log file
+- 
+- ### Usage
+- 
+-     phpLog
+- 
+- Outputs the path to the PHP log file
+- 
+- > Location: `bin/build/tools/php.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `phpTailLog`
+- 
+- > Tail the PHP log
+- 
+- ### Usage
+- 
+-     phpTailLog [ --help ]
+- 
+- Tail the PHP log
+- 
+- > Location: `bin/build/tools/php.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:tail}
+- 
+- ## `phpTest`
+- 
+- > Test a docker-based PHP application during build
+- 
+- ### Usage
+- 
+-     phpTest [ --env-file envFile ] [ --home homeDirectory ]
+- 
+- Test a docker-based PHP application during build
+- 
+- > Location: `bin/build/tools/php.sh`
+- 
+- ### Arguments
+- 
+- - `--env-file envFile` - File. Optional. Environment file to load.
+- - `--home homeDirectory` - Directory. Optional. Directory for application home.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `phpUninstall`
+- 
+- > Uninstall `php`
+- 
+- ### Usage
+- 
+-     phpUninstall [ package ]
+- 
+- Uninstall `php`
+- 
+- If this fails it will output the installation log.
+- 
+- When this tool succeeds the `php` binary is no longer available in the local operating system.
+- 
+- > Location: `bin/build/tools/php.sh`
+- 
+- ### Arguments
+- 
+- - `package` - Additional packages to install
+- 
+- ### Return codes
+- 
+- - `1` - If uninstallation fails
+- - `0` - If uninstallation succeeds
+- 
+- ## `pipeRunner`
+- 
+- > Single reader, multiple writers
+- 
+- ### Usage
+- 
+-     pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]
+- 
+- Single reader, multiple writers
+- Attempt at having docker communicate back to the outside world.
+- 
+- > Location: `bin/build/tools/utilities.sh`
+- 
+- ### Arguments
+- 
+- - `--mode mode` - String. Optional.
+- - namedPipe
+- - `--writer line ...` - When encountered all additional arguments are written to the runner.
+- - `readerExecutable ...` - Callable. Optional.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pipInstall`
+- 
+- > Utility to install python dependencies via pip
+- 
+- ### Usage
+- 
+-     pipInstall [ --help ] [ --handler handler ] pipPackage [ ... ]
+- 
+- Utility to install python dependencies via pip
+- Installs python if it hasn't been using `pythonInstall`.
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - pipPackage [ ... ]- `` - String. Required. Pip package name to install.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pipUninstall`
+- 
+- > Utility to uninstall python dependencies via pip
+- 
+- ### Usage
+- 
+-     pipUninstall [ --help ] [ --handler handler ] pipPackage [ ... ]
+- 
+- Utility to uninstall python dependencies via pip
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - pipPackage [ ... ]- `` - String. Required. Pip package name to uninstall.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pipUpgrade`
+- 
+- > Utility to upgrade pip correctly
+- 
+- ### Usage
+- 
+-     pipUpgrade [ --help ] [ --bin binary ]
+- 
+- Utility to upgrade pip correctly
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--bin binary` - Executable. Optional. Binary for `pip`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pipWrapper`
+- 
+- > Run pip whether it is installed as a module or
+- 
+- ### Usage
+- 
+-     pipWrapper [ --bin binary ] [ --handler handler ] [ --help ] [ --debug ] [ ... ]
+- 
+- Run pip whether it is installed as a module or as a binary
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - `--bin binary` - Executable. Optional. Binary for `pip`.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--help` - Flag. Optional. Display this help.
+- - `--debug` - Flag. Optional. Show outputs to `which` and `command -v` for `pip`
+- - `...` - Arguments. Optional. Arguments passed to `pip`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `plasterLines`
+- 
+- > Outputs a line and fills the remainder with space
+- 
+- ### Usage
+- 
+-     plasterLines
+- 
+- Outputs a line and fills the remainder with space
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `plumber`
+- 
+- > Run command and detect any global or local leaks
+- 
+- ### Usage
+- 
+-     plumber [ command ... ] [ --temporary tempPath ] [ --leak envName ... ] [ --verbose ] [ --help ]
+- 
+- Run command and detect any global or local leaks
+- 
+- > Location: `bin/build/tools/debug.sh`
+- 
+- ### Arguments
+- 
+- - `command ...` - Callable. Command to run
+- - `--temporary tempPath` - Directory. Optional. Use this for the temporary path.
+- - `--leak envName ...` - EnvironmentVariable. Variable name which is OK to leak.
+- - `--verbose` - Flag. Optional. Be verbose.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `plumber-verbose` - The plumber outputs the exact variable captures before and after
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `printfOutputEmpty`
+- 
+- > printf when output is blank
+- 
+- ### Usage
+- 
+-     printfOutputEmpty ...
+- 
+- Pipes all input to output, if any input exists behaves like `cat`. If input is empty then runs and outputs the `printf` statement result.
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `...` - Arguments. Required. printf arguments.
+- 
+- ### Reads standard input
+- 
+- text (Optional)
+- 
+- ### Writes to standard output
+- 
+- printf output and then the stdin text IFF stdin text is blank
+- 
+- ### Examples
+- 
+-     cat "$failedFunctions" | decorate wrap -- "- " | printfOutputEmpty "%s\n" "No functions failed."
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `printfOutputPrefix`
+- 
+- > Pipe to output some text before any output, otherwise, nothing
+- 
+- ### Usage
+- 
+-     printfOutputPrefix ...
+- 
+- Pipe to output some text before any output, otherwise, nothing is output.
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `...` - Arguments. Required. printf arguments.
+- 
+- ### Reads standard input
+- 
+- text (Optional)
+- 
+- ### Writes to standard output
+- 
+- printf output and then the stdin text IFF stdin text is non-blank
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `printfOutputSuffix`
+- 
+- > Pipe to output some text after any output, otherwise, nothing
+- 
+- ### Usage
+- 
+-     printfOutputSuffix ...
+- 
+- Pipe to output some text after any output, otherwise, nothing is output.
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `...` - Arguments. Required. printf arguments.
+- 
+- ### Reads standard input
+- 
+- text (Optional)
+- 
+- ### Writes to standard output
+- 
+- stdin text and then printf output IFF stdin text is non-blank
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `processMemoryUsage`
+- 
+- > Outputs value of resident memory used by a process, value
+- 
+- ### Usage
+- 
+-     processMemoryUsage pid
+- 
+- Outputs value of resident memory used by a process, value is in kilobytes
+- 
+- > Location: `bin/build/tools/process.sh`
+- 
+- ### Arguments
+- 
+- - `pid` - Integer. Required. Process ID of running process
+- 
+- ### Examples
+- 
+-     > processMemoryUsage 23
+- 
+- ### Sample Output
+- 
+- 423
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `2` - Argument error
+- 
+- ## `processOpenPipes`
+- 
+- > Output the number of open files for a process ID
+- 
+- ### Usage
+- 
+-     processOpenPipes [ --help ]
+- 
+- Output the number of open files for a process ID or group
+- Not completed yet
+- 
+- > Location: `bin/build/tools/process.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `processVirtualMemoryAllocation`
+- 
+- > Outputs value of virtual memory allocated for a process, value
+- 
+- ### Usage
+- 
+-     processVirtualMemoryAllocation [ --help ] [ pid ]
+- 
+- Outputs value of virtual memory allocated for a process, value is in kilobytes
+- 
+- > Location: `bin/build/tools/process.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `pid` - Process ID of running process
+- 
+- ### Examples
+- 
+-     processVirtualMemoryAllocation 23
+- 
+- ### Sample Output
+- 
+- 423
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `2` - Argument error
+- 
+- ## `processWait`
+- 
+- > Wait for processes not owned by this process to exit,
+- 
+- ### Usage
+- 
+-     processWait processId [ --timeout seconds ] [ --signals signal ] [ --require ]
+- 
+- Wait for processes not owned by this process to exit, and send signals to terminate processes.
+- 
+- > Location: `bin/build/tools/process.sh`
+- 
+- ### Arguments
+- 
+- - `processId` - Integer. Required. Wait for process ID to exit.
+- - `--timeout seconds` - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.
+- - `--signals signal` - CommaDelimitedList. Optional. Send each signal to processes, in order.
+- - `--require` - Flag. Optional. Require all processes to be alive upon first invocation.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pythonInstall`
+- 
+- > Install `python`
+- 
+- ### Usage
+- 
+-     pythonInstall [ --help ]
+- 
+- Install `python`
+- 
+- When this tool succeeds the `python` binary is available in the local operating system.
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - If installation fails
+- - `0` - If installation succeeds
+- 
+- ## `pythonPackageInstalled`
+- 
+- > Is a package installed for python?
+- 
+- ### Usage
+- 
+-     pythonPackageInstalled pipPackage ... [ --help ] [ --handler handler ] [ --any ]
+- 
+- Is a package installed for python?
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - `pipPackage ...` - String. Required. Package name(s) to check.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--any` - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.
+- 
+- ### Return codes
+- 
+- - `0` - All packages are installed (or at least one package with `--any`)
+- - `1` - All packages are not installed (or NO packages are installed with `--any`)
+- 
+- ## `pythonUninstall`
+- 
+- > Uninstall python
+- 
+- ### Usage
+- 
+-     pythonUninstall
+- 
+- Uninstall python
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `pythonVirtual`
+- 
+- > Set up a virtual environment for a project and install
+- 
+- ### Usage
+- 
+-     pythonVirtual --application directory [ --require requirements ] [ pipPackage ... ] [ --help ] [ --handler handler ]
+- 
+- Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them.
+- 
+- When completed, a directory `.venv` exists in your project containing dependencies.
+- 
+- > Location: `bin/build/tools/python.sh`
+- 
+- ### Arguments
+- 
+- - `--application directory` - Directory. Required. Path to project location.
+- - `--require requirements` - File. Optional. Requirements file for project.
+- - `pipPackage ...` - String. Optional. One or more pip packages to install in the virtual environment.
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `quoteBashString`
+- 
+- > Quote bash strings for inclusion as single-quoted for eval
+- 
+- ### Usage
+- 
+-     quoteBashString text
+- 
+- Quote bash strings for inclusion as single-quoted for eval
+- 
+- > Location: `bin/build/tools/quote.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Required. Text to quote.
+- 
+- ### Examples
+- 
+-     name="$(quoteBashString "$name")"
+- 
+- ### Sample Output
+- 
+- string quoted and appropriate to assign to a value in the shell
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `quoteGrepPattern`
+- 
+- > Quote grep -e patterns for shell use
+- 
+- ### Usage
+- 
+-     quoteGrepPattern text
+- 
+- Quote grep -e patterns for shell use
+- 
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/quote.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Required. Text to quote.
+- 
+- ### Examples
+- 
+-     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
+- 
+- ### Sample Output
+- 
+- string quoted and appropriate to insert in a grep search or replacement phrase
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `quoteSedPattern`
+- 
+- > Quote sed search strings for shell use
+- 
+- ### Usage
+- 
+-     quoteSedPattern text
+- 
+- Quote a string to be used in a sed pattern on the command line.
+- 
+- > Location: `bin/build/tools/sed.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Required. Text to quote
+- 
+- ### Examples
+- 
+-     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
+-     needSlash=$(quoteSedPattern '$.*/[\]^')
+- 
+- ### Sample Output
+- 
+- string quoted and appropriate to insert in a sed search or replacement phrase
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `quoteSedReplacement`
+- 
+- > Quote sed replacement strings for shell use
+- 
+- ### Usage
+- 
+-     quoteSedReplacement text [ separatorChar ]
+- 
+- Quote sed replacement strings for shell use
+- 
+- > Location: `bin/build/tools/sed.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Required. Text to quote
+- - `separatorChar` - The character used to separate the sed pattern and replacement. Defaults to `/`.
+- 
+- ### Examples
+- 
+-     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
+-     needSlash=$(quoteSedPattern '$.*/[\]^')
+- 
+- ### Sample Output
+- 
+- string quoted and appropriate to insert in a `sed` replacement phrase
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `readlineConfigurationAdd`
+- 
+- > Add configuration to `~/.inputrc` for a key binding
+- 
+- ### Usage
+- 
+-     readlineConfigurationAdd [ --help ] keyStroke action
+- 
+- Add configuration to `~/.inputrc` for a key binding
+- 
+- > Location: `bin/build/tools/readline.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `keyStroke` - String. Required.
+- - `action` - String. Required.
+- 
+- ### Examples
+- 
+- readlineConfigurationAdd "\ep" history-search-backward
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `releaseNew`
+- 
+- > Generate a new release notes and bump the version
+- 
+- ### Usage
+- 
+-     releaseNew [ --non-interactive ] [ versionName ]
+- 
+- **New release** - generates files in system for a new release.
+- 
+- *Requires* hook `version-current`, optionally `version-live`
+- 
+- Uses semantic versioning `MAJOR.MINOR.PATCH`
+- 
+- Checks the live version versus the version in code and prompts to
+- generate a new release file if needed.
+- 
+- A release notes template file is added at `./documentation/source/release/`. This file is
+- also added to `git` the first time.
+- 
+- > Location: `bin/build/tools/version.sh`
+- 
+- ### Arguments
+- 
+- - `--non-interactive` - Flag. Optional. If new version is needed, use default version
+- - `versionName - Optional. Set the new version name to this` - must be after live version in version order
+- 
+- ### Return codes
+- 
+- - `0` - Release generated or has already been generated
+- - `1` - If new version needs to be created and `--non-interactive`
+- 
+- ## `releaseNotes`
+- 
+- > Output path to current release notes
+- 
+- ### Usage
+- 
+-     releaseNotes [ --application application ] [ version ]
+- 
+- Output path to current release notes
+- 
+- If this fails it outputs an error to stderr
+- 
+- When this tool succeeds it outputs the path to the current release notes file
+- 
+- > Location: `bin/build/tools/version.sh`
+- 
+- ### Arguments
+- 
+- - `--application application` - Directory. Optional. Application home directory.
+- - `version` - String. Optional. Version for the release notes path. If not specified uses the current version.
+- 
+- ### Examples
+- 
+-     open $(bin/build/release-notes.sh)
+-     vim $(releaseNotes)
+- 
+- ### Sample Output
+- 
+- docs/release/version.md
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `reloadChanges`
+- 
+- > Watch or more directories for changes in a file extension
+- 
+- ### Usage
+- 
+-     reloadChanges --source source [ --name name ] --path path --file file [ --stop ] [ --show ] [ source ] [ path|file ... ] [ --help ]
+- 
+- Watch or more directories for changes in a file extension and reload a source file if any changes occur.
+- 
+- > Location: `bin/build/tools/prompt-modules.sh`
+- 
+- ### Arguments
+- 
+- - `--source source` - File. Required. Source file to source upon change.
+- - `--name name` - String. Optional. The name to call this when changes occur.
+- - `--path path` - Directory. Required. OneOrMore. A directory to scan for changes in `.sh` files
+- - `--file file` - File. Required. OneOrMore. A file to watch.å
+- - `--stop` - Flag. Optional. Stop watching changes and remove all watches.
+- - `--show` - Flag. Optional. Show watched settings and exit.
+- - `source` - File. Optional. If supplied directly on the command line, sets the source.
+- - path|- `file ...` - DirectoryOrFile. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `reloadChanges` - prompt module will show debugging information
+- - `reloadChangesProfile` - prompt module will show profiling information
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `returnArgument`
+- 
+- > Return `argument` error code. Outputs `message ...` to `stderr`.
+- 
+- ### Usage
+- 
+-     returnArgument [ message ... ]
+- 
+- Return `argument` error code. Outputs `message ...` to `stderr`.
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `message ...` - String. Optional. Message to output.
+- 
+- ### Return codes
+- 
+- - 2
+- 
+- ### Requires
+- 
+- - {SEE:returnMessage}
+- 
+- ## `returnAssert`
+- 
+- > Assertion return code
+- 
+- ### Usage
+- 
+-     returnAssert
+- 
+- Return code is `assert`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - 97
+- 
+- ## `returnClean`
+- 
+- > Delete files or directories and return the same exit code
+- 
+- ### Usage
+- 
+-     returnClean exitCode [ item ]
+- 
+- Delete files or directories and return the same exit code passed in.
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `exitCode` - Integer. Required. Exit code to return.
+- - `item` - Exists. Optional. One or more files or folders to delete, failures are logged to stderr.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:isUnsignedInteger}
+- - {SEE:returnArgument}
+- - {SEE:throwEnvironment}
+- - {SEE:bashDocumentation}
+- - {SEE:throwArgument}
+- - {SEE:helpArgument}
+- 
+- ## `returnCode`
+- 
+- > Print one or more return codes by name.
+- 
+- ### Usage
+- 
+-     returnCode [ name ... ]
+- 
+- Print one or more return codes by name.
+- 
+- Known codes:
+- 
+- - `success` (0) - success!
+- - `environment` (1) - generic issue with environment
+- - `argument` (2) - issue with arguments
+- - `assert` (97) - assertion failed (ASCII 97 = `a`)
+- - `identical` (105) - identical check failed (ASCII 105 = `i`)
+- - `leak` (108) - function leaked globals (ASCII 108 = `l`)
+- - `timeout` (116) - timeout exceeded (ASCII 116 = `t`)
+- - `exit` - (120) exit function immediately (ASCII 120 = `x`)
+- - `not-found` - (127) command not found
+- - `user-interrupt` - (130) User interrupt (Ctrl-C)
+- - `interrupt` - (141) Interrupt signal
+- - `internal` - (253) internal errors
+- 
+- Unknown error code is 254, end of range is 255 which is not used. Use `returnCodeString` to get a string from an exit code integer.
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `name ...` - String. Optional. Exit code value to output.
+- 
+- ### Return codes
+- 
+- - `0` - success
+- 
+- ### Requires
+- 
+- - {SEE:bashDocumentation}
+- 
+- ### See Also
+- 
+- - [stackoverflow.com](https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux)
+- - ## `returnCodeString`
+- 
+- ## `returnCodeString`
+- 
+- > Output the exit code as a string
+- 
+- ### Usage
+- 
+-     returnCodeString [ code ... ] [ --help ]
+- 
+- Output the exit code as a string
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `code ...` - UnsignedInteger. String. Exit code value to output.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- exitCodeToken, one per line
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `returnCode`
+- 
+- ## `returnEnvironment`
+- 
+- > Return `environment` error code. Outputs `message ...` to `stderr`.
+- 
+- ### Usage
+- 
+-     returnEnvironment [ message ... ]
+- 
+- Return `environment` error code. Outputs `message ...` to `stderr`.
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `message ...` - String. Optional. Message to output.
+- 
+- ### Return codes
+- 
+- - 1
+- 
+- ### Requires
+- 
+- - {SEE:returnMessage}
+- 
+- ## `returnExit`
+- 
+- > Exit return code
+- 
+- ### Usage
+- 
+-     returnExit
+- 
+- Return code is `exit`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - 120
+- 
+- ## `returnIdentical`
+- 
+- > Identical return code
+- 
+- ### Usage
+- 
+-     returnIdentical
+- 
+- Return code is `identical`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - 105
+- 
+- ## `returnLeak`
+- 
+- > Leak return code
+- 
+- ### Usage
+- 
+-     returnLeak
+- 
+- Return code is `leak`
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - 108
+- 
+- ## `returnMap`
+- 
+- > map a return value from one value to another
+- 
+- ### Usage
+- 
+-     returnMap [ --help ] [ value ] [ from ] [ to ] [ ... ]
+- 
+- map a return value from one value to another
+- 
+- > Location: `bin/build/tools/sugar.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `value` - Integer. A return value.
+- - `from` - Integer. When value matches `from`, instead return `to`
+- - `to` - Integer. The value to return when `from` matches `value`
+- - `...` - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `returnMessage`
+- 
+- > Return passed in integer return code and output message to
+- 
+- ### Usage
+- 
+-     returnMessage exitCode [ message ... ]
+- 
+- Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
+- 
+- > Location: `bin/build/tools/example.sh`
+- 
+- ### Arguments
+- 
+- - `exitCode` - UnsignedInteger. Required. Exit code to return. Default is 1.
+- - `message ...` - String. Optional. Message to output
+- 
+- ### Return codes
+- 
+- - exitCode
+- 
+- ## `returnThrow`
+- 
+- > Run `handler` with a passed return code
+- 
+- ### Usage
+- 
+-     returnThrow returnCode handler [ message ... ]
+- 
+- Run `handler` with a passed return code
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `returnCode` - Integer. Required. Return code.
+- - `handler` - Function. Required. Error handler.
+- - `message ...` - String. Optional. Error message
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:returnArgument}
+- 
+- ## `returnUndo`
+- 
+- > Run a function and preserve exit code
+- 
+- ### Usage
+- 
+-     returnUndo [ --help ] code [ undoFunction ] [ -- ]
+- 
+- Run a function and preserve exit code
+- Returns `code`
+- As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
+- 
+- > Location: `bin/build/tools/sugar.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `code` - UnsignedInteger. Required. Exit code to return.
+- - `undoFunction` - Callable. Optional. Command to run to undo something. Return status is ignored.
+- - `--` - Flag. Optional. Used to delimit multiple commands.
+- 
+- ### Examples
+- 
+-     local undo thing
+-     thing=$(catchEnvironment "$handler" createLargeResource) || return $?
+-     undo+=(-- deleteLargeResource "$thing")
+-     thing=$(catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
+-     undo+=(-- deleteMassiveResource "$thing")
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:isUnsignedInteger}
+- - {SEE:throwArgument}
+- - {SEE:decorate}
+- - {SEE:execute}
+- - {SEE:bashDocumentation}
+- 
+- ## `rsyncInstall`
+- 
+- > Install `rsync`.
+- 
+- ### Usage
+- 
+-     rsyncInstall [ --help ]
+- 
+- Install `rsync`.
+- 
+- `rsync` is a tool which easily keeps file directories synchronized between
+- file systems, remote systems, and locations.
+- 
+- > Location: `bin/build/tools/rsync.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `sedReplacePattern`
+- 
+- > Quote a sed command for search and replace
+- 
+- ### Usage
+- 
+-     sedReplacePattern searchPattern replacePattern
+- 
+- Quote a sed command for search and replace
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/sed.sh`
+- 
+- ### Arguments
+- 
+- - `searchPattern` - String. Required. The string to search for.
+- - `replacePattern` - String. Required. The replacement to replace with.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `serviceToPort`
+- 
+- > Get the port number associated with a service
+- 
+- ### Usage
+- 
+-     serviceToPort service [ --services servicesFile ] [ --help ]
+- 
+- Get the port number associated with a service
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `service` - String. Required. A unix service typically found in `/etc/services`
+- - `--services servicesFile` - File. Optional. File like '/etc/services`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Sample Output
+- 
+- Port number of associated service (integer) one per line
+- 
+- ### Return codes
+- 
+- - `1` - service not found
+- - `2` - bad argument or invalid port
+- - `0` - service found and output is an integer
+- 
+- ## `serviceToStandardPort`
+- 
+- > Hard-coded services for:
+- 
+- ### Usage
+- 
+-     serviceToStandardPort [ --help ] [ service ... ]
+- 
+- Hard-coded services for:
+- 
+- - `ssh` -> 22
+- - `http`-> 80
+- - `https`-> 80
+- - `postgres`-> 5432
+- - `mariadb`-> 3306
+- - `mysql`-> 3306
+- 
+- Backup when `/etc/services` does not exist.
+- 
+- > Location: `bin/build/tools/platform.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `service ...` - String. Optional. A unix service typically found in `/etc/services`
+- 
+- ### Sample Output
+- 
+- Port number of associated service (integer) one per line
+- 
+- ### Return codes
+- 
+- - `1` - service not found
+- - `0` - service found and output is an integer
+- 
+- ### See Also
+- 
+- - ## `serviceToPort`
+- 
+- ## `sshKnownHostAdd`
+- 
+- > Adds the host to the `~/.known_hosts` if it is not
+- 
+- ### Usage
+- 
+-     sshKnownHostAdd [ hostName ... ]
+- 
+- Adds the host to the `~/.known_hosts` if it is not found in it already
+- 
+- Side effects:
+- 1. `~/.ssh` may be created if it does not exist
+- 1. `~/.ssh` mode is set to `0700` (read/write/execute user)
+- 1. `~/.ssh/known_hosts` is created if it does not exist
+- 1. `~/.ssh/known_hosts` mode is set to `0600` (read/write user)
+- 1. `~./.ssh/known_hosts` is possibly modified (appended)
+- 
+- If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail
+- 
+- If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
+- 
+- > Location: `bin/build/tools/ssh.sh`
+- 
+- ### Arguments
+- 
+- - `hostName ...` - String. Optional. One ore more hosts to add to the known hosts file
+- 
+- ### Return codes
+- 
+- - `1` - Environment errors
+- - `0` - All hosts exist in or were successfully added to the known hosts file
+- 
+- ## `sshKnownHostRemove`
+- 
+- > Adds the host to the `~/.known_hosts` if it is not
+- 
+- ### Usage
+- 
+-     sshKnownHostRemove [ hostName ... ] [ --skip-backup | --no-backup ] [ --verbose ]
+- 
+- Adds the host to the `~/.known_hosts` if it is not found in it already
+- 
+- Side effects:
+- 1. `~/.ssh` may be created if it does not exist
+- 1. `~/.ssh` mode is set to `0700` (read/write/execute user)
+- 1. `~/.ssh/known_hosts` is created if it does not exist
+- 1. `~/.ssh/known_hosts` mode is set to `0600` (read/write user)
+- 1. `~./.ssh/known_hosts` is possibly modified (appended)
+- 
+- If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail
+- 
+- If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
+- 
+- > Location: `bin/build/tools/ssh.sh`
+- 
+- ### Arguments
+- 
+- - `hostName ...` - String. Optional. One ore more hosts to add to the known hosts file
+- --skip-backup |- ` --no-backup` - Flag. Optional. Skip the file backup as `name.$(dateToday)`
+- - `--verbose` - Flag. Optional. Be verbose.
+- 
+- ### Return codes
+- 
+- - `1` - Environment errors
+- - `0` - All hosts exist in or were successfully added to the known hosts file
+- 
+- ## `sshKnownHostsFile`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     sshKnownHostsFile
+- 
+- No documentation for `sshKnownHostsFile`.
+- 
+- > Location: `bin/build/tools/ssh.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `sshSetup`
+- 
+- > Set up SSH for a user with ID and backup
+- 
+- ### Usage
+- 
+-     sshSetup [ --force ] server
+- 
+- Set up SSH for a user with ID and backup keys in `~/.ssh`
+- 
+- Create a key for a user for SSH authentication to other servers.
+- 
+- Add .ssh key for current user
+- 
+- You will need the password for this server for the current user.
+- 
+- > Location: `bin/build/tools/ssh.sh`
+- 
+- ### Arguments
+- 
+- - `--force` - Flag. Optional. Force the program to create a new key if one exists
+- - `server` - String. Required. Servers to connect to to set up authorization
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:userRecordHome}
+- - {SEE:catchEnvironment}
+- - {SEE:throwEnvironment}
+- 
+- ## `statusMessage`
+- 
+- > Output a status message and display correctly on consoles with animation and in log files
+- 
+- ### Usage
+- 
+-     statusMessage [ --last ] [ --first ] [ --inline ] command
+- 
+- Output a status message
+- 
+- This is intended for messages on a line which are then overwritten using consoleLineFill
+- 
+- Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
+- 
+- When $(consoleHasAnimation) is true:
+- 
+- $(--first) - clears the line and outputs the message starting at the left column, no newline
+- $(--last) - clears the line and outputs the message starting at the left column, with a newline
+- $(--inline) - Outputs the message at the cursor without a newline
+- 
+- When $(consoleHasAnimation) is false:
+- 
+- $(--first) - outputs the message starting at the cursor, no newline
+- $(--last) - outputs the message starting at the cursor, with a newline
+- $(--inline) - Outputs the message at the cursor with a newline
+- 
+- > Location: `bin/build/tools/colors.sh`
+- 
+- ### Arguments
+- 
+- - `--last` - Flag. Optional. Last message to be output, so output a newline as well at the end.
+- - `--first` - Flag. Optional. First message to be output, only clears line if available.
+- - `--inline` - Flag. Optional. Inline message displays with newline when animation is NOT available.
+- - `command` - Required. Commands which output a message.
+- 
+- ### Examples
+- 
+-     statusMessage decorate info "Loading ..."
+-     bin/load.sh >>"$loadLogFile"
+-     consoleLineFill
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Environment
+- 
+- - Intended to be run on an interactive console. Should support $(tput cols).
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - {SEE:consoleHasAnimation}
+- - {SEE:catchEnvironment}
+- - {SEE:decorate}
+- - {SEE:validate}
+- - {SEE:consoleLineFill}
+- 
+- ## `stringBegins`
+- 
+- > Find whether a substring exists as teh beginning of one or more strings
+- 
+- ### Usage
+- 
+-     stringBegins haystack [ needle ... ]
+- 
+- Does needle exist as a substring of haystack?
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `haystack` - String. Required. String to search.
+- - `needle ...` - String. Optional. One or more strings to find as the "start" of `haystack`.
+- 
+- ### Return codes
+- 
+- - `0` - IFF ANY needle matches as a substring of haystack
+- - `1` - No needles found in haystack
+- 
+- ## `stringBeginsInsensitive`
+- 
+- > Find whether a substring exists as teh beginning of one or more strings
+- 
+- ### Usage
+- 
+-     stringBeginsInsensitive haystack [ needle ... ]
+- 
+- Does needle exist as a substring of haystack? (case-insensitive)
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `haystack` - String. Required. String to search. (case-insensitive)
+- - `needle ...` - String. Optional. One or more strings to find as the "start" of `haystack` (case-insensitive)
+- 
+- ### Return codes
+- 
+- - `0` - IFF ANY needle matches as a substring of haystack (case-insensitive)
+- - `1` - No needles found in haystack (case-insensitive)
+- 
+- ## `stringContains`
+- 
+- > Find whether a substring exists in one or more strings
+- 
+- ### Usage
+- 
+-     stringContains haystack [ needle ... ]
+- 
+- Does needle exist as a substring of haystack?
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `haystack` - String. Required. String to search.
+- - `needle ...` - String. Optional. One or more strings to find as a substring of `haystack`.
+- 
+- ### Return codes
+- 
+- - `0` - IFF ANY needle matches as a substring of haystack
+- - `1` - No needles found in haystack
+- 
+- ## `stringContainsInsensitive`
+- 
+- > Find whether a substring exists in one or more strings
+- 
+- ### Usage
+- 
+-     stringContainsInsensitive haystack [ needle ... ]
+- 
+- Does needle exist as a substring of haystack?
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `haystack` - String. Required. String to search.
+- - `needle ...` - String. Optional. One or more strings to find as a case-insensitive substring of `haystack`.
+- 
+- ### Return codes
+- 
+- - `0` - IFF ANY needle matches as a substring of haystack
+- - `1` - No needles found in haystack
+- 
+- ## `stringFound`
+- 
+- > Check if one string is a substring of another set
+- 
+- ### Usage
+- 
+-     stringFound needle [ haystack ... ]
+- 
+- Check if one string is a substring of another set of strings (case-sensitive)
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `needle` - String. Required. Thing to search for, not blank.
+- - `haystack ...` - EmptyString. Optional. One or more array elements to match
+- 
+- ### Return codes
+- 
+- - `0` - If element is a substring of any haystack
+- - `1` - If element is NOT found as a substring of any haystack
+- 
+- ## `stringFoundInsensitive`
+- 
+- > Check if one string is a substring of another set
+- 
+- ### Usage
+- 
+-     stringFoundInsensitive needle [ haystack ... ]
+- 
+- Check if one string is a substring of another set of strings (case-insensitive)
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `needle` - String. Required. Thing to search for, not blank.
+- - `haystack ...` - EmptyString. Optional. One or more array elements to match
+- 
+- ### Return codes
+- 
+- - `0` - If element is a substring of any haystack
+- - `1` - If element is NOT found as a substring of any haystack
+- 
+- ## `stringHideNewlines`
+- 
+- > Replace newlines in text with a replacement token for single-line output
+- 
+- ### Usage
+- 
+-     stringHideNewlines [ --help ] text [ replace ]
+- 
+- Hide newlines in text (to ensure single-line output or other manipulation)
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `text` - String. Required. Text to replace.
+- - `replace` - String. Optional. Replacement string for newlines. Default is `␤`
+- 
+- ### Writes to standard output
+- 
+- The text with the newline replaced with another character, suitable typically for single-line output
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `stringLowercase`
+- 
+- > Convert text to stringLowercase
+- 
+- ### Usage
+- 
+-     stringLowercase [ -- ] [ --help ] text
+- 
+- Convert text to stringLowercase
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--` - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+- - `--help` - Flag. Optional. Display this help.
+- - `text` - EmptyString. Required. Text to convert to stringLowercase
+- 
+- ### Writes to standard output
+- 
+- `String`. The stringLowercase version of the `text`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - tr
+- 
+- ## `stringOffset`
+- 
+- > Outputs the integer offset of `needle` if found as substring
+- 
+- ### Usage
+- 
+-     stringOffset needle haystack
+- 
+- Outputs the integer offset of `needle` if found as substring in `haystack`
+- If `haystack` is not found, -1 is output
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `needle` - String. Required.
+- - `haystack` - String. Required.
+- 
+- ### Writes to standard output
+- 
+- `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `stringOffsetInsensitive`
+- 
+- > Outputs the integer offset of `needle` if found as substring
+- 
+- ### Usage
+- 
+-     stringOffsetInsensitive needle haystack
+- 
+- Outputs the integer offset of `needle` if found as substring in `haystack` (case-insensitive)
+- If `haystack` is not found, -1 is output
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `needle` - String. Required.
+- - `haystack` - String. Required.
+- 
+- ### Writes to standard output
+- 
+- `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `stringRandom`
+- 
+- > Outputs 40 random hexadecimal characters, stringLowercase.
+- 
+- ### Usage
+- 
+-     stringRandom
+- 
+- Outputs 40 random hexadecimal characters, stringLowercase.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Writes to standard output
+- 
+- `String`. A random hexadecimal string.
+- 
+- ### Examples
+- 
+-     testPassword="$(stringRandom)"
+- 
+- ### Sample Output
+- 
+- cf7861b50054e8c680a9552917b43ec2b9edae2b
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `stringTrimWords`
+- 
+- > Remove words from the end of a phrase
+- 
+- ### Usage
+- 
+-     stringTrimWords [ wordCount ] [ word0 ... ]
+- 
+- Remove words from the end of a phrase
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `wordCount` - PositiveInteger. Words to output
+- - `word0 ...` - EmptyString. One or more words to output
+- 
+- ### Examples
+- 
+-     printf "%s: %s\n" "Summary:" "$(stringTrimWords 10 $description)"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `stringUnquote`
+- 
+- > Unquote a string
+- 
+- ### Usage
+- 
+-     stringUnquote quote value
+- 
+- Unquote a string
+- 
+- > Location: `bin/build/tools/quote.sh`
+- 
+- ### Arguments
+- 
+- - `quote` - String. Required. Must match beginning and end of string.
+- - `value` - String. Required. Value to unquote.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `stringUppercase`
+- 
+- > Convert text to uppercase
+- 
+- ### Usage
+- 
+-     stringUppercase [ -- ] [ --help ] text
+- 
+- Convert text to uppercase
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--` - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+- - `--help` - Flag. Optional. Display this help.
+- - `text` - EmptyString. Required. text to convert to uppercase
+- 
+- ### Writes to standard output
+- 
+- `String`. The stringUppercase version of the `text`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - tr
+- 
+- ## `stringValidate`
+- 
+- > Ensure that every character in a text string passes all
+- 
+- ### Usage
+- 
+-     stringValidate [ text ] [ class0 ... ] [ --help ]
+- 
+- Ensure that every character in a text string passes all character class tests
+- 
+- > Location: `bin/build/tools/character.sh`
+- 
+- ### Arguments
+- 
+- - `text` - Text to validate
+- - `class0 ...` - One or more character classes that the characters in string should match
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `sysvInitScriptInstall`
+- 
+- > Install a script to run upon initialization.
+- 
+- ### Usage
+- 
+-     sysvInitScriptInstall binary [ --help ]
+- 
+- Install a script to run upon initialization.
+- 
+- > Location: `bin/build/tools/sysvinit.sh`
+- 
+- ### Arguments
+- 
+- - `binary` - String. Required. Binary to install at startup.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `sysvInitScriptUninstall`
+- 
+- > Remove an initialization script
+- 
+- ### Usage
+- 
+-     sysvInitScriptUninstall binary [ --help ]
+- 
+- Remove an initialization script
+- 
+- > Location: `bin/build/tools/sysvinit.sh`
+- 
+- ### Arguments
+- 
+- - `binary` - String. Required. Basename of installed script to remove.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `tarCreate`
+- 
+- > Platform agnostic tar cfz which ignores owner and attributes
+- 
+- ### Usage
+- 
+-     tarCreate target [ files ]
+- 
+- Platform agnostic tar cfz which ignores owner and attributes
+- 
+- `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (`.tgz` or `.tar.gz`) with user and group set to 0 and no extended attributes attached to the files.
+- 
+- > Location: `bin/build/tools/tar.sh`
+- 
+- ### Arguments
+- 
+- - `target` - FileDirectory. Required.The tar.gz file to create.
+- - `files` - File. Optional. A list of files to include in the tar file.
+- 
+- ### Reads standard input
+- 
+- A list of files to include in the tar file
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `tarExtractPattern`
+- 
+- > Platform agnostic tar extract with wildcards
+- 
+- ### Usage
+- 
+-     tarExtractPattern [ pattern ]
+- 
+- Platform agnostic tar extract with wildcards
+- 
+- e.g. `tar -xf '*/file.json'` or `tar -xf --wildcards '*/file.json'` depending on OS
+- 
+- `tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments.
+- 
+- > Location: `bin/build/tools/tar.sh`
+- 
+- ### Arguments
+- 
+- - `pattern` - The file pattern to extract
+- 
+- ### Reads standard input
+- 
+- A gzipped-tar file
+- 
+- ### Writes to standard output
+- 
+- The desired file
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `terraformInstall`
+- 
+- > Install terraform binary
+- 
+- ### Usage
+- 
+-     terraformInstall [ package ... ]
+- 
+- Install terraform binary
+- 
+- > Location: `bin/build/tools/terraform.sh`
+- 
+- ### Arguments
+- 
+- - `package ...` - String. Optional. Additional packages to install using `packageInstall`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `terraformUninstall`
+- 
+- > Remove terraform binary
+- 
+- ### Usage
+- 
+-     terraformUninstall [ package ... ]
+- 
+- Remove terraform binary
+- 
+- > Location: `bin/build/tools/terraform.sh`
+- 
+- ### Arguments
+- 
+- - `package ...` - String. Optional. Additional packages to uninstall using `packageUninstall`
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- #### Tag filters
+- 
+- Prefix a tag with `+` for `--tag` or `--skip-tag` queries to add the meaning "previous *AND*".
+- 
+- - `--tag foo --tag bar` means tests must have `foo` tag OR must have `bar` tag
+- - `--tag foo --tag +bar` means tests must have `foo` tag AND must have `bar` tag (must have both)
+- - `--skip-tag foo --skip-tag bar` means skip any test with `foo` tag OR with any test with `bar` tag (either)
+- - `--skip-tag foo --skip-tag +bar` means skip any test with `foo` tag AND with the `bar` tag (must have both)
+- - `--tag a --tag +b --tag c --tag +d --tag +e` is `(a and b) or (c and d and e)`
+- 
+- Your test functions can contain tags as follows:
+- 
+-     # Tag: tagA tagB
+-     # Tag: tagC
+-     # Test-Platform: !alpine alpine !linux linux !darwin darwin
+-     # Test-Skip: true
+-     # Test-Housekeeper: false
+-     # Test-Plumber: true
+-     # Test-TAP-Directive: Something
+-     # Test-After: testWhichShouldGoBefore
+-     # Test-Before: testWhichShouldGoAfter
+-     # Test-Fail: true
+-     testThingy() {
+-        ...
+-     }
+- 
+- Environment variables:
+- 
+- - `BUILD_TEST_FLAGS` - SemicolonDelimitedList. Add flags like 'Plumber:false' to disable settings across tests.
+- - `BUILD_DEBUG` - Many settings to debug different systems, comma-delimited.
+- 
+- Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--clean` - Flag. Optional. Delete test artifact files and exit. (No tests run)
+- -l |- ` --list` - Flag. Optional. List all test names (which match if applicable).
+- - `--env-file environmentFile` - EnvironmentFile. Optional. Load one ore more environment files prior to running tests
+- - `--index-file indexFile` - RealDirectoryFile. Optional. If supplied and exists, uses the index file for tests.
+- - `--cache-path cachePath` - Directory. Optional.
+- - `--make-index` - Flag. Optional. Generate the index file if supplied and quit.
+- - `--continue` - Flag. Optional. Continue from last successful test.
+- - `-c` - Flag. Optional. Continue from last successful test.
+- - `--delete directoryOrFile` - FileDirectory. Optional. A file or directory to delete when the test suite terminates.
+- - `--delete-common` - Flag. Delete `./vendor` and `./node_modules` (and other temporary build directories) by default.
+- - `--debug` - Flag. Optional. Enable debugging for `--junit` (saves caches).
+- - `--verbose` - Flag. Optional. Be verbose.
+- - `--stop` - Flag. Optional. Stop after a failure instead of attempting to continue.
+- - `--coverage - Flag. Optional. Feature in progress` - generate a coverage file for tests.
+- - `--no-stats` - Flag. Optional. Do not generate a test.stats file showing test timings when completed.
+- - `--messy` - Flag. Optional. Do not delete test artifact files afterwards.
+- - `--fail executor` - Callable. Optional. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
+- - `--cd-away` - Flag. Optional. Change directories to a temporary directory before each test.
+- - `--tap tapFile` - FileDirectory. Optional. Output test results in TAP format to `tapFile`.
+- - `--junit junitFile` - FileDirectory. Optional. Output test results in junit format to `junitFile`. If a directory is specified the output is to `junit.xml`.
+- --show |- ` --suites` - Flag. Optional. List all test suites.
+- -1 | --suite |- ` --one testSuite` - String. Optional. Add one test suite to run.
+- - `--tag tagName` - String. Optional. Include tests (only) tagged with this name.
+- --list-tags | --tags |- ` --show-tags` - Flag. Optional. Of the matched tests, display the tags that they have, if any. Unique list.
+- - `--skip-tag tagName` - String. Optional. Skip tests tagged with this name.
+- - `testFunctionPattern ...` - String. Optional. Test function (or substring of function name) to run.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `test-dump-environment` - When set tests will dump the environment at the end.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `testSuiteFunctionTested`
+- 
+- > When environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and assertion
+- 
+- ### Usage
+- 
+-     testSuiteFunctionTested [ --help ] [ --help ] [ --verbose ] [ functionName ... ]
+- 
+- When environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and assertion functions track which functions take a function value (for example, `assertExitCode`) and track functions which are run, and stores them in the testing cache directory which accumulate after each test run unless the cache is cleared.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--help` - Flag. Optional. Display this help.
+- - `--verbose` - Flag. Optional. Show list of true results when all arguments pass.
+- - `functionName ...` - String. Function to look up to see if it has been tested. One or more.
+- 
+- ### Return codes
+- 
+- - `0` - All functions were tested by the test suite at least once.
+- - `1` - At least one function was not tested by the test suite at least once.
+- 
+- ## `testSuiteOrdering`
+- 
+- > undocumented
+- 
+- ### Usage
+- 
+-     testSuiteOrdering [ --cache cacheDirectory ] finderFile
+- 
+- No documentation for `testSuiteOrdering`.
+- 
+- > Location: `bin/build/tools/test.sh`
+- 
+- ### Arguments
+- 
+- - `--cache cacheDirectory` - Directory. Optional. Cache directory to use for ordering work.
+- - `finderFile` - File. Required. File to reorder.
+- 
+- ### Writes to standard output
+- 
+- Reordered file.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textAlignLeft`
+- 
+- > align text left
+- 
+- ### Usage
+- 
+-     textAlignLeft [ --help ] characterWidth [ text ... ]
+- 
+- Format text and align it left using spaces.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `characterWidth` - UnsignedInteger. Required. Number of characters to align left
+- - `text ...` - Text to align left.
+- 
+- ### Examples
+- 
+-     printf "%s: %s\n" "$(textAlignLeft 14 Name)" "$name"
+-     printf "%s: %s\n" "$(textAlignLeft 14 Profession)" "$occupation"
+-     Name          : Tyrone
+-     Profession    : Engineer
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textAlignRight`
+- 
+- > align text right
+- 
+- ### Usage
+- 
+-     textAlignRight [ characterWidth ] [ text ... ] [ --help ]
+- 
+- Format text and align it right using spaces.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `characterWidth` - Characters to align right
+- - `text ...` - Text to align right
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     printf "%s: %s\n" "$(textAlignRight 20 Name)" "$name"
+-     printf "%s: %s\n" "$(textAlignRight 20 Profession)" "$occupation"
+-                 Name: Juanita
+-           Profession: Engineer
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textCannon`
+- 
+- > Replace text `fromText` with `toText` in files
+- 
+- ### Usage
+- 
+-     textCannon [ --help ] [ --handler handler ] [ --path cannonPath ] fromText toText [ findArgs ... ]
+- 
+- Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
+- 
+- This can break your files so use with caution. Blank `searchText` is **not allowed**.
+- The term `textCannon` is not a mistake - it will break something at some point.
+- 
+- > Location: `bin/build/tools/map.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--path cannonPath` - Directory. Optional. Run textCannon operation starting in this directory.
+- - `fromText` - Required. String of text to search for.
+- - `toText` - Required. String of text to replace.
+- - `findArgs ...` - Arguments. Optional. Any additional arguments are meant to filter files.
+- 
+- ### Examples
+- 
+-     textCannon master main ! -path '*/old-version/*')
+- 
+- ### Return codes
+- 
+- - `0` - Success, no files changed
+- - `3` - At least one or more files were modified successfully
+- - `1` - --path is not a directory
+- - `1` - searchText is not blank
+- - `1` - `fileTemporaryName` failed
+- - `2` - Arguments are identical
+- 
+- ## `textRemoveFields`
+- 
+- > Remove fields from left to right from a text file
+- 
+- ### Usage
+- 
+-     textRemoveFields [ fieldCount ]
+- 
+- Remove fields from left to right from a text file as a pipe
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `fieldCount` - Integer. Optional. Number of field to remove. Default is just first `1`.
+- 
+- ### Reads standard input
+- 
+- A file with fields separated by spaces
+- 
+- ### Writes to standard output
+- 
+- The same file with the first `fieldCount` fields removed from each line.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textRepeat`
+- 
+- > Repeat a string
+- 
+- ### Usage
+- 
+-     textRepeat `count` `text` .. [ --help ]
+- 
+- Repeat a string
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `count` - UnsignedInteger. Required. Count of times to repeat.
+- - ``text` ..` - String. Required. A sequence of characters to repeat.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     textRepeat 80 =
+-     decorate info Hello world
+-     textRepeat 80 -
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textReplace`
+- 
+- > Replace all occurrences of a string within another string
+- 
+- ### Usage
+- 
+-     textReplace needle [ replacement ] [ haystack ]
+- 
+- Replace all occurrences of a string within another string
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `needle` - String. Required. String to replace.
+- - `replacement` - EmptyString.  String to replace needle with.
+- - `haystack` - EmptyString. Optional. String to modify. If not supplied, reads from standard input.
+- 
+- ### Reads standard input
+- 
+- If no haystack supplied reads from standard input and replaces the string on each line read.
+- 
+- ### Writes to standard output
+- 
+- New string with needle replaced
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textReplaceFirst`
+- 
+- > Replaces the first and only the first occurrence of a
+- 
+- ### Usage
+- 
+-     textReplaceFirst [ searchString ] [ replaceString ]
+- 
+- Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
+- Without arguments, displays help.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `searchString` - String. Thing to search for.
+- - `replaceString` - String. Thing to replace search string with.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs modified lines
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textSHA`
+- 
+- > SHA1 checksum of standard input
+- 
+- ### Usage
+- 
+-     textSHA [ filename ... ] [ --cache cacheDirectory ]
+- 
+- Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
+- 
+- You can use this as a pipe or pass in arguments which are files to be hashed.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `filename ...` - File. One or more filenames to generate a checksum for
+- - `--cache cacheDirectory` - Directory. Cache file cache values here for speed optimization.
+- 
+- ### Reads standard input
+- 
+- any file
+- 
+- ### Writes to standard output
+- 
+- `String`. A hexadecimal string which uniquely represents the data in `stdin`.
+- 
+- ### Debugging settings
+- 
+- Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+- 
+- - `textSHA` - Outputs all requested textSHA calls to log called `textSHA.log`.
+- 
+- ### Examples
+- 
+-     textSHA < "$fileName"
+-     textSHA "$fileName0" "$fileName1"
+- 
+- ### Sample Output
+- 
+- cf7861b50054e8c680a9552917b43ec2b9edae2b
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textSingleBlankLines`
+- 
+- > Ensures blank lines are singular
+- 
+- ### Usage
+- 
+-     textSingleBlankLines [ --help ]
+- 
+- Ensures blank lines are singular
+- Used often to clean up markdown `.md` files, but can be used for any line-based configuration file which allows blank lines.
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs modified lines where any blank lines are replaced with a single blank line.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textTrim`
+- 
+- > Trim whitespace of a bash argument
+- 
+- ### Usage
+- 
+-     textTrim [ text ]
+- 
+- Trim spaces and only spaces from arguments or a pipe
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs trimmed lines
+- 
+- ### Examples
+- 
+-     textTrim "$token"
+-     grep "$tokenPattern" | textTrim > "$tokensFound"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Credits
+- 
+- Thanks to [Chris F.A. Johnson (2008)
+- ](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
+- ).
+- 
+- ## `textTrimBoth`
+- 
+- > Trim whitespace from beginning and end of a stream
+- 
+- ### Usage
+- 
+-     textTrimBoth [ --help ]
+- 
+- Trim whitespace from beginning and end of a stream
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs modified lines
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textTrimHead`
+- 
+- > Removes any blank lines from the beginning of a stream
+- 
+- ### Usage
+- 
+-     textTrimHead [ --help ]
+- 
+- Removes any blank lines from the beginning of a stream
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs modified lines
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textTrimLeft`
+- 
+- > Trim whitespace of a bash argument
+- 
+- ### Usage
+- 
+-     textTrimLeft [ text ]
+- 
+- Trim spaces and only spaces from the left side of a string passed as arguments or a pipe
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs trimmed lines
+- 
+- ### Examples
+- 
+-     textTrimLeft "$token"
+-     grep "$tokenPattern" | textTrimLeft > "$tokensFound"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textTrimRight`
+- 
+- > Trim whitespace of a bash argument
+- 
+- ### Usage
+- 
+-     textTrimRight [ text ]
+- 
+- Trim spaces and only spaces from the right side of a string passed as arguments or a pipe
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `text` - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs trimmed lines
+- 
+- ### Examples
+- 
+-     textTrimRight "$token"
+-     grep "$tokenPattern" | textTrimRight > "$tokensFound"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textTrimTail`
+- 
+- > Removes any blank lines from the end of a stream
+- 
+- ### Usage
+- 
+-     textTrimTail [ --help ]
+- 
+- Removes any blank lines from the end of a stream
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- Reads lines from stdin until EOF
+- 
+- ### Writes to standard output
+- 
+- Outputs modified lines
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `textVersionSort`
+- 
+- > Sort versions in the format v0.0.0
+- 
+- ### Usage
+- 
+-     textVersionSort [ -r | --reverse ] [ --help ]
+- 
+- Sorts semantic versions prefixed with a `v` character; intended to be used as a pipe.
+- 
+- vXXX.XXX.XXX
+- 
+- for sort - -k 1.c,1 - the `c` is the 1-based character index, so 2 means skip the 1st character
+- 
+- Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume
+- 
+- > Location: `bin/build/tools/text.sh`
+- 
+- ### Arguments
+- 
+- -r |- ` --reverse` - Reverse the sort order (optional)
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Examples
+- 
+-     git tag | grep -e '^v[0-9.]*$' | textVersionSort
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:throwArgument}
+- - sort
+- - {SEE:bashDocumentation}
+- - {SEE:decorate}
+- 
+- ## `throwArgument`
+- 
+- > Run `handler` with an argument error
+- 
+- ### Usage
+- 
+-     throwArgument handler [ message ... ]
+- 
+- Run `handler` with an argument error
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - Function. Required. Failure command
+- - `message ...` - String. Optional. Error message to display.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:isFunction}
+- - {SEE:returnArgument}
+- - {SEE:decorate}
+- - {SEE:debuggingStack}
+- 
+- ## `throwEnvironment`
+- 
+- > Run `handler` with an environment error
+- 
+- ### Usage
+- 
+-     throwEnvironment handler [ message ... ]
+- 
+- Run `handler` with an environment error
+- 
+- > Location: `bin/build/tools/_sugar.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - Function. Required. Error handler.
+- - `message ...` - String. Optional. Error message
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:isFunction}
+- - {SEE:returnArgument}
+- - {SEE:decorate}
+- - {SEE:debuggingStack}
+- 
+- ## `timing`
+- 
+- > Time command, similar to `time` but uses internal functions
+- 
+- ### Usage
+- 
+-     timing command [ --help ] [ --name ] [ --slow slowMilliseconds ] [ --fast fastMilliseconds ]
+- 
+- Time command, similar to `time` but uses internal functions
+- Outputs time as `timingReport`
+- 
+- > Location: `bin/build/tools/timing.sh`
+- 
+- ### Arguments
+- 
+- - `command` - Executable. Required. Command to run.
+- - `--help` - Flag. Optional. Display this help.
+- - `--name` - String. Optional. Display this help.
+- - `--slow slowMilliseconds` - UnsignedInteger. Optional. Display output if the underlying commend takes is slower (longer) than this threshold.
+- - `--fast fastMilliseconds` - UnsignedInteger. Optional. Display output if the underlying commend runs is faster (shorter) than this threshold.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `timingDuration`
+- 
+- > Output timing like "1 day, 2 hours, 3 minutes, 4
+- 
+- ### Usage
+- 
+-     timingDuration [ duration ] [ --help ] [ --handler handler ] [ --stop stopUnit ]
+- 
+- Output timing like "1 day, 2 hours, 3 minutes, 4 seconds, 5 ms"
+- 
+- > Location: `bin/build/tools/timing.sh`
+- 
+- ### Arguments
+- 
+- - `duration` - UnsignedInteger. Optional. Timing to output
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `--stop stopUnit` - String. Optional. Stop displaying fractional output after this unit is displayed.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `timingElapsed`
+- 
+- > Show elapsed time from a start time
+- 
+- ### Usage
+- 
+-     timingElapsed timingOffset [ --help ]
+- 
+- Show elapsed time from a start time
+- 
+- > Location: `bin/build/tools/timing.sh`
+- 
+- ### Arguments
+- 
+- - `timingOffset` - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- UnsignedInteger
+- 
+- ### Examples
+- 
+-     init=$(timingStart)
+-     ...
+-     timingElapsed "$init"
+- 
+- ### Sample Output
+- 
+- 4232
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:__timestamp}
+- - {SEE:returnEnvironment}
+- - {SEE:validate}
+- - date
+- 
+- ## `timingFormat`
+- 
+- > Format a timing output (milliseconds) as seconds using a decimal
+- 
+- ### Usage
+- 
+-     timingFormat [ --help ] [ delta ]
+- 
+- Format a timing output (milliseconds) as seconds using a decimal
+- 
+- > Location: `bin/build/tools/timing.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `delta` - Integer. Milliseconds
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `timingReport`
+- 
+- > Output the time elapsed
+- 
+- ### Usage
+- 
+-     timingReport [ --slow slowMilliseconds ] [ --fast fastMilliseconds ] [ --style style ] [ --color style ] [ --end endTimestamp ] start [ message ] [ --help ] [ --handler handler ]
+- 
+- Outputs the timing optionally prefixed by a message.
+- 
+- Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
+- Condition additions `--slow` and `--fast` allow display conditional on the time output.
+- 
+- > Location: `bin/build/tools/timing.sh`
+- 
+- ### Arguments
+- 
+- - `--slow slowMilliseconds` - UnsignedInteger. Optional. Display output if the displayed time is slower (longer) than this threshold.
+- - `--fast fastMilliseconds` - UnsignedInteger. Optional. Display output if the displayed time is faster (shorter) than this threshold.
+- - `--style style` - String. Optional. Display the message using this style. Default style is `success`
+- - `--color style` - String. Optional. Display the message using this style. Default style is `success`. Deprecated 2026-04.
+- - `--end endTimestamp` - UnsignedInteger. Optional. Use this as the end time to display. Otherwise uses the current time. Unit is milliseconds.
+- - `start` - UnsignedInteger|EmptyString. Required. Unix timestamp in milliseconds. See `timingStart`. Unit is `milliseconds`. Invalid values do NOT produce an error.
+- - `message` - Any additional arguments are output before the elapsed value computed
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- 
+- ### Examples
+- 
+-     init=$(timingStart)
+-     ...
+-     timingReport "$init" "Deploy completed in"
+-     timingReport "$start" --slow 5000 "Reporting should be completed in less than 5 seconds."
+-     timingReport "$start" --fast 1000 --style error "Deployment completed too quickly; please check systems."
+- 
+- ### Return codes
+- 
+- - `0` - Exits with exit code zero
+- 
+- ### See Also
+- 
+- - {SEE:timingStart}
+- 
+- ## `timingStart`
+- 
+- > Start a timer
+- 
+- ### Usage
+- 
+-     timingStart [ --help ]
+- 
+- Outputs the offset in milliseconds from midnight UTC January 1, 1970.
+- 
+- Only fails if `date` is not installed
+- 
+- > Location: `bin/build/tools/timing.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- UnsignedInteger
+- 
+- ### Examples
+- 
+-     init=$(timingStart)
+-     ...
+-     timingReport "$init" "Completed in"
+-     start=$(timingStart) && printf "%d\n" "$start"
+-     1777501474602
+- 
+- ### Sample Output
+- 
+- 1777501474602
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - __timestamp,
+- - {SEE:returnEnvironment}
+- - date
+- 
+- ## `tofuInstall`
+- 
+- > Install tofu binary
+- 
+- ### Usage
+- 
+-     tofuInstall [ package ] [ --help ]
+- 
+- Install tofu binary
+- 
+- > Location: `bin/build/tools/tofu.sh`
+- 
+- ### Arguments
+- 
+- - `package` - String. Optional. Additional packages to install using `packageInstall`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - {SEE:tofuUninstall}
+- - ## `packageInstall`
+- 
+- ## `tofuUninstall`
+- 
+- > Uninstall tofu binary and apt sources keys
+- 
+- ### Usage
+- 
+-     tofuUninstall [ package ] [ --help ]
+- 
+- Uninstall tofu binary and apt sources keys
+- 
+- > Location: `bin/build/tools/tofu.sh`
+- 
+- ### Arguments
+- 
+- - `package` - String. Optional. Additional packages to uninstall using `packageUninstall`
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### See Also
+- 
+- - ## `tofuInstall`
+- 
+- ## `tools`
+- 
+- > Run a Zesk Build command or load it
+- 
+- ### Usage
+- 
+-     tools [ --help ] [ --start startDirectory ] [ --verbose ] [ ... ]
+- 
+- Run a Zesk Build command or load it
+- 
+- > Location: `bin/build/tools/build.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--start startDirectory` - Directory. Optional. Start searching for a build installation at this location and searching upwards in the file hierarchy.
+- - `--verbose` - Flag. Optional. Be verbose.
+- - `...` - Callable. Optional. Run this command after loading in the current build context.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlContentLength`
+- 
+- > Get the size of a remote URL
+- 
+- ### Usage
+- 
+-     urlContentLength [ --help ] [ --handler handler ] url
+- 
+- Get the size of a remote URL
+- 
+- > Location: `bin/build/tools/web.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `url` - URL. Required. URL to fetch the Content-Length.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlFetch`
+- 
+- > Fetch URL content
+- 
+- ### Usage
+- 
+-     urlFetch [ --help ] [ --dump headerFile ] [ --header header ] [ --wget ] [ --redirect-max maxRedirections ] [ --curl ] [ --binary binaryName ] [ --argument-format format ] [ --user userName ] [ --password password ] [ --agent userAgent ] [ --timeout timeoutSeconds ] url [ file ]
+- 
+- Fetch URL content
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--dump headerFile` - String. Optional. Dump the headers to the file specified, specify `-` to output to `stdout`.
+- - `--header header` - String. Optional. Send a header in the format 'Name: Value'
+- - `--wget` - Flag. Optional. Force use of wget. If unavailable, fail.
+- - `--redirect-max maxRedirections` - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.
+- - `--curl` - Flag. Optional. Force use of curl. If unavailable, fail.
+- - `--binary binaryName` - Callable. Use this binary instead. If the base name of the file is not `curl` or `wget` you MUST supply `--argument-format`.
+- - `--argument-format format` - String. Optional. Supply `curl` or `wget` for parameter formatting.
+- - `--user userName` - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
+- - `--password password` - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.
+- - `--agent userAgent` - String. Optional. Specify the user agent string.
+- - `--timeout timeoutSeconds` - PositiveInteger. Optional. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
+- - `url` - URL. Required. URL to fetch to target file.
+- - `file` - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ### Requires
+- 
+- - {SEE:returnMessage}
+- - {SEE:executableExists}
+- - {SEE:decorate}
+- - {SEE:validate}
+- - {SEE:throwArgument}
+- - {SEE:catchArgument}
+- - {SEE:throwEnvironment}
+- - {SEE:catchEnvironment}
+- 
+- ## `urlFilter`
+- 
+- > Open URLs which appear in a stream
+- 
+- ### Usage
+- 
+-     urlFilter [ --show-file ] [ --file name ] [ file ]
+- 
+- Open URLs which appear in a stream
+- Takes a text file and outputs any `https://` or `http://` URLs found within.
+- URLs are explicitly trimmed at quote, whitespace and escape boundaries.
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--show-file` - Boolean. Optional. Show the file name in the output (suffix with `: `)
+- - `--file name - String. Optional. The file name to display` - can be any text.
+- - `file` - File. Optional. A file to read and output URLs found.
+- 
+- ### Reads standard input
+- 
+- text
+- 
+- ### Writes to standard output
+- 
+- line:URL
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlMatchesLocalFileSize`
+- 
+- > Compare a remote file size with a local file size
+- 
+- ### Usage
+- 
+-     urlMatchesLocalFileSize [ --help ] url file
+- 
+- Compare a remote file size with a local file size
+- 
+- > Location: `bin/build/tools/web.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `url` - URL. Required. URL to check.
+- - `file` - File. Required. File to compare.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlOpen`
+- 
+- > Open a URL using the operating system
+- 
+- ### Usage
+- 
+-     urlOpen [ --help ] [ --ignore ] [ --wait ] [ --url url ]
+- 
+- Open a URL using the operating system
+- Usage urlOpen [ --help ]
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--ignore` - Flag. Optional. Ignore any invalid URLs found.
+- - `--wait` - Flag. Optional. Display this help.
+- - `--url url` - URL. Optional. URL to download.
+- 
+- ### Reads standard input
+- 
+- line:URL
+- 
+- ### Writes to standard output
+- 
+- none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlOpener`
+- 
+- > URL opener stream filter
+- 
+- ### Usage
+- 
+-     urlOpener [ --exec ] [ --help ]
+- 
+- Open URLs which appear in a stream
+- (but continue to output the stream)
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--exec` - Executable. Optional. If not supplied uses `urlOpen`.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Reads standard input
+- 
+- text
+- 
+- ### Writes to standard output
+- 
+- text
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlParse`
+- 
+- > Simple URL Parsing
+- 
+- ### Usage
+- 
+-     urlParse [ --help ] url [ --prefix prefix ] [ --stringUppercase ]
+- 
+- Simple URL parsing. Converts a `url` into values which can be parsed or evaluated.
+- 
+- Generates output which can be evaluated and separates the URL into components.
+- 
+- - `url` - URL
+- - `host` - Host
+- - `user` - User
+- - `password` - Password
+- - `port` - Connection port
+- - `name` - Path with the first slash removed
+- - `path` - Path
+- 
+- Does little to no validation of any characters so best used for well-formed input.
+- 
+- Now works on multiple URLs, output is separated by a blank line for new entries
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `url` - String. Required. a Uniform Resource Locator
+- - `--prefix prefix` - String. Optional. Prefix variable names with this string.
+- - `--stringUppercase` - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default).
+- 
+- ### Examples
+- 
+-     eval "$(urlParse scheme://user:password@host:port/path)"
+-     echo $name
+- 
+- ### Return codes
+- 
+- - `0` - If parsing succeeds
+- - `1` - If parsing fails
+- 
+- ## `urlParseItem`
+- 
+- > Get a URL component directly
+- 
+- ### Usage
+- 
+-     urlParseItem [ component ] url ...
+- 
+- Extract a component from one or more URLs
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `component` - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`
+- - `url ...` - String. URL. Required. A Uniform Resource Locator used to specify a database connection
+- 
+- ### Examples
+- 
+-     decorate info "Connecting as $(urlParseItem user "$url")"
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlSchemeDefaultPort`
+- 
+- > Output the port for the given scheme
+- 
+- ### Usage
+- 
+-     urlSchemeDefaultPort [ --help ] [ --handler handler ] scheme ...
+- 
+- Output the port for the given scheme
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
+- - `scheme ...` - String. Required. Scheme to look up the default port used for that scheme.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `urlValid`
+- 
+- > Is a URL valid?
+- 
+- ### Usage
+- 
+-     urlValid [ --help ] url ...
+- 
+- Checks if a URL is syntactically valid - solely a text check.
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `url ...` - String. URL. Required. A Uniform Resource Locator
+- 
+- ### Return codes
+- 
+- - `0` - all URLs passed in are valid
+- - `1` - at least one URL passed in is not a valid URL
+- 
+- ## `userAgentDefault`
+- 
+- > Default user agent string for web agents
+- 
+- ### Usage
+- 
+-     userAgentDefault [ --help ]
+- 
+- A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)
+- 
+- > Location: `bin/build/tools/url.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Writes to standard output
+- 
+- String
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `userHome`
+- 
+- > The current user HOME (must exist)
+- 
+- ### Usage
+- 
+-     userHome [ pathSegment ]
+- 
+- The current user HOME (must exist)
+- No directories *should* be created by calling this, nor should any assumptions be made about the ability to read or write files in this directory.
+- 
+- > Location: `bin/build/tools/user.sh`
+- 
+- ### Arguments
+- 
+- - `pathSegment` - String. Optional. Add these path segments to the HOME directory returned. Does not create them.
+- 
+- ### Return codes
+- 
+- - `1` - Issue with `buildEnvironmentGet HOME` or $HOME is not a directory (say, it's a file)
+- - `0` - Home directory exists.
+- 
+- ## `userRecord`
+- 
+- > Quick user database look up
+- 
+- ### Usage
+- 
+-     userRecord index [ user ] [ database ]
+- 
+- Look user up, output a single user database record.
+- 
+- > Location: `bin/build/tools/user.sh`
+- 
+- ### Arguments
+- 
+- - `index` - PositiveInteger. Required. Index (1-based) of field to select.
+- - `user` - String. Optional. User name to look up. Uses `whoami` if not supplied.
+- - `database` - File. Optional. User name database file to examine. Uses `/etc/passwd` if not supplied.
+- 
+- ### Writes to standard output
+- 
+- String. Associated record with `index` and `user`.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `userRecordHome`
+- 
+- > Quick user database query of the user home directory
+- 
+- ### Usage
+- 
+-     userRecordHome [ user ] [ database ]
+- 
+- Look user up, output user home directory
+- 
+- > Location: `bin/build/tools/user.sh`
+- 
+- ### Arguments
+- 
+- - `user` - String. Optional. User name to look up. Uses `whoami` if not supplied.
+- - `database` - File. Optional. User name database file to examine. Uses `/etc/passwd` if not supplied.
+- 
+- ### Writes to standard output
+- 
+- `Directory`. The user home directory.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `userRecordName`
+- 
+- > Quick user database query of the user name
+- 
+- ### Usage
+- 
+-     userRecordName [ user ] [ database ]
+- 
+- Look user up, output user name
+- 
+- > Location: `bin/build/tools/user.sh`
+- 
+- ### Arguments
+- 
+- - `user` - String. Optional. User name to look up. Uses `whoami` if not supplied.
+- - `database` - File. Optional. User name database file to examine. Uses `/etc/passwd` if not supplied.
+- 
+- ### Writes to standard output
+- 
+- the user name
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `validate`
+- 
+- > Validate a value by type
+- 
+- ### Usage
+- 
+-     validate handler type name value
+- 
+- Validation sets are passed as three arguments, optionally repeated: `type` `name ` `value`
+- 
+- Types are case-insensitive:
+- 
+- #### Text and formats
+- 
+- - `EmptyString` - (alias `string?`, `any`) - Any value at all
+- - `String` - (no aliases) - Any non-empty string
+- - `EnvironmentVariable` - (alias `env`) - A non-empty string which contains alphanumeric characters or the underscore and does not begin with a digit.
+- - `Secret` - (no aliases) - A value which is security sensitive
+- - `Date` - (no aliases) - A valid date in the form `YYYY-MM-DD`
+- - `URL` - (no aliases) - A Universal Resource Locator in the form `scheme://user:password@host:port/path`
+- 
+- #### Numbers
+- 
+- - `Flag` - (no aliases) - Presence of an option to enables a feature. (e.g. `--debug` is a `flag`)
+- - `Boolean` - (alias `bool`) - A value `true` or `false`
+- - `BooleanLike` - (aliases `boolean?`, `bool?`) - A value which should be evaluated to a boolean value
+- - `Integer` - (alias `int`) - Any integer, positive or negative
+- - `UnsignedInteger` - (aliases `uint`, `unsigned`) - Any integer 0 or greater
+- - `PositiveInteger` - (alias `positive`) - Any integer 1 or greater
+- - `Number` - (alias `number`) - Any integer or real number
+- 
+- #### File system
+- 
+- - `Exists` - (no aliases - A file (or directory) which exists in the file system of any type
+- - `File` - (no aliases) - A file which exists in the file system which is not any special type
+- - `Link` - (no aliases) - A link which exists in the file system
+- - `Directory` - (alias `dir`) - A directory which exists in the file system
+- - `DirectoryList` - (alias `dirlist`) - One or more directories as arguments
+- - `FileDirectory` - (alias `parent`) - A file whose directory exists in the file system but which may or may not exist.
+- - `RealDirectory` - (alias `realdir`) - The real path of a directory which must exist.
+- - `RealFile` - (alias `real`) - The real path of a file which must exist.
+- - `RemoteDirectory` - (alias `remotedir`) - The path to a directory on a remote host.
+- 
+- #### Application-relative
+- 
+- - `ApplicationDirectory` - (alias `appdir`) - A directory path relative to `BUILD_HOME`
+- - `ApplicationFile` - (alias `appfile`) - A file path relative to `BUILD_HOME`
+- - `ApplicationDirectoryList` - (alias `appdirlist`) - One or more arguments of type `ApplicationDirectory`
+- 
+- #### Functional
+- 
+- - `Type` - (no aliases) - A type which can be validated by `validate`
+- - `Function` - (alias `function`) - A defined function
+- - `Callable` - (alias `callable`) - A function or executable
+- - `Executable` - (alias `bin`) - Any binary available within the `PATH`
+- 
+- #### Lists
+- 
+- - `Array` - (no aliases) - Zero or more arguments
+- - `List` - (no  aliases) - Zero or more arguments
+- - `ColonDelimitedList` - (alias `list:`) - A colon-delimited list `:`
+- - `CommaDelimitedList` - (alias `list,`) - A comma-delimited list `,`
+- 
+- You can repeat the `type` `name` `value` more than once in the arguments and each will be checked until one fails
+- 
+- `validate` is intended to be extensible as well as reducible to smaller sizes by limiting type validation to used
+- types only. The core validation types can be used **CASE-SENSITIVE ONLY** in smaller scripts using the core `validate`
+- identical document which includes:
+- 
+- - `String`
+- - `PositiveInteger`
+- - `Function`
+- - `Callable`
+- - `Type`
+- 
+- The function `_validateTypeMapper` is defined and can map types to internal types. If not present, then no conversion
+- is done. For a type to be considered valid, the corresponding `__validateType` prefixed function **MUST** exist.
+- 
+- Internally the function `_validateTypeMapperDefault` is the default type mapper and does the stringLowercase and alias lookups.
+- 
+- > Location: `bin/build/tools/validate.sh`
+- 
+- ### Arguments
+- 
+- - `handler` - Function. Required. Error handler.
+- - `type` - Type. Required. Type to validate. If more than validation set is specified, specifying a `type` of "" inherits the previous `type`. Blank `types` are not allowed.
+- - `name` - String. Required. Name of the variable which is being validated. If more than validation set is specified, specifying a name of "" inherits the previous name. Blank names are not allowed.
+- - `value` - EmptyString. Required. Value to validate.
+- 
+- ### Return codes
+- 
+- - `0` - `value` is valid, stdout is a filtered version of the value to be used
+- - `2` - `value` is invalid, output reason to stderr
+- - `120` - `value` is invalid, return calling function immediately
+- 
+- ### Requires
+- 
+- - {SEE:__validateTypeString}
+- - {SEE:__validateTypePositiveInteger}
+- - {SEE:__validateTypeFunction}
+- - {SEE:__validateTypeCallable}
+- - {SEE:__validateTypeType}
+- - {SEE:isFunction}
+- - {SEE:throwArgument}
+- - {SEE:helpArgument}
+- - {SEE:decorate}
+- 
+- ## `validateTypeList`
+- 
+- > List types which can be validated
+- 
+- ### Usage
+- 
+-     validateTypeList
+- 
+- List types which can be validated
+- 
+- > Location: `bin/build/tools/validate.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `versionNextMinor`
+- 
+- > Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
+- 
+- ### Usage
+- 
+-     versionNextMinor lastVersion
+- 
+- Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
+- 
+- > Location: `bin/build/tools/version.sh`
+- 
+- ### Arguments
+- 
+- - `lastVersion` - String. Required. Version to calculate the next minor version.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `versionNoVee`
+- 
+- > Take one or more versions and strip the leading `v`
+- 
+- ### Usage
+- 
+-     versionNoVee
+- 
+- Take one or more versions and strip the leading `v`
+- 
+- > Location: `bin/build/tools/version.sh`
+- 
+- ### Arguments
+- 
+- - none
+- 
+- ### Reads standard input
+- 
+- Versions containing a preceding `v` character (optionally)
+- 
+- ### Writes to standard output
+- 
+- Versions with the initial `v` (if it exists) removed
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `websiteScrape`
+- 
+- > Scrape a website.
+- 
+- ### Usage
+- 
+-     websiteScrape [ --help ] url
+- 
+- Scrape a website.
+- 
+- Untested, and in progress. Do not use seriously.
+- Uses `wget` to fetch a site, convert it to HTML nad rewrite it for local consumption.
+- Site is stored in a directory called `host` for the URL requested.
+- This is not final yet and may not work properly.
+- 
+- > Location: `bin/build/tools/web.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `url` - URL. Required. Url to scrape recursively.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `xdebugDisable`
+- 
+- > Disable Xdebug on systems that have it
+- 
+- ### Usage
+- 
+-     xdebugDisable [ --help ]
+- 
+- Disable Xdebug on systems that have it
+- 
+- > Location: `bin/build/tools/xdebug.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `xdebugEnable`
+- 
+- > Enable Xdebug on systems that have it
+- 
+- ### Usage
+- 
+-     xdebugEnable [ --help ]
+- 
+- Enable Xdebug on systems that have it
+- 
+- > Location: `bin/build/tools/xdebug.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `xdebugInstall`
+- 
+- > Install the xdebug PHP Debugger
+- 
+- ### Usage
+- 
+-     xdebugInstall [ --help ]
+- 
+- Install the xdebug PHP Debugger
+- 
+- > Location: `bin/build/tools/xdebug.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 
+- ## `yarnInstall`
+- 
+- > Install yarn in the build environment
+- 
+- ### Usage
+- 
+-     yarnInstall [ --version versionCode ] [ --help ]
+- 
+- Install yarn in the build environment
+- If this fails it will output the installation log.
+- When this tool succeeds the `yarn` binary is available in the local operating system.
+- 
+- > Location: `bin/build/tools/yarn.sh`
+- 
+- ### Arguments
+- 
+- - `--version versionCode` - String. Optional. Install this version of yarn. Defaults to `stable` if `BUILD_YARN_VERSION` is blank or unset.
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `1` - If installation of yarn fails
+- - `0` - If yarn is already installed or installed without error
+- 
+- ### Environment
+- 
+- - - BUILD_YARN_VERSION
+- 
+- ## `yumIsInstalled`
+- 
+- > Is yum installed?
+- 
+- ### Usage
+- 
+-     yumIsInstalled [ --help ]
+- 
+- Is yum installed?
+- 
+- > Location: `bin/build/tools/yum.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- 
+- ### Return codes
+- 
+- - `0` - Success
+- - `1` - Environment error
+- - `2` - Argument error
+- 

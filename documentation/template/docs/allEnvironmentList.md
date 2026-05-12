@@ -1,106 +1,106 @@
-- {SEE:__BASH_PROMPT_MARKERS}
-- {SEE:__BASH_PROMPT_MODULES}
-- {SEE:__BASH_PROMPT_PREVIOUS}
-- {SEE:__BASH_PROMPT_SLOW}
-- {SEE:__BUILD_HAS_TTY}
-- {SEE:APACHE_HOME}
-- {SEE:APPLICATION_BUILD_DATE}
-- {SEE:APPLICATION_CODE}
-- {SEE:APPLICATION_CODE_EXTENSIONS}
-- {SEE:APPLICATION_CODE_IGNORE}
-- {SEE:APPLICATION_ID}
-- {SEE:APPLICATION_JSON}
-- {SEE:APPLICATION_JSON_PREFIX}
-- {SEE:APPLICATION_NAME}
-- {SEE:APPLICATION_OWNER}
-- {SEE:APPLICATION_REMOTE_HOME}
-- {SEE:APPLICATION_TAG}
-- {SEE:APPLICATION_VERSION}
-- {SEE:AWS_ACCESS_KEY_DATE}
-- {SEE:AWS_ACCESS_KEY_ID}
-- {SEE:AWS_PROFILE}
-- {SEE:AWS_REGION}
-- {SEE:AWS_SECRET_ACCESS_KEY}
-- {SEE:BITBUCKET_CLONE_DIR}
-- {SEE:BITBUCKET_REPO_SLUG}
-- {SEE:BITBUCKET_WORKSPACE}
-- {SEE:BUILD_CACHE_HOME}
-- {SEE:BUILD_COLORS}
-- {SEE:BUILD_COMPANY}
-- {SEE:BUILD_COMPANY_LINK}
-- {SEE:BUILD_COMPOSER_VERSION}
-- {SEE:BUILD_DEBUG}
-- {SEE:BUILD_DEBUG_LINES}
-- {SEE:BUILD_DEVELOPMENT_HOME}
-- {SEE:BUILD_DOCKER_BITBUCKET_IMAGE}
-- {SEE:BUILD_DOCKER_BITBUCKET_PATH}
-- {SEE:BUILD_DOCKER_IMAGE}
-- {SEE:BUILD_DOCKER_PATH}
-- {SEE:BUILD_DOCKER_PLATFORM}
-- {SEE:BUILD_DOCUMENTATION_PATH}
-- {SEE:BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN}
-- {SEE:BUILD_ENVIRONMENT_DIRS}
-- {SEE:BUILD_HOME}
-- {SEE:BUILD_HOOK_DIRS}
-- {SEE:BUILD_HOOK_EXTENSIONS}
-- {SEE:BUILD_INSTALL_URL}
-- {SEE:BUILD_MAINTENANCE_CREATED_FILE}
-- {SEE:BUILD_MAINTENANCE_MESSAGE_VARIABLE}
-- {SEE:BUILD_MAINTENANCE_VARIABLE}
-- {SEE:BUILD_MAXIMUM_TAGS_PER_VERSION}
-- {SEE:BUILD_NOTIFY_SOUND}
-- {SEE:BUILD_NPM_VERSION}
-- {SEE:BUILD_PACKAGE_MANAGER}
-- {SEE:BUILD_PAIR_WIDTH}
-- {SEE:BUILD_PRECOMMIT_EXTENSIONS}
-- {SEE:BUILD_PROJECT_DEACTIVATE}
-- {SEE:BUILD_PROMPT_COLORS}
-- {SEE:BUILD_RELEASE_NOTES}
-- {SEE:BUILD_TARGET}
-- {SEE:BUILD_TERM_COLORS_STATE}
-- {SEE:BUILD_TEST_FLAGS}
-- {SEE:BUILD_TEXT_BINARY}
-- {SEE:BUILD_TIMESTAMP}
-- {SEE:BUILD_URL_BINARY}
-- {SEE:BUILD_URL_TIMEOUT}
-- {SEE:BUILD_VERSION_NO_OPEN}
-- {SEE:BUILD_VERSION_SUFFIX}
-- {SEE:BUILD_YARN_VERSION}
-- {SEE:CI}
-- {SEE:COLORFGBG}
-- {SEE:DAEMONTOOLS_HOME}
-- {SEE:DEPLOY_REMOTE_HOME}
-- {SEE:DEPLOY_USER_HOSTS}
-- {SEE:DEPLOYMENT}
-- {SEE:DISPLAY}
-- {SEE:EDITOR}
-- {SEE:GIT_BRANCH_FORMAT}
-- {SEE:GIT_OPEN_LINKS}
-- {SEE:GIT_REMOTE}
-- {SEE:GITHUB_ACCESS_TOKEN}
-- {SEE:GITHUB_ACCESS_TOKEN_EXPIRE}
-- {SEE:GITHUB_REPOSITORY_NAME}
-- {SEE:GITHUB_REPOSITORY_OWNER}
-- {SEE:HOME}
-- {SEE:IP_URL}
-- {SEE:IP_URL_FILTER}
-- {SEE:LC_TERMINAL}
-- {SEE:MANPATH}
-- {SEE:MARIADB_BINARY_CONNECT}
-- {SEE:MARIADB_BINARY_DUMP}
-- {SEE:NODE_PACKAGE_MANAGER}
-- {SEE:PATH}
-- {SEE:PRODUCTION}
-- {SEE:PROMPT_COMMAND}
-- {SEE:PS1}
-- {SEE:SHFMT_ARGUMENTS}
-- {SEE:TERM}
-- {SEE:TEST_TRACK_ASSERTIONS}
-- {SEE:VISUAL}
-- {SEE:XDEBUG_ENABLED}
-- {SEE:XDG_CACHE_HOME}
-- {SEE:XDG_CONFIG_DIRS}
-- {SEE:XDG_CONFIG_HOME}
-- {SEE:XDG_DATA_DIRS}
-- {SEE:XDG_DATA_HOME}
-- {SEE:XDG_STATE_HOME}
+- [`__BASH_PROMPT_MARKERS` __BASH_PROMPT_MARKERS]({rel}/env/#bash_prompt) - **Array:EmptyString**. Bash Prompt escape codes for prompt reporting
+- [`__BASH_PROMPT_MODULES` __BASH_PROMPT_MODULES]({rel}/env/#bash_prompt) - **Array:Callable**. List of functions to run each prompt command
+- [`__BASH_PROMPT_PREVIOUS` __BASH_PROMPT_PREVIOUS]({rel}/env/#bash_prompt) - **Array**. Previous result code
+- [`__BASH_PROMPT_SLOW` __BASH_PROMPT_SLOW]({rel}/env/#bash_prompt) - **PositiveInteger**. Bash Prompt slow timer
+- [`__BUILD_HAS_TTY` __BUILD_HAS_TTY]({rel}/env/#internal) - **Boolean**. Cached value of the availability of `/dev/tty`.
+- [`APACHE_HOME` APACHE_HOME]({rel}/env/#vendor) - **Directory**. Constant for the Apache configuration home directory.
+- [`APPLICATION_BUILD_DATE` APPLICATION_BUILD_DATE]({rel}/env/#deployment) - **String**. Time when a build was initiated, set upon first invocation
+- [`APPLICATION_CODE` APPLICATION_CODE]({rel}/env/#application) - **String**. This is the unique code name of the application. Use
+- [`APPLICATION_CODE_EXTENSIONS` APPLICATION_CODE_EXTENSIONS]({rel}/env/#application) - **ColonDelimitedList**. List of extensions for code in the application. Required.
+- [`APPLICATION_CODE_IGNORE` APPLICATION_CODE_IGNORE]({rel}/env/#application) - **ColonDelimitedList**. List of path names to ignore for application code. (e.g.
+- [`APPLICATION_ID` APPLICATION_ID]({rel}/env/#deployment) - **String**. This is the unique hash which represents the source code
+- [`APPLICATION_JSON` APPLICATION_JSON]({rel}/env/#application) - **ApplicationFile**. Path to the application configuration JSON
+- [`APPLICATION_JSON_PREFIX` APPLICATION_JSON_PREFIX]({rel}/env/#application) - **String**. Prefix to place we can store things in the JSON
+- [`APPLICATION_NAME` APPLICATION_NAME]({rel}/env/#application) - **String**. This is the display name of the application
+- [`APPLICATION_OWNER` APPLICATION_OWNER]({rel}/env/#application) - **String**. The entity which owns or manages the application. Typically the
+- [`APPLICATION_REMOTE_HOME` APPLICATION_REMOTE_HOME]({rel}/env/#deployment) - **RemoteDirectory**. Path on the remote server where the application is served
+- [`APPLICATION_TAG` APPLICATION_TAG]({rel}/env/#deployment) - **String**. This is the full version number including debugging or release
+- [`APPLICATION_VERSION` APPLICATION_VERSION]({rel}/env/#deployment) - **String**. This is the version number which can be displayed
+- [`AWS_ACCESS_KEY_DATE` AWS_ACCESS_KEY_DATE]({rel}/env/#amazon_web_services) - **Date**. Date of key expiration which can be checked in pipelines.
+- [`AWS_ACCESS_KEY_ID` AWS_ACCESS_KEY_ID]({rel}/env/#amazon_web_services) - **String**. Amazon Web Services IAM Identity
+- [`AWS_PROFILE` AWS_PROFILE]({rel}/env/#amazon_web_services) - **String**. Default profile for Amazon Web Services
+- [`AWS_REGION` AWS_REGION]({rel}/env/#amazon_web_services) - **String**. Region for Amazon Web Services
+- [`AWS_SECRET_ACCESS_KEY` AWS_SECRET_ACCESS_KEY]({rel}/env/#amazon_web_services) - **Secret**. Private Secret Password for AWS
+- [`BITBUCKET_CLONE_DIR` BITBUCKET_CLONE_DIR]({rel}/env/#continuous_integration) - **Directory**. Defined in BITBUCKET Pipelines
+- [`BITBUCKET_REPO_SLUG` BITBUCKET_REPO_SLUG]({rel}/env/#continuous_integration) - **String**. Defined in BITBUCKET Pipelines, represents the project code name.
+- [`BITBUCKET_WORKSPACE` BITBUCKET_WORKSPACE]({rel}/env/#continuous_integration) - **String**. Defined in BITBUCKET Pipelines. represents the project workspace.
+- [`BUILD_CACHE_HOME` BUILD_CACHE_HOME]({rel}/env/#build_configuration) - **Directory**. Location for the build system cache files. Defaults to `$HOME/.build`
+- [`BUILD_COLORS` BUILD_COLORS]({rel}/env/#decoration) - **Boolean**. If true then colors are shown, blank means guess the
+- [`BUILD_COMPANY` BUILD_COMPANY]({rel}/env/#application) - **String**. Legal copyright holder for this codebase
+- [`BUILD_COMPANY_LINK` BUILD_COMPANY_LINK]({rel}/env/#application) - **URL**. Legal copyright holder website for this codebase
+- [`BUILD_COMPOSER_VERSION` BUILD_COMPOSER_VERSION]({rel}/env/#installation) - **String**. Version of composer to use for building vendor directory
+- [`BUILD_DEBUG` BUILD_DEBUG]({rel}/env/#build_configuration) - **CommaDelimitedList**. Constant for turning debugging on during build to find errors
+- [`BUILD_DEBUG_LINES` BUILD_DEBUG_LINES]({rel}/env/#build_configuration) - **PositiveInteger**. Number of lines of debugging output to send to stderr
+- [`BUILD_DEVELOPMENT_HOME` BUILD_DEVELOPMENT_HOME]({rel}/env/#development) - **String**. Directory where Zesk Build is being developed in the file
+- [`BUILD_DOCKER_BITBUCKET_IMAGE` BUILD_DOCKER_BITBUCKET_IMAGE]({rel}/env/#continuous_integration:_bitbucket) - **String**. undocumented
+- [`BUILD_DOCKER_BITBUCKET_PATH` BUILD_DOCKER_BITBUCKET_PATH]({rel}/env/#continuous_integration:_bitbucket) - **RemoteDirectory**. undocumented
+- [`BUILD_DOCKER_IMAGE` BUILD_DOCKER_IMAGE]({rel}/env/#docker) - **String**. Default docker image to use when launching `dockerLocalContainer`
+- [`BUILD_DOCKER_PATH` BUILD_DOCKER_PATH]({rel}/env/#docker) - **RemoteDirectory**. Default path for the shell to map the current directory
+- [`BUILD_DOCKER_PLATFORM` BUILD_DOCKER_PLATFORM]({rel}/env/#docker) - **String**. The platform for `dockerLocalContainer`
+- [`BUILD_DOCUMENTATION_PATH` BUILD_DOCUMENTATION_PATH]({rel}/env/#bash) - **DirectoryList**. Search path for documentation settings file.
+- [`BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN` BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN]({rel}/env/#documentation) - **String**. Links in documentation
+- [`BUILD_ENVIRONMENT_DIRS` BUILD_ENVIRONMENT_DIRS]({rel}/env/#build_configuration) - **DirectoryList**. Search directory for environment definition files. `:` separated.
+- [`BUILD_HOME` BUILD_HOME]({rel}/env/#build_configuration) - **Directory**. `BUILD_HOME` is `.` when this code is installed - at
+- [`BUILD_HOOK_DIRS` BUILD_HOOK_DIRS]({rel}/env/#build_configuration) - **ApplicationDirectoryList**. List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.
+- [`BUILD_HOOK_EXTENSIONS` BUILD_HOOK_EXTENSIONS]({rel}/env/#application) - **ColonDelimitedList**. List of extensions to run when looking for hooks
+- [`BUILD_INSTALL_URL` BUILD_INSTALL_URL]({rel}/env/#build_configuration) - **URL**. `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer.
+- [`BUILD_MAINTENANCE_CREATED_FILE` BUILD_MAINTENANCE_CREATED_FILE]({rel}/env/#application) - **Boolean**. When true, means the `.env.local` file was created by the
+- [`BUILD_MAINTENANCE_MESSAGE_VARIABLE` BUILD_MAINTENANCE_MESSAGE_VARIABLE]({rel}/env/#application) - **EnvironmentVariable**. Name of the environment variable (if any) which reflects the
+- [`BUILD_MAINTENANCE_VARIABLE` BUILD_MAINTENANCE_VARIABLE]({rel}/env/#application) - **EnvironmentVariable**. The maintenance variable name which enables (or disabled) maintenance mode.
+- [`BUILD_MAXIMUM_TAGS_PER_VERSION` BUILD_MAXIMUM_TAGS_PER_VERSION]({rel}/env/#build_configuration) - **PositiveInteger**. Number of versions tags (d0, d1, d2, etc.) to look
+- [`BUILD_NOTIFY_SOUND` BUILD_NOTIFY_SOUND]({rel}/env/#build_configuration) - **String**. Sound for notifications. Set to `-` for no sound. Defaults
+- [`BUILD_NPM_VERSION` BUILD_NPM_VERSION]({rel}/env/#installation) - **String**. Version of npm to install using native `npm` binary.
+- [`BUILD_PACKAGE_MANAGER` Package Manager Binary]({rel}/env/#installation) - **Executable**. The default package manager on systems which have more than
+- [`BUILD_PAIR_WIDTH` BUILD_PAIR_WIDTH]({rel}/env/#decoration) - **PositiveInteger**. Width for pairs. Defaults to `40`.
+- [`BUILD_PRECOMMIT_EXTENSIONS` BUILD_PRECOMMIT_EXTENSIONS]({rel}/env/#build_configuration) - **List**. List of extensions for which build hooks may be written
+- [`BUILD_PROJECT_DEACTIVATE` BUILD_PROJECT_DEACTIVATE]({rel}/env/#application) - **Function**. Set this to a function which cleans up the project
+- [`BUILD_PROMPT_COLORS` BUILD_PROMPT_COLORS]({rel}/env/#decoration) - **ColonDelimitedList**. Colon-separated list of colors for the prompt
+- [`BUILD_RELEASE_NOTES` BUILD_RELEASE_NOTES]({rel}/env/#build_configuration) - **ApplicationDirectory**. Constant for the release notes path. Defaults to `./docs/release`.
+- [`BUILD_TARGET` BUILD_TARGET]({rel}/env/#deployment) - **String**. The file to generate when generating builds
+- [`BUILD_TERM_COLORS_STATE` BUILD_TERM_COLORS_STATE]({rel}/env/#application) - **String**. State to store state of current terminal color state
+- [`BUILD_TEST_FLAGS` BUILD_TEST_FLAGS]({rel}/env/#testing) - **String**. Test flags affect controls and how tests are run.
+- [`BUILD_TEXT_BINARY` BUILD_TEXT_BINARY]({rel}/env/#decoration) - **Callable**. Binary used to generate `decorate big`
+- [`BUILD_TIMESTAMP` BUILD_TIMESTAMP]({rel}/env/#deployment) - **UnsignedInteger**. Time when a build was initiated, set upon first invocation
+- [`BUILD_URL_BINARY` BUILD_URL_BINARY]({rel}/env/#decoration) - **Callable**. Binary used in __urlOpen
+- [`BUILD_URL_TIMEOUT` BUILD_URL_TIMEOUT]({rel}/env/#build_configuration) - **PositiveInteger**. Timeout in seconds for fetching URLs in `urlFetch`
+- [`BUILD_VERSION_NO_OPEN` BUILD_VERSION_NO_OPEN]({rel}/env/#build_configuration) - **Boolean**. Constant for whether to open release notes when a version
+- [`BUILD_VERSION_SUFFIX` BUILD_VERSION_SUFFIX]({rel}/env/#build_configuration) - **String**. Default suffix used in `gitTagVersion`
+- [`BUILD_YARN_VERSION` BUILD_YARN_VERSION]({rel}/env/#vendor) - **String**. Version of yarn to install using `corepack`
+- [`CI` CI]({rel}/env/#continuous_integration) - **String**. If this value is non-blank, then console `statusMessage`s are just
+- [`COLORFGBG` COLORFGBG]({rel}/env/#decoration) - **String**. Standard way to express the foreground and background colors
+- [`DAEMONTOOLS_HOME` DAEMONTOOLS_HOME]({rel}/env/#vendor) - **Directory**. Constant for the directory where services are monitored by daemontools
+- [`DEPLOY_REMOTE_HOME` DEPLOY_REMOTE_HOME]({rel}/env/#deployment) - **RemoteDirectory**. Path on the remote server where the application deployment home
+- [`DEPLOY_USER_HOSTS` DEPLOY_USER_HOSTS]({rel}/env/#deployment) - **String**. A list of one ore more user@host for installation of
+- [`DEPLOYMENT` DEPLOYMENT]({rel}/env/#deployment) - **String**. Target deployment for this code
+- [`DISPLAY` DISPLAY]({rel}/env/#bash) - **String**. Environment variable for X windows display.
+- [`EDITOR` EDITOR]({rel}/env/#bash) - **Callable**. Binary for editing files
+- [`GIT_BRANCH_FORMAT` GIT_BRANCH_FORMAT]({rel}/env/#development) - **String**. undocumented
+- [`GIT_OPEN_LINKS` GIT_OPEN_LINKS]({rel}/env/#development) - **Boolean**. Open links from git remotes in `gitCommit`
+- [`GIT_REMOTE` GIT_REMOTE]({rel}/env/#development) - **String**. undocumented
+- [`GITHUB_ACCESS_TOKEN` GITHUB_ACCESS_TOKEN]({rel}/env/#development) - **Secret**. Access token used for release
+- [`GITHUB_ACCESS_TOKEN_EXPIRE` GITHUB_ACCESS_TOKEN_EXPIRE]({rel}/env/#development) - **Date**. GitHub Access token expiration date. Invalid AFTER this date.
+- [`GITHUB_REPOSITORY_NAME` GITHUB_REPOSITORY_NAME]({rel}/env/#development) - **String**. Repository name for release
+- [`GITHUB_REPOSITORY_OWNER` GITHUB_REPOSITORY_OWNER]({rel}/env/#deployment:_github) - **String**. Repository owner for release
+- [`HOME` HOME]({rel}/env/#bash) - **Directory**. Current user's home directory.
+- [`IP_URL` IP_URL]({rel}/env/#build_configuration) - **URL**. URL to look up IP my address remotely
+- [`IP_URL_FILTER` IP_URL_FILTER]({rel}/env/#build_configuration) - **String**. jq filter to parse IP_URL result (assuming JSON)
+- [`LC_TERMINAL` LC_TERMINAL]({rel}/env/#bash) - **String**. LC_TERMINAL typically identifies the terminal application
+- [`MANPATH` MANPATH]({rel}/env/#bash) - **DirectoryList**. A colon `:` separated list of paths to search for
+- [`MARIADB_BINARY_CONNECT` MARIADB_BINARY_CONNECT]({rel}/env/#vendor) - **Executable**. MariaDB binary for database connections
+- [`MARIADB_BINARY_DUMP` MARIADB_BINARY_DUMP]({rel}/env/#vendor) - **Executable**. MariaDB binary for dump
+- [`NODE_PACKAGE_MANAGER` node Package Manager]({rel}/env/#vendor) - **Executable**. The package manager used for node operations. Usually `yarn` or
+- [`PATH` Executable Search Path]({rel}/env/#bash) - **DirectoryList**. A colon `:` separated list of paths to search for
+- [`PRODUCTION` PRODUCTION]({rel}/env/#bash) - **Boolean**. Is this a production system? e.g. remove unnecessary runtime checks.
+- [`PROMPT_COMMAND` PROMPT_COMMAND]({rel}/env/#bash) - **Callable**. Command is run before displaying the prompt, receives exit status
+- [`PS1` PS1]({rel}/env/#bash) - **String**. Bash Prompt for terminals
+- [`SHFMT_ARGUMENTS` SHFMT_ARGUMENTS]({rel}/env/#bash) - **Array**. Arguments passed to shfmt when running as a pre-commit hook
+- [`TERM` TERM]({rel}/env/#bash) - **String**. The current terminal type.
+- [`TEST_TRACK_ASSERTIONS` TEST_TRACK_ASSERTIONS]({rel}/env/#testing) - **Boolean**. Assertion tracking testing optimization
+- [`VISUAL` VISUAL]({rel}/env/#bash) - **Executable**. Binary for viewing files
+- [`XDEBUG_ENABLED` XDEBUG_ENABLED]({rel}/env/#php) - **Boolean**. Is xdebug enabled? The application can honor this environment variable
+- [`XDG_CACHE_HOME` XDG_CACHE_HOME]({rel}/env/#build_configuration) - **Directory**. Main Cache Directory
+- [`XDG_CONFIG_DIRS` XDG_CONFIG_DIRS]({rel}/env/#build_configuration) - **DirectoryList**. Configuration Path Directories
+- [`XDG_CONFIG_HOME` XDG_CONFIG_HOME]({rel}/env/#build_configuration) - **Directory**. Main Configuration Path
+- [`XDG_DATA_DIRS` XDG_DATA_DIRS]({rel}/env/#build_configuration) - **DirectoryList**. Data Path Directories
+- [`XDG_DATA_HOME` XDG_DATA_HOME]({rel}/env/#build_configuration) - **Directory**. Data Home Directory
+- [`XDG_STATE_HOME` XDG_STATE_HOME]({rel}/env/#build_configuration) - **Directory**. State Home Directory

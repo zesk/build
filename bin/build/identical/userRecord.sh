@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
-# Original of userRecord (FKA _home)
+# Identical template
+#
+# Original of userRecord
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

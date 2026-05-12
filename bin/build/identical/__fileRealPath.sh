@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
-# Original of fileRealPath
+# Identical template
+#
+# Original of __fileRealPath
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

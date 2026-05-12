@@ -8,5 +8,5 @@ See [`pathConfigure`](/tools/platform/#pathconfigure)
 
 ### See Also
 
-- {SEE:pathConfigure}
+- ## `pathConfigure`
 

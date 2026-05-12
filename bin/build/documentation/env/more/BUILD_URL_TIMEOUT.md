@@ -7,5 +7,5 @@ Timeout in seconds for fetching URLs in `urlFetch`
 
 ### See Also
 
-- {SEE:urlFetch}
+- ## `urlFetch`
 

@@ -8,5 +8,5 @@ if blank, no filter is used and raw result is returned
 
 ### See Also
 
-- {SEE:networkIPLookup}
+- ## `networkIPLookup`
 

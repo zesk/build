@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
-# Original of _home
+# Identical template
+#
+# Original of textVersionSort
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

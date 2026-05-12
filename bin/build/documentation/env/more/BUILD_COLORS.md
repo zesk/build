@@ -7,5 +7,5 @@ If true then colors are shown, blank means guess the value, false means no color
 
 ### See Also
 
-- {SEE:decorate}
+- ## `decorate`
 

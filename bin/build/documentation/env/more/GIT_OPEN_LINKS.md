@@ -7,6 +7,7 @@ Open links from git remotes in `gitCommit`
 
 ### See Also
 
-- {SEE:gitCommit}
-- {SEE:gitCommit}
+- ## `gitCommit`
+
+- ## `gitCommit`
 

@@ -64,11 +64,9 @@ testMapTokens() {
 }
 
 testMapPrefixSuffix() {
-  local itemIndex=1 binary aa=()
+  local itemIndex=1 aa=()
 
-  local shortest="" shortestBinary=""
-
-  for binary in mapEnvironment mapEnvironmentFun mapEnvironmenySed "$(buildHome)/bin/build/map.sh"; do
+  local timings=() binary && for binary in "$(buildHome)/bin/build/map.sh" mapEnvironment mapEnvironmentFun mapEnvironmentSed; do
     local start && start=$(timingStart)
     aa=(--display "$binary")
 
@@ -87,13 +85,10 @@ testMapPrefixSuffix() {
     assertEquals "${aa[@]}" "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" AME LACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
     local elapsed && elapsed=$(timingElapsed "$start")
-    if [ -z "$shortest" ] || [ "$elapsed" -lt "$shortest" ]; then
-      shortest="$elapsed"
-      shortestBinary="$binary"
-    fi
-    decorate pair "$binary" "$(timingDuration "$elapsed")"
+    timings+=("$elapsed" "$binary")
   done
-  decorate pair "FASTEST: $shortestBinary" "$(timingDuration "$shortest")"
+  statusMessage --last decorate info "Map timing"
+  printf "%d %s\n" "${timings[@]}" | sort -rn
 }
 
 testMapValue() {

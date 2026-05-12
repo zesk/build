@@ -28,4 +28,3 @@ _returnCodeString() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-clear

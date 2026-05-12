@@ -12,9 +12,9 @@
 
 {buildFunctionsDerivedCompile}
 
-{buildFunctionsCompile}
+{documentationFileCompile}
 
-{buildFunctionsCompileParallel}
+{documentationFileCompileParallel}
 
 {buildFunctionsRemoveDeprecated}
 

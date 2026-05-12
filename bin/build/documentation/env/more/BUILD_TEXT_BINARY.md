@@ -7,8 +7,8 @@ Binary used to generate `decorate big`
 
 ### See Also
 
-- {SEE:decorate}
-- {SEE:big}
+- ## `decorate`
+
 - {SEE:__aptStandardPackages}
 - {SEE:__apkStandardPackages}
 - {SEE:__brewStandardPackages}

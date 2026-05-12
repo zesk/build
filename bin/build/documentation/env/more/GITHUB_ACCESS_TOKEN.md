@@ -7,5 +7,5 @@ Access token used for release
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 

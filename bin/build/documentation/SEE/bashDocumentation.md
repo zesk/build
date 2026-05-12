@@ -17,17 +17,6 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - `usage-cache-skip` - Skip all caching and generate from scratch
 - `handler` - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 
-### Examples
-
-goldenGoose() {
-   local handler="_${FUNCNAME[0]}"
-   local home && home=$(catchReturn "$handler" buildHome) || return $?
-   ...
-}
-_goldenGoose() {
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 ### Return codes
 
 - `0` - Success

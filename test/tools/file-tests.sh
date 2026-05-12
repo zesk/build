@@ -6,6 +6,25 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testFileUniqueLines() {
+  local handler="returnMessage"
+
+  local temp && temp=$(fileTemporaryName "$handler") || return $?
+
+  printf "%s\n" a a a a b b b c c c d d d ee e ff g A z z A >"$temp" || return $?
+
+  local nonUnqiueHash && nonUnqiueHash=$(textSHA <"$temp")
+  local nonUniqueCount && nonUniqueCount=$(fileLineCount <"$temp")
+
+  assertExitCode 0 fileUniqueLines "$temp" || return $?
+
+  local uniqueHash && uniqueHash=$(textSHA <"$temp")
+  local uniqueCount && uniqueCount=$(fileLineCount <"$temp")
+
+  assertNotEquals "$nonUnqiueHash" "$uniqueHash" || return $?
+  assertGreaterThan "$nonUniqueCount" "$uniqueCount" || return $?
+}
+
 testBasicFileStuff() {
   local testDir
   local testFile

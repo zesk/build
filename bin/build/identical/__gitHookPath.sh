@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
 # Identical template
 #
-# Original of __where
+# Original of __gitHookPath
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

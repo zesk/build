@@ -17,5 +17,5 @@ An automatic reporting occurs when commands exceed 0.3s.
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 

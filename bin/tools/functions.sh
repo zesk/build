@@ -39,7 +39,7 @@ buildFunctionsDerivedCompile() {
 
   dd+=(--derive bashDocumentationDeriveSee --)
   dd+=(--derive bashDocumentationDeriveFunction --)
-  catchReturn "$handler" buildFunctionsCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
+  catchReturn "$handler" documentationFileCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
 
   [ -z "$fingerprint" ] || fingerprint --key "$key" --verbose
 }
@@ -136,7 +136,7 @@ __buildFunctionsIsComplete() {
     index=$((index + 1))
     catchReturn "$handler" statusMessage decorate warning "Loading missing: $fun" || return $?
     (
-      __buildFunctionsCompileFunction "$handler" "$docPath" "$fun" "" "Missing #$index/${#missing[@]}" "$@" || return $?
+      __documentationFileCompileFunction "$handler" "$docPath" "$fun" "" "Missing #$index/${#missing[@]}" "$@" || return $?
     ) || return $?
   done
   catchReturn "$handler" statusMessage decorate info "No functions missing" || return $?

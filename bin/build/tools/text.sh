@@ -376,6 +376,8 @@ _textTrim() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# IDENTICAL inArray 29
+
 # Check if an element exists in an array
 #
 # Argument: element - EmptyString. Thing to search for
@@ -404,6 +406,8 @@ _inArray() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# IDENTICAL stringContains 25
 
 # Argument: haystack - String. Required. String to search.
 # Argument: needle ... - String. Optional. One or more strings to find as a substring of `haystack`.
@@ -565,7 +569,6 @@ _stringBeginsInsensitive() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Remove words from the end of a phrase
 #
 # Argument: wordCount - PositiveInteger. Words to output
@@ -658,10 +661,7 @@ fileFieldMaximum() {
 
   local index=$((${1-1} + 0)) charArg=${2-}
 
-  local ss=()
-  if [ -n "$charArg" ]; then
-    ss=("-F$charArg")
-  fi
+  local ss=() && [ -z "$charArg" ] || ss=("-F$charArg")
   catchReturn "$handler" awk "${ss[@]+"${ss[@]}"}" "{ print length(\$$index) }" | catchReturn "$handler" sort -rn | catchReturn "$handler" head -n 1 || return $?
 }
 _fileFieldMaximum() {
@@ -669,17 +669,16 @@ _fileFieldMaximum() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Outputs the maximum line length passed into stdin
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # stdin: Lines are read from standard in and line length is computed for each line
 # stdout: `UnsignedInteger`
 fileLineMaximum() {
   local handler="_${FUNCNAME[0]}"
-  local max
 
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
-  max=0
-  while IFS= read -r line; do
+  local max=0 line && while IFS= read -r line; do
     if [ "${#line}" -gt "$max" ]; then
       max=${#line}
     fi

@@ -43,7 +43,7 @@ _identicalRepair() {
 # Argument: --repair directory - Directory. Optional. Any files in onr or more directories can be used to repair other files.
 # Argument: --skip file - Directory. Optional. Ignore this file for repairs.
 # Argument: --ignore-singles - Flag. Optional. Skip the check to see if single entries exist.
-# Argument: --no-map - Flag. Optional. Do not map __BASE__, __FILE__, __DIR__ tokens.
+# Argument: --no-map - Flag. Optional. Do not map __FULL__, __EXTENSION__, __BASE__, __FILE__, __NAME__, __DIR__, __DIRECTORY__  tokens.
 # Argument: --debug - Flag. Optional. Additional debugging information is output.
 # Argument: --help - Flag. Optional. This help.
 # Argument: --singles singlesFiles - File. Optional. One or more files which contain a list of allowed `{identical}` singles, one per line.
@@ -70,7 +70,14 @@ _identicalRepair() {
 # should remain identical.
 #
 # Mapping also automatically handles file names and paths, so using the token `__FILE__` within your identical source
-# will convert to the target file's application path.
+# will convert to the target file's application path:
+#
+# - `__FULL__` - Full path to file
+# - `__EXTENSION__` - The file extension (`sh`)
+# - `__BASE__` - Just file name and extension
+# - `__FILE__` - The application file
+# - `__NAME__` - Just the file name without extension
+# - `__DIRECTORY__` - Application directory (also `__DIR__`)
 #
 # Failures are considered:
 #

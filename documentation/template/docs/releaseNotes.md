@@ -14,9 +14,9 @@ Added:
 - {SEE:mapFunction}
 - {SEE:documentationMaker}
 - {SEE:documentationMake}
-- Renamed: `documentationBuildEnvironment` -> {SEE:documentationEnvironmentMake}
-- Renamed: `documentationBuildCache` -> {SEE:documentationCache}
-- Renamed: `documentationTemplateUpdate` -> {SEE:documentationIdenticalRepair}
+- Renamed: `documentationEnvironmentMake` -> {SEE:documentationEnvironmentMake}
+- Renamed: `documentationCache` -> {SEE:documentationCache}
+- Renamed: `documentationIdenticalRepair` -> {SEE:documentationIdenticalRepair}
 
 Deprecated:
 
@@ -36,6 +36,9 @@ Deprecated:
 - `decorate box --width auto` did not support `stdin` but now does
     - {SEE:__decorateExtensionBox}
 - `markdownRemoveUnfinishedSections` now keeps `SEE:token` variables
+- `identicalCheck --repair` now added a new macro `__NAME__` which is `__BASE__` without an extension.
+- Made `bashDocumentationDeriveSee` and `bashDocumentationDeriveFunction` part of documentation system
+- 
 
 ## Zesk Build release v0.42.5
 
@@ -70,7 +73,7 @@ Deprecated:
       mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how
       permissions are translated, I assume. Workaround falls back to `ls` which is slow but works. See `isExecutable`.
       Added 2024-01.
-- `__help` -> `helpArgument` and now in main documentation
+- `helpArgument` -> `helpArgument` and now in main documentation
 - Moved `SEE` documentation cache to `bin/build/documentation/SEE`
 - Documentation `--md-cache` obsolete, uses `__documentationPath` function
 
@@ -108,21 +111,21 @@ Deprecated:
 - Added `--quiet` to `buildEnvironmentGet` and `buildEnvironmentLoad` when you don't care if the file is missing
 - Added `validate` type for `AWSRegion` and added identical templates `regionArgumentValidation`,
   `__validateTypeAWSRegion`, and `regionArgumentHandler`
-- `bashPromptModule_binBuild` is now deprecated, use `bashPromptModule_BuildProject` instead
+- `bashPromptModule_BuildProject` is now deprecated, use `bashPromptModule_BuildProject` instead
 - `fileRealPath` depends on `readlink -f` which is not available on older version of Mac OS X, so updated for
   compatibility
 - `fileRealPath` and `fileRemoveFields` compatibility with older OS versions
 - Adding test failure report to end of `testSuite`
 - `iTerm2Init` no longer loads `iTerm2Aliases`
 - Deprecated renaming:
-    - `bashPromptModule_binBuild` -> `bashPromptModule_BuildProject`
-    - `newlineHide` -> `stringHideNewlines`
+    - `bashPromptModule_BuildProject` -> `bashPromptModule_BuildProject`
+    - `stringHideNewlines` -> `stringHideNewlines`
     - `plural` -> `localePlural `
     - `pluralWord` -> `localePluralWord `
     - `cannon` -> `textCannon `
-    - `usageDocument` -> `bashDocumentation`
-    - `usageDocumentSimple` -> `bashSimpleDocumentation`
-    - `logsRotate` (or `logRotates`?) -> `logDirectoryRotate`
+    - `bashDocumentation` -> `bashDocumentation`
+    - `bashDocumentationSimple` -> `bashSimpleDocumentation`
+    - `logDirectoryRotate` (or `logDirectoryRotate`?) -> `logDirectoryRotate`
 - Caching of documentation markdown in source (`bin/build/documentation/*.md`) and `SEE` documentation caching for
   faster builds.
 - `logRotate` and `logDirectoryRotate` cleanup
@@ -137,39 +140,39 @@ Deprecated:
 
 Continuing naming fixes to be consistent across the library. `noun-verb`
 
-- `clampDigits` -> `integerClamp`
-- `parseBoolean` -> `booleanParse`
-- `replaceFirstPattern` -> `textReplaceFirst`
-- `stringReplace` -> `textReplace`
-- `trimBoth` -> `textTrimBoth`
-- `trimHead` -> `textTrimHead`
-- `trimTail` -> `textTrimTail`
-- `singleBlankLines` -> `textSingleBlankLines`
-- `trimRightSpace` -> `textTrimRight`
-- `trimLeftSpace` -> `textTrimLeft`
-- `trimSpace` -> `textTrim`
-- `removeFields` -> `textRemoveFields`
-- `loadAverage` -> `cpuLoadAverage`
-- `realPath` -> `fileRealPath`
-- `trimWords` -> `stringTrimWords`
-- `unquote ` -> `stringUnquote `
+- `integerClamp` -> `integerClamp`
+- `booleanParse` -> `booleanParse`
+- `textReplaceFirst` -> `textReplaceFirst`
+- `textReplace` -> `textReplace`
+- `textTrimBoth` -> `textTrimBoth`
+- `textTrimHead` -> `textTrimHead`
+- `textTrimTail` -> `textTrimTail`
+- `textSingleBlankLines` -> `textSingleBlankLines`
+- `textTrimRight` -> `textTrimRight`
+- `textTrimLeft` -> `textTrimLeft`
+- `textTrim` -> `textTrim`
+- `textRemoveFields` -> `textRemoveFields`
+- `cpuLoadAverage` -> `cpuLoadAverage`
+- `fileRealPath` -> `fileRealPath`
+- `stringTrimWords` -> `stringTrimWords`
+- `stringUnquote ` -> `stringUnquote `
 - `uppercase ` -> `stringUppercase `
 - `lowercase ` -> `stringLowercase `
-- `usageRequireEnvironment` -> `environmentRequire`
-- `veeGitTag` -> `gitTagVee`
-- `watchDirectory` -> `directoryWatch`
-- `shaPipe` -> `textSHA`
-- `rotateLog` -> `logRotate`
-- `rotateLogs` -> `logsRotate`
-- `randomString` -> `stringRandom`
-- `bigText` -> `decorate big`
-- `bigTextAt` -> `decorate at`
+- `environmentRequire` -> `environmentRequire`
+- `gitTagVee` -> `gitTagVee`
+- `directoryWatch` -> `directoryWatch`
+- `textSHA` -> `textSHA`
+- `logRotate` -> `logRotate`
+- `logDirectoryRotate` -> `logDirectoryRotate`
+- `stringRandom` -> `stringRandom`
+- `decorate big` -> `decorate big`
+- `decorate at` -> `decorate at`
 
 ### Not sure about these - not `noun-verb` but makes sense
 
-- `runCount` -> `executeCount`
-- `loopExecute` -> `executeLoop`
-- `usageRequireBinary` -> `executableRequire`
+- `executeCount` -> `executeCount`
+- `executeLoop` -> `executeLoop`
+- `executableRequire` -> `executableRequire`
 
 ### Bug fixes
 
@@ -186,7 +189,7 @@ Continuing naming fixes to be consistent across the library. `noun-verb`
 > Copyright &copy; 2026 Market Acumen, Inc.
 
 - Previous version: v0.41.1
-- `__usageDocumentCached` identical updates
+- `__bashDocumentationCached` identical updates
 - `executableExists` was flagging functions as executable when it should not
 - Fixed issues with installer and `bashGetRequires` not correctly flagging missing functions.
 - Moved `decorateThemed` to a identical template
@@ -199,7 +202,7 @@ Continuing naming fixes to be consistent across the library. `noun-verb`
 
 - Previous version: v0.41.0
 - Added [`cpuCount`](../tools/cpu.md#cpucount)
-- Foreign [`__usageDocumentCached`](../tools/usage.md#__usagedocumentcached) would cause an error, now does not
+- Foreign [`__bashDocumentationCached`](../tools/usage.md#__usagedocumentcached) would cause an error, now does not
 - Fixed `deleteFiles` error in [`approvedSources`](../tools/approve.md)
 - Some documentation updates and cleanup, added [strftime Cheatsheet](../guide/strftime-cheatsheet.md)
 - Fixed issue with [`reloadChanges`](../tools/prompt.md#reloadchanges) getting false positive each run

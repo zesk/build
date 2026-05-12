@@ -1,10 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
 # Identical template
 #
-# Original of mapEnvironment (uses bash replace instead of sed)
+# Original of mapEnvironmentSed
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
 #
 # requires a lot of stuff
 #

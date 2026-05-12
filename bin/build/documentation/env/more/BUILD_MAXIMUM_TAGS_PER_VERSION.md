@@ -7,5 +7,5 @@ Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitT
 
 ### See Also
 
-- {SEE:gitTagVersion}
+- ## `gitTagVersion`
 

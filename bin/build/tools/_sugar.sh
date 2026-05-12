@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 275
+# IDENTICAL _sugar 274
 
 # Argument: name ... - String. Optional. Exit code value to output.
 # Print one or more return codes by name.
@@ -47,7 +47,7 @@ _returnCode() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ returnCodeString 17
+# _IDENTICAL_ returnCodeString 16
 
 # Output the exit code as a string
 #

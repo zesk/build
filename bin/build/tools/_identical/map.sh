@@ -35,6 +35,9 @@ _identicalMapAttributesFilter() {
   aa+=(-e 's/__EXTENSION__/'"$(quoteSedReplacement "${base##*.}")"'/g')
   aa+=(-e 's/__BASE__/'"$(quoteSedReplacement "$base")"'/g')
 
+  local name && name="${base%.*}"
+  aa+=(-e 's/__NAME__/'"$(quoteSedReplacement "$name")"'/g')
+
   file="${file#"$home"}"
   aa+=(-e 's/__FILE__/'"$(quoteSedReplacement "$file")"'/g')
 

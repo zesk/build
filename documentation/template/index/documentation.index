@@ -213,8 +213,6 @@ buildEnvironmentNames documentation/source/tools/build.md
 buildFailed documentation/source/tools/pipeline.md
 buildFailed documentation/source/tools/unused.md
 buildFunctions documentation/source/tools/build.md
-buildFunctionsCompile documentation/source/tools/internal.md
-buildFunctionsCompileParallel documentation/source/tools/internal.md
 buildFunctionsDerivedCompile documentation/source/tools/internal.md
 buildFunctionsRemoveDeprecated documentation/source/tools/internal.md
 buildHome documentation/source/tools/build.md
@@ -372,6 +370,8 @@ dockerVolumeExists documentation/source/tools/docker.md
 documentationBuild documentation/source/tools/documentation.md
 documentationCache documentation/source/tools/documentation.md
 documentationEnvironmentMake documentation/source/tools/documentation.md
+documentationFileCompile documentation/source/tools/internal.md
+documentationFileCompileParallel documentation/source/tools/internal.md
 documentationIdenticalRepair documentation/source/tools/documentation.md
 documentationIndexDocumentation documentation/source/tools/documentation.md
 documentationIndexLookup documentation/source/tools/documentation.md

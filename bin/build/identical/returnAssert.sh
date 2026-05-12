@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# IDENTICAL templateHeader 7
+#
+# Identical template
+#
+# Original of returnAssert
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

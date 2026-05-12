@@ -7,5 +7,5 @@ Repository owner for release
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 

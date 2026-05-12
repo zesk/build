@@ -178,7 +178,7 @@ __documentationMaker() {
   done < <(find "$sourcePath" -type f -name "*.md" ! -path '*/\.*/*' | sort)
 }
 
-__buildFunctionsCompile() {
+__documentationFileCompile() {
   local handler="$1" && shift
 
   local cleanFlag=false quickFlag=true gitActions=false dd=() functions=() verboseFlag=false
@@ -284,7 +284,7 @@ __buildFunctionsCompile() {
     local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
     (
-      statusMessage timing --name "$prefix $fun" __buildFunctionsCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" "${dd[@]+"${dd[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      statusMessage timing --name "$prefix $fun" __documentationFileCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" "${dd[@]+"${dd[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     ) || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   shopt -s expand_aliases || :
@@ -306,7 +306,7 @@ __buildFunctionsCompile() {
 # Argument: sourceFile - File|EmptyString. Required. Source file or blank if not known.
 # Argument: prefix ... - String. Optional. Prefix the status line with this text.
 # Argument: derived  - .... Optional. Derived functions to run on new or modified files.
-__buildFunctionsCompileFunction() {
+__documentationFileCompileFunction() {
   export BUILD_DEBUG
   local flag=",usage-profile," flags=",${BUILD_DEBUG-},"
 

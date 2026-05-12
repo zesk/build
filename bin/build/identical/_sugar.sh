@@ -47,7 +47,7 @@ _returnCode() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ returnCodeString 17
+# _IDENTICAL_ returnCodeString 16
 
 # Output the exit code as a string
 #
@@ -64,7 +64,6 @@ _returnCodeString() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 # Boolean test
 # If you want "true-ish" use `isTrue`.
 # Returns 0 if `value` is boolean `false` oHar `true`.

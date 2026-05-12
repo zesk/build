@@ -7,5 +7,5 @@ Default docker image to use when launching `dockerLocalContainer`
 
 ### See Also
 
-- {SEE:dockerLocalContainer}
+- ## `dockerLocalContainer`
 

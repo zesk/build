@@ -34,10 +34,8 @@ __identicalCheckInsideLoopLineHandler() {
     return 0
   fi
 
-  local tokenLineCount tokenLineCount
-
-  tokenLineCount=$(head -n 1 "$tokenFile")
-  tokenFileName=$(tail -n 1 "$tokenFile")
+  local tokenLineCount && tokenLineCount=$(head -n 1 "$tokenFile")
+  local tokenFileName && tokenFileName=$(tail -n 1 "$tokenFile")
   [ "$tokenFileName" != "$searchFile" ] || mapFile=false
 
   if [ ! -f "$countFile" ]; then

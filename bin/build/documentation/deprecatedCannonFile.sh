@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-03
+# Generated on 2026-05-11
 # shellcheck disable=SC2034
-argument="findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"cannonFile - File. Required. One or more files delimited with \`|\` characters, one per line \`search|replace|findArguments|...\`. If not files are supplied then pipe file via stdin."$'\n'""
+argument=$'findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.\ncannonFile - File. Required. One or more files delimited with `|` characters, one per line `search|replace|findArguments|...`. If not files are supplied then pipe file via stdin.\n'
 base="deprecated-tools.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Run textCannon using a configuration file or files."$'\n'"Comment lines (First character is \`#\`) are considered the current \"state\" (e.g. version) and are displayed during processing."$'\n'""$'\n'"Sample file:"$'\n'""$'\n'"    # v0.25.0"$'\n'"    timingStart|timingStart"$'\n'"    timingReport|timingReport"$'\n'"    bashUserInput|bashUserInput"$'\n'""$'\n'"    # v0.24.0"$'\n'"    listJoin|listJoin"$'\n'"    mapTokens|mapTokens"$'\n'""$'\n'""
+description=$'Run textCannon using a configuration file or files.\nComment lines (First character is `#`) are considered the current "state" (e.g. version) and are displayed during processing.\n\nSample file:\n\n    # v0.25.0\n    timingStart|timingStart\n    timingReport|timingReport\n    bashUserInput|bashUserInput\n\n    # v0.24.0\n    listJoin|listJoin\n    mapTokens|mapTokens\n\n'
 descriptionLineCount="14"
 file="bin/build/tools/deprecated-tools.sh"
 fn="deprecatedCannonFile"
 fnMarker="deprecatedcannonfile"
 foundNames=([0]="argument" [1]="return_code")
 line="171"
-rawComment="Argument: findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"Argument: cannonFile - File. Required. One or more files delimited with \`|\` characters, one per line \`search|replace|findArguments|...\`. If not files are supplied then pipe file via stdin."$'\n'"Run textCannon using a configuration file or files."$'\n'"Comment lines (First character is \`#\`) are considered the current \"state\" (e.g. version) and are displayed during processing."$'\n'"Sample file:"$'\n'"    # v0.25.0"$'\n'"    timingStart|timingStart"$'\n'"    timingReport|timingReport"$'\n'"    bashUserInput|bashUserInput"$'\n'"    # v0.24.0"$'\n'"    listJoin|listJoin"$'\n'"    mapTokens|mapTokens"$'\n'"Return Code: 0 - No changes were made in any files."$'\n'"Return Code: 1 - changes were made in at least one file."$'\n'""$'\n'""
-return_code="0 - No changes were made in any files."$'\n'"1 - changes were made in at least one file."$'\n'""
+rawComment=$'Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.\nArgument: cannonFile - File. Required. One or more files delimited with `|` characters, one per line `search|replace|findArguments|...`. If not files are supplied then pipe file via stdin.\nRun textCannon using a configuration file or files.\nComment lines (First character is `#`) are considered the current "state" (e.g. version) and are displayed during processing.\nSample file:\n    # v0.25.0\n    timingStart|timingStart\n    timingReport|timingReport\n    bashUserInput|bashUserInput\n    # v0.24.0\n    listJoin|listJoin\n    mapTokens|mapTokens\nReturn Code: 0 - No changes were made in any files.\nReturn Code: 1 - changes were made in at least one file.\n\n'
+return_code=$'0 - No changes were made in any files.\n1 - changes were made in at least one file.\n'
 sourceFile="bin/build/tools/deprecated-tools.sh"
-sourceHash="1121098df87cee32b55dc85263f73f68977219d8"
+sourceHash="b18aaa6ec28246a094ceb2c6f1a02311f091f804"
 sourceLine="171"
 summary="Run textCannon using a configuration file or files."
 summaryComputed="true"

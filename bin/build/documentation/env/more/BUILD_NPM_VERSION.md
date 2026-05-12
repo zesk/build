@@ -7,5 +7,5 @@ Version of npm to install using native `npm` binary.
 
 ### See Also
 
-- {SEE:npmInstall}
+- ## `npmInstall`
 

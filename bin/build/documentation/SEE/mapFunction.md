@@ -19,6 +19,5 @@
 
 ### See Also
 
-- {SEE:mapValue}
-- ## `mapEnvironment`
+- ## `mapValue`
 

@@ -7,6 +7,14 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# bashDocumentationDeriveFunction
+# bashDocumentationDeriveSee
+# bashFirstComment
+# bashRemoveCommentCharacter
+# documentationIndexGenerate
+# documentationMake
+# documentationMaker
+
 testEverythingElse() {
   # dockerComposeWrapper
   # plasterLines

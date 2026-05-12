@@ -7,6 +7,7 @@ List of markers to identify to the terminal location of the prompt. Used by `iTe
 
 ### See Also
 
-- {SEE:iTerm2Init}
-- {SEE:bashPrompt}
+- ## `iTerm2Init`
+
+- ## `bashPrompt`
 

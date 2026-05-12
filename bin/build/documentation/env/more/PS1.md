@@ -7,5 +7,5 @@ Bash Prompt for terminals
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 

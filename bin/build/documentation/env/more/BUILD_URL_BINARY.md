@@ -7,5 +7,5 @@ Binary used in __urlOpen
 
 ### See Also
 
-- {SEE:urlOpen}
+- ## `urlOpen`
 

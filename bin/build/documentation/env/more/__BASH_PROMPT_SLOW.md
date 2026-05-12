@@ -7,5 +7,5 @@ Number of milliseconds after which a `bashPrompt` command is considered slow.
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 

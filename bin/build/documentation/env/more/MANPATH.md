@@ -8,5 +8,5 @@ See [`manPathConfigure`](/tools/platform/#manpathconfigure)
 
 ### See Also
 
-- {SEE:manPathConfigure}
+- ## `manPathConfigure`
 

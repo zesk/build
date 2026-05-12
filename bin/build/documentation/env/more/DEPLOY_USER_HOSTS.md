@@ -7,5 +7,5 @@ A list of one ore more user@host for installation of the application
 
 ### See Also
 
-- {SEE:deployApplication}
+- ## `deployApplication`
 

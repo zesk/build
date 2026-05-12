@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copy this into `bin/tools/` to add `developerTrack --developer` to track developer tools.
 #

@@ -425,10 +425,9 @@ __validateTypeURL() {
 # Return Code: 0 - Success
 __validateTypeLoadEnvironmentFile() {
   local handler="returnMessage"
-  local envFile bashEnv
 
-  envFile=$(__validateTypeFile "$@") || return $?
-  bashEnv=$(fileTemporaryName "$handler") || return $?
+  local envFile && envFile=$(__validateTypeFile "$@") || return $?
+  local bashEnv && bashEnv=$(fileTemporaryName "$handler") || return $?
   catchEnvironment "$handler" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
   local exitCode=0
   set -a

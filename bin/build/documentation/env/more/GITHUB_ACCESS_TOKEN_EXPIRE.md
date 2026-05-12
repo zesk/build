@@ -7,5 +7,5 @@ GitHub Access token expiration date. Invalid AFTER this date.
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 

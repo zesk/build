@@ -15,5 +15,5 @@ Colors are escape codes. Last entry is a reset simply to make environment output
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 

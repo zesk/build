@@ -456,10 +456,10 @@ _documentationMaker() {
 # Argument: functionName ... - String. Optional. Specific functions to compile.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-buildFunctionsCompile() {
+documentationFileCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_buildFunctionsCompile() {
+_documentationFileCompile() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

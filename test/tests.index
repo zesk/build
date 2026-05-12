@@ -155,6 +155,7 @@ testBetterType suite=file test/tools/file-tests.sh
 testFileLineCount suite=file test/tools/file-tests.sh
 testFileMatches suite=file test/tools/file-tests.sh  tag=slow
 testFileTeeAtomic suite=file test/tools/file-tests.sh
+testFileUniqueLines suite=file test/tools/file-tests.sh
 testLinkCreate suite=file test/tools/file-tests.sh
 testFingerprint suite=fingerprint test/tools/fingerprint-tests.sh
 testRoundFloat suite=float test/tools/float-tests.sh
@@ -209,6 +210,7 @@ testCannon suite=map test/tools/map-tests.sh
 testConvertValue suite=map test/tools/map-tests.sh
 testIsMappable suite=map test/tools/map-tests.sh
 testMapEnvironmentBadNames suite=map test/tools/map-tests.sh
+testMapEnvironmentFunBadNames suite=map test/tools/map-tests.sh
 testMapFunction suite=map test/tools/map-tests.sh
 testMapPrefixSuffix suite=map test/tools/map-tests.sh
 testMapTokens suite=map test/tools/map-tests.sh

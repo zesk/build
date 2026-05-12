@@ -7,5 +7,5 @@ Default suffix used in `gitTagVersion`
 
 ### See Also
 
-- {SEE:gitTagVersion}
+- ## `gitTagVersion`
 

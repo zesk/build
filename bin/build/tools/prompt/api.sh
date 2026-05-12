@@ -321,7 +321,7 @@ __bashPromptCommand() {
 
   export __BASH_PROMPT_PREVIOUS
 
-  local slow="${__BASH_PROMPT_SLOW-300}"
+  local slow="${__BASH_PROMPT_SLOW-300}" # milliseconds
 
   # Index 0 1 2 3 4
   __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "${__BASH_PROMPT_PREVIOUS[1]-}" "${__BASH_PROMPT_PREVIOUS[2]-}" "${__BASH_PROMPT_PREVIOUS[3]-}" "$exitCode")

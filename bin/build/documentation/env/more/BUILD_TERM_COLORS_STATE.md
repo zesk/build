@@ -7,5 +7,5 @@ State to store state of current terminal color state
 
 ### See Also
 
-- {SEE:bashPromptModule_TermColors}
+- ## `bashPromptModule_TermColors`
 

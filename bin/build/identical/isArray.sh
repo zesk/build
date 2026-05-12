@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
 # Identical template
 #

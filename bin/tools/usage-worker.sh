@@ -11,7 +11,7 @@
 # Argument: --workers workerCount - PositiveInteger. Optional. Create this many workers to do the job.
 # Argument: --all - Flag. Optional. Check and build all of the build functions usage data.
 # Argument: --clean - Flag. Optional. Delete all usage files before starting.
-buildFunctionsCompileParallel() {
+documentationFileCompileParallel() {
   local handler="_${FUNCNAME[0]}"
   local totalWorkers=1 allFlag=false cleanFlag=false
 
@@ -51,7 +51,7 @@ buildFunctionsCompileParallel() {
     decorate info "Cleaned process state" || return $?
   fi
   # shellcheck disable=SC2064
-  trap "__buildFunctionsCompileParallel \"$cachePath\"" EXIT INT
+  trap "__documentationFileCompileParallel \"$cachePath\"" EXIT INT
 
   local fifo="$cachePath/fifo" writerPidFile="$cachePath/writer" workerPidFile="$cachePath/workers" pid
 
@@ -65,10 +65,10 @@ buildFunctionsCompileParallel() {
       throwEnvironment "$handler" "${FUNCNAME[0]} already running as pid $(decorate value "$pid")" || return $?
     fi
     decorate warning "Cleaning up dead process ${FUNCNAME[0]} $(decorate value "$pid")"
-    __buildFunctionsCompileCleanupProcesses "$handler" "$cachePath" || return $?
+    __documentationFileCompileCleanupProcesses "$handler" "$cachePath" || return $?
   fi
 
-  local undo=(__buildFunctionsCompileParallel "$cachePath")
+  local undo=(__documentationFileCompileParallel "$cachePath")
 
   catchEnvironment "$handler" rm -f "$fifo" || return $?
   catchEnvironment "$handler" mkfifo "$fifo" || returnUndo $? "${undo[@]}" || return $?
@@ -81,14 +81,14 @@ buildFunctionsCompileParallel() {
   # start multiple workers in parallel
   catchEnvironment "$handler" rm -rf "$workerPidFile" || return $?
   local workerId && for workerId in $(seq 1 "$totalWorkers"); do
-    __buildFunctionsCompileWorker "$handler" "$cachePath" "$workerId" &
+    __documentationFileCompileWorker "$handler" "$cachePath" "$workerId" &
     pid=$!
     catchEnvironment "$handler" printf "%d\n" "$!" >>"$workerPidFile" || returnUndo $? "${undo[@]}" || return $?
     statusMessage --last decorate info "Worker $workerId: Process $pid" || return $?
   done
 
   # start writer
-  __buildFunctionsCompileWriter "$handler" "$cachePath" "$allFlag" &
+  __documentationFileCompileWriter "$handler" "$cachePath" "$allFlag" &
   pid=$!
   catchEnvironment "$handler" printf "%d\n" "$pid" >"$writerPidFile" || returnUndo $? "${undo[@]}" || return $?
   local endY && IFS=$'\n' read -r -d '' _x endY < <(cursorGet)
@@ -98,33 +98,33 @@ buildFunctionsCompileParallel() {
   statusMessage decorate info "Started writer $pid" || return $?
 
   if ! wait; then
-    __buildFunctionsCompileParallel "$cachePath" || :
+    __documentationFileCompileParallel "$cachePath" || :
     trap - EXIT INT || :
     throwEnvironment "$handler" "Processes failed." || return $?
   fi
 
-  __buildFunctionsCompileParallel "$cachePath" || return $?
+  __documentationFileCompileParallel "$cachePath" || return $?
 
   trap - EXIT INT || :
   statusMessage timingReport "$start" "Ran $(localePluralWord "$totalWorkers" "worker")" || return $?
 }
-_buildFunctionsCompileParallel() {
+_documentationFileCompileParallel() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Cleanup function
-__buildFunctionsCompileParallel() {
+__documentationFileCompileParallel() {
   local handler="${FUNCNAME[0]#_}"
   local cachePath="$1"
   if [ -d "$cachePath" ]; then
-    __buildFunctionsCompileCleanupProcesses "$handler" "$cachePath" || return $?
+    __documentationFileCompileCleanupProcesses "$handler" "$cachePath" || return $?
     # catchEnvironment "$handler" rm -rf "$cachePath" || return $?
   fi
 }
 
 # Cleanup function
-__buildFunctionsCompileCleanupProcesses() {
+__documentationFileCompileCleanupProcesses() {
   local handler="$1" && shift
   local cachePath="$1" && shift
   [ -d "$cachePath" ] || return 0
@@ -141,7 +141,7 @@ __buildFunctionsCompileCleanupProcesses() {
 }
 
 # --- writer: generate jobs into the FIFO in the background ---
-__buildFunctionsCompileWriter() {
+__documentationFileCompileWriter() {
   local handler="$1" && shift
   local cachePath="$1" && shift
   local all="$1" && shift
@@ -152,7 +152,7 @@ __buildFunctionsCompileWriter() {
   ! buildDebugEnabled usage-writer || verboseFlag=true
 
   # shellcheck disable=SC2064
-  catchReturn "$handler" trap "__buildFunctionsCompileProcessTerminate \"\" \"Writer\"" HUP TERM || return $?
+  catchReturn "$handler" trap "__documentationFileCompileProcessTerminate \"\" \"Writer\"" HUP TERM || return $?
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
@@ -223,7 +223,7 @@ __buildFunctionsCompileWriter() {
   catchEnvironment "$handler" rm -f "$cachePath/writer" || return $?
 }
 
-__buildFunctionsCompileWorker() {
+__documentationFileCompileWorker() {
   local handler="$1" && shift
   local cachePath="$1" && shift
   local workerId="$1" && shift
@@ -274,7 +274,7 @@ __buildFunctionsCompileWorker() {
   local icon="✅"
   # shellcheck disable=SC2064
   export __CHILD=true
-  catchReturn "$handler" trap "__buildFunctionsCompileProcessTerminate \"$yOffset\" \"$prefix\"" HUP TERM || return $?
+  catchReturn "$handler" trap "__documentationFileCompileProcessTerminate \"$yOffset\" \"$prefix\"" HUP TERM || return $?
   local returnCode=0 && while true; do
     catchReturn "$handler" flock 4 || return $? # grab lock
     if ! IFS="" read -r -d $'\0' -n "$recordSize" -u 3 recordLine; then
@@ -297,7 +297,7 @@ __buildFunctionsCompileWorker() {
       break
     fi
     local start && start=$(timingStart) || return $?
-    if ! __buildFunctionsCompileFunction "$handler" "$docPath" "$functionName" "$sourceFile" "$prefix" 1>&2; then
+    if ! __documentationFileCompileFunction "$handler" "$docPath" "$functionName" "$sourceFile" "$prefix" 1>&2; then
       returnCode=1
       break
     fi
@@ -314,7 +314,7 @@ __buildFunctionsCompileWorker() {
   return $returnCode
 }
 
-__buildFunctionsCompileProcessTerminate() {
+__documentationFileCompileProcessTerminate() {
   local returnCode="$?"
   local yOffset="$1" && shift
   local title="$1" && shift

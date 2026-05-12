@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
-# Original of returnClean
+# Identical template
+#
+# Original of __returnClean
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

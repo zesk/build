@@ -1,13 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
 # Identical template
 #
-# Original of returnMessage
-#
-# Syntactic sugar to allow a command to output a message to stderr and exit
-# One line is nice as this is used nearly everywhere as a common escape from initialization problems.
+# Original of __returnMessage
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
+
+#
+# Syntactic sugar to allow a command to output a message to stderr and exit
+#
 
 # IDENTICAL returnMessage EOF
 
@@ -46,10 +49,6 @@ _returnMessage() {
 isUnsignedInteger() {
   [ $# -eq 1 ] || returnMessage 2 "Single argument only: $*" || return $?
   case "${1#+}" in --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
-}
-_isUnsignedInteger() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL returnMessage

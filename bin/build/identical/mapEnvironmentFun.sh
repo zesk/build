@@ -1,12 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
 # Identical template
 #
-# Original of mapEnvironment (uses bash replace instead of sed)
+# Original of mapEnvironmentFun
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
-#
-# requires a lot of stuff
 #
 
 # IDENTICAL mapEnvironmentFun EOF
@@ -26,8 +25,8 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: throwArgument read environmentVariables decorate sed cat rm throwEnvironment catchEnvironment returnClean
-# Requires: validate fileTemporaryName
+# Requires: throwArgument decorate
+# Requires: validate
 mapEnvironmentFun() {
   local handler="_${FUNCNAME[0]}"
   local __aa=()
@@ -61,5 +60,6 @@ __mapEnvironmentFun() {
   local __onlyList="$1" && shift
   local __tokenName="$1" && shift
   [ -z "$__onlyList" ] || stringContains "$__onlyList" ":$__tokenName:" || return 1
-  printf -- %s "${!__tokenName-}"
+  [ -n "${!__tokenName+x}" ] || return 1
+  printf -- %s "${!__tokenName}"
 }

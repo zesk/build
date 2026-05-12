@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-# IDENTICAL returnMessage 43
+# IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -43,10 +43,6 @@ _returnMessage() {
 isUnsignedInteger() {
   [ $# -eq 1 ] || returnMessage 2 "Single argument only: $*" || return $?
   case "${1#+}" in --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
-}
-_isUnsignedInteger() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL returnMessage
@@ -133,13 +129,14 @@ bashDocumentation() {
   bashSimpleDocumentation "$@"
 }
 
-# IDENTICAL __usageMessage 39
+# IDENTICAL __usageMessage 44
 
 # Summary: Icon for usage messages
 # - `0` - meaning no error, icon is `🏆`
 # - non-`0` - Error, icon is `❌`
+# Local: icon
 __usageMessageIcon() {
-  [ "$1" -eq 0 ] && printf -- "%s" "🏆" || printf -- "%s" "❌"
+  [ "$1" -eq 0 ] && icon="🏆" || icon="❌"
 }
 
 # Summary: Style usage messages
@@ -149,9 +146,9 @@ __usageMessageIcon() {
 # - `1` - Environment error, style is `error`
 # - `2` - Argument error, style is `red`
 # - `*` - All additional errors, style is `orange`
+# Local: style
 __usageMessageStyle() {
-  local color="info" && case "$1" in 0) ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac && shift
-  decorate "$color" "$@"
+  style="info" && case "$1" in 0) ;; 1) style="error" ;; 2) style="red" ;; *) style="orange" ;; esac && shift
 }
 
 # Output the message for usage consistently
@@ -166,11 +163,15 @@ __usageMessage() {
     [ -n "$suffix" ] || return 0
     __usageMessageStyle "$returnCode" "$suffix"
   elif [ "$returnCode" != 2 ]; then
-    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    [ -z "$suffix" ] || suffix=" $(decorate warning "$suffix")"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
-    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    [ -z "$suffix" ] || suffix=" $(decorate error "$suffix")"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 
@@ -280,6 +281,25 @@ bashSimpleDocumentation() {
   return "$returnCode"
 }
 _bashSimpleDocumentation() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# IDENTICAL listJoin 17
+
+# Output a list of items joined by a character
+# Output: text
+# Argument: separator - EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.
+# Argument: text0 ... - String. Optional. One or more strings to join
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+listJoin() {
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+  local IFS="${1-:0:1}"
+  shift || :
+  printf "%s" "$*"
+}
+_listJoin() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -513,6 +533,37 @@ _isExecutable() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# IDENTICAL inArray 29
+
+# Check if an element exists in an array
+#
+# Argument: element - EmptyString. Thing to search for
+# Argument: arrayElement0 ... - Array. Optional. One or more array elements to match
+# Example:     if inArray "$thing" "${things[@]+"${things[@]}"}"; then
+# Example:         things+=("$thing")
+# Example:     fi
+# Return Code: 0 - If element is found in array
+# Return Code: 1 - If element is NOT found in array
+# Tested: No
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
+inArray() {
+  local element=${1-} arrayElement
+  if ! shift 2>/dev/null; then
+    _inArray 0 && return $? || return $?
+  fi
+  for arrayElement; do
+    if [ "$element" == "$arrayElement" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+_inArray() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # IDENTICAL _type 46
 
 # Test if an argument is a positive integer (non-zero)
@@ -561,7 +612,7 @@ _isFunction() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ returnCodeString 17
+# _IDENTICAL_ returnCodeString 16
 
 # Output the exit code as a string
 #
@@ -578,7 +629,6 @@ _returnCodeString() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-clear
 
 # IDENTICAL validate 171
 
@@ -1107,41 +1157,26 @@ _executeInputSupport() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileTemporaryName 34
 
-# Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
-# Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# Argument: ... - Arguments. Optional. Any additional arguments are passed through.
-# Requires: mktemp helpArgument catchEnvironment bashDocumentation
-# BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
-# Environment: BUILD_DEBUG
-fileTemporaryName() {
-  local handler="_${FUNCNAME[0]}"
-  helpArgument "$handler" "$@" || return 0
-  handler="$1" && shift
-  local debug=",${BUILD_DEBUG-},"
-  if [ "${debug#*,temp,}" != "$debug" ]; then
-    local target="${BUILD_HOME-.}/.${FUNCNAME[0]}"
-    printf "%s" "fileTemporaryName: " >>"$target"
-    catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
-    local sources=() count=${#FUNCNAME[@]} index=0
-    while [ "$index" -lt "$count" ]; do
-      sources+=("${BASH_SOURCE[index + 1]-}:${BASH_LINENO[index]-"$LINENO"} - ${FUNCNAME[index]-}")
-      index=$((index + 1))
-    done
-    printf "%s\n" "${sources[@]}" "-- END" >>"$target"
-  else
-    catchEnvironment "$handler" mktemp "$@" || return $?
-  fi
+# <-- END of IDENTICAL fileTemporaryName
+
+# IDENTICAL muzzle 16
+
+# Suppress stdout without piping. Handy when you just want a behavior not the output.
+# Argument: command - Callable. Required. Thing to muzzle.
+# Argument: ... - Arguments. Optional. Additional arguments.
+# Example:     {fn} pushd "$buildDir"
+# Example:     catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
+# stdout: - No output from stdout ever from this function
+muzzle() {
+  # __IDENTICAL__ __checkHelp1FUNCNAME 1
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+  "$@" >/dev/null
 }
-_fileTemporaryName() {
+_muzzle() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
-# <-- END of IDENTICAL fileTemporaryName
 
 # IDENTICAL fileReverseLines 18
 
@@ -1163,50 +1198,154 @@ _fileReverseLines() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL environmentVariables 19
+# IDENTICAL stringContains 25
 
-# Output a list of environment variables and ignore function definitions
-#
-# both `set` and `env` output functions and this is an easy way to just output
-# exported variables
-#
-# Requires: declare grep cut bashDocumentation helpArgument
-environmentVariables() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
-  {
-    declare -px | grep 'declare -x ' | cut -f 1 -d "=" | cut -f 3 -d " " && declare -ax | grep 'declare -ax ' | cut -f 1 -d '=' | cut -f 3 -d " "
-  } | catchReturn "$handler" sort -u || return $?
+# Argument: haystack - String. Required. String to search.
+# Argument: needle ... - String. Optional. One or more strings to find as a substring of `haystack`.
+# Return Code: 0 - IFF ANY needle matches as a substring of haystack
+# Return Code: 1 - No needles found in haystack
+# Summary: Find whether a substring exists in one or more strings
+# Does needle exist as a substring of haystack?
+stringContains() {
+  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+  local haystack="${1-}"
+
+  [ -n "$haystack" ] || return 1
+  shift
+  while [ $# -gt 0 ]; do
+    [ -n "$1" ] || continue
+    local needle="$1"
+    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
+    shift
+  done
+  return 1
 }
-_environmentVariables() {
-  true || environmentVariables --help
+_stringContains() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 63
+# IDENTICAL mapFunction 96
+
+# Summary: Convert tokens in input to values
+#
+# Map tokens in the input stream based on some heuristic.
+#
+# Converts tokens in the form `{VARIABLE}` to the associated value.
+#
+# Undefined values are not converted.
+#
+# See: mapValue mapEnvironment
+# Argument: --env-file envFile - File. Optional. Load this environment file prior to processing input.
+# Argument: --default defaultString - String. Optional. Default string for tokens. Can use additional tokens: `{prefix}` `{suffix}` `{tokenName}` and `{token}`. Set to `--` to output `token`.
+# Argument: --prefix prefixString - String. Optional. Prefix character for tokens, defaults to `{`.
+# Argument: --suffix suffixString - String. Optional. Suffix character for tokens, defaults to `}`.
+# Argument:  mapFunction ... - Function. Required. Replacement function with arguments. Called as is with three additional arguments: `tokenName` `offset` `total`
+#
+# `mapFunction` should return non-zero to have the default behavior occur. If a zero exit code is output then some replacement value is assumed to be written to `stdout` by the `mapFunction`.
+# The special return code 120 is used to terminate the calling function immediately.
+# Return Code: 120 - Map function exited early
+# Return Code: 130 - User interrupt (exits early)
+# Return Code: 141 - System interrupt (exits early)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Requires: cat throwEnvironment catchEnvironment
+# Requires: throwArgument decorate validate
+mapFunction() {
+  local handler="_${FUNCNAME[0]}"
+
+  local __prefix='{' __suffix='}' __ee=() __searchFilters=() __replaceFilters=() mapper=() __default="--"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --default) shift && __default=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
+    --prefix) shift && __prefix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --suffix) shift && __suffix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --env-file) shift && muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $? ;;
+    *) muzzle validate "$handler" Function "mapFunction" "$1" && mapper=("$@") && set -- && break || return $? ;;
+    esac
+    shift
+  done
+
+  [ ${#mapper[@]} -gt 0 ] || throwArgument "$handler" "mapFunction is required" || return $?
+
+  local __counter=0 __checkValue=""
+  local __failed=()
+  local __value && __value="$(catchEnvironment "$handler" cat)" || return $?
+  local __offset=0 __total="${#__value}" && while true; do
+    local __remain="${__value#*"$__prefix"}"
+    [ "$__remain" != "$__value" ] || break
+    local __tokenName="${__remain%%"$__suffix"*}"
+    [ "$__tokenName" != "$__remain" ] || break
+    local __before="${__value%%"$__prefix"*}"
+    __offset=$((__offset + ${#__before}))
+    printf -- "%s" "$__before"
+    __value="${__value#*"$__suffix"}"
+    if [ "${__tokenName#*$'\n'}" != "$__tokenName" ]; then
+      # Invalid token name (newline)
+      printf -- "%s%s%s" "$__prefix" "$__tokenName" "$__suffix"
+      continue
+    else
+      local __token="$__prefix$__tokenName$__suffix"
+      local __returnCode=0
+      if [ "${#__failed[@]}" -gt 0 ] && inArray "$__tokenName" "${__failed[@]}"; then
+        __returnCode=1
+      else
+        "${mapper[@]}" "$__tokenName" "$__offset" "$__total" || __returnCode=$?
+        __failed+=("$__tokenName")
+      fi
+      case "$__returnCode" in 120 | 130 | 141) return "$__returnCode" ;; esac
+      [ "$__returnCode" -gt 0 ] || continue
+      case "$__default" in
+      "") ;;
+      --) printf -- "%s" "$__token" ;;
+      *) printf -- "%s" "$(prefix="$__prefix" suffix="$__suffix" tokenName="$__tokenName" token="$__prefix$__tokenName$__suffix" mapEnvironment <<<"$__default")" ;;
+      esac
+    fi
+    __counter=$((__counter + 1))
+    if [ $__counter -gt 1000 ]; then
+      throwEnvironment "$handler" "Infinite loop found at $__count $__offset of $__total $(dumpPipe "Infinite loop found at $__count $__offset of $__total Remain:" <<<"$__value")" || return $?
+    fi
+  done
+  printf "%s" "$__value"
+}
+_mapFunction() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
+# IDENTICAL mapEnvironmentFun 54
 
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# This one does it like `mapValue`
-# Environment is accessed via arguments passed or entire exported environment value space are and mapped to the destination.
+# Uses environment variables passed as arguments or entire exported environment variables are used and mapped to the destination.
+# See: mapEnvironment
 # See: mapValue
-# Argument: environmentVariableName - String. Optional. Map this value only. If not specified, all environment variables are mapped.
+# Argument: environmentName - String. Optional. Map this value only. If not specified, all environment variables are mapped.
+# Argument: --env-file envFile - File. Optional. Load this environment file prior to processing input.
 # Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: environmentVariables cat throwEnvironment catchEnvironment
-# Requires: throwArgument decorate validate
-# shellcheck disable=SC2120
-mapEnvironment() {
+# Requires: throwArgument decorate
+# Requires: validate
+mapEnvironmentFun() {
   local handler="_${FUNCNAME[0]}"
-
-  local __prefix='{' __suffix='}' __ee=()
+  local __aa=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -1217,43 +1356,28 @@ mapEnvironment() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --prefix) shift && __prefix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-    --suffix) shift && __suffix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-    --env-file) shift && muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $? ;;
-    *) __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $? ;;
+    --env-file | --prefix | --suffix) shift && __aa+=("$("$argument" "${1-}")") ;;
+    *) break ;;
     esac
     shift
   done
 
-  # If no environment variables are passed on the command line, then use all of them
-  local __e
-  if [ "${#__ee[@]}" -eq 0 ]; then
-    while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
-  fi
-
-  (
-    local __value && __value="$(catchEnvironment "$handler" cat)" || return $?
-    unset handler
-    for __e in "${__ee[@]}"; do
-      case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
-      local __search="$__prefix$__e$__suffix"
-      local __replace="${!__e-}"
-      __value="${__value//"$__search"/$__replace}"
-    done
-    printf "%s" "$__value"
-  )
+  local onlyList && onlyList=$(listJoin ":" "$@")
+  [ -z "$onlyList" ] || onlyList=":$onlyList:"
+  mapFunction "${__aa[@]+"${__aa[@]}"}" __mapEnvironmentFun "$onlyList"
 }
-_mapEnvironment() {
-  decorateInitialized || decorate info --
+_mapEnvironmentFun() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# fn: {base}
-# See `mapEnvironment` for arguments and usage.
-# See: mapEnvironment
-__binMapEnvironment() {
-  mapEnvironment "$@"
+# Helper function
+__mapEnvironmentFun() {
+  local __onlyList="$1" && shift
+  local __tokenName="$1" && shift
+  [ -z "$__onlyList" ] || stringContains "$__onlyList" ":$__tokenName:" || return 1
+  [ -n "${!__tokenName+x}" ] || return 1
+  printf -- %s "${!__tokenName}"
 }
 
-__binMapEnvironment "$@"
+mapEnvironmentFun "$@"

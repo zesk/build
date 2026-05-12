@@ -25,6 +25,7 @@ If not specified, uses the default for the current platform.
 
 ### See Also
 
-- {SEE:dockerLocalContainer}
-- {SEE:dockerPlatformDefault}
+- ## `dockerLocalContainer`
+
+- ## `dockerPlatformDefault`
 

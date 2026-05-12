@@ -7,5 +7,5 @@ Command is run before displaying the prompt, receives exit status from the prior
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 

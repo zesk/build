@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+# IDENTICAL templateHeader 7
+#
+# Identical template
+#
+# Original of __NAME__
+#
+# Copyright &copy; 2026 Market Acumen, Inc.
+#
+
 #
 # argument_handler
 #

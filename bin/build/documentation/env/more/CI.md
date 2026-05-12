@@ -10,6 +10,7 @@ Continuous Integration - this is set to a non-blank value in:
 
 ### See Also
 
-- {SEE:statusMessage}
-- {SEE:consoleHasAnimation}
+- ## `statusMessage`
+
+- ## `consoleHasAnimation`
 

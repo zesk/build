@@ -23,23 +23,19 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
       fi
     fi
 
-    local home
-
-    home=$(catchReturn "$handler" buildHome) || return $?
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
 
     # Title
-    local name
-    name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+    local name && name=$(catchReturn "$handler" buildEnvironmentGet --quiet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
 
-    local title
-    title="$name $(catchReturn "$handler" hookVersionCurrent)" || return $?
+    local title && title="$name $(catchReturn "$handler" hookVersionCurrent)" || return $?
     decorate big --bigger "$title"
+
     # Logo for iTerm2
     iTerm2Image -i "$home/etc/zesk-build-icon.png"
 
     markdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
-
   }
   ___developerHelp() {
     # __IDENTICAL__ bashDocumentation 1
@@ -58,12 +54,16 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     alias '?'="__developerHelp"
 
+    # Title
+    local name && name=$(catchReturn "$handler" buildEnvironmentGet --quiet APPLICATION_NAME) || return $?
+    [ -n "$name" ] || name=$(basename "$home")
+    export APPLICATION_NAME="$name"
+
     muzzle reloadChanges --stop 2>&1
-    muzzle reloadChanges --name "$(buildEnvironmentGet APPLICATION_NAME)" "$home/bin/tools.sh" "$home/bin/tools/"
+    muzzle reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/tools/"
     muzzle buildCompletion
 
-    bashPrompt --skip-prompt bashPromptModule_TermColors bashPromptModule_BuildProject
-
+    bashPrompt --label "$name " bashPromptModule_TermColors bashPromptModule_BuildProject
     pathConfigure --last "$home/bin" "$home/bin/build"
 
     __developerHelp --cache
@@ -81,7 +81,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   __developerConfigureUndo() {
     local handler="_${FUNCNAME[0]}"
 
-    local home && home=$(catchReturn "$handler" buildHome) || return $?
+    local home && home=$(catchReturn "$handler" fileRealPath "${BASH_SOURCE[0]%/*}/..") || return $?
     local name && name=$(catchReturn "$handler" buildEnvironmentContext "$home" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
 

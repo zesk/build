@@ -7,5 +7,5 @@ Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notifi
 
 ### See Also
 
-- {SEE:darwinNotification}
+- ## `darwinNotification`
 

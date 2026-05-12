@@ -8,8 +8,9 @@ List of markers to identify to the terminal location of the prompt. Used by `iTe
 
 ### See Also
 
-- {SEE:iTerm2Init}
-- {SEE:bashPrompt}
+- ## `iTerm2Init`
+
+- ## `bashPrompt`
 
 
 ## `__BASH_PROMPT_MODULES`
@@ -31,7 +32,7 @@ An automatic reporting occurs when commands exceed 0.3s.
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 
 
 ## `__BASH_PROMPT_PREVIOUS`
@@ -43,7 +44,7 @@ Previous result code
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 
 
 ## `__BASH_PROMPT_SLOW`
@@ -55,7 +56,7 @@ Number of milliseconds after which a `bashPrompt` command is considered slow.
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 
 
 ## `__BUILD_HAS_TTY`
@@ -211,7 +212,7 @@ Region for Amazon Web Services
 
 ### See Also
 
-- {SEE:awsIPAccess}
+- ## `awsIPAccess`
 
 
 ## `AWS_SECRET_ACCESS_KEY`
@@ -265,7 +266,7 @@ If true then colors are shown, blank means guess the value, false means no color
 
 ### See Also
 
-- {SEE:decorate}
+- ## `decorate`
 
 
 ## `BUILD_COMPANY_LINK`
@@ -322,7 +323,7 @@ Directory where Zesk Build is being developed in the file system (for other proj
 
 ### See Also
 
-- {SEE:buildDevelopmentLink}
+- ## `buildDevelopmentLink`
 
 
 ## `BUILD_DOCKER_IMAGE`
@@ -334,7 +335,7 @@ Default docker image to use when launching `dockerLocalContainer`
 
 ### See Also
 
-- {SEE:dockerLocalContainer}
+- ## `dockerLocalContainer`
 
 
 ## `BUILD_DOCKER_PATH`
@@ -346,7 +347,7 @@ Default path for the shell to map the current directory to when launching `docke
 
 ### See Also
 
-- {SEE:dockerLocalContainer}
+- ## `dockerLocalContainer`
 
 
 ## `BUILD_DOCKER_PLATFORM`
@@ -376,8 +377,9 @@ If not specified, uses the default for the current platform.
 
 ### See Also
 
-- {SEE:dockerLocalContainer}
-- {SEE:dockerPlatformDefault}
+- ## `dockerLocalContainer`
+
+- ## `dockerPlatformDefault`
 
 
 ## `BUILD_DOCUMENTATION_PATH`
@@ -484,7 +486,7 @@ Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitT
 
 ### See Also
 
-- {SEE:gitTagVersion}
+- ## `gitTagVersion`
 
 
 ## `BUILD_NOTIFY_SOUND`
@@ -496,7 +498,7 @@ Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notifi
 
 ### See Also
 
-- {SEE:darwinNotification}
+- ## `darwinNotification`
 
 
 ## `BUILD_NPM_VERSION`
@@ -508,7 +510,7 @@ Version of npm to install using native `npm` binary.
 
 ### See Also
 
-- {SEE:npmInstall}
+- ## `npmInstall`
 
 
 ## `BUILD_PACKAGE_MANAGER`
@@ -582,7 +584,7 @@ Colors are escape codes. Last entry is a reset simply to make environment output
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 
 
 ## `BUILD_RELEASE_NOTES`
@@ -610,7 +612,7 @@ State to store state of current terminal color state
 
 ### See Also
 
-- {SEE:bashPromptModule_TermColors}
+- ## `bashPromptModule_TermColors`
 
 
 ## `BUILD_TEST_FLAGS`
@@ -630,8 +632,8 @@ Binary used to generate `decorate big`
 
 ### See Also
 
-- {SEE:decorate}
-- {SEE:big}
+- ## `decorate`
+
 - {SEE:__aptStandardPackages}
 - {SEE:__apkStandardPackages}
 - {SEE:__brewStandardPackages}
@@ -654,7 +656,7 @@ Binary used in __urlOpen
 
 ### See Also
 
-- {SEE:urlOpen}
+- ## `urlOpen`
 
 
 ## `BUILD_URL_TIMEOUT`
@@ -666,7 +668,7 @@ Timeout in seconds for fetching URLs in `urlFetch`
 
 ### See Also
 
-- {SEE:urlFetch}
+- ## `urlFetch`
 
 
 ## `BUILD_VERSION_NO_OPEN`
@@ -686,7 +688,7 @@ Default suffix used in `gitTagVersion`
 
 ### See Also
 
-- {SEE:gitTagVersion}
+- ## `gitTagVersion`
 
 
 ## `BUILD_YARN_VERSION`
@@ -698,7 +700,7 @@ Version of yarn to install using `corepack`
 
 ### See Also
 
-- {SEE:yarnInstall}
+- ## `yarnInstall`
 
 
 ## `CI`
@@ -713,8 +715,9 @@ Continuous Integration - this is set to a non-blank value in:
 
 ### See Also
 
-- {SEE:statusMessage}
-- {SEE:consoleHasAnimation}
+- ## `statusMessage`
+
+- ## `consoleHasAnimation`
 
 
 ## `COLORFGBG`
@@ -755,7 +758,7 @@ A list of one ore more user@host for installation of the application
 
 ### See Also
 
-- {SEE:deployApplication}
+- ## `deployApplication`
 
 
 ## `DEPLOYMENT`
@@ -792,8 +795,9 @@ Open links from git remotes in `gitCommit`
 
 ### See Also
 
-- {SEE:gitCommit}
-- {SEE:gitCommit}
+- ## `gitCommit`
+
+- ## `gitCommit`
 
 
 ## `GITHUB_ACCESS_TOKEN_EXPIRE`
@@ -805,7 +809,7 @@ GitHub Access token expiration date. Invalid AFTER this date.
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 
 
 ## `GITHUB_ACCESS_TOKEN`
@@ -817,7 +821,7 @@ Access token used for release
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 
 
 ## `GITHUB_REPOSITORY_NAME`
@@ -829,7 +833,7 @@ Repository name for release
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 
 
 ## `GITHUB_REPOSITORY_OWNER`
@@ -841,7 +845,7 @@ Repository owner for release
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 
 
 ## `HOME`
@@ -862,7 +866,7 @@ if blank, no filter is used and raw result is returned
 
 ### See Also
 
-- {SEE:networkIPLookup}
+- ## `networkIPLookup`
 
 
 ## `IP_URL`
@@ -874,7 +878,7 @@ URL to look up IP my address remotely
 
 ### See Also
 
-- {SEE:networkIPLookup}
+- ## `networkIPLookup`
 
 
 ## `LC_TERMINAL`
@@ -895,7 +899,7 @@ See [`manPathConfigure`](/tools/platform/#manpathconfigure)
 
 ### See Also
 
-- {SEE:manPathConfigure}
+- ## `manPathConfigure`
 
 
 ## `MARIADB_BINARY_CONNECT`
@@ -933,7 +937,7 @@ See [`pathConfigure`](/tools/platform/#pathconfigure)
 
 ### See Also
 
-- {SEE:pathConfigure}
+- ## `pathConfigure`
 
 
 ## `PRODUCTION`
@@ -953,7 +957,7 @@ Command is run before displaying the prompt, receives exit status from the prior
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 
 
 ## `PS1`
@@ -965,7 +969,7 @@ Bash Prompt for terminals
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 
 
 ## `SHFMT_ARGUMENTS`
@@ -999,8 +1003,7 @@ If blank, the default behavior is to track; disable it with setting the value to
 
 ### See Also
 
-- {SEE:testSuite}
-- {SEE:assert.sh}
+- #### Tag filters
 
 
 ## `VISUAL`

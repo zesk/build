@@ -29,6 +29,5 @@ Is this a boolean? (`true` or `false`)
 
 ### See Also
 
-- {SEE:isTrue}
-- ## `booleanParse`
+- ## `isTrue`
 

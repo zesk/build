@@ -984,13 +984,14 @@ bashDocumentation() {
   bashSimpleDocumentation "$@"
 }
 
-# IDENTICAL __usageMessage 39
+# IDENTICAL __usageMessage 44
 
 # Summary: Icon for usage messages
 # - `0` - meaning no error, icon is `🏆`
 # - non-`0` - Error, icon is `❌`
+# Local: icon
 __usageMessageIcon() {
-  [ "$1" -eq 0 ] && printf -- "%s" "🏆" || printf -- "%s" "❌"
+  [ "$1" -eq 0 ] && icon="🏆" || icon="❌"
 }
 
 # Summary: Style usage messages
@@ -1000,9 +1001,9 @@ __usageMessageIcon() {
 # - `1` - Environment error, style is `error`
 # - `2` - Argument error, style is `red`
 # - `*` - All additional errors, style is `orange`
+# Local: style
 __usageMessageStyle() {
-  local color="info" && case "$1" in 0) ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac && shift
-  decorate "$color" "$@"
+  style="info" && case "$1" in 0) ;; 1) style="error" ;; 2) style="red" ;; *) style="orange" ;; esac && shift
 }
 
 # Output the message for usage consistently
@@ -1017,11 +1018,15 @@ __usageMessage() {
     [ -n "$suffix" ] || return 0
     __usageMessageStyle "$returnCode" "$suffix"
   elif [ "$returnCode" != 2 ]; then
-    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    [ -z "$suffix" ] || suffix=" $(decorate warning "$suffix")"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
-    [ -z "$suffix" ] || suffix=" $(decorate code "$suffix")"
-    printf "%s %s%s\n" "$(__usageMessageIcon "$returnCode")" "$(__usageMessageStyle "$returnCode" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    [ -z "$suffix" ] || suffix=" $(decorate error "$suffix")"
+    local icon && __usageMessageIcon "$returnCode"
+    local style && __usageMessageStyle "$returnCode"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 
@@ -1755,7 +1760,7 @@ execute() {
   "$@" || returnMessage "$?" "$@" || return $?
 }
 
-# IDENTICAL returnMessage 43
+# IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -1793,14 +1798,10 @@ isUnsignedInteger() {
   [ $# -eq 1 ] || returnMessage 2 "Single argument only: $*" || return $?
   case "${1#+}" in --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
-_isUnsignedInteger() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 # <-- END of IDENTICAL returnMessage
 
-# _IDENTICAL_ returnCodeString 17
+# _IDENTICAL_ returnCodeString 16
 
 # Output the exit code as a string
 #
@@ -1817,7 +1818,6 @@ _returnCodeString() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-clear
 
 # IDENTICAL executeInputSupport 48
 

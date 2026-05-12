@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Generic log service
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL returnMessage 43
+# IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -42,10 +42,6 @@ _returnMessage() {
 isUnsignedInteger() {
   [ $# -eq 1 ] || returnMessage 2 "Single argument only: $*" || return $?
   case "${1#+}" in --help) bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
-}
-_isUnsignedInteger() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL returnMessage

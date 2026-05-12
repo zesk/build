@@ -7,5 +7,5 @@ Version of yarn to install using `corepack`
 
 ### See Also
 
-- {SEE:yarnInstall}
+- ## `yarnInstall`
 

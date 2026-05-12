@@ -57,10 +57,9 @@ __testInstallInstallBuild() {
 
 testMapBin() {
 
-  local handler="returnMessage" home
+  local handler="returnMessage"
 
-  home=$(buildHome)
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
   catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   __testSection testMap

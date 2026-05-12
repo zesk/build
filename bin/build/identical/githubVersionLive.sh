@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
+# IDENTICAL templateHeader 7
 #
-# Sample live version script, uses github API to fetch release version
+# Identical template
+#
+# Original of githubVersionLive
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

@@ -7,5 +7,5 @@ URL to look up IP my address remotely
 
 ### See Also
 
-- {SEE:networkIPLookup}
+- ## `networkIPLookup`
 

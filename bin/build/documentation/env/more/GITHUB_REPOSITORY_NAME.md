@@ -7,5 +7,5 @@ Repository name for release
 
 ### See Also
 
-- {SEE:githubRelease}
+- ## `githubRelease`
 

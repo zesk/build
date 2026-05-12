@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
+# IDENTICAL templateHeader 7
+#
+# Identical template
+#
+# Original of isCallable
+#
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Typeless languages make coding fun
 #
 # EDIT THIS FILE
 #
-# Copyright &copy; 2026 Market Acumen, Inc.
 
 # ------------------------------- CUT BELOW HERE -------------------------------
 

@@ -7,5 +7,5 @@ Previous result code
 
 ### See Also
 
-- {SEE:bashPrompt}
+- ## `bashPrompt`
 
