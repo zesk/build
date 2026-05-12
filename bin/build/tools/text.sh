@@ -1039,7 +1039,6 @@ _textSHA() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Depends: sha1sum, /dev/random
 # Description: Outputs 40 random hexadecimal characters, stringLowercase.
 # Example:     testPassword="$(stringRandom)"
@@ -1054,7 +1053,6 @@ _stringRandom() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Outputs the integer offset of `needle` if found as substring in `haystack`
 # If `haystack` is not found, -1 is output
 # Argument: needle - String. Required.
@@ -1075,7 +1073,6 @@ _stringOffset() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Outputs the integer offset of `needle` if found as substring in `haystack` (case-insensitive)
 # If `haystack` is not found, -1 is output
 # Argument: needle - String. Required.

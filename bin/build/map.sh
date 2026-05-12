@@ -1157,7 +1157,6 @@ _executeInputSupport() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # <-- END of IDENTICAL fileTemporaryName
 
 # IDENTICAL muzzle 16
@@ -1322,7 +1321,6 @@ _mapFunction() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # IDENTICAL mapEnvironmentFun 54
 

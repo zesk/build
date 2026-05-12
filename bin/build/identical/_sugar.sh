@@ -64,6 +64,7 @@ _returnCodeString() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
 # Boolean test
 # If you want "true-ish" use `isTrue`.
 # Returns 0 if `value` is boolean `false` oHar `true`.
