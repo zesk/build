@@ -103,10 +103,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
   # Show dark and light mode
   darkLight() {
-    local m
+
     bin/build/repair.sh decorate
     source bin/tools.sh
-    for m in __decorateStylesDefaultLight __decorateStylesDefaultDark; do
+    local m && for m in __decorateStylesDefaultLight __decorateStylesDefaultDark; do
       "$m"
       colorSampleSemanticStyles
     done
@@ -115,7 +115,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   processWatcher() {
     local handler="_${FUNCNAME[0]}"
     local uid && uid=$(id -u) || return $?
-    local token && token="$(validate "$handler" String "token" "${1-:15}")" && shift || return $?
+    local token && token="$(validate "$handler" String "token" "${1-:bash}")" || return $?
+    [ $# -eq 0 ] || shift
     local threshold && threshold="$(validate "$handler" UnsignedInteger "threshold" "${1-:15}")" || return $?
     while true; do
       local processCount && processCount="$(pgrep -u "$uid" "$token" | grep -v "$$" | fileLineCount)" || return $?
@@ -148,8 +149,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     muzzle reloadChanges --stop 2>&1
 
     pathRemove "$home/bin" "$home/bin/build"
-
-    unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}" 2>/dev/null
+    local uu=("${FUNCNAME[0]}" "_${FUNCNAME[0]}" __buildHelp ___buildHelp __buildBackground processWatcher _processWatcher)
+    unset "${uu[@]}" 2>/dev/null
   }
   __buildBackground() {
     decorate warning backgroundProcess is still experimental
