@@ -14,6 +14,7 @@
 # documentationIndexGenerate
 # documentationMake
 # documentationMaker
+# documentationFileCompile
 
 testEverythingElse() {
   # dockerComposeWrapper

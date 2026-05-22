@@ -42,7 +42,7 @@ testAWSS3Upload() {
   checkFile=$(fileTemporaryName "$handler") || return $?
   catchEnvironment "$handler" aws s3 cp "$target/manifest.json" "$checkFile" || return $?
 
-  assertFileContains "$checkFile" "createdString" "$home/bin/build/build.json" "$home/bitbucket-pipelines.yml" "$home/README.md" "$home/etc" || return $?
+  assertFileContains "$checkFile" "createdString" "$home/bin/build/build.json" "$home/bitbucket-pipelines.yml" "$home/bin/build/README.md" "$home/etc" || return $?
 
   assertExitCode --stdout-match "manifest.json" --stdout-match "README.md" 0 awsS3DirectoryDelete --show "$target" || return $?
   assertExitCode 0 awsS3DirectoryDelete "$target" || return $?

@@ -244,7 +244,7 @@ testDeployBuildEnvironment() {
 
     assertExitCode --stderr-match "blank" 2 deployBuildEnvironment --id || return $?
 
-    assertExitCode --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
+    BUILD_DEBUG="" assertExitCode --stdout-match "deployBuildEnvironment" 0 deployBuildEnvironment --help || return $?
 
     assertExitCode --stderr-match "blank" 2 deployBuildEnvironment "" --id || return $?
 
