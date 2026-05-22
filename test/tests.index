@@ -52,6 +52,7 @@ testColorFormat suite=colors test/tools/colors-tests.sh
 testColorModes suite=colors test/tools/colors-tests.sh
 testColorSampleCodes suite=colors test/tools/colors-tests.sh
 testColorSampleCombinations suite=colors test/tools/colors-tests.sh
+testColorSamples suite=colors test/tools/colors-tests.sh
 testColorSampleStyles suite=colors test/tools/colors-tests.sh
 testColorScheme suite=colors test/tools/colors-tests.sh
 testSemanticColorSampleStyles suite=colors test/tools/colors-tests.sh
