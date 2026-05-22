@@ -392,7 +392,7 @@ __testSuite() {
         # ============================================================================================================
         # HOOK testsuite-stop
         # ============================================================================================================
-        TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-stop failed" || return $?
+        timing --name "testsuite-stop" TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-stop failed" || return $?
       fi
       currentSuiteName=$suiteName
       consoleLineFill
@@ -403,7 +403,7 @@ __testSuite() {
       # ============================================================================================================
       TEST_FILE=$sectionFile TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-start "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-start failed" || return $?
 
-      catchReturn "$handler" source "$theTestFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "Loading $(decorate file "$theTestFile")" || return $?
+      timing --slow 500 --name "source $theTestFile" catchReturn "$handler" source "$theTestFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "Loading $(decorate file "$theTestFile")" || return $?
     fi
 
     local __testStart && __testStart=$(timingStart)
@@ -451,6 +451,7 @@ __testSuite() {
     #       ▜▀ ▞▀▖▞▀▘▜▀ ▙▄▘▌ ▌▛▀▖
     #       ▐ ▖▛▀ ▝▀▖▐ ▖▌▚ ▌ ▌▌ ▌
     #  ▀▀▀▀▀▀▀ ▝▀▘▀▀  ▀ ▘ ▘▝▀▘▘ ▘
+    timingReport "$allTestStart" "__testRun"
     local testReturnCode=0
     TEST_START="$__testStart" TEST_FILE=$sectionFile TEST_VERBOSE=$verboseMode TEST_LINE=$testLine TEST_FLAGS=$rawFlags TEST_SUITE_NAME="$suiteName" TEST_NAME=$item "${runner[@]+"${runner[@]}"}" __testRun "$handler" "$stateFile" "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || testReturnCode=$?
     if [ $testReturnCode -eq 0 ]; then
@@ -464,13 +465,14 @@ __testSuite() {
 
     catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
-    __testRunCleanup "$handler" "$stateFile" || return $?
+    timing --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
 
     [ "${#cleanTestOnly[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${cleanTestOnly[@]}" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
     if ! $passed && $stopFlag; then
       terminated=(--terminate "Stopped after $item failed")
       break
     fi
+    timingReport "$allTestStart" "done loop"
   done <"$foundTests"
   if [ -n "$currentSuiteName" ]; then
     # ============================================================================================================
