@@ -465,7 +465,7 @@ __testSuite() {
 
     catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
-    timing --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
+    timing --slow "$hookSlowMilliseconds" --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
 
     [ "${#cleanTestOnly[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${cleanTestOnly[@]}" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
     if ! $passed && $stopFlag; then

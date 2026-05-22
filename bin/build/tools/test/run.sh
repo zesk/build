@@ -65,7 +65,6 @@ __testRun() {
     # ============================================================================================================
     # catchReturn "$handler" environmentValueWrite skipped "$TEST_NAME" >>"$stateFile" || return $?
     TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true timing --slow "$TEST_HOOK_SLOW" --name "test-skip" catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || returnClean $? "${clean[@]}" || return $?
-    timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup skip" __testRunCleanup "$handler" "$stateFile" || returnClean $? "${clean[@]}" || return $?
     return 0
   fi
 
@@ -223,22 +222,22 @@ __testRun() {
     returnAssert || resultCode=$?
   fi
 
-  local passed=true hh=()
-  if [ "$resultCode" -ne 0 ]; then
-    passed=false
-    hh=(--failed "$__TEST_SUITE_RESULT")
-  fi
-
-  local label="Failed" && ! $passed || label="Passed"
-  catchReturn "$handler" printf "%s\n" "Test $label: $__test $resultCode (${resultFlags[*]})" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
-
   # ============================================================================================================
   # HOOK test-stop
   # ============================================================================================================
-  TEST_ELAPSED="$elapsed" TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed timing --slow "$TEST_HOOK_SLOW" --name "test-stop" catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" return $?
+  (
+    local passed=true hh=()
+    if [ "$resultCode" -ne 0 ]; then
+      passed=false
+      hh=(--failed "$__TEST_SUITE_RESULT")
+    fi
 
-  timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup -> $resultCode" __testRunCleanup "$handler" "$stateFile" || return $?
-  timing --slow "$TEST_HOOK_SLOW" --name "__testRun clean -> $resultCode" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+    local label="Failed" && ! $passed || label="Passed"
+    catchReturn "$handler" printf "%s\n" "Test $label: $__test $resultCode (${resultFlags[*]})" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
+
+    TEST_ELAPSED="$elapsed" TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed timing --slow "$TEST_HOOK_SLOW" --name "test-stop" catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" || return $?
+    timing --slow "$TEST_HOOK_SLOW" --name "__testRun clean -> $resultCode" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  ) &
 
   return "$resultCode"
 }
@@ -258,5 +257,5 @@ __testRunCleanup() {
     done
     : "$stdout $stderr $output $error"
   ) || return $?
-  catchReturn "$handler" environmentCompile --parse --in-place "$stateFile" || return $?
+  # catchReturn "$handler" environmentCompile --parse --in-place "$stateFile" || return $?
 }
