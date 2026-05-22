@@ -15,6 +15,11 @@ testColorModes() {
   mockEnvironmentStop __BUILD_DECORATE
 }
 
+testColorSamples() {
+  colorSampleCodes || return $?
+  colorSampleStyles || return $?
+}
+
 testColorSampleCodes() {
   assertExitCode 0 colorSampleCodes || return $?
   assertExitCode --stderr-match "Only argument allowed is" --stderr-match "--help" 2 colorSampleCodes --no-arguments-really-allowed || return $?
@@ -69,6 +74,7 @@ testSimpleMarkdownToConsole() {
 }
 
 testColorSampleCombinations() {
+  assertExitCode 0 colorSampleCombinations || return $?
   echo "NOT BOLD"
   colorSampleCombinations " ZESK "
   echo "BOLD"

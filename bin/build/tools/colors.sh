@@ -147,14 +147,16 @@ colorSampleCombinations() {
   fi
   text="${*-" ABC "}"
   padding="$(textRepeat $((${#text} - 3)) " ")"
-  printf "   "
-  for fg in $(seq 30 "$top3") $(seq 90 97); do
+  printf "    "
+  # shellcheck disable=SC2207
+  local fgs=($(seq 1 9) $(seq 30 "$top3") $(seq 90 97))
+  for fg in "${fgs[@]}"; do
     printf "\033[%s%dm%3d%s\033[0m " "$extra" "$fg" "$fg" "$padding"
   done
   printf "\n"
   for bg in $(seq 40 47) $(seq 100 107); do
     printf "\033[%s%dm%3d\033[0m " "$extra" "$bg" "$bg"
-    for fg in $(seq 30 "$top3") $(seq 90 97); do
+    for fg in "${fgs[@]}"; do
       printf "\033[%s%d;%dm$text\033[0m " "$extra" "$fg" "$bg"
     done
     printf "\n"
