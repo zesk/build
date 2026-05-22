@@ -365,9 +365,11 @@ __testSuite() {
   # ============================================================================================================
   # HOOK tests-start
   # ============================================================================================================
-  hookRunOptional --handler "$handler" --application "$home" tests-start "$stateFile" "${hookArgs[@]+"${hookArgs[@]}"}" || returnClean $? "${clean[@]}" || return $?
+  local hookSlowMilliseconds=1
 
-  local undo=("hookRunOptional" "tests-stop" "--failed" "undo called" "$stateFile" -- rm -rf "${clean[@]}")
+  timing --slow "$hookSlowMilliseconds" --name "tests-start" hookRunOptional --handler "$handler" --application "$home" tests-start "$stateFile" "${hookArgs[@]+"${hookArgs[@]}"}" || returnClean $? "${clean[@]}" || return $?
+
+  local undo=(timing --slow "$hookSlowMilliseconds" --name "tests-stop" hookRunOptional "tests-stop" "--failed" "undo called" "$stateFile" -- rm -rf "${clean[@]}")
 
   __TEST_SUITE_TRACE=options
   local suiteName="" sectionFile="" _remainder terminated=() currentSuiteName=""
@@ -383,16 +385,14 @@ __testSuite() {
         continue
       fi
     fi
-    local suiteUndo=()
-    [ -z "$suiteName" ] || suiteUndo=(hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile")
-    suiteUndo+=("${undo[@]}")
-
+    local suiteUndo=() suiteStopCommand=(timing --slow "$hookSlowMilliseconds" --name "testsuite-stop" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile") suiteUndo=()
+    [ -z "$suiteName" ] || suiteUndo=("${suiteStopCommand[@]}")
     if [ "$suiteName" != "$currentSuiteName" ]; then
       if [ -n "$currentSuiteName" ]; then
         # ============================================================================================================
         # HOOK testsuite-stop
         # ============================================================================================================
-        timing --name "testsuite-stop" TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-stop failed" || return $?
+        TEST_SUITE_NAME="$suiteName" "${suiteStopCommand[@]}" || returnUndo $? "${suiteUndo[@]}" "${undo[@]}" || throwEnvironment "$handler" "testsuite-stop failed" || return $?
       fi
       currentSuiteName=$suiteName
       consoleLineFill
@@ -401,7 +401,7 @@ __testSuite() {
       # ============================================================================================================
       # HOOK testsuite-start
       # ============================================================================================================
-      TEST_FILE=$sectionFile TEST_SUITE_NAME="$suiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-start "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-start failed" || return $?
+      TEST_FILE="$sectionFile" TEST_SUITE_NAME="$suiteName" timing --slow "$hookSlowMilliseconds" --name "testsuite-start" hookRunOptional --handler "$handler" --application "$home" testsuite-start "$suiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-start failed" || return $?
 
       timing --slow 500 --name "source $theTestFile" catchReturn "$handler" source "$theTestFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "Loading $(decorate file "$theTestFile")" || return $?
     fi
@@ -451,7 +451,7 @@ __testSuite() {
     #       ▜▀ ▞▀▖▞▀▘▜▀ ▙▄▘▌ ▌▛▀▖
     #       ▐ ▖▛▀ ▝▀▖▐ ▖▌▚ ▌ ▌▌ ▌
     #  ▀▀▀▀▀▀▀ ▝▀▘▀▀  ▀ ▘ ▘▝▀▘▘ ▘
-    timingReport "$allTestStart" "__testRun"
+    timingReport "$allTestStart" "elapsed before __testRun"
     local testReturnCode=0
     TEST_START="$__testStart" TEST_FILE=$sectionFile TEST_VERBOSE=$verboseMode TEST_LINE=$testLine TEST_FLAGS=$rawFlags TEST_SUITE_NAME="$suiteName" TEST_NAME=$item "${runner[@]+"${runner[@]}"}" __testRun "$handler" "$stateFile" "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || testReturnCode=$?
     if [ $testReturnCode -eq 0 ]; then
@@ -472,19 +472,19 @@ __testSuite() {
       terminated=(--terminate "Stopped after $item failed")
       break
     fi
-    timingReport "$allTestStart" "done loop"
+    timingReport "$allTestStart" "elapsed at done"
   done <"$foundTests"
   if [ -n "$currentSuiteName" ]; then
     # ============================================================================================================
     # HOOK testsuite-stop
     # ============================================================================================================
-    TEST_SUITE_NAME="$currentSuiteName" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$currentSuiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-stop failed" || return $?
+    TEST_SUITE_NAME="$currentSuiteName" timing --slow "$hookSlowMilliseconds" --name "testsuite-stop" hookRunOptional --handler "$handler" --application "$home" testsuite-stop "$currentSuiteName" "$stateFile" || returnUndo $? "${suiteUndo[@]}" || throwEnvironment "$handler" "testsuite-stop failed" || return $?
   fi
 
   # ============================================================================================================
   # HOOK tests-stop
   # ============================================================================================================
-  hookRunOptional --handler "$handler" --application "$home" tests-stop "${terminated[@]+"${terminated[@]}"}" "$stateFile" || returnClean $? "${clean[@]}" || throwEnvironment "$handler" "tests-stop failed" || return $?
+  timing --slow "$hookSlowMilliseconds" --name "tests-stop" hookRunOptional --handler "$handler" --application "$home" tests-stop "${terminated[@]+"${terminated[@]}"}" "$stateFile" || returnClean $? "${clean[@]}" || throwEnvironment "$handler" "tests-stop failed" || return $?
 
   [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || throwArgument "$handler" "Match not found: $(decorate each code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
 
