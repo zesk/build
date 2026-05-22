@@ -129,7 +129,8 @@ __assertTimingCalculate() {
       decorate error "Timestamp saved was invalid: $(dumpPipe timingFile <"$timingFile")"
     fi
   else
-    decorate info "First test ($__BUILD_SAVED_CACHE_DIRECTORY)"
+    decorate info "First!"
+    # decorate info "First test ($__BUILD_SAVED_CACHE_DIRECTORY)"
   fi
   timingStart >"$timingFile"
 }

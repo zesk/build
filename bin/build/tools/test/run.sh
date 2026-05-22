@@ -12,6 +12,7 @@
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 __testRun() {
+  local init && init=$(timingStart)
   local handler="$1" && shift
   local __handler="$handler"
   local stateFile="$1" && shift
@@ -26,14 +27,14 @@ __testRun() {
   export __TEST_SUITE_TRACE
   export __TEST_SUITE_RESULT
 
-  export TEST_FILE TEST_VERBOSE TEST_LINE TEST_FLAGS TEST_SUITE_NAME TEST_NAME
+  export TEST_FILE TEST_VERBOSE TEST_LINE TEST_FLAGS TEST_SUITE_NAME TEST_NAME TEST_HOOK_SLOW
 
   local verboseMode="${TEST_VERBOSE-false}"
 
   # ============================================================================================================
   # HOOK test-start
   # ============================================================================================================
-  TEST_SKIPPED=false catchEnvironment "$handler" hookRunOptional "test-start" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-start hook FAILED" return $?
+  TEST_SKIPPED=false timing --slow "$TEST_HOOK_SLOW" --name "test-start" catchEnvironment "$handler" hookRunOptional "test-start" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-start hook FAILED" || return $?
 
   __testRunShellInitialize
 
@@ -63,8 +64,8 @@ __testRun() {
     # HOOK test-skip
     # ============================================================================================================
     # catchReturn "$handler" environmentValueWrite skipped "$TEST_NAME" >>"$stateFile" || return $?
-    TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || returnClean $? "${clean[@]}" || return $?
-    __testRunCleanup "$handler" "$stateFile" || returnClean $? "${clean[@]}" || return $?
+    TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true timing --slow "$TEST_HOOK_SLOW" --name "test-skip" catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || returnClean $? "${clean[@]}" || return $?
+    timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup skip" __testRunCleanup "$handler" "$stateFile" || returnClean $? "${clean[@]}" || return $?
     return 0
   fi
 
@@ -145,6 +146,7 @@ __testRun() {
   ###########################################
   ! $verboseMode || decorate each code "${runner[@]}"
   local resultFlags=()
+  timingReport "$init" "__testRun setup"
   if "${runner[@]}" > >(tee -a "$captureStdout") 2> >(tee -a "$captureStderr"); then
     resultFlags+=("success")
     catchReturn "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
@@ -233,11 +235,10 @@ __testRun() {
   # ============================================================================================================
   # HOOK test-stop
   # ============================================================================================================
-  TEST_ELAPSED="$elapsed" TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" return $?
+  TEST_ELAPSED="$elapsed" TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed timing --slow "$TEST_HOOK_SLOW" --name "test-stop" catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" return $?
 
-  __testRunCleanup "$handler" "$stateFile" || return $?
-
-  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup -> $resultCode" __testRunCleanup "$handler" "$stateFile" || return $?
+  timing --slow "$TEST_HOOK_SLOW" --name "__testRun clean -> $resultCode" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   return "$resultCode"
 }
