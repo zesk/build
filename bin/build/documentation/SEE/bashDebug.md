@@ -4,8 +4,8 @@
 
 ### Usage
 
-    bashDebug commandToDebug ... [ --help ]
-
+        bashDebug command
+    
 `bashDebug`: Simple debugger to walk through a program.
 
 Debugger accepts the following keystrokes:

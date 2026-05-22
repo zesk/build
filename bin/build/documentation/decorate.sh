@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-03
+# Generated on 2026-05-22
 # shellcheck disable=SC2034
 argument="style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration"$'\n'"text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for \`style\`."$'\n'""
 base="core.sh"
@@ -17,7 +17,7 @@ rawComment="Singular decoration function"$'\n'"Argument: style - String. Require
 requires="isFunction catchArgument catchReturn awk"$'\n'"bashDocumentation helpArgument"$'\n'"_decorateInitialize __decorateStyle __decorate executeInputSupport"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="4288b1b5dd74b1f4240bb03c3728be0a51c51aa6"
+sourceHash="b32c2786dfeaa993b8f2fc96c6c30a813d28611c"
 sourceLine="89"
 stdout="Decorated text"$'\n'""
 summary="Singular decoration function"

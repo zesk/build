@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 274
+# IDENTICAL _sugar 275
 
 # Argument: name ... - String. Optional. Exit code value to output.
 # Print one or more return codes by name.
@@ -286,4 +286,5 @@ catchReturn() {
   "$@" || "$handler" "$?" "$@" || return $?
 }
 
+# <-- END of IDENTICAL _sugar
 # <-- END of IDENTICAL _sugar

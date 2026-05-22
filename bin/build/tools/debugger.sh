@@ -11,6 +11,8 @@
 # Summary: Bash debugger
 # `{fn}`: Simple debugger to walk through a program.
 #
+# Usage:     bashDebug command
+#
 # Argument: commandToDebug ... - Callable. Required. Command to debug.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-12
+# Generated on 2026-05-22
 # shellcheck disable=SC2034
 argument="handler - String. Required. Failure command"$'\n'"command ... - Callable. Required. Command to run."$'\n'"... - Arguments. Optional. Arguments to \`command\`"$'\n'""
 base="_sugar.sh"
@@ -16,7 +16,7 @@ rawComment="Run \`command\`, upon failure run \`handler\` with an environment er
 requires="catchCode"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceHash="f483140af62e442b07342b869da4ea17b676a4e1"
+sourceHash="859744e8330da27fd03e1da6874909739d06ce70"
 sourceLine="247"
 summary="Run \`command\`, upon failure run \`handler\` with an environment error"
 summaryComputed="true"

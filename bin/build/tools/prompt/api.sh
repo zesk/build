@@ -110,7 +110,7 @@ __bashPrompt() {
     promptFormat="{label}{user}@{host} {directory} {return}{status} "
   fi
 
-  buildEnvironmentLoad --handler "$handler" PROMPT_COMMAND PS1 __BASH_PROMPT_SLOW __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS || return $?
+  buildEnvironmentLoad --handler "$handler" PROMPT_COMMAND PS1 __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS || return $?
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
     addArguments=()
