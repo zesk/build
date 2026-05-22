@@ -99,13 +99,15 @@ __bashDocumentation() {
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
     # ********************************************************************************************************************
-    if ! catchReturn "$handler" bashDocumentationExtract --function "$displayName" "$functionDefinitionFile" >"$variablesFile" <"$commentFile"; then
+    if ! catchReturn "$handler" bashDocumentationExtract --no-cache --function "$displayName" "$functionDefinitionFile" <"$commentFile" >"$variablesFile"; then
       dumpPipe "commentFile" <"$commentFile" 1>&2
       dumpPipe "variablesFile" <"$variablesFile" 1>&2
       dumpPipe "functionDefinitionFile" <"$functionDefinitionFile" 1>&2
       throwEnvironment "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
     fi
-
+    if fileIsEmpty "$variablesFile"; then
+      throwEnvironment "$handler" "Empty variables file for $(dumpPipe "commentFile" <"$commentFile")" || returnClean $? "${clean[@]}" || return $?
+    fi
     if [ -n "${rawComment-}" ]; then decorate error "FOUND LEAK AT $LINENO $displayName $functionDefinitionFile" && debuggingStack 1>&2 && pause; fi
 
     __profileLabel=bashDocumentationExtract

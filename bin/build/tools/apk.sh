@@ -32,7 +32,7 @@ isAlpine() {
   [ -f /etc/alpine-release ]
 }
 _isAlpine() {
-  ! false || isAlpine --help
+  true || isAlpine --help
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

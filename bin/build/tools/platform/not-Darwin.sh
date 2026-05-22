@@ -8,7 +8,7 @@
 # Requires: find stat
 __fileModificationTimes() {
   local directory="$1" && shift
-  find "$directory" -type f "$@" -exec stat --format='%Y %n' {} \;
+  find "$directory" "$@" -type f -exec stat --format='%Y %n' {} \;
 }
 
 # Requires: xargs sed

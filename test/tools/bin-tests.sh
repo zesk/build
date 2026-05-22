@@ -66,9 +66,9 @@ testMapBin() {
 
   local expected actual
 
-  actual="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | FOO=test BAR=goob bin/build/map.sh)"
+  actual="$(echo "{FOO}:{BAR}{foo}{bar}{FOO}_{BAR}" | FOO=test BAR=works bin/build/map.sh)"
 
-  expected="testgoob{foo}{bar}goob"
+  expected="test:works{foo}{bar}test_works"
 
   assertEquals "$expected" "$actual" || return $?
 

@@ -1224,7 +1224,7 @@ _stringContains() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapFunction 96
+# IDENTICAL mapFunction 99
 
 # Summary: Convert tokens in input to values
 #
@@ -1295,12 +1295,15 @@ mapFunction() {
       continue
     else
       local __token="$__prefix$__tokenName$__suffix"
-      local __returnCode=0
-      if [ "${#__failed[@]}" -gt 0 ] && inArray "$__tokenName" "${__failed[@]}"; then
+      local __returnCode && if [ "${#__failed[@]}" -gt 0 ] && inArray "$__tokenName" "${__failed[@]}"; then
         __returnCode=1
       else
-        "${mapper[@]}" "$__tokenName" "$__offset" "$__total" || __returnCode=$?
-        __failed+=("$__tokenName")
+        if "${mapper[@]}" "$__tokenName" "$__offset" "$__total"; then
+          __returnCode=0
+        else
+          __returnCode=$?
+          __failed+=("$__tokenName")
+        fi
       fi
       case "$__returnCode" in 120 | 130 | 141) return "$__returnCode" ;; esac
       [ "$__returnCode" -gt 0 ] || continue
@@ -1315,7 +1318,7 @@ mapFunction() {
       throwEnvironment "$handler" "Infinite loop found at $__count $__offset of $__total $(dumpPipe "Infinite loop found at $__count $__offset of $__total Remain:" <<<"$__value")" || return $?
     fi
   done
-  printf "%s" "$__value"
+  printf -- "%s" "$__value"
 }
 _mapFunction() {
   # __IDENTICAL__ bashDocumentation 1
