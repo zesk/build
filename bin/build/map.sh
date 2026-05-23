@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-# IDENTICAL returnMessage 39
+# IDENTICAL returnMessage 31
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -14,17 +14,11 @@
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
-  local handler="_${FUNCNAME[0]}"
-  local code="${1:-1}" && shift 2>/dev/null
-  if [ "$code" = "--help" ]; then "$handler" 0 && return; fi
-  local trace="${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> "
-  isUnsignedInteger "$code" || returnMessage 2 "$trace${handler#_} non-integer \"$code\"" "$@" || return $?
-  if [ "$code" -gt 0 ]; then
-    printf -- "%s%s %s\n" "❌ $trace" "[$code]" "${*-§}" 1>&2
-  else
-    printf -- "%s %s\n" "✅" "${*-§}"
-  fi
-  return "$code"
+  local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
+  if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
+  local t="${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> "
+  isUnsignedInteger "$c" || returnMessage 2 "$t${h#_} non-integer \"$c\"" "$@" || return $?
+  if [ "$c" != "0" ]; then printf "%s%s %s\n" "❌ $t" "[$c]" "${*-§}" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
 }
 _returnMessage() {
   # __IDENTICAL__ bashDocumentation 1
@@ -33,9 +27,7 @@ _returnMessage() {
 
 # Summary: Is value an unsigned integer?
 # Test if a value is a 0 or greater integer. Leading "+" is ok.
-# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-# Credits: F. Hauri - Give Up GitHub (isnum_Case)
-# Original: is_uint
+# See: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
 # Return Code: 0 - if it is an unsigned integer
 # Return Code: 1 - if it is not an unsigned integer

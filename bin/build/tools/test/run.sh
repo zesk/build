@@ -69,8 +69,8 @@ __testRun() {
       # catchReturn "$handler" environmentValueWrite skipped "$TEST_NAME" >>"$stateFile" || return $?
       TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true timing --slow "$TEST_HOOK_SLOW" --name "test-skip" catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || returnClean $? "${clean[@]}" || return $?
 
-      timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
-      timing --slow "$TEST_HOOK_SLOW" --name "__testRun clean -> $resultCode" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+      timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup skip" __testRunCleanup "$handler" "$stateFile" || return $?
+      timing --slow "$TEST_HOOK_SLOW" --name "__testRun skip -> 0" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
       [ "$TEST_DELETE_HOME" != true ] || catchEnvironment "$handler" rm -rf "$startDirectory" || return $?
     ) &
     return 0

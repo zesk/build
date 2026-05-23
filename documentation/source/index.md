@@ -30,9 +30,9 @@ To install directly from the web:
     curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/{version}/bin/build/install-bin-build.sh" | bash
 
 Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **{applicationName}** as needed.
-Do *NOT* commit `bin/build` to your source repository – commit `install-bin-build.sh` and load it as needed. You can
+It is not generally recommended to commit `bin/build` to your source repository – commit `install-bin-build.sh` and load it as needed. You can
 lock to a version using `install-bin-build.sh --version "$desiredVersion"`. **{applicationName}**'s installer will install
-the **most recent** version without the `--version` argument.
+the **most recent** version without the `--version` argument. 
 
 ## Features
 

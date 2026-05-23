@@ -76,6 +76,7 @@ deprecatedIgnore() {
     ! -name 'deprecated.sh' \
     ! -name 'deprecated*.md' \
     ! -name 'unused.md' \
+    ! -name '*.index' \
     ! -path "*$notes/*" \
     ! -path "*/\.*/*" \
     "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"

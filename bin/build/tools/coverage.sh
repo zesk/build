@@ -39,7 +39,7 @@ bashCoverage() {
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
-  catchReturn "$handler" __bashCoverageWrapper "$target" "$@" || return $?
+  __bashCoverageWrapper "$handler" "$target" "$@" || return $?
   ! $verbose || timingReport "$start" "Coverage completed in"
 }
 _bashCoverage() {
@@ -63,18 +63,31 @@ _bashCoverageReport() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__undotSource() {
+  local before="${source%%/../*}"
+  while [ "$before" != "$source" ]; do
+    if [ "${before#*/}" = "$before" ]; then before=""; else before="${before%/*}/"; fi
+    source="$before${source#*/../}"
+    before="${source%%/../*}"
+  done
+}
+
 # Internal: true
 # Debugger function tracks coverage calls and stores them in target file (1st argument)
 # KISS as this needs to be AFAFP
 __bashCoverageMarker() {
+  if [ -z "${BUILD_HOME-}" ] || [ ! -f "$1" ]; then
+    return 0
+  fi
   export BUILD_HOME
   local source=${BASH_SOURCE[1]} home="${BUILD_HOME%/}/" command="${BASH_COMMAND//$'\n'/\n}"
+  __undotSource
   source="${source#"$home"}"
-  printf -- "%s:%s %s %s\n" "$source" "${BASH_LINENO[1]}" "${FUNCNAME[1]}" "$command" >>"$1"
+  printf -- "%s:%s %s %s\n" "$source" "${BASH_LINENO[0]}" "${FUNCNAME[1]}" "$command" >>"$1"
   # debuggingStack >>"$1.stack" || return $?
 }
 ___bashCoverageMarker() {
-  __bashCoverageEnd
+  __bashCoverageEnd returnMessage
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -82,28 +95,50 @@ ___bashCoverageMarker() {
 # Utility - cover passed command
 #
 __bashCoverageWrapper() {
-  local e=0 target="$1" && shift
-  __bashCoverageStart "$target"
-  "$@" || e=$?
-  __bashCoverageEnd
-  return $e
+  local handler="$1" && shift
+  local target="$1" && shift
+  catchReturn "$handler" touch "$target" || return $?
+  __bashCoverageStart "$handler" "$target"
+  local returnCode=0
+  catchReturn "$handler" "$@" || returnCode=$?
+  __bashCoverageEnd "$handler" || return $?
+  return $returnCode
+}
+
+# Is bash coverage currently running?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Return Code: 0 - Yes, it's running.
+# Return Code: 1 - No, it is not running.=
+# Return Code: 2 - Argument error
+bashCoverageEnabled() {
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  local _ value && read -r _ value <(shopt extdebug)
+  [ "$value" = "on" ]
+}
+_bashCoverageEnabled() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Utility - start coverage recording
 #
 __bashCoverageStart() {
-  shopt -s extdebug
-  set -o functrace
+  local handler="$1" && shift
+  catchReturn "$handler" shopt -s extdebug || return $?
+  catchReturn "$handler" set -o functrace || return $?
   # shellcheck disable=SC2064
-  trap "__bashCoverageMarker \"$1\"" DEBUG
+  catchReturn "$handler" trap "__bashCoverageMarker \"$1\"" DEBUG || return $?
 }
 
 #
 # Utility - stop coverage recording
 #
 __bashCoverageEnd() {
-  trap - DEBUG
-  set +o functrace
-  shopt -u extdebug
+  local handler="$1" && shift
+  catchReturn "$handler" trap - DEBUG || return $?
+  catchReturn "$handler" set +o functrace || return $?
+  catchReturn "$handler" shopt -u extdebug || return $?
 }

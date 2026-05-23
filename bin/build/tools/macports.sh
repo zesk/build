@@ -166,7 +166,7 @@ __portStandardPackages() {
 __portPackageMapping() {
   case "$1" in
   "pcregrep")
-    printf "%s\n" "pcre2grep"
+    printf "%s\n" "pcre2"
     ;;
   "python")
     printf "%s\n" python33 py33-pip
