@@ -55,8 +55,8 @@ testColorSampleCombinations suite=colors test/tools/colors-tests.sh  tag=colors
 testColorSamples suite=colors test/tools/colors-tests.sh  tag=colors
 testColorSampleStyles suite=colors test/tools/colors-tests.sh
 testColorScheme suite=colors test/tools/colors-tests.sh
-testSemanticColorSampleStyles suite=colors test/tools/colors-tests.sh  tag=colors
-testSimpleMarkdownToConsole suite=colors test/tools/colors-tests.sh
+testSemanticColorSampleStyles suite=colors test/tools/colors-tests.sh
+testSimpleMarkdownToConsole suite=colors test/tools/colors-tests.sh  tag=colors
 testCompletion suite=completion test/tools/completion-tests.sh
 testColorBrightness suite=console test/tools/console-tests.sh
 testConsoleFileLink suite=console test/tools/console-tests.sh
