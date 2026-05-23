@@ -114,7 +114,7 @@ __bashCoverageWrapper() {
 bashCoverageEnabled() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  local _ value && read -r _ value <(shopt extdebug)
+  local _ value && read -r _ value < <(shopt extdebug)
   [ "$value" = "on" ]
 }
 _bashCoverageEnabled() {

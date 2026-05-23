@@ -11,6 +11,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
   # Zesk Build Development
   # - `buildPR` - Open URL to a new Pull Request
+  # - `buildTestSuiteIndex` - Build the test suite index
   # - `buildFunctionsDerivedCompile` - Compile the usage directory `./bin/build/documentation/` and derived files.
   # - `documentationFileCompile` - Compile the usage directory `./bin/build/documentation/` (just settings).
   # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
@@ -151,6 +152,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     pathRemove "$home/bin" "$home/bin/build"
     local uu=("${FUNCNAME[0]}" "_${FUNCNAME[0]}" __buildHelp ___buildHelp __buildBackground processWatcher _processWatcher)
     unset "${uu[@]}" 2>/dev/null
+
+    statusMessage printf -- "%s" ""
   }
   __buildBackground() {
     decorate warning backgroundProcess is still experimental

@@ -66,6 +66,7 @@ testBuildFunctionsHelpCoverage suite=coverage test/tools/coverage-tests.sh  tag=
 testBuildFunctionsHelpOnly suite=coverage test/tools/coverage-tests.sh  tag=slow tag=slow-non-critical
 testCoverageBasics suite=coverage test/tools/coverage-tests.sh
 testCoverageNeedToUpdate suite=coverage test/tools/coverage-tests.sh
+testCoverageNotEnabled suite=coverage test/tools/coverage-tests.sh
 testCoverageReportThing suite=coverage test/tools/coverage-tests.sh
 testSlowTagsWorkCorrectly suite=coverage test/tools/coverage-tests.sh  tag=slow tag=test-tags
 testCrontabApplicationUpdate suite=crontab test/tools/crontab-tests.sh

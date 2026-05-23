@@ -6,6 +6,19 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testCoverageNotEnabled() {
+  local handler="returnMessage"
+  if bashCoverageEnabled; then
+    return 0
+  fi
+  local target && target=$(fileTemporaryName "$handler") || return $?
+
+  assertExitCode 1 bashCoverageEnabled || return $?
+  assertExitCode 0 bashCoverage --target "$target" bashCoverageEnabled || return $?
+  assertExitCode 1 bashCoverageEnabled || return $?
+  catchReturn "$handler" rm -f "$target" || return $?
+}
+
 # Leak: BASH_ARGC
 # Leak: BASH_ARGV
 testCoverageBasics() {
@@ -148,33 +161,30 @@ testBuildFunctionsCoverage() {
 testBuildFunctionsHelpCoverage() {
   local handler="returnMessage"
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local deprecatedFunctions clean=()
-  deprecatedFunctions=$(fileTemporaryName "$handler") || return $?
+  local deprecatedFunctions && deprecatedFunctions=$(fileTemporaryName "$handler") || return $?
 
-  clean+=("$deprecatedFunctions")
+  local clean=("$deprecatedFunctions")
 
   __deprecatedFunctions "$handler" "$home" >"$deprecatedFunctions" || return $?
 
-  local eof fun missing=() functions=() blanks=() helpless=()
+  local missing=() functions=() blanks=() helpless=()
 
-  eof=false
-  while ! $eof; do
-    read -r fun || eof=true
+  local eof=false && while ! $eof; do
+    local fun && read -r fun || eof=true
     [ -z "$fun" ] || functions+=("$fun")
   done < <(buildFunctions && __dataBuildFunctionsWithBlankHelp | sort -u)
 
   eof=false
   while ! $eof; do
-    read -r fun || eof=true
+    local fun && read -r fun || eof=true
     [ -z "$fun" ] || blanks+=("$fun")
   done < <(__dataBuildFunctionsWithBlankHelp)
 
   eof=false
   while ! $eof; do
-    read -r fun || eof=true
+    local fun && read -r fun || eof=true
     # Remove stars
     fun="${fun//-/}"
     if [ -n "$fun" ]; then
@@ -188,9 +198,8 @@ testBuildFunctionsHelpCoverage() {
     fi
   done <"$home/etc/helpless.txt"
 
-  export BUILD_COLORS BUILD_DEBUG TEST_TRACK_ASSERTIONS
+  export TEST_TRACK_ASSERTIONS
 
-  mockEnvironmentStart BUILD_DEBUG "${BUILD_DEBUG-}"
   mockEnvironmentStart TEST_TRACK_ASSERTIONS
 
   # BUILD_COLORS on vs off
@@ -204,8 +213,6 @@ testBuildFunctionsHelpCoverage() {
   #   user	6m46.296s
   #   sys	  14m43.790s
 
-  BUILD_DEBUG=$(listRemove "${BUILD_DEBUG}" ',' "fast-usage")
-  BUILD_DEBUG=$(listAppend "${BUILD_DEBUG}" ',' "documentation-cache")
   TEST_TRACK_ASSERTIONS=false
 
   local verboseFlag=false
@@ -242,7 +249,7 @@ testBuildFunctionsHelpCoverage() {
         helpCall=("$fun")
       fi
       ! $verboseFlag || statusMessage decorate subtle "Attempting: $(decorate code "${helpCall[@]}")"
-      BUILD_COLORS=false assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
+      BUILD_COLORS=false BUILD_DEBUG="" assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
       catchEnvironment "$handler" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
     fi
     stopAfter=$((stopAfter - 1))
