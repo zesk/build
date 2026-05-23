@@ -1,30 +1,36 @@
 # Current plans
 
 - Heading towards a 1.0 release
+- Testing coverage (see `missing-tests.sh` for walk of shame)
+- Some sore of coverage computation?
 
 ## Done
 
-- 2026 - March - Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling) (Added: 2025 -
+- 2026 - **May** - Doing a lot of renaming work; making the documentation more complete.
+- 2026 - **March** - Continue migration to local `local` usage instead of head of function (`example.sh` arguments
+  handling) (Added: 2025 -
   January)
-- 2025 - September - `usage.sh` and related `usageArgument` will be moved to a less verbose type-checking interface modeled after the
+- 2025 - **September** - `usage.sh` and related `usageArgument` will be moved to a less verbose type-checking interface
+  modeled after the
   `decorate` pattern which seemed to work well. Called `valdiate` - tests have been added - need to migrate and
   deprecate. (Added: 2025 - April)
-- 2025 - April - Coverage - Ensure all functions have all code paths executed (Added: July 2025)
-- 2025 - February - Start writing some tutorials on how to get it set up and working (Added: 2025 - January)
-- 2025 - February - Move `docs` generation to a `mkdocs` [plugin](https://www.mkdocs.org/dev-guide/plugins/) perhaps (Added: 2025 -
+- 2025 - **April** - Coverage - Ensure all functions have all code paths executed (Added: July 2025)
+- 2025 - **February** - Start writing some tutorials on how to get it set up and working (Added: 2025 - January)
+- 2025 - **February** - Move `docs` generation to a `mkdocs` [plugin](https://www.mkdocs.org/dev-guide/plugins/) perhaps (
+  Added: 2025 -
   January)
-- 2025 - September - Add loading functions for code sections which are used less frequently.
-- 2025 - August - Ensure all temporary files are cleaned up by all functions (Added: July 2025)
-- 2025 - February - "Work on 30-minute build timing or make it faster somehow" - Added `--tag` to `testSuite` to skip
+- 2025 - **September** - Add loading functions for code sections which are used less frequently.
+- 2025 - **August** - Ensure all temporary files are cleaned up by all functions (Added: July 2025)
+- 2025 - **February** - "Work on 30-minute build timing or make it faster somehow" - Added `--tag` to `testSuite` to skip
   slow tests each run
-- 2025 - February - "Move away from `.check-assertions`" - now just checks everything - may not be a good choice
-- 2025 - February - Move away from `.debugging` markers - now uses a hash of the file stored in the file itself. (
+- 2025 - **February** - "Move away from `.check-assertions`" - now just checks everything - may not be a good choice
+- 2025 - **February** - Move away from `.debugging` markers - now uses a hash of the file stored in the file itself. (
   Ignoring the hash line.)
-- 2025 - July - Need to determine if any other functions which depend on current directory being the app home and fix
+- 2025 - **July** - Need to determine if any other functions which depend on current directory being the app home and fix
   that (e.g.
   `buildEnvironmentLoad`) (Added `--cd-away` and enforces it)
-- 2025 - July - Added `# Test-Build-Home: true` flag to require certain tests to start with CWD at `buildHome`
-- 2025 - July - Added `--help` or help to (nearly) all commands
+- 2025 - **July** - Added `# Test-Build-Home: true` flag to require certain tests to start with CWD at `buildHome`
+- 2025 - **July** - Added `--help` or help to (nearly) all commands
 
 ## Functions without mention in `*-tests.sh`
 
@@ -45,7 +51,8 @@
 
 - executeInputSupport
 
-### AWS 
+### AWS
+
 - awsSecurityGroupIPModify
 
 ### Bash

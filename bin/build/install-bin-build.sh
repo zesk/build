@@ -1792,7 +1792,7 @@ __decorateStylesDefaultDark() {
     "notice=97;44 Notice"
     "success=0;32 Success"
     "subtle=38;5;240"
-    "label=96;40"
+    "label=90;44"
     "value=94"
     "decoration=45;30"
   )

@@ -365,7 +365,7 @@ __testSuite() {
   # ============================================================================================================
   # HOOK tests-start
   # ============================================================================================================
-  local hookSlowMilliseconds=1
+  local hookSlowMilliseconds="${TEST_HOOK_SLOW-500}"
 
   timing --slow "$hookSlowMilliseconds" --name "tests-start" hookRunOptional --handler "$handler" --application "$home" tests-start "$stateFile" "${hookArgs[@]+"${hookArgs[@]}"}" || returnClean $? "${clean[@]}" || return $?
 
