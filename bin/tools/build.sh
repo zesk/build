@@ -126,6 +126,7 @@ __buildBuild() {
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   catchReturn "$handler" packageInstall || return $?
+  catchReturn "$handler" packageGroupInstall pcregrep || return $?
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
