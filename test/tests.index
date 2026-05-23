@@ -49,13 +49,13 @@ testIsCharacterClasses suite=character test/tools/character-tests.sh
 testStringValidate suite=character test/tools/character-tests.sh
 testValidateCharacterClass suite=character test/tools/character-tests.sh  tag=slow
 testColorFormat suite=colors test/tools/colors-tests.sh
-testColorModes suite=colors test/tools/colors-tests.sh
+testColorModes suite=colors test/tools/colors-tests.sh  tag=colors
 testColorSampleCodes suite=colors test/tools/colors-tests.sh
-testColorSampleCombinations suite=colors test/tools/colors-tests.sh
-testColorSamples suite=colors test/tools/colors-tests.sh
+testColorSampleCombinations suite=colors test/tools/colors-tests.sh  tag=colors
+testColorSamples suite=colors test/tools/colors-tests.sh  tag=colors
 testColorSampleStyles suite=colors test/tools/colors-tests.sh
 testColorScheme suite=colors test/tools/colors-tests.sh
-testSemanticColorSampleStyles suite=colors test/tools/colors-tests.sh
+testSemanticColorSampleStyles suite=colors test/tools/colors-tests.sh  tag=colors
 testSimpleMarkdownToConsole suite=colors test/tools/colors-tests.sh
 testCompletion suite=completion test/tools/completion-tests.sh
 testColorBrightness suite=console test/tools/console-tests.sh

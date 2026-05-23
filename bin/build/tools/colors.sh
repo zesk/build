@@ -147,7 +147,7 @@ colorSampleCombinations() {
   fi
   text="${*-" ABC "}"
   padding="$(textRepeat $((${#text} - 3)) " ")"
-  printf "    "
+  printf "    \033[0m"
   # shellcheck disable=SC2207
   local fgs=($(seq 1 9) $(seq 30 "$top3") $(seq 90 97))
   for fg in "${fgs[@]}"; do

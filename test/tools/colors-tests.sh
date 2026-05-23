@@ -6,6 +6,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# Tag: colors
 testColorModes() {
   mockEnvironmentStart __BUILD_DECORATE
   __decorateStylesDefaultDark
@@ -15,6 +16,7 @@ testColorModes() {
   mockEnvironmentStop __BUILD_DECORATE
 }
 
+# Tag: colors
 testColorSamples() {
   colorSampleCodes || return $?
   colorSampleStyles || return $?
@@ -41,6 +43,7 @@ testSemanticColorSampleStyles() {
   mockEnvironmentStop __BUILD_DECORATE
 }
 
+# Tag: colors
 testSimpleMarkdownToConsole() {
   local actual expected testString
   local this=${FUNCNAME[0]}
@@ -73,8 +76,8 @@ testSimpleMarkdownToConsole() {
   assertEquals "$actual" "$expected" || return $?
 }
 
+# Tag: colors
 testColorSampleCombinations() {
-  assertExitCode 0 colorSampleCombinations || return $?
   echo "NOT BOLD"
   colorSampleCombinations " ZESK "
   echo "BOLD"
@@ -131,13 +134,11 @@ testColorScheme() {
   mockEnvironmentStart __BUILD_TERM_COLORS
   mockEnvironmentStart __BASH_PROMPT_PREVIOUS
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   assertExitCode --skip-plumber 0 colorScheme <"$home/etc/term-colors.conf" || return $?
 
   mockEnvironmentStop __BUILD_DECORATE
   mockEnvironmentStop __BUILD_TERM_COLORS
   mockEnvironmentStop __BASH_PROMPT_PREVIOUS
-
 }

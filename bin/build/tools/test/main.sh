@@ -419,10 +419,11 @@ __testSuite() {
 
     ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
 
-    local testHome saveHome cleanTestOnly=()
+    local testHome cleanTestOnly=()
 
-    saveHome=$(pwd)
+    local saveHome && saveHome="$(pwd)"
 
+    local deleteHome=false
     # --cd-away handling
     if $cdAway; then
       local buildHomeRequired
@@ -433,13 +434,12 @@ __testSuite() {
         testHome="$home"
       else
         testHome="$(fileTemporaryName "$handler" -d)" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
-        cleanTestOnly+=("$testHome")
+        deleteHome=true
       fi
     else
       testHome="$saveHome"
     fi
     testsRun+=("$item")
-    catchEnvironment "$handler" cd "$testHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
     ! $verboseMode || statusMessage --last decorate pair "Raw flags" "$rawFlags"
 
@@ -453,19 +453,16 @@ __testSuite() {
     #  ▀▀▀▀▀▀▀ ▝▀▘▀▀  ▀ ▘ ▘▝▀▘▘ ▘
     timingReport "$allTestStart" "elapsed before __testRun"
     local testReturnCode=0
-    TEST_HOOK_SLOW=$hookSlowMilliseconds TEST_START="$__testStart" TEST_FILE=$sectionFile TEST_VERBOSE=$verboseMode TEST_LINE=$testLine TEST_FLAGS=$rawFlags TEST_SUITE_NAME="$suiteName" TEST_NAME=$item "${runner[@]+"${runner[@]}"}" __testRun "$handler" "$stateFile" "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || testReturnCode=$?
+    catchEnvironment "$handler" muzzle pushd "$testHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
+    TEST_DELETE_HOME=$deleteHome TEST_HOOK_SLOW=$hookSlowMilliseconds TEST_START="$__testStart" TEST_FILE=$sectionFile TEST_VERBOSE=$verboseMode TEST_LINE=$testLine TEST_FLAGS=$rawFlags TEST_SUITE_NAME="$suiteName" TEST_NAME=$item "${runner[@]+"${runner[@]}"}" __testRun "$handler" "$stateFile" "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || testReturnCode=$?
+    catchEnvironment "$handler" muzzle popd || return $?
     if [ $testReturnCode -eq 0 ]; then
       passed=true
     else
       passed=false
       __testSuiteExecutor "$item" "$theTestFile" "$testLine" "${failExecutors[@]+"${failExecutors[@]}"}" || throwEnvironment "$handler" "failure executors failed" || :
-      catchEnvironment "$handler" cd "$saveHome" || :
       __testFailed "$handler" "$testReturnCode" "$stateFile" "$suiteName" "$item" || finalReturnCode=$?
     fi
-
-    catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
-
-    timing --slow "$hookSlowMilliseconds" --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
 
     [ "${#cleanTestOnly[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${cleanTestOnly[@]}" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
     if ! $passed && $stopFlag; then

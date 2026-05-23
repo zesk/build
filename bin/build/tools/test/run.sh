@@ -50,6 +50,8 @@ __testRun() {
   # Renamed to avoid clobbering by tests
   __testDirectory=$(catchEnvironment "$handler" pwd) || returnClean $? "${clean[@]}" || return $?
 
+  local startDirectory && startDirectory=$(catchEnvironment "$handler" pwd) || return $?
+
   # Test
   __testSection "$__test" || :
 
@@ -58,13 +60,19 @@ __testRun() {
   platform="$(_testPlatform)"
   [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || returnClean $? "${clean[@]}" || return $?
   if ! __testFlagPlatformMatch "$platform" "$__flagText" 2>>"$quietLog"; then
-    catchReturn "$handler" statusMessage --last decorate warning "Skipping $(decorate code "$__test") on $(decorate error "$platform")" || returnClean $? "${clean[@]}" || return $?
-    __TEST_SUITE_RESULT="skipped platform $platform"
     # ============================================================================================================
     # HOOK test-skip
     # ============================================================================================================
-    # catchReturn "$handler" environmentValueWrite skipped "$TEST_NAME" >>"$stateFile" || return $?
-    TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true timing --slow "$TEST_HOOK_SLOW" --name "test-skip" catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || returnClean $? "${clean[@]}" || return $?
+    (
+      catchReturn "$handler" statusMessage --last decorate warning "Skipping $(decorate code "$__test") on $(decorate error "$platform")" || returnClean $? "${clean[@]}" || return $?
+      __TEST_SUITE_RESULT="skipped platform $platform"
+      # catchReturn "$handler" environmentValueWrite skipped "$TEST_NAME" >>"$stateFile" || return $?
+      TEST_REASON=$__TEST_SUITE_RESULT TEST_SKIPPED=true TEST_SUCCESS=true timing --slow "$TEST_HOOK_SLOW" --name "test-skip" catchEnvironment "$handler" hookRunOptional "test-skip" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || returnClean $? "${clean[@]}" || return $?
+
+      timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
+      timing --slow "$TEST_HOOK_SLOW" --name "__testRun clean -> $resultCode" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+      [ "$TEST_DELETE_HOME" != true ] || catchEnvironment "$handler" rm -rf "$startDirectory" || return $?
+    ) &
     return 0
   fi
 
@@ -100,8 +108,7 @@ __testRun() {
     ! $testActuallyFails || decorate pair "Fail" "$(decorate green "$testActuallyFails")"
   fi
 
-  local runner=()
-  runner=("$__test" "$captureStdout")
+  local runner=("$__test" "$captureStdout")
   if $doHousekeeper; then
     catchReturn "$handler" environmentValueWrite housekeeper true >>"$stateFile" || return $?
     housekeeperCache=$(catchReturn "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
@@ -118,8 +125,6 @@ __testRun() {
     catchReturn "$handler" environmentValueWrite plumber false >>"$stateFile" || return $?
   fi
 
-  local startDirectory
-  startDirectory=$(catchEnvironment "$handler" pwd) || return $?
   catchReturn "$handler" muzzle pushd "$startDirectory" || return $?
 
   local resultCode=0
@@ -236,7 +241,9 @@ __testRun() {
     catchReturn "$handler" printf "%s\n" "Test $label: $__test $resultCode (${resultFlags[*]})" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
 
     TEST_ELAPSED="$elapsed" TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed timing --slow "$TEST_HOOK_SLOW" --name "test-stop" catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" || return $?
+    timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
     timing --slow "$TEST_HOOK_SLOW" --name "__testRun clean -> $resultCode" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+    [ "$TEST_DELETE_HOME" != true ] || catchEnvironment "$handler" rm -rf "$startDirectory" || return $?
   ) &
 
   return "$resultCode"
