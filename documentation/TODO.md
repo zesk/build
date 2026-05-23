@@ -1,8 +1,9 @@
 # Current plans
 
-- Heading towards a 1.0 release
-- Testing coverage (see `missing-tests.sh` for walk of shame)
-- Some sore of coverage computation?
+Heading towards a 1.0 release:
+
+- 2026 - **May** - Testing coverage (see `missing-tests.sh` for walk of shame)
+- 2026 - **May** - Some sore of coverage computation?
 
 ## Done
 
