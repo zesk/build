@@ -1,4 +1,30 @@
-- [alpineContainer]({rel}tools/apk.md#alpinecontainer) - Open an Alpine container shell ([source](https://github.com/zesk/build/blob/main/bin/build/tools/apk.sh#L50))## `apkIsInstalled`
+- ## `alpineContainer`
+- 
+- > Open an Alpine container shell
+- 
+- ### Usage
+- 
+-     alpineContainer [ --help ] [ --env-file envFile ] [ --env envVariable=envValue ] [ --platform platform ] [ extraArgs ]
+- 
+- Open an Alpine container shell
+- 
+- > Location: `bin/build/tools/apk.sh`
+- 
+- ### Arguments
+- 
+- - `--help` - Flag. Optional. Display this help.
+- - `--env-file envFile` - File. Optional. One or more environment files which are suitable to load for docker; must be valid
+- --env envVariable=- `envValue` - File. Optional. One or more environment variables to set.
+- - `--platform platform` - String. Optional. Platform to run (arm vs intel).
+- - `extraArgs` - Mixed. Optional. The first non-file argument to `alpineContainer` is passed directly through to `docker run` as arguments
+- 
+- ### Return codes
+- 
+- - `1` - If already inside docker, or the environment file passed is not valid
+- - `0` - Success
+- - `Any` - `docker run` error code is returned if non-zero
+- 
+- ## `apkIsInstalled`
 - 
 - > Is this an Alpine system and is apk installed?
 - 
@@ -2424,8 +2450,8 @@
 - 
 - ### Usage
 - 
--     bashDebug commandToDebug ... [ --help ]
-- 
+-         bashDebug command
+-     
 - `bashDebug`: Simple debugger to walk through a program.
 - 
 - Debugger accepts the following keystrokes:
@@ -4125,38 +4151,7 @@
 - - `1` - The environment variable is not found.
 - - `0` - The environment variable is found and the value was output to `stdout`
 - 
-- ## `buildEnvironmentGetDirectory`
-- 
-- > Load and print one or more environment settings which represents
-- 
-- ### Usage
-- 
--     buildEnvironmentGetDirectory [ envName ] [ --subdirectory subdirectory ] [ --mode fileMode ] [ --owner ownerName ] [ --no-create ]
-- 
-- Load and print one or more environment settings which represents a directory which should be created.
-- 
-- If BOTH files exist, both are sourced, so application environments should anticipate values
-- created by build's default.
-- 
-- Modifies local environment. Not usually run within a subshell.
-- 
-- > Location: `bin/build/tools/build.sh`
-- 
-- ### Arguments
-- 
-- - `envName` - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
-- - `--subdirectory subdirectory` - String. Optional. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
-- - `--mode fileMode` - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.
-- - `--owner ownerName` - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.
-- - `--no-create` - Flag. Optional. Do not create the subdirectory if it does not exist.
-- 
-- ### Return codes
-- 
-- - `0` - Success
-- - `1` - Environment error
-- - `2` - Argument error
-- 
-- ## `buildEnvironmentLoad`
+- [buildEnvironmentGetDirectory]({rel}tools/build.md#buildenvironmentgetdirectory) - Load and print one or more environment settings which represents ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L584))## `buildEnvironmentLoad`
 - 
 - > Load one or more environment settings from the environment file
 - 
@@ -4609,29 +4604,7 @@
 - 
 - - bc
 - 
-- ## `colorNormalize`
-- 
-- > Redistribute color values to make brightness adjustments more balanced
-- 
-- ### Usage
-- 
--     colorNormalize [ --help ]
-- 
-- Redistribute color values to make brightness adjustments more balanced
-- 
-- > Location: `bin/build/tools/colors.sh`
-- 
-- ### Arguments
-- 
-- - `--help` - Flag. Optional. Display this help.
-- 
-- ### Return codes
-- 
-- - `0` - Success
-- - `1` - Environment error
-- - `2` - Argument error
-- 
-- ## `colorParse`
+- [colorNormalize]({rel}tools/decorate.md#colornormalize) - Redistribute color values to make brightness adjustments more balanced ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L558))## `colorParse`
 - 
 - > Parse a color and output R G B decimal values
 - 
@@ -4703,29 +4676,7 @@
 - - `1` - Environment error
 - - `2` - Argument error
 - 
-- ## `colorSampleSemanticStyles`
-- 
-- > Output colors
-- 
-- ### Usage
-- 
--     colorSampleSemanticStyles
-- 
-- Outputs sample sentences for the `action` commands to see what they look like.
-- 
-- > Location: `bin/build/tools/colors.sh`
-- 
-- ### Arguments
-- 
-- - none
-- 
-- ### Return codes
-- 
-- - `0` - Success
-- - `1` - Environment error
-- - `2` - Argument error
-- 
-- ## `colorSampleStyles`
+- [colorSampleSemanticStyles]({rel}tools/decorate.md#colorsamplesemanticstyles) - Output colors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L213))## `colorSampleStyles`
 - 
 - > Output colors
 - 
@@ -14635,7 +14586,7 @@
 - 
 - - ## `mapValue`
 - 
-- [mapEnvironmentFun]({rel}#mapenvironmentfun) - Convert tokens in files to environment variable values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L420))## `mapEnvironmentSed`
+- [mapEnvironmentFun]({rel}#mapenvironmentfun) - Convert tokens in files to environment variable values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L423))## `mapEnvironmentSed`
 - 
 - > Convert tokens in files to environment variable values
 - 
@@ -16598,38 +16549,7 @@
 - - `1` - Environment error
 - - `2` - Argument error
 - 
-- ## `printfOutputPrefix`
-- 
-- > Pipe to output some text before any output, otherwise, nothing
-- 
-- ### Usage
-- 
--     printfOutputPrefix ...
-- 
-- Pipe to output some text before any output, otherwise, nothing is output.
-- Without arguments, displays help.
-- 
-- > Location: `bin/build/tools/text.sh`
-- 
-- ### Arguments
-- 
-- - `...` - Arguments. Required. printf arguments.
-- 
-- ### Reads standard input
-- 
-- text (Optional)
-- 
-- ### Writes to standard output
-- 
-- printf output and then the stdin text IFF stdin text is non-blank
-- 
-- ### Return codes
-- 
-- - `0` - Success
-- - `1` - Environment error
-- - `2` - Argument error
-- 
-- ## `printfOutputSuffix`
+- [printfOutputPrefix]({rel}tools/text.md#printfoutputprefix) - Pipe to output some text before any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1164))## `printfOutputSuffix`
 - 
 - > Pipe to output some text after any output, otherwise, nothing
 - 
@@ -18789,37 +18709,7 @@
 - ](https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 - ).
 - 
-- ## `textTrimBoth`
-- 
-- > Trim whitespace from beginning and end of a stream
-- 
-- ### Usage
-- 
--     textTrimBoth [ --help ]
-- 
-- Trim whitespace from beginning and end of a stream
-- 
-- > Location: `bin/build/tools/text.sh`
-- 
-- ### Arguments
-- 
-- - `--help` - Flag. Optional. Display this help.
-- 
-- ### Reads standard input
-- 
-- Reads lines from stdin until EOF
-- 
-- ### Writes to standard output
-- 
-- Outputs modified lines
-- 
-- ### Return codes
-- 
-- - `0` - Success
-- - `1` - Environment error
-- - `2` - Argument error
-- 
-- ## `textTrimHead`
+- [textTrimBoth]({rel}tools/text.md#texttrimboth) - Trim whitespace from beginning and end of a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L235))## `textTrimHead`
 - 
 - > Removes any blank lines from the beginning of a stream
 - 

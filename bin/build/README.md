@@ -24,7 +24,7 @@ This toolkit assumes:
 - **Release notes** are located in a dedicated subdirectory (can be configured per-project), using markdown `.md` (
   required) and named `v1.0.0.md`  which match version names (`v1.0.0`) (required)
 
-You can use **{applicationName}** solely as a toolkit within your project, or directly into your operating system and
+You can use **Zesk Build** solely as a toolkit within your project, or directly into your operating system and
 available to all programs.
 
 To use in your project:
@@ -49,7 +49,7 @@ To install globally:
 Directly from the web:
 
     mkdir -p bin/build && cd bin/build
-    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/{version}/bin/build/install-bin-build.sh" | bash
+    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/v0.43.0/bin/build/install-bin-build.sh" | bash
 
 ## Main entry points
 
@@ -58,16 +58,16 @@ Directly from the web:
 
 ## Project structure
 
-When using **{applicationName}** in your project, the following directories in your project structure have significance:
+When using **Zesk Build** in your project, the following directories in your project structure have significance:
 
 - `./` - Application root (same as `buildHome`)
-- `./bin/build/` - {applicationName} installation location (may *not* be changed)
+- `./bin/build/` - Zesk Build installation location (may *not* be changed)
 - `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` – or other extensions – on the end)
 - `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end if you use
   `buildEnvironmentLoad` or `buildEnvironmentGet`)
 - `./docs/release/v1.0.0.md` - Release notes (override path by adding `BUILD_RELEASE_NOTES` environment)
 
-Internally **{applicationName}** is organized:
+Internally **Zesk Build** is organized:
 
 - `bin/build/env/*.sh` - All external environment variables are referenced here. Projects should override default
   *behavior* with `./bin/env/*.sh` files.
@@ -89,7 +89,7 @@ Optional:
 - `pcregrep` - documentation generation and support
 - `unzip` - for `awsInstall`
 
-## Simple {applicationName} Loaders
+## Simple Zesk Build Loaders
 
 As a shortcut to running functions:
 
