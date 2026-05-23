@@ -167,13 +167,13 @@ pipelines:
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
-    deploy:
+    production-deploy:
       - step:
           size: 1x
           artifacts:
             - .interrupt.log
             - .build.env
-          deployment: deploy
+          deployment: production-deploy
           name: Just Deploy
           services:
             - docker
