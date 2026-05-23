@@ -182,6 +182,21 @@ pipelines:
             - bin/build.sh --documentation
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/deploy.sh --env-file .build.env --documentation --release
+    staging-deploy:
+      - step:
+          size: 1x
+          artifacts:
+            - .interrupt.log
+            - .build.env
+          deployment: staging-deploy
+          name: Staging Deploy
+          services:
+            - docker
+          script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
+            - bin/build.sh --documentation
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
+            - bin/deploy.sh --env-file .build.env --documentation --release
     test:
       - step:
           deployment: test
