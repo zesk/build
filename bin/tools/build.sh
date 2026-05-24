@@ -26,9 +26,10 @@ buildStepInitialize() {
   else
     local buildEnv="$home/.build.env"
     [ -f "$buildEnv" ] || throwEnvironment "$handler" "No build environment? $(decorate file "$buildEnv")"
+    catchReturn "$handler" environmentFileLoad "$buildEnv" || return $?
   fi
   [ "${1-}" = true ] || return 0
-  catchReturn "$handler" environmentFileLoad "$buildEnv" --execute dumpEnvironment || return $?
+  catchReturn "$handler" dumpEnvironment || return $?
 }
 _buildStepInitialize() {
   # __IDENTICAL__ bashDocumentation 1
