@@ -1,0 +1,1 @@
+[processVirtualMemoryAllocation]({rel}tools/process.md#processvirtualmemoryallocation) - Outputs value of virtual memory allocated for a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L188))

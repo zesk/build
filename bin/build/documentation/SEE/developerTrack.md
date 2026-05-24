@@ -1,0 +1,1 @@
+[developerTrack]({rel}tools/developer.md#developertrack) - Track changes to the bash environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L102))

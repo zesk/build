@@ -1,0 +1,1 @@
+[fileUniqueLines]({rel}tools/text.md#fileuniquelines) - Sorts and makes all file lines unique ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L611))

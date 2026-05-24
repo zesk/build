@@ -1,0 +1,1 @@
+[documentationFunctionCompile]({rel}tools/internal.md#documentationfunctioncompile) - Extract and build the documentation settings cache and generate derived ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L458))

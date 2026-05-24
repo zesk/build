@@ -1,0 +1,1 @@
+[bashDebug]({rel}tools/debug.md#bashdebug) - Bash debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L43))

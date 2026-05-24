@@ -1,0 +1,1 @@
+[packageAvailableList]({rel}tools/package.md#packageavailablelist) - List installed packages on this system using package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L648))

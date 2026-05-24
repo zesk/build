@@ -1,0 +1,1 @@
+[environmentCompile]({rel}tools/environment.md#environmentcompile) - Compile an environment file to evaluated names and values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment/compile.sh#L16))

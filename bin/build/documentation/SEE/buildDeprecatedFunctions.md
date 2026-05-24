@@ -1,0 +1,1 @@
+[buildDeprecatedFunctions]({rel}tools/build.md#builddeprecatedfunctions) - List all functions which are currently deprecated in Zesk Build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L65))

@@ -1,0 +1,1 @@
+[assertNotContains]({rel}tools/assert.md#assertnotcontains) - Assert one string does not contains another (case-sensitive) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L484))

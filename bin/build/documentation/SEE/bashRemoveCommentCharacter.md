@@ -1,0 +1,1 @@
+[bashRemoveCommentCharacter]({rel}tools/bash.md#bashremovecommentcharacter) - Extracts the first comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L595))

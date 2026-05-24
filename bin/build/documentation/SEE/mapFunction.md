@@ -1,0 +1,1 @@
+[mapFunction]({rel}tools/map.md#mapfunction) - Convert tokens in input to values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/map.sh#L37))

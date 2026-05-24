@@ -1,0 +1,1 @@
+[documentationCache]({rel}tools/documentation.md#documentationcache) - Get the default cache directory for the documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L199))

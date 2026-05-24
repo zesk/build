@@ -1,0 +1,1 @@
+[assertNotExitCode]({rel}tools/assert.md#assertnotexitcode) - Assert a process runs and exits with an exit code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L214))

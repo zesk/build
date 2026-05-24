@@ -1,0 +1,1 @@
+[bashCoverage]({rel}tools/coverage.md#bashcoverage) - Collect code coverage statistics for a code sample ([source](https://github.com/zesk/build/blob/main/bin/build/tools/coverage.sh#L15))

@@ -1,0 +1,1 @@
+[releaseNotesMarkdown]({rel}tools/version.md#releasenotesmarkdown) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/version.sh#L48))

@@ -1,0 +1,1 @@
+[textTrimTail]({rel}tools/text.md#texttrimtail) - Removes any blank lines from the end of a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L263))

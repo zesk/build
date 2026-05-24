@@ -1,0 +1,1 @@
+[bashDebuggerDisable]({rel}tools/debug.md#bashdebuggerdisable) - Disable the debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L98))

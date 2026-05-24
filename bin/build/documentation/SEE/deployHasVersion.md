@@ -1,0 +1,1 @@
+[deployHasVersion]({rel}tools/deploy.md#deployhasversion) - Does a deploy version exist? versionName is the version identifier ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L123))

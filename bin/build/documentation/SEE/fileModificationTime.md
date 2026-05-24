@@ -1,0 +1,1 @@
+[fileModificationTime]({rel}tools/file.md#filemodificationtime) - Fetch the modification time of a file as a timestamp ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L60))

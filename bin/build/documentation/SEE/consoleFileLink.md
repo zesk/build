@@ -1,0 +1,1 @@
+[consoleFileLink]({rel}tools/console.md#consolefilelink) - Output a local file link to the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L225))

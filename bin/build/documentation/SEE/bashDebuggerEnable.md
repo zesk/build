@@ -1,0 +1,1 @@
+[bashDebuggerEnable]({rel}tools/debug.md#bashdebuggerenable) - Enable the debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L63))

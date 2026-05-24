@@ -1,0 +1,22 @@
+## `nodePackageManagerUninstall`
+
+> Installs the selected package manager for node
+
+### Usage
+
+    nodePackageManagerUninstall
+
+Installs the selected package manager for node
+
+> Location: `bin/build/tools/node.sh`
+
+### Arguments
+
+- none
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
