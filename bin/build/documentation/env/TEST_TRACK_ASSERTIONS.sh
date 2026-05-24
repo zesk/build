@@ -1,0 +1,19 @@
+# shellcheck disable=SC2034
+base="TEST_TRACK_ASSERTIONS.sh"
+category="Testing"
+derivations=([0]="env" [1]="envMarker")
+description=$'Assertion tracking testing optimization\nTurn on or off tracking of function assertions within the testing core.\nIf blank, the default behavior is to track; disable it with setting the value to `false`.\n\n'
+descriptionLineCount="4"
+env="TEST_TRACK_ASSERTIONS"
+envMarker="test_track_assertions"
+file="bin/build/env/TEST_TRACK_ASSERTIONS.sh"
+fn="TEST_TRACK_ASSERTIONS"
+foundNames=([0]="category" [1]="see" [2]="type")
+rawComment=$'Assertion tracking testing optimization\nTurn on or off tracking of function assertions within the testing core.\nCategory: Testing\nSee: testSuite assert.sh\nType: Boolean\nIf blank, the default behavior is to track; disable it with setting the value to `false`.\n\n'
+see=$'testSuite assert.sh\n'
+sourceFile="bin/build/env/TEST_TRACK_ASSERTIONS.sh"
+sourceHash="b1f82f200fcef7ccd3ca1c55d0ef2b50baec4b44"
+sourceLine=""
+summary="Assertion tracking testing optimization"
+summaryComputed="true"
+type="Boolean"
