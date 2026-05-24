@@ -19,6 +19,10 @@ Extract and build the documentation settings cache
 - `functionName ...` - String. Optional. Specific functions to compile.
 - `--help` - Flag. Optional. Display this help.
 
+### Reads standard input
+
+functionName - File with function names one per line.
+
 ### Return codes
 
 - `0` - Success

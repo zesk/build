@@ -23,9 +23,7 @@ Test if a value is a 0 or greater integer. Leading "+" is ok.
 
 - {SEE:returnMessage}
 
-### Credits
+### See Also
 
-Thanks to [F. Hauri - Give Up GitHub (isnum_Case)
-](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-).
+- [stackoverflow.com](https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash)
 

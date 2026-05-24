@@ -451,7 +451,7 @@ __testSuite() {
     #       ▜▀ ▞▀▖▞▀▘▜▀ ▙▄▘▌ ▌▛▀▖
     #       ▐ ▖▛▀ ▝▀▖▐ ▖▌▚ ▌ ▌▌ ▌
     #  ▀▀▀▀▀▀▀ ▝▀▘▀▀  ▀ ▘ ▘▝▀▘▘ ▘
-    timingReport "$allTestStart" "elapsed before __testRun"
+    statusMessage timingReport "$allTestStart" "elapsed before __testRun"
     local testReturnCode=0
     catchEnvironment "$handler" muzzle pushd "$testHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
     TEST_DELETE_HOME=$deleteHome TEST_HOOK_SLOW=$hookSlowMilliseconds TEST_START="$__testStart" TEST_FILE=$sectionFile TEST_VERBOSE=$verboseMode TEST_LINE=$testLine TEST_FLAGS=$rawFlags TEST_SUITE_NAME="$suiteName" TEST_NAME=$item "${runner[@]+"${runner[@]}"}" __testRun "$handler" "$stateFile" "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || testReturnCode=$?
@@ -469,7 +469,7 @@ __testSuite() {
       terminated=(--terminate "Stopped after $item failed")
       break
     fi
-    timingReport "$allTestStart" "elapsed at done"
+    statusMessage timingReport "$allTestStart" "elapsed at done"
   done <"$foundTests"
   if [ -n "$currentSuiteName" ]; then
     # ============================================================================================================

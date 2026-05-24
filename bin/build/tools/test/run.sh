@@ -12,7 +12,7 @@
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 __testRun() {
-  local init && init=$(timingStart)
+  local __testStart && __testStart=$(timingStart)
   local handler="$1" && shift
   local __handler="$handler"
   local stateFile="$1" && shift
@@ -21,7 +21,7 @@ __testRun() {
   local __test="${1-}" __flagText="${2-}" platform
 
   local __testDirectory __TEST_SUITE_RESULT
-  local __test __tests __testStart
+  local __test __tests
   local __beforeFunctions
 
   export __TEST_SUITE_TRACE
@@ -34,7 +34,9 @@ __testRun() {
   # ============================================================================================================
   # HOOK test-start
   # ============================================================================================================
-  TEST_SKIPPED=false timing --slow "$TEST_HOOK_SLOW" --name "test-start" catchEnvironment "$handler" hookRunOptional "test-start" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-start hook FAILED" || return $?
+  (
+    TEST_SKIPPED=false timing --slow "$TEST_HOOK_SLOW" --name "test-start" catchEnvironment "$handler" hookRunOptional "test-start" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-start hook FAILED" || return $?
+  ) &
 
   __testRunShellInitialize
 
@@ -50,13 +52,10 @@ __testRun() {
   # Renamed to avoid clobbering by tests
   __testDirectory=$(catchEnvironment "$handler" pwd) || returnClean $? "${clean[@]}" || return $?
 
-  local startDirectory && startDirectory=$(catchEnvironment "$handler" pwd) || return $?
-
   # Test
   __testSection "$__test" || :
 
   __TEST_SUITE_TRACE="$__test"
-  __testStart=$(timingStart)
   platform="$(_testPlatform)"
   [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || returnClean $? "${clean[@]}" || return $?
   if ! __testFlagPlatformMatch "$platform" "$__flagText" 2>>"$quietLog"; then
@@ -71,7 +70,7 @@ __testRun() {
 
       timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup skip" __testRunCleanup "$handler" "$stateFile" || return $?
       timing --slow "$TEST_HOOK_SLOW" --name "__testRun skip -> 0" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-      [ "$TEST_DELETE_HOME" != true ] || catchEnvironment "$handler" rm -rf "$startDirectory" || return $?
+      [ "$TEST_DELETE_HOME" != true ] || catchEnvironment "$handler" rm -rf "$__testDirectory" || return $?
     ) &
     return 0
   fi
@@ -125,7 +124,7 @@ __testRun() {
     catchReturn "$handler" environmentValueWrite plumber false >>"$stateFile" || return $?
   fi
 
-  catchReturn "$handler" muzzle pushd "$startDirectory" || return $?
+  catchReturn "$handler" muzzle pushd "$__testDirectory" || return $?
 
   local resultCode=0
   local assertions && assertions=$(assertStatistics --total)
@@ -150,7 +149,7 @@ __testRun() {
   ###########################################
   ! $verboseMode || decorate each code "${runner[@]}"
   local resultFlags=()
-  timingReport "$init" "__testRun setup"
+  statusMessage timingReport "$__testStart" "__testRun setup"
   if "${runner[@]}" > >(tee -a "$captureStdout") 2> >(tee -a "$captureStderr"); then
     resultFlags+=("success")
     catchReturn "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
@@ -243,7 +242,7 @@ __testRun() {
     TEST_ELAPSED="$elapsed" TEST_REASON="$__TEST_SUITE_RESULT" TEST_ASSERTIONS=$(($(assertStatistics --total) - assertions)) TEST_RETURN_CODE=$resultCode TEST_SKIPPED=false TEST_SUCCESS=$passed timing --slow "$TEST_HOOK_SLOW" --name "test-stop" catchEnvironment "$handler" hookRunOptional "test-stop" "${hh[@]+"${hh[@]}"}" "$TEST_SUITE_NAME" "$TEST_NAME" "$stateFile" || throwEnvironment "$handler" "$TEST_NAME test-stop hook FAILED" || return $?
     timing --slow "$TEST_HOOK_SLOW" --name "__testRunCleanup" __testRunCleanup "$handler" "$stateFile" || return $?
     timing --slow "$TEST_HOOK_SLOW" --name "__testRun clean -> $resultCode" catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-    [ "$TEST_DELETE_HOME" != true ] || catchEnvironment "$handler" rm -rf "$startDirectory" || return $?
+    [ "$TEST_DELETE_HOME" != true ] || catchEnvironment "$handler" rm -rf "$__testDirectory" || return $?
   ) &
 
   return "$resultCode"

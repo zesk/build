@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-11
+# Generated on 2026-05-24
 # shellcheck disable=SC2034
 argument=$'exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.\nmessage ... - String. Optional. Message to output\n'
 base="example.sh"
@@ -16,7 +16,7 @@ rawComment=$'Return passed in integer return code and output message to `stderr`
 requires=$'isUnsignedInteger printf returnMessage\n'
 return_code=$'exitCode\n'
 sourceFile="bin/build/tools/example.sh"
-sourceHash="b022132ab9f0f4be979507ecfffaf181905e4034"
+sourceHash="1a917739e0fd19593fd63f029e67917ba1361e82"
 sourceLine="143"
 summary="Return passed in integer return code and output message to"
 summaryComputed="true"
