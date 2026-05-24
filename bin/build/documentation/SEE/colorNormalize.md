@@ -1,1 +1,22 @@
-[colorNormalize]({rel}tools/decorate.md#colornormalize) - Redistribute color values to make brightness adjustments more balanced ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L558))
+## `colorNormalize`
+
+> Redistribute color values to make brightness adjustments more balanced
+
+### Usage
+
+    colorNormalize [ --help ]
+
+Redistribute color values to make brightness adjustments more balanced
+
+> Location: `bin/build/tools/colors.sh`
+
+### Arguments
+
+- `--help` - Flag. Optional. Display this help.
+
+### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

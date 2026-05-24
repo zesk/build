@@ -24,5 +24,5 @@ Convert resulting files using `bashCoverageReport`
 
 ### See Also
 
-- {SEE:bashCoverageReport}
+- ## `bashCoverageReport`
 

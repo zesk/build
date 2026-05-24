@@ -479,7 +479,6 @@ _documentationFilesAdd() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Remove a function from the documentation cache
 # Argument: --verbose - Flag. Optional. Use more words or phrases than absolutely essential.
 # Argument: --dry-run - Flag. Optional. Do not do any thing, just say what would be done.
@@ -528,7 +527,8 @@ documentationFunctionRemove() {
   if $dryRun; then
     [ "${#deprecatedFiles[@]}" -eq 0 ] && statusMessage --last printf -- "%s\n" "# No deprecated files." || printf -- "git rm -f %s\n" "${deprecatedFiles[@]}" || return $?
   else
-    [ "${#deprecatedFiles[@]}" -eq 0 ] || local f && for f in "${deprecatedFiles[@]}"; do
+    local f
+    [ "${#deprecatedFiles[@]}" -eq 0 ] || for f in "${deprecatedFiles[@]}"; do
       ! $verboseFlag || decorate info "Remove \"$f\""
       ! $gitRemove || catchEnvironment "$handler" git rm -f "$f" 2>/dev/null || :
       catchReturn "$handler" rm -f "$f" || return $?

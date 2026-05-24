@@ -24,3 +24,4 @@ usage="bashCoverageEnabled [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashCoverageEnabled'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Is bash coverage currently running?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Yes, it'\''s running.'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - No, it is not running.='$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
 # shellcheck disable=SC2016
 helpPlain='Usage: bashCoverageEnabled [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Is bash coverage currently running?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Yes, it'\''s running.'$'\n''- 1 - No, it is not running.='$'\n''- 2 - Argument error'
+documentationPath=""
