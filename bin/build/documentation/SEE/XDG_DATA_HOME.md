@@ -1,0 +1,1 @@
+[`XDG_DATA_HOME` XDG_DATA_HOME]({rel}/env/#build_configuration) - **Directory**. Data Home Directory

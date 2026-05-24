@@ -1,0 +1,1 @@
+- `EDITOR` &mdash; EDITOR *Callable*. Binary for editing files [notes](#editor)

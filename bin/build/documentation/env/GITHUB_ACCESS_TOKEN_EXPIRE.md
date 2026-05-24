@@ -1,0 +1,1 @@
+- `GITHUB_ACCESS_TOKEN_EXPIRE` &mdash; GITHUB_ACCESS_TOKEN_EXPIRE *Date*. GitHub Access token expiration date. Invalid AFTER this date. [notes](#github_access_token_expire)

@@ -1,0 +1,1 @@
+- `XDG_DATA_HOME` &mdash; XDG_DATA_HOME *Directory*. Data Home Directory [notes](#xdg_data_home)

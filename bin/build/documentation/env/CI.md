@@ -1,0 +1,1 @@
+- `CI` &mdash; CI *String*. If this value is non-blank, then console `statusMessage`s are just [notes](#ci)

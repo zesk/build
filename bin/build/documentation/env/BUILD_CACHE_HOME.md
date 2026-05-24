@@ -1,0 +1,1 @@
+- `BUILD_CACHE_HOME` &mdash; BUILD_CACHE_HOME *Directory*. Location for the build system cache files. Defaults to `$HOME/.build` [notes](#build_cache_home)

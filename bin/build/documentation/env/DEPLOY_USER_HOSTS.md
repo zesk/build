@@ -1,0 +1,1 @@
+- `DEPLOY_USER_HOSTS` &mdash; DEPLOY_USER_HOSTS *String*. A list of one ore more user@host for installation of [notes](#deploy_user_hosts)

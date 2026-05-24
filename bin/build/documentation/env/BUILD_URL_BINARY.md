@@ -1,0 +1,1 @@
+- `BUILD_URL_BINARY` &mdash; BUILD_URL_BINARY *Callable*. Binary used in __urlOpen [notes](#build_url_binary)

@@ -1,0 +1,1 @@
+- `XDG_CACHE_HOME` &mdash; XDG_CACHE_HOME *Directory*. Main Cache Directory [notes](#xdg_cache_home)

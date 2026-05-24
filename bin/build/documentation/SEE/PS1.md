@@ -1,0 +1,1 @@
+[`PS1` PS1]({rel}/env/#bash) - **String**. Bash Prompt for terminals

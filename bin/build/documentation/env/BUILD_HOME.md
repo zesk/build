@@ -1,0 +1,1 @@
+- `BUILD_HOME` &mdash; BUILD_HOME *Directory*. `BUILD_HOME` is `.` when this code is installed - at [notes](#build_home)

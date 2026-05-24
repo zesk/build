@@ -1,0 +1,1 @@
+[`PATH` Executable Search Path]({rel}/env/#bash) - **DirectoryList**. A colon `:` separated list of paths to search for

@@ -1,0 +1,1 @@
+- `PATH` &mdash; Executable Search Path *DirectoryList*. A colon `:` separated list of paths to search for [notes](#path)

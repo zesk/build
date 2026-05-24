@@ -1,0 +1,1 @@
+- `MANPATH` &mdash; MANPATH *DirectoryList*. A colon `:` separated list of paths to search for [notes](#manpath)

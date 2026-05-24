@@ -1,0 +1,1 @@
+- `BUILD_MAINTENANCE_MESSAGE_VARIABLE` &mdash; BUILD_MAINTENANCE_MESSAGE_VARIABLE *EnvironmentVariable*. Name of the environment variable (if any) which reflects the [notes](#build_maintenance_message_variable)

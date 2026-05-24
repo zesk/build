@@ -21,8 +21,12 @@ buildStepInitialize() {
 
   printf "%s on %s\nTimings: %s\n" "$(decorate success "$(networkNameFull)")" "$(decorate orange "$(cpuLoadAverage)")" "$("$home/bin/build/tools.sh" timing --name zesk-build-load env -i "PATH=$PATH" "HOME=$HOME" bin/build/tools.sh timing timingStart)"
 
-  local buildEnv="$home/.build.env"
-  [ -f "$buildEnv" ] || throwEnvironment "$handler" "No build environment? $(decorate file "$buildEnv")"
+  if [ "${1-}" = "--first" ]; then
+    shift
+  else
+    local buildEnv="$home/.build.env"
+    [ -f "$buildEnv" ] || throwEnvironment "$handler" "No build environment? $(decorate file "$buildEnv")"
+  fi
   [ "${1-}" = true ] || return 0
   catchReturn "$handler" environmentFileLoad "$buildEnv" --execute dumpEnvironment || return $?
 }

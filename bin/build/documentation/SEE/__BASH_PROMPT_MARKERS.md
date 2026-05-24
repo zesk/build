@@ -1,0 +1,1 @@
+[`__BASH_PROMPT_MARKERS` __BASH_PROMPT_MARKERS]({rel}/env/#bash_prompt) - **Array:EmptyString**. Bash Prompt escape codes for prompt reporting

@@ -1,4 +1,4 @@
-# [Zesk Build v0.43.0](https://build.zesk.com)
+# [Zesk Build v0.43.1](https://build.zesk.com)
 
 Documentation can be found
 at [https://build.zesk.com](https://build.zesk.com). ([Next version](https://stage-build.zesk.com))
@@ -49,7 +49,7 @@ To install globally:
 Directly from the web:
 
     mkdir -p bin/build && cd bin/build
-    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/v0.43.0/bin/build/install-bin-build.sh" | bash
+    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/v0.43.1/bin/build/install-bin-build.sh" | bash
 
 ## Main entry points
 

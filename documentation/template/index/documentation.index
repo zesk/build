@@ -372,6 +372,7 @@ documentationCache documentation/source/tools/documentation.md
 documentationEnvironmentMake documentation/source/tools/documentation.md
 documentationFileCompile documentation/source/tools/internal.md
 documentationFileCompileParallel documentation/source/tools/internal.md
+documentationFunctionCompile documentation/source/tools/internal.md
 documentationIdenticalRepair documentation/source/tools/documentation.md
 documentationIndexDocumentation documentation/source/tools/documentation.md
 documentationIndexLookup documentation/source/tools/documentation.md
@@ -761,6 +762,7 @@ readlineConfigurationAdd documentation/source/tools/readline.md
 releaseNew documentation/source/tools/version.md
 releaseNotes documentation/source/release/index.md
 releaseNotes documentation/source/tools/version.md
+releaseNotesMarkdown documentation/source/tools/version.md
 reloadChanges documentation/source/tools/prompt.md
 removeFields documentation/source/tools/unused.md
 repairProfile documentation/source/tools/internal.md

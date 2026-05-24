@@ -1,0 +1,1 @@
+- `BUILD_DEBUG` &mdash; BUILD_DEBUG *CommaDelimitedList*. Constant for turning debugging on during build to find errors [notes](#build_debug)

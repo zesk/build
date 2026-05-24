@@ -1,0 +1,1 @@
+[`BUILD_MAINTENANCE_CREATED_FILE` BUILD_MAINTENANCE_CREATED_FILE]({rel}/env/#application) - **Boolean**. When true, means the `.env.local` file was created by the

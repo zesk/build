@@ -1,0 +1,1 @@
+- `BUILD_NOTIFY_SOUND` &mdash; BUILD_NOTIFY_SOUND *String*. Sound for notifications. Set to `-` for no sound. Defaults [notes](#build_notify_sound)

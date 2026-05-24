@@ -1,0 +1,1 @@
+[`BUILD_CACHE_HOME` BUILD_CACHE_HOME]({rel}/env/#build_configuration) - **Directory**. Location for the build system cache files. Defaults to `$HOME/.build`

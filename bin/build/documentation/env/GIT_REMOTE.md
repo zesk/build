@@ -1,0 +1,1 @@
+- `GIT_REMOTE` &mdash; GIT_REMOTE *String*. undocumented 

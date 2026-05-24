@@ -1,0 +1,1 @@
+- `__BASH_PROMPT_MODULES` &mdash; __BASH_PROMPT_MODULES *Array:Callable*. List of functions to run each prompt command [notes](#__bash_prompt_modules)

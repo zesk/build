@@ -1,0 +1,1 @@
+- `VISUAL` &mdash; VISUAL *Executable*. Binary for viewing files [notes](#visual)

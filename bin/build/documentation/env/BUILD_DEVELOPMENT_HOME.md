@@ -1,0 +1,1 @@
+- `BUILD_DEVELOPMENT_HOME` &mdash; BUILD_DEVELOPMENT_HOME *String*. Directory where Zesk Build is being developed in the file [notes](#build_development_home)

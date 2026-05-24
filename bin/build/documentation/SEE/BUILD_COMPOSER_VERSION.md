@@ -1,0 +1,1 @@
+[`BUILD_COMPOSER_VERSION` BUILD_COMPOSER_VERSION]({rel}/env/#installation) - **String**. Version of composer to use for building vendor directory

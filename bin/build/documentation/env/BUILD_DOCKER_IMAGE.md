@@ -1,0 +1,1 @@
+- `BUILD_DOCKER_IMAGE` &mdash; BUILD_DOCKER_IMAGE *String*. Default docker image to use when launching `dockerLocalContainer` [notes](#build_docker_image)

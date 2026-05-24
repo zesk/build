@@ -6,12 +6,6 @@
 
 List of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.
 
-### See Also
-
-- ## `iTerm2Init`
-
-- ## `bashPrompt`
-
 
 ## `__BASH_PROMPT_MODULES`
 
@@ -30,10 +24,6 @@ To report on each command and timing.
 
 An automatic reporting occurs when commands exceed 0.3s.
 
-### See Also
-
-- ## `bashPrompt`
-
 
 ## `__BASH_PROMPT_PREVIOUS`
 
@@ -42,10 +32,6 @@ An automatic reporting occurs when commands exceed 0.3s.
 
 Previous result code
 
-### See Also
-
-- ## `bashPrompt`
-
 
 ## `__BASH_PROMPT_SLOW`
 
@@ -53,10 +39,6 @@ Previous result code
 > > **Type**: *PositiveInteger* • **Category**: *Bash Prompt*
 
 Number of milliseconds after which a `bashPrompt` command is considered slow.
-
-### See Also
-
-- ## `bashPrompt`
 
 
 ## `__BUILD_HAS_TTY`
@@ -210,10 +192,6 @@ Default profile for Amazon Web Services
 
 Region for Amazon Web Services
 
-### See Also
-
-- ## `awsIPAccess`
-
 
 ## `AWS_SECRET_ACCESS_KEY`
 
@@ -264,10 +242,6 @@ Cache MAY be deleted at any time. If you need your files to be preserved, store 
 
 If true then colors are shown, blank means guess the value, false means no colors
 
-### See Also
-
-- ## `decorate`
-
 
 ## `BUILD_COMPANY_LINK`
 
@@ -291,10 +265,6 @@ Legal copyright holder for this codebase
 > > **Type**: *String* • **Category**: *Installation*
 
 Version of composer to use for building vendor directory
-
-### See Also
-
-- {SEE:phpComposer}
 
 
 ## `BUILD_DEBUG_LINES`
@@ -321,10 +291,6 @@ Enable debugging globally in the build scripts. Set to a comma (`,`) delimited l
 
 Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)
 
-### See Also
-
-- ## `buildDevelopmentLink`
-
 
 ## `BUILD_DOCKER_IMAGE`
 
@@ -333,10 +299,6 @@ Directory where Zesk Build is being developed in the file system (for other proj
 
 Default docker image to use when launching `dockerLocalContainer`
 
-### See Also
-
-- ## `dockerLocalContainer`
-
 
 ## `BUILD_DOCKER_PATH`
 
@@ -344,10 +306,6 @@ Default docker image to use when launching `dockerLocalContainer`
 > > **Type**: *RemoteDirectory* • **Category**: *Docker*
 
 Default path for the shell to map the current directory to when launching `dockerLocalContainer`
-
-### See Also
-
-- ## `dockerLocalContainer`
 
 
 ## `BUILD_DOCKER_PLATFORM`
@@ -374,12 +332,6 @@ Valid values are:
 - `linux/arm/v6`
 
 If not specified, uses the default for the current platform.
-
-### See Also
-
-- ## `dockerLocalContainer`
-
-- ## `dockerPlatformDefault`
 
 
 ## `BUILD_DOCUMENTATION_PATH`
@@ -484,10 +436,6 @@ This value is set to `true` or `false`
 
 Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitTagVersion`
 
-### See Also
-
-- ## `gitTagVersion`
-
 
 ## `BUILD_NOTIFY_SOUND`
 
@@ -496,10 +444,6 @@ Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitT
 
 Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notification`.
 
-### See Also
-
-- ## `darwinNotification`
-
 
 ## `BUILD_NPM_VERSION`
 
@@ -507,10 +451,6 @@ Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notifi
 > > **Type**: *String* • **Category**: *Installation*
 
 Version of npm to install using native `npm` binary.
-
-### See Also
-
-- ## `npmInstall`
 
 
 ## `BUILD_PACKAGE_MANAGER`
@@ -582,10 +522,6 @@ Colors are escape codes. Last entry is a reset simply to make environment output
 4. Host
 5. Path
 
-### See Also
-
-- ## `bashPrompt`
-
 
 ## `BUILD_RELEASE_NOTES`
 
@@ -610,10 +546,6 @@ The file to generate when generating builds
 
 State to store state of current terminal color state
 
-### See Also
-
-- ## `bashPromptModule_TermColors`
-
 
 ## `BUILD_TEST_FLAGS`
 
@@ -629,14 +561,6 @@ Test flags affect controls and how tests are run.
 > > **Type**: *Callable* • **Category**: *Decoration*
 
 Binary used to generate `decorate big`
-
-### See Also
-
-- ## `decorate`
-
-- {SEE:__aptStandardPackages}
-- {SEE:__apkStandardPackages}
-- {SEE:__brewStandardPackages}
 
 
 ## `BUILD_TIMESTAMP`
@@ -654,10 +578,6 @@ Time when a build was initiated, set upon first invocation if not already
 
 Binary used in __urlOpen
 
-### See Also
-
-- ## `urlOpen`
-
 
 ## `BUILD_URL_TIMEOUT`
 
@@ -665,10 +585,6 @@ Binary used in __urlOpen
 > > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
 
 Timeout in seconds for fetching URLs in `urlFetch`
-
-### See Also
-
-- ## `urlFetch`
 
 
 ## `BUILD_VERSION_NO_OPEN`
@@ -686,10 +602,6 @@ Constant for whether to open release notes when a version is requested (see `ver
 
 Default suffix used in `gitTagVersion`
 
-### See Also
-
-- ## `gitTagVersion`
-
 
 ## `BUILD_YARN_VERSION`
 
@@ -697,10 +609,6 @@ Default suffix used in `gitTagVersion`
 > > **Type**: *String* • **Category**: *Vendor*
 
 Version of yarn to install using `corepack`
-
-### See Also
-
-- ## `yarnInstall`
 
 
 ## `CI`
@@ -712,12 +620,6 @@ If this value is non-blank, then console `statusMessage`s are just output normal
 Continuous Integration - this is set to a non-blank value in:
 
 - Bitbucket pipelines
-
-### See Also
-
-- ## `statusMessage`
-
-- ## `consoleHasAnimation`
 
 
 ## `COLORFGBG`
@@ -756,10 +658,6 @@ Path on the remote server where the application deployment home is (per applicat
 
 A list of one ore more user@host for installation of the application
 
-### See Also
-
-- ## `deployApplication`
-
 
 ## `DEPLOYMENT`
 
@@ -793,12 +691,6 @@ Binary for editing files
 
 Open links from git remotes in `gitCommit`
 
-### See Also
-
-- ## `gitCommit`
-
-- ## `gitCommit`
-
 
 ## `GITHUB_ACCESS_TOKEN_EXPIRE`
 
@@ -806,10 +698,6 @@ Open links from git remotes in `gitCommit`
 > > **Type**: *Date* • **Category**: *Development*
 
 GitHub Access token expiration date. Invalid AFTER this date.
-
-### See Also
-
-- ## `githubRelease`
 
 
 ## `GITHUB_ACCESS_TOKEN`
@@ -819,10 +707,6 @@ GitHub Access token expiration date. Invalid AFTER this date.
 
 Access token used for release
 
-### See Also
-
-- ## `githubRelease`
-
 
 ## `GITHUB_REPOSITORY_NAME`
 
@@ -831,10 +715,6 @@ Access token used for release
 
 Repository name for release
 
-### See Also
-
-- ## `githubRelease`
-
 
 ## `GITHUB_REPOSITORY_OWNER`
 
@@ -842,10 +722,6 @@ Repository name for release
 > > **Type**: *String* • **Category**: *Deployment: GitHub*
 
 Repository owner for release
-
-### See Also
-
-- ## `githubRelease`
 
 
 ## `HOME`
@@ -864,10 +740,6 @@ Current user's home directory.
 jq filter to parse IP_URL result (assuming JSON)
 if blank, no filter is used and raw result is returned
 
-### See Also
-
-- ## `networkIPLookup`
-
 
 ## `IP_URL`
 
@@ -875,10 +747,6 @@ if blank, no filter is used and raw result is returned
 > > **Type**: *URL* • **Category**: *Build Configuration*
 
 URL to look up IP my address remotely
-
-### See Also
-
-- ## `networkIPLookup`
 
 
 ## `LC_TERMINAL`
@@ -896,10 +764,6 @@ LC_TERMINAL typically identifies the terminal application
 
 A colon `:` separated list of paths to search for manual pages.
 See [`manPathConfigure`](/tools/platform/#manpathconfigure)
-
-### See Also
-
-- ## `manPathConfigure`
 
 
 ## `MARIADB_BINARY_CONNECT`
@@ -935,10 +799,6 @@ Default is `yarn`.
 A colon `:` separated list of paths to search for executables in `bash`.
 See [`pathConfigure`](/tools/platform/#pathconfigure)
 
-### See Also
-
-- ## `pathConfigure`
-
 
 ## `PRODUCTION`
 
@@ -955,10 +815,6 @@ Is this a production system? e.g. remove unnecessary runtime checks.
 
 Command is run before displaying the prompt, receives exit status from the prior command.
 
-### See Also
-
-- ## `bashPrompt`
-
 
 ## `PS1`
 
@@ -966,10 +822,6 @@ Command is run before displaying the prompt, receives exit status from the prior
 > > **Type**: *String* • **Category**: *Bash*
 
 Bash Prompt for terminals
-
-### See Also
-
-- ## `bashPrompt`
 
 
 ## `SHFMT_ARGUMENTS`
@@ -1000,10 +852,6 @@ The current terminal type.
 Assertion tracking testing optimization
 Turn on or off tracking of function assertions within the testing core.
 If blank, the default behavior is to track; disable it with setting the value to `false`.
-
-### See Also
-
-- #### Tag filters
 
 
 ## `VISUAL`

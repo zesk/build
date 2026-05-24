@@ -1,0 +1,1 @@
+- `GITHUB_ACCESS_TOKEN` &mdash; GITHUB_ACCESS_TOKEN *Secret*. Access token used for release [notes](#github_access_token)

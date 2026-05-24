@@ -1,0 +1,1 @@
+- `BUILD_PROMPT_COLORS` &mdash; BUILD_PROMPT_COLORS *ColonDelimitedList*. Colon-separated list of colors for the prompt [notes](#build_prompt_colors)

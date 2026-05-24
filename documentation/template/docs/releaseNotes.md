@@ -1,4 +1,12 @@
 
+## Zesk Build release v0.43.1
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.43.0
+- Added {SEE:releaseNotesMarkdown}
+- Fixed `SEE` and documentation generation paths
+
 ## Zesk Build release v0.43.0
 
 > Copyright &copy; 2026 Market Acumen, Inc.
@@ -14,9 +22,9 @@ Added:
 - {SEE:mapFunction}
 - {SEE:documentationMaker}
 - {SEE:documentationMake}
-- Renamed: `documentationEnvironmentMake` -> {SEE:documentationEnvironmentMake}
-- Renamed: `documentationCache` -> {SEE:documentationCache}
-- Renamed: `documentationIdenticalRepair` -> {SEE:documentationIdenticalRepair}
+- Renamed: `documentationBuildEnvironment` -> {SEE:documentationEnvironmentMake}
+- Renamed: `documentationBuildCache` -> {SEE:documentationCache}
+- Renamed: `documentationTemplateUpdate` -> {SEE:documentationIdenticalRepair}
 
 Deprecated:
 
@@ -38,10 +46,11 @@ Deprecated:
 - `markdownRemoveUnfinishedSections` now keeps `SEE:token` variables
 - `identicalCheck --repair` now added a new macro `__NAME__` which is `__BASE__` without an extension.
 - Made `bashDocumentationDeriveSee` and `bashDocumentationDeriveFunction` part of documentation system
-- 
-- fixing doc caching issue
-- adding debugging to see why test overhead is so high
-- Removed double cleanup after tests
+- Fixing doc caching issue
+- Adding timing debugging to see why test overhead is so high, removed double cleanup after tests
+- Ignore `.index` files which were showing up in deprecated runs
+- `returnMessage` cleaned up and made smaller
+- `bashCoverage` added `bashCoverageEnabled` and fixed issue when unsetting `BUILD_HOME`
 
 ## Zesk Build release v0.42.5
 
@@ -76,145 +85,18 @@ Deprecated:
       mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how
       permissions are translated, I assume. Workaround falls back to `ls` which is slow but works. See `isExecutable`.
       Added 2024-01.
-- `helpArgument` -> `helpArgument` and now in main documentation
+- `__help` -> `helpArgument` and now in main documentation
 - Moved `SEE` documentation cache to `bin/build/documentation/SEE`
 - Documentation `--md-cache` obsolete, uses `__documentationPath` function
 
-## Zesk Build release v0.42.2
+# Past Releases
 
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.42.1
-- Added `documentationIndexUnlinkedFunctions`
-- Added tracing to `returnMessage`
-- fixing doc build
-
-## Zesk Build release v0.42.1
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.42.0
-- `bashPromptModule_BuildProject` had a error output which was incorrect and annoying, fixed.
-- `bashPromptModule_TermColors` had an issue with cache busting, fixed.
-- Documentation updates and fixes
-- `timingDuration` added `--unit` option for specifying the time unit to halt dividing by when outputting. 
-
-## Zesk Build release v0.42.0
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.41.3
-- Some identicals didn't get copied (`validate`) but functionally didn't affect anything
-- `buildTestPlatforms` now operating better; `testSuite` required the current directory to be `buildHome` but now does
-  not
-- Fixing uninitialized environment variables in `aws-tests.sh`
-- Fixing undefined `DOCUMENTATION_SHM`
-- `bin/build/deprecated.sh` now ignores its own internal stuff when in other projects, and you can ignore the
-  fingerprinting using `--no-fingerprint`
-- Added `--quiet` to `buildEnvironmentGet` and `buildEnvironmentLoad` when you don't care if the file is missing
-- Added `validate` type for `AWSRegion` and added identical templates `regionArgumentValidation`,
-  `__validateTypeAWSRegion`, and `regionArgumentHandler`
-- `bashPromptModule_BuildProject` is now deprecated, use `bashPromptModule_BuildProject` instead
-- `fileRealPath` depends on `readlink -f` which is not available on older version of Mac OS X, so updated for
-  compatibility
-- `fileRealPath` and `fileRemoveFields` compatibility with older OS versions
-- Adding test failure report to end of `testSuite`
-- `iTerm2Init` no longer loads `iTerm2Aliases`
-- Deprecated renaming:
-    - `bashPromptModule_BuildProject` -> `bashPromptModule_BuildProject`
-    - `stringHideNewlines` -> `stringHideNewlines`
-    - `plural` -> `localePlural `
-    - `pluralWord` -> `localePluralWord `
-    - `cannon` -> `textCannon `
-    - `bashDocumentation` -> `bashDocumentation`
-    - `bashDocumentationSimple` -> `bashSimpleDocumentation`
-    - `logDirectoryRotate` (or `logDirectoryRotate`?) -> `logDirectoryRotate`
-- Caching of documentation markdown in source (`bin/build/documentation/*.md`) and `SEE` documentation caching for
-  faster builds.
-- `logRotate` and `logDirectoryRotate` cleanup
-
-## Zesk Build release v0.41.3
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.41.2
-
-### Deprecated functions
-
-Continuing naming fixes to be consistent across the library. `noun-verb`
-
-- `integerClamp` -> `integerClamp`
-- `booleanParse` -> `booleanParse`
-- `textReplaceFirst` -> `textReplaceFirst`
-- `textReplace` -> `textReplace`
-- `textTrimBoth` -> `textTrimBoth`
-- `textTrimHead` -> `textTrimHead`
-- `textTrimTail` -> `textTrimTail`
-- `textSingleBlankLines` -> `textSingleBlankLines`
-- `textTrimRight` -> `textTrimRight`
-- `textTrimLeft` -> `textTrimLeft`
-- `textTrim` -> `textTrim`
-- `textRemoveFields` -> `textRemoveFields`
-- `cpuLoadAverage` -> `cpuLoadAverage`
-- `fileRealPath` -> `fileRealPath`
-- `stringTrimWords` -> `stringTrimWords`
-- `stringUnquote ` -> `stringUnquote `
-- `uppercase ` -> `stringUppercase `
-- `lowercase ` -> `stringLowercase `
-- `environmentRequire` -> `environmentRequire`
-- `gitTagVee` -> `gitTagVee`
-- `directoryWatch` -> `directoryWatch`
-- `textSHA` -> `textSHA`
-- `logRotate` -> `logRotate`
-- `logDirectoryRotate` -> `logDirectoryRotate`
-- `stringRandom` -> `stringRandom`
-- `decorate big` -> `decorate big`
-- `decorate at` -> `decorate at`
-
-### Not sure about these - not `noun-verb` but makes sense
-
-- `executeCount` -> `executeCount`
-- `executeLoop` -> `executeLoop`
-- `executableRequire` -> `executableRequire`
-
-### Bug fixes
-
-- `bin/documentation.sh --clean` no longer deletes `bin/build/documentation/` - use `buildUsageCompile --clean` for that
-  if needed
-- Fixed `markdownRemoveUnfinishedSections` and documentation generator to ensure `## functionName` headers appear in
-  generated documentation
-- `documentationBuild` no longer resets color scheme
-- `bold` no longer redefined in `etc/term-colors.conf` (not recommended either)
-- Removed extra bold settings in semantic styles to allow bold to be applied
-
-## Zesk Build release v0.41.2
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.41.1
-- `__bashDocumentationCached` identical updates
-- `executableExists` was flagging functions as executable when it should not
-- Fixed issues with installer and `bashGetRequires` not correctly flagging missing functions.
-- Moved `decorateThemed` to a identical template
-- Adding assets and (gasp) tracking to documentation
-- Fixed leak in `__bashDocumentation` which was hidden by cached function help
-
-## Zesk Build release v0.41.1
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.41.0
-- Added [`cpuCount`](../tools/cpu.md#cpucount)
-- Foreign [`__bashDocumentationCached`](../tools/usage.md#__usagedocumentcached) would cause an error, now does not
-- Fixed `deleteFiles` error in [`approvedSources`](../tools/approve.md)
-- Some documentation updates and cleanup, added [strftime Cheatsheet](../guide/strftime-cheatsheet.md)
-- Fixed issue with [`reloadChanges`](../tools/prompt.md#reloadchanges) getting false positive each run
-- [`bashDebugInterruptFile --already-error`](../tools/debug.md#bashdebuginterruptfile) added
-- Added [`dumpEnvironment --prefix`](../tools/dump.md#dumpenvironment) match
-- Added [`__functionSettings`](../tools/usage.md#__functionsettings) to grant access to compiled function settings
-
-# Past releases
-
+- [v0.42.2](./v0.42.2.md)
+- [v0.42.1](./v0.42.1.md)
+- [v0.42.0](./v0.42.0.md)
+- [v0.41.3](./v0.41.3.md)
+- [v0.41.2](./v0.41.2.md)
+- [v0.41.1](./v0.41.1.md)
 - [v0.41.0](./v0.41.0.md)
 - [v0.40.3](./v0.40.3.md)
 - [v0.40.2](./v0.40.2.md)

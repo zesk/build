@@ -1,0 +1,1 @@
+- `DISPLAY` &mdash; DISPLAY *String*. Environment variable for X windows display. [notes](#display)

@@ -1,0 +1,1 @@
+- `GIT_OPEN_LINKS` &mdash; GIT_OPEN_LINKS *Boolean*. Open links from git remotes in `gitCommit` [notes](#git_open_links)
