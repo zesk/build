@@ -19,7 +19,7 @@ buildStepInitialize() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  printf "%s on %s\nTimings: %s\n" "$(decorate success "$(networkNameFull)")" "$(decorate orange "$(cpuLoadAverage)")" "$("$home/bin/build/tools.sh" timing --name zesk-build-load env -i "PATH=$PATH" "HOME=$HOME" bin/build/tools.sh timing timingStart)"
+  printf "Host: %s, Load: %s\n%s\n" "$(decorate success "$(networkNameFull)")" "$(decorate orange "$(cpuLoadAverage | head -n 1)")" "$("$home/bin/build/tools.sh" timing --name "Speed:" "$home/bin/build/tools.sh" muzzle timing timingStart)"
 
   if [ "${1-}" = "--first" ]; then
     shift
