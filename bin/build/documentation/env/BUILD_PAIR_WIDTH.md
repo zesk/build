@@ -1,1 +1,0 @@
-- `BUILD_PAIR_WIDTH` &mdash; BUILD_PAIR_WIDTH *PositiveInteger*. Width for pairs. Defaults to `40`. [notes](#build_pair_width)

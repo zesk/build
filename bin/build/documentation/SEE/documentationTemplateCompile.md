@@ -1,1 +1,0 @@
-[documentationTemplateCompile]({rel}tools/documentation.md#documentationtemplatecompile) - Document an item and generate a template (markdown). To custom ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L426))

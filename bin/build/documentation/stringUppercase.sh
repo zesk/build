@@ -1,24 +1,29 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-12
+# Generated on 2026-05-24
 # shellcheck disable=SC2034
-argument="-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"--help - Flag. Optional. Display this help."$'\n'"text - EmptyString. Required. text to convert to uppercase"$'\n'""
+argument=$'-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.\n--help - Flag. Optional. Display this help.\ntext - EmptyString. Required. text to convert to uppercase\n'
 base="text.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Convert text to uppercase"$'\n'""$'\n'""
+description=$'Convert text to uppercase\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/text.sh"
 fn="stringUppercase"
 fnMarker="stringuppercase"
 foundNames=([0]="argument" [1]="stdout" [2]="requires")
 line="888"
-rawComment="Convert text to uppercase"$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: text - EmptyString. Required. text to convert to uppercase"$'\n'"stdout: \`String\`. The stringUppercase version of the \`text\`."$'\n'"Requires: tr"$'\n'""$'\n'""
-requires="tr"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Convert text to uppercase\nArgument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.\nArgument: --help - Flag. Optional. Display this help.\nArgument: text - EmptyString. Required. text to convert to uppercase\nstdout: `String`. The stringUppercase version of the `text`.\nRequires: tr\n\n'
+requires=$'tr\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"
 sourceHash="b913e34543d2ae704942cadce5473f26955cd42e"
 sourceLine="888"
-stdout="\`String\`. The stringUppercase version of the \`text\`."$'\n'""
+stdout=$'`String`. The stringUppercase version of the `text`.\n'
 summary="Convert text to uppercase"
 summaryComputed="true"
 usage="stringUppercase [ -- ] [ --help ] text"
+# shellcheck disable=SC2016
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mstringUppercase'$'\e''[0m '$'\e''[[(blue)]m[ -- ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mtext'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--      '$'\e''[[(value)]mFlag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mtext    '$'\e''[[(value)]mEmptyString. Required. text to convert to uppercase'$'\e''[[(reset)]m'$'\n'''$'\n''Convert text to uppercase'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n'''$'\e''[[(code)]mString'$'\e''[[(reset)]m. The stringUppercase version of the '$'\e''[[(code)]mtext'$'\e''[[(reset)]m.'
+# shellcheck disable=SC2016
+helpPlain='Usage: stringUppercase [ -- ] [ --help ] text'$'\n'''$'\n''    --      Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.'$'\n''    --help  Flag. Optional. Display this help.'$'\n''    text    EmptyString. Required. text to convert to uppercase'$'\n'''$'\n''Convert text to uppercase'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''String. The stringUppercase version of the text.'
+documentationPath="documentation/source/tools/text.md"

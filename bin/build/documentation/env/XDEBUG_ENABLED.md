@@ -1,1 +1,0 @@
-- `XDEBUG_ENABLED` &mdash; XDEBUG_ENABLED *Boolean*. Is xdebug enabled? The application can honor this environment variable [notes](#xdebug_enabled)

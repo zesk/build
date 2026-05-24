@@ -1,1 +1,0 @@
-- `NODE_PACKAGE_MANAGER` &mdash; node Package Manager *Executable*. The package manager used for node operations. Usually `yarn` or [notes](#node_package_manager)

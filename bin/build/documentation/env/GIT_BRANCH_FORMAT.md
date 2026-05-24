@@ -1,1 +1,0 @@
-- `GIT_BRANCH_FORMAT` &mdash; GIT_BRANCH_FORMAT *String*. undocumented 

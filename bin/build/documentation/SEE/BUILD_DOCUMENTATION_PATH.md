@@ -1,1 +1,0 @@
-[`BUILD_DOCUMENTATION_PATH` BUILD_DOCUMENTATION_PATH]({rel}/env/#bash) - **DirectoryList**. Search path for documentation settings file.

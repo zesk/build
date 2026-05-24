@@ -1,1 +1,0 @@
-[`__BUILD_HAS_TTY` __BUILD_HAS_TTY]({rel}/env/#internal) - **Boolean**. Cached value of the availability of `/dev/tty`.

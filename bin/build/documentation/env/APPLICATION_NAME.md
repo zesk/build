@@ -1,1 +1,0 @@
-- `APPLICATION_NAME` &mdash; APPLICATION_NAME *String*. This is the display name of the application [notes](#application_name)

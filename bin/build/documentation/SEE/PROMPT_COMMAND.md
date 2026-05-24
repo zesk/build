@@ -1,1 +1,0 @@
-[`PROMPT_COMMAND` PROMPT_COMMAND]({rel}/env/#bash) - **Callable**. Command is run before displaying the prompt, receives exit status

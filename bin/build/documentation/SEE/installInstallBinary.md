@@ -1,1 +1,0 @@
-[installInstallBinary]({rel}#installinstallbinary) - Installs an installer the first time in a new project, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L32))

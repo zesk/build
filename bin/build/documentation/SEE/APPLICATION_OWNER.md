@@ -1,1 +1,0 @@
-[`APPLICATION_OWNER` APPLICATION_OWNER]({rel}/env/#application) - **String**. The entity which owns or manages the application. Typically the

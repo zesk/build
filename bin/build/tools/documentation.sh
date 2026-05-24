@@ -572,7 +572,7 @@ _documentationFileCompile() {
 bashDocumentationDeriveFunction() {
   local handler="_${FUNCNAME[0]}"
 
-  local settingsFile="" checkFlag=false
+  local settingsFile="" checkFlag=false verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -585,6 +585,7 @@ bashDocumentationDeriveFunction() {
     --help) "$handler" 0 && return $? || return $? ;;
     --template) shift && template=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --check) checkFlag=true ;;
+    --verbose) verboseFlag=true ;;
     *) settingsFile=$(validate "$handler" File "settingsFile" "$argument") && shift && break || return $? ;;
     esac
     shift
@@ -599,11 +600,13 @@ bashDocumentationDeriveFunction() {
     local sourceFile && sourceFile=$(environmentValueRead "$settingsFile" sourceFile) || return $?
     if [ -f "$targetFile" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile"; then
       catchReturn "$handler" touch "$targetFile" || return $?
+      ! $verboseFlag || statusMessage decorate success "Checked fn $(decorate file "$targetFile")"
       return 0
     fi
     return 1
   fi
   catchReturn "$handler" bashDocumentationMarkdown --template "$template" "$fn" >"$targetFile" || return $?
+  ! $verboseFlag || statusMessage decorate success "Created fn $(decorate file "$targetFile")"
 }
 _bashDocumentationDeriveFunction() {
   # __IDENTICAL__ bashDocumentation 1
@@ -620,7 +623,7 @@ _bashDocumentationDeriveFunction() {
 bashDocumentationDeriveSee() {
   local handler="_${FUNCNAME[0]}"
 
-  local settingsFile="" checkFlag=false template=""
+  local settingsFile="" checkFlag=false template="" verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -633,6 +636,7 @@ bashDocumentationDeriveSee() {
     --help) "$handler" 0 && return $? || return $? ;;
     --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
     --check) checkFlag=true ;;
+    --verbose) verboseFlag=true ;;
     *) settingsFile=$(validate "$handler" File "settingsFile" "$argument") && shift && break || return $? ;;
     esac
     shift
@@ -654,6 +658,7 @@ bashDocumentationDeriveSee() {
   if $checkFlag; then
     if [ -f "$targetFile" ] && [ -f "$documentationPath" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile" "$documentationPath"; then
       catchReturn "$handler" touch "$targetFile" || return $?
+      ! $verboseFlag || statusMessage decorate success "Checked SEE $(decorate file "$targetFile")"
       return 0
     fi
     return 1
@@ -666,6 +671,7 @@ bashDocumentationDeriveSee() {
     local sourceLink && sourceLink="$(catchReturn "$handler" mapEnvironment <<<"$functionLinkPattern")" || return $?
     catchReturn "$handler" muzzle fileDirectoryRequire --handler "$handler" "$targetFile" || return $?
     documentationPath="$documentationPath" sourceLink="$sourceLink" catchReturn "$handler" mapEnvironment <"$template" >"$targetFile" || return $?
+    ! $verboseFlag || statusMessage decorate success "Wrote SEE $(decorate file "$targetFile")"
   ) || return $?
 }
 _bashDocumentationDeriveSee() {

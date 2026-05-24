@@ -1,1 +1,0 @@
-[`XDG_CONFIG_DIRS` XDG_CONFIG_DIRS]({rel}/env/#build_configuration) - **DirectoryList**. Configuration Path Directories

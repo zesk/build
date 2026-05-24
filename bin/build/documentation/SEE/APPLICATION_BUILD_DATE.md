@@ -1,1 +1,0 @@
-[`APPLICATION_BUILD_DATE` APPLICATION_BUILD_DATE]({rel}/env/#deployment) - **String**. Time when a build was initiated, set upon first invocation

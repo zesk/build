@@ -27,38 +27,3 @@ _buildFunctionsRemoveDeprecated() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
-# Is everything up to date?
-# Argument: handler - Function. Required.
-# Argument: docPath - Directory. Required.
-# Argument: tempFunctions - File. Required. File containing list of function names
-__buildFunctionsIsComplete() {
-  local handler="$handler" && shift
-  local docPath="$1" && shift
-  local tempFunctions="$1" && shift
-
-  local missing=() finished=false && while ! $finished; do
-    local fun && read -r fun || finished=true
-    [ -n "$fun" ] || continue
-    if [ ! -f "$docPath/$fun.sh" ]; then
-      missing+=("$fun")
-    fi
-  done <"$tempFunctions"
-  finished=false && while ! $finished; do
-    local file fun && read -r file || finished=true
-    [ -n "$file" ] || continue
-    fun="${file##*/}" && fun="${fun%.sh}"
-    if ! isFunction "$fun" && ! muzzle buildEnvironmentGet "$fun" 2>/dev/null; then
-      catchReturn "$handler" statusMessage --last decorate error "File $(decorate file "$file") has no matching function $(decorate code "$fun") anymore" || return $?
-    fi
-  done < <(find "$docPath" -type f -name '*.sh')
-  local index=0 fun
-  [ "${#missing[@]}" -eq 0 ] || for fun in "${missing[@]}"; do
-    index=$((index + 1))
-    catchReturn "$handler" statusMessage decorate warning "Loading missing: $fun" || return $?
-    (
-      __documentationFileCompileFunction "$handler" "$docPath" "$fun" "" "Missing #$index/${#missing[@]}" "$@" || return $?
-    ) || return $?
-  done
-  catchReturn "$handler" statusMessage decorate info "No functions missing" || return $?
-}

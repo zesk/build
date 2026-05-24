@@ -1,25 +1,30 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-03
+# Generated on 2026-05-24
 # shellcheck disable=SC2034
 argument="none"
 base="platform.sh"
-credits="Eric Pement"$'\n'""
-depends="awk"$'\n'""
+credits=$'Eric Pement\n'
+depends=$'awk\n'
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Reverses a pipe's input lines to output using an awk trick."$'\n'""$'\n'"Not recommended on big files."$'\n'""$'\n'""
+description=$'Reverses a pipe\'s input lines to output using an awk trick.\n\nNot recommended on big files.\n\n'
 descriptionLineCount="4"
 file="bin/build/tools/platform.sh"
 fn="fileReverseLines"
 fnMarker="filereverselines"
 foundNames=([0]="summary" [1]="source" [2]="credits" [3]="depends")
 line="106"
-rawComment="Reverses a pipe's input lines to output using an awk trick."$'\n'"Not recommended on big files."$'\n'"Summary: Reverse output lines"$'\n'"Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'"Credits: Eric Pement"$'\n'"Depends: awk"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-source="https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'""
+rawComment=$'Reverses a pipe\'s input lines to output using an awk trick.\nNot recommended on big files.\nSummary: Reverse output lines\nSource: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt\nCredits: Eric Pement\nDepends: awk\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+source=$'https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt\n'
 sourceFile="bin/build/tools/platform.sh"
 sourceHash="097e41ee15602cdab3bc28d8a420362c8b93b425"
 sourceLine="106"
 summary="Reverse output lines"
 summaryComputed=""
 usage="fileReverseLines"
+# shellcheck disable=SC2016
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileReverseLines'$'\e''[0m'$'\n'''$'\n''Reverses a pipe'\''s input lines to output using an awk trick.'$'\n'''$'\n''Not recommended on big files.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+# shellcheck disable=SC2016
+helpPlain='Usage: fileReverseLines'$'\n'''$'\n''Reverses a pipe'\''s input lines to output using an awk trick.'$'\n'''$'\n''Not recommended on big files.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+documentationPath="documentation/source/tools/file.md"

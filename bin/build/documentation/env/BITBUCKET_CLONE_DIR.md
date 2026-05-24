@@ -1,1 +1,0 @@
-- `BITBUCKET_CLONE_DIR` &mdash; BITBUCKET_CLONE_DIR *Directory*. Defined in BITBUCKET Pipelines [notes](#bitbucket_clone_dir)

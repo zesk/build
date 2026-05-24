@@ -1,1 +1,0 @@
-[`BUILD_NPM_VERSION` BUILD_NPM_VERSION]({rel}/env/#installation) - **String**. Version of npm to install using native `npm` binary.

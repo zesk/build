@@ -1,1 +1,0 @@
-[`DISPLAY` DISPLAY]({rel}/env/#bash) - **String**. Environment variable for X windows display.

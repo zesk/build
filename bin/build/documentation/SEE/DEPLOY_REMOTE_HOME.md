@@ -1,1 +1,0 @@
-[`DEPLOY_REMOTE_HOME` DEPLOY_REMOTE_HOME]({rel}/env/#deployment) - **RemoteDirectory**. Path on the remote server where the application deployment home

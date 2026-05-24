@@ -1,1 +1,0 @@
-[`GITHUB_ACCESS_TOKEN_EXPIRE` GITHUB_ACCESS_TOKEN_EXPIRE]({rel}/env/#development) - **Date**. GitHub Access token expiration date. Invalid AFTER this date.

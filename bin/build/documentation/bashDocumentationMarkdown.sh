@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-11
+# Generated on 2026-05-24
 # shellcheck disable=SC2034
 argument=$'functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.\n--help - Flag. Optional. Display this help.\n'
 base="usage.sh"
@@ -20,3 +20,8 @@ sourceLine="24"
 summary="Output documentation for a function in Markdown format"
 summaryComputed=""
 usage="bashDocumentationMarkdown functionName [ --help ]"
+# shellcheck disable=SC2016
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashDocumentationMarkdown'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfunctionName'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mfunctionName  '$'\e''[[(value)]mString. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help        '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Output documentation for a function in Markdown format'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+# shellcheck disable=SC2016
+helpPlain='Usage: bashDocumentationMarkdown functionName [ --help ]'$'\n'''$'\n''    functionName  String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.'$'\n''    --help        Flag. Optional. Display this help.'$'\n'''$'\n''Output documentation for a function in Markdown format'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+documentationPath="documentation/source/tools/usage.md"

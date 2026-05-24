@@ -245,7 +245,7 @@ __documentationFileCompile() {
     local total=0
     if [ "${#functions[@]}" -gt 0 ]; then
       local fun && for fun in "${functions[@]}"; do
-        local path && for path in "" "env/" "SEE/" "env/more"; do
+        local path && for path in "" "env/" "SEE/" "env/more/"; do
           local extension && for extension in "sh" "md"; do
             local target
             target=$(__documentationFile "$home" "$path$fun" false "$extension") || continue
@@ -270,7 +270,7 @@ __documentationFileCompile() {
 
   local start && start=$(timingStart)
 
-  local docPath && docPath="$(dirname "$(__documentationFile "$home" "SEE/test" true)")" || return $?
+  local docPath && docPath="$(dirname "$(__documentationFile "$home" "test" true)")" || return $?
   catchReturn "$handler" muzzle directoryRequire "$docPath" || return $?
 
   local tempFunctions && tempFunctions=$(fileTemporaryName "$handler") || return $?
@@ -290,6 +290,7 @@ __documentationFileCompile() {
       statusMessage timing --name "$prefix $fun" __documentationFileCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" "${dd[@]+"${dd[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     ) || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+  wait
   shopt -s expand_aliases || :
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
@@ -325,7 +326,7 @@ __documentationFileCompileFunction() {
   local prettyFun && prettyFun=$(catchReturn "$handler" decorate code "$fun") || return $?
 
   __profilePrefix="${__profilePrefix}[$fun] "
-  local documentationSettingsFile="$docPath/$fun.sh" seeFile="$docPath/SEE_$fun.md" mdFile="$docPath/$fun.md"
+  local documentationSettingsFile="$docPath/$fun.sh" seeFile="$docPath/SEE/$fun.md" mdFile="$docPath/$fun.md"
   local ff=("$documentationSettingsFile" "$seeFile" "$mdFile")
 
   if [ -z "$sourceFile" ] && [ -f "$documentationSettingsFile" ]; then

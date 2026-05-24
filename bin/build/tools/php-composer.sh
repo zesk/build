@@ -6,7 +6,6 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-#
 # Summary: Run Composer commands on code
 #
 # Runs composer validate and install on a directory.
@@ -16,7 +15,6 @@
 # When this tool succeeds the `composer` tool has run on a source tree and the `vendor` directory and `composer.lock` are often updated.
 #
 # This tools does not install the `composer` binary into the local environment.
-# fn: composer.sh
 #
 # Argument: installDirectory - Directory. Required. You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
 # DOC TEMPLATE: --help 1

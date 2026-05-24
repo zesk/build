@@ -1,23 +1,28 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-03
+# Generated on 2026-05-24
 # shellcheck disable=SC2034
-argument="component - the url component to get: \`url\`, \`path\`, \`name\`, \`scheme\`, \`user\`, \`password\`, \`host\`, \`port\`, \`portDefault\`, \`error\`"$'\n'"url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection"$'\n'""
+argument=$'component - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`\nurl ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection\n'
 base="url.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Extract a component from one or more URLs"$'\n'""$'\n'""
+description=$'Extract a component from one or more URLs\n\n'
 descriptionLineCount="2"
-example="    decorate info \"Connecting as \$(urlParseItem user \"\$url\")\""$'\n'""
+example=$'    decorate info "Connecting as $(urlParseItem user "$url")"\n'
 file="bin/build/tools/url.sh"
 fn="urlParseItem"
 fnMarker="urlparseitem"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="187"
-rawComment="Extract a component from one or more URLs"$'\n'"Summary: Get a URL component directly"$'\n'"Argument: component - the url component to get: \`url\`, \`path\`, \`name\`, \`scheme\`, \`user\`, \`password\`, \`host\`, \`port\`, \`portDefault\`, \`error\`"$'\n'"Argument: url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection"$'\n'"Example:     decorate info \"Connecting as \$(urlParseItem user \"\$url\")\""$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Extract a component from one or more URLs\nSummary: Get a URL component directly\nArgument: component - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`\nArgument: url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection\nExample:     decorate info "Connecting as $(urlParseItem user "$url")"\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/url.sh"
 sourceHash="8a95c52ce8bb5cc766609fdc6a03daab47743e41"
 sourceLine="187"
 summary="Get a URL component directly"
 summaryComputed=""
 usage="urlParseItem [ component ] url ..."
+# shellcheck disable=SC2016
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]murlParseItem'$'\e''[0m '$'\e''[[(blue)]m[ component ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]murl ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mcomponent  '$'\e''[[(value)]mthe url component to get: '$'\e''[[(code)]murl'$'\e''[[(reset)]m, '$'\e''[[(code)]mpath'$'\e''[[(reset)]m, '$'\e''[[(code)]mname'$'\e''[[(reset)]m, '$'\e''[[(code)]mscheme'$'\e''[[(reset)]m, '$'\e''[[(code)]muser'$'\e''[[(reset)]m, '$'\e''[[(code)]mpassword'$'\e''[[(reset)]m, '$'\e''[[(code)]mhost'$'\e''[[(reset)]m, '$'\e''[[(code)]mport'$'\e''[[(reset)]m, '$'\e''[[(code)]mportDefault'$'\e''[[(reset)]m, '$'\e''[[(code)]merror'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]murl ...    '$'\e''[[(value)]mString. URL. Required. A Uniform Resource Locator used to specify a database connection'$'\e''[[(reset)]m'$'\n'''$'\n''Extract a component from one or more URLs'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    decorate info "Connecting as $(urlParseItem user "$url")"'
+# shellcheck disable=SC2016
+helpPlain='Usage: urlParseItem [ component ] url ...'$'\n'''$'\n''    component  the url component to get: url, path, name, scheme, user, password, host, port, portDefault, error'$'\n''    url ...    String. URL. Required. A Uniform Resource Locator used to specify a database connection'$'\n'''$'\n''Extract a component from one or more URLs'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    decorate info "Connecting as $(urlParseItem user "$url")"'
+documentationPath="documentation/source/tools/url.md"

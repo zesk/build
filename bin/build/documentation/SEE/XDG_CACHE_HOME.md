@@ -1,1 +1,0 @@
-[`XDG_CACHE_HOME` XDG_CACHE_HOME]({rel}/env/#build_configuration) - **Directory**. Main Cache Directory

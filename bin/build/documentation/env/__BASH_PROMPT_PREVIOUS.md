@@ -1,1 +1,0 @@
-- `__BASH_PROMPT_PREVIOUS` &mdash; __BASH_PROMPT_PREVIOUS *Array*. Previous result code [notes](#__bash_prompt_previous)

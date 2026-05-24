@@ -1,22 +1,27 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-03
+# Generated on 2026-05-24
 # shellcheck disable=SC2034
-argument="--mode mode - String. Optional."$'\n'"namedPipe"$'\n'"--writer line ... - When encountered all additional arguments are written to the runner."$'\n'"readerExecutable ... - Callable. Optional."$'\n'""
+argument=$'--mode mode - String. Optional.\nnamedPipe\n--writer line ... - When encountered all additional arguments are written to the runner.\nreaderExecutable ... - Callable. Optional.\n'
 base="utilities.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Single reader, multiple writers"$'\n'"Attempt at having docker communicate back to the outside world."$'\n'""$'\n'""
+description=$'Single reader, multiple writers\nAttempt at having docker communicate back to the outside world.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/utilities.sh"
 fn="pipeRunner"
 fnMarker="piperunner"
 foundNames=([0]="argument")
 line="185"
-rawComment="Single reader, multiple writers"$'\n'"Attempt at having docker communicate back to the outside world."$'\n'"Argument: --mode mode - String. Optional."$'\n'"Argument: namedPipe"$'\n'"Argument: --writer line ... - When encountered all additional arguments are written to the runner."$'\n'"Argument: readerExecutable ... - Callable. Optional."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Single reader, multiple writers\nAttempt at having docker communicate back to the outside world.\nArgument: --mode mode - String. Optional.\nArgument: namedPipe\nArgument: --writer line ... - When encountered all additional arguments are written to the runner.\nArgument: readerExecutable ... - Callable. Optional.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/utilities.sh"
 sourceHash="94563d0a08741ddbc0e4c700e450e33a3cb9e86f"
 sourceLine="185"
 summary="Single reader, multiple writers"
 summaryComputed="true"
 usage="pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]"
+# shellcheck disable=SC2016
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mpipeRunner'$'\e''[0m '$'\e''[[(blue)]m[ --mode mode ]'$'\e''[0m '$'\e''[[(blue)]m[ namedPipe ]'$'\e''[0m '$'\e''[[(blue)]m[ --writer line ... ]'$'\e''[0m '$'\e''[[(blue)]m[ readerExecutable ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--mode mode           '$'\e''[[(value)]mString. Optional.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mnamedPipe             '$'\e''[[(value)]mnamedPipe'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--writer line ...     '$'\e''[[(value)]mWhen encountered all additional arguments are written to the runner.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mreaderExecutable ...  '$'\e''[[(value)]mCallable. Optional.'$'\e''[[(reset)]m'$'\n'''$'\n''Single reader, multiple writers'$'\n''Attempt at having docker communicate back to the outside world.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+# shellcheck disable=SC2016
+helpPlain='Usage: pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]'$'\n'''$'\n''    --mode mode           String. Optional.'$'\n''    namedPipe             namedPipe'$'\n''    --writer line ...     When encountered all additional arguments are written to the runner.'$'\n''    readerExecutable ...  Callable. Optional.'$'\n'''$'\n''Single reader, multiple writers'$'\n''Attempt at having docker communicate back to the outside world.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+documentationPath="documentation/source/tools/utilities.md"

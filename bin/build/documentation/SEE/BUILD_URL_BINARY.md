@@ -1,1 +1,0 @@
-[`BUILD_URL_BINARY` BUILD_URL_BINARY]({rel}/env/#decoration) - **Callable**. Binary used in __urlOpen

@@ -1,1 +1,0 @@
-[`BUILD_COLORS` BUILD_COLORS]({rel}/env/#decoration) - **Boolean**. If true then colors are shown, blank means guess the

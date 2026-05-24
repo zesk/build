@@ -1,25 +1,30 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-21
+# Generated on 2026-05-24
 # shellcheck disable=SC2034
-argument="\`prefix\` - Optional prefix for token search, defaults to \`{\` (same as \`map.sh\`)"$'\n'"\`suffix\` - Optional suffix for token search, defaults to \`}\` (same as \`map.sh\`)"$'\n'""
+argument=$'`prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)\n`suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)\n'
 base="map.sh"
-depends="sed quoteSedPattern"$'\n'""
+depends=$'sed quoteSedPattern\n'
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="No documentation for \`mapTokens\`."$'\n'""
+description=$'No documentation for `mapTokens`.\n'
 descriptionLineCount=""
-environment="None."$'\n'""
+environment=$'None.\n'
 file="bin/build/tools/map.sh"
 fn="mapTokens"
 fnMarker="maptokens"
 foundNames=([0]="argument" [1]="environment" [2]="short_description" [3]="depends")
 line="118"
-rawComment="Argument: \`prefix\` - Optional prefix for token search, defaults to \`{\` (same as \`map.sh\`)"$'\n'"Argument: \`suffix\` - Optional suffix for token search, defaults to \`}\` (same as \`map.sh\`)"$'\n'"Environment: None."$'\n'"Short description: list mappable variables in a file (without prefix or suffix)"$'\n'"Depends: sed quoteSedPattern"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-short_description="list mappable variables in a file (without prefix or suffix)"$'\n'""
+rawComment=$'Argument: `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)\nArgument: `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)\nEnvironment: None.\nShort description: list mappable variables in a file (without prefix or suffix)\nDepends: sed quoteSedPattern\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+short_description=$'list mappable variables in a file (without prefix or suffix)\n'
 sourceFile="bin/build/tools/map.sh"
-sourceHash="28c85a1a2f0604d47009077a23130a3172acf6bf"
+sourceHash="c91a3375287e38d3885f8a800913d1919243c8db"
 sourceLine="118"
 summary="undocumented"
 summaryComputed=""
 usage="mapTokens [ \`prefix\` ] [ \`suffix\` ]"
+# shellcheck disable=SC2016
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmapTokens'$'\e''[0m '$'\e''[[(blue)]m[ `prefix` ]'$'\e''[0m '$'\e''[[(blue)]m[ `suffix` ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m'$'\e''[[(code)]mprefix'$'\e''[[(reset)]m  '$'\e''[[(value)]mOptional prefix for token search, defaults to '$'\e''[[(code)]m{'$'\e''[[(reset)]m (same as '$'\e''[[(code)]mmap.sh'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m'$'\e''[[(code)]msuffix'$'\e''[[(reset)]m  '$'\e''[[(value)]mOptional suffix for token search, defaults to '$'\e''[[(code)]m}'$'\e''[[(reset)]m (same as '$'\e''[[(code)]mmap.sh'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]mmapTokens'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- None.'
+# shellcheck disable=SC2016
+helpPlain='Usage: mapTokens [ `prefix` ] [ `suffix` ]'$'\n'''$'\n''    prefix  Optional prefix for token search, defaults to { (same as map.sh)'$'\n''    suffix  Optional suffix for token search, defaults to } (same as map.sh)'$'\n'''$'\n''No documentation for mapTokens.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- None.'
+documentationPath="documentation/source/tools/map.md"

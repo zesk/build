@@ -1,1 +1,0 @@
-- `BUILD_DOCKER_PATH` &mdash; BUILD_DOCKER_PATH *RemoteDirectory*. Default path for the shell to map the current directory [notes](#build_docker_path)

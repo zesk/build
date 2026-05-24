@@ -1,1 +1,0 @@
-[`APPLICATION_NAME` APPLICATION_NAME]({rel}/env/#application) - **String**. This is the display name of the application

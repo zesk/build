@@ -1,1 +1,0 @@
-[`BUILD_HOME` BUILD_HOME]({rel}/env/#build_configuration) - **Directory**. `BUILD_HOME` is `.` when this code is installed - at

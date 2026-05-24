@@ -1,1 +1,0 @@
-- `BUILD_HOOK_DIRS` &mdash; BUILD_HOOK_DIRS *ApplicationDirectoryList*. List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`. [notes](#build_hook_dirs)

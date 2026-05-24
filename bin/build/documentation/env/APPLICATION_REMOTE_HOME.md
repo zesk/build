@@ -1,1 +1,0 @@
-- `APPLICATION_REMOTE_HOME` &mdash; APPLICATION_REMOTE_HOME *RemoteDirectory*. Path on the remote server where the application is served [notes](#application_remote_home)
