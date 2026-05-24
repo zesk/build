@@ -6,6 +6,8 @@
 
 {releaseNotes}
 
+{releaseNotesMarkdown}
+
 {releaseNew}
 
 {versionNextMinor}

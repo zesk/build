@@ -269,7 +269,7 @@ buildDocumentationBuild() {
 
     statusMessage --last decorate notice "Updating release page ..."
     local step && step=$(timingStart)
-    catchReturn "$handler" __buildDocumentationBuildReleaseNotes "$handler" "$home" >"$templateSource/releaseNotes.md" || return $?
+    catchReturn "$handler" releaseNotesMarkdown --title "# Past Releases" >"$templateSource/releaseNotes.md" || return $?
     statusMessage --last timingReport "$step" "Wrote $(decorate file "$templateSource/releaseNotes.md")"
 
     statusMessage --last timing --name "Building missing" __buildDocumentationBuildMissing "$handler" "$home" "$templateSource" || return $?

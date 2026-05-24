@@ -1,4 +1,4 @@
-# Environment Variables
+# {applicationName} Environment Variables
 
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)

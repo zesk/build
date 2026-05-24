@@ -45,6 +45,66 @@ _versionNoVee() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+releaseNotesMarkdown() {
+  local handler="_${FUNCNAME[0]}"
+
+  local count=5 home="" title=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --application) shift && home=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --count) shift && count=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
+    --title) shift && title=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
+
+  local currentNotes && currentNotes=$(catchReturn "$handler" releaseNotes --application "$home") || return $?
+  __releaseNotesMarkdown "$handler" "$(dirname "$currentNotes")" "$count" "$title" || return $?
+}
+_releaseNotesMarkdown() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__releaseNotesMarkdown() {
+  local handler="$1" && shift
+  local notesPath="$1" && shift
+  local recentNotes="$1" && shift
+  local title="$1" && shift
+
+  local index=0
+  local release && while IFS="" read -r release; do
+    local vv=${release##*/}
+    vv="${vv%.*}"
+    if [ "$index" -lt "$recentNotes" ]; then
+      printf "%s\n" "" "$(markdownIndentHeading <"$release")"
+    elif [ "$index" -eq "$recentNotes" ]; then
+      # Between
+      [ -z "$title" ] && printf "\n" || printf -- "%s\n" "" "$title" ""
+    fi
+    if [ "$index" -ge "$recentNotes" ]; then
+      printf -- "- [%s](%s)\n" "$vv" "./$vv.md"
+    fi
+    ((index++))
+  done < <(find "$notesPath" -name "*.md" | textVersionSort -r)
+}
+
 # Summary: Output path to current release notes
 #
 # Output path to current release notes
