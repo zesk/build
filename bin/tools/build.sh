@@ -19,7 +19,7 @@ buildStepInitialize() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  prinf "%s on %s\nTimings: %s\n" "$(decorate success "$(networkNameFull)")" "$(decorate orange "$(cpuLoadAverage)")" "$("$home/bin/build/tools.sh" timing --name zesk-build-load env -i "PATH=$PATH" "HOME=$HOME" bin/build/tools.sh timing timingStart)"
+  printf "%s on %s\nTimings: %s\n" "$(decorate success "$(networkNameFull)")" "$(decorate orange "$(cpuLoadAverage)")" "$("$home/bin/build/tools.sh" timing --name zesk-build-load env -i "PATH=$PATH" "HOME=$HOME" bin/build/tools.sh timing timingStart)"
 
   local buildEnv="$home/.build.env"
   [ -f "$buildEnv" ] || throwEnvironment "$handler" "No build environment? $(decorate file "$buildEnv")"
