@@ -60,7 +60,7 @@ Deprecated:
 - Previous version: v0.42.3
 - Added better error handling for `__fileListColumn` and also `fileOwner`
 - Added `__validateTypeFingerprint` aka `validate "$handler" Fingerprint ...`
-- `--fingerprint` is now required for `deprecated.sh` and `repair.sh` and `buildFunctionsDerivedCompile`
+- `--fingerprint` is now required for `deprecated.sh` and `repair.sh` and `buildFunctionsCompile`
 - Added `returnExit` function
   - {SEE:returnExit}
 - `validate` semantics changed so that any `__validateType` function which returns 120 (`exit`) the function will exit immediately.
@@ -161,21 +161,21 @@ Continuing naming fixes to be consistent across the library. `noun-verb`
 - `stringUnquote ` -> `stringUnquote `
 - `uppercase ` -> `stringUppercase `
 - `lowercase ` -> `stringLowercase `
-- `usageRequireEnvironment` -> `environmentRequire`
-- `veeGitTag` -> `gitTagVee`
-- `watchDirectory` -> `directoryWatch`
-- `shaPipe` -> `textSHA`
-- `rotateLog` -> `logRotate`
+- `environmentRequire` -> `environmentRequire`
+- `gitTagVee` -> `gitTagVee`
+- `directoryWatch` -> `directoryWatch`
+- `textSHA` -> `textSHA`
+- `logRotate` -> `logRotate`
 - `logDirectoryRotate` -> `logDirectoryRotate`
-- `randomString` -> `stringRandom`
-- `bigText` -> `decorate big`
-- `bigTextAt` -> `decorate at`
+- `stringRandom` -> `stringRandom`
+- `decorate big` -> `decorate big`
+- `decorate at` -> `decorate at`
 
 ### Not sure about these - not `noun-verb` but makes sense
 
 - `executeCount` -> `executeCount`
-- `loopExecute` -> `executeLoop`
-- `usageRequireBinary` -> `executableRequire`
+- `executeLoop` -> `executeLoop`
+- `executableRequire` -> `executableRequire`
 
 ### Bug fixes
 

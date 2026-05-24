@@ -213,7 +213,7 @@ buildEnvironmentNames documentation/source/tools/build.md
 buildFailed documentation/source/tools/pipeline.md
 buildFailed documentation/source/tools/unused.md
 buildFunctions documentation/source/tools/build.md
-buildFunctionsDerivedCompile documentation/source/tools/internal.md
+buildFunctionsCompile documentation/source/tools/internal.md
 buildFunctionsRemoveDeprecated documentation/source/tools/internal.md
 buildHome documentation/source/tools/build.md
 buildPR documentation/source/tools/internal.md

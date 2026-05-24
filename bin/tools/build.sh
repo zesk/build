@@ -154,7 +154,7 @@ __buildBuild() {
   "$home/bin/build/repair.sh" --internal --fingerprint || throwEnvironment "$handler" "Identical repair failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running function build ..."
-  buildFunctionsDerivedCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?
+  buildFunctionsCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?
 
   if $makeDocumentation; then
     local rootPath="$home/documentation/.site"
@@ -168,6 +168,10 @@ __buildBuild() {
     ! $debugFlag || statusMessage decorate warning "Building documentation ..."
     catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
     rootPath="$home/documentation/.docs"
+    local f && for f in README.md LICENSE.md; do
+      catchReturn "$handler" cp "$home/documentation/.docs/$f" "$home/$f" || return $?
+      catchReturn "$handler" git add "$home/$f" || return $?
+    done
     [ -d "$rootPath" ] || throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
   fi
 

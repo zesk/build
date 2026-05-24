@@ -178,10 +178,45 @@ __documentationMaker() {
   done < <(find "$sourcePath" -type f -name "*.md" ! -path '*/\.*/*' | sort)
 }
 
+__documentationFunctionCompile() {
+  local handler="$1" && shift
+  local dd=() fingerprint="" key && key="$(caller)"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --clean | --all) dd+=("$argument") ;;
+    --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return "$(convertValue $? 120 0)" ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "$key") || return "$(convertValue $? 120 0)" ;;
+    --check)
+      [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
+      fingerprint --key "$key" --check
+      return $?
+      ;;
+    *) break ;;
+    esac
+    shift
+  done
+
+  dd+=(--derive bashDocumentationDeriveSee --)
+  dd+=(--derive bashDocumentationDeriveFunction --)
+  catchReturn "$handler" documentationFileCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
+
+  [ -z "$fingerprint" ] || fingerprint --key "$key" --verbose
+}
+
 __documentationFileCompile() {
   local handler="$1" && shift
 
-  local cleanFlag=false quickFlag=true gitActions=false dd=() functions=() verboseFlag=false
+  local cleanFlag=false dd=() functions=() verboseFlag=false
 
   decorateInitialized || decorate info --
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -195,18 +230,14 @@ __documentationFileCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     --verbose) verboseFlag=true ;;
     --clean) cleanFlag=true ;;
-    --git) gitActions=true ;;
-    --all) quickFlag=false ;;
     --derive) dd+=("--") && shift && while [ $# -gt 0 ]; do
       [ "$1" != "--" ] || break
       dd+=("$1") && shift
     done ;;
-    *) quickFlag=false && functions=("$@") && break ;;
+    *) functions=("$@") && break ;;
     esac
     shift
   done
-
-  __buildFunctionsLoad "$handler" || return $?
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
@@ -244,41 +275,13 @@ __documentationFileCompile() {
 
   local tempFunctions && tempFunctions=$(fileTemporaryName "$handler") || return $?
   local clean=("$tempFunctions")
-  ([ "${#functions[@]}" -gt 0 ] && printf "%s\n" "${functions[@]}" || catchReturn "$handler" buildFunctions) >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
+  ([ "${#functions[@]}" -gt 0 ] && printf "%s\n" "${functions[@]}" || catchReturn "$handler" cat) >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   local totalFunctions && totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
-  local actualTotalFunctions=$totalFunctions
-  if $quickFlag; then
-    catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' -empty -delete || return $?
-    if __buildFunctionsIsComplete "$handler" "$docPath" "$tempFunctions" "${dd[@]+"${dd[@]}"}"; then
-      local allModificationTimes="$tempFunctions.all"
-      clean+=("$allModificationTimes")
-      {
-        catchReturn "$handler" fileModificationTimes "$home/bin/build/tools/" -name '*.sh' || return $?
-        catchReturn "$handler" fileModificationTimes "$docPath" -maxdepth 1 -name '*.sh' || return $?
-      } | catchReturn "$handler" sort -rn >"$allModificationTimes" || returnClean $? "${clean[@]}" || return $?
-      # dumpPipe --lines 10000 "ALL" <"$allModificationTimes"
-      local filePath
-      while read -r filePath; do
-        # If prefixed with a docPath, then skip it
-        [ "${filePath#"$docPath"}" = "$filePath" ] || continue
-        grep "$docPath" | textRemoveFields 1 | cut -d . -f 1 | cut "-c$((2 + ${#docPath}))-" >"$tempFunctions"
-        break
-      done < <(textRemoveFields 1 <"$allModificationTimes")
-      catchEnvironment "$handler" rm -f "$allModificationTimes" || return $?
-      totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
-      ! $verboseFlag || "$handler" statusMessage decorate info "Optimized function count to check is $totalFunctions (Actual is $actualTotalFunctions)" 1>&2 || return $?
-    else
-      ! $verboseFlag || catchReturn "$handler" statusMessage decorate info "Total function count to compute is $totalFunctions" 1>&2 || return $?
-    fi
-  else
-    ! $verboseFlag || catchReturn "$handler" statusMessage decorate info "Total function count to compute is $totalFunctions" 1>&2 || return $?
-  fi
-  local finished=false
-  local index=0
+
   # turn off aliases
   local undo=(shopt -s expand_aliases)
   shopt -u expand_aliases || :
-  while ! $finished; do
+  local finished=false index=0 && while ! $finished; do
     index=$((index + 1))
     local prefix="#$index/$totalFunctions -"
     local fun && read -r fun || finished=true
@@ -289,11 +292,6 @@ __documentationFileCompile() {
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   shopt -s expand_aliases || :
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-  if $gitActions; then
-    buildFunctionsRemoveDeprecated --dry-run --handler "$handler" || return $?
-    buildFunctionsRemoveDeprecated --handler "$handler" || return $?
-    find "$home/bin/build/documentation/" -type f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
-  fi
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
 }
 

@@ -6,11 +6,21 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testDocumentationFunctionSimple() {
+  local handler="returnMessage"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  assertExitCode 0 documentationFunctionCompile < <(printf "%s\n" assertExitCode) || return $?
+  assertFileExists "$home/bin/build/documentation/assertExitCode.sh" "$home/bin/build/documentation/assertExitCode.md" "$home/bin/build/documentation/SEE/assertExitCode.md" || return $?
+  assertExitCode 0 documentationFunctionRemove --verbose < <(printf "%s\n" assertExitCode) || return $?
+  assertFileNotExists "$home/bin/build/documentation/assertExitCode.sh" "$home/bin/build/documentation/assertExitCode.md" "$home/bin/build/documentation/SEE/assertExitCode.md" || return $?
+  assertExitCode 0 documentationFunctionCompile < <(printf "%s\n" assertExitCode) || return $?
+  assertFileExists "$home/bin/build/documentation/assertExitCode.sh" "$home/bin/build/documentation/assertExitCode.md" "$home/bin/build/documentation/SEE/assertExitCode.md" || return $?
+}
+
 testDocumentationIndexes() {
   local handler="returnMessage"
-  local home
-
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   assertExitCode 0 markdownCheckIndex "$home/documentation/source/index.md" || return $?
   assertExitCode 0 markdownCheckIndex "$home/documentation/source/guide/index.md" || return $?

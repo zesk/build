@@ -12,7 +12,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # Zesk Build Development
   # - `buildPR` - Open URL to a new Pull Request
   # - `buildTestSuiteIndex` - Build the test suite index
-  # - `buildFunctionsDerivedCompile` - Compile the usage directory `./bin/build/documentation/` and derived files.
+  # - `buildFunctionsCompile` - Compile the usage directory `./bin/build/documentation/` and derived files.
   # - `documentationFileCompile` - Compile the usage directory `./bin/build/documentation/` (just settings).
   # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
   # - `buildContainer image` - Load Zesk Build in a container image

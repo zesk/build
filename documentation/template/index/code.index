@@ -26,7 +26,7 @@ __documentationFileCompileWriter bin/tools/usage-worker.sh 143
 __updateMarkdown bin/tools/markdown.sh 33
 _buildBuildTiming bin/tools/development.sh 135
 _buildDocumentationBuild bin/tools/documentation.sh 294
-_buildFunctionsDerivedCompile bin/tools/functions.sh 45
+_buildFunctionsCompile bin/tools/functions.sh 45
 _buildFunctionsRemoveDeprecated bin/tools/functions.sh 98
 _buildPR bin/tools/development.sh 12
 _buildPreRelease bin/tools/pre-release.sh 77
@@ -45,7 +45,7 @@ buildAddTool bin/tools/development.sh 18
 buildBuildTiming bin/tools/development.sh 117
 buildContainer bin/tools/development.sh 49
 buildDocumentationBuild bin/tools/documentation.sh 157
-buildFunctionsDerivedCompile bin/tools/functions.sh 11
+buildFunctionsCompile bin/tools/functions.sh 11
 buildFunctionsRemoveDeprecated bin/tools/functions.sh 49
 buildPR bin/tools/development.sh 7
 buildPreRelease bin/tools/pre-release.sh 24

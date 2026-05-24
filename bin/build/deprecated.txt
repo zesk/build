@@ -1,5 +1,4 @@
 # v0.43.0
-buildFunctionsCompile|documentationFileCompile|
 buildFunctionSeeTemplate|bashDocumentationDeriveSee|
 buildFunctionMarkdownDocumentation|bashDocumentationDeriveFunction|
 documentationBuildEnvironment|documentationEnvironmentMake|

@@ -10,9 +10,11 @@
 
 ### Generating cache files
 
-{buildFunctionsDerivedCompile}
+{buildFunctionsCompile}
 
 {documentationFileCompile}
+
+{documentationFunctionCompile}
 
 {documentationFileCompileParallel}
 
