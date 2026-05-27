@@ -465,8 +465,12 @@ _documentationFunctionCompile() {
 
 # Git add documentation files
 # Just the first path.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 documentationFilesAdd() {
   local handler="_${FUNCNAME[0]}"
+
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   local paths=() && IFS=":" read -r -a paths <<<"$(catchReturn "$handler" buildEnvironmentGet BUILD_DOCUMENTATION_PATH)" || return $?
@@ -486,6 +490,8 @@ _documentationFilesAdd() {
 # Argument: --dry-run - Flag. Optional. Do not do any thing, just say what would be done.
 # Argument: --git - Flag. Remove from git.
 # stdin: functionName - File with function names one per line.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 documentationFunctionRemove() {
   local handler="_${FUNCNAME[0]}"
 
