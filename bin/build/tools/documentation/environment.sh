@@ -90,17 +90,16 @@ __documentationEnvironmentMake() {
   #
 
   local categoriesFile="$cacheDirectory/categories.txt"
-  local clean=("$categoriesUnsortedFile")
+  local categoriesUnsortedFile="$cacheDirectory/categories.$$.txt"
+  local settingsTempFile="$cacheDirectory/settings.$$.env"
+
+  local clean=("$categoriesUnsortedFile" "$settingsTempFile")
 
   #
   # env/*.sh files
   #
 
   local moreDirectory && moreDirectory=$(catchReturn "$handler" directoryRequire "$cacheDirectory/more") || return $?
-
-  local categoriesUnsortedFile="$cacheDirectory/categories.$$.txt"
-  local settingsTempFile="$cacheDirectory/settings.$$.env"
-  clean+=("$settingsTempFile")
 
   local categories=()
   catchReturn "$handler" rm -f "$cacheDirectory/category."* || return $?
