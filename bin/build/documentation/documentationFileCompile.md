@@ -23,9 +23,3 @@ Extract and build the documentation settings cache
 
 functionName - File with function names one per line.
 
-### Return codes
-
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
-

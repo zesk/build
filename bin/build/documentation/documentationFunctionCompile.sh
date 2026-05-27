@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-26
 # shellcheck disable=SC2034
 argument=$'--clean - Flag. Optional. Clean everything and then exit.\n--git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)\n--all - Flag. Optional. Do everything regardless of cache state.\n--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nfunctionName ... - String. Optional. Specific functions to compile.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="458"
 rawComment=$'Extract and build the documentation settings cache and generate derived files\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: functionName - File with function names one per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="8eb3966e2b01069497c46079393754dd3f3ece3a"
+sourceHash="d15bc7cc6294c07449563ae7a7e924e91d663163"
 sourceLine="458"
 stdin=$'functionName - File with function names one per line.\n'
 summary="Extract and build the documentation settings cache and generate derived"

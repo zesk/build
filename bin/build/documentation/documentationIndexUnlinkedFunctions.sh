@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-26
 # shellcheck disable=SC2034
 argument=$'indexPath - Directory. Required. Index path.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="405"
 rawComment=$'List functions without documentation pages.\nArgument: indexPath - Directory. Required. Index path.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="8eb3966e2b01069497c46079393754dd3f3ece3a"
+sourceHash="d15bc7cc6294c07449563ae7a7e924e91d663163"
 sourceLine="405"
 summary="List functions without documentation pages."
 summaryComputed="true"

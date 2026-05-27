@@ -81,6 +81,10 @@ __assertPathsEquals() {
   assertEquals --line "$1" "$(directoryPathSimplify "$2")" "$(directoryPathSimplify "$3")" || return $?
 }
 
+testReleaseNotesMarkdown() {
+  assertExitCode --dump --stdout-match "Boo" 0 releaseNotesMarkdown --title "Boo" || return $?
+}
+
 testReleaseNotes() {
   local handler="returnMessage" home
 

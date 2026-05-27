@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-26
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--check - Flag. Optional. Check to see if an update is needed\nsettingsFile - File. Required. Settings file for function to document.\n'
 base="documentation.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationDeriveSee"
 fnMarker="bashdocumentationderivesee"
 foundNames=([0]="summary" [1]="argument")
-line="623"
+line="625"
 rawComment=$'Summary: Generate SEE markdown content\nGenerate `SEE/{fn}.md` - Derived file generator.\nFile is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --check - Flag. Optional. Check to see if an update is needed\nArgument: settingsFile - File. Required. Settings file for function to document.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="8eb3966e2b01069497c46079393754dd3f3ece3a"
-sourceLine="623"
+sourceHash="d15bc7cc6294c07449563ae7a7e924e91d663163"
+sourceLine="625"
 summary="Generate SEE markdown content"
 summaryComputed=""
 usage="bashDocumentationDeriveSee [ --help ] [ --check ] settingsFile"

@@ -68,7 +68,3 @@ Target templates created:
 - `1` - Issue with environment
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_DOCUMENTATION_PATH}
-

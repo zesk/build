@@ -468,8 +468,10 @@ _documentationFunctionCompile() {
 documentationFilesAdd() {
   local handler="_${FUNCNAME[0]}"
 
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
   local paths=() && IFS=":" read -r -a paths <<<"$(catchReturn "$handler" buildEnvironmentGet BUILD_DOCUMENTATION_PATH)" || return $?
   local path && for path in "${paths[@]}"; do
+    pathIsAbsolute "$path" || path="$home/$path"
     find "$path" -type f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
     break
   done
