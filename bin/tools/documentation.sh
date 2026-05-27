@@ -259,7 +259,7 @@ buildDocumentationBuild() {
   if $updateDerived; then
     statusMessage decorate info "Updating all ..."
     local seeHome="$home/bin/build/documentation/SEE"
-    local fun && while read -r fun; do [ -f "$seeHome/$fun.md" ] && cat "$seeHome/$fun.md" || printf -- "%s\n" "{SEE:$fun}"; done < <(buildFunctions | sort) | sed 's/^/- &/g' >"$templateSource/allFunctionList.md" || return $?
+    local fun && while read -r fun; do [ -f "$seeHome/$fun.md" ] && printf -- "%s\n" "$(cat "$seeHome/$fun.md")" || printf -- "%s\n" "{SEE:$fun}"; done < <(buildFunctions | sort) | sed 's/^/- &/g' >"$templateSource/allFunctionList.md" || return $?
     local env && while read -r env; do [ -f "$seeHome/$env.md" ] && cat "$seeHome/$env.md" | printfOutputSuffix "\n" || printf -- "%s\n" "{SEE:$env}"; done < <(BUILD_ENVIRONMENT_DIRS="$home/bin/build/env" buildEnvironmentNames | sort) | sed 's/^/- &/g' >"$templateSource/allEnvironmentList.md" || return $?
 
     statusMessage decorate info "Updating environmentPage ..."

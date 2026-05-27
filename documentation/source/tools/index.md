@@ -41,7 +41,7 @@
 
 ## Language Tools
 
-- [Argument](./argument.md) – EXPERIMENTAL. Arguments specified using comments.
+- [Argument](./argument.md) – `--help` handler, and arguments specified using comments (experimental).
 - [Character](./character.md) – Character manipulation tools
 - [Date](./date.md) – Date validation, math, and "now"-related date generation
 - [Deprecated](./deprecated.md) – Tools to help you upgrade deprecated code.

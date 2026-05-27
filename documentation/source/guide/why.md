@@ -11,7 +11,7 @@ using a tool
 which is universally available on nearly every platform on the planet and uses consistent, tested and documented tools
 which are open source.
 
-If you live in your shell, and use **Bash** – we recommend you check out the [functionality](../tools/all.md) which is
+If you live in your shell, and use **Bash** – we recommend you check out the [functionality](../tools/index.md) which is
 offered and see if it will work for your projects. **{applicationName}** eats its own dog food so this tool is used in
 production environments and configures remote pipelines identically, delivers credentials to developers and keeps our
 credentials synchronized using an add-on library called **Infrastructure**
@@ -20,9 +20,7 @@ Operations** values used for any number of configuration environments.
 
 ## Why was it built?
 
-Here's a bullet list of reasons:
-
-- A littering of shell scripts in every project, many with similar functionality between projects
+- Had a littering of eerily similar shell scripts in every project
 - Rewriting the same shell function in many places in many projects created debt to keep projects and code in sync
 - Generally speaking, patterns in Bash are consistent
 - System tools and flags for shell binaries used across platforms are **inconsistent** - this toolkit isolates and
@@ -31,8 +29,7 @@ Here's a bullet list of reasons:
 - Useful to have a toolkit with few dependencies which can fully configure and set up **other platforms** in a
   platform-independent language (Bash)
 - The `iTerm2` integration makes customizing project workflow and color schemes for terminals super simple 
-- No assertion libraries available which work well with Bash
-- No validation libraries available which work well with Bash
+- No assertion or validation libraries available which work well with Bash
 - "Oh yeah, I forgot that timeouts for `read` don't work the same when we switched from `Ubuntu` to `Alpine` distros for
   our application."
 - `identicalCheck` was written and then became sort of part of the way this toolkit is built.
@@ -47,8 +44,8 @@ Here's a bullet list of reasons:
 ## Why `Zesk`?
 
 Market Acumen, Inc. which owns the copyrights to this software registered the domain name `zesk.com` which is short and
-memorable and has been working on building software technologies around that name. Another toolkit (Zesk for
-PHP)(https://github.com/zesk/zesk) shares the name.
+memorable and has been working on building software technologies around that name. Another toolkit [Zesk for
+PHP](https://github.com/zesk/zesk) shares the name.
 
 The name is sort of like **desk** or **zest** which is a nice association for software which helps you build software.
 
