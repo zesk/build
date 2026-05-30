@@ -18,6 +18,7 @@ __documentationIdenticalRepair() {
   local handler="$1" && shift
 
   local fingerprint="" key="documentationIdentical" hookName="documentation-fingerprint"
+  local templatePath="" repairArgs=() failCount=0
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -29,22 +30,19 @@ __documentationIdenticalRepair() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "$hookName" "$key") || return "$(convertValue $? 120 0)" ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "fingerprintFlag" "$hookName:$key") || return "$(convertValue $? 120 0)" ;;
     *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      if [ -z "$templatePath" ]; then
+        templatePath=$(validate "$handler" Directory "templatePath" "${1-}") || return $?
+      else
+        while [ $# -gt 0 ]; do
+          repairArgs+=("--repair" "$1")
+          shift
+        done
+        break
+      fi
       ;;
     esac
-    shift
-  done
-
-  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
-
-  local templatePath repairArgs=() failCount=0
-  templatePath=$(validate "$handler" Directory "templatePath" "${1-}") && shift || return $?
-
-  while [ $# -gt 0 ]; do
-    repairArgs+=("--repair" "$1")
     shift
   done
   while ! identicalCheck "${repairArgs[@]}" --ignore-singles --extension md --prefix '<!-- TEMPLATE' --cd "$templatePath"; do

@@ -8,6 +8,8 @@ Simple coverage statistics collection for bash scripts to compute testing code c
 
 {bashCoverage}
 
+{bashCoverageEnabled}
+
 ## Reporting - work in progress
 
 {bashCoverageReport}

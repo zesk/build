@@ -6,7 +6,11 @@
 
 ## Building documentation
 
-{documentationBuild}
+{documentationFunctionsCompile}
+
+{documentationMake}
+
+{documentationMaker}
 
 {documentationCache}
 
@@ -14,7 +18,25 @@
 
 {documentationTemplate}
 
+## Documentation code management
+
+{documentationFilesAdd}
+
+{documentationFunctionRemove}
+
+## Markdown generation
+
+{bashDocumentationDefaults}
+
+{bashDocumentationMissing}
+
+{bashDocumentationAllEnvironment}
+
+{bashDocumentationAllFunctions}
+
 ## Indexes
+
+{documentationIndexGenerate}
 
 {documentationIndexDocumentation}
 

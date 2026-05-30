@@ -85,14 +85,14 @@ _fingerprint() {
 
 # Validates an application fingerprint
 # Argument: name - Use `-` for the default hook, or pass in a hook name to use to calculate the fingerprint.
-# Argument: value - String. Path. The value used is the stored fingerprint path in the application JSON file.
+# Argument: value - String. Path. The value used is the stored fingerprint path in the application JSON file. Specify `hookName:jsonPath` to specify a custom hook name for the value.
 # Default hook is `application-fingerprint`.
 # fn: validate "$handler" Fingerprint name "value"
 # Example usage:
 #
 #     case "$argument" in
 #     ...
-#     --fingerprint) fingerprint=$(validate "$handler" Fingerprint "hookName" "jsonPath") || return "$(convertValue $? 120 0)" ;;
+#     --fingerprint) fingerprint=$(validate "$handler" Fingerprint "name" "hookName:jsonPath") || return "$(convertValue $? 120 0)" ;;
 #     ...
 #     esac
 #
@@ -101,37 +101,25 @@ _fingerprint() {
 # Return code: 120 - Exit when fingerprint matches.
 # Argument: value - Key value to use. Required.
 __validateTypeFingerprint() {
-  local fingerprint="" hh=()
+  local fingerprint=""
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || _validateThrow "validate Fingerprint requires non-zero key" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --hook) shift && hh+=("$argument" "${1-}") ;;
-    *)
-      export __VALIDATE_FINGERPRINT_CACHE
-      local returnCode=0
-      if [ ${#hh[@]} -eq 0 ] && [ -n "${__VALIDATE_FINGERPRINT_CACHE-}" ]; then
-        if fingerprint=$(fingerprint --check "${hh[@]+"${hh[@]}"}" --key "$1" --cached "$__VALIDATE_FINGERPRINT_CACHE"); then
-          returnExit || returnCode=$?
-        fi
-      else
-        if fingerprint=$(fingerprint --check "${hh[@]+"${hh[@]}"}" --key "$1"); then
-          returnExit || returnCode=$?
-        fi
-      fi
-      if [ -n "$fingerprint" ]; then
-        printf "%s\n" "$fingerprint"
-        __VALIDATE_FINGERPRINT_CACHE="$fingerprint"
-      fi
-      return "$returnCode"
-      ;;
-    esac
-    shift
-  done
-  _validateThrow "no arguments to Fingerprint" || return $?
+  local argument="${1-}" && [ -n "$argument" ] || _validateThrow "validate Fingerprint requires non-blank key" || return $?
+  local hookName="${argument%:*}" keyName="${argument##*:}" hh=()
+  [ "$keyName" = "$hookName" ] || hh=(--hook "$hookName")
+  export __VALIDATE_FINGERPRINT_CACHE
+  local returnCode=0
+  if [ ${#hh[@]} -eq 0 ] && [ -n "${__VALIDATE_FINGERPRINT_CACHE-}" ]; then
+    if fingerprint=$(fingerprint --check "${hh[@]+"${hh[@]}"}" --key "$keyName" --cached "$__VALIDATE_FINGERPRINT_CACHE"); then
+      returnExit || returnCode=$?
+    fi
+  else
+    if fingerprint=$(fingerprint --check "${hh[@]+"${hh[@]}"}" --key "$keyName"); then
+      returnExit || returnCode=$?
+    fi
+  fi
+  if [ -n "$fingerprint" ]; then
+    printf "%s\n" "$fingerprint"
+    [ ${#hh[@]} -gt 0 ] || __VALIDATE_FINGERPRINT_CACHE="$fingerprint"
+  fi
+  return "$returnCode"
 }

@@ -26,6 +26,8 @@
 
 ## Code analysis
 
+{bashFunctionNameValid}
+
 {bashFileComment}
 
 {bashFirstComment}

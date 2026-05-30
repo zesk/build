@@ -31,7 +31,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     while [ $# -gt 0 ]; do
       local argument="$1"
       case "$1" in
-      --fingerprint) fingerprint=$(validate "$handler" Fingerprint - "repair") || return "$(convertValue $? 120 0)" ;;
+      --fingerprint) fingerprint=$(validate "$handler" Fingerprint "$argument" "repair") || return "$(convertValue $? 120 0)" ;;
       --check)
         [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
         fingerprint --check --key "$key"

@@ -89,7 +89,7 @@ buildDocumentationBuild() {
   local applicationName && applicationName=$(catchReturn "$handler" cat "$templateSource/applicationName.md") || return $?
   statusMessage --last consoleHeadingLine . "$(decorate info "$applicationName documentation started on $(decorate value "$(date +"%F %T")")") "
 
-  local indexHome="$home/documentation/index"
+  local indexHome="$home/documentation/template/index"
   local documentationSource="$home/documentation/source"
   local documentationTarget="$home/documentation/.docs"
   local templateCompiled="$home/documentation/.template"
@@ -110,7 +110,7 @@ buildDocumentationBuild() {
   statusMessage decorate info "Updating example ..."
   catchReturn "$handler" sed 's/^/    /g' <"$home/bin/build/tools/example.sh" >"$templateSource/example.md" || return $?
 
-  statusMessage --last timing --name "Building missing" bashDocumentationMissing --handler "$handler" --index "$home/documentation/index" --source "$home/bin" --documentation "$home/documentation/source" --target "$templateSource"
+  statusMessage --last timing --name "Building missing" bashDocumentationMissing --handler "$handler" --index "$home/documentation/template/index" --source "$home/bin" --documentation "$home/documentation/source" --target "$templateSource"
   # __buildDocumentationBuildMissing "$handler" "$home" "$templateSource" || return $?
 
   # Make templates

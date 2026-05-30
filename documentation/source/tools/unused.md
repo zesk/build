@@ -7,6 +7,8 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{documentationBuild}
+
 {versionSort}
 
 {isUpToDate}

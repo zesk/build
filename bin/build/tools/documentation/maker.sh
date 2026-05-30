@@ -197,7 +197,7 @@ __documentationFunctionCompile() {
     --source) shift && aa+=("$argument" "${1-}") ;;
     --documentation) shift && documentationSource=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return "$(convertValue $? 120 0)" ;;
-    --fingerprint) fingerprint=$(validate "$handler" Fingerprint - "$key") || return "$(convertValue $? 120 0)" ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "$argument" "$key") || return "$(convertValue $? 120 0)" ;;
     --check)
       [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
       fingerprint --key "$key" --check

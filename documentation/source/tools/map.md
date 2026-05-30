@@ -11,6 +11,8 @@ configuration customizations.
 
 {mapEnvironment}
 
+{mapEnvironmentFun}
+
 {mapValue}
 
 {mapValueTrim}

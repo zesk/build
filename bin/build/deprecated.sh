@@ -61,7 +61,7 @@ __deprecatedCleanup() {
       doTokens=false
       ;;
     --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "-" "$key") || return "$(convertValue $? 120 0)" ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "$argument" "$key") || return "$(convertValue $? 120 0)" ;;
     --check)
       [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
       fingerprint --key "$key" --check
@@ -120,6 +120,7 @@ __deprecatedCleanup() {
   __BUILD_DEPRECATED_EXTRAS+=(
     ! -path '*/bin/build/main.sh'
     ! -path '*/bin/build/documentation/*'
+    ! -path '*/documentation/template/*'
     ! -path '*/documentation/*/release/*'
     ! -path '*/documentation/\.*/*'
     \(

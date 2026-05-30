@@ -28,10 +28,6 @@ Stale files are ones which no longer are associated with a file's current finger
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:XDG_STATE_HOME}
-
 ### See Also
 
 - {SEE:XDG_STATE_HOME.sh}
