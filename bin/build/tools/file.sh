@@ -101,7 +101,116 @@ _fileModificationSeconds() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# List files modified before a specific timestamp (inclusive)
 #
+# Output is sorted from oldest time to newest (chronological).
+#
+# Argument: directory - Directory. Required. Must exists - directory to list.
+# Argument: timestamp - PositiveInteger. Required. Timestamp to compare file timestamps with.
+# Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query
+# Example: {fn} "$myDir" "$yesterdayNoon" ! -path "*/.*/*"
+# Output: 1704312758 bin/build/deprecated.sh
+# Output: 1705347087 bin/build/tools.sh
+# Output: 1705442647 bin/build/build.json
+fileModificationTimesBefore() {
+  local handler="_${FUNCNAME[0]}"
+  local timestamp="" directory=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *)
+      if [ -z "$directory" ]; then
+        directory="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
+      elif [ -z "$timestamp" ]; then
+        timestamp=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
+      else
+        break
+      fi
+      ;;
+    esac
+    shift
+  done
+  [ -n "$directory" ] || throwArgument "$handler" "directory is required" || return $?
+  [ -n "$timestamp" ] || throwArgument "$handler" "timestamp is required" || return $?
+
+  local fileTimestamp fileName && while read -r fileTimestamp fileName; do
+    if isInteger "$fileTimestamp"; then
+      if [ "$fileTimestamp" -lt "$timestamp" ]; then
+        printf "%d %s\n" "$timestamp" "$fileName"
+      else
+        break
+      fi
+    fi
+  done < <(fileModificationTimes "$directory" "$@" | sort -n)
+}
+_fileModificationTimesBefore() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# List files modified after a specific timestamp (inclusive)
+#
+# Output is sorted from newest time to oldest time (reverse chronological).
+#
+# Argument: directory - Directory. Required. Must exist - directory to list.
+# Argument: timestamp - PositiveInteger. Required. Timestamp to compare file timestamps with.
+# Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query
+# Example: {fn} "$myDir" "$yesterdayNoon" ! -path "*/.*/*"
+# Output: 1704312758 bin/build/deprecated.sh
+# Output: 1705347087 bin/build/tools.sh
+# Output: 1705442647 bin/build/build.json
+fileModificationTimesAfter() {
+  local handler="_${FUNCNAME[0]}"
+  local timestamp="" directory=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *)
+      if [ -z "$directory" ]; then
+        directory="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
+      elif [ -z "$timestamp" ]; then
+        timestamp=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
+      else
+        break
+      fi
+      ;;
+    esac
+    shift
+  done
+  [ -n "$directory" ] || throwArgument "$handler" "directory is required" || return $?
+  [ -n "$timestamp" ] || throwArgument "$handler" "timestamp is required" || return $?
+
+  local fileTimestamp fileName && while read -r fileTimestamp fileName; do
+    if isInteger "$fileTimestamp"; then
+      if [ "$fileTimestamp" -ge "$timestamp" ]; then
+        printf "%d %s\n" "$timestamp" "$fileName"
+      else
+        break
+      fi
+    fi
+  done < <(fileModificationTimes "$directory" "$@" | sort -rn)
+}
+_fileModificationTimesAfter() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Lists files in a directory recursively along with their modification time in seconds.
 #
 # Output is unsorted.

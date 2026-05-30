@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'sourceFile - File. Required. File to check\ntargetFile ... - File. Optional. One or more files to compare. All must exist.\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/file.sh"
 fn="fileIsOldest"
 fnMarker="fileisoldest"
 foundNames=([0]="argument" [1]="return_code")
-line="184"
+line="293"
 rawComment=$'Check to see if the first file is the newest one\nIf `sourceFile` is modified AFTER ALL `targetFile`s, return `0``\nOtherwise return `1``\nArgument: sourceFile - File. Required. File to check\nArgument: targetFile ... - File. Optional. One or more files to compare. All must exist.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 1 - `sourceFile`, \'targetFile\' does not exist, or\nReturn Code: 0 - All files exist and `sourceFile` is the oldest file\n\n'
 return_code=$'1 - `sourceFile`, \'targetFile\' does not exist, or\n0 - All files exist and `sourceFile` is the oldest file\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
-sourceLine="184"
+sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
+sourceLine="293"
 summary="Check to see if the first file is the newest"
 summaryComputed="true"
 usage="fileIsOldest sourceFile [ targetFile ... ] [ --help ]"

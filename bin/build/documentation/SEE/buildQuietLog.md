@@ -1,1 +1,1 @@
-[buildQuietLog]({rel}tools/build.md#buildquietlog) - Generate the path for a quiet log in the build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L639))
+[buildQuietLog]({rel}tools/build.md#buildquietlog) - Generate the path for a quiet log in the build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L658))

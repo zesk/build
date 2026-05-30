@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--only - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)\nfile - File. Optional. File(s) to filter.\n'
 base="bash.sh"
@@ -15,7 +15,7 @@ line="519"
 rawComment=$'Filter comments from a bash stream\nArgument: --help - Flag. Optional. Display this help.\nArgument: --only - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)\nArgument: file - File. Optional. File(s) to filter.\nstdin: a bash file\nstdout: bash file without line-comments `#`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="9d7b158a0e679532b85d7d28ad6415566e66b29c"
+sourceHash="8b11e89328e79950a2b4734a035cc38305d5a61e"
 sourceLine="519"
 stdin=$'a bash file\n'
 stdout=$'bash file without line-comments `#`\n'

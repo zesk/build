@@ -29,8 +29,3 @@ Modifies local environment. Not usually run within a subshell.
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- $envName
-- {SEE:BUILD_ENVIRONMENT_DIRS} - `:` separated list of paths to load env files
-

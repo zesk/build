@@ -21,7 +21,3 @@ Output the list of environment variable names which can be loaded via `buildEnvi
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_ENVIRONMENT_DIRS} {SEE:BUILD_HOME}
-

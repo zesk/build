@@ -6,9 +6,11 @@
 
 {releaseNotes}
 
-Built on **{timestamp}**.
+Built on <span class="time-moment" data-timestamp="{timestamp}">{timestampString}</span>.
 
 <!-- TEMPLATE footer 5 -->
 <hr />
 
 [⬅ Parent ](../index.md)
+
+

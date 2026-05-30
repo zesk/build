@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'target - Exists. File. Source file name or path.\nlinkName - String. Required. Link short name, created next to `target`.\n'
 base="file.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/file.sh"
 fn="linkCreate"
 fnMarker="linkcreate"
 foundNames=([0]="argument")
-line="730"
+line="839"
 rawComment=$'Create a link\nArgument: target - Exists. File. Source file name or path.\nArgument: linkName - String. Required. Link short name, created next to `target`.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
-sourceLine="730"
+sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
+sourceLine="839"
 summary="Create a link"
 summaryComputed="true"
 usage="linkCreate [ target ] linkName"

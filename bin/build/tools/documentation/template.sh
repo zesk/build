@@ -16,6 +16,28 @@
 # Argument: --help - Flag. Optional. Display this help.
 __documentationIdenticalRepair() {
   local handler="$1" && shift
+
+  local fingerprint="" key="documentationIdentical" hookName="documentation-fingerprint"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "$hookName" "$key") || return "$(convertValue $? 120 0)" ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local templatePath repairArgs=() failCount=0
@@ -31,6 +53,7 @@ __documentationIdenticalRepair() {
       catchEnvironment "$handler" "identicalCheck --repair failed" || return $?
     fi
   done
+  [ -z "$fingerprint" ] || fingerprint --cached "$fingerprint" --key "$key" --hook "$hookName" --verbose
 }
 
 # Argument: cacheDirectory - Directory. Required. Cache directory.

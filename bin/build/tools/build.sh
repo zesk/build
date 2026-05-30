@@ -121,6 +121,25 @@ _buildFunctions() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Exclude any function which is a build function
+# Removes any function from the text stream which is in `buildFunctions`
+# stdin: line:Function
+# stdout: line:Function
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+buildFunctionsFilter() {
+  local handler="_${FUNCNAME[0]}"
+  local ff && ff=$(fileTemporaryName "$handler") || return $?
+  local clean=("$ff")
+  catchReturn "$handler" buildFunctions | sort -u >"$ff" || returnClean $? "${clean[@]}" || return $?
+  sort -u | diff -u - "$ff" | grep '^-' | cut -c 2- | grep -v '^-'
+  catchReturn "$handler" rm -f "${clean[@]}" || return $?
+}
+_buildFunctionsFilter() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Path to cache directory for build system.
 #
 # Defaults to `$XDG_CACHE_HOME/.build` unless `$XDG_CACHE_HOME` is not a directory.
@@ -174,18 +193,18 @@ _buildHome() {
 # Environment: BUILD_ENVIRONMENT_DIRS BUILD_HOME
 _buildEnvironmentPath() {
   local handler="$1" && shift
-  local paths=() home
 
-  export BUILD_ENVIRONMENT_DIRS BUILD_HOME
-  home="${BUILD_HOME-}"
-  if [ -z "$home" ]; then
-    home=$(catchReturn "$handler" buildHome) || return $?
+  if [ -z "${BUILD_ENVIRONMENT_DIRS-}" ]; then
+    export BUILD_ENVIRONMENT_DIRS
+    local home="${BUILD_HOME-}"
+    if [ -z "$home" ]; then
+      home=$(catchReturn "$handler" buildHome) || return $?
+    fi
+    # shellcheck source=/dev/null
+    source "$home/bin/build/env/BUILD_ENVIRONMENT_DIRS.sh" || throwEnvironment "$handler" "BUILD_ENVIRONMENT_DIRS.sh fail" || return $?
   fi
-  # shellcheck source=/dev/null
-  source "$home/bin/build/env/BUILD_ENVIRONMENT_DIRS.sh" || throwEnvironment "$handler" "BUILD_ENVIRONMENT_DIRS.sh fail" || return $?
-
-  IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_DIRS-}" || :
-  printf "%s\n" "${paths[@]+"${paths[@]}"}" "$home/bin/build/env"
+  local paths=() && IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_DIRS-}"
+  printf "%s\n" "${paths[@]+"${paths[@]}"}"
 }
 
 # Summary: List known environment names

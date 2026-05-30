@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'directory - Directory. Required. Must exists - directory to list.\nfindArgs - Arguments. Optional. Optional additional arguments to modify the find query\n'
 base="file.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/file.sh"
 fn="fileModificationTimes"
 fnMarker="filemodificationtimes"
 foundNames=([0]="argument" [1]="example" [2]="output")
-line="116"
+line="225"
 output=$'1705347087 bin/build/tools.sh\n1704312758 bin/build/deprecated.sh\n1705442647 bin/build/build.json\n'
 rawComment=$'Lists files in a directory recursively along with their modification time in seconds.\nOutput is unsorted.\nArgument: directory - Directory. Required. Must exists - directory to list.\nArgument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query\nExample: {fn} $myDir ! -path "*/.*/*"\nOutput: 1705347087 bin/build/tools.sh\nOutput: 1704312758 bin/build/deprecated.sh\nOutput: 1705442647 bin/build/build.json\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
-sourceLine="116"
+sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
+sourceLine="225"
 summary="Lists files in a directory recursively along with their modification"
 summaryComputed="true"
 usage="fileModificationTimes directory [ findArgs ]"

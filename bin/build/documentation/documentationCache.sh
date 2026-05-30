@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-26
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'suffix - String. Optional. Directory suffix - created if does not exist.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="199"
 rawComment=$'Get the default cache directory for the documentation\nArgument: suffix - String. Optional. Directory suffix - created if does not exist.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="d15bc7cc6294c07449563ae7a7e924e91d663163"
+sourceHash="1c8f55384c305516f36c332ab5bcba79217a4ef6"
 sourceLine="199"
 summary="Get the default cache directory for the documentation"
 summaryComputed="true"

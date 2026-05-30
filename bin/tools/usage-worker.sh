@@ -253,7 +253,10 @@ __documentationFileCompileWorker() {
   if ! isUnsignedInteger "$recordSize"; then
     throwEnvironment "$handler" "$prefix Record size is non integer: $recordSize" || return $?
   fi
-  local docPath && docPath="$(catchReturn "$handler" buildHome)/bin/build/documentation" || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local docPath && docPath="$home/bin/build/documentation"
+  local sourcePath && sourcePath="$home/bin/build/tools"
   local functionName fileModificationTime sourceFile
   local totalWorkers && totalWorkers=$(catchReturn "$handler" head -n 1 "$totalWorkersFile") || return $?
   local lock="$cachePath/lock"
@@ -297,7 +300,7 @@ __documentationFileCompileWorker() {
       break
     fi
     local start && start=$(timingStart) || return $?
-    if ! __documentationFileCompileFunction "$handler" "$docPath" "$functionName" "$sourceFile" "$prefix" 1>&2; then
+    if ! __documentationFileCompileFunction "$handler" "$docPath" "$sourcePath" "$functionName" "$sourceFile" "$prefix" 1>&2; then
       returnCode=1
       break
     fi

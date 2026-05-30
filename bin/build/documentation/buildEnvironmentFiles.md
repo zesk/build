@@ -23,7 +23,3 @@ Determine the environment file names for environment variables
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_ENVIRONMENT_DIRS}
-

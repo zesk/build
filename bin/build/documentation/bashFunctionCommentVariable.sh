@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'source - File. Required. File where the function is defined.\nfunctionName - String. Required. The name of the bash function to extract the documentation for.\nvariableName - string. Required. Get this variable value\n--prefix - flag. Optional. Find variables with the prefix `variableName`\n--i | --insensitive - Flag. Optional. Case-insensitive match.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
@@ -15,7 +15,7 @@ line="407"
 rawComment=$'Argument: source - File. Required. File where the function is defined.\nArgument: functionName - String. Required. The name of the bash function to extract the documentation for.\nArgument: variableName - string. Required. Get this variable value\nArgument: --prefix - flag. Optional. Find variables with the prefix `variableName`\nArgument: --i | --insensitive - Flag. Optional. Case-insensitive match.\nArgument: --help - Flag. Optional. Display this help.\nGets a list of the variable values from a bash function comment\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="9d7b158a0e679532b85d7d28ad6415566e66b29c"
+sourceHash="8b11e89328e79950a2b4734a035cc38305d5a61e"
 sourceLine="407"
 summary="Gets a list of the variable values from a bash"
 summaryComputed="true"

@@ -20,7 +20,3 @@ Prints the build home directory (usually same as the application root)
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_HOME}
-

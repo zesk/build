@@ -8,6 +8,5 @@
 # Category: Build Configuration
 
 # shellcheck source=/dev/null
-source "${BASH_SOURCE[0]%/*}/BUILD_HOME.sh"
 export BUILD_ENVIRONMENT_DIRS
-BUILD_ENVIRONMENT_DIRS="${BUILD_ENVIRONMENT_DIRS-"${BUILD_HOME:-.}/bin/env"}"
+BUILD_ENVIRONMENT_DIRS="${BUILD_ENVIRONMENT_DIRS-"bin/env:bin/build/env"}"

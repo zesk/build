@@ -48,7 +48,7 @@ __documentationMake() {
   [ -z "$path" ] || path="${path%:}:"
   path="$path$(listJoin ":" "${templates[@]+"${templates[@]}"}")"
 
-  # ! $verboseFlag || decorate pair BUILD_DOCUMENTATION_PATH "$path" 1>&2
+  ! $verboseFlag || decorate pair BUILD_DOCUMENTATION_PATH "$path" 1>&2
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
@@ -180,7 +180,7 @@ __documentationMaker() {
 
 __documentationFunctionCompile() {
   local handler="$1" && shift
-  local dd=() fingerprint="" key && key="$(caller)"
+  local aa=() fingerprint="" key && key="$(caller)" documentationSource=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -193,9 +193,11 @@ __documentationFunctionCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --clean | --all) dd+=("$argument") ;;
+    --clean | --verbose) aa+=("$argument") ;;
+    --source) shift && aa+=("$argument" "${1-}") ;;
+    --documentation) shift && documentationSource=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return "$(convertValue $? 120 0)" ;;
-    --fingerprint) fingerprint=$(validate "$handler" Fingerprint fingerprintFlag "$key") || return "$(convertValue $? 120 0)" ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint - "$key") || return "$(convertValue $? 120 0)" ;;
     --check)
       [ $# -eq 0 ] || throwArgument "$handler" "Extra arguments: $# $*" || return $?
       fingerprint --key "$key" --check
@@ -206,9 +208,9 @@ __documentationFunctionCompile() {
     shift
   done
 
-  dd+=(--derive bashDocumentationDeriveSee --)
-  dd+=(--derive bashDocumentationDeriveFunction --)
-  catchReturn "$handler" documentationFileCompile "${dd[@]+"${dd[@]}"}" "$@" || return $?
+  [ -z "$documentationSource" ] || aa+=(--derive bashDocumentationDeriveSee --source "$documentationSource" --)
+  aa+=(--derive bashDocumentationDeriveFunction --)
+  documentationFileCompile --handler "$handler" "${aa[@]+"${aa[@]}"}" "$@" || return $?
 
   [ -z "$fingerprint" ] || fingerprint --key "$key" --verbose
 }
@@ -216,7 +218,7 @@ __documentationFunctionCompile() {
 __documentationFileCompile() {
   local handler="$1" && shift
 
-  local cleanFlag=false dd=() functions=() verboseFlag=false
+  local cleanFlag=false aa=() functions=() verboseFlag=false sourcePath=""
 
   decorateInitialized || decorate info --
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -228,11 +230,14 @@ __documentationFileCompile() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
     --clean) cleanFlag=true ;;
-    --derive) dd+=("--") && shift && while [ $# -gt 0 ]; do
+    --source) shift && sourcePath=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --derive) aa+=("--") && shift && while [ $# -gt 0 ]; do
       [ "$1" != "--" ] || break
-      dd+=("$1") && shift
+      aa+=("$1") && shift
     done ;;
     *) functions=("$@") && break ;;
     esac
@@ -286,8 +291,9 @@ __documentationFileCompile() {
     local prefix="#$index/$totalFunctions -"
     local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
+    bashFunctionNameValid "$fun" || continue
     (
-      statusMessage timing --name "$prefix $fun" __documentationFileCompileFunction "$handler" "$docPath" "$fun" "" "$prefix" "${dd[@]+"${dd[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      statusMessage timing --name "$prefix $fun" __documentationFileCompileFunction "$handler" "$docPath" "$sourcePath" "$fun" "" "$prefix" "${aa[@]+"${aa[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     ) || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   wait
@@ -301,6 +307,7 @@ __documentationFileCompile() {
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: handler - Function. Required.
 # Argument: docPath - Directory. Required.
+# Argument: sourcePath - Directory. Required. Directory to find function definitions if not found.
 # Argument: function - String. Required. Function to extract
 # Argument: sourceFile - File|EmptyString. Required. Source file or blank if not known.
 # Argument: prefix ... - String. Optional. Prefix the status line with this text.
@@ -317,8 +324,9 @@ __documentationFileCompileFunction() {
 
   local handler="$1" && shift
   local docPath="$1" && shift
+  local sourcePath="$1" && shift
 
-  local fun && fun=$(validate "$handler" Function "function" "${1-}") && shift || return $?
+  local fun && fun=$(validate "$handler" String "function" "${1-}") && shift || return $?
   local sourceHash="" sourceFile="${1-}" && shift || return $?
   local prefix="$1" && shift && [ -z "$prefix" ] || prefix="${prefix% } "
   local derived=("$@") && set --
@@ -366,7 +374,7 @@ __documentationFileCompileFunction() {
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
-    sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$home/bin/build/tools" "$fun") || return $?
+    sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$sourcePath" "$fun") || return $?
     local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
     if [ "$sourcesFound" -gt 1 ]; then
       throwEnvironment "$handler" "${prefix} Multiple sources found for $prettyFun (x$sourcesFound): ${sourceFile//$'\n'/, }" || return $?

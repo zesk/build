@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'handler - Function. Required. Function to call on failure. Function Type: returnMessage\n--help - Flag. Optional. Display this help.\n... - Arguments. Optional. Any additional arguments are passed through.\n'
 base="file.sh"
@@ -13,13 +13,13 @@ file="bin/build/tools/file.sh"
 fn="fileTemporaryName"
 fnMarker="filetemporaryname"
 foundNames=([0]="argument" [1]="requires" [2]="build_debug" [3]="environment")
-line="807"
+line="916"
 rawComment=$'Wrapper for `mktemp`. Generate a temporary file name, and fail using a function\nArgument: handler - Function. Required. Function to call on failure. Function Type: returnMessage\nArgument: --help - Flag. Optional. Display this help.\nArgument: ... - Arguments. Optional. Any additional arguments are passed through.\nRequires: mktemp helpArgument catchEnvironment bashDocumentation\nBUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks\nEnvironment: BUILD_DEBUG\n\n'
 requires=$'mktemp helpArgument catchEnvironment bashDocumentation\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
-sourceLine="807"
+sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
+sourceLine="916"
 summary="Wrapper for \`mktemp\`. Generate a temporary file name, and fail"
 summaryComputed="true"
 usage="fileTemporaryName handler [ --help ] [ ... ]"

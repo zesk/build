@@ -6,6 +6,12 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testBashFunctionNameValid() {
+  assertExitCode 0 bashFunctionNameValid bashFunctionNameValid || return $?
+  assertExitCode 0 bashFunctionNameValid "${FUNCNAME[0]}" || return $?
+  assertExitCode 1 bashFunctionNameValid 99Problems || return $?
+}
+
 testBashEnableBuiltins() {
   local handler="returnMessage"
   local enableExceptions=("compopt" "mapfile" "readarray" "shift")

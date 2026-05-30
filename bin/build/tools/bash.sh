@@ -628,3 +628,18 @@ _bashFunctionComment() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Summary: Is a string a valid function name?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Does not check if a function is defined, just whether the name would be acceptable as a function name in Bash.
+# Return Code: 0 - All values passed are valid function names for bash functions
+# Return Code: 1 - One or more values passed are NOT valid function names for bash functions
+bashFunctionNameValid() {
+  [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
+  while [ $# -gt 0 ]; do case "$1" in [^A-Za-z_]* | *[^A-Za-z0-9_]*) return 1 ;; esac && shift; done
+}
+_bashFunctionNameValid() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

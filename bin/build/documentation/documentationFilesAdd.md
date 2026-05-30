@@ -4,7 +4,7 @@
 
 ### Usage
 
-    documentationFilesAdd
+    documentationFilesAdd [ --help ]
 
 Git add documentation files
 Just the first path.
@@ -13,7 +13,7 @@ Just the first path.
 
 ### Arguments
 
-- none
+- `--help` - Flag. Optional. Display this help.
 
 ### Return codes
 

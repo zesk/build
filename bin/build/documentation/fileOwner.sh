@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'file - File to get the owner for\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/file.sh"
 fn="fileOwner"
 fnMarker="fileowner"
 foundNames=([0]="argument" [1]="return_code")
-line="508"
+line="617"
 rawComment=$'Get the file owner name\nArgument: file - File to get the owner for\nArgument: --help - Flag. Optional. Display this help.\nOutputs the file owner for each file passed on the command line\nReturn Code: 0 - Success\nReturn Code: 1 - Unable to access file\n\n'
 return_code=$'0 - Success\n1 - Unable to access file\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
-sourceLine="508"
+sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
+sourceLine="617"
 summary="Get the file owner name"
 summaryComputed="true"
 usage="fileOwner [ file ] [ --help ]"

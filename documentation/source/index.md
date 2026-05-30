@@ -2,7 +2,7 @@
 
 {applicationName} is a suite of Bash functions which make software development, deployment, and management easier.
 
-Documentation up to date as of {timestamp}.
+Documentation up to date as of <span class="time-moment" data-timestamp="{timestamp}">{timestampString}</span>.
 
 ## Contents
 
@@ -29,10 +29,13 @@ To install directly from the web:
     mkdir -p bin/build && cd bin/build
     curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/{version}/bin/build/install-bin-build.sh" | bash
 
-Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **{applicationName}** as needed.
-It is not generally recommended to commit `bin/build` to your source repository – commit `install-bin-build.sh` and load it as needed. You can
-lock to a version using `install-bin-build.sh --version "$desiredVersion"`. **{applicationName}**'s installer will install
-the **most recent** version without the `--version` argument. 
+Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **{applicationName}** as
+needed.
+It is not generally recommended to commit `bin/build` to your source repository – commit `install-bin-build.sh` and load
+it as needed. You can
+lock to a version using `install-bin-build.sh --version "$desiredVersion"`. **{applicationName}**'s installer will
+install
+the **most recent** version without the `--version` argument.
 
 ## Features
 

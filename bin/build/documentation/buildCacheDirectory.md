@@ -29,7 +29,3 @@ Appends any passed in arguments as path segments.
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:XDG_CACHE_HOME}
-

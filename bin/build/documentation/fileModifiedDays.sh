@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'file ... - File. Required. One or more files to examine\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/file.sh"
 fn="fileModifiedDays"
 fnMarker="filemodifieddays"
 foundNames=([0]="argument" [1]="return_code")
-line="276"
+line="385"
 rawComment=$'Prints days (integer) since modified\nArgument: file ... - File. Required. One or more files to examine\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - Success\nReturn Code: 2 - Can not get modification time\n\n'
 return_code=$'0 - Success\n2 - Can not get modification time\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="73b29d210ecf88a33b1e7505591e6705abf5b5c9"
-sourceLine="276"
+sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
+sourceLine="385"
 summary="Prints days (integer) since modified"
 summaryComputed="true"
 usage="fileModifiedDays file ... [ --help ]"

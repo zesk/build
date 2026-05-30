@@ -1,19 +1,20 @@
 ## `documentationFunctionCompile`
 
-> Extract and build the documentation settings cache and generate derived
+> - `--documentation` is required for `SEE:` files
 
 ### Usage
 
-    documentationFunctionCompile [ --clean ] [ --git ] [ --all ] [ --fingerprint ] [ functionName ... ]
+    documentationFunctionCompile [ --clean ] [ --source codeSource ] [ --documentation documentationSource ] [ --all ] [ --fingerprint ] [ functionName ... ]
 
-Extract and build the documentation settings cache and generate derived files
+- `--documentation` is required for `SEE:` files
 
 > Location: `bin/build/tools/documentation.sh`
 
 ### Arguments
 
 - `--clean` - Flag. Optional. Clean everything and then exit.
-- `--git` - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
+- `--source codeSource` - Directory. Code source to find functions.
+- `--documentation documentationSource` - Directory. Documentation source to find documentation links.
 - `--all` - Flag. Optional. Do everything regardless of cache state.
 - `--fingerprint` - Flag. Optional. Use fingerprint to ensure results are up to date.
 - `functionName ...` - String. Optional. Specific functions to compile.

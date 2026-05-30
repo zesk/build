@@ -6,6 +6,8 @@
 - Previous version: v0.43.0
 - Added {SEE:releaseNotesMarkdown}
 - Fixed `SEE` and documentation generation paths
+- Fixed documentation
+- Fixed variable undefined in `documentationEnvironmentMake`
 
 ## Zesk Build release v0.43.0
 

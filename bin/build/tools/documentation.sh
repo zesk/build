@@ -450,7 +450,64 @@ _documentationMaker() {
 
 # Extract and build the documentation settings cache and generate derived files
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
-# Argument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
+# Argument: --all - Flag. Optional. Do everything regardless of cache state.
+# Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
+# Argument: --source - Directory. Required. Directory where functions are defined.
+# Argument: --key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available.
+# Argument: functionName ... - String. Optional. Specific functions to compile.
+# stdin: Function. Name of functions, one per line to compile if `--all` is not specified.
+documentationFunctionsCompile() {
+  local handler="_${FUNCNAME[0]}" aa=() allFlag=false source="" target=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --all) allFlag=true ;;
+    --target) shift && target=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --source) shift && source=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --key) shift && aa+=("$argument" "${1-}") ;;
+    *) aa+=("$1") ;;
+    esac
+    shift
+  done
+
+  [ -n "$source" ] || throwArgument "$handler" "source is required" || return $?
+  aa=(--handler "$handler" --source "$source" "${aa[@]+"${aa[@]}"}")
+  if $allFlag; then
+    # uses stdin
+    documentationFunctionCompile "${aa[@]}" "$@" || return $?
+  else
+    [ -n "$target" ] || throwArgument "$target" "target is required unless you supply --all" || return $?
+
+    local funFile && funFile=$(fileTemporaryName "$handler") || return $?
+    local clean=("$funFile")
+    local codeTimestamp _ && read -r codeTimestamp _ < <(catchReturn "$handler" fileModifiedRecently "$source") || returnClean $? "${clean[@]}" || return $?
+    fileModificationTimesBefore "$target" "$codeTimestamp" -maxdepth 1 -mindepth 1 -name '*.sh' | textRemoveFields 1 | cut -c "$((${#target} + 2))-" | cut -f 1 -d . >"$funFile"
+    documentationFunctionCompile "${aa[@]}" "$@" <"$funFile" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" rm -f "${clean[@]}" || return $?
+  fi
+}
+_documentationFunctionsCompile() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Build function documentation
+# Extract and build the documentation settings cache and generate derived files:
+
+# - `--documentation` is required for `SEE:` files
+#
+# Argument: --clean - Flag. Optional. Clean everything and then exit.
+# Argument: --source codeSource - Directory. Code source to find functions.
+# Argument: --documentation documentationSource - Directory. Documentation source to find documentation links.
 # Argument: --all - Flag. Optional. Do everything regardless of cache state.
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
 # Argument: functionName ... - String. Optional. Specific functions to compile.
@@ -476,7 +533,9 @@ documentationFilesAdd() {
   local paths=() && IFS=":" read -r -a paths <<<"$(catchReturn "$handler" buildEnvironmentGet BUILD_DOCUMENTATION_PATH)" || return $?
   local path && for path in "${paths[@]}"; do
     pathIsAbsolute "$path" || path="$home/$path"
-    find "$path" -type f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
+    if ! git check-ignore -q "$path"; then
+      find "$path" -type f \( -name '*.sh' -or -name '*.md' \) -print0 | xargs -0 git add || return $?
+    fi
     break
   done
 }
@@ -552,6 +611,7 @@ _documentationFunctionRemove() {
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
 # Argument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
 # Argument: --all - Flag. Optional. Do everything regardless of cache state.
+# Argument: --source sourcePath - Directory. Required. Find function source code definition in this directory.
 # Argument: --derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files.
 # Argument: functionName ... - String. Optional. Specific functions to compile.
 # DOC TEMPLATE: --help 1
@@ -561,6 +621,165 @@ documentationFileCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _documentationFileCompile() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Generate markdown for a list of all functions
+# Uses list of functions passed in `stdin`; using the `SEE` template.
+# Output to `allFunctionList.md` typically.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# stdin: Function. Function names one per line.
+bashDocumentationAllFunctions() {
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local fun && while read -r fun; do
+    local seeTemplate && seeTemplate=$(__documentationFile "$home" "SEE/$fun.md") || seeTemplate=""
+    [ -n "$seeTemplate" ] && printf -- "%s\n" "$(cat "$seeTemplate")" || printf -- "%s\n" "{SEE:$fun}"
+  done < <(sort) | sed 's/^/- &/g' || return $?
+}
+_bashDocumentationAllFunctions() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Generate markdown for a list of all functions
+# Uses list of functions passed in `stdin`; using the `SEE` template.
+# Output to `allEnvironmentList.md` typically.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# stdin: EnvironmentVariable. One per line.
+bashDocumentationAllEnvironment() {
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local env && while read -r env; do
+    local seeTemplate && seeTemplate=$(__documentationFile "$home" "SEE/$env.md") || seeTemplate=""
+    [ -n "$seeTemplate" ] && printf -- "%s\n" "$(cat "$seeTemplate")" || printf -- "%s\n" "{SEE:$env}"
+  done < <(buildEnvironmentNames | sort) | sed 's/^/- &/g' || return $?
+}
+_bashDocumentationAllEnvironment() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Generate base template files for Bash code documentation.
+# Generates the following (with example content):
+# - `applicationName.md` - `Zesk Build`
+# - `applicationOwner.md` - `Market Acumen, Inc.`
+# - `year.md` - `2026`
+# - `version.md` - `v0.43.2`
+# - `timestamp.md` - `1779910142`
+# - `timestampString.md` - `2026-05-27 15:29:15`
+# Argument: --target templateTarget - FileDirectory. Required. Create templates here.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+bashDocumentationDefaults() {
+  local handler="_${FUNCNAME[0]}"
+
+  local templateTarget="" releaseTitle="# Past Releases"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --target) shift && templateTarget="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $? ;;
+    --release-title) shift && releaseTitle="$(validate "$handler" EmptyString "$argument" "${1-}")" || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$templateTarget" ] || throwArgument "$handler" "--target is required" || return $?
+
+  templateTarget=$(catchReturn "$handler" directoryRequire "$templateTarget") || return $?
+
+  local applicationName && applicationName=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+
+  catchReturn "$handler" printf "%s" "$applicationName" >"$templateTarget/applicationName.md" || return $?
+  catchReturn "$handler" printf "%s" "$(buildEnvironmentGet APPLICATION_OWNER)" >"$templateTarget/applicationOwner.md" || return $?
+  catchReturn "$handler" printf "%s" "$(date +%Y)" >"$templateTarget/year.md" || return $?
+  catchReturn "$handler" hookVersionCurrent >"$templateTarget/version.md" || return $?
+  catchReturn "$handler" date -u "+%s" >"$templateTarget/timestamp.md" || return $?
+  catchReturn "$handler" printf "%s" "$(catchReturn "$handler" date -u "+%F %T") UTC" >"$templateTarget/timestampString.md" || return $?
+  catchReturn "$handler" releaseNotesMarkdown --title "$releaseTitle" >"$templateTarget/releaseNotes.md" || return $?
+}
+_bashDocumentationDefaults() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Generate templates of functions missing from documentation
+#
+# Generates:
+# - `missingFunctionTotal.md`
+# - `missingFunctionList.md`
+# in the target directory.
+#
+# Argument: --index indexPath - Directory. Required. Where to store documentation indexes for later use.
+# Argument: --source sourcePath - Directory. Required. The source
+# Argument: --target templateTarget - FileDirectory. Required. Create templates here.
+bashDocumentationMissing() {
+  local handler="_${FUNCNAME[0]}"
+
+  local indexPath="" codeSourcePath="" documentationSourcePath="" templateTarget=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --index) shift && indexPath="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
+    --source) shift && codeSourcePath="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
+    --documentation) shift && documentationSourcePath="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
+    --target) shift && templateTarget="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$indexPath" ] || throwArgument "$handler" "--index is required" || return $?
+  [ -n "$codeSourcePath" ] || throwArgument "$handler" "--source is required" || return $?
+  [ -n "$documentationSourcePath" ] || throwArgument "$handler" "--documentation is required" || return $?
+  [ -n "$templateTarget" ] || throwArgument "$handler" "--target is required" || return $?
+
+  indexPath=$(catchReturn "$handler" directoryRequire "$indexPath") || return $?
+  templateTarget=$(catchReturn "$handler" directoryRequire "$templateTarget") || return $?
+
+  statusMessage decorate info "Generating documentation index ..."
+  local start && start=$(timingStart) || return $?
+  catchReturn "$handler" documentationIndexGenerate --target "$indexPath" "$codeSourcePath" || return $?
+  catchReturn "$handler" documentationIndexDocumentation --target "$indexPath" "$documentationSourcePath" || return $?
+  statusMessage timingReport "$start" "Documentation index generated"
+  local tempMissing="$templateTarget/.missingFunctions.$$.md"
+  local clean=("$tempMissing")
+  documentationIndexUnlinkedFunctions "$indexPath" | grepSafe -v '^_' | sort >"$tempMissing" || returnClean $? "${clean[@]}" || return $?
+  fileLineCount <"$tempMissing" >"$templateTarget/missingFunctionTotal.md" || returnClean $? "${clean[@]}" || return $?
+  sed 's/.*/{&}\n/g' <"$tempMissing" >"$templateTarget/missingFunctionList.md" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" rm -rf "$tempMissing" || return $?
+}
+_bashDocumentationMissing() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -580,7 +799,7 @@ _documentationFileCompile() {
 bashDocumentationDeriveFunction() {
   local handler="_${FUNCNAME[0]}"
 
-  local settingsFile="" checkFlag=false verboseFlag=false
+  local settingsFile="" checkFlag=false verboseFlag=false template=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -645,6 +864,7 @@ bashDocumentationDeriveSee() {
     --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
     --check) checkFlag=true ;;
     --verbose) verboseFlag=true ;;
+    --source) shift && source=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *) settingsFile=$(validate "$handler" File "settingsFile" "$argument") && shift && break || return $? ;;
     esac
     shift
@@ -655,9 +875,10 @@ bashDocumentationDeriveSee() {
 
   local fn && fn=$(environmentValueRead "$settingsFile" fn) || return $?
   local documentationPath && if ! documentationPath=$(environmentValueRead "$settingsFile" documentationPath); then
-    if ! documentationPath=$(directoryChange "$home" find "documentation/source/tools" -type f -name '*.md' -print0 | xargs -0 grep -l "{$fn}" | sort | head -n 1); then
+    if ! documentationPath=$(directoryChange "$home" find "$source" -type f -name '*.md' -print0 | xargs -0 grep -l "{$fn}" | sort | head -n 1); then
       decorate warning "No documentationPath found for $fn" || :
     else
+      documentationPath=${documentationPath#"$home/"}
       environmentValueWrite "documentationPath" "$documentationPath" >>"$settingsFile"
     fi
   fi

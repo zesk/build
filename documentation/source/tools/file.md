@@ -28,6 +28,10 @@
 
 {fileModificationTimes}
 
+{fileModificationTimesBefore}
+
+{fileModificationTimesAfter}
+
 {fileModifiedRecently}
 
 ### Owner Group Size Type

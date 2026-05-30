@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-26
+# Generated on 2026-05-27
 # shellcheck disable=SC2034
 argument=$'--target targetDirectory - Directory. Optional. Directory where the index will be created. Uses `documentationCache` if not specified.\ndocumentationSource ... - Directory. OneOrMore. Documentation source path to find tokens and their definitions.\n--verbose - Flag. Optional. Extrapolate needlessly.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="337"
 rawComment=$'Generate the documentation index\nIndexes where functions are defined in documentation (e.g. `*.md` files - markdown files).\nFinds the appropriate token `{funcName}` and generates an index for linking or other purposes.\nArgument: --target targetDirectory - Directory. Optional. Directory where the index will be created. Uses `documentationCache` if not specified.\nArgument: documentationSource ... - Directory. OneOrMore. Documentation source path to find tokens and their definitions.\nArgument: --verbose - Flag. Optional. Extrapolate needlessly.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - If success\nReturn Code: 1 - Issue with file generation\nReturn Code: 2 - Argument error\n\n'
 return_code=$'0 - If success\n1 - Issue with file generation\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="d15bc7cc6294c07449563ae7a7e924e91d663163"
+sourceHash="1c8f55384c305516f36c332ab5bcba79217a4ef6"
 sourceLine="337"
 summary="Generate the documentation index"
 summaryComputed="true"
