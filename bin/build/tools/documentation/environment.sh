@@ -105,6 +105,7 @@ __documentationEnvironmentMake() {
   catchReturn "$handler" rm -f "$cacheDirectory/category."* || return $?
 
   ! $verboseFlag || statusMessage decorate info "Iterating through env files ..." 1>&2
+  local newestTemplate && newestTemplate=$(fileNewest "$lineFile" "$moreFile" "$seeFile") || return $?
   [ "${#ee[@]}" -eq 0 ] || local envFile && for envFile in "${ee[@]}"; do
     local undo=(set +a)
     local env="${envFile##*/}" && env="${env%.sh}"
@@ -113,18 +114,13 @@ __documentationEnvironmentMake() {
     local moreTarget="$moreDirectory/$env.md"
     local envMarker="${env// /_}" && envMarker=$(stringLowercase "$envMarker")
     local settings="$cacheDirectory/$env.sh"
-    if $forceFlag || [ ! -f "$settings" ] || ! fileIsNewest "$settings" "$envFile" "$lineFile" "$moreFile" "$seeFile"; then
+    if $forceFlag || [ ! -f "$settings" ] || [ ! -f "$envTarget" ] || ! fileIsNewest "$envTarget" "$settings" "$envFile" "$newestTemplate"; then
       set -a # UNDO ok
-      if ! $forceFlag && [ -f "$envTarget" ] && fileIsNewest "$envTarget" "$envFile" "$lineFile" "$moreFile"; then
-        ! $verboseFlag || statusMessage decorate notice "Cached $(decorate file "$envFile") ..." 1>&2
-        catchReturn "$handler" touch "$settings" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
-        continue
-      else
-        ! $verboseFlag || statusMessage decorate info "Generated $(decorate file "$settings") from $(decorate file "$envFile") ..." 1>&2
-      fi
       __documentationEnvironmentFileParse "$handler" "$envFile" >"$settings" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     else
       ! $verboseFlag || statusMessage decorate notice "Cached $(decorate file "$settings") ..." 1>&2
+      [ ! -f "$envTarget" ] || continue
+      touch "$settings"
     fi
 
     local description="" type="" category="" summary="" descriptionLineCount="" name="" see=""
@@ -163,9 +159,12 @@ __documentationEnvironmentMake() {
       type="$type"
     )
     printf -- "%s\n" "${tokens[@]}" >"$settingsTempFile"
+    ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$seeTarget") ..." 1>&2
     envMarker="$categoryMarker" link="$seeLink" name="$name" env="$env" description="$description" summary="$summary" category="$category" more="$more" type="$type" mapEnvironment <"$seeFile" >"$seeTarget" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+    ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$envTarget") ..." 1>&2
     envMarker="$categoryMarker" link="$seeLink" name="$name" env="$env" description="$description" summary="$summary" category="$category" more="$more" type="$type" mapEnvironment <"$lineFile" >"$envTarget" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     if [ -n "$more" ]; then
+    ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$moreTarget") ..." 1>&2
       (documentationTemplateCompile "$moreFile" "$settingsTempFile" >"$moreTarget") || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     fi
   done
