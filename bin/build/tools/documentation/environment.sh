@@ -164,7 +164,7 @@ __documentationEnvironmentMake() {
     ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$envTarget") ..." 1>&2
     envMarker="$categoryMarker" link="$seeLink" name="$name" env="$env" description="$description" summary="$summary" category="$category" more="$more" type="$type" mapEnvironment <"$lineFile" >"$envTarget" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     if [ -n "$more" ]; then
-    ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$moreTarget") ..." 1>&2
+      ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$moreTarget") ..." 1>&2
       (documentationTemplateCompile "$moreFile" "$settingsTempFile" >"$moreTarget") || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     fi
   done
