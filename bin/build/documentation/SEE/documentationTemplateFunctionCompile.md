@@ -1,1 +1,1 @@
-[documentationTemplateFunctionCompile]({rel}tools/documentation.md#documentationtemplatefunctioncompile) - Generate a function documentation block using \`functionTemplate\` for \`functionName\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L247))
+[documentationTemplateFunctionCompile]({rel}tools/documentation.md#documentationtemplatefunctioncompile) - Generate a function documentation block using \`functionTemplate\` for \`functionName\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L259))

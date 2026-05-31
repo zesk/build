@@ -36,8 +36,7 @@ __documentationIndexGenerate() {
     throwArgument "$handler" "at least one codePath required" || return $?
     return $?
   fi
-  local start && start=$(timingStart) || return $?
-
+  local start && start=$(catchReturn "$handler" timingStart) || return $?
   local indexDirectory && indexDirectory=$(catchReturn "$handler" __documentationIndexCache) || return $?
 
   catchReturn "$handler" muzzle directoryRequire "$indexDirectory" || return $?
@@ -78,12 +77,12 @@ __documentationIndexGenerate() {
       local count=0
       ! $verboseFlag || statusMessage decorate info "Processing $(decorate file "$shellFile")"
       catchReturn "$handler" printf "%s" "" >"$functionsCache" || return $?
-      while read -r functionName; do
-        local lineNumber="${functionName%%:*}" comment
+      local functionName && while read -r functionName; do
+        local lineNumber="${functionName%%:*}"
         functionName=$(textTrim "${functionName#*:}")
         printf "%s %s %s\n" "$functionName" "$shellFile" "$lineNumber" | tee -a "$functionsCache" >>"$indexFile.unsorted"
         count=$((count + 1))
-        comment=$(catchReturn "$handler" bashFileComment "$fullPath" "$lineNumber") || return $?
+        local comment && comment=$(catchReturn "$handler" bashFileComment "$fullPath" "$lineNumber") || return $?
         if [ -n "$comment" ]; then
           catchEnvironment "$handler" printf -- "%s\n" "$comment" >"$indexDirectory/comment/$functionName" || return $?
         else
@@ -200,7 +199,7 @@ __documentationIndexDocumentation() {
   [ -f "$unsorted" ] || throwEnvironment "$handler" "$unsorted does not exist? sourcePaths: ${#sourcePaths[@]} ${sourcePaths[*]}" || return $?
   catchEnvironment "$handler" sort -u <"$unsorted" >"$indexFile" || returnClean $? "$indexFile" "$unsorted" || return $?
   catchReturn "$handler" rm -f "$unsorted" || return $?
-  total=$(fileLineCount "$indexFile")
+  local total && total=$(catchReturn "$handler" fileLineCount "$indexFile") || return $?
   ! $debugFlag || statusMessage decorate info "$(printf "%s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate cyan "$(localePluralWord "$total" "function")")" "for" "$(decorate each file "${sourcePaths[@]}")" "in" "$(timingReport "$start")")" 1>&2
 }
 ___documentationIndexDocumentation() {

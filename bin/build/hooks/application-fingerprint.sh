@@ -17,7 +17,6 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # The default hook generates a fingerprint using `sha1sum` and the contents of each `application-files` file.
 __hookApplicationFingerprint() {
   local handler="_${FUNCNAME[0]}"
-  local home
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -35,8 +34,8 @@ __hookApplicationFingerprint() {
     esac
     shift
   done
-  home=$(catchReturn "$handler" buildHome) || return $?
-  catchReturn "$handler" hookRun --application "$home" application-files -print0 | xargs -0 -n 1 sha1sum | sort | textSHA || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  catchReturn "$handler" hookRun --application "$home" application-files -print0 | directoryChange "$home" xargs -0 -n 1 sha1sum | sort | textSHA || return $?
 }
 ___hookApplicationFingerprint() {
   # __IDENTICAL__ bashDocumentation 1

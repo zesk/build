@@ -244,6 +244,8 @@ __documentationFileCompile() {
     shift
   done
 
+  [ -n "$sourcePath" ] || throwArgument "$handler" "--source is required" || return $?
+
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   if $cleanFlag; then
@@ -283,9 +285,10 @@ __documentationFileCompile() {
   ([ "${#functions[@]}" -gt 0 ] && printf "%s\n" "${functions[@]}" || catchReturn "$handler" cat) >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   local totalFunctions && totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
 
+  local undo=(-- shopt -s expand_aliases -- muzzle popd)
   # turn off aliases
-  local undo=(shopt -s expand_aliases)
   shopt -u expand_aliases || :
+  catchReturn "$handler" muzzle pushd "$home" || return $?
   local finished=false index=0 && while ! $finished; do
     index=$((index + 1))
     local prefix="#$index/$totalFunctions -"
@@ -294,11 +297,11 @@ __documentationFileCompile() {
     bashFunctionNameValid "$fun" || continue
     (
       statusMessage timing --name "$prefix $fun" __documentationFileCompileFunction "$handler" "$docPath" "$sourcePath" "$fun" "" "$prefix" "${aa[@]+"${aa[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
-    ) || return $?
+    ) || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
-  wait
   shopt -s expand_aliases || :
-  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+  catchReturn "$handler" rm -f "${clean[@]}" || return $?
+  catchReturn "$handler" muzzle popd || return $?
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
 }
 
@@ -374,6 +377,8 @@ __documentationFileCompileFunction() {
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
+
+    [ -n "$sourcePath" ] || throwArgument "$handler" "Missing source path to find $fun" || return $?
     sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$sourcePath" "$fun") || return $?
     local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
     if [ "$sourcesFound" -gt 1 ]; then
@@ -387,6 +392,8 @@ __documentationFileCompileFunction() {
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
   fi
+
+  pathIsAbsolute "$sourceFile" || sourceFile="$home/$sourceFile"
 
   if [ -n "$sourceHash" ]; then
     local computedHash && computedHash=$(catchEnvironment "$handler" textSHA <"$sourceFile") || return $?
@@ -438,7 +445,7 @@ __documentationFileCompileFunction() {
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
   if [ ! -f "$documentationSettingsFile" ]; then
-    throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $documentationSettingsFile"$'\n'"$(dumpPipe <"$tempComment")" || returnClean $? "${clean[@]}" || return $?
+    throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $(decorate file "$sourceFile") did not generate $documentationSettingsFile"$'\n'"$(dumpPipe <"$tempComment")" || returnClean $? "${clean[@]}" || return $?
   else
     # local init && init=$(timingStart)
     catchReturn "$handler" decorateThemelessMode || return $?

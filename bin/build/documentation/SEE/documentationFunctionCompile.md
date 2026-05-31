@@ -1,1 +1,1 @@
-[documentationFunctionCompile]({rel}tools/internal.md#documentationfunctioncompile) - - \`--documentation\` is required for \`SEE:\` files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L515))
+[documentationFunctionCompile]({rel}tools/internal.md#documentationfunctioncompile) - - \`--documentation\` is required for \`SEE:\` files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L525))

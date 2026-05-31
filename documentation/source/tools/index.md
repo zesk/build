@@ -67,7 +67,7 @@
 - [Fingerprint](./fingerprint.md) – Fingerprint your code
 - [Log](./log.md) – Log rotation
 - [Network](./network.md) – Basic networking information, host name
-- [CPU](cpu.md) – CPU count and load average
+- [CPU](./cpu.md) – CPU count and load average
 - [Services](./service.md) – System services database (`/etc/services`)
 - [Process](./process.md) – Process tools
 - [Timing](./timing.md) – Millisecond timing support across operating systems
@@ -97,6 +97,7 @@
 - [Identical](./identical.md) – A system to keep your code and source in perfect harmony
 - [Installation](./install.md) – Install other software like `aws` or `python` using package managers or custom
   techniques.
+- [Pipeline](./pipeline.md) – Pipeline tools
 - [Utilities](./utilities.md) – Some handy utilities
 - [Version](./version.md) – Release version management for your application
 - [Web](./web.md) – Web tools

@@ -388,10 +388,8 @@ _documentationIndexGenerate() {
 __bashDocumentation_FindFunctionDefinitions() {
   local handler="_${FUNCNAME[0]}"
 
-  local directory
-
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
-  directory=$(validate "$handler" Directory "directory" "${1-}") && shift || return $?
+  local directory && directory=$(validate "$handler" Directory "directory" "${1-}") && shift || return $?
 
   local foundCount=0 phraseCount=${#@}
   while [ "$#" -gt 0 ]; do
@@ -518,7 +516,7 @@ _documentationFunctionsCompile() {
 # - `--documentation` is required for `SEE:` files
 #
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
-# Argument: --source codeSource - Directory. Code source to find functions.
+# Argument: --source codeSource - Directory. Required. Code source to find functions.
 # Argument: --documentation documentationSource - Directory. Documentation source to find documentation links.
 # Argument: --all - Flag. Optional. Do everything regardless of cache state.
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
@@ -644,10 +642,11 @@ _documentationFileCompile() {
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Function. Function names one per line.
 bashDocumentationAllFunctions() {
+  local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   local fun && while read -r fun; do
-    local seeTemplate && seeTemplate=$(__documentationFile "$home" "SEE/$fun.md") || seeTemplate=""
+    local seeTemplate && seeTemplate=$(__documentationFile "$home" "SEE/$fun") || seeTemplate=""
     [ -n "$seeTemplate" ] && printf -- "%s\n" "$(cat "$seeTemplate")" || printf -- "%s\n" "{SEE:$fun}"
   done < <(sort) | sed 's/^/- &/g' || return $?
 }
@@ -663,10 +662,11 @@ _bashDocumentationAllFunctions() {
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: EnvironmentVariable. One per line.
 bashDocumentationAllEnvironment() {
+  local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   local env && while read -r env; do
-    local seeTemplate && seeTemplate=$(__documentationFile "$home" "SEE/$env.md") || seeTemplate=""
+    local seeTemplate && seeTemplate=$(__documentationFile "$home" "SEE/$env") || seeTemplate=""
     [ -n "$seeTemplate" ] && printf -- "%s\n" "$(cat "$seeTemplate")" || printf -- "%s\n" "{SEE:$env}"
   done < <(buildEnvironmentNames | sort) | sed 's/^/- &/g' || return $?
 }

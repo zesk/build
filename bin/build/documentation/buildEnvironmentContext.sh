@@ -12,12 +12,12 @@ file="bin/build/tools/build.sh"
 fn="buildEnvironmentContext"
 fnMarker="buildenvironmentcontext"
 foundNames=([0]="argument" [1]="example")
-line="705"
+line="707"
 rawComment=$'Run a command and ensure the build tools context matches the current project.\nUseful when you need to ensure the command is run with the correct version of Zesk Build.\nArgument: startDirectory - Directory. Required. Context in which the command should run.\nArgument: command - Callable. Required. Command to run in new context.\nArgument: ... - Arguments. Optional. Arguments to the `command`.\nAvoid infinite loops here, call down.\nExample:     buildEnvironmentContext "$(pwd)" environmentFileLoad "$(pwd)/.env" --execute timing --slow 500 "$(pwd)/bin/ping.py"\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="3f80bef4c3044547d0294608af71456a5a68f035"
-sourceLine="705"
+sourceHash="7c3aa107c357db74a0d854defdaf7f2b17361d34"
+sourceLine="707"
 summary="Run a command and ensure the build tools context matches"
 summaryComputed="true"
 usage="buildEnvironmentContext startDirectory command [ ... ]"

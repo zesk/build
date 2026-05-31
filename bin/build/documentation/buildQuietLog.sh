@@ -11,12 +11,12 @@ file="bin/build/tools/build.sh"
 fn="buildQuietLog"
 fnMarker="buildquietlog"
 foundNames=([0]="argument")
-line="658"
+line="660"
 rawComment=$'Generate the path for a quiet log in the build cache directory, creating it if necessary.\nArgument: name - String. Required. The log file name to create. Trims leading `_` if present.\nArgument: --no-create - Flag. Optional. Do not require creation of the directory where the log file will appear.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="3f80bef4c3044547d0294608af71456a5a68f035"
-sourceLine="658"
+sourceHash="7c3aa107c357db74a0d854defdaf7f2b17361d34"
+sourceLine="660"
 summary="Generate the path for a quiet log in the build"
 summaryComputed="true"
 usage="buildQuietLog name [ --no-create ]"

@@ -6,6 +6,23 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testFileModificationTimesRelative() {
+  local handler="returnMessage"
+
+  local tempDirectory && tempDirectory=$(fileTemporaryName "$handler" -d) || return $?
+
+  touch "$tempDirectory/first" && sleep 1
+  touch "$tempDirectory/second" && sleep 1
+  touch "$tempDirectory/third" && sleep 1
+
+  local middle && middle=$(fileModificationTime "$tempDirectory/second") || return $?
+
+  assertExitCode --stdout-match third --stdout-match second 0 fileModificationTimesAfter "$tempDirectory" "$middle" || return $?
+  assertExitCode --stdout-match first --stdout-match second 0 fileModificationTimesBefore "$tempDirectory" "$middle" || return $?
+  catchReturn "$handler" rm -f "$tempDirectory" || return $?
+}
+
+
 testFileUniqueLines() {
   local handler="returnMessage"
 

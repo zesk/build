@@ -219,8 +219,10 @@ buildEnvironmentNames() {
 
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   (
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
     IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
     for path in "${paths[@]}"; do
+      pathIsAbsolute "$path" || path="$home/$path"
       find "$path" -type f -name '*.sh' -exec basename {} \; | cut -d . -f 1
     done
   ) | catchEnvironment "$handler" sort -u || return $?

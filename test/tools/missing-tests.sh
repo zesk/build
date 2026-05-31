@@ -7,6 +7,15 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+#  No references found for processCountWatcher
+
+# bin/documentation.sh runs these:
+#
+# No references found for bashDocumentationDefaults
+# No references found for bashDocumentationMissing
+# No references found for buildFunctionsExclude
+
+
 # bashDocumentationDeriveFunction
 # bashDocumentationDeriveSee
 # bashFirstComment

@@ -10,16 +10,18 @@ __bashPromptModule_TermColors() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return 0
   local otherHome && otherHome=$(catchReturn "$handler" bashLibraryHome "bin/build/tools.sh" 2>/dev/null) || :
-
+  local savedState=""
   local debug=false
   ! buildDebugEnabled term-colors || debug=true
 
+  export BUILD_TERM_COLORS_STATE
+
+  local dd=()
   if [ "$home" = "$otherHome" ]; then
-    local schemeFile dd=()
     ! $debug || dd+=("--debug")
 
-    local savedState savedModified=""
-    savedState=$(catchReturn "$handler" buildEnvironmentGet BUILD_TERM_COLORS_STATE) || return $?
+    savedModified=""
+    savedState="${BUILD_TERM_COLORS_STATE-}"
     if [ -n "$savedState" ]; then
       local savedHome savedModified
       savedHome="${savedState%|*}"
@@ -32,11 +34,14 @@ __bashPromptModule_TermColors() {
     else
       ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE is blank"
     fi
+  elif [ -z "$otherHome" ]; then
+    ! $debug || statusMessage decorate info "No build home, no colors."
+    return 0
   else
     ! $debug || statusMessage decorate info "$(decorate file "$home") -> $(decorate file "$otherHome")"
   fi
   # Deprecated files
-  for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
+  local schemeFile && for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
     ! $debug || statusMessage decorate info "Looking at $(decorate file "$schemeFile")"
     if [ ! -f "$schemeFile" ]; then
       ! $debug || statusMessage decorate info "$(decorate file "$schemeFile") does not exist"
@@ -52,7 +57,7 @@ __bashPromptModule_TermColors() {
         break
       fi
     else
-      ! $debug || statusMessage decorate info "$schemeFile modified ($modified) before $savedModified"
+      ! $debug || statusMessage decorate info "$schemeFile modified ($modified) before or at $savedModified (skipping)"
     fi
   done
 }

@@ -33,10 +33,6 @@ Fetch URL content
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_URL_TIMEOUT}
-
 ### Requires
 
 - {SEE:returnMessage}

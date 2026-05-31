@@ -253,6 +253,14 @@ __deprecatedConfiguration() {
   while read -r fileName; do
     printf "git mv %s %s\n" "$fileName" "$(dirname "$fileName")/bashSanitize.conf"
   done < <(find "$home" -name ".skip-copyright" -type f) | outputTrigger "$(decorate error "Found old config files:")"
+
+  # iterm2-colors.conf renamed
+  if [ -f "$home/.iterm2-colors.conf" ]; then
+    git mv "$home/.iterm2-colors.conf" "$home/term-colors.conf"
+  fi
+  if [ -f "$home/etc/iterm2-colors.conf" ]; then
+    git mv "$home/etc/iterm2-colors.conf" "$home/etc/term-colors.conf"
+  fi
   return "$returnCode"
 }
 

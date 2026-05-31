@@ -12,12 +12,12 @@ file="bin/build/tools/build.sh"
 fn="buildEnvironmentFiles"
 fnMarker="buildenvironmentfiles"
 foundNames=([0]="argument" [1]="environment")
-line="243"
+line="245"
 rawComment=$'Determine the environment file names for environment variables\nArgument: envName - String. Optional. Name of the environment value to find\nArgument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nEnvironment: BUILD_ENVIRONMENT_DIRS\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="3f80bef4c3044547d0294608af71456a5a68f035"
-sourceLine="243"
+sourceHash="7c3aa107c357db74a0d854defdaf7f2b17361d34"
+sourceLine="245"
 summary="Determine the environment file names for environment variables"
 summaryComputed="true"
 usage="buildEnvironmentFiles [ envName ] [ --application applicationHome ] [ --help ] [ --handler handler ]"

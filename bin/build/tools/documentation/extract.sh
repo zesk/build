@@ -123,7 +123,7 @@ __bashDocumentationExtractGenerateCache() {
     extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
     extras+=("# Generated on $(dateToday)")
     catchReturn "$handler" environmentClean || return $?
-    local uncompiled="${definitionFile%.sh}.sh.$$.uncompiled"
+    local uncompiled && uncompiled=$(fileTemporaryName "$handler") || return $?
     local clean=("$uncompiled" "$uncompiled.finished")
     bashRecursionDebug || return $?
     __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$lineNumber" "$@" | printfOutputPrefix "%s\n" "${extras[@]}" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
@@ -138,7 +138,7 @@ __bashDocumentationExtractGenerateCache() {
       environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" 1>&2
       throwEnvironment "$handler" "Final $definitionFile does not contain sourceFile=?" || returnClean $? "${clean[@]}" || return $?
     fi
-    catchEnvironment "$handler" mv -f "$uncompiled.finished" "$definitionFile" || returnClean $? "${clean[@]}" || $?
+    catchEnvironment "$handler" cp "$uncompiled.finished" "$definitionFile" || returnClean $? "${clean[@]}" "$definitionFile" || $?
     catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   ) || return $?
 }

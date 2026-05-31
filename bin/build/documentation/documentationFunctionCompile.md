@@ -4,7 +4,7 @@
 
 ### Usage
 
-    documentationFunctionCompile [ --clean ] [ --source codeSource ] [ --documentation documentationSource ] [ --all ] [ --fingerprint ] [ functionName ... ]
+    documentationFunctionCompile [ --clean ] --source codeSource [ --documentation documentationSource ] [ --all ] [ --fingerprint ] [ functionName ... ]
 
 - `--documentation` is required for `SEE:` files
 
@@ -13,7 +13,7 @@
 ### Arguments
 
 - `--clean` - Flag. Optional. Clean everything and then exit.
-- `--source codeSource` - Directory. Code source to find functions.
+- `--source codeSource` - Directory. Required. Code source to find functions.
 - `--documentation documentationSource` - Directory. Documentation source to find documentation links.
 - `--all` - Flag. Optional. Do everything regardless of cache state.
 - `--fingerprint` - Flag. Optional. Use fingerprint to ensure results are up to date.
