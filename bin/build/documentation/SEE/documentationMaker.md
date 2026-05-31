@@ -1,1 +1,1 @@
-[documentationMaker]({rel}#documentationmaker) - Generate documentation using source markdown and a mapping function. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L443))
+[documentationMaker]({rel}tools/documentation.md#documentationmaker) - Generate documentation using source markdown and a mapping function. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L443))

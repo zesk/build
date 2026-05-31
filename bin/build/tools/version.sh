@@ -30,6 +30,9 @@ _isVersion() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Strip leading vee from version tags
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Take one or more versions and strip the leading `v`
 # stdin: Versions containing a preceding `v` character (optionally)
 # stdout: Versions with the initial `v` (if it exists) removed
@@ -45,10 +48,25 @@ _versionNoVee() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Generate markdown for release notes
+# Outputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.
+# Output show release notes in reverse version order:
+# - the catenation of the release notes files (`count` items)
+# - a blank line
+# - the title line and a blank line (or nothing if title line is blank)
+# - list links to remaining release notes (`- [v0.0.1](./0.0.1.md)` for example)
+# Argument: --count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.
+# Argument: --title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes.
+# Argument: --rel rel - EmptyString. Relative link text to display before links. Defaults to `.`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# stdout: markdown
 releaseNotesMarkdown() {
   local handler="_${FUNCNAME[0]}"
 
-  local count=5 home="" title=""
+  local count=5 home="" title="" rel="."
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -64,6 +82,7 @@ releaseNotesMarkdown() {
     --application) shift && home=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --count) shift && count=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --title) shift && title=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
+    --rel) shift && rel=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -75,7 +94,7 @@ releaseNotesMarkdown() {
   [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
 
   local currentNotes && currentNotes=$(catchReturn "$handler" releaseNotes --application "$home") || return $?
-  __releaseNotesMarkdown "$handler" "$(dirname "$currentNotes")" "$count" "$title" || return $?
+  __releaseNotesMarkdown "$handler" "$(dirname "$currentNotes")" "$count" "$rel" "$title" || return $?
 }
 _releaseNotesMarkdown() {
   # __IDENTICAL__ bashDocumentation 1
@@ -86,6 +105,7 @@ __releaseNotesMarkdown() {
   local handler="$1" && shift
   local notesPath="$1" && shift
   local recentNotes="$1" && shift
+  local rel="$1" && shift
   local title="$1" && shift
 
   local index=0
@@ -99,7 +119,7 @@ __releaseNotesMarkdown() {
       [ -z "$title" ] && printf "\n" || printf -- "%s\n" "" "$title" ""
     fi
     if [ "$index" -ge "$recentNotes" ]; then
-      printf -- "- [%s](%s)\n" "$vv" "./$vv.md"
+      printf -- "- [%s](%s)\n" "$vv" "$rel/$vv.md"
     fi
     ((index++))
   done < <(find "$notesPath" -name "*.md" | textVersionSort -r)

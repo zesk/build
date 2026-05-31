@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-05-31
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="104"
 rawComment=$'List unlinked functions in documentation index\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="1c8f55384c305516f36c332ab5bcba79217a4ef6"
+sourceHash="fcb62bb7556219228e99646be98608f374524bed"
 sourceLine="104"
 summary="List unlinked functions in documentation index"
 summaryComputed="true"

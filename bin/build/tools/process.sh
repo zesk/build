@@ -299,3 +299,73 @@ _processOpenPipes() {
 #    1-9    dialect-specific field identifiers (The output
 #        of -F? identifies the information to be found
 #        in dialect-specific fields.)
+
+# Watch the number of processes matching `token` and fail if it exceeds a threshold
+# Argument:
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: threshold - UnsignedInteger. Optional. If process count exceeds this threshold, run the hook and return 1.
+# Argument: ... - Arguments. Optional. Pass these arguments to the hook.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --quiet - Flag. Optional. Do not output a message when threshold is exceeded.
+# Argument: --hook hookName - EmptyString. Optional. Run this hook. Defaults to `notify'
+# Argument: --sleep sleepTime - PositiveInteger. Optional. Sleep time between checks in milliseconds.
+# Argument: --timeout timeoutTime - PositiveInteger. Optional. Time out watching after `timeoutTime` milliseconds.
+# Return Code: 0 - Sleep was interrupted
+# Return Code: 1 - Process count exceeded threshold
+processCountWatcher() {
+  local handler="_${FUNCNAME[0]}"
+  local token="" threshold=15 hookName="notify" quietFlag=false sleepTime=1 timeout=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --quiet) quietFlag=true ;;
+    --hook) shift && hookName=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
+    --sleep) shift && sleepTime=$(validate "$handler" PositiveInteger "$argument" "${1-}") && sleepTime=$((sleepTime / 1000)) || return $? ;;
+    --timeout) shift && timeout=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
+    *)
+      if [ -z "$token" ]; then
+        token="$(validate "$handler" String "token" "${1-}")" || return $?
+      elif [ -z "$threshold" ]; then
+        threshold="$(validate "$handler" UnsignedInteger "threshold" "${1-}")" || return $?
+      else
+        break
+      fi
+      ;;
+    esac
+    shift
+  done
+
+  local uid && uid=$(catchReturn "$handler" id -u) || return $?
+  local startTime && [ -z "$timeout" ] || startTime=$(catchReturn "$handler" timingStart) || return $?
+  [ "$sleepTime" -le 0 ] || sleepTime=1
+  while true; do
+    local processCount && processCount="$(pgrep -u "$uid" "$token" | grep -v "$$" | fileLineCount)" || return $?
+    if [ "$processCount" -gt "$threshold" ]; then
+      $quietFlag || decorate info "$token $(decorate error "[$processCount]") > $(decorate value "$threshold")"
+      [ -z "$hookName" ] || hookRun "$hookName" "$@" || return $?
+      return 1
+    fi
+    if [ -n "$timeout" ] && [ "$(timingElapsed "$startTime")" -gt "$timeout" ]; then
+      $quietFlag || decorate info "$token $(decorate error "[$processCount]") timed out after $(localePluralWord "$timeout" millisecond)."
+      return 0
+    fi
+    sleep "$sleepTime" || returnInterrupt || return $?
+  done
+  returnExit || return $?
+}
+_processCountWatcher() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

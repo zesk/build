@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-05-31
 # shellcheck disable=SC2034
 argument=$'envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.\n--subdirectory subdirectory - String. Optional. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.\n--mode fileMode - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.\n--owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.\n--no-create - Flag. Optional. Do not create the subdirectory if it does not exist.\n'
 base="build.sh"
@@ -16,7 +16,7 @@ line="603"
 rawComment=$'Load and print one or more environment settings which represents a directory which should be created.\nArgument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.\nArgument: --subdirectory subdirectory - String. Optional. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.\nArgument: --mode fileMode - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.\nArgument: --owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.\nArgument: --no-create - Flag. Optional. Do not create the subdirectory if it does not exist.\nIf BOTH files exist, both are sourced, so application environments should anticipate values\ncreated by build\'s default.\nModifies local environment. Not usually run within a subshell.\nEnvironment: $envName\nEnvironment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="16a877ce34323f71849bcba9805acd71769a633e"
+sourceHash="3f80bef4c3044547d0294608af71456a5a68f035"
 sourceLine="603"
 summary="Load and print one or more environment settings which represents"
 summaryComputed="true"

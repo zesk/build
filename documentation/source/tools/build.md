@@ -34,7 +34,7 @@ Configure a project to use **{applicationName}**.
 
 {buildFunctions}
 
-{buildFunctionsFilter}
+{buildFunctionsExclude}
 
 {buildDeprecatedFunctions}
 

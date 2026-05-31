@@ -1,1 +1,1 @@
-[documentationFilesAdd]({rel}#documentationfilesadd) - Git add documentation files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L527))
+[documentationFilesAdd]({rel}tools/documentation.md#documentationfilesadd) - Git add documentation files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L527))

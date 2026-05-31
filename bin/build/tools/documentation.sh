@@ -192,6 +192,18 @@ _documentationEnvironmentMake() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Convert an environment comment to environment variables
+# Argument: environmentFile - EnvironmentFile. Required. File to convert to a settings file.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+documentationEnvironmentFileParse() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationEnvironmentFileParse() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Get the default cache directory for the documentation
 # Argument: suffix - String. Optional. Directory suffix - created if does not exist.
 # DOC TEMPLATE: --help 1
@@ -771,7 +783,7 @@ bashDocumentationMissing() {
   local start && start=$(timingStart) || return $?
   catchReturn "$handler" documentationIndexGenerate --target "$indexPath" "$codeSourcePath" || return $?
   catchReturn "$handler" documentationIndexDocumentation --target "$indexPath" "$documentationSourcePath" || return $?
-  statusMessage timingReport "$start" "Documentation index generated"
+  statusMessage --last timingReport "$start" "Documentation index generated"
   local tempMissing="$templateTarget/.missingFunctions.$$.md"
   local clean=("$tempMissing")
   documentationIndexUnlinkedFunctions "$indexPath" | grepSafe -v '^_' | sort >"$tempMissing" || returnClean $? "${clean[@]}" || return $?

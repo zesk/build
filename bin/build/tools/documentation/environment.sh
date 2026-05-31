@@ -60,7 +60,7 @@ __documentationEnvironmentMake() {
   done
   local start && start=$(timingStart)
 
-  local ee=() && while read -r envFile; do ee+=("$envFile"); done < <(local source && for source in "${sources[@]}"; do find "$source" -maxdepth 1 -type f -name "*.sh"; done)
+  local ee=() && while read -r envFile; do ee+=("$envFile"); done < <(local source && for source in "${sources[@]}"; do find "$source" -maxdepth 1 -type f -name "*.sh" | sort; done)
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   local cacheDirectory && cacheDirectory=$(__documentationFile "$home" "env/base" true) || return $?

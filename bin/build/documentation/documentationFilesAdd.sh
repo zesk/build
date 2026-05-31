@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-05-31
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="527"
 rawComment=$'Git add documentation files\nJust the first path.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="1c8f55384c305516f36c332ab5bcba79217a4ef6"
+sourceHash="fcb62bb7556219228e99646be98608f374524bed"
 sourceLine="527"
 summary="Git add documentation files"
 summaryComputed="true"
@@ -24,4 +24,4 @@ usage="documentationFilesAdd [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdocumentationFilesAdd'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Git add documentation files'$'\n''Just the first path.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
 # shellcheck disable=SC2016
 helpPlain='Usage: documentationFilesAdd [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Git add documentation files'$'\n''Just the first path.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
-documentationPath=""
+documentationPath="documentation/source/tools/documentation.md"

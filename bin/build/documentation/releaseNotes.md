@@ -34,7 +34,3 @@ docs/release/version.md
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_RELEASE_NOTES}
-

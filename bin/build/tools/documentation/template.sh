@@ -10,6 +10,13 @@
 # Test: o ./test/tools/documentation-tests.sh
 
 # Map template files using our identical functionality
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --key keyName - String. Optional. Key for the fingerprint.
+# Argument: --hook hookName - String. Optional. Hook for the fingerprint.
+# Argument: --fingerprint - Flag. Optional. Use the fingerprint to cache this process.
 # Argument: templatePath - Directory. Required. Path to the templates to repair.
 # Argument: repairPath ... - Directory. Required. One or more directories containing IDENTICAL sources for repair.
 # DOC TEMPLATE: --help 1
@@ -30,7 +37,10 @@ __documentationIdenticalRepair() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "fingerprintFlag" "$hookName:$key") || return "$(convertValue $? 120 0)" ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --key) shift && key=$(validate "$handler" String "$argument" "$key") || return $? ;;
+    --hook) shift && hookName=$(validate "$handler" String "$argument" "$key") || return $? ;;
+    --fingerprint) fingerprint=$(validate "$handler" Fingerprint "$argument" "$hookName:$key") || return "$(convertValue $? 120 0)" ;;
     *)
       if [ -z "$templatePath" ]; then
         templatePath=$(validate "$handler" Directory "templatePath" "${1-}") || return $?

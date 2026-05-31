@@ -1,13 +1,13 @@
 # v0.43.1
 
-# v0.43.0
+# v0.43.0 - 2025-05-23
 buildFunctionSeeTemplate|bashDocumentationDeriveSee|
 buildFunctionMarkdownDocumentation|bashDocumentationDeriveFunction|
 documentationBuildEnvironment|documentationEnvironmentMake|
 documentationBuildCache|documentationCache|
 documentationTemplateUpdate|documentationIdenticalRepair|
 
-# v0.42.5
+# v0.42.5 - 2026-04-29
 
 # v0.42.4
 
@@ -70,7 +70,7 @@ consoleHeadingBoxed|decorate box|
 
 # v0.41.2
 
-# v0.41.1
+# v0.41.1 - 2026-03-06
 
 # v0.41.0
 isSubstring|stringFound
@@ -191,104 +191,4 @@ simpleMarkdownToConsole|markdownToConsole
 
 # v0.39.6
 
-# v0.39.5
-
-# v0.39.4
-
-# v0.39.3
-new-release.sh|release-new.sh|
-
-# v0.39.2
-
-# v0.39.1
-
-# v0.39.0
-isAbsolutePath|pathIsAbsolute
-bashDocumentation_Extract|bashDocumentationExtract
-IDENTICAL _return |IDENTICAL returnMessage |
-_IDENTICAL_ exitString |_IDENTICAL_ returnString |
-exitString|returnCodeString
-nextMinorVersion|versionNextMinor
-NextMinorVersion|VersionNextMinor
-newRelease|releaseNew
-NewRelease|ReleaseNew
-returnCatchEnvironment|catchEnvironment|
-returnCatchArgument|catchArgument|
-returnThrowEnvironment|throwEnvironment|
-returnThrowArgument|throwArgument|
-returnCatchCode|catchCode|
-__throwEnvironment|throwEnvironment
-__catchEnvironment|catchEnvironment
-__throwArgument |throwArgument |
-__catchArgument |catchArgument |
-__throw |returnThrow |
-returnCatch|catchReturn|
-__catch |catchReturn |
-__catchCode|catchCode|
-__environment |catchEnvironment "returnMessage" |
-__execute |execute |
-__echo |executeEcho |
-_choose |booleanChoose |
-
-# v0.38.3
-# Exit Code:|# Return Code:|
-
-# v0.38.2
-
-# v0.38.1
-
-# v0.38.0
-
-# v0.37.2
-interactiveBashSource|approveBashSource
-approvedFiles|approvedBashSources
-
-# v0.37.1
-
-# v0.37.0
-hostIPList|networkIPList
-timestampToDate|dateFromTimestamp
-truncateFloat|floatTruncate
-roundFloat|floatRound
-mostRecentlyModifiedFile|fileModifiedRecentlyName
-mostRecentlyModifiedTimestamp|fileModifiedRecentlyTimestamp
-copyFile|fileCopy
-copyFileWouldChange|fileChange
-betterType|fileType
-simplifyPath|directoryPathSimplify
-renameFiles|filesRename
-reverseFileLines|fileReverseLines
-renameLink|linkRename
-modificationTime|fileModificationTime
-modificationSeconds|fileModificationSeconds
-isEmptyFile|fileIsEmpty
-isNewestFile|fileIsNewest
-isOldestFile|fileIsOldest
-oldestFile|fileOldest
-newestFile|fileNewest
-modifiedDays|fileModifiedDays
-modifiedSeconds|fileModifiedSeconds
-requireFileDirectory|fileDirectoryRequire
-requireDirectory|directoryRequire
-_clean |returnClean
-_undo |returnUndo
-getFromPipelineYML|bitbucketGetVariable
-allColorTest|colorSampleCodes
-AllColorTest|ColorSampleCodes
-colorTest|colorSampleStyles
-ColorTest|ColorSampleStyles
-semanticColorTest|colorSampleSemanticStyles
-SemanticColorTest|ColorSampleSemanticStyles
-colorComboTest|colorSampleCombinations
-ColorComboTest|ColorSampleCombinations
-IDENTICAL bashDocumentation |__IDENTICAL__ bashDocumentation |
-_IDENTICAL_ bashDocumentation|__IDENTICAL__ bashDocumentation|
-semanticColorSampleStyles|colorSampleSemanticStyles
-anyEnvToDockerEnv|environmentFileToDocker
-AnyEnvToDockerEnv|EnvironmentFileToDocker
-anyEnvToBashEnv|environmentFileToBashCompatible
-dockerEnvToBash|environmentFileDockerToBashCompatible
-DockerEnvToBash|EnvironmentFileDockerToBashCompatible
-dockerEnvFromBashEnv|environmentFileBashCompatibleToDocker
-DockerEnvFromBashEnv|EnvironmentFileBashCompatibleToDocker
-checkDockerEnvFile|environmentFileIsDocker|
+# v0.39.5 - 2025-11-04

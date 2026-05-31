@@ -130,7 +130,7 @@
 - {SEE:buildEnvironmentLoad}
 - {SEE:buildEnvironmentNames}
 - {SEE:buildFunctions}
-- {SEE:buildFunctionsFilter}
+- {SEE:buildFunctionsExclude}
 - {SEE:buildHome}
 - {SEE:buildQuietLog}
 - {SEE:catchArgument}
@@ -598,6 +598,7 @@
 - {SEE:printfOutputEmpty}
 - {SEE:printfOutputPrefix}
 - {SEE:printfOutputSuffix}
+- {SEE:processCountWatcher}
 - {SEE:processMemoryUsage}
 - {SEE:processOpenPipes}
 - {SEE:processVirtualMemoryAllocation}

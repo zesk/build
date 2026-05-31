@@ -127,7 +127,7 @@ _buildFunctions() {
 # stdout: line:Function
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-buildFunctionsFilter() {
+buildFunctionsExclude() {
   local handler="_${FUNCNAME[0]}"
   local ff && ff=$(fileTemporaryName "$handler") || return $?
   local clean=("$ff")
@@ -135,7 +135,7 @@ buildFunctionsFilter() {
   sort -u | diff -u - "$ff" | grep '^-' | cut -c 2- | grep -v '^-'
   catchReturn "$handler" rm -f "${clean[@]}" || return $?
 }
-_buildFunctionsFilter() {
+_buildFunctionsExclude() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

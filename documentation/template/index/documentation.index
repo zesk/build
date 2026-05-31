@@ -220,7 +220,7 @@ buildFailed documentation/source/tools/pipeline.md
 buildFailed documentation/source/tools/unused.md
 buildFunctions documentation/source/tools/build.md
 buildFunctionsCompile documentation/source/tools/internal.md
-buildFunctionsFilter documentation/source/tools/build.md
+buildFunctionsExclude documentation/source/tools/build.md
 buildFunctionsRemoveDeprecated documentation/source/tools/internal.md
 buildHome documentation/source/tools/build.md
 buildPR documentation/source/tools/internal.md

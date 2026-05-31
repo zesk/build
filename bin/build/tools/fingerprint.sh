@@ -75,7 +75,7 @@ fingerprint() {
       return 1
     fi
     catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-    ! $verboseFlag || decorate subtle "Fingerprint updated to $(decorate code "$fingerprint") [$savedFingerprint]. (path: $(decorate value "$jqPath"))"
+    ! $verboseFlag || decorate info "Fingerprint updated to $(decorate code "$fingerprint") $(decorate subtle "[${savedFingerprint:0:8}...]"). (path: $(decorate value "$jqPath"))"
   fi
 }
 _fingerprint() {

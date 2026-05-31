@@ -1,10 +1,10 @@
 ## `versionNoVee`
 
-> Take one or more versions and strip the leading `v`
+> Strip leading vee from version tags
 
 ### Usage
 
-    versionNoVee
+    versionNoVee [ --help ]
 
 Take one or more versions and strip the leading `v`
 
@@ -12,7 +12,7 @@ Take one or more versions and strip the leading `v`
 
 ### Arguments
 
-- none
+- `--help` - Flag. Optional. Display this help.
 
 ### Reads standard input
 

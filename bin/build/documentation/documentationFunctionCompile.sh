@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-05-31
 # shellcheck disable=SC2034
 argument=$'--clean - Flag. Optional. Clean everything and then exit.\n--source codeSource - Directory. Code source to find functions.\n--documentation documentationSource - Directory. Documentation source to find documentation links.\n--all - Flag. Optional. Do everything regardless of cache state.\n--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nfunctionName ... - String. Optional. Specific functions to compile.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="515"
 rawComment=$'- `--documentation` is required for `SEE:` files\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --source codeSource - Directory. Code source to find functions.\nArgument: --documentation documentationSource - Directory. Documentation source to find documentation links.\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: functionName - File with function names one per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="1c8f55384c305516f36c332ab5bcba79217a4ef6"
+sourceHash="fcb62bb7556219228e99646be98608f374524bed"
 sourceLine="515"
 stdin=$'functionName - File with function names one per line.\n'
 summary="- \`--documentation\` is required for \`SEE:\` files"

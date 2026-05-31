@@ -1,7 +1,3 @@
-## 
-
-- `BUILD_ENVIRONMENT_DIRS` &mdash; BUILD_ENVIRONMENT_DIRS **.  
-
 ## Amazon Web Services
 
 - `AWS_ACCESS_KEY_DATE` &mdash; AWS_ACCESS_KEY_DATE *Date*. Date of key expiration which can be checked in pipelines. [notes](#aws_access_key_date)
@@ -56,6 +52,7 @@
 - `BUILD_CACHE_HOME` &mdash; BUILD_CACHE_HOME *Directory*. Location for the build system cache files. Defaults to `$HOME/.build` [notes](#build_cache_home)
 - `BUILD_DEBUG` &mdash; BUILD_DEBUG *CommaDelimitedList*. Constant for turning debugging on during build to find errors [notes](#build_debug)
 - `BUILD_DEBUG_LINES` &mdash; BUILD_DEBUG_LINES *PositiveInteger*. Number of lines of debugging output to send to stderr [notes](#build_debug_lines)
+- `BUILD_ENVIRONMENT_DIRS` &mdash; BUILD_ENVIRONMENT_DIRS *DirectoryList*. Search directory for environment definition files. `:` separated. [notes](#build_environment_dirs)
 - `BUILD_HOME` &mdash; BUILD_HOME *Directory*. `BUILD_HOME` is `.` when this code is installed - at [notes](#build_home)
 - `BUILD_HOOK_DIRS` &mdash; BUILD_HOOK_DIRS *ApplicationDirectoryList*. List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`. [notes](#build_hook_dirs)
 - `BUILD_INSTALL_URL` &mdash; BUILD_INSTALL_URL *URL*. `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer. [notes](#build_install_url)

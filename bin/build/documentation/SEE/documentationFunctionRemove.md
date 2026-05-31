@@ -1,1 +1,1 @@
-[documentationFunctionRemove]({rel}#documentationfunctionremove) - Remove a function from the documentation cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L554))
+[documentationFunctionRemove]({rel}tools/documentation.md#documentationfunctionremove) - Remove a function from the documentation cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L554))

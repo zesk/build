@@ -79,7 +79,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     alias bpr='__buildFingerUpdate && gitCommit && buildPR'
 
     muzzle reloadChanges --stop 2>&1
-    muzzle reloadChanges --name "$(buildEnvironmentGet APPLICATION_NAME)" "$home/bin/tools.sh" "$home/bin/build/build.json"
     muzzle buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors bashPromptModule_BuildProject
@@ -111,25 +110,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
       "$m"
       colorSampleSemanticStyles
     done
-  }
-
-  processWatcher() {
-    local handler="_${FUNCNAME[0]}"
-    local uid && uid=$(id -u) || return $?
-    local token && token="$(validate "$handler" String "token" "${1-:bash}")" || return $?
-    [ $# -eq 0 ] || shift
-    local threshold && threshold="$(validate "$handler" UnsignedInteger "threshold" "${1-:15}")" || return $?
-    while true; do
-      local processCount && processCount="$(pgrep -u "$uid" "$token" | grep -v "$$" | fileLineCount)" || return $?
-      if [ "$processCount" -gt "$threshold" ]; then
-        decorate info "$token $(decorate error "$processCount") > $(decorate value "$threshold")"
-      fi
-      sleep 1 || break
-    done
-  }
-  _processWatcher() {
-    # __IDENTICAL__ bashDocumentation 1
-    bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   # Undo Zesk Build project configuration

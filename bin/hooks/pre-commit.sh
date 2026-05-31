@@ -15,12 +15,13 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
   # - `sugar.sh` is maintained (and checked to make sure the wrong version is not being edited)
   __hookPreCommit() {
     local handler="_${FUNCNAME[0]}"
-    # gitPreCommitSetup is already called
 
-    gitPreCommitHeader sh md json
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+    gitPreCommitHeader sh md json txt conf css index js png svg yml
 
     statusMessage decorate success Updating help files ...
-    catchEnvironment "$handler" ./bin/update-md.sh --skip-commit || return $?
+    __buildBuildUpdateMarkdown "$handler" "$home" || return $?
 
     statusMessage decorate success Updating _sugar.sh
     local original="bin/build/identical/_sugar.sh" nonOriginal="bin/build/tools/_sugar.sh"
@@ -41,7 +42,6 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       rm -f "$nonOriginalWithEOF" || :
     fi
 
-    local home && home=$(catchReturn "$handler" buildHome) || return $?
     if ! find "$home/bin/build/documentation" -type f -name '*.sh' -empty | decorate warning | decorate wrap "- " "" | outputTrigger | printfOutputPrefix "%s\n" "$(decorate error "Zero documentation files:")"; then
       statusMessage decorate info "Building usage ..."
       catchEnvironment "$handler" find "$home/bin/build/documentation" -type f -name '*.sh' -empty -delete || return $?

@@ -21,7 +21,3 @@ Skips dot directories and release notes by default and any file named `deprecate
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_RELEASE_NOTES}
-

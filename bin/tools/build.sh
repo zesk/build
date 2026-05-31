@@ -50,24 +50,17 @@ __buildDebugColors() {
 
 }
 
-__buildMarker() {
-  local handler="returnMessage"
-  local home
-
-  home=$(catchReturn "$handler" buildHome) || return $?
-  local jsonFile
-
-  jsonFile="$home/$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+__buildBuildJSONUpdate() {
+  local handler="$1" && shift
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local jsonFile && jsonFile="$home/$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
 
   [ -f "$jsonFile" ] || catchEnvironment "$handler" printf "{}" >"$jsonFile" || return $?
-
-  local version id
-  version="$(catchReturn "$handler" hookRun version-current)" || return $?
-  id="$(catchReturn "$handler" hookRun application-id)" || return $?
+  local version && version="$(catchReturn "$handler" hookRun version-current)" || return $?
+  local id && id="$(catchReturn "$handler" hookRun application-id)" || return $?
   catchEnvironment "$handler" jsonFileSet "$jsonFile" ".version" "$version" || return $?
   catchEnvironment "$handler" jsonFileSet "$jsonFile" ".id" "$id" || return $?
   catchEnvironment "$handler" muzzle git add "$jsonFile" || return $?
-
   printf "%s\n" "$jsonFile"
 }
 

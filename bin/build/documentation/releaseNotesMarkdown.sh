@@ -1,27 +1,28 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-31
 # shellcheck disable=SC2034
-argument="none"
+argument=$'--count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.\n--title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes.\n--rel rel - EmptyString. Relative link text to display before links. Defaults to `.`\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="version.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'No documentation for `releaseNotesMarkdown`.\n'
-descriptionLineCount=""
+description=$'Outputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.\nOutput show release notes in reverse version order:\n- the catenation of the release notes files (`count` items)\n- a blank line\n- the title line and a blank line (or nothing if title line is blank)\n- list links to remaining release notes (`- [v0.0.1](./0.0.1.md)` for example)\n\n'
+descriptionLineCount="7"
 file="bin/build/tools/version.sh"
 fn="releaseNotesMarkdown"
 fnMarker="releasenotesmarkdown"
-foundNames=()
-line="48"
-rawComment=$'\n'
+foundNames=([0]="summary" [1]="argument" [2]="stdout")
+line="66"
+rawComment=$'Summary: Generate markdown for release notes\nOutputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.\nOutput show release notes in reverse version order:\n- the catenation of the release notes files (`count` items)\n- a blank line\n- the title line and a blank line (or nothing if title line is blank)\n- list links to remaining release notes (`- [v0.0.1](./0.0.1.md)` for example)\nArgument: --count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.\nArgument: --title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes.\nArgument: --rel rel - EmptyString. Relative link text to display before links. Defaults to `.`\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nstdout: markdown\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/version.sh"
-sourceHash="240ad2fcde33d656f7bc12d11ec1180e782340b2"
-sourceLine="48"
-summary="undocumented"
+sourceHash="becf1625ab0c25e8e0c878614987861b134eca85"
+sourceLine="66"
+stdout=$'markdown\n'
+summary="Generate markdown for release notes"
 summaryComputed=""
-usage="releaseNotesMarkdown"
+usage="releaseNotesMarkdown [ --count fullCount ] [ --title titleText ] [ --rel rel ] [ --help ] [ --handler handler ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreleaseNotesMarkdown'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]mreleaseNotesMarkdown'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreleaseNotesMarkdown'$'\e''[0m '$'\e''[[(blue)]m[ --count fullCount ]'$'\e''[0m '$'\e''[[(blue)]m[ --title titleText ]'$'\e''[0m '$'\e''[[(blue)]m[ --rel rel ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--count fullCount  '$'\e''[[(value)]mPositiveInteger. Number of recent release notes to include in the output. Defaults to 5.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--title titleText  '$'\e''[[(value)]mEmptyString. Markdown text to display between the recent release notes and the links to release notes.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--rel rel          '$'\e''[[(value)]mEmptyString. Relative link text to display before links. Defaults to '$'\e''[[(code)]m.'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--handler handler  '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n'''$'\n''Outputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.'$'\n''Output show release notes in reverse version order:'$'\n''- the catenation of the release notes files ('$'\e''[[(code)]mcount'$'\e''[[(reset)]m items)'$'\n''- a blank line'$'\n''- the title line and a blank line (or nothing if title line is blank)'$'\n''- list links to remaining release notes ('$'\e''[[(code)]m- [v0.0.1](./0.0.1.md)'$'\e''[[(reset)]m for example)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''markdown'
 # shellcheck disable=SC2016
-helpPlain='Usage: releaseNotesMarkdown'$'\n'''$'\n''No documentation for releaseNotesMarkdown.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+helpPlain='Usage: releaseNotesMarkdown [ --count fullCount ] [ --title titleText ] [ --rel rel ] [ --help ] [ --handler handler ]'$'\n'''$'\n''    --count fullCount  PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.'$'\n''    --title titleText  EmptyString. Markdown text to display between the recent release notes and the links to release notes.'$'\n''    --rel rel          EmptyString. Relative link text to display before links. Defaults to .'$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n'''$'\n''Outputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.'$'\n''Output show release notes in reverse version order:'$'\n''- the catenation of the release notes files (count items)'$'\n''- a blank line'$'\n''- the title line and a blank line (or nothing if title line is blank)'$'\n''- list links to remaining release notes (- [v0.0.1](./0.0.1.md) for example)'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''markdown'
 documentationPath="documentation/source/tools/version.md"

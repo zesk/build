@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-05-31
 # shellcheck disable=SC2034
 argument=$'processId - Integer. Required. Wait for process ID to exit.\n--timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.\n--signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order.\n--require - Flag. Optional. Require all processes to be alive upon first invocation.\n'
 base="process.sh"
@@ -15,7 +15,7 @@ line="36"
 rawComment=$'Wait for processes not owned by this process to exit, and send signals to terminate processes.\nArgument: processId - Integer. Required. Wait for process ID to exit.\nArgument: --timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.\nArgument: --signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order.\nArgument: --require - Flag. Optional. Require all processes to be alive upon first invocation.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/process.sh"
-sourceHash="9a9162fce05d86abc173c620c9416ff86fe4e013"
+sourceHash="0b517df56f78b0f4641c01677f31d5f0db9297ca"
 sourceLine="36"
 summary="Wait for processes not owned by this process to exit,"
 summaryComputed="true"

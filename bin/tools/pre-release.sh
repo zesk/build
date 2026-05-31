@@ -20,7 +20,7 @@ __buildPreReleaseStep() {
 }
 
 __buildPreReleaseLintFiles() {
-  find "$1" -name '*.sh' ! -path '*/.*/*' | bashLintFiles
+  find "$1" -name '*.sh' ! -path '*/.*/*' ! -path '*/bin/build/documentation/*' | bashLintFiles
 }
 
 buildPreRelease() {
@@ -55,24 +55,27 @@ buildPreRelease() {
   # catchEnvironment "$handler"  "$home/bin/documentation.sh" --clean || exitCode=$?
   __buildPreReleaseStep "$handler" "$interruptCode" "Documentation build" "$home/bin/documentation.sh" || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
+
+  __buildBuildUpdateMarkdown "$handler" "$home" || return $?
+
   #
   # Commit changes
   #
+  local version && version=$(hookVersionCurrent)
+  muzzle __buildBuildJSONUpdate "$handler" || return $?
   if [ "$exitCode" -eq 0 ] && gitRepositoryChanged; then
     statusMessage decorate info "Committing changes ..."
-    catchEnvironment "$handler" gitCommit -- "buildPreRelease $(hookVersionCurrent)" || exitCode=$?
+    catchEnvironment "$handler" gitCommit -- "buildPreRelease $version" || exitCode=$?
     statusMessage --last decorate info "Committed and ready to release."
   else
     statusMessage --last decorate info "No changes to commit."
   fi
 
   # Completed message
-  local text && text="$(catchEnvironment "$handler" hookVersionCurrent)" || return $?
-  if [ "$exitCode" != 0 ]; then
-    decorate big "$text Failed" | decorate error
-  else
-    decorate big "$text Built" | decorate success
-  fi
+  decorate big "$version Failed" | {
+    # shellcheck disable=SC2015
+    [ "$exitCode" = 0 ] && decorate error || decorate success
+  }
   return "$exitCode"
 }
 _buildPreRelease() {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-05-31
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--check - Flag. Optional. Check to see if an update is needed\nsettingsFile - File. Required. Settings file for function to document.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="850"
 rawComment=$'Summary: Generate SEE markdown content\nGenerate `SEE/{fn}.md` - Derived file generator.\nFile is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --check - Flag. Optional. Check to see if an update is needed\nArgument: settingsFile - File. Required. Settings file for function to document.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="1c8f55384c305516f36c332ab5bcba79217a4ef6"
+sourceHash="fcb62bb7556219228e99646be98608f374524bed"
 sourceLine="850"
 summary="Generate SEE markdown content"
 summaryComputed=""
