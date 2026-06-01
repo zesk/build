@@ -14,22 +14,20 @@ __buildBuildAddNoteTo() {
   local source="$home/documentation/.template/$1"
   local target="$home/bin/build/$1"
   local docTarget="$home/documentation/source/$1"
+  local homeTarget="$home/$1"
 
-  if [ -f "$source" ]; then
-    statusMessage --last decorate info "Adding note to $1"
-    catchEnvironment "$handler" cp "$source" "$target" || return $?
-    catchEnvironment "$handler" printf -- "\n%s" "(this file is a copy - please modify the original)" "" >>"$target" || return $?
-    catchEnvironment "$handler" cp "$target" "$docTarget" || return $?
-    catchEnvironment "$handler" git add "$target" "$docTarget" || return $?
-  else
-    statusMessage --last decorate warning "No $(decorate file "$source") found"
-  fi
+  [ -f "$source" ] || throwArgument "$handler" "$source does not exist" || return $?
+  catchEnvironment "$handler" cp "$source" "$target" || return $?
+  statusMessage --last decorate info "Adding note to $target"
+  catchEnvironment "$handler" printf -- "\n%s" "(this file is a copy - please modify the original)" "" >>"$target" || return $?
+  catchEnvironment "$handler" cp "$target" "$docTarget" || return $?
+  catchEnvironment "$handler" cp "$target" "$homeTarget" || return $?
+  catchEnvironment "$handler" git add "$target" "$docTarget" "$homeTarget" || return $?
 }
 
 # Distribute the README.md and LICENSE.md files to important places.
 #
-# Requires: jq throwArgument statusMessage decorate  buildHome  catchReturn __addNoteTo __buildMarker
-# Requires: git gitInsideHook gitRepositoryChanged statusMessage throwEnvironment
+# Requires: __buildBuildAddNoteTo
 __buildBuildUpdateMarkdown() {
   local handler="$1" && shift
   local home="$1" && shift

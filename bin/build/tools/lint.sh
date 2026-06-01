@@ -177,8 +177,7 @@ bashLintFiles() {
     fi
     return 1
   fi
-  statusMessage decorate success "All scripts passed validation ($source)"
-  printf -- "\n"
+  statusMessage --last decorate success "All scripts passed validation ($source)"
 }
 _bashLintFiles() {
   # __IDENTICAL__ bashDocumentation 1

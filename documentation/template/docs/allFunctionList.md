@@ -20,7 +20,7 @@
 - [assertDirectoryExists]({rel}tools/assert.md#assertdirectoryexists) - Test that a directory exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L564))
 - [assertDirectoryNotEmpty]({rel}tools/assert.md#assertdirectorynotempty) - Test that a directory does not exist ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L700))
 - [assertEquals]({rel}tools/assert.md#assertequals) - Assert two strings are equal. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L260))
-- {SEE:assertExitCode}
+- [assertExitCode]({rel}tools/assert.md#assertexitcode) - Assert a process runs and exits with the correct exit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L166))
 - [assertFileContains]({rel}tools/assert.md#assertfilecontains) - Assert a file contains one or more strings ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1000))
 - [assertFileDoesNotContain]({rel}tools/assert.md#assertfiledoesnotcontain) - Assert a file does not contains any occurrence of one ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1045))
 - [assertFileDoesNotExist]({rel}tools/assert.md#assertfiledoesnotexist) - Test that a file does not exist ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L799))
@@ -80,7 +80,7 @@
 - {SEE:bashDocumentationMissing}
 - [bashFileComment]({rel}tools/bash.md#bashfilecomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L501))
 - [bashFinalComment]({rel}tools/bash.md#bashfinalcomment) - Extracts the final comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L555))
-- [bashFindUncaughtAssertions]({rel}tools/test.md#bashfinduncaughtassertions) - Search bash files for assertions which do not terminate a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L290))
+- [bashFindUncaughtAssertions]({rel}tools/test.md#bashfinduncaughtassertions) - Search bash files for assertions which do not terminate a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L289))
 - [bashFirstComment]({rel}tools/bash.md#bashfirstcomment) - Extracts the first comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L575))
 - [bashFunctionComment]({rel}tools/bash.md#bashfunctioncomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L619))
 - [bashFunctionCommentVariable]({rel}tools/bash.md#bashfunctioncommentvariable) - Gets a list of the variable values from a bash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L407))
@@ -91,7 +91,7 @@
 - [bashLibraryHome]({rel}tools/bash.md#bashlibraryhome) - Output the home for a library in the parent path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L137))
 - [bashLint]({rel}tools/lint.md#bashlint) - Check bash files for common errors ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L33))
 - [bashLintFiles]({rel}tools/lint.md#bashlintfiles) - Check files for the existence of a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L105))
-- [bashLintFilesInteractive]({rel}tools/lint.md#bashlintfilesinteractive) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L207))
+- [bashLintFilesInteractive]({rel}tools/lint.md#bashlintfilesinteractive) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L206))
 - [bashListFunctions]({rel}tools/bash.md#bashlistfunctions) - List functions in a given shell file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L360))
 - [bashMakeExecutable]({rel}tools/bash.md#bashmakeexecutable) - Makes all \`*.sh\` files executable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L124))
 - [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt creates the \`PS1\` prompt with the following extra ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))

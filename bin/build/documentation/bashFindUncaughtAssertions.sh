@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--exclude path - String. Optional. Exclude paths which contain this string\n--exec binary - Executable. Optional. For each failed file run this command.\ndirectory - Directory. Optional. Where to search for files to check.\n--list - Flag. Optional. List files which fail. (Default is simply to exit silently.)\n'
+argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--exclude path - String. Optional. Exclude paths which contain this string"$'\n'"--exec binary - Executable. Optional. For each failed file run this command."$'\n'"directory - Directory. Optional. Where to search for files to check."$'\n'"--list - Flag. Optional. List files which fail. (Default is simply to exit silently.)"$'\n'""
 base="lint.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Search bash files for assertions which do not terminate a function and are likely an error\n\n'
+description="Search bash files for assertions which do not terminate a function and are likely an error"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/lint.sh"
 fn="bashFindUncaughtAssertions"
 fnMarker="bashfinduncaughtassertions"
 foundNames=([0]="argument")
-line="290"
-rawComment=$'Search bash files for assertions which do not terminate a function and are likely an error\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --exclude path - String. Optional. Exclude paths which contain this string\nArgument: --exec binary - Executable. Optional. For each failed file run this command.\nArgument: directory - Directory. Optional. Where to search for files to check.\nArgument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+line="289"
+rawComment="Search bash files for assertions which do not terminate a function and are likely an error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --exclude path - String. Optional. Exclude paths which contain this string"$'\n'"Argument: --exec binary - Executable. Optional. For each failed file run this command."$'\n'"Argument: directory - Directory. Optional. Where to search for files to check."$'\n'"Argument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/lint.sh"
-sourceHash="7b9146e89f6f2739b967d2534b52727bad65199c"
-sourceLine="290"
+sourceHash="11ce70536d7c631bbc2e620d25550754388e6278"
+sourceLine="289"
 summary="Search bash files for assertions which do not terminate a"
 summaryComputed="true"
 usage="bashFindUncaughtAssertions [ --help ] [ --handler handler ] [ --exclude path ] [ --exec binary ] [ directory ] [ --list ]"

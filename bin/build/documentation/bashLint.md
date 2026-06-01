@@ -38,8 +38,3 @@ This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
 
-### See Also
-
-- {SEE:shellcheck}
-- {SEE:bashSanitize}
-
