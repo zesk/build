@@ -126,5 +126,5 @@ License is [Apache License](./LICENSE.md). Source can be found online at [GitHub
 
 Reviewed: 2026-06-01
 
-(This is a copy – original at documentation/.template/README.md)
+(This is a copy – original at documentation/template/docs/README.md)
 

@@ -1,17 +1,17 @@
 # shellcheck disable=SC2034
-BUILD_DEBUG="fingerprint-audit"
 base="__BASH_PROMPT_MODULES.sh"
+BUILD_DEBUG="fingerprint-audit"
 category="Bash Prompt"
 derivations=([0]="env" [1]="envMarker")
-description="List of modules to run each prompt command."$'\n'""$'\n'"Manage with \`bashPrompt functionName\` to add, \`bashPrompt --remove functionName\` to remove."$'\n'""$'\n'"Make your functions *really* fast otherwise the shell becomes sluggish. Also try:"$'\n'""$'\n'"    BUILD_DEBUG=bashPrompt"$'\n'""$'\n'"To report on each command and timing."$'\n'""$'\n'"An automatic reporting occurs when commands exceed 0.3s."$'\n'""$'\n'""
+description=$'List of modules to run each prompt command.\n\nManage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.\n\nMake your functions *really* fast otherwise the shell becomes sluggish. Also try:\n\n    BUILD_DEBUG=bashPrompt\n\nTo report on each command and timing.\n\nAn automatic reporting occurs when commands exceed 0.3s.\n\n'
 descriptionLineCount="12"
 env="__BASH_PROMPT_MODULES"
 envMarker="__bash_prompt_modules"
 file="bin/build/env/__BASH_PROMPT_MODULES.sh"
 fn="__BASH_PROMPT_MODULES"
 foundNames=([0]="summary" [1]="category" [2]="type" [3]="see")
-rawComment="Summary: List of functions to run each prompt command"$'\n'"List of modules to run each prompt command."$'\n'"Manage with \`bashPrompt functionName\` to add, \`bashPrompt --remove functionName\` to remove."$'\n'"Make your functions *really* fast otherwise the shell becomes sluggish. Also try:"$'\n'"    BUILD_DEBUG=bashPrompt"$'\n'"To report on each command and timing."$'\n'"An automatic reporting occurs when commands exceed 0.3s."$'\n'"Category: Bash Prompt"$'\n'"Type: Array:Callable"$'\n'"See: bashPrompt"$'\n'""$'\n'""
-see="bashPrompt"$'\n'""
+rawComment=$'Summary: List of functions to run each prompt command\nList of modules to run each prompt command.\nManage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.\nMake your functions *really* fast otherwise the shell becomes sluggish. Also try:\n    BUILD_DEBUG=bashPrompt\nTo report on each command and timing.\nAn automatic reporting occurs when commands exceed 0.3s.\nCategory: Bash Prompt\nType: Array:Callable\nSee: bashPrompt\n\n'
+see=$'bashPrompt\n'
 sourceFile="bin/build/env/__BASH_PROMPT_MODULES.sh"
 sourceHash="037ef31431321b55e3a9f1e36da3ec90d3dceb0f"
 sourceLine=""

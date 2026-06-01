@@ -33,7 +33,7 @@ __buildBuildAddNoteTo() {
   (
     catchEnvironment "$handler" cp "$source" "$modifiedSource" || return $?
     statusMessage --last decorate info "Adding note to $source"
-    catchEnvironment "$handler" printf -- "\n\n%s" "(This is a copy – original at ${source#"$home/"})" "" >>"$modifiedSource" || return $?
+    catchEnvironment "$handler" printf -- "\n\n%s" "(This is a copy – original at documentation/template/docs/${source##*/})" "" >>"$modifiedSource" || return $?
     local target && for target in "${targets[@]}"; do
       catchEnvironment "$handler" cp "$modifiedSource" "$target/$name" || return $?
       catchEnvironment "$handler" git add "$target/$name" || return $?

@@ -100,9 +100,11 @@ buildDocumentationBuild() {
   statusMessage timing --name "documentationMake templates" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
   statusMessage --last decorate notice "Building Bash documentation and reference ..."
 
+  local versionFile="$templateCompiled/version.md"
+
   # Make source
   statusMessage decorate notice "Making source ..."
-  statusMessage timing --name "documentationMake source" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$documentationSource" --target "$documentationTarget" || return $?
+  version="$(cat "$versionFile")" statusMessage timing --name "documentationMake source" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$documentationSource" --target "$documentationTarget" || return $?
   documentationMkdocs --handler "$handler" --path "./documentation" --package mkdocs-material || return $?
 
   statusMessage --last consoleHeadingLine '•' timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"

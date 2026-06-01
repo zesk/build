@@ -216,8 +216,8 @@ _executableExists() {
 # Output: Port number of associated service (integer) one per line
 # Return Code: 1 - service not found
 # Return Code: 0 - service found and output is an integer
+# Summary: Handle standard services
 # See: serviceToPort
-#
 serviceToStandardPort() {
   local handler="_${FUNCNAME[0]}"
 

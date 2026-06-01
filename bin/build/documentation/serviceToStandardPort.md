@@ -1,6 +1,6 @@
 ## `serviceToStandardPort`
 
-> Hard-coded services for:
+> Handle standard services
 
 ### Usage
 

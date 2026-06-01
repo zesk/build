@@ -76,8 +76,8 @@ _escapeDoubleQuotes() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Converts strings to shell escaped strings
+# Summary: Bash-string escape
+# Converts strings to shell escaped strings. Newlines become another string line.
 # Argument: string - String. Optional. String to convert to a bash-compatible string.
 # stdin: text - Optional.
 # stdout: bash-compatible string
@@ -95,7 +95,6 @@ _escapeBash() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Quote strings for inclusion in shell quoted strings
 #
 # DOC TEMPLATE: noArgumentsForHelp 1

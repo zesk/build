@@ -324,10 +324,18 @@ pythonVirtual() {
   done
 
   [ -n "$application" ] || application=$(catchReturn "$handler" buildHome) || return $?
-  [ ${#pp[@]} -gt 0 ] || throwArgument "$handler" "Need at "
+  [ ${#pp[@]} -gt 0 ] || throwArgument "$handler" "Need at least one requirement" || return $?
   catchEnvironment "$handler" pythonInstall || return $?
 
   local venv="$application/.venv" clean=()
+  local platformMarker && platformMarker="$(uname -a)"
+  local envMarker="$venv/.platformMarker"
+  if [ -d "$venv" ]; then
+    if [ -f "$envMarker" ] && envMarkerValue="$(cat "$envMarker")" && [ "$envMarkerValue" != "$platformMarker" ]; then
+      decorate warning "Removing not-my platform environment directory: $(decorate code "$envMarkerValue")"
+      catchReturn "$handler" rm -rf "$venv" || return $?
+    fi
+  fi
   ! $cleanFlag || [ ! -d "$venv" ] || catchEnvironment "$handler" rm -rf "$venv" || return $?
   if [ ! -d "$venv" ] || [ ! -f "$venv/bin/activate" ]; then
     if ! pythonPackageInstalled venv; then
@@ -336,6 +344,7 @@ pythonVirtual() {
     catchEnvironment "$handler" python -m venv "$venv" || return $?
     [ -d "$venv" ] || throwEnvironment "$handler" "Unable to create $venv" || return $?
     clean+=(rm -rf "$venv" --)
+    catchReturn "$handler" printf "%s\n" "$platformMarker" >"$envMarker" || returnClean $? "${clean[@]}" || return $?
   fi
   catchEnvironment "$handler" source "$venv/bin/activate" || returnClean $? "${clean[@]}" || return $?
   catchReturn "$handler" pipUpgrade --bin "$venv/bin/pip" || returnClean $? "${clean[@]}" || return $?

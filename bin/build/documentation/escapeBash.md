@@ -1,12 +1,12 @@
 ## `escapeBash`
 
-> Converts strings to shell escaped strings
+> Bash-string escape
 
 ### Usage
 
     escapeBash [ string ]
 
-Converts strings to shell escaped strings
+Converts strings to shell escaped strings. Newlines become another string line.
 
 > Location: `bin/build/tools/quote.sh`
 
