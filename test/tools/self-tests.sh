@@ -35,7 +35,7 @@ testBuildApplicationTools() {
 
   catchEnvironment "$handler" touch "$testApp/docs/release/v1.2.3.md" || return $?
   assertExitCode 0 installInstallBuild "$testApp/bin" "$testApp" || return $?
-  catchEnvironment "$handler" cp "$(buildHome)/bin/build/application.sh" "$testApp/bin/tools.sh" || return $?
+  catchEnvironment "$handler" cp "$(buildHome)/bin/build/identical/application.sh" "$testApp/bin/tools.sh" || return $?
 
   catchEnvironment "$handler" muzzle pushd "$testApp" || return $?
 

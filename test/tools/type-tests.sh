@@ -15,9 +15,9 @@ testBinaryTypes() {
   assertExitCode 0 isExecutable ./bin/build/map.sh || return $?
   assertExitCode 0 isExecutable ./bin/build/tools.sh || return $?
 
-  assertNotExitCode 0 isCallable ./bin/build/LICENSE.md || return $?
+  assertNotExitCode 0 isCallable ./bin/build/LICENSE.txt || return $?
   assertNotExitCode 0 isCallable ./bin/MISSING || return $?
-  assertNotExitCode 0 isExecutable ./bin/build/LICENSE.md || return $?
+  assertNotExitCode 0 isExecutable ./bin/build/LICENSE.txt || return $?
   assertNotExitCode 0 isExecutable ./bin/MISSING || return $?
 
   catchEnvironment "$handler" muzzle popd || return $?
@@ -118,7 +118,7 @@ notAFile
 ..
 $(pwd)
 bin/build/README.md
-bin/build/LICENSE.md
+bin/build/LICENSE.txt
 .gitignore
 EOF
 

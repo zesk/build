@@ -151,7 +151,7 @@ _bashSanitizeCheckCopyright() {
   if "${command[@]}" >"$matches"; then
     set +v
     while IFS=":" read -r file pattern; do
-      error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
+      error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"$'\n'
     done <"$matches"
     ! $debugFlag || decorate each quote "${command[@]}"
     throwEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?

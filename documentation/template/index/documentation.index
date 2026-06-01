@@ -376,6 +376,7 @@ dockerVolumeDelete documentation/source/tools/docker.md
 dockerVolumeExists documentation/source/tools/docker.md
 documentationBuild documentation/source/tools/unused.md
 documentationCache documentation/source/tools/documentation.md
+documentationEnvironmentFileParse documentation/source/tools/documentation.md
 documentationEnvironmentMake documentation/source/tools/documentation.md
 documentationFileCompile documentation/source/tools/internal.md
 documentationFileCompileParallel documentation/source/tools/internal.md
@@ -757,6 +758,7 @@ pluralWord documentation/source/tools/unused.md
 printfOutputEmpty documentation/source/tools/text.md
 printfOutputPrefix documentation/source/tools/text.md
 printfOutputSuffix documentation/source/tools/text.md
+processCountWatcher documentation/source/tools/process.md
 processMemoryUsage documentation/source/tools/process.md
 processOpenPipes documentation/source/tools/unused.md
 processVirtualMemoryAllocation documentation/source/tools/process.md

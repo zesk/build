@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 #
+# Identical template
+#
+# Original of licenseHeader
+#
 # IDENTICAL licenseHeader 11
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
@@ -12,17 +16,3 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#
-
-# Run repair on profile-related tokens
-repairProfile() {
-  local handler="_${FUNCNAME[0]}"
-
-  local home && home=$(catchReturn "$handler" buildHome) || return $?
-
-  catchReturn "$handler" "$home/bin/build/repair.sh" profileFunctionMarker profileFunctionMarkerOthers profileFunctionTail profileFunctionHead profileFunctionEnable || return $?
-}
-_repairProfile() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}

@@ -1,6 +1,6 @@
 # [{applicationName} {version}](https://build.zesk.com)
 
-Documentation can be found
+Documentation can be found 
 at [https://build.zesk.com](https://build.zesk.com). ([Next version](https://stage-build.zesk.com))
 
 Pipeline, build, and operations tools useful for any project written exclusively in `bash` and works across all major
@@ -24,8 +24,7 @@ This toolkit assumes:
 - **Release notes** are located in a dedicated subdirectory (can be configured per-project), using markdown `.md` (
   required) and named `v1.0.0.md`  which match version names (`v1.0.0`) (required)
 
-You can use **{applicationName}** solely as a toolkit within your project, or directly into your operating system and
-available to all programs.
+You can use **{applicationName}** solely as a toolkit within your project, or directly into your operating system.
 
 To use in your project:
 
@@ -34,9 +33,6 @@ To use in your project:
   correct path setup to your project root).
 - Run the installer it before you need this code (will be installed at `./bin/build`)
 - `source bin/build/tools.sh` to load the library and use any function defined
-
-Various patterns exist in this code base which make sense to have scripts which fail in a reliable way which reveals the
-source issue and are suggested to be used within your own tools.
 
 To install globally:
 
@@ -53,26 +49,32 @@ Directly from the web:
 
 ## Main entry points
 
-- `bin/build/tools.sh` - The only include required for all build tools functions, also can be used as
-  `bin/build/tools.sh identicalCheck ...`
+- `./bin/build/tools.sh` - The only include required for all build tools functions, also can be used as
+  `./bin/build/tools.sh identicalCheck ...`
 
 ## Project structure
 
 When using **{applicationName}** in your project, the following directories in your project structure have significance:
 
 - `./` - Application root (same as `buildHome`)
-- `./bin/build/` - {applicationName} installation location (may *not* be changed)
-- `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` – or other extensions – on the end)
+- `./bin/build/` - {applicationName} installation location (may **not** be changed)
+- `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` – or other extensions)
 - `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end if you use
   `buildEnvironmentLoad` or `buildEnvironmentGet`)
-- `./docs/release/v1.0.0.md` - Release notes (override path by adding `BUILD_RELEASE_NOTES` environment)
+- `./docs/release/v1.0.0.md` - Release notes
+
+You can add or override these defaults:
+
+- loaded environment files can be extended by adding a path to `BUILD_ENVIRONMENT_DIRS`
+- hooks can be extended by adding a path to `BUILD_HOOK_DIRS`
+- Release notes path can be modified by setting the `BUILD_RELEASE_NOTES` environment variable
 
 Internally **{applicationName}** is organized:
 
 - `bin/build/env/*.sh` - All external environment variables are referenced here. Projects should override default
   *behavior* with `./bin/env/*.sh` files.
+- `bin/build/hooks/*.sh` - Default hooks are located &mdash; if your application does not implement them - this version is used.
 - `bin/build/tools/*.sh` - Build tools function implementations
-- `bin/build/hooks/*.sh` - All default hooks are here - if your application does not implement them - these are used.
 
 ## Requirements
 
@@ -120,6 +122,6 @@ Scripts support loading one or more environment files and running commands direc
 All copyrights held by **{applicationOwner}**, a [provider
 of infrastructure and cloud expertise.](https://marketacumen.com/executive-technical-assessment-and-reporting/?crcat=code&crsource=zesk-build&crcampaign=README.md&crkw=provider+of+infrastructure+expertise)
 
-License is [MIT License](../../../LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
+License is [Apache License](./LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 
-Reviewed: 2026-04-22
+Reviewed: 2026-06-01

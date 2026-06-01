@@ -113,12 +113,13 @@ __documentationEnvironmentMake() {
     local moreTarget="$moreDirectory/$env.md"
     local envMarker="${env// /_}" && envMarker=$(stringLowercase "$envMarker")
     local settings="$cacheDirectory/$env.sh"
+    local skipGenerate=false
     if $forceFlag || [ ! -f "$settings" ] || [ ! -f "$envTarget" ] || ! fileIsNewest "$envTarget" "$settings" "$envFile" "$newestTemplate"; then
       set -a # UNDO ok
       __documentationEnvironmentFileParse "$handler" "$envFile" >"$settings" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     else
       ! $verboseFlag || statusMessage decorate notice "Cached $(decorate file "$settings") ..." 1>&2
-      [ ! -f "$envTarget" ] || continue
+      [ ! -f "$envTarget" ] || skipGenerate=true
       touch "$settings"
     fi
 
@@ -143,43 +144,46 @@ __documentationEnvironmentMake() {
     local categoryFile="$categoryBucket/category.$categoryFileName"
     catchEnvironment "$handler" printf "%s\n" "$env" >>"$categoryFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
 
-    catchReturn "$handler" muzzle fileDirectoryRequire "$seeTarget" || return $?
-    local tokens=(
-      "$(environmentValueWrite name "$name")"
-      "$(environmentValueWrite env "$env")"
-      envMarker="$envMarker"
-      categoryMarker="$categoryMarker"
-      link="$seeLink"
-      "$(environmentValueWrite description "$description")"
-      "$(environmentValueWrite more "$more")"
-      "$(environmentValueWrite summary "$summary")"
-      "$(environmentValueWrite category "$category")"
-      type="$type"
-    )
-    printf -- "%s\n" "${tokens[@]}" >"$settingsTempFile"
-    ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$seeTarget") ..." 1>&2
-    envMarker="$categoryMarker" link="$seeLink" name="$name" env="$env" description="$description" summary="$summary" category="$category" more="$more" type="$type" mapEnvironment <"$seeFile" >"$seeTarget" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
-    ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$envTarget") ..." 1>&2
-    envMarker="$categoryMarker" link="$seeLink" name="$name" env="$env" description="$description" summary="$summary" category="$category" more="$more" type="$type" mapEnvironment <"$lineFile" >"$envTarget" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
-    if [ -n "$more" ]; then
-      ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$moreTarget") ..." 1>&2
-      (documentationTemplateCompile "$moreFile" "$settingsTempFile" >"$moreTarget") || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+    if $skipGenerate; then
+      ! $verboseFlag || statusMessage decorate notice "Skipping $(decorate file "$seeTarget") $(decorate file "$envTarget") $(decorate file "$moreTarget") ..." 1>&2
+    else
+      catchReturn "$handler" muzzle fileDirectoryRequire "$seeTarget" || return $?
+      local tokens=(
+        "$(environmentValueWrite name "$name")"
+        "$(environmentValueWrite env "$env")"
+        envMarker="$envMarker"
+        categoryMarker="$categoryMarker"
+        link="$seeLink"
+        "$(environmentValueWrite description "$description")"
+        "$(environmentValueWrite more "$more")"
+        "$(environmentValueWrite summary "$summary")"
+        "$(environmentValueWrite category "$category")"
+        type="$type"
+      )
+      printf -- "%s\n" "${tokens[@]}" >"$settingsTempFile"
+      ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$seeTarget") ..." 1>&2
+      envMarker="$categoryMarker" link="$seeLink" name="$name" env="$env" description="$description" summary="$summary" category="$category" more="$more" type="$type" mapEnvironment <"$seeFile" >"$seeTarget" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$envTarget") ..." 1>&2
+      envMarker="$categoryMarker" link="$seeLink" name="$name" env="$env" description="$description" summary="$summary" category="$category" more="$more" type="$type" mapEnvironment <"$lineFile" >"$envTarget" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      if [ -n "$more" ]; then
+        ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$moreTarget") ..." 1>&2
+        (documentationTemplateCompile "$moreFile" "$settingsTempFile" >"$moreTarget") || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      fi
     fi
   done
   set +a
 
   catchEnvironment "$handler" sort -u <"$categoriesUnsortedFile" >"$categoriesFile" || returnClean $? "${clean[@]}" || return $?
-  catchEnvironment "$handler" rm -rf "$categoriesUnsortedFile" || returnClean $? "${clean[@]}" || return $?
 
   local category && while IFS="" read -r category; do
     categoryFileName="${category// /_}"
     ! $verboseFlag || statusMessage decorate info "Processing $(basename "$category") ..." 1>&2
     local name
-    if [ -f "$cacheDirectory/category.$categoryFileName" ]; then
+    if [ -f "$categoryBucket/category.$categoryFileName" ]; then
       printf "%s\n" "## $category" ""
       while IFS="" read -r name; do
         printf "%s\n" "$(cat "$cacheDirectory/$name.md")"
-      done < <(sort -u "$cacheDirectory/category.$categoryFileName")
+      done < <(sort -u "$categoryBucket/category.$categoryFileName")
       printf "\n"
     fi
   done <"$categoriesFile" >"$targetPath/environmentCategoryList.md" || return $?
@@ -194,5 +198,5 @@ __documentationEnvironmentMake() {
     cat "$name" >>"$moreDocument"
   done < <(find "$moreDirectory" -type f -name '*.md' | sort)
   ! $verboseFlag || decorate info "Wrote $(decorate file "$targetPath/environmentMore.md")" 1>&2
-  catchReturn "$handler" rm -f "${clean[@]}" || return $?
+  catchReturn "$handler" rm -rf "${clean[@]}" || return $?
 }

@@ -120,7 +120,9 @@ __buildBuild() {
 
   local start && start=$(timingStart)
 
-  decorateInitialized || statusMessage decorate info "Color mode is " && catchReturn "$handler" consoleConfigureDecorate || return $?
+  if ! decorateInitialized; then
+    statusMessage decorate info "Color mode is " && catchReturn "$handler" muzzle consoleConfigureDecorate || return $?
+  fi
 
   iTerm2Badge -i "🛠️ Building"
 
@@ -140,11 +142,6 @@ __buildBuild() {
   dumpEnvironment
   consoleLine "#"
 
-  ! $debugFlag || statusMessage decorate info "Updating markdown ..."
-  if ! __buildBuildUpdateMarkdown "$handler" "$home"; then
-    catchEnvironment "$handler" "Can not update the Markdown files" || return $?
-  fi
-
   ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
   "$home/bin/build/deprecated.sh" --fingerprint || throwEnvironment "$handler" "Deprecated failed" || return $?
 
@@ -153,6 +150,11 @@ __buildBuild() {
 
   ! $debugFlag || statusMessage decorate warning "Running function build ..."
   buildFunctionsCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?
+
+  ! $debugFlag || statusMessage decorate info "Updating markdown ..."
+  if ! __buildBuildUpdateMarkdown "$handler" "$home"; then
+    catchEnvironment "$handler" "Can not update the Markdown files" || return $?
+  fi
 
   if $makeDocumentation; then
     local rootPath="$home/documentation/.site"
@@ -165,12 +167,9 @@ __buildBuild() {
     done
     ! $debugFlag || statusMessage decorate warning "Building documentation ..."
     catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
-    rootPath="$home/documentation/.docs"
-    local f && for f in README.md LICENSE.md; do
-      catchReturn "$handler" cp "$home/documentation/.docs/$f" "$home/$f" || return $?
-      catchReturn "$handler" git add "$home/$f" || return $?
-    done
+
     [ -d "$rootPath" ] || throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
+
   fi
 
   if $commitChanges && gitRepositoryChanged; then

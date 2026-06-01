@@ -82,5 +82,7 @@ pre-commit check if possible.
 ## Copyright and License
 
 - [About {applicationName}](./about.md)
+- [License](./LICENSE.txt)
+- [Read me](./README.md)
 
-Copyright &copy; 2026 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](./LICENSE.md).
+Copyright &copy; 2026 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](LICENSE.txt).
