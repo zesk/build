@@ -117,7 +117,7 @@ _bashSanitizeCheckAssertions() {
     shift
   done
   local directory && for directory in "${directories[@]}"; do
-    statusMessage --first decorate warning "Checking assertions in $(decorate file "$directory") ... "
+    statusMessage --first decorate info "Checking assertions in $(decorate file "$directory") ... "
     if ! bashFindUncaughtAssertions "$directory" --list "$@"; then
       # When ready - add --interactive here as well
       bashFindUncaughtAssertions "$directory" "$@" --exec "$executor" &
