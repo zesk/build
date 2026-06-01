@@ -19,23 +19,8 @@ __buildDocumentationCleanDirectory() {
 }
 
 # Build the build documentation
-# Argument: --none - Flag. Turn off all updates.
-# Argument: --derived - Flag. Enable derived files updates.
-# Argument: --no-derived - Flag. Disable derived files updates.
-# Argument: --derived-only - Flag. Just derived files only.
-# Argument: --reference - Flag. Enable reference file updates.
-# Argument: --no-reference - Flag. Disable reference file updates.
-# Argument: --reference-only - Flag. Reference file updates.
-# Argument: --mkdocs - Flag. Enable `mkdocs` generation.
-# Argument: --no-mkdocs - Flag. Disable `mkdocs` generation.
-# Argument: --mkdocs-only - Flag. `mkdocs` generation only.
-# Argument: --index-update - Flag. Update documentation indexes.`
-# Argument: --docs-update - Flag. Documentation generation only.
 # Argument: --clean - Flag. Clean caches.
-# Argument: --verbose - Flag. Clean caches.
-# Argument: --filter filters ... - DashDashDelimitedArguments. Arguments to filter which reference files are updated.
-# Argument: --force - Flag. Force building of everything.
-# Argument: --debug - Flag. Debugging output enabled.
+# Argument: --verbose - Flag. Talk pretty.
 # See: documentationBuild
 buildDocumentationBuild() {
   local handler="_${FUNCNAME[0]}"
@@ -45,7 +30,7 @@ buildDocumentationBuild() {
 
   export APPLICATION_NAME
 
-  local da=() vv=()
+  local vv=()
   local cleanFlag=false verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -58,10 +43,7 @@ buildDocumentationBuild() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --clean) cleanFlag=true ;;
-    --debug) da+=(--debug) ;;
-    --verbose) da+=("$argument") && vv+=("$argument") && verboseFlag=true ;;
-    --filter) da+=("$argument") && while [ $# -gt 0 ] && [ "$1" != "--" ]; do da+=("$1") && shift; done ;;
-    --force) da+=("$argument") && ea+=("$argument") ;;
+    --verbose) vv+=("$argument") && verboseFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

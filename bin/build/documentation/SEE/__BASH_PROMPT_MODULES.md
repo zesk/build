@@ -1,1 +1,1 @@
-[`__BASH_PROMPT_MODULES` __BASH_PROMPT_MODULES]({rel}/env/#bash_prompt) - **Array:Callable**. List of functions to run each prompt command
+[`__BASH_PROMPT_MODULES` __BASH_PROMPT_MODULES]({rel}/env/#bash_prompt) – **Array:Callable**. List of functions to run each prompt command

@@ -70,14 +70,14 @@
 - [bashDebuggerEnable]({rel}tools/debug.md#bashdebuggerenable) - Enable the debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L63))
 - [bashDebugInterruptFile]({rel}tools/debug.md#bashdebuginterruptfile) - Adds a trap to capture the debugging stack on interrupt ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L187))
 - [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
-- {SEE:bashDocumentationAllEnvironment}
-- {SEE:bashDocumentationAllFunctions}
-- {SEE:bashDocumentationDefaults}
-- {SEE:bashDocumentationDeriveFunction}
-- {SEE:bashDocumentationDeriveSee}
-- {SEE:bashDocumentationExtract}
+- [bashDocumentationAllEnvironment]({rel}tools/documentation.md#bashdocumentationallenvironment) - Generate markdown for a list of all functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L664))
+- [bashDocumentationAllFunctions]({rel}tools/documentation.md#bashdocumentationallfunctions) - Generate markdown for a list of all functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L644))
+- [bashDocumentationDefaults]({rel}tools/documentation.md#bashdocumentationdefaults) - Generate base template files for Bash code documentation. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L691))
+- [bashDocumentationDeriveFunction]({rel}tools/internal.md#bashdocumentationderivefunction) - Generate markdown documentation page ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L811))
+- [bashDocumentationDeriveSee]({rel}tools/internal.md#bashdocumentationderivesee) - Generate SEE markdown content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L862))
+- [bashDocumentationExtract]({rel}tools/documentation.md#bashdocumentationextract) - Generate a set of name/value pairs to document bash entities ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L60))
 - [bashDocumentationMarkdown]({rel}tools/usage.md#bashdocumentationmarkdown) - Output documentation for a function in Markdown format ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L24))
-- {SEE:bashDocumentationMissing}
+- [bashDocumentationMissing]({rel}tools/documentation.md#bashdocumentationmissing) - Generate templates of functions missing from documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L746))
 - [bashFileComment]({rel}tools/bash.md#bashfilecomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L501))
 - [bashFinalComment]({rel}tools/bash.md#bashfinalcomment) - Extracts the final comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L555))
 - [bashFindUncaughtAssertions]({rel}tools/test.md#bashfinduncaughtassertions) - Search bash files for assertions which do not terminate a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/lint.sh#L289))
@@ -85,7 +85,7 @@
 - [bashFunctionComment]({rel}tools/bash.md#bashfunctioncomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L619))
 - [bashFunctionCommentVariable]({rel}tools/bash.md#bashfunctioncommentvariable) - Gets a list of the variable values from a bash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L407))
 - [bashFunctionDefined]({rel}tools/bash.md#bashfunctiondefined) - Is a function defined in a bash source file? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L257))
-- {SEE:bashFunctionNameValid}
+- [bashFunctionNameValid]({rel}tools/bash.md#bashfunctionnamevalid) - Is a string a valid function name? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L638))
 - [bashGetRequires]({rel}tools/bash.md#bashgetrequires) - Gets a list of the \`Requires:\` comments in a bash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L44))
 - [bashLibrary]({rel}tools/bash.md#bashlibrary) - Run or source a library ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L160))
 - [bashLibraryHome]({rel}tools/bash.md#bashlibraryhome) - Output the home for a library in the parent path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L137))
@@ -130,7 +130,7 @@
 - [buildEnvironmentLoad]({rel}tools/build.md#buildenvironmentload) - Load one or more environment settings from the environment file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L410))
 - [buildEnvironmentNames]({rel}tools/build.md#buildenvironmentnames) - List known environment names ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L217))
 - [buildFunctions]({rel}tools/build.md#buildfunctions) - Prints the list of functions defined in Zesk Build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L88))
-- {SEE:buildFunctionsExclude}
+- [buildFunctionsExclude]({rel}tools/build.md#buildfunctionsexclude) - Exclude any function which is a build function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L130))
 - [buildHome]({rel}tools/build.md#buildhome) - Prints the build home directory (usually same as the application ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L171))
 - [buildQuietLog]({rel}tools/build.md#buildquietlog) - Generate the path for a quiet log in the build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L660))
 - [catchArgument]({rel}tools/sugar-core.md#catchargument) - Run \`command\`, upon failure run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L238))
@@ -259,14 +259,14 @@
 - [dockerPlatformDefault]({rel}tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
 - [dockerVolumeDelete]({rel}tools/docker.md#dockervolumedelete) - Delete a docker volume ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L310))
 - [dockerVolumeExists]({rel}tools/docker.md#dockervolumeexists) - Does a docker volume exist with name? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L297))
-- {SEE:documentationCache}
-- {SEE:documentationEnvironmentFileParse}
-- {SEE:documentationEnvironmentMake}
+- [documentationCache]({rel}tools/documentation.md#documentationcache) - Get the default cache directory for the documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L211))
+- [documentationEnvironmentFileParse]({rel}#documentationenvironmentfileparse) - Convert an environment comment to environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L199))
+- [documentationEnvironmentMake]({rel}tools/documentation.md#documentationenvironmentmake) - Build documentation files for environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L187))
 - [documentationFileCompile]({rel}tools/internal.md#documentationfilecompile) - Extract and build the documentation settings cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L630))
 - [documentationFilesAdd]({rel}tools/documentation.md#documentationfilesadd) - Git add documentation files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L537))
 - [documentationFunctionCompile]({rel}tools/internal.md#documentationfunctioncompile) - - \`--documentation\` is required for \`SEE:\` files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L525))
 - [documentationFunctionRemove]({rel}tools/documentation.md#documentationfunctionremove) - Remove a function from the documentation cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L564))
-- {SEE:documentationFunctionsCompile}
+- [documentationFunctionsCompile]({rel}tools/documentation.md#documentationfunctionscompile) - Extract and build the documentation settings cache and generate derived ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L469))
 - [documentationIdenticalRepair]({rel}tools/documentation.md#documentationidenticalrepair) - Map template files using our identical functionality ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L235))
 - [documentationIndexDocumentation]({rel}tools/documentation.md#documentationindexdocumentation) - Generate the documentation index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L349))
 - [documentationIndexGenerate]({rel}tools/documentation.md#documentationindexgenerate) - Generate a function index for bash files. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L364))
@@ -345,8 +345,8 @@
 - [fileModificationSeconds]({rel}tools/file.md#filemodificationseconds) - Fetch the modification time in seconds from now of a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L84))
 - [fileModificationTime]({rel}tools/file.md#filemodificationtime) - Fetch the modification time of a file as a timestamp ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L60))
 - [fileModificationTimes]({rel}tools/file.md#filemodificationtimes) - Lists files in a directory recursively along with their modification ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L225))
-- {SEE:fileModificationTimesAfter}
-- {SEE:fileModificationTimesBefore}
+- [fileModificationTimesAfter]({rel}tools/file.md#filemodificationtimesafter) - List files modified after a specific timestamp (inclusive) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L170))
+- [fileModificationTimesBefore]({rel}tools/file.md#filemodificationtimesbefore) - List files modified before a specific timestamp (inclusive) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L115))
 - [fileModifiedDays]({rel}tools/file.md#filemodifieddays) - Prints days (integer) since modified ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L385))
 - [fileModifiedRecently]({rel}tools/file.md#filemodifiedrecently) - List the most recently modified file in a directory prefixed ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L241))
 - [fileModifiedSeconds]({rel}tools/file.md#filemodifiedseconds) - Prints seconds since modified ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L365))
@@ -364,7 +364,7 @@
 - [fileTemporaryName]({rel}tools/file.md#filetemporaryname) - Wrapper for \`mktemp\`. Generate a temporary file name, and fail ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L916))
 - [fileType]({rel}tools/file.md#filetype) - Better type handling of shell objects ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L512))
 - [fileUniqueLines]({rel}tools/text.md#fileuniquelines) - Sorts and makes all file lines unique ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L611))
-- {SEE:fingerprint}
+- [fingerprint]({rel}tools/fingerprint.md#fingerprint) - Update file from \`APPLICATION_JSON\` with application fingerprint. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/fingerprint.sh#L20))
 - [floatRound]({rel}tools/float.md#floatround) - Convert float to nearest integer (up or down) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/float.sh#L13))
 - [floatTruncate]({rel}tools/float.md#floattruncate) - Convert float to an integer, round down always ([source](https://github.com/zesk/build/blob/main/bin/build/tools/float.sh#L27))
 - [gitBranchExists]({rel}tools/git.md#gitbranchexists) - Does a branch exist locally or remotely? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L1016))
@@ -429,7 +429,7 @@
 - [inArray]({rel}tools/text.md#inarray) - Check if an element exists in an array ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L393))
 - [incrementor]({rel}tools/utilities.md#incrementor) - Set or increment a incrementor state based on a state ([source](https://github.com/zesk/build/blob/main/bin/build/tools/utilities.sh#L52))
 - [installInstallBinary]({rel}guide/installer.md#installinstallbinary) - Installs an installer the first time in a new project, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L32))
-- {SEE:installInstallBuild}
+- [installInstallBuild]({rel}tools/build.md#installinstallbuild) - Installs \`install-bin-build.sh\` the first time in a new project, and ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L48))
 - [integerClamp]({rel}tools/text.md#integerclamp) - Clamp digits between two integers ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L596))
 - [interactiveCountdown]({rel}tools/interactive.md#interactivecountdown) - Display a message and count down display ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L227))
 - [interactiveManager]({rel}tools/interactive.md#interactivemanager) - Run checks interactively until errors are all fixed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L211))
@@ -599,7 +599,7 @@
 - [printfOutputEmpty]({rel}tools/text.md#printfoutputempty) - printf when output is blank ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1141))
 - [printfOutputPrefix]({rel}tools/text.md#printfoutputprefix) - Pipe to output some text before any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1164))
 - [printfOutputSuffix]({rel}tools/text.md#printfoutputsuffix) - Pipe to output some text after any output, otherwise, nothing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1185))
-- {SEE:processCountWatcher}
+- [processCountWatcher]({rel}#processcountwatcher) - Watch the number of processes matching \`token\` and fail if ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L318))
 - [processMemoryUsage]({rel}tools/process.md#processmemoryusage) - Outputs value of resident memory used by a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L150))
 - [processOpenPipes]({rel}tools/unused.md#processopenpipes) - Output the number of open files for a process ID ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L220))
 - [processVirtualMemoryAllocation]({rel}tools/process.md#processvirtualmemoryallocation) - Outputs value of virtual memory allocated for a process, value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L188))
@@ -689,7 +689,7 @@
 - [timingStart]({rel}tools/timing.md#timingstart) - Start a timer ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L148))
 - [tofuInstall]({rel}tools/tofu.md#tofuinstall) - Install tofu binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L59))
 - [tofuUninstall]({rel}tools/tofu.md#tofuuninstall) - Uninstall tofu binary and apt sources keys ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L80))
-- {SEE:tools}
+- [tools]({rel}tools/build.md#tools) - Run a Zesk Build command or load it ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L495))
 - [urlContentLength]({rel}tools/url.md#urlcontentlength) - Get the size of a remote URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/web.sh#L60))
 - [urlFetch]({rel}tools/url.md#urlfetch) - Fetch URL content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L559))
 - [urlFilter]({rel}tools/url.md#urlfilter) - Open URLs which appear in a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L355))

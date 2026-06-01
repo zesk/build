@@ -1,1 +1,1 @@
-[`{env}` {name}]({rel}{link}#{envMarker}) - **{type}**. {summary}
+[`{env}` {name}]({rel}{link}#{envMarker}) – **{type}**. {summary}

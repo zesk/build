@@ -6,6 +6,8 @@
 
 {processWait}
 
+{processCountWatcher}
+
 {processMemoryUsage}
 
 {processVirtualMemoryAllocation}

@@ -1,1 +1,1 @@
-[`BUILD_DEVELOPMENT_HOME` BUILD_DEVELOPMENT_HOME]({rel}/env/#development) - **String**. Directory where Zesk Build is being developed in the file
+[`BUILD_DEVELOPMENT_HOME` BUILD_DEVELOPMENT_HOME]({rel}/env/#development) – **String**. Directory where Zesk Build is being developed in the file

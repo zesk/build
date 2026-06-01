@@ -1,1 +1,1 @@
-[`APPLICATION_CODE_IGNORE` APPLICATION_CODE_IGNORE]({rel}/env/#application) - **ColonDelimitedList**. List of path names to ignore for application code. (e.g.
+[`APPLICATION_CODE_IGNORE` APPLICATION_CODE_IGNORE]({rel}/env/#application) – **ColonDelimitedList**. List of path names to ignore for application code. (e.g.

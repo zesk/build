@@ -1,0 +1,1 @@
+[buildFunctionsExclude]({rel}tools/build.md#buildfunctionsexclude) - Exclude any function which is a build function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L130))

@@ -1,1 +1,1 @@
-[`MANPATH` MANPATH]({rel}/env/#bash) - **DirectoryList**. A colon `:` separated list of paths to search for
+[`MANPATH` MANPATH]({rel}/env/#bash) – **DirectoryList**. A colon `:` separated list of paths to search for

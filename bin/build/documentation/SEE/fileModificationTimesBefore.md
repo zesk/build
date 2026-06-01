@@ -1,0 +1,1 @@
+[fileModificationTimesBefore]({rel}tools/file.md#filemodificationtimesbefore) - List files modified before a specific timestamp (inclusive) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L115))

@@ -1,1 +1,1 @@
-[`GIT_BRANCH_FORMAT` GIT_BRANCH_FORMAT]({rel}/env/#development) - **String**. undocumented
+[`GIT_BRANCH_FORMAT` GIT_BRANCH_FORMAT]({rel}/env/#development) – **String**. undocumented

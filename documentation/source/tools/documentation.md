@@ -14,9 +14,13 @@
 
 {documentationCache}
 
+{documentationTemplate}
+
+## Environment documentation
+
 {documentationEnvironmentMake}
 
-{documentationTemplate}
+{documentationEnvironmentFileParse}
 
 ## Documentation code management
 

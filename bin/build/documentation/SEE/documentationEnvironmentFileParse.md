@@ -1,0 +1,1 @@
+[documentationEnvironmentFileParse]({rel}#documentationenvironmentfileparse) - Convert an environment comment to environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L199))

@@ -1,1 +1,1 @@
-[`BUILD_NOTIFY_SOUND` BUILD_NOTIFY_SOUND]({rel}/env/#build_configuration) - **String**. Sound for notifications. Set to `-` for no sound. Defaults
+[`BUILD_NOTIFY_SOUND` BUILD_NOTIFY_SOUND]({rel}/env/#build_configuration) – **String**. Sound for notifications. Set to `-` for no sound. Defaults

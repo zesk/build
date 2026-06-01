@@ -1,1 +1,1 @@
-[`APPLICATION_CODE_EXTENSIONS` APPLICATION_CODE_EXTENSIONS]({rel}/env/#application) - **ColonDelimitedList**. List of extensions for code in the application. Required.
+[`APPLICATION_CODE_EXTENSIONS` APPLICATION_CODE_EXTENSIONS]({rel}/env/#application) – **ColonDelimitedList**. List of extensions for code in the application. Required.

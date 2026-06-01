@@ -1,1 +1,1 @@
-[`XDEBUG_ENABLED` XDEBUG_ENABLED]({rel}/env/#php) - **Boolean**. Is xdebug enabled? The application can honor this environment variable
+[`XDEBUG_ENABLED` XDEBUG_ENABLED]({rel}/env/#php) – **Boolean**. Is xdebug enabled? The application can honor this environment variable

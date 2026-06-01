@@ -88,12 +88,12 @@ __documentationEnvironmentMake() {
   #
   # categories.txt
   #
-
+  local categoryBucket && categoryBucket=$(fileTemporaryName "$handler" -d) || return $?
   local categoriesFile="$cacheDirectory/categories.txt"
-  local categoriesUnsortedFile="$cacheDirectory/categories.$$.txt"
-  local settingsTempFile="$cacheDirectory/settings.$$.env"
+  local categoriesUnsortedFile="$categoryBucket/categories.$$.txt"
+  local settingsTempFile="$categoryBucket/settings.$$.env"
 
-  local clean=("$categoriesUnsortedFile" "$settingsTempFile")
+  local clean=("$categoryBucket")
 
   #
   # env/*.sh files
@@ -102,7 +102,6 @@ __documentationEnvironmentMake() {
   local moreDirectory && moreDirectory=$(catchReturn "$handler" directoryRequire "$cacheDirectory/more") || return $?
 
   local categories=()
-  catchReturn "$handler" rm -f "$cacheDirectory/category."* || return $?
 
   ! $verboseFlag || statusMessage decorate info "Iterating through env files ..." 1>&2
   local newestTemplate && newestTemplate=$(fileNewest "$lineFile" "$moreFile" "$seeFile") || return $?
@@ -141,8 +140,7 @@ __documentationEnvironmentMake() {
     fi
     local categoryFileName="${category// /_}"
     local categoryMarker && categoryMarker=$(stringLowercase "$categoryFileName")
-    local categoryFile="$cacheDirectory/category.$categoryFileName"
-    inArray "$categoryFile" "${clean[@]}" || clean+=("$categoryFile")
+    local categoryFile="$categoryBucket/category.$categoryFileName"
     catchEnvironment "$handler" printf "%s\n" "$env" >>"$categoryFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
 
     catchReturn "$handler" muzzle fileDirectoryRequire "$seeTarget" || return $?
