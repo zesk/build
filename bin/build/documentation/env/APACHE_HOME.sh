@@ -1,20 +1,20 @@
 # shellcheck disable=SC2034
 base="APACHE_HOME.sh"
 category="Vendor"
-default=$'/etc/apache2\n'
+default="/etc/apache2"$'\n'""
 derivations=([0]="env" [1]="envMarker")
-description=$'Constant for the Apache configuration home directory.\n\n'
+description="Constant for the Apache configuration home directory."$'\n'""$'\n'""
 descriptionLineCount="2"
 env="APACHE_HOME"
 envMarker="apache_home"
 file="bin/build/env/APACHE_HOME.sh"
 fn="APACHE_HOME"
 foundNames=([0]="default" [1]="category" [2]="vendor" [3]="type")
-rawComment=$'Constant for the Apache configuration home directory.\nDefault: /etc/apache2\nCategory: Vendor\nVendor: Apache\nType: Directory\n\n'
+rawComment="Constant for the Apache configuration home directory."$'\n'"Default: /etc/apache2"$'\n'"Category: Vendor"$'\n'"Vendor: Apache"$'\n'"Type: Directory"$'\n'""$'\n'""
 sourceFile="bin/build/env/APACHE_HOME.sh"
 sourceHash="d7f6a17620d6cb5e5ea61746eacfe3f0d59a5018"
 sourceLine=""
 summary="Constant for the Apache configuration home directory."
 summaryComputed="true"
 type="Directory"
-vendor=$'Apache\n'
+vendor="Apache"$'\n'""

@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Removes literally any line which begins with zero or more whitespace characters and then a `#`.\n\n'
+description="Removes literally any line which begins with zero or more whitespace characters and then a \`#\`."$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashStripComments"
 fnMarker="bashstripcomments"
 foundNames=([0]="summary" [1]="argument")
 line="296"
-rawComment=$'Summary: Pipe to strip comments from a bash file\nRemoves literally any line which begins with zero or more whitespace characters and then a `#`.\nArgument: --help - Flag. Optional. Display this help.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Pipe to strip comments from a bash file"$'\n'"Removes literally any line which begins with zero or more whitespace characters and then a \`#\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="8b11e89328e79950a2b4734a035cc38305d5a61e"
+sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
 sourceLine="296"
 summary="Pipe to strip comments from a bash file"
 summaryComputed=""

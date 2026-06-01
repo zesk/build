@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
-argument=$'script - File. Required. Bash script to fetch requires tokens from.\n'
+argument="script - File. Required. Bash script to fetch requires tokens from."$'\n'""
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Gets a list of the `Requires:` comments in a bash file\nReturns a unique list of tokens\n\n'
+description="Gets a list of the \`Requires:\` comments in a bash file"$'\n'"Returns a unique list of tokens"$'\n'""$'\n'""
 descriptionLineCount="3"
 file="bin/build/tools/bash.sh"
 fn="bashGetRequires"
 fnMarker="bashgetrequires"
 foundNames=([0]="argument")
 line="44"
-rawComment=$'Argument: script - File. Required. Bash script to fetch requires tokens from.\nGets a list of the `Requires:` comments in a bash file\nReturns a unique list of tokens\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Argument: script - File. Required. Bash script to fetch requires tokens from."$'\n'"Gets a list of the \`Requires:\` comments in a bash file"$'\n'"Returns a unique list of tokens"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="8b11e89328e79950a2b4734a035cc38305d5a61e"
+sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
 sourceLine="44"
 summary="Gets a list of the \`Requires:\` comments in a bash"
 summaryComputed="true"

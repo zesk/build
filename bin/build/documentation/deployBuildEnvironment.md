@@ -29,11 +29,3 @@ Not possible to deploy to different paths on different hosts, currently. Hosts a
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:DEPLOY_REMOTE_HOME} - path on remote host for deployment data
-- {SEE:APPLICATION_REMOTE_HOME} - path on remote host for application
-- {SEE:DEPLOY_USER_HOSTS} - list of user@host (will be tokenized by spaces regardless of shell quoting)
-- {SEE:APPLICATION_ID} - Version to be deployed
-- {SEE:BUILD_TARGET} - The application package name
-

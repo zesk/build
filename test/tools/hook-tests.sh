@@ -38,6 +38,14 @@ testHookSystem() {
   mockEnvironmentStart BUILD_HOOK_DIRS
   mockEnvironmentStart BUILD_HOME "$savedHome"
 
+  unset BUILD_HOOK_EXTENSIONS
+  unset BUILD_HOOK_DIRS
+
+  assertExitCode 0 hookEnvironment || return $?
+
+  assertNotEquals --display "BUILD_HOOK_DIRS is non-blank" "" "${BUILD_HOOK_DIRS-}" || return $?
+  assertNotEquals --display "BUILD_HOOK_EXTENSIONS is non-blank" "" "${BUILD_HOOK_EXTENSIONS-}" || return $?
+
   unset BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS
 
   executeEcho decorate pair BUILD_HOOK_EXTENSIONS "${BUILD_HOOK_EXTENSIONS-}" || return $?

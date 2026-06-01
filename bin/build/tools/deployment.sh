@@ -261,11 +261,11 @@ deployRemoteFinish() {
     shift
   done
 
-  local start width name deployArguments
+  export BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS
+  hookEnvironment --handler "$handler" || return $?
 
   # Check arguments are non-blank and actually supplied
-  local name
-  for name in deployHome applicationId applicationPath; do
+  local name && for name in deployHome applicationId applicationPath; do
     if [ -z "${!name}" ]; then
       throwArgument "$handler" "$name is required" || return $?
     fi
@@ -282,8 +282,8 @@ deployRemoteFinish() {
     throwArgument "$handler" "--cleanup and --revert are mutually exclusive" || return $?
   fi
 
-  start=$(timingStart)
-  width=50
+  local start && start=$(timingStart)
+  local width=50
   decorate pair $width "Host:" "$(uname -n)"
   decorate pair $width "Deployment path:" "$deployHome"
   decorate pair $width "Application path:" "$applicationPath"
@@ -302,7 +302,7 @@ deployRemoteFinish() {
     if [ -z "$applicationId" ]; then
       throwArgument "$handler" "No argument applicationId passed" || return $?
     fi
-    deployArguments=(
+    local deployArguments=(
       "${firstFlags[@]+${firstFlags[@]}}"
       --home "$deployHome"
       --id "$applicationId"

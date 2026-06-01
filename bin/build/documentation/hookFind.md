@@ -31,7 +31,3 @@ If a file named `hookName` with the extension `.sh` is found which is executable
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:BUILD_HOOK_EXTENSIONS} {SEE:BUILD_HOOK_DIRS} {SEE:BUILD_DEBUG}
-

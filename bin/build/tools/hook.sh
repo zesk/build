@@ -363,3 +363,16 @@ _hookFind() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Load hook environment variables used to find hooks
+# Summary: Load hook-related environment variables
+# Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+hookEnvironment() {
+  buildEnvironmentLoad --handler "_${FUNCNAME[0]}" "$@" BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS || return $?
+}
+_hookEnvironment() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

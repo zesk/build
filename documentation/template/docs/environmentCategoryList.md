@@ -102,9 +102,9 @@
 - `APPLICATION_VERSION` &mdash; APPLICATION_VERSION *String*. This is the version number which can be displayed [notes](#application_version)
 - `BUILD_TARGET` &mdash; BUILD_TARGET *String*. The file to generate when generating builds [notes](#build_target)
 - `BUILD_TIMESTAMP` &mdash; BUILD_TIMESTAMP *UnsignedInteger*. Time when a build was initiated, set upon first invocation [notes](#build_timestamp)
+- `DEPLOYMENT` &mdash; DEPLOYMENT *String*. Target deployment for this code [notes](#deployment)
 - `DEPLOY_REMOTE_HOME` &mdash; DEPLOY_REMOTE_HOME *RemoteDirectory*. Path on the remote server where the application deployment home [notes](#deploy_remote_home)
 - `DEPLOY_USER_HOSTS` &mdash; DEPLOY_USER_HOSTS *String*. A list of one ore more user@host for installation of [notes](#deploy_user_hosts)
-- `DEPLOYMENT` &mdash; DEPLOYMENT *String*. Target deployment for this code [notes](#deployment)
 
 ## Deployment: GitHub
 
@@ -113,12 +113,12 @@
 ## Development
 
 - `BUILD_DEVELOPMENT_HOME` &mdash; BUILD_DEVELOPMENT_HOME *String*. Directory where Zesk Build is being developed in the file [notes](#build_development_home)
-- `GIT_BRANCH_FORMAT` &mdash; GIT_BRANCH_FORMAT *String*. undocumented 
-- `GIT_OPEN_LINKS` &mdash; GIT_OPEN_LINKS *Boolean*. Open links from git remotes in `gitCommit` [notes](#git_open_links)
-- `GIT_REMOTE` &mdash; GIT_REMOTE *String*. undocumented 
 - `GITHUB_ACCESS_TOKEN` &mdash; GITHUB_ACCESS_TOKEN *Secret*. Access token used for release [notes](#github_access_token)
 - `GITHUB_ACCESS_TOKEN_EXPIRE` &mdash; GITHUB_ACCESS_TOKEN_EXPIRE *Date*. GitHub Access token expiration date. Invalid AFTER this date. [notes](#github_access_token_expire)
 - `GITHUB_REPOSITORY_NAME` &mdash; GITHUB_REPOSITORY_NAME *String*. Repository name for release [notes](#github_repository_name)
+- `GIT_BRANCH_FORMAT` &mdash; GIT_BRANCH_FORMAT *String*. undocumented 
+- `GIT_OPEN_LINKS` &mdash; GIT_OPEN_LINKS *Boolean*. Open links from git remotes in `gitCommit` [notes](#git_open_links)
+- `GIT_REMOTE` &mdash; GIT_REMOTE *String*. undocumented 
 
 ## Docker
 

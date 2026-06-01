@@ -34,8 +34,3 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - `Any` - The hook exit code is returned if it is run
 - `1` - is returned if the hook is not found
 
-### Environment
-
-- {SEE:BUILD_HOOK_EXTENSIONS}
-- {SEE:BUILD_HOOK_DIRS}
-

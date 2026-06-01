@@ -76,7 +76,3 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 `deployHome` is considered a state directory so removing entries in this should be managed separately.
 
-### Environment
-
-- {SEE:BUILD_DEBUG}
-

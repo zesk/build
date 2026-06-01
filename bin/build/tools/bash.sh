@@ -636,7 +636,8 @@ _bashFunctionComment() {
 # Return Code: 0 - All values passed are valid function names for bash functions
 # Return Code: 1 - One or more values passed are NOT valid function names for bash functions
 bashFunctionNameValid() {
-  [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do case "$1" in [^A-Za-z_]* | *[^A-Za-z0-9_]*) return 1 ;; esac && shift; done
 }
 _bashFunctionNameValid() {

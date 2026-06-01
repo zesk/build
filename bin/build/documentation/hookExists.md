@@ -23,7 +23,3 @@ Check if one or more hook exists. All hooks must exist to succeed.
 
 - `0` - If all hooks exist
 
-### Environment
-
-- {SEE:BUILD_HOOK_EXTENSIONS} {SEE:BUILD_HOOK_DIRS} {SEE:BUILD_DEBUG}
-

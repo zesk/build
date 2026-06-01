@@ -2,14 +2,14 @@
 base="XDG_CONFIG_HOME.sh"
 category="Build Configuration"
 derivations=([0]="env" [1]="envMarker")
-description=$'Location for configuration files\nSee [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.\n\n'
+description="Location for configuration files"$'\n'"See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables."$'\n'""$'\n'""
 descriptionLineCount="3"
 env="XDG_CONFIG_HOME"
 envMarker="xdg_config_home"
 file="bin/build/env/XDG_CONFIG_HOME.sh"
 fn="XDG_CONFIG_HOME"
 foundNames=([0]="summary" [1]="category" [2]="type")
-rawComment=$'Summary: Main Configuration Path\nLocation for configuration files\nCategory: Build Configuration\nType: Directory\nSee [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.\n\n'
+rawComment="Summary: Main Configuration Path"$'\n'"Location for configuration files"$'\n'"Category: Build Configuration"$'\n'"Type: Directory"$'\n'"See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables."$'\n'""$'\n'""
 sourceFile="bin/build/env/XDG_CONFIG_HOME.sh"
 sourceHash="37a2ab46da6e6094878ea535696d9199c837a3f7"
 sourceLine=""

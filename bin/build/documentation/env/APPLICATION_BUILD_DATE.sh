@@ -2,14 +2,14 @@
 base="APPLICATION_BUILD_DATE.sh"
 category="Deployment"
 derivations=([0]="env" [1]="envMarker")
-description=$'Time when a build was initiated, set upon first invocation if not already.\n\n'
+description="Time when a build was initiated, set upon first invocation if not already."$'\n'""$'\n'""
 descriptionLineCount="2"
 env="APPLICATION_BUILD_DATE"
 envMarker="application_build_date"
 file="bin/build/env/APPLICATION_BUILD_DATE.sh"
 fn="APPLICATION_BUILD_DATE"
 foundNames=([0]="category" [1]="type")
-rawComment=$'Time when a build was initiated, set upon first invocation if not already.\nCategory: Deployment\nType: String\n\n'
+rawComment="Time when a build was initiated, set upon first invocation if not already."$'\n'"Category: Deployment"$'\n'"Type: String"$'\n'""$'\n'""
 sourceFile="bin/build/env/APPLICATION_BUILD_DATE.sh"
 sourceHash="9586f9badc5a659db7d288f7b862a806c93fc4fd"
 sourceLine=""

@@ -2,14 +2,14 @@
 base="BUILD_CACHE_HOME.sh"
 category="Build Configuration"
 derivations=([0]="env" [1]="envMarker")
-description=$'Location for the build system cache files. Defaults to `$HOME/.build` and if `$HOME` is not a directory then `$(buildHome)/.build`\nCache MAY be deleted at any time. If you need your files to be preserved, store them elsewhere.\n\n'
+description="Location for the build system cache files. Defaults to \`\$HOME/.build\` and if \`\$HOME\` is not a directory then \`\$(buildHome)/.build\`"$'\n'"Cache MAY be deleted at any time. If you need your files to be preserved, store them elsewhere."$'\n'""$'\n'""
 descriptionLineCount="3"
 env="BUILD_CACHE_HOME"
 envMarker="build_cache_home"
 file="bin/build/env/BUILD_CACHE_HOME.sh"
 fn="BUILD_CACHE_HOME"
 foundNames=([0]="category" [1]="type")
-rawComment=$'Location for the build system cache files. Defaults to `$HOME/.build` and if `$HOME` is not a directory then `$(buildHome)/.build`\nCache MAY be deleted at any time. If you need your files to be preserved, store them elsewhere.\nCategory: Build Configuration\nType: Directory\n\n'
+rawComment="Location for the build system cache files. Defaults to \`\$HOME/.build\` and if \`\$HOME\` is not a directory then \`\$(buildHome)/.build\`"$'\n'"Cache MAY be deleted at any time. If you need your files to be preserved, store them elsewhere."$'\n'"Category: Build Configuration"$'\n'"Type: Directory"$'\n'""$'\n'""
 sourceFile="bin/build/env/BUILD_CACHE_HOME.sh"
 sourceHash="1c9526d7026c3def628aa861751473f9ecd87358"
 sourceLine=""

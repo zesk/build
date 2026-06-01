@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n--only - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)\nfile - File. Optional. File(s) to filter.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'"--only - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)"$'\n'"file - File. Optional. File(s) to filter."$'\n'""
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Filter comments from a bash stream\n\n'
+description="Filter comments from a bash stream"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashCommentFilter"
 fnMarker="bashcommentfilter"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="519"
-rawComment=$'Filter comments from a bash stream\nArgument: --help - Flag. Optional. Display this help.\nArgument: --only - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)\nArgument: file - File. Optional. File(s) to filter.\nstdin: a bash file\nstdout: bash file without line-comments `#`\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Filter comments from a bash stream"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --only - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)"$'\n'"Argument: file - File. Optional. File(s) to filter."$'\n'"stdin: a bash file"$'\n'"stdout: bash file without line-comments \`#\`"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="8b11e89328e79950a2b4734a035cc38305d5a61e"
+sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
 sourceLine="519"
-stdin=$'a bash file\n'
-stdout=$'bash file without line-comments `#`\n'
+stdin="a bash file"$'\n'""
+stdout="bash file without line-comments \`#\`"$'\n'""
 summary="Filter comments from a bash stream"
 summaryComputed="true"
 usage="bashCommentFilter [ --help ] [ --only ] [ file ]"

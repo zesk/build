@@ -13,13 +13,14 @@
 # Argument: --cached fingerprint - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.
 # Argument: --verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.
 # Argument: --quiet - Flag. Optional. Be quiet (turns verbose off).
+# Argument: --audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn't; or should be ignored.
 # Argument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value.
 # Argument: --key - String. Optional. Update this key in the JSON file.
 # BUILD_DEBUG: fingerprint - By default be verbose even if the flag is not specified. (Use `--quiet` to silence if needed)
 # Environment: BUILD_DEBUG
 fingerprint() {
   local handler="_${FUNCNAME[0]}"
-  local key="" verboseFlag=false checkFlag=false prefix="" fingerprint="" hookName=""
+  local key="" verboseFlag=false checkFlag=false prefix="" fingerprint="" hookName="" aa=()
 
   ! buildDebugEnabled fingerprint || verboseFlag=true
 
@@ -35,6 +36,7 @@ fingerprint() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --check) checkFlag=true ;;
+    --audit) aa+=("$argument") ;;
     --cached) shift && fingerprint=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --hook) shift && hookName=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
@@ -49,6 +51,8 @@ fingerprint() {
     shift
   done
 
+  ! buildDebugEnabled fingerprint-audit || aa+=("--audit")
+
   [ -n "$prefix" ] || prefix=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
   [ -n "$key" ] || key="fingerprint"
   [ -n "$hookName" ] || hookName="application-fingerprint"
@@ -61,7 +65,7 @@ fingerprint() {
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "Missing $(decorate file "$jsonFile")" || return $?
 
   local savedFingerprint && savedFingerprint="$(catchReturn "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
-  [ -n "$fingerprint" ] || fingerprint=$(catchReturn "$handler" hookRun "$hookName") || return $?
+  [ -n "$fingerprint" ] || fingerprint=$(catchReturn "$handler" hookRun "$hookName" "${aa[@]+"${aa[@]}"}") || return $?
   if [ "$fingerprint" = "$savedFingerprint" ]; then
     if $checkFlag; then
       printf -- "%s\n" "$fingerprint"

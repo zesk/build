@@ -52,6 +52,9 @@ __deployApplication() {
     requiredArgs+=(applicationId)
   fi
 
+  export BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS
+  hookEnvironment --handler "$handler" || return $?
+
   # Check arguments are non-blank and actually supplied
   requiredArgs+=(deployHome applicationPath)
   local name

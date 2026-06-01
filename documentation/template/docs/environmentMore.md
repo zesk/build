@@ -1,60 +1,4 @@
 
-## `__BASH_PROMPT_MARKERS`
-
-> **__BASH_PROMPT_MARKERS** &mdash; Bash Prompt escape codes for prompt reporting
-> > **Type**: *Array:EmptyString* • **Category**: *Bash Prompt*
-
-List of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.
-
-
-## `__BASH_PROMPT_MODULES`
-
-> **__BASH_PROMPT_MODULES** &mdash; List of functions to run each prompt command
-> > **Type**: *Array:Callable* • **Category**: *Bash Prompt*
-
-List of modules to run each prompt command.
-
-Manage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.
-
-Make your functions *really* fast otherwise the shell becomes sluggish. Also try:
-
-    BUILD_DEBUG=bashPrompt
-
-To report on each command and timing.
-
-An automatic reporting occurs when commands exceed 0.3s.
-
-
-## `__BASH_PROMPT_PREVIOUS`
-
-> **__BASH_PROMPT_PREVIOUS** &mdash; Previous result code
-> > **Type**: *Array* • **Category**: *Bash Prompt*
-
-Previous result code
-
-
-## `__BASH_PROMPT_SLOW`
-
-> **__BASH_PROMPT_SLOW** &mdash; Bash Prompt slow timer
-> > **Type**: *PositiveInteger* • **Category**: *Bash Prompt*
-
-Number of milliseconds after which a `bashPrompt` command is considered slow.
-
-
-## `__BUILD_HAS_TTY`
-
-> **__BUILD_HAS_TTY** &mdash; Cached value of the availability of `/dev/tty`.
-> > **Type**: *Boolean* • **Category**: *Internal*
-
-Cached value of the availability of `/dev/tty`.
-Possible values are `true` or `false` or blank.
-
-- `true` - `/dev/tty` appears to be operating without errors
-- `false` - `/dev/tty` appears to be disconnected and can not be used
-
-This value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.
-
-
 ## `APACHE_HOME`
 
 > **APACHE_HOME** &mdash; Constant for the Apache configuration home directory.
@@ -69,6 +13,14 @@ Constant for the Apache configuration home directory.
 > > **Type**: *String* • **Category**: *Deployment*
 
 Time when a build was initiated, set upon first invocation if not already.
+
+
+## `APPLICATION_CODE`
+
+> **APPLICATION_CODE** &mdash; This is the unique code name of the application. Use
+> > **Type**: *String* • **Category**: *Application*
+
+This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness.
 
 
 ## `APPLICATION_CODE_EXTENSIONS`
@@ -87,14 +39,6 @@ List of extensions for code in the application. Required.
 List of path names to ignore for application code. (e.g. `/vendor/`, `/node_modules/`, etc.)
 
 
-## `APPLICATION_CODE`
-
-> **APPLICATION_CODE** &mdash; This is the unique code name of the application. Use
-> > **Type**: *String* • **Category**: *Application*
-
-This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness.
-
-
 ## `APPLICATION_ID`
 
 > **APPLICATION_ID** &mdash; This is the unique hash which represents the source code
@@ -103,20 +47,20 @@ This is the unique code name of the application. Use a domain name suffix to ens
 This is the unique hash which represents the source code state (typically a git hash)
 
 
-## `APPLICATION_JSON_PREFIX`
-
-> **APPLICATION_JSON_PREFIX** &mdash; Prefix to place we can store things in the JSON
-> > **Type**: *String* • **Category**: *Application*
-
-Prefix to place we can store things in the JSON file (e.g. to set the fingerprint)
-
-
 ## `APPLICATION_JSON`
 
 > **APPLICATION_JSON** &mdash; Path to the application configuration JSON
 > > **Type**: *ApplicationFile* • **Category**: *Application*
 
 Path to the application configuration JSON
+
+
+## `APPLICATION_JSON_PREFIX`
+
+> **APPLICATION_JSON_PREFIX** &mdash; Prefix to place we can store things in the JSON
+> > **Type**: *String* • **Category**: *Application*
+
+Prefix to place we can store things in the JSON file (e.g. to set the fingerprint)
 
 
 ## `APPLICATION_NAME`
@@ -243,20 +187,20 @@ Cache MAY be deleted at any time. If you need your files to be preserved, store 
 If true then colors are shown, blank means guess the value, false means no colors
 
 
-## `BUILD_COMPANY_LINK`
-
-> **BUILD_COMPANY_LINK** &mdash; Legal copyright holder website for this codebase
-> > **Type**: *URL* • **Category**: *Application*
-
-Legal copyright holder website for this codebase
-
-
 ## `BUILD_COMPANY`
 
 > **BUILD_COMPANY** &mdash; Legal copyright holder for this codebase
 > > **Type**: *String* • **Category**: *Application*
 
 Legal copyright holder for this codebase
+
+
+## `BUILD_COMPANY_LINK`
+
+> **BUILD_COMPANY_LINK** &mdash; Legal copyright holder website for this codebase
+> > **Type**: *URL* • **Category**: *Application*
+
+Legal copyright holder website for this codebase
 
 
 ## `BUILD_COMPOSER_VERSION`
@@ -267,14 +211,6 @@ Legal copyright holder for this codebase
 Version of composer to use for building vendor directory
 
 
-## `BUILD_DEBUG_LINES`
-
-> **BUILD_DEBUG_LINES** &mdash; Number of lines of debugging output to send to stderr
-> > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
-
-Number of lines of debugging output to send to stderr before stopping
-
-
 ## `BUILD_DEBUG`
 
 > **BUILD_DEBUG** &mdash; Constant for turning debugging on during build to find errors
@@ -282,6 +218,14 @@ Number of lines of debugging output to send to stderr before stopping
 
 Constant for turning debugging on during build to find errors in the build scripts.
 Enable debugging globally in the build scripts. Set to a comma (`,`) delimited list string to enable specific debugging, or `true` for ALL debugging, `false` (or blank) for NO debugging.
+
+
+## `BUILD_DEBUG_LINES`
+
+> **BUILD_DEBUG_LINES** &mdash; Number of lines of debugging output to send to stderr
+> > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
+
+Number of lines of debugging output to send to stderr before stopping
 
 
 ## `BUILD_DEVELOPMENT_HOME`
@@ -643,6 +587,14 @@ Not referenced in this product; referenced via [rxvt](https://rxvt.sourceforge.n
 Constant for the directory where services are monitored by daemontools
 
 
+## `DEPLOYMENT`
+
+> **DEPLOYMENT** &mdash; Target deployment for this code
+> > **Type**: *String* • **Category**: *Deployment*
+
+Target deployment for this code
+
+
 ## `DEPLOY_REMOTE_HOME`
 
 > **DEPLOY_REMOTE_HOME** &mdash; Path on the remote server where the application deployment home
@@ -657,14 +609,6 @@ Path on the remote server where the application deployment home is (per applicat
 > > **Type**: *String* • **Category**: *Deployment*
 
 A list of one ore more user@host for installation of the application
-
-
-## `DEPLOYMENT`
-
-> **DEPLOYMENT** &mdash; Target deployment for this code
-> > **Type**: *String* • **Category**: *Deployment*
-
-Target deployment for this code
 
 
 ## `DISPLAY`
@@ -684,12 +628,12 @@ From the user's perspective, every X server has a display name of the form: `hos
 Binary for editing files
 
 
-## `GIT_OPEN_LINKS`
+## `GITHUB_ACCESS_TOKEN`
 
-> **GIT_OPEN_LINKS** &mdash; Open links from git remotes in `gitCommit`
-> > **Type**: *Boolean* • **Category**: *Development*
+> **GITHUB_ACCESS_TOKEN** &mdash; Access token used for release
+> > **Type**: *Secret* • **Category**: *Development*
 
-Open links from git remotes in `gitCommit`
+Access token used for release
 
 
 ## `GITHUB_ACCESS_TOKEN_EXPIRE`
@@ -698,14 +642,6 @@ Open links from git remotes in `gitCommit`
 > > **Type**: *Date* • **Category**: *Development*
 
 GitHub Access token expiration date. Invalid AFTER this date.
-
-
-## `GITHUB_ACCESS_TOKEN`
-
-> **GITHUB_ACCESS_TOKEN** &mdash; Access token used for release
-> > **Type**: *Secret* • **Category**: *Development*
-
-Access token used for release
 
 
 ## `GITHUB_REPOSITORY_NAME`
@@ -724,12 +660,28 @@ Repository name for release
 Repository owner for release
 
 
+## `GIT_OPEN_LINKS`
+
+> **GIT_OPEN_LINKS** &mdash; Open links from git remotes in `gitCommit`
+> > **Type**: *Boolean* • **Category**: *Development*
+
+Open links from git remotes in `gitCommit`
+
+
 ## `HOME`
 
 > **HOME** &mdash; Current user's home directory.
 > > **Type**: *Directory* • **Category**: *Bash*
 
 Current user's home directory.
+
+
+## `IP_URL`
+
+> **IP_URL** &mdash; URL to look up IP my address remotely
+> > **Type**: *URL* • **Category**: *Build Configuration*
+
+URL to look up IP my address remotely
 
 
 ## `IP_URL_FILTER`
@@ -739,14 +691,6 @@ Current user's home directory.
 
 jq filter to parse IP_URL result (assuming JSON)
 if blank, no filter is used and raw result is returned
-
-
-## `IP_URL`
-
-> **IP_URL** &mdash; URL to look up IP my address remotely
-> > **Type**: *URL* • **Category**: *Build Configuration*
-
-URL to look up IP my address remotely
 
 
 ## `LC_TERMINAL`
@@ -926,4 +870,60 @@ See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) 
 
 Base directory for user-specific state files to be stored
 See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+
+
+## `__BASH_PROMPT_MARKERS`
+
+> **__BASH_PROMPT_MARKERS** &mdash; Bash Prompt escape codes for prompt reporting
+> > **Type**: *Array:EmptyString* • **Category**: *Bash Prompt*
+
+List of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.
+
+
+## `__BASH_PROMPT_MODULES`
+
+> **__BASH_PROMPT_MODULES** &mdash; List of functions to run each prompt command
+> > **Type**: *Array:Callable* • **Category**: *Bash Prompt*
+
+List of modules to run each prompt command.
+
+Manage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.
+
+Make your functions *really* fast otherwise the shell becomes sluggish. Also try:
+
+    BUILD_DEBUG=bashPrompt
+
+To report on each command and timing.
+
+An automatic reporting occurs when commands exceed 0.3s.
+
+
+## `__BASH_PROMPT_PREVIOUS`
+
+> **__BASH_PROMPT_PREVIOUS** &mdash; Previous result code
+> > **Type**: *Array* • **Category**: *Bash Prompt*
+
+Previous result code
+
+
+## `__BASH_PROMPT_SLOW`
+
+> **__BASH_PROMPT_SLOW** &mdash; Bash Prompt slow timer
+> > **Type**: *PositiveInteger* • **Category**: *Bash Prompt*
+
+Number of milliseconds after which a `bashPrompt` command is considered slow.
+
+
+## `__BUILD_HAS_TTY`
+
+> **__BUILD_HAS_TTY** &mdash; Cached value of the availability of `/dev/tty`.
+> > **Type**: *Boolean* • **Category**: *Internal*
+
+Cached value of the availability of `/dev/tty`.
+Possible values are `true` or `false` or blank.
+
+- `true` - `/dev/tty` appears to be operating without errors
+- `false` - `/dev/tty` appears to be disconnected and can not be used
+
+This value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.
 

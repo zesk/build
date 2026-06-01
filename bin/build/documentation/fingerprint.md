@@ -4,7 +4,7 @@
 
 ### Usage
 
-    fingerprint [ --help ] [ --handler handler ] [ --cached fingerprint ] [ --verbose ] [ --quiet ] [ --check ] [ --key ]
+    fingerprint [ --help ] [ --handler handler ] [ --cached fingerprint ] [ --verbose ] [ --quiet ] [ --audit ] [ --check ] [ --key ]
 
 Update file from `APPLICATION_JSON` with application fingerprint.
 
@@ -17,6 +17,7 @@ Update file from `APPLICATION_JSON` with application fingerprint.
 - `--cached fingerprint` - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.
 - `--verbose` - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.
 - `--quiet` - Flag. Optional. Be quiet (turns verbose off).
+- `--audit` - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn't; or should be ignored.
 - `--check` - Flag. Optional. Check if the fingerprint is up to date and output the current value.
 - `--key` - String. Optional. Update this key in the JSON file.
 

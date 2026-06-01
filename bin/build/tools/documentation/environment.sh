@@ -10,6 +10,8 @@
 __documentationEnvironmentFileParse() {
   local handler="$1" && shift
 
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
+
   local envFile && envFile=$(validate "$handler" File "environmentFile" "${1-}") && shift || return $?
 
   local envName="${envFile##*/}" && envName="${envName%.*}"

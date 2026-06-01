@@ -129,11 +129,12 @@ _buildFunctions() {
 # Argument: --help - Flag. Optional. Display this help.
 buildFunctionsExclude() {
   local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local ff && ff=$(fileTemporaryName "$handler") || return $?
   local clean=("$ff")
   catchReturn "$handler" buildFunctions | sort -u >"$ff" || returnClean $? "${clean[@]}" || return $?
   sort -u | diff -u - "$ff" | grep '^-' | cut -c 2- | grep -v '^-'
-  catchReturn "$handler" rm -f "${clean[@]}" || return $?
+  returnClean $? "${clean[@]}" || return $?
 }
 _buildFunctionsExclude() {
   # __IDENTICAL__ bashDocumentation 1
@@ -448,7 +449,7 @@ buildEnvironmentLoad() {
       if $quietFlag; then
         returnCode=1
       else
-        throwEnvironment "$handler" "Failed to find any files for $envName" || returnClean $? "$tempFiles" || return $?
+        throwEnvironment "$handler" "Failed to find any files for $envName $(debuggingStack)" || returnClean $? "$tempFiles" || return $?
       fi
     fi
     export "${envName?}" || throwEnvironment "$handler" "export $envName failed" || returnClean $? "$tempFiles" || return $?
@@ -574,7 +575,7 @@ buildEnvironmentGet() {
     --application) shift && ll+=("$argument" "${1-}") ;;
     --quiet) ll+=("$argument") ;;
     *)
-      catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
+      [ -n "${!argument+x}" ] || catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
       printf "%s%s" "${!argument-}" "$suffix"
       suffix=$'\n'
       ;;

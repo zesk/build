@@ -17,7 +17,8 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # The default hook generates a fingerprint using `sha1sum` and the contents of each `application-files` file.
 __hookApplicationFingerprint() {
   local handler="_${FUNCNAME[0]}"
-  local home
+
+  local auditFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -28,6 +29,7 @@ __hookApplicationFingerprint() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --audit) auditFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -35,8 +37,20 @@ __hookApplicationFingerprint() {
     esac
     shift
   done
-  home=$(catchReturn "$handler" buildHome) || return $?
-  catchReturn "$handler" hookRun --application "$home" documentation-files -print0 | xargs -0 -n 1 sha1sum | sort | textSHA || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  local auditFile=/dev/null doTheDiff=false
+  if $auditFlag; then
+    auditFile="$home/$HOOK_NAME.files.txt"
+    local auditFilePrevious="$home/$HOOK_NAME.files.before.txt"
+    if [ -f "$auditFile" ]; then
+      catchReturn "$handler" mv -f "$auditFile" "$auditFilePrevious" || return $?
+      doTheDiff=true
+    fi
+  fi
+  catchReturn "$handler" hookRun --application "$home" documentation-files -print0 | xargs -0 -n 1 sha1sum | sort -k 2 | tee "$auditFile" | textSHA || return $?
+  if $doTheDiff; then
+    diff -u "$auditFile" "$auditFilePrevious" | dumpPipe "$HOOK_NAME --audit" 1>&2
+  fi
 }
 ___hookApplicationFingerprint() {
   # __IDENTICAL__ bashDocumentation 1

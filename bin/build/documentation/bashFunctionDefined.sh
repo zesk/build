@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
-argument=$'functionName - String. Required. Name of function to check.\nfile ... - File. Required. One or more files to check if a function is defined within.\n--help - Flag. Optional. Display this help.\n'
+argument="functionName - String. Required. Name of function to check."$'\n'"file ... - File. Required. One or more files to check if a function is defined within."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
 description="Is a function defined in a bash source file?"
@@ -12,10 +12,10 @@ fn="bashFunctionDefined"
 fnMarker="bashfunctiondefined"
 foundNames=([0]="summary" [1]="argument")
 line="257"
-rawComment=$'Summary: Is a function defined in a bash source file?\nArgument: functionName - String. Required. Name of function to check.\nArgument: file ... - File. Required. One or more files to check if a function is defined within.\nArgument: --help - Flag. Optional. Display this help.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Is a function defined in a bash source file?"$'\n'"Argument: functionName - String. Required. Name of function to check."$'\n'"Argument: file ... - File. Required. One or more files to check if a function is defined within."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="8b11e89328e79950a2b4734a035cc38305d5a61e"
+sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
 sourceLine="257"
 summary="Is a function defined in a bash source file?"
 summaryComputed=""

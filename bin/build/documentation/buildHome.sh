@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-31
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="build.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Prints the build home directory (usually same as the application root)\n\n'
+description="Prints the build home directory (usually same as the application root)"$'\n'""$'\n'""
 descriptionLineCount="2"
-environment=$'BUILD_HOME\n'
+environment="BUILD_HOME"$'\n'""
 file="bin/build/tools/build.sh"
 fn="buildHome"
 fnMarker="buildhome"
 foundNames=([0]="environment" [1]="argument")
-line="171"
-rawComment=$'Environment: BUILD_HOME\nPrints the build home directory (usually same as the application root)\nArgument: --help - Flag. Optional. Display this help.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+line="172"
+rawComment="Environment: BUILD_HOME"$'\n'"Prints the build home directory (usually same as the application root)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceHash="7c3aa107c357db74a0d854defdaf7f2b17361d34"
-sourceLine="171"
+sourceHash="172e2997b70c507377c34850d0651a1907c9c327"
+sourceLine="172"
 summary="Prints the build home directory (usually same as the application"
 summaryComputed="true"
 usage="buildHome [ --help ]"

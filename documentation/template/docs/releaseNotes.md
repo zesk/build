@@ -18,6 +18,8 @@
 - Added `processCountWatcher`
 - Added {SEE:releaseNotesMarkdown}
 - `validate "$handler" Fingerprint` now supports `hookName:keyName` syntax to support alternate hooks.
+- Switched to the **Apache License**, moved `LICENSE.md` to `LICENSE.txt`
+- Semantics of `buildEnvironmentGet` changed to only load variables when the global is unset.
 
 ## Zesk Build release v0.43.0
 
