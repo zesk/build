@@ -29,3 +29,4 @@ ORIGINALS/
 /.interrupt.log
 /.env-ATTIC/
 /test-results/
+/etc/*-fingerprint.files.txt
