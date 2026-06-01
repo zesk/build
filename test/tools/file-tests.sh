@@ -22,7 +22,6 @@ testFileModificationTimesRelative() {
   catchReturn "$handler" rm -f "$tempDirectory" || return $?
 }
 
-
 testFileUniqueLines() {
   local handler="returnMessage"
 
