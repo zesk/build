@@ -27,8 +27,6 @@ __textSHA() {
     --cache) shift && cachePath="$(validate "$handler" Directory "$argument" "${1-}")" && cachedFlag=true || return $? ;;
     *)
       files+=("$(validate "$handler" File "fileToChecksum" "$argument")") || return $?
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -89,7 +87,6 @@ __textSHACached() {
       else
         ___textSHA "$handler" "$argument" | catchEnvironment "$handler" tee "$cacheFile" || return $?
       fi
-      shift
     done
   else
     ___textSHA "$handler" || return $?

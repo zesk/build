@@ -19,7 +19,7 @@ __hookDocumentationFingerprint() {
   local handler="_${FUNCNAME[0]}"
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
-  catchReturn "$handler" hookRun --application "$home" documentation-files | catchReturn "$handler" hookRun --application "$home" fingerprint --name "$HOOK_NAME" "$@" || return $?
+  catchReturn "$handler" hookRun --application "$home" documentation-files | hookRun --application "$home" fingerprint --name "$HOOK_NAME" "$@" || return $?
 }
 ___hookDocumentationFingerprint() {
   # __IDENTICAL__ bashDocumentation 1

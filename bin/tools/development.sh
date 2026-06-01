@@ -144,21 +144,30 @@ _buildBuildTiming() {
 __buildFingerUpdate() {
   local handler="_${FUNCNAME[0]}"
 
-  local f jf
+  local documentationFingerprint && documentationFingerprint=$(catchReturn "$handler" hookRun documentation-fingerprint) || return $?
+  local applicationFingerprint && applicationFingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
+  local jsonFile && jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
+  local path u=() paths=(.fingerprint .deprecated .identical .buildFunctions .repair)
+  local changed=()
+  IFS=$'\n' read -d '' -r -a u < <(__buildFingerUpdateLoop "$handler" "$jsonFile" "$applicationFingerprint" "${paths[@]}")
+  changed+=("${u[@]+"${u[@]}"}")
+  paths=(.documentationIdentical)
+  IFS=$'\n' read -d '' -r -a u < <(__buildFingerUpdateLoop "$handler" "$jsonFile" "$documentationFingerprint" "${paths[@]}")
+  changed+=("${u[@]+"${u[@]}"}")
+  [ "${#u[@]}" -eq 0 ] || statusMessage --last decorate success "Updated $(decorate each red "${u[@]}") [$(localePluralWord "${#u[@]}" field)] in $(decorate file "$jsonFile")"
+}
 
-  f=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
-  jf=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
-  local path u=()
-  for path in .fingerprint .deprecated .identical .buildFunctions .repair; do
-    local value
-    value=$(catchReturn "$handler" jsonFileGet "$jf" "$path") || return $?
-    if [ "$value" != "$f" ]; then
+__buildFingerUpdateLoop() {
+  local handler="$1" && shift
+  local jsonFile="$1" && shift
+  local setValue="$1" && shift
+  for path in "$@"; do
+    local value && value=$(catchReturn "$handler" jsonFileGet "$jsonFile" "$path") || return $?
+    if [ "$value" != "$setValue" ]; then
       statusMessage decorate info "Updating $(decorate code "$path")"
-      catchReturn "$handler" jsonFileSet "$jf" "$path" "$f" || return $?
-      u+=("$path")
+      catchReturn "$handler" jsonFileSet "$jsonFile" "$path" "$setValue" || return $?
     fi
   done
-  [ "${#u[@]}" -eq 0 ] || statusMessage --last decorate success "Updated $(decorate each red "${u[@]}") [$(localePluralWord "${#u[@]}" field)] in $(decorate file "$jf")"
 }
 ___buildFingerUpdate() {
   # __IDENTICAL__ bashDocumentation 1

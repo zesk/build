@@ -9,6 +9,8 @@ Hooks are called to enable custom actions at specific times which can be overwri
 
 {hookExists}
 
+{hookEnvironment}
+
 {hookRun}
 
 {hookSource}

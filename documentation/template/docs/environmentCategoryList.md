@@ -1,4 +1,4 @@
-## Amazon Web Services
+ ## Amazon Web Services
 
 - `AWS_ACCESS_KEY_DATE` &mdash; AWS_ACCESS_KEY_DATE *Date*. Date of key expiration which can be checked in pipelines. [notes](#aws_access_key_date)
 - `AWS_ACCESS_KEY_ID` &mdash; AWS_ACCESS_KEY_ID *String*. Amazon Web Services IAM Identity [notes](#aws_access_key_id)
@@ -6,7 +6,7 @@
 - `AWS_REGION` &mdash; AWS_REGION *String*. Region for Amazon Web Services [notes](#aws_region)
 - `AWS_SECRET_ACCESS_KEY` &mdash; AWS_SECRET_ACCESS_KEY *Secret*. Private Secret Password for AWS [notes](#aws_secret_access_key)
 
-## Application
+ ## Application
 
 - `APPLICATION_CODE` &mdash; APPLICATION_CODE *String*. This is the unique code name of the application. Use [notes](#application_code)
 - `APPLICATION_CODE_EXTENSIONS` &mdash; APPLICATION_CODE_EXTENSIONS *ColonDelimitedList*. List of extensions for code in the application. Required. [notes](#application_code_extensions)
@@ -24,7 +24,7 @@
 - `BUILD_PROJECT_DEACTIVATE` &mdash; BUILD_PROJECT_DEACTIVATE *Function*. Set this to a function which cleans up the project [notes](#build_project_deactivate)
 - `BUILD_TERM_COLORS_STATE` &mdash; BUILD_TERM_COLORS_STATE *String*. State to store state of current terminal color state [notes](#build_term_colors_state)
 
-## Bash
+ ## Bash
 
 - `BUILD_DOCUMENTATION_PATH` &mdash; BUILD_DOCUMENTATION_PATH *DirectoryList*. Search path for documentation settings file. [notes](#build_documentation_path)
 - `DISPLAY` &mdash; DISPLAY *String*. Environment variable for X windows display. [notes](#display)
@@ -40,14 +40,14 @@
 - `TERM` &mdash; TERM *String*. The current terminal type. [notes](#term)
 - `VISUAL` &mdash; VISUAL *Executable*. Binary for viewing files [notes](#visual)
 
-## Bash Prompt
+ ## Bash Prompt
 
 - `__BASH_PROMPT_MARKERS` &mdash; __BASH_PROMPT_MARKERS *Array:EmptyString*. Bash Prompt escape codes for prompt reporting [notes](#__bash_prompt_markers)
 - `__BASH_PROMPT_MODULES` &mdash; __BASH_PROMPT_MODULES *Array:Callable*. List of functions to run each prompt command [notes](#__bash_prompt_modules)
 - `__BASH_PROMPT_PREVIOUS` &mdash; __BASH_PROMPT_PREVIOUS *Array*. Previous result code [notes](#__bash_prompt_previous)
 - `__BASH_PROMPT_SLOW` &mdash; __BASH_PROMPT_SLOW *PositiveInteger*. Bash Prompt slow timer [notes](#__bash_prompt_slow)
 
-## Build Configuration
+ ## Build Configuration
 
 - `BUILD_CACHE_HOME` &mdash; BUILD_CACHE_HOME *Directory*. Location for the build system cache files. Defaults to `$HOME/.build` [notes](#build_cache_home)
 - `BUILD_DEBUG` &mdash; BUILD_DEBUG *CommaDelimitedList*. Constant for turning debugging on during build to find errors [notes](#build_debug)
@@ -72,19 +72,19 @@
 - `XDG_DATA_HOME` &mdash; XDG_DATA_HOME *Directory*. Data Home Directory [notes](#xdg_data_home)
 - `XDG_STATE_HOME` &mdash; XDG_STATE_HOME *Directory*. State Home Directory [notes](#xdg_state_home)
 
-## Continuous Integration
+ ## Continuous Integration
 
 - `BITBUCKET_CLONE_DIR` &mdash; BITBUCKET_CLONE_DIR *Directory*. Defined in BITBUCKET Pipelines [notes](#bitbucket_clone_dir)
 - `BITBUCKET_REPO_SLUG` &mdash; BITBUCKET_REPO_SLUG *String*. Defined in BITBUCKET Pipelines, represents the project code name. [notes](#bitbucket_repo_slug)
 - `BITBUCKET_WORKSPACE` &mdash; BITBUCKET_WORKSPACE *String*. Defined in BITBUCKET Pipelines. represents the project workspace. [notes](#bitbucket_workspace)
 - `CI` &mdash; CI *String*. If this value is non-blank, then console `statusMessage`s are just [notes](#ci)
 
-## Continuous Integration: BitBucket
+ ## Continuous Integration: BitBucket
 
 - `BUILD_DOCKER_BITBUCKET_IMAGE` &mdash; BUILD_DOCKER_BITBUCKET_IMAGE *String*. undocumented 
 - `BUILD_DOCKER_BITBUCKET_PATH` &mdash; BUILD_DOCKER_BITBUCKET_PATH *RemoteDirectory*. undocumented 
 
-## Decoration
+ ## Decoration
 
 - `BUILD_COLORS` &mdash; BUILD_COLORS *Boolean*. If true then colors are shown, blank means guess the [notes](#build_colors)
 - `BUILD_PAIR_WIDTH` &mdash; BUILD_PAIR_WIDTH *PositiveInteger*. Width for pairs. Defaults to `40`. [notes](#build_pair_width)
@@ -93,7 +93,7 @@
 - `BUILD_URL_BINARY` &mdash; BUILD_URL_BINARY *Callable*. Binary used in __urlOpen [notes](#build_url_binary)
 - `COLORFGBG` &mdash; COLORFGBG *String*. Standard way to express the foreground and background colors [notes](#colorfgbg)
 
-## Deployment
+ ## Deployment
 
 - `APPLICATION_BUILD_DATE` &mdash; APPLICATION_BUILD_DATE *String*. Time when a build was initiated, set upon first invocation [notes](#application_build_date)
 - `APPLICATION_ID` &mdash; APPLICATION_ID *String*. This is the unique hash which represents the source code [notes](#application_id)
@@ -106,11 +106,11 @@
 - `DEPLOY_USER_HOSTS` &mdash; DEPLOY_USER_HOSTS *String*. A list of one ore more user@host for installation of [notes](#deploy_user_hosts)
 - `DEPLOYMENT` &mdash; DEPLOYMENT *String*. Target deployment for this code [notes](#deployment)
 
-## Deployment: GitHub
+ ## Deployment: GitHub
 
 - `GITHUB_REPOSITORY_OWNER` &mdash; GITHUB_REPOSITORY_OWNER *String*. Repository owner for release [notes](#github_repository_owner)
 
-## Development
+ ## Development
 
 - `BUILD_DEVELOPMENT_HOME` &mdash; BUILD_DEVELOPMENT_HOME *String*. Directory where Zesk Build is being developed in the file [notes](#build_development_home)
 - `GIT_BRANCH_FORMAT` &mdash; GIT_BRANCH_FORMAT *String*. undocumented 
@@ -120,36 +120,36 @@
 - `GITHUB_ACCESS_TOKEN_EXPIRE` &mdash; GITHUB_ACCESS_TOKEN_EXPIRE *Date*. GitHub Access token expiration date. Invalid AFTER this date. [notes](#github_access_token_expire)
 - `GITHUB_REPOSITORY_NAME` &mdash; GITHUB_REPOSITORY_NAME *String*. Repository name for release [notes](#github_repository_name)
 
-## Docker
+ ## Docker
 
 - `BUILD_DOCKER_IMAGE` &mdash; BUILD_DOCKER_IMAGE *String*. Default docker image to use when launching `dockerLocalContainer` [notes](#build_docker_image)
 - `BUILD_DOCKER_PATH` &mdash; BUILD_DOCKER_PATH *RemoteDirectory*. Default path for the shell to map the current directory [notes](#build_docker_path)
 - `BUILD_DOCKER_PLATFORM` &mdash; BUILD_DOCKER_PLATFORM *String*. The platform for `dockerLocalContainer` [notes](#build_docker_platform)
 
-## Documentation
+ ## Documentation
 
 - `BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN` &mdash; BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN *String*. Links in documentation [notes](#build_documentation_source_link_pattern)
 
-## Installation
+ ## Installation
 
 - `BUILD_COMPOSER_VERSION` &mdash; BUILD_COMPOSER_VERSION *String*. Version of composer to use for building vendor directory [notes](#build_composer_version)
 - `BUILD_NPM_VERSION` &mdash; BUILD_NPM_VERSION *String*. Version of npm to install using native `npm` binary. [notes](#build_npm_version)
 - `BUILD_PACKAGE_MANAGER` &mdash; Package Manager Binary *Executable*. The default package manager on systems which have more than [notes](#build_package_manager)
 
-## Internal
+ ## Internal
 
 - `__BUILD_HAS_TTY` &mdash; __BUILD_HAS_TTY *Boolean*. Cached value of the availability of `/dev/tty`. [notes](#__build_has_tty)
 
-## PHP
+ ## PHP
 
 - `XDEBUG_ENABLED` &mdash; XDEBUG_ENABLED *Boolean*. Is xdebug enabled? The application can honor this environment variable [notes](#xdebug_enabled)
 
-## Testing
+ ## Testing
 
 - `BUILD_TEST_FLAGS` &mdash; BUILD_TEST_FLAGS *String*. Test flags affect controls and how tests are run. [notes](#build_test_flags)
 - `TEST_TRACK_ASSERTIONS` &mdash; TEST_TRACK_ASSERTIONS *Boolean*. Assertion tracking testing optimization [notes](#test_track_assertions)
 
-## Vendor
+ ## Vendor
 
 - `APACHE_HOME` &mdash; APACHE_HOME *Directory*. Constant for the Apache configuration home directory. [notes](#apache_home)
 - `BUILD_YARN_VERSION` &mdash; BUILD_YARN_VERSION *String*. Version of yarn to install using `corepack` [notes](#build_yarn_version)

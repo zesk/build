@@ -79,37 +79,58 @@ buildDocumentationBuild() {
   # Ensure we have our target
   catchEnvironment "$handler" muzzle directoryRequire "$documentationTarget" "$templateCompiled" "$indexHome" || return $?
 
-  statusMessage --last decorate notice "Updating document templates ..."
-  documentationIdenticalRepair --fingerprint "$documentationSource" "$home/documentation/template" || return $?
+  statusMessage decorate notice "Updating document templates ..."
+  statusMessage --last timing --name "Updated document templates in" documentationIdenticalRepair --fingerprint "$documentationSource" "$home/documentation/template" || return $?
 
   statusMessage decorate info "Updating all ..."
+  local start && start=$(timingStart)
   bashDocumentationAllFunctions < <(buildFunctions) >"$templateSource/allFunctionList.md" || return $?
   BUILD_ENVIRONMENT_DIRS="$home/bin/build/env" bashDocumentationAllEnvironment >"$templateSource/allEnvironmentList.md"
+  local ff && for ff in "$documentationSource/tools/"*.md; do
+    local title && title=$(grep -m 1 '^# ' "$ff" | textRemoveFields 1) || return $?
+    printf -- "- [%s]({rel}tools/%s)\n" "$title" "${ff##*/}"
+  done | sort -d >"$templateSource/allToolGroupList.md"
+  statusMessage --last timingReport "$start" "Updated all in"
 
   statusMessage decorate info "Updating environmentPage ..."
-  statusMessage --last timing --name "documentationEnvironmentMake" catchReturn "$handler" documentationEnvironmentMake "${vv[@]+"${vv[@]}"}" --template "$home/documentation/template/env" --source "$home/bin/build/env" --target "$templateSource" || return $?
+  statusMessage --last timing --name "Updated environmentPage in" catchReturn "$handler" documentationEnvironmentMake "${vv[@]+"${vv[@]}"}" --template "$home/documentation/template/env" --source "$home/bin/build/env" --target "$templateSource" || return $?
 
   statusMessage decorate info "Updating example ..."
-  catchReturn "$handler" sed 's/^/    /g' <"$home/bin/build/tools/example.sh" >"$templateSource/example.md" || return $?
+  statusMessage --last timing --name "Updated example" catchReturn "$handler" sed 's/^/    /g' <"$home/bin/build/tools/example.sh" >"$templateSource/example.md" || return $?
 
-  statusMessage --last timing --name "Building missing" bashDocumentationMissing --handler "$handler" --index "$home/documentation/template/index" --source "$home/bin" --documentation "$home/documentation/source" --target "$templateSource"
+  statusMessage decorate info "Building missing ..."
+  statusMessage --last timing --name "Built missing in" bashDocumentationMissing --handler "$handler" --index "$home/documentation/template/index" --source "$home/bin" --documentation "$home/documentation/source" --target "$templateSource"
   # __buildDocumentationBuildMissing "$handler" "$home" "$templateSource" || return $?
 
   # Make templates
   statusMessage decorate notice "Making templates ..."
-  statusMessage timing --name "documentationMake templates" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
-  statusMessage --last decorate notice "Building Bash documentation and reference ..."
-
-  local versionFile="$templateCompiled/version.md"
+  statusMessage --last timing --name "Made templates in" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
 
   # Make source
   statusMessage decorate notice "Making source ..."
-  version="$(cat "$versionFile")" statusMessage timing --name "documentationMake source" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$documentationSource" --target "$documentationTarget" || return $?
-  documentationMkdocs --handler "$handler" --path "./documentation" --package mkdocs-material || return $?
+  statusMessage --last timing --name "Made source" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$documentationSource" --target "$documentationTarget" || return $?
 
-  statusMessage --last consoleHeadingLine '•' timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
+  statusMessage decorate notice "Running mkdocs ..."
+  statusMessage --last timing --name "mkdocs ran in" catchReturn "$handler" buildDocumentationMkdocs || return $?
+
+  statusMessage --last consoleHeadingLine '•' "$(timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in")"
 }
 _buildDocumentationBuild() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+buildDocumentationMkdocs() {
+  local handler="_${FUNCNAME[0]}"
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local templateCompiled="$home/documentation/.template"
+  local versionFile="$templateCompiled/version.md"
+
+  version="$(cat "$versionFile")" documentationMkdocs --handler "$handler" --path "$home/documentation" --package mkdocs-material >/dev/null || return $?
+}
+_buildDocumentationMkdocs() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

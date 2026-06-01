@@ -334,6 +334,9 @@ pythonVirtual() {
     if [ -f "$envMarker" ] && envMarkerValue="$(cat "$envMarker")" && [ "$envMarkerValue" != "$platformMarker" ]; then
       decorate warning "Removing not-my platform environment directory: $(decorate code "$envMarkerValue")"
       catchReturn "$handler" rm -rf "$venv" || return $?
+    elif [ "$("$venv/bin/python" -I 2>/dev/null <<<"print('true')")" != "true" ]; then
+      decorate warning "Removing failed platform environment directory: $(decorate code "$envMarkerValue")"
+      catchReturn "$handler" rm -rf "$venv" || return $?
     fi
   fi
   ! $cleanFlag || [ ! -d "$venv" ] || catchEnvironment "$handler" rm -rf "$venv" || return $?

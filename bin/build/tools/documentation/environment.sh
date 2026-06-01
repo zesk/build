@@ -107,6 +107,7 @@ __documentationEnvironmentMake() {
 
   ! $verboseFlag || statusMessage decorate info "Iterating through env files ..." 1>&2
   local newestTemplate && newestTemplate=$(fileNewest "$lineFile" "$moreFile" "$seeFile") || return $?
+  local envCache && envCache=$(catchReturn "$handler" documentationCache "env-source") || return $?
   [ "${#ee[@]}" -eq 0 ] || local envFile && for envFile in "${ee[@]}"; do
     local undo=(set +a)
     local env="${envFile##*/}" && env="${env%.sh}"
@@ -116,39 +117,56 @@ __documentationEnvironmentMake() {
     local envMarker="${env// /_}" && envMarker=$(stringLowercase "$envMarker")
     local settings="$cacheDirectory/$env.sh"
     local skipGenerate=false
-    if $forceFlag || [ ! -f "$settings" ] || [ ! -f "$envTarget" ] || ! fileIsNewest "$envTarget" "$settings" "$envFile" "$newestTemplate"; then
+    if $forceFlag || [ ! -f "$settings" ] || [ ! -f "$envTarget" ] || ! fileIsNewest "$settings" "$envTarget" "$envFile" "$newestTemplate"; then
+      ! $verboseFlag || statusMessage --last printf -- "WHY: forceFlag=%s settings=%s envTarget=%s newestFile=%s\n" "$forceFlag" "$([ -f "$settings" ] && printf exists || printf not-found)" "$([ -f "$envTarget" ] && printf "%s" "$envTarget" || printf not-found)" "$(fileNewest --ignore "$envTarget" "$settings" "$envFile" "$newestTemplate")" 1>&2
+      local start && start=$(catchReturn "$handler" timingStart) || return $?
+      ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$settings") ..." 1>&2
       set -a # UNDO ok
       __documentationEnvironmentFileParse "$handler" "$envFile" >"$settings" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      statusMessage --last timingReport "$start" "Generated $(decorate file "$settings") ..." 1>&2
     else
       ! $verboseFlag || statusMessage decorate notice "Cached $(decorate file "$settings") ..." 1>&2
-      [ ! -f "$envTarget" ] || skipGenerate=true
-      touch "$settings"
+      if [ -f "$envTarget" ]; then
+        skipGenerate=true
+        catchReturn "$handler" touch "$envTarget" || return $?
+      fi
+      catchReturn "$handler" touch "$settings" || return $?
     fi
 
-    local description="" type="" category="" summary="" descriptionLineCount="" name="" see=""
+    local description="" type="" category="" summary="" descriptionLineCount="" name="" see="" sourceHash="" sourceFile=""
 
     # shellcheck source=/dev/null
     catchEnvironment "$handler" source "$settings" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
 
+    [ -n "$name" ] || name="$env"
+
+    if [ -n "$category" ]; then
+      local categoryFileName="${category// /_}"
+      local categoryFile="$categoryBucket/category.$categoryFileName"
+      catchEnvironment "$handler" printf "%s\n" "$env" >>"$categoryFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
+      if [ "${#categories[@]}" -eq 0 ] || ! inArray "$category" "${categories[@]}"; then
+        catchEnvironment "$handler" printf "%s\n" "$category" >>"$categoriesUnsortedFile" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+        categories+=("$category")
+      fi
+    fi
+
     : "$see"
 
-    [ -n "$name" ] || name="$env"
+    if ! $skipGenerate && [ -n "$sourceFile" ] && [ -n "$sourceHash" ]; then
+      sourceFile="$home/$sourceFile"
+      local currentSourceHash && currentSourceHash=$(textSHA --cache "$envCache" "$sourceFile")
+      [ "$currentSourceHash" != "$sourceHash" ] || skipGenerate=true
+    fi
+
     local more=""
     if isInteger "$descriptionLineCount" && [ "$descriptionLineCount" -ge 2 ]; then
       more="[notes](#$envMarker)"
     fi
-    if [ "${#categories[@]}" -eq 0 ] || ! inArray "$category" "${categories[@]}"; then
-      catchEnvironment "$handler" printf "%s\n" "$category" >>"$categoriesUnsortedFile" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
-      categories+=("$category")
-    fi
-    local categoryFileName="${category// /_}"
-    local categoryMarker && categoryMarker=$(stringLowercase "$categoryFileName")
-    local categoryFile="$categoryBucket/category.$categoryFileName"
-    catchEnvironment "$handler" printf "%s\n" "$env" >>"$categoryFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
 
     if $skipGenerate; then
-      ! $verboseFlag || statusMessage decorate notice "Skipping $(decorate file "$seeTarget") $(decorate file "$envTarget") $(decorate file "$moreTarget") ..." 1>&2
+      ! $verboseFlag || statusMessage decorate notice "Skipping $env ..." 1>&2
     else
+      local categoryMarker && categoryMarker=$(stringLowercase "$categoryFileName")
       catchReturn "$handler" muzzle fileDirectoryRequire "$seeTarget" || return $?
       local tokens=(
         "$(environmentValueWrite name "$name")"
@@ -182,7 +200,7 @@ __documentationEnvironmentMake() {
     ! $verboseFlag || statusMessage decorate info "Processing $(basename "$category") ..." 1>&2
     local name
     if [ -f "$categoryBucket/category.$categoryFileName" ]; then
-      printf "%s\n" "## $category" ""
+      printf "%s\n" " ## $category" ""
       while IFS="" read -r name; do
         printf "%s\n" "$(cat "$cacheDirectory/$name.md")"
       done < <(sort -u "$categoryBucket/category.$categoryFileName")

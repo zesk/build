@@ -256,6 +256,7 @@ _fileModifiedRecently() {
 # If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 # Otherwise return `1``
 #
+# Argument: --ignore - Flag. Optional. Ignore files which do not exist.
 # Argument: sourceFile - File. Required. File to check
 # Argument: targetFile ... - File. Optional. One or more files to compare. All must exist.
 # DOC TEMPLATE: --help 1
@@ -270,7 +271,8 @@ fileIsNewest() {
   if [ $# -eq 0 ]; then
     return 1
   fi
-  [ "$1" = "$(fileNewest "$@")" ]
+  local args=() && while [ $# -gt 0 ]; do case "$1" in -*) args+=("$1") ;; *) break ;; esac && shift; done
+  [ "$1" = "$(fileNewest "${args[@]+"${args[@]}"}" "$@")" ]
 }
 _fileIsNewest() {
   # __IDENTICAL__ bashDocumentation 1
@@ -283,6 +285,7 @@ _fileIsNewest() {
 # If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 # Otherwise return `1``
 #
+# Argument: --ignore - Flag. Optional. Ignore files which do not exist.
 # Argument: sourceFile - File. Required. File to check
 # Argument: targetFile ... - File. Optional. One or more files to compare. All must exist.
 # DOC TEMPLATE: --help 1
@@ -295,7 +298,8 @@ fileIsOldest() {
   if [ $# -eq 0 ]; then
     return 1
   fi
-  [ "$1" = "$(fileOldest "$@")" ]
+  local args=() && while [ $# -gt 0 ]; do case "$1" in -*) args+=("$1") ;; *) break ;; esac && shift; done
+  [ "$1" = "$(fileOldest "${args[@]+"${args[@]}"}" "$@")" ]
 }
 _fileIsOldest() {
   # __IDENTICAL__ bashDocumentation 1
@@ -310,7 +314,24 @@ __gamutFile() {
 
   shift 2 || returnArgument "${FUNCNAME[0]} used incorrectly" || return $?
 
-  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
+  local ignoreFlag=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --ignore) ignoreFlag=true ;;
+    *) break ;;
+    esac
+    shift
+  done
 
   local gamutTime="" theFile=""
 
@@ -318,7 +339,12 @@ __gamutFile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1)) tempTime
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count: $(decorate each code "${__saved[@]}") $(debuggingStack)" || return $?
-    [ -f "$argument" ] || throwArgument "$handler" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    if [ ! -f "$argument" ]; then
+      if $ignoreFlag; then
+        shift && continue
+      fi
+      throwArgument "$handler" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    fi
     tempTime=$(fileModificationTime "$argument") || throwEnvironment "#$__index/$__count: fileModificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
       theFile="$1"
@@ -334,6 +360,7 @@ __gamutFile() {
 # Argument: file ... - File. Required. One or more files to examine
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: --ignore - Flag. Optional. Ignore files which do not exist.
 fileOldest() {
   __gamutFile "_${FUNCNAME[0]}" -lt "$@"
 }
@@ -347,6 +374,7 @@ _fileOldest() {
 # Argument: file ... - File. Required. One or more files to examine
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: --ignore - Flag. Optional. Ignore files which do not exist.
 fileNewest() {
   __gamutFile "_${FUNCNAME[0]}" -gt "$@"
 }

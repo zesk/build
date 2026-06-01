@@ -20,6 +20,7 @@
 - `validate "$handler" Fingerprint` now supports `hookName:keyName` syntax to support alternate hooks.
 - Switched to the **Apache License**, moved `LICENSE.md` to `LICENSE.txt`
 - Semantics of `buildEnvironmentGet` changed to only load variables when the global is unset.
+- `pythonVirtual` now deletes non-compatible `.venv` environments when created on another platform (issue with Docker)
 
 ## Zesk Build release v0.43.0
 

@@ -48,8 +48,6 @@ __documentationMake() {
   [ -z "$path" ] || path="${path%:}:"
   path="$path$(listJoin ":" "${templates[@]+"${templates[@]}"}")"
 
-  ! $verboseFlag || decorate pair BUILD_DOCUMENTATION_PATH "$path" 1>&2
-
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   printf -- "" | muzzle tee "$foundLog" "$missingLog"

@@ -4,9 +4,15 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
+## Get a copy of the Apache License
+
+{buildFetchLicense}
+
 ## Building markdown documentation
 
 {buildDocumentationBuild}
+
+{buildDocumentationMkdocs}
 
 ### Generating cache files
 

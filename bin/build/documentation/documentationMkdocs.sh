@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
 argument=$'--path documentationPath - Directory. Optional. Directory where documentation root exists.\n--template yamlTemplate - File. Optional. Name of mkdocs.yml template file to generate final file. Default is `mkdocs.template.yml`.\n'
 base="mkdocs.sh"
@@ -15,7 +15,7 @@ line="10"
 rawComment=$'Build documentation using mkdocs and a template\nArgument: --path documentationPath - Directory. Optional. Directory where documentation root exists.\nArgument: --template yamlTemplate - File. Optional. Name of mkdocs.yml template file to generate final file. Default is `mkdocs.template.yml`.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/mkdocs.sh"
-sourceHash="dab4282db2049eaef2d2c687e331cfc96d0ce29c"
+sourceHash="465bc87096cee71c70fa7b57dc09520786915a3d"
 sourceLine="10"
 summary="Build documentation using mkdocs and a template"
 summaryComputed="true"
