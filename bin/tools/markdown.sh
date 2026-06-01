@@ -28,7 +28,6 @@ __buildBuildAddNoteTo() {
 
 # Distribute the README.md and LICENSE.md files to important places.
 #
-# Argument: --skip-commit - Skip the commit if the files change
 # Requires: jq throwArgument statusMessage decorate  buildHome  catchReturn __addNoteTo __buildMarker
 # Requires: git gitInsideHook gitRepositoryChanged statusMessage throwEnvironment
 __buildBuildUpdateMarkdown() {

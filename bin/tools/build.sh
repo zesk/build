@@ -141,7 +141,7 @@ __buildBuild() {
   consoleLine "#"
 
   ! $debugFlag || statusMessage decorate info "Updating markdown ..."
-  if ! "$home/bin/update-md.sh" --skip-commit; then
+  if ! __buildBuildUpdateMarkdown "$handler" "$home"; then
     catchEnvironment "$handler" "Can not update the Markdown files" || return $?
   fi
 
