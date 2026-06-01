@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
 argument=$'--bin binary - Executable. Optional. Binary for `pip`.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--help - Flag. Optional. Display this help.\n--debug - Flag. Optional. Show outputs to `which` and `command -v` for `pip`\n... - Arguments. Optional. Arguments passed to `pip`\n'
 base="python.sh"
@@ -15,7 +15,7 @@ line="206"
 rawComment=$'Run pip whether it is installed as a module or as a binary\nArgument: --bin binary - Executable. Optional. Binary for `pip`.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --debug - Flag. Optional. Show outputs to `which` and `command -v` for `pip`\nArgument: ... - Arguments. Optional. Arguments passed to `pip`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/python.sh"
-sourceHash="c5956e3d32ee75e52908b4d36d8cfde5928066e8"
+sourceHash="150ae65ded62fc0da1f63d2170531d182318466b"
 sourceLine="206"
 summary="Run pip whether it is installed as a module or"
 summaryComputed="true"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\npipPackage [ ... ] - String. Required. Pip package name to uninstall.\n'
 base="python.sh"
@@ -15,7 +15,7 @@ line="137"
 rawComment=$'Utility to uninstall python dependencies via pip\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: pipPackage [ ... ] - String. Required. Pip package name to uninstall.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/python.sh"
-sourceHash="c5956e3d32ee75e52908b4d36d8cfde5928066e8"
+sourceHash="150ae65ded62fc0da1f63d2170531d182318466b"
 sourceLine="137"
 summary="Utility to uninstall python dependencies via pip"
 summaryComputed="true"

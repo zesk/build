@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
 argument=$'pipPackage ... - String. Required. Package name(s) to check.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.\n'
 base="python.sh"
@@ -15,7 +15,7 @@ line="252"
 rawComment=$'Is a package installed for python?\nArgument: pipPackage ... - String. Required. Package name(s) to check.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.\nReturn Code: 0 - All packages are installed (or at least one package with `--any`)\nReturn Code: 1 - All packages are not installed (or NO packages are installed with `--any`)\n\n'
 return_code=$'0 - All packages are installed (or at least one package with `--any`)\n1 - All packages are not installed (or NO packages are installed with `--any`)\n'
 sourceFile="bin/build/tools/python.sh"
-sourceHash="c5956e3d32ee75e52908b4d36d8cfde5928066e8"
+sourceHash="150ae65ded62fc0da1f63d2170531d182318466b"
 sourceLine="252"
 summary="Is a package installed for python?"
 summaryComputed="true"
