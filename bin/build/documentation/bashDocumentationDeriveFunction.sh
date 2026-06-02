@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationDeriveFunction"
 fnMarker="bashdocumentationderivefunction"
 foundNames=([0]="summary" [1]="argument")
-line="819"
+line="821"
 rawComment=$'Summary: Generate markdown documentation page\nGenerate function derived files.\nFile(s) are generated next to `settingsFile`.\n- `--check` checks to see if the file needs to be generated or updated. Returns 0 if up to date.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --check - Flag. Optional. Check to see if an update is needed\nArgument: settingsFile - File. Required. Settings file for function to document.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
-sourceLine="819"
+sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceLine="821"
 summary="Generate markdown documentation page"
 summaryComputed=""
 usage="bashDocumentationDeriveFunction [ --help ] [ --check ] settingsFile"

@@ -1,1 +1,0 @@
-- `BUILD_TEST_FLAGS` &mdash; BUILD_TEST_FLAGS *String*. Test flags affect controls and how tests are run. [notes](#build_test_flags)

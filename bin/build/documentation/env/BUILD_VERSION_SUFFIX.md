@@ -1,1 +1,0 @@
-- `BUILD_VERSION_SUFFIX` &mdash; BUILD_VERSION_SUFFIX *String*. Default suffix used in `gitTagVersion` [notes](#build_version_suffix)

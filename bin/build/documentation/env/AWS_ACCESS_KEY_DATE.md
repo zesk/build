@@ -1,1 +1,0 @@
-- `AWS_ACCESS_KEY_DATE` &mdash; AWS_ACCESS_KEY_DATE *Date*. Date of key expiration which can be checked in pipelines. [notes](#aws_access_key_date)

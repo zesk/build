@@ -1,1 +1,0 @@
-- `APPLICATION_OWNER` &mdash; APPLICATION_OWNER *String*. The entity which owns or manages the application. Typically the [notes](#application_owner)

@@ -1,1 +1,0 @@
-- `BUILD_COMPANY` &mdash; BUILD_COMPANY *String*. Legal copyright holder for this codebase [notes](#build_company)

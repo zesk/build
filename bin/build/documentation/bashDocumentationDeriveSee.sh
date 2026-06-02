@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationDeriveSee"
 fnMarker="bashdocumentationderivesee"
 foundNames=([0]="summary" [1]="argument")
-line="870"
+line="872"
 rawComment=$'Summary: Generate SEE markdown content\nGenerate `SEE/{fn}.md` - Derived file generator.\nFile is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --check - Flag. Optional. Check to see if an update is needed\nArgument: settingsFile - File. Required. Settings file for function to document.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
-sourceLine="870"
+sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceLine="872"
 summary="Generate SEE markdown content"
 summaryComputed=""
 usage="bashDocumentationDeriveSee [ --help ] [ --check ] settingsFile"

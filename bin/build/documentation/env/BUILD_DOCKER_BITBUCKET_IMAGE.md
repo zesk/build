@@ -1,1 +1,0 @@
-- `BUILD_DOCKER_BITBUCKET_IMAGE` &mdash; BUILD_DOCKER_BITBUCKET_IMAGE *String*. undocumented 

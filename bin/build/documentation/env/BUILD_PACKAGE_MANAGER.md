@@ -1,1 +1,0 @@
-- `BUILD_PACKAGE_MANAGER` &mdash; Package Manager Binary *Executable*. The default package manager on systems which have more than [notes](#build_package_manager)

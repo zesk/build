@@ -41,7 +41,7 @@ __bashDocumentationExtract() {
     --generate) generateCache=true ;;
     --no-cache) checkCache=false && generateCache=false ;;
     --function) derivations+=("return_code" "fn" "lowerFn" "fnMarker" "argument" "usage") ;;
-    --environment) derivations+=("env" "envMarker") ;;
+    --environment) derivations+=("env" "envMarker" "name") ;;
     --cache) checkCache=true ;;
     *)
       if [ -z "$fn" ]; then

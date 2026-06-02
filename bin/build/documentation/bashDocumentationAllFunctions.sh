@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationAllFunctions"
 fnMarker="bashdocumentationallfunctions"
 foundNames=([0]="summary" [1]="argument" [2]="stdin")
-line="652"
+line="654"
 rawComment=$'Summary: Generate markdown for a list of all functions\nUses list of functions passed in `stdin`; using the `SEE` template.\nOutput to `allFunctionList.md` typically.\nArgument: --help - Flag. Optional. Display this help.\nstdin: Function. Function names one per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
-sourceLine="652"
+sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceLine="654"
 stdin=$'Function. Function names one per line.\n'
 summary="Generate markdown for a list of all functions"
 summaryComputed=""

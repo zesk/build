@@ -1,1 +1,0 @@
-- `APPLICATION_TAG` &mdash; APPLICATION_TAG *String*. This is the full version number including debugging or release [notes](#application_tag)

@@ -1,1 +1,0 @@
-- `BUILD_NPM_VERSION` &mdash; BUILD_NPM_VERSION *String*. Version of npm to install using native `npm` binary. [notes](#build_npm_version)

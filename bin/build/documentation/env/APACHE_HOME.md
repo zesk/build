@@ -1,1 +1,0 @@
-- `APACHE_HOME` &mdash; APACHE_HOME *Directory*. Constant for the Apache configuration home directory. [notes](#apache_home)

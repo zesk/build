@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationFunctionRemove"
 fnMarker="documentationfunctionremove"
 foundNames=([0]="argument" [1]="stdin")
-line="572"
+line="574"
 rawComment=$'Remove a function from the documentation cache\nArgument: --verbose - Flag. Optional. Use more words or phrases than absolutely essential.\nArgument: --dry-run - Flag. Optional. Do not do any thing, just say what would be done.\nArgument: --git - Flag. Remove from git.\nstdin: functionName - File with function names one per line.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
-sourceLine="572"
+sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceLine="574"
 stdin=$'functionName - File with function names one per line.\n'
 summary="Remove a function from the documentation cache"
 summaryComputed="true"

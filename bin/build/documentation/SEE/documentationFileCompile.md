@@ -1,1 +1,1 @@
-[documentationFileCompile]({rel}tools/internal.md#documentationfilecompile) - Extract and build the documentation settings cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L638))
+[documentationFileCompile]({rel}tools/internal.md#documentationfilecompile) - Extract and build the documentation settings cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L640))

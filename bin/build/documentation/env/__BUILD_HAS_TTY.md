@@ -1,1 +1,0 @@
-- `__BUILD_HAS_TTY` &mdash; __BUILD_HAS_TTY *Boolean*. Cached value of the availability of `/dev/tty`. [notes](#__build_has_tty)

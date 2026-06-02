@@ -499,7 +499,7 @@ documentationFunctionsCompile() {
 
     local funFile && funFile=$(fileTemporaryName "$handler") || return $?
     local clean=("$funFile")
-    local sourceTimestamp _ && read -r sourceTimestamp _ < <(catchReturn "$handler" fileModifiedRecently "$source") || returnClean $? "${clean[@]}" || return $?
+    # local sourceTimestamp _ && read -r sourceTimestamp _ < <(catchReturn "$handler" fileModifiedRecently "$source") || returnClean $? "${clean[@]}" || return $?
     local targetTimestamp && read -r targetTimestamp _ < <(catchReturn "$handler" fileModifiedRecently "$target") || returnClean $? "${clean[@]}" || return $?
     local changed=() && IFS=$'\n' read -r -d "" -a changed < <(fileModificationTimesAfter "$source" "$targetTimestamp" -name '*.sh' | textRemoveFields 1)
     if [ "${#changed[@]}" -gt 0 ]; then
@@ -507,7 +507,9 @@ documentationFunctionsCompile() {
         bashListFunctions <"$changedFile" | grepSafe -v '^_' >>"$funFile"
       done
     else
-      fileModificationTimesBefore "$target" "$sourceTimestamp" -maxdepth 1 -mindepth 1 -name '*.sh' | textRemoveFields 1 | cut -c "$((${#target} + 2))-" | cut -f 1 -d . >"$funFile"
+      statusMessage --last decorate success "Up to date."
+      return 0
+      # fileModificationTimesBefore "$target" "$sourceTimestamp" -maxdepth 1 -mindepth 1 -name '*.sh' | textRemoveFields 1 | cut -c "$((${#target} + 2))-" | cut -f 1 -d . >"$funFile"
     fi
     documentationFunctionCompile "${aa[@]}" "$@" <"$funFile" || returnClean $? "${clean[@]}" || return $?
     catchReturn "$handler" rm -f "${clean[@]}" || return $?

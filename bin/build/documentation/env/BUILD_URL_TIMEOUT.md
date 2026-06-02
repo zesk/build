@@ -1,1 +1,0 @@
-- `BUILD_URL_TIMEOUT` &mdash; BUILD_URL_TIMEOUT *PositiveInteger*. Timeout in seconds for fetching URLs in `urlFetch` [notes](#build_url_timeout)

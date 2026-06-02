@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationFileCompile"
 fnMarker="documentationfilecompile"
 foundNames=([0]="argument" [1]="stdin")
-line="638"
+line="640"
 rawComment=$'Extract and build the documentation settings cache\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --source sourcePath - Directory. Required. Find function source code definition in this directory.\nArgument: --derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nArgument: --help - Flag. Optional. Display this help.\nstdin: functionName - File with function names one per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
-sourceLine="638"
+sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceLine="640"
 stdin=$'functionName - File with function names one per line.\n'
 summary="Extract and build the documentation settings cache"
 summaryComputed="true"

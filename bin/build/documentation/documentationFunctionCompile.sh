@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationFunctionCompile"
 fnMarker="documentationfunctioncompile"
 foundNames=([0]="argument" [1]="stdin")
-line="533"
+line="535"
 rawComment=$'- `--documentation` is required for `SEE:` files\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --source codeSource - Directory. Required. Code source to find functions.\nArgument: --documentation documentationSource - Directory. Documentation source to find documentation links.\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: functionName - File with function names one per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
-sourceLine="533"
+sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceLine="535"
 stdin=$'functionName - File with function names one per line.\n'
 summary="- \`--documentation\` is required for \`SEE:\` files"
 summaryComputed="true"

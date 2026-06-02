@@ -17,7 +17,7 @@ __documentationEnvironmentFileParse() {
   local envName="${envFile##*/}" && envName="${envName%.*}"
   # $envFile is NOT read and written in this command
   # shellcheck disable=SC2094
-  bashFirstComment <"$envFile" | sed 1d | grep -v '&copy;' | cut -c 3- | bashDocumentationExtract --no-cache --environment "$envName" "$envFile" 1 "$@" | environmentCompile --parse --keep-comments
+  bashFirstComment <"$envFile" | grep -v '&copy;' | cut -c 3- | bashDocumentationExtract --no-cache --environment "$envName" "$envFile" 1 "$@" | environmentCompile --parse --keep-comments
 }
 
 __documentationTemplateFile() {

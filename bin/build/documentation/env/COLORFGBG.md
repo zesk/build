@@ -1,1 +1,0 @@
-- `COLORFGBG` &mdash; COLORFGBG *String*. Standard way to express the foreground and background colors [notes](#colorfgbg)

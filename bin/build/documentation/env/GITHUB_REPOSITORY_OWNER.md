@@ -1,1 +1,0 @@
-- `GITHUB_REPOSITORY_OWNER` &mdash; GITHUB_REPOSITORY_OWNER *String*. Repository owner for release [notes](#github_repository_owner)
