@@ -1,0 +1,20 @@
+# shellcheck disable=SC2034
+base="AWS_SECRET_ACCESS_KEY.sh"
+category="Amazon Web Services"
+derivations=([0]="env" [1]="envMarker" [2]="name")
+description=$'Private Secret Password for AWS\n\n'
+descriptionLineCount="2"
+env="AWS_SECRET_ACCESS_KEY"
+envMarker="aws_secret_access_key"
+file="bin/build/env/AWS_SECRET_ACCESS_KEY.sh"
+fn="AWS_SECRET_ACCESS_KEY"
+foundNames=([0]="name" [1]="category" [2]="vendor" [3]="type")
+name="AWS Secret Access Key"
+rawComment=$'Name: AWS Secret Access Key\nPrivate Secret Password for AWS\nCategory: Amazon Web Services\nVendor: Amazon Web Services\nType: Secret\n\n'
+sourceFile="bin/build/env/AWS_SECRET_ACCESS_KEY.sh"
+sourceHash="8b9763cbdb2c15b5f0a451f87d3332a9baecb7d0"
+sourceLine=""
+summary="Private Secret Password for AWS"
+summaryComputed="true"
+type="Secret"
+vendor=$'Amazon Web Services\n'

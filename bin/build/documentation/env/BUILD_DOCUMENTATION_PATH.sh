@@ -1,0 +1,20 @@
+# shellcheck disable=SC2034
+base="BUILD_DOCUMENTATION_PATH.sh"
+category="Bash"
+derivations=([0]="env" [1]="envMarker" [2]="name")
+description=$'Search path for documentation settings file.\nA colon `:` separated list of paths to search for function documentation settings file for `__bashDocumentationCached`\n\n'
+descriptionLineCount="3"
+env="BUILD_DOCUMENTATION_PATH"
+envMarker="build_documentation_path"
+file="bin/build/env/BUILD_DOCUMENTATION_PATH.sh"
+fn="BUILD_DOCUMENTATION_PATH"
+foundNames=([0]="name" [1]="category" [2]="type" [3]="see")
+name="Build Documentation Path List"
+rawComment=$'Name: Build Documentation Path List\nCategory: Bash\nType: DirectoryList\nSearch path for documentation settings file.\nA colon `:` separated list of paths to search for function documentation settings file for `__bashDocumentationCached`\nSee: __bashDocumentationCached\n\n'
+see=$'__bashDocumentationCached\n'
+sourceFile="bin/build/env/BUILD_DOCUMENTATION_PATH.sh"
+sourceHash="b38f8b55debee50ebaa3a2c2fd31914efe5fa350"
+sourceLine=""
+summary="Search path for documentation settings file."
+summaryComputed="true"
+type="DirectoryList"
