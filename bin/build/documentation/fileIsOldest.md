@@ -4,7 +4,7 @@
 
 ### Usage
 
-    fileIsOldest sourceFile [ targetFile ... ] [ --help ]
+    fileIsOldest [ --ignore ] sourceFile [ targetFile ... ] [ --help ]
 
 Check to see if the first file is the newest one
 
@@ -15,6 +15,7 @@ Otherwise return `1``
 
 ### Arguments
 
+- `--ignore` - Flag. Optional. Ignore files which do not exist.
 - `sourceFile` - File. Required. File to check
 - `targetFile ...` - File. Optional. One or more files to compare. All must exist.
 - `--help` - Flag. Optional. Display this help.

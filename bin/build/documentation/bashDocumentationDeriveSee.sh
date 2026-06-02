@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-02
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"--check - Flag. Optional. Check to see if an update is needed"$'\n'"settingsFile - File. Required. Settings file for function to document."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n--check - Flag. Optional. Check to see if an update is needed\nsettingsFile - File. Required. Settings file for function to document.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Generate \`SEE/{fn}.md\` - Derived file generator."$'\n'"File is next to \`settingsFile\`; \`--check\` checks to see if the file needs to be generated or updated."$'\n'""$'\n'""
+description=$'Generate `SEE/{fn}.md` - Derived file generator.\nFile is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/documentation.sh"
 fn="bashDocumentationDeriveSee"
 fnMarker="bashdocumentationderivesee"
 foundNames=([0]="summary" [1]="argument")
-line="862"
-rawComment="Summary: Generate SEE markdown content"$'\n'"Generate \`SEE/{fn}.md\` - Derived file generator."$'\n'"File is next to \`settingsFile\`; \`--check\` checks to see if the file needs to be generated or updated."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --check - Flag. Optional. Check to see if an update is needed"$'\n'"Argument: settingsFile - File. Required. Settings file for function to document."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="870"
+rawComment=$'Summary: Generate SEE markdown content\nGenerate `SEE/{fn}.md` - Derived file generator.\nFile is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --check - Flag. Optional. Check to see if an update is needed\nArgument: settingsFile - File. Required. Settings file for function to document.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="0d90e647b7790474ad3a3c64db34d327f5438242"
-sourceLine="862"
+sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
+sourceLine="870"
 summary="Generate SEE markdown content"
 summaryComputed=""
 usage="bashDocumentationDeriveSee [ --help ] [ --check ] settingsFile"

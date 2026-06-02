@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
 argument=$'-a - Flag. Optional. Append target (atomically as well).\ntarget - File. Required. File to target\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/file.sh"
 fn="fileTeeAtomic"
 fnMarker="fileteeatomic"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="summary")
-line="951"
+line="979"
 rawComment=$'Write to a file in a single operation to avoid invalid files\nArgument: -a - Flag. Optional. Append target (atomically as well).\nArgument: target - File. Required. File to target\nArgument: --help - Flag. Optional. Display this help.\nstdin: Piped to a temporary file until EOF and then moved to target\nstdout: A copy of stdin\nSummary: tee but atomic (EXPERIMENTAL)\nEXPERIMENTAL not a lot of testing of this don\'t use quite yet.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
-sourceLine="951"
+sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
+sourceLine="979"
 stdin=$'Piped to a temporary file until EOF and then moved to target\n'
 stdout=$'A copy of stdin\n'
 summary="tee but atomic (EXPERIMENTAL)"

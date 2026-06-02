@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-31
+# Generated on 2026-06-02
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Git add documentation files"$'\n'"Just the first path."$'\n'""$'\n'""
+description=$'Git add documentation files\nJust the first path.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/documentation.sh"
 fn="documentationFilesAdd"
 fnMarker="documentationfilesadd"
 foundNames=([0]="argument")
-line="537"
-rawComment="Git add documentation files"$'\n'"Just the first path."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="545"
+rawComment=$'Git add documentation files\nJust the first path.\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="0d90e647b7790474ad3a3c64db34d327f5438242"
-sourceLine="537"
+sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
+sourceLine="545"
 summary="Git add documentation files"
 summaryComputed="true"
 usage="documentationFilesAdd [ --help ]"

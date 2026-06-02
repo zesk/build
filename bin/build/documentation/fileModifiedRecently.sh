@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-06-01
 # shellcheck disable=SC2034
 argument=$'directory - Directory. Required. Must exists - directory to list.\nfindArgs - Arguments. Optional. Optional additional arguments to modify the find query\n'
 base="file.sh"
@@ -15,7 +15,7 @@ line="241"
 rawComment=$'List the most recently modified file in a directory prefixed with the timestamp\nArgument: directory - Directory. Required. Must exists - directory to list.\nArgument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
+sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
 sourceLine="241"
 summary="List the most recently modified file in a directory prefixed"
 summaryComputed="true"

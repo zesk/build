@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-31
+# Generated on 2026-06-02
 # shellcheck disable=SC2034
-argument="--clean - Flag. Optional. Clean everything and then exit."$'\n'"--source codeSource - Directory. Required. Code source to find functions."$'\n'"--documentation documentationSource - Directory. Documentation source to find documentation links."$'\n'"--all - Flag. Optional. Do everything regardless of cache state."$'\n'"--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date."$'\n'"functionName ... - String. Optional. Specific functions to compile."$'\n'""
+argument=$'--clean - Flag. Optional. Clean everything and then exit.\n--source codeSource - Directory. Required. Code source to find functions.\n--documentation documentationSource - Directory. Documentation source to find documentation links.\n--all - Flag. Optional. Do everything regardless of cache state.\n--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nfunctionName ... - String. Optional. Specific functions to compile.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="- \`--documentation\` is required for \`SEE:\` files"$'\n'""$'\n'""
+description=$'- `--documentation` is required for `SEE:` files\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/documentation.sh"
 fn="documentationFunctionCompile"
 fnMarker="documentationfunctioncompile"
 foundNames=([0]="argument" [1]="stdin")
-line="525"
-rawComment="- \`--documentation\` is required for \`SEE:\` files"$'\n'"Argument: --clean - Flag. Optional. Clean everything and then exit."$'\n'"Argument: --source codeSource - Directory. Required. Code source to find functions."$'\n'"Argument: --documentation documentationSource - Directory. Documentation source to find documentation links."$'\n'"Argument: --all - Flag. Optional. Do everything regardless of cache state."$'\n'"Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date."$'\n'"Argument: functionName ... - String. Optional. Specific functions to compile."$'\n'"stdin: functionName - File with function names one per line."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="533"
+rawComment=$'- `--documentation` is required for `SEE:` files\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --source codeSource - Directory. Required. Code source to find functions.\nArgument: --documentation documentationSource - Directory. Documentation source to find documentation links.\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: functionName - File with function names one per line.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="0d90e647b7790474ad3a3c64db34d327f5438242"
-sourceLine="525"
-stdin="functionName - File with function names one per line."$'\n'""
+sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
+sourceLine="533"
+stdin=$'functionName - File with function names one per line.\n'
 summary="- \`--documentation\` is required for \`SEE:\` files"
 summaryComputed="true"
 usage="documentationFunctionCompile [ --clean ] --source codeSource [ --documentation documentationSource ] [ --all ] [ --fingerprint ] [ functionName ... ]"

@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-02
 # shellcheck disable=SC2034
-argument="--clean - Flag. Optional. Clean everything and then exit."$'\n'"--all - Flag. Optional. Do everything regardless of cache state."$'\n'"--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date."$'\n'"--source - Directory. Required. Directory where functions are defined."$'\n'"--key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available."$'\n'"functionName ... - String. Optional. Specific functions to compile."$'\n'""
+argument=$'--clean - Flag. Optional. Clean everything and then exit.\n--all - Flag. Optional. Do everything regardless of cache state.\n--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\n--source - Directory. Required. Directory where functions are defined.\n--key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available.\nfunctionName ... - String. Optional. Specific functions to compile.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Extract and build the documentation settings cache and generate derived files"$'\n'""$'\n'""
+description=$'Extract and build the documentation settings cache and generate derived files\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/documentation.sh"
 fn="documentationFunctionsCompile"
 fnMarker="documentationfunctionscompile"
 foundNames=([0]="argument" [1]="stdin")
 line="469"
-rawComment="Extract and build the documentation settings cache and generate derived files"$'\n'"Argument: --clean - Flag. Optional. Clean everything and then exit."$'\n'"Argument: --all - Flag. Optional. Do everything regardless of cache state."$'\n'"Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date."$'\n'"Argument: --source - Directory. Required. Directory where functions are defined."$'\n'"Argument: --key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available."$'\n'"Argument: functionName ... - String. Optional. Specific functions to compile."$'\n'"stdin: Function. Name of functions, one per line to compile if \`--all\` is not specified."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Extract and build the documentation settings cache and generate derived files\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: --source - Directory. Required. Directory where functions are defined.\nArgument: --key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: Function. Name of functions, one per line to compile if `--all` is not specified.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="0d90e647b7790474ad3a3c64db34d327f5438242"
+sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
 sourceLine="469"
-stdin="Function. Name of functions, one per line to compile if \`--all\` is not specified."$'\n'""
+stdin=$'Function. Name of functions, one per line to compile if `--all` is not specified.\n'
 summary="Extract and build the documentation settings cache and generate derived"
 summaryComputed="true"
 usage="documentationFunctionsCompile [ --clean ] [ --all ] [ --fingerprint ] --source [ --key fingerprintKey ] [ functionName ... ]"

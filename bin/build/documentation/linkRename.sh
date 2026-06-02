@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-27
+# Generated on 2026-06-02
 # shellcheck disable=SC2034
 argument=$'from - Link. Required. Link to rename.\nto - FileDirectory. Required. New link path.\n'
 base="file.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/file.sh"
 fn="linkRename"
 fnMarker="linkrename"
 foundNames=([0]="argument" [1]="see")
-line="551"
+line="579"
 rawComment=$'Rename a link\nArgument: from - Link. Required. Link to rename.\nArgument: to - FileDirectory. Required. New link path.\nRenames a link forcing replacement, and works on different versions of `mv` which differs between systems.\nSee: mv\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'mv\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="bbae84ac54a20b3ed2a0936cd425f12f62a59d01"
-sourceLine="551"
+sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
+sourceLine="579"
 summary="Rename a link"
 summaryComputed="true"
 usage="linkRename from to"

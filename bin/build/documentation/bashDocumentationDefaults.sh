@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-02
 # shellcheck disable=SC2034
-argument="--target templateTarget - FileDirectory. Required. Create templates here."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""
+argument=$'--target templateTarget - FileDirectory. Required. Create templates here.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Generates the following (with example content):"$'\n'"- \`applicationName.md\` - \`Zesk Build\`"$'\n'"- \`applicationOwner.md\` - \`Market Acumen, Inc.\`"$'\n'"- \`year.md\` - \`2026\`"$'\n'"- \`version.md\` - \`v0.43.2\`"$'\n'"- \`timestamp.md\` - \`1779910142\`"$'\n'"- \`timestampString.md\` - \`2026-05-27 15:29:15\`"$'\n'""$'\n'""
+description=$'Generates the following (with example content):\n- `applicationName.md` - `Zesk Build`\n- `applicationOwner.md` - `Market Acumen, Inc.`\n- `year.md` - `2026`\n- `version.md` - `v0.43.2`\n- `timestamp.md` - `1779910142`\n- `timestampString.md` - `2026-05-27 15:29:15`\n\n'
 descriptionLineCount="8"
 file="bin/build/tools/documentation.sh"
 fn="bashDocumentationDefaults"
 fnMarker="bashdocumentationdefaults"
 foundNames=([0]="summary" [1]="argument")
-line="691"
-rawComment="Summary: Generate base template files for Bash code documentation."$'\n'"Generates the following (with example content):"$'\n'"- \`applicationName.md\` - \`Zesk Build\`"$'\n'"- \`applicationOwner.md\` - \`Market Acumen, Inc.\`"$'\n'"- \`year.md\` - \`2026\`"$'\n'"- \`version.md\` - \`v0.43.2\`"$'\n'"- \`timestamp.md\` - \`1779910142\`"$'\n'"- \`timestampString.md\` - \`2026-05-27 15:29:15\`"$'\n'"Argument: --target templateTarget - FileDirectory. Required. Create templates here."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="699"
+rawComment=$'Summary: Generate base template files for Bash code documentation.\nGenerates the following (with example content):\n- `applicationName.md` - `Zesk Build`\n- `applicationOwner.md` - `Market Acumen, Inc.`\n- `year.md` - `2026`\n- `version.md` - `v0.43.2`\n- `timestamp.md` - `1779910142`\n- `timestampString.md` - `2026-05-27 15:29:15`\nArgument: --target templateTarget - FileDirectory. Required. Create templates here.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="0d90e647b7790474ad3a3c64db34d327f5438242"
-sourceLine="691"
+sourceHash="13134038a36d80d9eea8bb3ddf5535edac40ac2b"
+sourceLine="699"
 summary="Generate base template files for Bash code documentation."
 summaryComputed=""
 usage="bashDocumentationDefaults --target templateTarget [ --help ] [ --handler handler ]"

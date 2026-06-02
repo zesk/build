@@ -4,7 +4,7 @@
 
 ### Usage
 
-    fileNewest file ... [ --help ]
+    fileNewest file ... [ --help ] [ --ignore ]
 
 Output the newest file in the list
 
@@ -14,6 +14,7 @@ Output the newest file in the list
 
 - `file ...` - File. Required. One or more files to examine
 - `--help` - Flag. Optional. Display this help.
+- `--ignore` - Flag. Optional. Ignore files which do not exist.
 
 ### Return codes
 

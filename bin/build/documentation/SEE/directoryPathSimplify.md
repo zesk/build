@@ -1,1 +1,1 @@
-[directoryPathSimplify]({rel}tools/directory.md#directorypathsimplify) - Normalizes segments of \`/./\` and \`/../\` in a path without ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L436))
+[directoryPathSimplify]({rel}tools/directory.md#directorypathsimplify) - Normalizes segments of \`/./\` and \`/../\` in a path without ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L464))
