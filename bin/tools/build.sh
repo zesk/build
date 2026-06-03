@@ -28,8 +28,8 @@ buildStepInitialize() {
     [ -f "$buildEnv" ] || throwEnvironment "$handler" "No build environment? $(decorate file "$buildEnv")"
     catchReturn "$handler" environmentFileLoad "$buildEnv" || return $?
   fi
-  [ "${1-}" = true ] || return 0
-  catchReturn "$handler" dumpEnvironment || return $?
+  __buildBuildShowSettings
+  [ "${BUILD_TEST_DUMP_ENVIRONMENT-}" != "true" ] || catchReturn "$handler" dumpEnvironment || return $?
 }
 _buildStepInitialize() {
   # __IDENTICAL__ bashDocumentation 1
@@ -62,6 +62,20 @@ __buildBuildJSONUpdate() {
   catchEnvironment "$handler" jsonFileSet "$jsonFile" ".id" "$id" || return $?
   catchEnvironment "$handler" muzzle git add "$jsonFile" || return $?
   printf "%s\n" "$jsonFile"
+}
+
+__buildBuildShowSettings() {
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  consoleLine "."
+  decorate pair Branch "${BITBUCKET_BRANCH-}"
+  decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
+  decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
+  decorate pair "CPUs" "$(cpuCount)"
+  decorate pair Fingerprint "$(fingerprint --check)" || decorate error "Fingerprint mismatched - this may take a while" || :
+  hookRun application-files | xargs -n 1 sha1sum | sort -k 2 >"$home/.application-files.log"
+  decorate pair "# Application Files" "$(fileLineCount "$home/.application-files.log")"
+  consoleLine "."
 }
 
 #
@@ -133,15 +147,7 @@ __buildBuild() {
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   catchReturn "$handler" decorate big "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
-  consoleLine "."
-  decorate pair Branch "${BITBUCKET_BRANCH-}"
-  decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
-  decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
-  decorate pair "CPUs" "$(cpuCount)"
-  decorate pair Fingerprint "$(fingerprint --check)" || decorate error "Fingerprint mismatched - this will take a while" || :
-  hookRun application-files | xargs -n 1 sha1sum | sort -k 2 >"$home/.application-files.log"
-  decorate pair "# Application Files" "$(fileLineCount "$home/.application-files.log")"
-  consoleLine "."
+  __buildBuildShowSettings
   dumpEnvironment
   consoleLine "#"
 
