@@ -15,9 +15,11 @@
 # Argument: dumpEnv - Boolean. Optional. When `true` dumps the environment.
 buildStepInitialize() {
   local handler="_${FUNCNAME[0]}"
-  local home
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  home=$(catchReturn "$handler" buildHome) || return $?
+  if ! decorateInitialized; then
+    statusMessage decorate info "Color mode is " && catchReturn "$handler" consoleConfigureDecorate || return $?
+  fi
 
   printf "Host: %s, Load: %s\n%s\n" "$(decorate success "$(networkNameFull)")" "$(decorate orange "$(cpuLoadAverage | head -n 1)")" "$("$home/bin/build/tools.sh" timing --name "Speed:" "$home/bin/build/tools.sh" muzzle timing timingStart)"
 
@@ -134,10 +136,6 @@ __buildBuild() {
 
   local start && start=$(timingStart)
 
-  if ! decorateInitialized; then
-    statusMessage decorate info "Color mode is " && catchReturn "$handler" muzzle consoleConfigureDecorate || return $?
-  fi
-
   iTerm2Badge -i "🛠️ Building"
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
@@ -147,8 +145,7 @@ __buildBuild() {
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   catchReturn "$handler" decorate big "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
-  __buildBuildShowSettings
-  dumpEnvironment
+  buildStepInitialize
   consoleLine "#"
 
   ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
