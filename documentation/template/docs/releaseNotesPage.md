@@ -4,6 +4,8 @@
 > Copyright &copy; 2026 Market Acumen, Inc.
 
 - Previous version: v0.43.1
+- `{releaseNotesPage}` was renamed as it was the same name as a function previously.
+- Reorganized documentation indexes.
 
 ## Zesk Build release v0.43.1
 

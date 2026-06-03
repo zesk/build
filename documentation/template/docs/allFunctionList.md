@@ -267,7 +267,7 @@
 - [documentationFunctionCompile]({rel}tools/internal.md#documentationfunctioncompile) - - \`--documentation\` is required for \`SEE:\` files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L535))
 - [documentationFunctionRemove]({rel}tools/documentation.md#documentationfunctionremove) - Remove a function from the documentation cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L574))
 - [documentationFunctionsCompile]({rel}tools/documentation.md#documentationfunctionscompile) - Extract and build the documentation settings cache and generate derived ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L469))
-- {SEE:documentationIdenticalRepair}
+- [documentationIdenticalRepair]({rel}tools/documentation.md#documentationidenticalrepair) - Map template files using our identical functionality ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L235))
 - [documentationIndexDocumentation]({rel}tools/documentation.md#documentationindexdocumentation) - Generate the documentation index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L349))
 - [documentationIndexGenerate]({rel}tools/documentation.md#documentationindexgenerate) - Generate a function index for bash files. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L364))
 - [documentationIndexLookup]({rel}tools/documentation.md#documentationindexlookup) - Looks up information in the function index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L329))
@@ -411,7 +411,7 @@
 - [grepSafe]({rel}tools/text.md#grepsafe) - \`grep\` but returns 0 when nothing matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L75))
 - [groupID]({rel}tools/group.md#groupid) - Convert a group name to a group ID ([source](https://github.com/zesk/build/blob/main/bin/build/tools/group.sh#L17))
 - [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L577))
-- {SEE:hookEnvironment}
+- [hookEnvironment]({rel}tools/hook.md#hookenvironment) - Load hook-related environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L372))
 - [hookExists]({rel}tools/hook.md#hookexists) - Determine if a hook exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L229))
 - [hookFind]({rel}tools/hook.md#hookfind) - Find the path to a hook binary file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L282))
 - [hookRun]({rel}tools/hook.md#hookrun) - Run a project hook ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L128))

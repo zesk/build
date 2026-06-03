@@ -49,7 +49,7 @@ __hookFingerprint() {
   fi
   sort -f -d -i | xargs -n 1 sha1sum | tee "$auditFile" | textSHA || return $?
   if [ -n "$auditFilePrevious" ]; then
-    if ! diff -q "$auditFile" "$auditFilePrevious"; then
+    if ! muzzle diff -q "$auditFile" "$auditFilePrevious"; then
       diff -U0 "$auditFile" "$auditFilePrevious" | dumpPipe "$name --audit" 1>&2 || :
     fi
     catchReturn "$handler" returnClean $? "$auditFilePrevious" || return $?

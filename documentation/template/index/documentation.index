@@ -74,7 +74,6 @@ _installRemotePackage documentation/source/tools/bin.md
 allEnvironmentList documentation/source/index/environment.md
 allFunctionList documentation/source/index/function.md
 allFunctionList documentation/source/tools/all.md
-allToolGroupList documentation/source/index/function.md
 allToolGroupList documentation/source/index/group.md
 alpineContainer documentation/source/tools/apk.md
 apkIsInstalled documentation/source/tools/apk.md

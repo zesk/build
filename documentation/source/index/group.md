@@ -1,4 +1,4 @@
-## Functions by group
+# Functions by group
 
 <!-- TEMPLATE indexHeader 2 -->
 [🛠️ Tools ](../tools/index.md) &middot; [⬅ Home ](../index.md)

@@ -12,7 +12,7 @@ nav:
   - about.md
   - Function groups: "index/group.md"
   - All functions: "index/function.md"
-  - All environment variables: "env/all.md"
+  - All environment variables: "index/environment.md"
 not_in_nav: |
   nada.md
 #footer:

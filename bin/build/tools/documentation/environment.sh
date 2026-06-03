@@ -200,7 +200,7 @@ __documentationEnvironmentMake() {
     ! $verboseFlag || statusMessage decorate info "Processing $(basename "$category") ..." 1>&2
     local name
     if [ -f "$categoryBucket/category.$categoryFileName" ]; then
-      printf "%s\n" " ## $category" ""
+      printf "%s\n" "## $category" ""
       while IFS="" read -r name; do
         printf "%s\n" "$(cat "$cacheDirectory/$name.md")"
       done < <(sort -u "$categoryBucket/category.$categoryFileName")
