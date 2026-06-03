@@ -4,7 +4,7 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-{releaseNotes}
+{releaseNotesPage}
 
 Built on <span class="time-moment" data-timestamp="{timestamp}">{timestampString}</span>.
 
@@ -12,5 +12,3 @@ Built on <span class="time-moment" data-timestamp="{timestamp}">{timestampString
 <hr />
 
 [⬅ Parent ](../index.md)
-
-

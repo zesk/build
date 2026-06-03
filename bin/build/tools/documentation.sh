@@ -736,7 +736,7 @@ bashDocumentationDefaults() {
   catchReturn "$handler" hookVersionCurrent >"$templateTarget/version.md" || return $?
   catchReturn "$handler" date -u "+%s" >"$templateTarget/timestamp.md" || return $?
   catchReturn "$handler" printf "%s" "$(catchReturn "$handler" date -u "+%F %T") UTC" >"$templateTarget/timestampString.md" || return $?
-  catchReturn "$handler" releaseNotesMarkdown --title "$releaseTitle" >"$templateTarget/releaseNotes.md" || return $?
+  catchReturn "$handler" releaseNotesMarkdown --title "$releaseTitle" >"$templateTarget/releaseNotesPage.md" || return $?
 }
 _bashDocumentationDefaults() {
   # __IDENTICAL__ bashDocumentation 1
