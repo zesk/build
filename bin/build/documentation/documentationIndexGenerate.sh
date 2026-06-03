@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-02
+# Generated on 2026-06-03
 # shellcheck disable=SC2034
 argument=$'codePath ... - Directory. Required. OneOrMore. Path where code (`.sh` files) is stored (should remain identical between invocations)\n--target targetPath - Optional. Location to store the index file, called `code.index`.\n--verbose - Flag. Optional. Talk voluminously.\n'
 base="documentation.sh"
@@ -17,7 +17,7 @@ requires=$'__pcregrep\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'__documentationIndexLookup\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceHash="a3794434b7e4d336ccd6c9cbf964150d59b552f0"
 sourceLine="364"
 summary="Generate a function index for bash files."
 summaryComputed="true"

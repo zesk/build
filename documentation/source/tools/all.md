@@ -14,13 +14,6 @@ See also:
 
 - [All environment variables](./all.md)
 
-## All tool groups
-
-All tool groups in {applicationName}, alphabetically.
-
-{allToolGroupList}
-
-
 <!-- TEMPLATE toolFooter 3 -->
 <hr />
 

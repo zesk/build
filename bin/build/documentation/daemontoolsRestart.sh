@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-03
 # shellcheck disable=SC2034
 argument="none"
 base="daemontools.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/daemontools.sh"
 fn="daemontoolsRestart"
 fnMarker="daemontoolsrestart"
 foundNames=()
-line="393"
+line="394"
 rawComment=$'Restart the daemontools processes from scratch.\nDangerous. Stops any running services and restarts them.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/daemontools.sh"
-sourceHash="f448dbffaa1f7e767bd20c8f8728f0f9e0597de0"
-sourceLine="393"
+sourceHash="e7272ea2b43766f6539702f962a0e5b92c54b968"
+sourceLine="394"
 summary="Restart the daemontools processes from scratch."
 summaryComputed="true"
 usage="daemontoolsRestart"

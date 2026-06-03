@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-02
+# Generated on 2026-06-03
 # shellcheck disable=SC2034
 argument=$'--clean - Flag. Optional. Clean everything and then exit.\n--source codeSource - Directory. Required. Code source to find functions.\n--documentation documentationSource - Directory. Documentation source to find documentation links.\n--all - Flag. Optional. Do everything regardless of cache state.\n--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nfunctionName ... - String. Optional. Specific functions to compile.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="535"
 rawComment=$'- `--documentation` is required for `SEE:` files\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --source codeSource - Directory. Required. Code source to find functions.\nArgument: --documentation documentationSource - Directory. Documentation source to find documentation links.\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: functionName - File with function names one per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="fe683a0979555e5011a73b30a3317e59cea3b184"
+sourceHash="a3794434b7e4d336ccd6c9cbf964150d59b552f0"
 sourceLine="535"
 stdin=$'functionName - File with function names one per line.\n'
 summary="- \`--documentation\` is required for \`SEE:\` files"

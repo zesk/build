@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-03
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="daemontools.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/daemontools.sh"
 fn="daemontoolsExecute"
 fnMarker="daemontoolsexecute"
 foundNames=([0]="argument")
-line="288"
+line="290"
 rawComment=$'Launch the daemontools daemon\nDo not use this for production\nRun the daemontools root daemon\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/daemontools.sh"
-sourceHash="f448dbffaa1f7e767bd20c8f8728f0f9e0597de0"
-sourceLine="288"
+sourceHash="e7272ea2b43766f6539702f962a0e5b92c54b968"
+sourceLine="290"
 summary="Launch the daemontools daemon"
 summaryComputed="true"
 usage="daemontoolsExecute [ --help ]"

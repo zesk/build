@@ -47,7 +47,7 @@ ___bashPromptModule_reloadChangesInit bin/build/tools/prompt/modules/reload.sh 2
 ___brewAvailableList bin/build/tools/brew.sh 130
 ___brewInstalledList bin/build/tools/brew.sh 118
 ___brewUpgrade bin/build/tools/brew.sh 89
-___buildBuild bin/tools/build.sh 192
+___buildBuild bin/tools/build.sh 195
 ___buildBuildUpdateMarkdown bin/tools/markdown.sh 54
 ___buildConfigure bin/developer.sh 98
 ___buildDeploy bin/tools/deploy.sh 131
@@ -284,11 +284,12 @@ __build bin/build/identical/application.sh 95
 __build bin/tools.sh 95
 __buildApplicationConfigureEnvironmentFiles bin/build/tools/application.sh 213
 __buildApplicationConfigurePaths bin/build/tools/application.sh 198
-__buildApplicationConfigureShellFiles bin/build/tools/application.sh 254
+__buildApplicationConfigureShellFiles bin/build/tools/application.sh 261
 __buildBackground bin/developer.sh 137
-__buildBuild bin/tools/build.sh 75
+__buildBuild bin/tools/build.sh 91
 __buildBuildAddNoteTo bin/tools/markdown.sh 19
-__buildBuildJSONUpdate bin/tools/build.sh 51
+__buildBuildJSONUpdate bin/tools/build.sh 53
+__buildBuildShowSettings bin/tools/build.sh 67
 __buildBuildUpdateMarkdown bin/tools/markdown.sh 46
 __buildCompletion bin/build/tools/completion.sh 96
 __buildCompletionArguments bin/build/tools/completion.sh 120
@@ -296,7 +297,7 @@ __buildCompletionFunction bin/build/tools/completion.sh 112
 __buildCompletionFunctionID bin/build/tools/completion.sh 147
 __buildConfigure bin/developer.sh 64
 __buildConfigureUndo bin/developer.sh 115
-__buildDebugColors bin/tools/build.sh 37
+__buildDebugColors bin/tools/build.sh 39
 __buildDebugDisable bin/build/tools/debug.sh 71
 __buildDebugEnable bin/build/tools/debug.sh 63
 __buildDeploy bin/tools/deploy.sh 16
@@ -992,8 +993,8 @@ __yumUpdate bin/build/tools/yum.sh 70
 __yumUpgrade bin/build/tools/yum.sh 63
 _alpineContainer bin/build/tools/apk.sh 57
 _apkIsInstalled bin/build/tools/apk.sh 20
-_applicationHome bin/build/tools/application.sh 84
-_applicationHomeAliases bin/build/tools/application.sh 128
+_applicationHome bin/build/tools/application.sh 85
+_applicationHomeAliases bin/build/tools/application.sh 129
 _applicationIdLink bin/build/tools/deploy.sh 144
 _approveBashSource bin/build/tools/interactive.sh 94
 _approvedSources bin/build/tools/interactive.sh 112
@@ -1166,9 +1167,10 @@ _buildDeprecatedFunctions bin/build/tools/build.sh 73
 _buildDevelopmentLink bin/build/tools/developer.sh 203
 _buildDocumentation_MergeWithDocsBranch bin/build/tools/documentation/template.sh 118
 _buildDocumentation_Recommit bin/build/tools/documentation/template.sh 140
-_buildDocumentationBuild bin/tools/documentation.sh 117
+_buildDocumentationBuild bin/tools/documentation.sh 116
+_buildDocumentationEnvironment bin/tools/documentation.sh 131
 _buildDocumentationGenerateEnvironment bin/build/tools/documentation/template.sh 163
-_buildDocumentationMkdocs bin/tools/documentation.sh 132
+_buildDocumentationMkdocs bin/tools/documentation.sh 146
 _buildEnvironmentAdd bin/build/tools/build.sh 388
 _buildEnvironmentContext bin/build/tools/build.sh 750
 _buildEnvironmentFiles bin/build/tools/build.sh 283
@@ -1190,7 +1192,7 @@ _buildProductionTest bin/tools/development.sh 111
 _buildQuickTest bin/tools/development.sh 72
 _buildQuietLog bin/build/tools/build.sh 691
 _buildStagingTest bin/tools/development.sh 92
-_buildStepInitialize bin/tools/build.sh 33
+_buildStepInitialize bin/tools/build.sh 35
 _buildTestPlatforms bin/tools/platforms.sh 133
 _buildTestSuite bin/tools/test.sh 49
 _buildTestSuiteIndex bin/tools/test.sh 60
@@ -2006,8 +2008,8 @@ _yarnInstall bin/build/tools/yarn.sh 70
 _yumIsInstalled bin/build/tools/yum.sh 17
 alpineContainer bin/build/tools/apk.sh 49
 apkIsInstalled bin/build/tools/apk.sh 15
-applicationHome bin/build/tools/application.sh 51
-applicationHomeAliases bin/build/tools/application.sh 94
+applicationHome bin/build/tools/application.sh 52
+applicationHomeAliases bin/build/tools/application.sh 95
 approveBashSource bin/build/tools/interactive.sh 91
 approvedSources bin/build/tools/interactive.sh 109
 aptIsInstalled bin/build/tools/apt.sh 24
@@ -2149,7 +2151,7 @@ booleanParse bin/build/tools/text.sh 154
 boxedHeading bin/build/tools/deprecated.sh 537
 brewInstall bin/build/tools/brew.sh 18
 buildAddTool bin/tools/development.sh 18
-buildApplicationConfigure bin/build/tools/application.sh 145
+buildApplicationConfigure bin/build/tools/application.sh 146
 buildBuildTiming bin/tools/development.sh 117
 buildCacheDirectory bin/build/tools/build.sh 154
 buildCompletion bin/build/tools/completion.sh 16
@@ -2160,7 +2162,8 @@ buildDebugStop bin/build/tools/debug.sh 105
 buildDeprecatedFunctions bin/build/tools/build.sh 64
 buildDevelopmentLink bin/build/tools/developer.sh 180
 buildDocumentationBuild bin/tools/documentation.sh 24
-buildDocumentationMkdocs bin/tools/documentation.sh 121
+buildDocumentationEnvironment bin/tools/documentation.sh 120
+buildDocumentationMkdocs bin/tools/documentation.sh 135
 buildEnvironmentAdd bin/build/tools/build.sh 340
 buildEnvironmentContext bin/build/tools/build.sh 707
 buildEnvironmentFiles bin/build/tools/build.sh 245

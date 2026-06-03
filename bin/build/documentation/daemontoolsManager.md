@@ -32,7 +32,3 @@ Specify actions more than once on the command line to specify more than one set 
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
-
-- {SEE:DAEMONTOOLS_HOME} - The default home directory for `daemontools`
-

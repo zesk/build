@@ -1,4 +1,10 @@
 
+## Zesk Build release v0.43.2
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.43.1
+
 ## Zesk Build release v0.43.1
 
 > Copyright &copy; 2026 Market Acumen, Inc.
@@ -90,23 +96,9 @@ Deprecated:
   - {SEE:returnExit}
 - `validate` semantics changed so that any `__validateType` function which returns 120 (`exit`) the function will exit immediately.
 
-## Zesk Build release v0.42.3
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.42.2
-- This issue has now been fixed; however, Docker did not update any of these
-  issues [On Mac OS X the Docker environment thinks non-executable files are executable](https://github.com/docker/for-mac/issues/5509):
-    - notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is
-      mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how
-      permissions are translated, I assume. Workaround falls back to `ls` which is slow but works. See `isExecutable`.
-      Added 2024-01.
-- `__help` -> `helpArgument` and now in main documentation
-- Moved `SEE` documentation cache to `bin/build/documentation/SEE`
-- Documentation `--md-cache` obsolete, uses `__documentationPath` function
-
 # Past Releases
 
+- [v0.42.3](./v0.42.3.md)
 - [v0.42.2](./v0.42.2.md)
 - [v0.42.1](./v0.42.1.md)
 - [v0.42.0](./v0.42.0.md)
