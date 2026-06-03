@@ -138,8 +138,9 @@ __buildBuild() {
   decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
   decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
   decorate pair "CPUs" "$(cpuCount)"
-  decorate pair Fingerprint "$(fingerprint --check)"
-  hookRun application-files | xargs -n 1 sha1sum | sort -k 2 >"$home/application-files.debug"
+  decorate pair Fingerprint "$(fingerprint --check)" || decorate error "Fingerprint mismatched - this will take a while" || :
+  hookRun application-files | xargs -n 1 sha1sum | sort -k 2 >"$home/.application-files.log"
+  decorate pair "# Application Files" "$(fileLineCount "$home/.application-files.log")"
   consoleLine "."
   dumpEnvironment
   consoleLine "#"

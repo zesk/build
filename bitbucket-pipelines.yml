@@ -97,6 +97,7 @@ pipelines:
           artifacts:
             - .interrupt.log
             - .build.env
+            - .application-files.log
           size: 1x
           deployment: staging
           name: Staging Build (1x)
