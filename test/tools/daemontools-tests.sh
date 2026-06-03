@@ -14,9 +14,9 @@ testDaemontools() {
 
   mockEnvironmentStart DAEMONTOOLS_HOME
 
-  local home
+  unset DAEMONTOOLS_HOME
 
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
   assertExitCode --head --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then
