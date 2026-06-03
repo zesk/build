@@ -18,6 +18,7 @@ __applicationHomeGo() {
   local handler="$1" && shift
   local file home label uHome oldHome=""
 
+  catchReturn "$handler" hookEnvironment || return $?
   file=$(catchReturn "$handler" __applicationHomeFile) || return $?
   home=$(textTrim "$(catchEnvironment "$handler" head -n 1 "$file")") || return $?
   if [ -z "$home" ]; then
@@ -181,7 +182,6 @@ buildApplicationConfigure() {
   fi
 
   catchReturn "$handler" hookEnvironment || return $?
-  catchReturn "$handler" buildEnvironmentLoad APPLICATION_CODE APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX || return $?
   local year && year=$(catchReturn "$handler" date +%Y) || return $?
 
   __buildApplicationConfigurePaths "$handler" "$home" true || return $?
@@ -220,11 +220,18 @@ __buildApplicationConfigureEnvironmentFiles() {
   local interactive="$1" && shift
 
   local envs=(
-    APPLICATION_NAME APPLICATION_CODE APPLICATION_OWNER APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX BUILD_RELEASE_NOTES
+    APPLICATION_NAME
+    APPLICATION_OWNER
+    APPLICATION_CODE
+    APPLICATION_CODE_EXTENSIONS
+    APPLICATION_CODE_IGNORE
+    APPLICATION_JSON
+    APPLICATION_JSON_PREFIX
+    BUILD_RELEASE_NOTES
   )
   local e && for e in "${envs[@]}"; do
     local target="$targetHome/bin/env/$e.sh"
-    local value="${!e-}"
+    local value && value="$(catchReturn "$handler" buildEnvironmentGet "$e")" || return $?
     if $preflight; then
       [ -f "$target" ] || decorate info "Will create $(decorate file "$target") - current value \"$(decorate code "$value")\"" || return $?
       if [ -z "$value" ]; then

@@ -37,6 +37,10 @@ testDeployRemoteFinish() {
 
   mockEnvironmentStart BUILD_COLORS
   mockEnvironmentStart BUILD_DEBUG_LINES
+  mockEnvironmentStart BUILD_HOOK_EXTENSIONS
+  mockEnvironmentStart BUILD_HOOK_DIRS
+
+  unset BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS
 
   local tempDirectory id oldId matches finishArgs
 
@@ -144,6 +148,8 @@ testDeployRemoteFinish() {
 
   mockEnvironmentStop BUILD_COLORS
   mockEnvironmentStop BUILD_DEBUG_LINES
+  mockEnvironmentStop BUILD_HOOK_EXTENSIONS
+  mockEnvironmentStop BUILD_HOOK_DIRS
 
   return 0
 }

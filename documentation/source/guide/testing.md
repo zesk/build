@@ -4,7 +4,8 @@
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
-{applicationName} has a complete testing and assertion platform which allows you to write tests for your Bash scripts with a
+{applicationName} has a complete testing and assertion platform which allows you to write tests for your Bash scripts
+with a
 lot of extra functionality which makes it easy to use.
 
 ## Basic setup
@@ -59,6 +60,8 @@ If you find you need to turn this functionality off, add the tags to disable the
 
 ## Assertion cheat sheet
 
+- [Assertion Functions](../tools/assert.md)
+
 ### Text
 
 - `assertEquals "$expected" "$actual"`
@@ -112,6 +115,19 @@ You can tag tests using the standard {applicationName} documentation. The follow
   down)
 - `Test-Fail` - Set to `true` if you want the semantics of failure to be reversed.
 
+All tag samples applied to a test:
+
+    # Tag: test-example
+    # Test-Build-Home: false
+    # Test-Housekeeper: false
+    # Test-Plumber: false
+    # Test-Platform: !darwin
+    # Test-Fail: false
+    testHasLeaks() {
+        local handler="returnMessage"
+        dogma=$(fileTemporaryName "$handler") || return $?
+    }
+
 Globals flags can be set using `BUILD_TEST_FLAGS` and are inherited to the test level:
 
 - `Assert-Plumber:true` - Set this globally to have each assertion also do plumber tests (finer grained capture with
@@ -122,6 +138,8 @@ Global flags are separated by a semicolon: `;`
 Examples:
 
     BUILD_TEST_FLAGS='Plumber:true;Assert-Plumber:true;Housekeeper:false' bin/test.sh 
+
+- [Test Functions](../tools/test.md)
 
 <!-- TEMPLATE guideFooter 3 -->
 <hr />

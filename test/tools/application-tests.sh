@@ -10,10 +10,13 @@
 testApplicationHome() {
   local handler="returnMessage"
 
-  catchReturn "$handler" hookEnvironment || return $?
-
   mockEnvironmentStart BUILD_COLORS
   mockEnvironmentStart XDG_STATE_HOME
+  mockEnvironmentStart BUILD_HOOK_EXTENSIONS
+  mockEnvironmentStart BUILD_HOOK_DIRS
+
+  unset BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS
+
   export XDG_STATE_HOME
 
   XDG_STATE_HOME=$(fileTemporaryName "$handler" -d) || return $?
@@ -24,6 +27,8 @@ testApplicationHome() {
   assertFileContains --line "$LINENO" "$XDG_STATE_HOME/.applicationHome" "$HOME" || return $?
   catchEnvironment "$handler" rm -rf "$XDG_STATE_HOME" || return $?
 
+  mockEnvironmentStop BUILD_HOOK_EXTENSIONS
+  mockEnvironmentStop BUILD_HOOK_DIRS
   mockEnvironmentStop XDG_STATE_HOME
   mockEnvironmentStop BUILD_COLORS
 }
@@ -35,6 +40,11 @@ testApplicationHomeAliases() {
 testBuildApplicationConfigure() {
   local handler="returnMessage"
   local companyName="Widgets, LLC"
+
+  mockEnvironmentStart BUILD_HOOK_DIRS
+  mockEnvironmentStart BUILD_HOOK_EXTENSIONS
+
+  unset BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS
 
   local tempPath && tempPath=$(fileTemporaryName "$handler" -d) || return $?
   local aa=(--owner "$companyName" --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App')
@@ -53,4 +63,8 @@ testBuildApplicationConfigure() {
   assertFileDoesNotContain "$tempPath/bin/env/APPLICATION_OWNER.sh" "__appOwnerLoader" || return $?
   assertFileContains "$tempPath/bin/env/APPLICATION_OWNER.sh" "$companyName" || return $?
   catchEnvironment "$handler" rm -rf "$tempPath" || return $?
+
+  mockEnvironmentStop BUILD_HOOK_DIRS
+  mockEnvironmentStop BUILD_HOOK_EXTENSIONS
+
 }
