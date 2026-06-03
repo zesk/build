@@ -47,7 +47,7 @@ __hookFingerprint() {
       catchReturn "$handler" mv -f "$auditFile" "$auditFilePrevious" || return $?
     fi
   fi
-  xargs -n 1 sha1sum | sort -k 2 | tee "$auditFile" | textSHA || return $?
+  sort -f -d -i | xargs -n 1 sha1sum | tee "$auditFile" | textSHA || return $?
   if [ -n "$auditFilePrevious" ]; then
     if ! diff -q "$auditFile" "$auditFilePrevious"; then
       diff -U0 "$auditFile" "$auditFilePrevious" | dumpPipe "$name --audit" 1>&2
