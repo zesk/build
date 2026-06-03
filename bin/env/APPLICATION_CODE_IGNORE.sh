@@ -4,4 +4,4 @@
 # Category: Application
 # List of paths which are not our code (skipped in hook `application-files`)
 export APPLICATION_CODE_IGNORE
-APPLICATION_CODE_IGNORE="/test/example/:/bin/build/documentation/:fingerprint.files.txt"
+APPLICATION_CODE_IGNORE="/test/example/:/bin/build/documentation/"

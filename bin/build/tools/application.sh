@@ -180,15 +180,17 @@ buildApplicationConfigure() {
     code="$(catchReturn "$handler" basename "$home")" || return $?
   fi
 
-  local year && year=$(catchEnvironment "$handler" date +%Y) || return $?
+  catchReturn "$handler" hookEnvironment || return $?
+  catchReturn "$handler" buildEnvironmentLoad APPLICATION_CODE APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX || return $?
+  local year && year=$(catchReturn "$handler" date +%Y) || return $?
 
   __buildApplicationConfigurePaths "$handler" "$home" true || return $?
   year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureShellFiles "$handler" "$home" true "$templateHome" || return $?
-  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" true "$interactive" || return $?
+  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" true "$templateHome" "$interactive" || return $?
 
   __buildApplicationConfigurePaths "$handler" "$home" false || return $?
   year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureShellFiles "$handler" "$home" false "$templateHome" || return $?
-  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$interactive" || return $?
+  year="$year" APPLICATION_OWNER="$owner" APPLICATION_CODE="$code" APPLICATION_NAME="$name" __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$templateHome" "$interactive" || return $?
 }
 _buildApplicationConfigure() {
   # __IDENTICAL__ bashDocumentation 1
@@ -212,21 +214,22 @@ __buildApplicationConfigurePaths() {
 
 __buildApplicationConfigureEnvironmentFiles() {
   local handler="$1" && shift
-  local home="$1" && shift
+  local targetHome="$1" && shift
   local preflight="$1" && shift
+  local applicationHome="$1" && shift
   local interactive="$1" && shift
 
   local envs=(
     APPLICATION_NAME APPLICATION_CODE APPLICATION_OWNER APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX BUILD_RELEASE_NOTES
   )
   local e && for e in "${envs[@]}"; do
-    local target="$home/bin/env/$e.sh"
+    local target="$targetHome/bin/env/$e.sh"
     local value="${!e-}"
     if $preflight; then
       [ -f "$target" ] || decorate info "Will create $(decorate file "$target") - current value \"$(decorate code "$value")\"" || return $?
       if [ -z "$value" ]; then
         local type
-        local envFileSource && envFileSource="$(catchReturn "$handler" buildEnvironmentFiles --application "$home" "$e" | tail -n 1)" || return $?
+        local envFileSource && envFileSource="$(catchReturn "$handler" buildEnvironmentFiles --application "$applicationHome" "$e" | tail -n 1)" || return $?
         type=$(catchReturn "$handler" bashCommentVariable --insensitive Type <"$envFileSource") || return $?
         if [ -z "$type" ]; then
           decorate warning "Unable to retrieve type from file $(decorate file "$envFileSource")"
@@ -245,7 +248,7 @@ __buildApplicationConfigureEnvironmentFiles() {
         fi
       fi
     else
-      catchReturn "$handler" buildEnvironmentAdd --application "$home" "$e" --value "$value" || return $?
+      catchReturn "$handler" buildEnvironmentAdd --application "$targetHome" "$e" --value "$value" || return $?
     fi
   done
 }

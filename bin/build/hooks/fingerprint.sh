@@ -38,11 +38,10 @@ __hookFingerprint() {
     esac
     shift
   done
-  local home && home=$(catchReturn "$handler" buildHome) || return $?
   local auditFile=/dev/null auditFilePrevious=""
 
   if $auditFlag; then
-    auditFile="$home/etc/$name.files.txt"
+    auditFile="$(buildCacheDirectory "${FUNCNAME[0]}")/$name.txt"
     if [ -f "$auditFile" ]; then
       auditFilePrevious="$(fileTemporaryName "$handler")" || return $?
       catchReturn "$handler" mv -f "$auditFile" "$auditFilePrevious" || return $?

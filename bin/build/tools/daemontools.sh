@@ -266,7 +266,9 @@ _daemontoolsIsRunning() {
 daemontoolsHome() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  catchReturn "$handler" buildEnvironmentGet DAEMONTOOLS_HOME || return $?
+  local daemontoolsHome && daemontoolsHome=$(catchReturn "$handler" buildEnvironmentGet DAEMONTOOLS_HOME) || return $?
+  [ -n "$daemontoolsHome" ] || throwEnvironment "$handler" "DAEMONTOOLS_HOME is blank" || return $?
+  printf "%s\n" "$daemontoolsHome"
 }
 _daemontoolsHome() {
   # __IDENTICAL__ bashDocumentation 1
@@ -294,8 +296,7 @@ daemontoolsExecute() {
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
 
-  local home
-  home="$(catchReturn "$handler" daemontoolsHome)" || return $?
+  local home && home="$(catchReturn "$handler" daemontoolsHome)" || return $?
 
   catchReturn "$handler" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
   catchEnvironment "$handler" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
@@ -357,18 +358,18 @@ daemontoolsTerminate() {
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
 
-  local home && home="$(catchEnvironment "$handler" daemontoolsHome)" && home="${home%/}" || return $?
+  local serviceHome && serviceHome="$(catchEnvironment "$handler" daemontoolsHome)" && serviceHome="${serviceHome%/}" || return $?
 
-  catchReturn "$handler" statusMessage decorate warning "Shutting down services [$(decorate file "$home")]" || return $?
+  catchReturn "$handler" statusMessage decorate warning "Shutting down services [$(decorate file "$serviceHome")]" || return $?
   local service && while read -r service; do
     service="${service%/}"
-    if [ "$service" = "$home" ]; then
+    if [ "$service" = "$serviceHome" ]; then
       continue
     fi
     catchReturn "$handler" statusMessage decorate warning "Shutting down $service ..." || return $?
     catchEnvironment "$handler" svc -dx "$service" || return $?
     [ ! -d "$service/log" ] || catchEnvironment "$handler" svc -dx "$service/log" || return $?
-  done < <(find "$home" -maxdepth 1 -type d)
+  done < <(find "$serviceHome" -maxdepth 1 -type d)
   local processId processIds=() && while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   if [ ${#processIds[@]} -eq 0 ]; then
     catchReturn "$handler" statusMessage --last decorate warning "daemontools is not running" || return $?
@@ -415,19 +416,13 @@ daemontoolsRestart() {
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
 
-  local home && home="$(catchEnvironment "$handler" daemontoolsHome)" || return $?
-  home="${home%/}"
+  local serviceHome && serviceHome="$(catchEnvironment "$handler" daemontoolsHome)" || return $?
+  serviceHome="${serviceHome%/}"
 
-  local killLoop foundOne maxLoops
-
-  statusMessage decorate info "Restarting daemontools [$(decorate file "$home")]..."
-  killLoop=0
-  maxLoops=4
-  foundOne=true
-  while $foundOne; do
-    local pid name
+  statusMessage decorate info "Restarting daemontools [$(decorate file "$serviceHome")]..."
+  local killLoop=0 foundOne=true maxLoops=4 && while $foundOne; do
     foundOne=false
-    while read -r pid name; do
+    local pid name && while read -r pid name; do
       statusMessage decorate info "$(printf "Killing %s %s " "$name" "$(decorate value "($pid)")")"
       kill -9 "$pid" || printf "kill %s FAILED (?: %d) " "$name" $?
       foundOne=true
@@ -436,7 +431,7 @@ daemontoolsRestart() {
     [ $killLoop -le $maxLoops ] || throwEnvironment "$handler" "Unable to kill svscan processes after $maxLoops attempts" || return $?
   done
   catchEnvironment "$handler" pkill svscan -t KILL || return $?
-  catchEnvironment "$handler" svc -dx "$home"/* "$home"/*/log || return $?
+  catchEnvironment "$handler" svc -dx "$serviceHome"/* "$serviceHome"/*/log || return $?
 
   local bootPid
 
@@ -448,7 +443,7 @@ daemontoolsRestart() {
   statusMessage decorate warning "Waiting 5 seconds ..."
   sleep 5 || throwEnvironment "$handler" "Killed during sleep" || return $?
   kill -0 "$bootPid" || throwEnvironment "$handler" "Unable to signal svscanboot PID $bootPid" || return $?
-  catchEnvironment "$handler" svstat "$home" || return $?
+  catchEnvironment "$handler" svstat "$serviceHome" || return $?
   statusMessage --last decorate success "Successfully restarted daemontools [$bootPid]"
 }
 _daemontoolsRestart() {
