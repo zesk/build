@@ -138,6 +138,8 @@ __buildBuild() {
   decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
   decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
   decorate pair "CPUs" "$(cpuCount)"
+  decorate pair Fingerprint "$(fingerprint --check)"
+  hookRun application-files | xargs -n 1 sha1sum | sort -k 2 >"$home/application-files.debug"
   consoleLine "."
   dumpEnvironment
   consoleLine "#"
