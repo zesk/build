@@ -48,7 +48,9 @@ __buildBuildUpdateMarkdown() {
   local handler="$1" && shift
   local home="$1" && shift
 
-  local f && for f in "$home/documentation/.template/README.md" "$home/documentation/template/docs/LICENSE.txt"; do __buildBuildAddNoteTo "$handler" "$home" "$f"; done
+  local f && for f in "$home/documentation/.template/README.md" "$home/documentation/template/docs/LICENSE.txt"; do
+    [ ! -f "$f" ] || __buildBuildAddNoteTo "$handler" "$home" "$f"
+  done
 }
 ___buildBuildUpdateMarkdown() {
   # __IDENTICAL__ bashDocumentation 1
