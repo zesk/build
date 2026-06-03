@@ -4,7 +4,7 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-- [All environment variables](./all.md) &middot; [All functions](../tools/all.md)
+- [All environment variables](./all.md) &middot; [All functions](../index/function.md)
 
 **{applicationName}** supports environment variables and certain patterns around their usage to assist in documentation
 and proper usage.
@@ -82,5 +82,3 @@ See also:
 <hr />
 
 [⬅ Parent ](../index.md)
-
-

@@ -1,7 +1,9 @@
 # Tools
 
-- [All functions](./all.md)
-- [All environment variables](./all.md)
+- [All functions](./index/function.md)
+- [All environment variables](./index/environment.md)
+- [All functions by group](./index/group.md)
+- [Index home](./index/index.md)
 
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
@@ -156,7 +158,7 @@ The `tools.sh` shell is the only include you need in your scripts:
 
 (see `bin/build/identical/__tools.sh` for an error-reporting loader)
 
-Once included, [all functions here](./all.md) are available for use.
+Once included, [all functions here](../index/function.md) are available for use.
 
 # New or Obsolete
 
@@ -167,5 +169,3 @@ Once included, [all functions here](./all.md) are available for use.
 <hr />
 
 [⬅ Parent ](../index.md)
-
-

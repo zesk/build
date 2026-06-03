@@ -7,11 +7,12 @@ nav:
   - Home: "index.md"
   - "tools/index.md"
   - Environment: "env/index.md"
-  - "tools/all.md"
-  - All environments: "env/all.md"
   - "guide/index.md"
   - Releases: "release/index.md"
   - about.md
+  - Function groups: "index/group.md"
+  - All functions: "index/function.md"
+  - All environment variables: "env/all.md"
 not_in_nav: |
   nada.md
 #footer:
