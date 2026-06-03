@@ -1,0 +1,1 @@
+- `TERM` &mdash; Terminal Type *String*. The current terminal type. [notes](#term)

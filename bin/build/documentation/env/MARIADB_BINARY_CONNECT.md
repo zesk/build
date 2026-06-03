@@ -1,0 +1,1 @@
+- `MARIADB_BINARY_CONNECT` &mdash; mariadb Connect Executable *Executable*. MariaDB binary for database connections [notes](#mariadb_binary_connect)

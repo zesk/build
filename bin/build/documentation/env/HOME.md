@@ -1,0 +1,1 @@
+- `HOME` &mdash; User Home *Directory*. Current user's home directory. [notes](#home)

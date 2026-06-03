@@ -1,0 +1,1 @@
+- `BUILD_ENVIRONMENT_DIRS` &mdash; Build Environment Directory List *DirectoryList*. Search directory for environment definition files. `:` separated. [notes](#build_environment_dirs)

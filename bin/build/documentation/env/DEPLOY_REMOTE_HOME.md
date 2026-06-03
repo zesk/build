@@ -1,0 +1,1 @@
+- `DEPLOY_REMOTE_HOME` &mdash; Remote directory for deployment *RemoteDirectory*. Path on the remote server where the application deployment home [notes](#deploy_remote_home)

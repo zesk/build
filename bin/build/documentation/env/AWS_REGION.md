@@ -1,0 +1,1 @@
+- `AWS_REGION` &mdash; AWS Region *String*. Region for Amazon Web Services [notes](#aws_region)

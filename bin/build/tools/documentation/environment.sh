@@ -105,11 +105,11 @@ __documentationEnvironmentMake() {
 
   local categories=()
 
-  ! $verboseFlag || statusMessage decorate info "Iterating through env files ..." 1>&2
+  ! $verboseFlag || statusMessage decorate info "Iterating through env files (cacheDirectory=$cacheDirectory)..." 1>&2
   local newestTemplate && newestTemplate=$(fileNewest "$lineFile" "$moreFile" "$seeFile") || return $?
   local envCache && envCache=$(catchReturn "$handler" documentationCache "env-source") || return $?
+  local undo=(set +a)
   [ "${#ee[@]}" -eq 0 ] || local envFile && for envFile in "${ee[@]}"; do
-    local undo=(set +a)
     local env="${envFile##*/}" && env="${env%.sh}"
     local envTarget="$cacheDirectory/$env.md"
     local seeTarget && seeTarget=$(__documentationFile "$home" "SEE/$env" true) || return $?
@@ -117,7 +117,7 @@ __documentationEnvironmentMake() {
     local envMarker="${env// /_}" && envMarker=$(stringLowercase "$envMarker")
     local settings="$cacheDirectory/$env.sh"
     local skipGenerate=false
-    if $forceFlag || [ ! -f "$settings" ] || [ ! -f "$envTarget" ] || ! fileIsNewest "$settings" "$envTarget" "$envFile" "$newestTemplate"; then
+    if $forceFlag || [ ! -f "$settings" ] || ! fileIsNewest "$settings" "$envFile" "$newestTemplate"; then
       ! $verboseFlag || statusMessage --last printf -- "WHY: forceFlag=%s settings=%s envTarget=%s newestFile=%s\n" "$forceFlag" "$([ -f "$settings" ] && printf exists || printf not-found)" "$([ -f "$envTarget" ] && printf "%s" "$envTarget" || printf not-found)" "$(fileNewest --ignore "$envTarget" "$settings" "$envFile" "$newestTemplate")" 1>&2
       local start && start=$(catchReturn "$handler" timingStart) || return $?
       ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$settings") ..." 1>&2
@@ -126,11 +126,11 @@ __documentationEnvironmentMake() {
       statusMessage --last timingReport "$start" "Generated $(decorate file "$settings") ..." 1>&2
     else
       ! $verboseFlag || statusMessage decorate notice "Cached $(decorate file "$settings") ..." 1>&2
-      if [ -f "$envTarget" ]; then
+      catchReturn "$handler" touch "$settings" || return $?
+      if [ -f "$envTarget" ] && fileIsNewest "$envTarget" "$settings"; then
         skipGenerate=true
         catchReturn "$handler" touch "$envTarget" || return $?
       fi
-      catchReturn "$handler" touch "$settings" || return $?
     fi
 
     local description="" type="" category="" summary="" descriptionLineCount="" name="" see="" sourceHash="" sourceFile=""
@@ -152,7 +152,7 @@ __documentationEnvironmentMake() {
 
     : "$see"
 
-    if ! $skipGenerate && [ -n "$sourceFile" ] && [ -n "$sourceHash" ]; then
+    if ! $forceFlag && ! $skipGenerate && [ -n "$sourceFile" ] && [ -n "$sourceHash" ]; then
       sourceFile="$home/$sourceFile"
       local currentSourceHash && currentSourceHash=$(textSHA --cache "$envCache" "$sourceFile")
       [ "$currentSourceHash" != "$sourceHash" ] || skipGenerate=true

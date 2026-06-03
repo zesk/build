@@ -1,1 +1,1 @@
-[`AWS_ACCESS_KEY_DATE` AWS_ACCESS_KEY_DATE]({rel}/env/#amazon_web_services) – **Date**. Date of key expiration which can be checked in pipelines.
+[`AWS_ACCESS_KEY_DATE` AWS Access Key Issue Date]({rel}/env/#amazon_web_services) – **Date**. Date of key expiration which can be checked in pipelines.

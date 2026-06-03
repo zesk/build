@@ -48,7 +48,7 @@ ___brewAvailableList bin/build/tools/brew.sh 130
 ___brewInstalledList bin/build/tools/brew.sh 118
 ___brewUpgrade bin/build/tools/brew.sh 89
 ___buildBuild bin/tools/build.sh 192
-___buildBuildUpdateMarkdown bin/tools/markdown.sh 52
+___buildBuildUpdateMarkdown bin/tools/markdown.sh 54
 ___buildConfigure bin/developer.sh 98
 ___buildDeploy bin/tools/deploy.sh 131
 ___buildFingerUpdate bin/tools/development.sh 171

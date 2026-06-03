@@ -1,0 +1,1 @@
+- `BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN` &mdash; Build documentation URL Pattern *String*. Links in documentation [notes](#build_documentation_source_link_pattern)

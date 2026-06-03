@@ -1,0 +1,1 @@
+- `APPLICATION_CODE_IGNORE` &mdash; Application Code Ignore Paths *ColonDelimitedList*. List of path names to ignore for application code. (e.g. [notes](#application_code_ignore)

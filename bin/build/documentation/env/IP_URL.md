@@ -1,0 +1,1 @@
+- `IP_URL` &mdash; IP Lookup URL *URL*. URL to look up IP my address remotely [notes](#ip_url)

@@ -1,1 +1,1 @@
-[`BUILD_COLORS` BUILD_COLORS]({rel}/env/#decoration) – **Boolean**. If true then colors are shown, blank means guess the
+[`BUILD_COLORS` Build Colors Flag]({rel}/env/#decoration) – **Boolean**. If true then colors are shown, blank means guess the

@@ -1,0 +1,1 @@
+- `BUILD_MAINTENANCE_CREATED_FILE` &mdash; Maintenance Created Flag *Boolean*. When true, means the `.env.local` file was created by the [notes](#build_maintenance_created_file)

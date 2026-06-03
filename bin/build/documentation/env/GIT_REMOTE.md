@@ -1,0 +1,1 @@
+- `GIT_REMOTE` &mdash; GitHub Remote Name *String*. undocumented 

@@ -1,0 +1,1 @@
+- `BUILD_TERM_COLORS_STATE` &mdash; Terminal Color State *String*. State to store state of current terminal color state [notes](#build_term_colors_state)

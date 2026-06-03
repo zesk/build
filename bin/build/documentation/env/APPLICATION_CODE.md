@@ -1,0 +1,1 @@
+- `APPLICATION_CODE` &mdash; Application Code Name *String*. This is the unique code name of the application. Use [notes](#application_code)

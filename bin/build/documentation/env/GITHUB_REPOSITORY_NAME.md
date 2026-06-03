@@ -1,0 +1,1 @@
+- `GITHUB_REPOSITORY_NAME` &mdash; GitHub Repository Name *String*. Repository name for release [notes](#github_repository_name)

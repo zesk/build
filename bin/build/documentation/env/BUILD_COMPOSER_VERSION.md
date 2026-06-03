@@ -1,0 +1,1 @@
+- `BUILD_COMPOSER_VERSION` &mdash; Composer Version *String*. Version of composer to use for building vendor directory [notes](#build_composer_version)

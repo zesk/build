@@ -1,0 +1,1 @@
+- `BITBUCKET_WORKSPACE` &mdash; Bitbucket Workspace *String*. Defined in BITBUCKET Pipelines. represents the project workspace. [notes](#bitbucket_workspace)

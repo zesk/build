@@ -1,0 +1,1 @@
+- `BUILD_DOCKER_PLATFORM` &mdash; Docker Platform *String*. The platform for `dockerLocalContainer` [notes](#build_docker_platform)

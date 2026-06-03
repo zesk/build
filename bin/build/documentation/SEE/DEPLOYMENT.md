@@ -1,1 +1,1 @@
-[`DEPLOYMENT` DEPLOYMENT]({rel}/env/#deployment) – **String**. Target deployment for this code
+[`DEPLOYMENT` Deployment Code]({rel}/env/#deployment) – **String**. Target deployment for this code

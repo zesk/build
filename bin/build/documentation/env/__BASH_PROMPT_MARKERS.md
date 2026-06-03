@@ -1,0 +1,1 @@
+- `__BASH_PROMPT_MARKERS` &mdash; Prompt marker list *Array:EmptyString*. Bash Prompt escape codes for prompt reporting [notes](#__bash_prompt_markers)

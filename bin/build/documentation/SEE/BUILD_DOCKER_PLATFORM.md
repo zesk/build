@@ -1,1 +1,1 @@
-[`BUILD_DOCKER_PLATFORM` BUILD_DOCKER_PLATFORM]({rel}/env/#docker) – **String**. The platform for `dockerLocalContainer`
+[`BUILD_DOCKER_PLATFORM` Docker Platform]({rel}/env/#docker) – **String**. The platform for `dockerLocalContainer`

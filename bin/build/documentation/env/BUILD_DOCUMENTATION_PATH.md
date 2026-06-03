@@ -1,0 +1,1 @@
+- `BUILD_DOCUMENTATION_PATH` &mdash; Build Documentation Path List *DirectoryList*. Search path for documentation settings file. [notes](#build_documentation_path)

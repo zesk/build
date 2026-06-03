@@ -1,0 +1,1 @@
+- `SHFMT_ARGUMENTS` &mdash; Shell Formatting Arguments *Array*. Arguments passed to shfmt when running as a pre-commit hook [notes](#shfmt_arguments)

@@ -1,0 +1,1 @@
+- `LC_TERMINAL` &mdash; Terminal Application *String*. LC_TERMINAL typically identifies the terminal application [notes](#lc_terminal)

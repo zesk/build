@@ -1,1 +1,1 @@
-[`HOME` HOME]({rel}/env/#bash) – **Directory**. Current user's home directory.
+[`HOME` User Home]({rel}/env/#bash) – **Directory**. Current user's home directory.

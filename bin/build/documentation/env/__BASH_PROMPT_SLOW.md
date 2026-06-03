@@ -1,0 +1,1 @@
+- `__BASH_PROMPT_SLOW` &mdash; Prompt command slow threshold *PositiveInteger*. Bash Prompt slow timer [notes](#__bash_prompt_slow)

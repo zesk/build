@@ -1,1 +1,1 @@
-[`BUILD_DOCKER_BITBUCKET_IMAGE` BUILD_DOCKER_BITBUCKET_IMAGE]({rel}/env/#continuous_integration:_bitbucket) – **String**. undocumented
+[`BUILD_DOCKER_BITBUCKET_IMAGE` Docker Image for Bitbucket Containers]({rel}/env/#continuous_integration:_bitbucket) – **String**. undocumented

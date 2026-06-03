@@ -1,0 +1,1 @@
+- `AWS_ACCESS_KEY_ID` &mdash; AWS Access Key *String*. Amazon Web Services IAM Identity [notes](#aws_access_key_id)

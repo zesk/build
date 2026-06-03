@@ -1,0 +1,1 @@
+- `XDG_CONFIG_DIRS` &mdash; Configuration Path Directories *DirectoryList*. Configuration Path Directories [notes](#xdg_config_dirs)

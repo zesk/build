@@ -1,1 +1,1 @@
-[`BUILD_HOOK_DIRS` BUILD_HOOK_DIRS]({rel}/env/#build_configuration) – **ApplicationDirectoryList**. List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.
+[`BUILD_HOOK_DIRS` Build Hook Directory List]({rel}/env/#build_configuration) – **ApplicationDirectoryList**. List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.

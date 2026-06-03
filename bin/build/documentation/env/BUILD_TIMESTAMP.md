@@ -1,0 +1,1 @@
+- `BUILD_TIMESTAMP` &mdash; Build Timestamp *UnsignedInteger*. Time when a build was initiated, set upon first invocation [notes](#build_timestamp)

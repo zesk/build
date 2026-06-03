@@ -1,0 +1,1 @@
+- `BUILD_VERSION_NO_OPEN` &mdash; Build Version No Open Flag *Boolean*. Constant for whether to open release notes when a version [notes](#build_version_no_open)

@@ -1,0 +1,1 @@
+- `APPLICATION_CODE_EXTENSIONS` &mdash; Application Code File Extension List *ColonDelimitedList*. List of extensions for code in the application. Required. [notes](#application_code_extensions)

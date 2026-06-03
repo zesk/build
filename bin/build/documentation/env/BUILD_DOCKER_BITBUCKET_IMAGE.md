@@ -1,0 +1,1 @@
+- `BUILD_DOCKER_BITBUCKET_IMAGE` &mdash; Docker Image for Bitbucket Containers *String*. undocumented 

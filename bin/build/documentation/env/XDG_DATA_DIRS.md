@@ -1,0 +1,1 @@
+- `XDG_DATA_DIRS` &mdash; Data Path Directories *DirectoryList*. Data Path Directories [notes](#xdg_data_dirs)

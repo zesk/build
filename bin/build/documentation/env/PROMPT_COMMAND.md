@@ -1,0 +1,1 @@
+- `PROMPT_COMMAND` &mdash; Prompt function *Callable*. Command is run before displaying the prompt, receives exit status [notes](#prompt_command)

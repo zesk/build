@@ -1,0 +1,1 @@
+- `BITBUCKET_REPO_SLUG` &mdash; Bitbucket Repository Slug *String*. Defined in BITBUCKET Pipelines, represents the project code name. [notes](#bitbucket_repo_slug)

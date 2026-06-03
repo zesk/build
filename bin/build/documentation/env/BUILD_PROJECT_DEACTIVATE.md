@@ -1,0 +1,1 @@
+- `BUILD_PROJECT_DEACTIVATE` &mdash; Project Deactivation Function *Function*. Set this to a function which cleans up the project [notes](#build_project_deactivate)

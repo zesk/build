@@ -92,8 +92,7 @@ buildDocumentationBuild() {
   done | sort -d >"$templateSource/allToolGroupList.md"
   statusMessage --last timingReport "$start" "Updated all in"
 
-  statusMessage decorate info "Updating environmentPage ..."
-  statusMessage --last timing --name "Updated environmentPage in" catchReturn "$handler" documentationEnvironmentMake "${vv[@]+"${vv[@]}"}" --template "$home/documentation/template/env" --source "$home/bin/build/env" --target "$templateSource" || return $?
+  catchReturn "$handler" buildDocumentationEnvironment "${vv[@]+"${vv[@]}"}" || return $?
 
   statusMessage decorate info "Updating example ..."
   statusMessage --last timing --name "Updated example" catchReturn "$handler" sed 's/^/    /g' <"$home/bin/build/tools/example.sh" >"$templateSource/example.md" || return $?
@@ -116,6 +115,21 @@ buildDocumentationBuild() {
   statusMessage --last consoleHeadingLine '•' "$(timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in")"
 }
 _buildDocumentationBuild() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+buildDocumentationEnvironment() {
+  local handler="_${FUNCNAME[0]}"
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local templateSource="$home/documentation/template/docs"
+
+  statusMessage decorate info "Updating environmentPage ..."
+  statusMessage --last timing --name "Updated environmentPage in" documentationEnvironmentMake "$@" --template "$home/documentation/template/env" --source "$home/bin/build/env" --target "$templateSource" || return $?
+}
+_buildDocumentationEnvironment() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

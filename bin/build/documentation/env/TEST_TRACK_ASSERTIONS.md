@@ -1,0 +1,1 @@
+- `TEST_TRACK_ASSERTIONS` &mdash; Track Assertions Flag *Boolean*. Assertion tracking testing optimization [notes](#test_track_assertions)

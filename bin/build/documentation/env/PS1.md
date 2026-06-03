@@ -1,0 +1,1 @@
+- `PS1` &mdash; Bash Command Prompt *String*. Bash Prompt for terminals [notes](#ps1)

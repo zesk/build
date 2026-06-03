@@ -1,1 +1,1 @@
-[`APPLICATION_CODE` APPLICATION_CODE]({rel}/env/#application) – **String**. This is the unique code name of the application. Use
+[`APPLICATION_CODE` Application Code Name]({rel}/env/#application) – **String**. This is the unique code name of the application. Use

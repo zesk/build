@@ -1,0 +1,1 @@
+- `BUILD_PRECOMMIT_EXTENSIONS` &mdash; Pre-Commit Extension List *List*. List of extensions for which build hooks may be written [notes](#build_precommit_extensions)

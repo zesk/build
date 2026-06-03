@@ -1,0 +1,1 @@
+- `XDG_STATE_HOME` &mdash; State Home Directory *Directory*. State Home Directory [notes](#xdg_state_home)

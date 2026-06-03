@@ -1,0 +1,1 @@
+- `COLORFGBG` &mdash; Terminal Foreground and Background *String*. Standard way to express the foreground and background colors [notes](#colorfgbg)

@@ -1,0 +1,1 @@
+- `XDG_CONFIG_HOME` &mdash; Main Configuration Path *Directory*. Main Configuration Path [notes](#xdg_config_home)

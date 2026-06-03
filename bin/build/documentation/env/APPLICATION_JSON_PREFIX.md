@@ -1,0 +1,1 @@
+- `APPLICATION_JSON_PREFIX` &mdash; Application JSON Prefix *String*. Prefix to place we can store things in the JSON [notes](#application_json_prefix)

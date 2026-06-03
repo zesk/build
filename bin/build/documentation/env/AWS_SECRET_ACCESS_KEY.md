@@ -1,0 +1,1 @@
+- `AWS_SECRET_ACCESS_KEY` &mdash; AWS Secret Access Key *Secret*. Private Secret Password for AWS [notes](#aws_secret_access_key)

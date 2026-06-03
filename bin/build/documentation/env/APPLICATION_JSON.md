@@ -1,0 +1,1 @@
+- `APPLICATION_JSON` &mdash; Application JSON File *ApplicationFile*. Path to the application configuration JSON [notes](#application_json)

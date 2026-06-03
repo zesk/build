@@ -1,0 +1,1 @@
+- `APPLICATION_VERSION` &mdash; Application Version *String*. This is the version number which can be displayed [notes](#application_version)

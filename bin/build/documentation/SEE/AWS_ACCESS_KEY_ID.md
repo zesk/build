@@ -1,1 +1,1 @@
-[`AWS_ACCESS_KEY_ID` AWS_ACCESS_KEY_ID]({rel}/env/#amazon_web_services) – **String**. Amazon Web Services IAM Identity
+[`AWS_ACCESS_KEY_ID` AWS Access Key]({rel}/env/#amazon_web_services) – **String**. Amazon Web Services IAM Identity

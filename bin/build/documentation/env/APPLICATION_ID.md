@@ -1,0 +1,1 @@
+- `APPLICATION_ID` &mdash; Application ID *String*. This is the unique hash which represents the source code [notes](#application_id)
