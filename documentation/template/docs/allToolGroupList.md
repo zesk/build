@@ -45,7 +45,6 @@
 - [Homebrew]({rel}tools/brew.md)
 - [Hooks]({rel}tools/hook.md)
 - [Identical Functions]({rel}tools/identical.md)
-- [Indexes]({rel}tools/all.md)
 - [Installation Functions]({rel}tools/install.md)
 - [Interactive Functions]({rel}tools/interactive.md)
 - [iTerm2 Tools]({rel}tools/iterm2.md)

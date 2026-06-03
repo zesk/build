@@ -1,4 +1,4 @@
-# {applicationName} Indexes
+# All Indexes
 
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)

@@ -1,10 +1,5 @@
 # Tools
 
-- [All functions](./index/function.md)
-- [All environment variables](./index/environment.md)
-- [All functions by group](./index/group.md)
-- [Index home](./index/index.md)
-
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
 <hr />
@@ -159,6 +154,13 @@ The `tools.sh` shell is the only include you need in your scripts:
 (see `bin/build/identical/__tools.sh` for an error-reporting loader)
 
 Once included, [all functions here](../index/function.md) are available for use.
+
+## Indexes
+
+- [Index home](../index/index.md)
+  - [All functions](../index/function.md)
+  - [All environment variables](../index/environment.md)
+  - [All functions by group](../index/group.md)
 
 # New or Obsolete
 
