@@ -307,9 +307,12 @@ _listJoin() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 81
+# IDENTICAL bashFunctionComment 90
 
-# Extracts the final comment from a stream
+# Summary: Extract final comment from a stream
+# Extracts the final comment from a stream.
+# Excludes lines similarly to `bashFirstComment`.
+# See: bashFirstComment
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
@@ -329,7 +332,14 @@ _bashFinalComment() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Extracts the first comment from a stream
+# Summary: Extract first comment from a stream
+# Extracts the first comment from a stream.
+# Excludes lines containing the following tokens:
+#
+# - `" IDENTICAL "` or `"_IDENTICAL_"`
+# - `"Internal:"` or `"INTERNAL:"`
+# - `"DOC TEMPLATE:"`
+#
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
@@ -349,7 +359,8 @@ _bashFirstComment() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Extracts the first comment from a stream
+# Summary: Remove comment character
+# Remove comment character and leading spaces from lines.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
@@ -365,12 +376,10 @@ _bashRemoveCommentCharacter() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Extract a bash comment from a file. Excludes lines containing the following tokens:
-#
-# - `" IDENTICAL "` or `"_IDENTICAL_"`
-# - `"Internal:"` or `"INTERNAL:"`
-# - `"DOC TEMPLATE:"`
-#
+# Summary: Output the comment for a function in a file
+# Outputs a function comment in a file.
+# Excludes lines similarly to `bashFirstComment`.
+# See: bashFirstComment
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1

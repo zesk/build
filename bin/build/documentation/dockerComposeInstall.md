@@ -25,5 +25,5 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 
 #### See Also
 
-- {SEE:pipInstall}
+- [pipInstall]({rel}tools/python.md#pipinstall) - Utility to install python dependencies via pip ([source](https://github.com/zesk/build/blob/main/bin/build/tools/python.sh#L86))
 

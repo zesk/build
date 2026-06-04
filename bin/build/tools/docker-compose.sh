@@ -123,7 +123,7 @@ _dockerComposeCommandList() {
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - Yes, it is.
 # Return Code: 1 - No, it is not.
-isDockerComposeCommand() {
+dockerComposeCommandIsValid() {
   local handler="_${FUNCNAME[0]}" command="${1-}"
 
   [ -n "$command" ] || throwArgument "$handler" "command is blank" || return $?
@@ -133,7 +133,7 @@ isDockerComposeCommand() {
   fi
   grep -q -e "$(quoteGrepPattern "$command")" < <(dockerComposeCommandList)
 }
-_isDockerComposeCommand() {
+_dockerComposeCommandIsValid() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -240,7 +240,7 @@ dockerCompose() {
       ;;
     *)
       [ -z "$command" ] || throwArgument "$handler" "$command already specified ($argument)" || return $?
-      if isDockerComposeCommand "$argument"; then
+      if dockerComposeCommandIsValid "$argument"; then
         command="$argument"
         shift
         break

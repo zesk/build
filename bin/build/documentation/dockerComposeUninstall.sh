@@ -5,19 +5,19 @@
 argument="none"
 base="docker-compose.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Uninstalls \`docker-compose\`"$'\n'""$'\n'""
+description=$'Uninstalls `docker-compose`\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/docker-compose.sh"
 fn="dockerComposeUninstall"
 fnMarker="dockercomposeuninstall"
 foundNames=([0]="stderr" [1]="summary" [2]="return_code")
 line="62"
-rawComment="Uninstalls \`docker-compose\`"$'\n'"stderr: Upon failure error log is output"$'\n'"Summary: Uninstall \`docker-compose\`"$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""$'\n'""
-return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""
+rawComment=$'Uninstalls `docker-compose`\nstderr: Upon failure error log is output\nSummary: Uninstall `docker-compose`\nReturn Code: 1 - If installation fails\nReturn Code: 0 - If installation succeeds\n\n'
+return_code=$'1 - If installation fails\n0 - If installation succeeds\n'
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="a10cd9abf0ca14f427ce8a440b925933d82759e8"
+sourceHash="0e7630785e46a17c77dad4f7fd6017843dcfbc7c"
 sourceLine="62"
-stderr="Upon failure error log is output"$'\n'""
+stderr=$'Upon failure error log is output\n'
 summary="Uninstall \`docker-compose\`"
 summaryComputed=""
 usage="dockerComposeUninstall"

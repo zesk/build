@@ -1,1 +1,1 @@
-[bashFunctionComment]({rel}tools/bash.md#bashfunctioncomment) - Extract a bash comment from a file. Excludes lines containing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L622))
+[bashFunctionComment]({rel}tools/bash.md#bashfunctioncomment) - Output the comment for a function in a file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L631))

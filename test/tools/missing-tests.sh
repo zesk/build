@@ -142,7 +142,7 @@ testEverythingElse() {
   #  installInstallBinary
   #  interactiveCountdown
   #  interactiveManager
-  #  isDockerComposeCommand
+  #  dockerComposeCommandIsValid
   #  isPHPStorm
   #  isPyCharm
   #  isVisualStudioCode

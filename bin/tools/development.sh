@@ -147,7 +147,7 @@ __buildFingerUpdate() {
   local documentationFingerprint && documentationFingerprint=$(catchReturn "$handler" hookRun documentation-fingerprint) || return $?
   local applicationFingerprint && applicationFingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
   local jsonFile && jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
-  local path u=() paths=(.fingerprint .deprecated .identical .buildFunctions .repair)
+  local path u=() paths=(.fingerprint .deprecated .buildFunctions .repair)
   local changed=()
   IFS=$'\n' read -d '' -r -a u < <(__buildFingerUpdateLoop "$handler" "$jsonFile" "$applicationFingerprint" "${paths[@]}")
   changed+=("${u[@]+"${u[@]}"}")

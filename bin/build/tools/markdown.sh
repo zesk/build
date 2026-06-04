@@ -87,7 +87,7 @@ markdownRemoveUnfinishedSections() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --preprocess) shift && preprocess+=("$(validate "$handler" Function "$argument" "${1-}")") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

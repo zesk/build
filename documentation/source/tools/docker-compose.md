@@ -5,7 +5,7 @@
 
 {dockerCompose}
 
-{isDockerComposeCommand}
+{dockerComposeCommandIsValid}
 
 {dockerComposeCommandList}
 

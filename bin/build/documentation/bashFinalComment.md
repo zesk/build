@@ -1,12 +1,13 @@
 ### `bashFinalComment`
 
-> Extracts the final comment from a stream
+> Extract final comment from a stream
 
 #### Usage
 
     bashFinalComment [ --help ]
 
-Extracts the final comment from a stream
+Extracts the final comment from a stream.
+Excludes lines similarly to `bashFirstComment`.
 
 > Location: `bin/build/tools/bash.sh`
 
@@ -27,4 +28,8 @@ Extracts the final comment from a stream
 - cut
 - grep
 - {SEE:convertValue}
+
+#### See Also
+
+- [bashFirstComment]({rel}tools/bash.md#bashfirstcomment) - Extracts the first comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L578))
 

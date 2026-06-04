@@ -1,2 +1,4 @@
 {buildDocumentationEnvironment}
 
+{isDockerComposeCommand}
+

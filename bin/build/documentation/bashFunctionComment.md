@@ -1,12 +1,13 @@
 ### `bashFunctionComment`
 
-> Extract a bash comment from a file. Excludes lines containing
+> Output the comment for a function in a file
 
 #### Usage
 
     bashFunctionComment source functionName [ --help ]
 
-Extract a bash comment from a file. Excludes lines containing the following tokens:
+Outputs a function comment in a file.
+Excludes lines similarly to `bashFirstComment`.
 
 > Location: `bin/build/tools/bash.sh`
 
@@ -29,4 +30,8 @@ Extract a bash comment from a file. Excludes lines containing the following toke
 - {SEE:fileReverseLines}
 - {SEE:helpArgument}
 - {SEE:bashDocumentation}
+
+#### See Also
+
+- [bashFirstComment]({rel}tools/bash.md#bashfirstcomment) - Extract first comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L588))
 

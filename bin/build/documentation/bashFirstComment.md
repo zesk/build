@@ -1,12 +1,13 @@
 ### `bashFirstComment`
 
-> Extracts the first comment from a stream
+> Extract first comment from a stream
 
 #### Usage
 
     bashFirstComment [ --help ]
 
-Extracts the first comment from a stream
+Extracts the first comment from a stream.
+Excludes lines containing the following tokens:
 
 > Location: `bin/build/tools/bash.sh`
 

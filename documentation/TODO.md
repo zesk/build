@@ -227,7 +227,7 @@ Heading towards a 1.0 release:
 - interactiveManager
 - isBashBuiltin
 - isCharacterClasses
-- isDockerComposeCommand
+- dockerComposeCommandIsValid
 - isExecutableHack
 - isPHPStorm
 - isPyCharm
@@ -555,7 +555,7 @@ On a "2x" machine:
 - isBashBuiltin
 - isCharacterClasses
 - isDarwin
-- isDockerComposeCommand
+- dockerComposeCommandIsValid
 - isPHPStorm
 - isPyCharm
 - isType

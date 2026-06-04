@@ -2,20 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="... - Arguments. Passed to \`docker compose\` command or equivalent"$'\n'""
+argument=$'... - Arguments. Passed to `docker compose` command or equivalent\n'
 base="docker-compose.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Wrapper for \`docker-compose\` or \`docker compose\`"$'\n'""$'\n'""
+description=$'Wrapper for `docker-compose` or `docker compose`\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/docker-compose.sh"
 fn="dockerComposeWrapper"
 fnMarker="dockercomposewrapper"
 foundNames=([0]="argument")
 line="10"
-rawComment="Wrapper for \`docker-compose\` or \`docker compose\`"$'\n'"Argument: ... - Arguments. Passed to \`docker compose\` command or equivalent"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Wrapper for `docker-compose` or `docker compose`\nArgument: ... - Arguments. Passed to `docker compose` command or equivalent\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="a10cd9abf0ca14f427ce8a440b925933d82759e8"
+sourceHash="0e7630785e46a17c77dad4f7fd6017843dcfbc7c"
 sourceLine="10"
 summary="Wrapper for \`docker-compose\` or \`docker compose\`"
 summaryComputed="true"

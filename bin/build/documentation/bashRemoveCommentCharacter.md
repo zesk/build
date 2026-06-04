@@ -1,12 +1,12 @@
 ### `bashRemoveCommentCharacter`
 
-> Extracts the first comment from a stream
+> Remove comment character
 
 #### Usage
 
     bashRemoveCommentCharacter [ --help ]
 
-Extracts the first comment from a stream
+Remove comment character and leading spaces from lines.
 
 > Location: `bin/build/tools/bash.sh`
 

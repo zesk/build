@@ -365,6 +365,7 @@ directoryRelativePath documentation/source/tools/directory.md
 directoryRequire documentation/source/tools/directory.md
 directoryWatch documentation/source/tools/watch.md
 dockerCompose documentation/source/tools/docker-compose.md
+dockerComposeCommandIsValid documentation/source/tools/docker-compose.md
 dockerComposeCommandList documentation/source/tools/docker-compose.md
 dockerComposeInstall documentation/source/tools/install.md
 dockerComposeIsRunning documentation/source/tools/docker-compose.md
@@ -587,7 +588,6 @@ isCallable documentation/source/tools/type.md
 isCharacterClass documentation/source/tools/character.md
 isCharacterClasses documentation/source/tools/character.md
 isDarwin documentation/source/tools/darwin.md
-isDockerComposeCommand documentation/source/tools/docker-compose.md
 isErrorExit documentation/source/tools/debug.md
 isExecutable documentation/source/tools/type.md
 isFunction documentation/source/tools/type.md
