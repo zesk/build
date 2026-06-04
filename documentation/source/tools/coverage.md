@@ -1,7 +1,6 @@
 # Coverage
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 Simple coverage statistics collection for bash scripts to compute testing code coverage.

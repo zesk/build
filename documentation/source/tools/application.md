@@ -1,7 +1,6 @@
 # Application Development
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 This is a development tool and tracks the state of the "current" project you are working on.

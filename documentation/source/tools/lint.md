@@ -1,7 +1,6 @@
 # Linting
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 **Clean your bash code**. Seriously. Saves so much time in the long run.

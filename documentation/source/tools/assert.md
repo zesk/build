@@ -1,7 +1,6 @@
 # Assert Tools
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 Check out our [testing guide](../guide/testing.md)

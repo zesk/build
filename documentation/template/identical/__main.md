@@ -2,8 +2,7 @@
 
 # {title} - {APPLICATION_NAME}
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 <!-- TEMPLATE toolFooter 3 -->
@@ -13,8 +12,7 @@
 
 
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 <!-- TEMPLATE guideFooter 3 -->
@@ -23,8 +21,7 @@
 [🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
 
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE header 1 -->
 <hr />
 
 {content}
@@ -32,7 +29,8 @@
 <!-- TEMPLATE footer 5 -->
 <hr />
 
-[⬅ Parent ](../index.md)
+[⬅ Home ](../index.md)
+
 
 
 <!-- TEMPLATE envHeader 2 -->
@@ -46,15 +44,13 @@ content here
 
 [🛠️ Environment Variables ](./index.md) &middot; [⬅ Top ](../index.md)
 
-Copyright &copy; {year} [{BUILD_COMPANY}]({BUILD_COMPANY_LINK}{title})
-
 
 <!-- TEMPLATE indexHeader 2 -->
-[🛠️ Tools ](../tools/index.md) &middot; [⬅ Home ](../index.md)
+[🛠️ Indexes](../index/index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 
 <!-- TEMPLATE indexFooter 3 -->
 <hr />
 
-[🛠️ Tools ](../tools/index.md) &middot; [⬅ Home ](../index.md)
+[🛠️ Indexes](../index/index.md) &middot; [⬅ Home ](../index.md)

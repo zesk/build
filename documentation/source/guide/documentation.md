@@ -1,7 +1,6 @@
 # Usage guide
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 **Usage** refers to the output that a command generates when an error occurs or the user (typically) uses the `--help`

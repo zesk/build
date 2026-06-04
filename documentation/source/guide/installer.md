@@ -1,7 +1,6 @@
 ## Package Installer Core
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 These tools are if you wish to write your own installer for your own software in `bash` using **{applicationName}**'s

@@ -1,7 +1,6 @@
 # Identical Tools
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 Early on in this toolkit development it became clear that Bash as a language was lacking a few features – largely the

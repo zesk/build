@@ -2,13 +2,13 @@
 
 All environment variables known by {applicationName}, alphabetically.
 
-<!-- TEMPLATE envHeader 2 -->
-[🛠️ Environment Variables ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE indexHeader 2 -->
+[🛠️ Indexes](../index/index.md) &middot; [⬅ Home ](../index.md)
 <hr />
 
 {allEnvironmentList}
 
-<!-- TEMPLATE envFooter 3 -->
+<!-- TEMPLATE indexFooter 3 -->
 <hr />
 
-[🛠️ Environment Variables ](./index.md) &middot; [⬅ Top ](../index.md)
+[🛠️ Indexes](../index/index.md) &middot; [⬅ Home ](../index.md)

@@ -1,7 +1,6 @@
 # Deploy Functions
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 Deployment is the upgrading of an application from one version to another. These functions handle this on a file-level

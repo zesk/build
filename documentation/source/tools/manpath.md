@@ -1,7 +1,6 @@
 # Modify `MANPATH`
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 The `MANPATH` is the path used to search for manual pages using `man`.

@@ -1,7 +1,6 @@
 # MacPorts
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 MacPorts is supported automatically on Darwin.

@@ -1,7 +1,6 @@
 # strftime cheatsheet
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 Used in `date` and other programs. Wrote this so I don't have to search to find the right character.

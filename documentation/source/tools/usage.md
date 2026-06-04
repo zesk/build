@@ -1,7 +1,6 @@
 # Usage Functions
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 Usage refers to displaying an error which shows the proper usage of a program to the user or controlling program.

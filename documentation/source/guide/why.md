@@ -1,7 +1,6 @@
 # Why {applicationName}
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 ## Why use {applicationName}?
@@ -25,15 +24,16 @@ Operations** values used for any number of configuration environments.
 - Generally speaking, patterns in Bash are consistent
 - System tools and flags for shell binaries used across platforms are **inconsistent** - this toolkit isolates and
   minimizes the platform dependencies.
-- Useful to have a toolkit which operates outside the default application languages (isolation, independence)
-- Useful to have a toolkit with few dependencies which can fully configure and set up **other platforms** in a
-  platform-independent language (Bash)
-- The `iTerm2` integration makes customizing project workflow and color schemes for terminals super simple 
-- No assertion or validation libraries available which work well with Bash
+- Lazy programmers like the author can't remember most flags for command line utilities
+- Useful to have a toolkit that operates outside the default application languages (isolation, independence)
+- Useful to have a toolkit with few dependencies that can fully configure and set up **other platforms** in a
+  platform-independent language (`bash`)
+- The `iTerm2` integration makes customizing project workflow and color schemes for terminals super simple
+- As far as my research goes; there are no assertion or validation libraries available which work well with Bash
 - "Oh yeah, I forgot that timeouts for `read` don't work the same when we switched from `Ubuntu` to `Alpine` distros for
   our application."
 - `identicalCheck` was written and then became sort of part of the way this toolkit is built.
-- Everyone invents their own decoration libraries so why not us? Wink.
+- Everyone invents their own decoration libraries, so why not? Wink.
 
 ## Why `bash`?
 
@@ -43,7 +43,7 @@ Operations** values used for any number of configuration environments.
 
 ## Why `Zesk`?
 
-Market Acumen, Inc. which owns the copyrights to this software registered the domain name `zesk.com` which is short and
+Market Acumen, Inc. which owns the copyrights to this software, registered the domain name `zesk.com` which is short and
 memorable and has been working on building software technologies around that name. Another toolkit [Zesk for
 PHP](https://github.com/zesk/zesk) shares the name.
 

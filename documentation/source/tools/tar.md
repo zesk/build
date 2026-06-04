@@ -1,7 +1,6 @@
 # tar Functions
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 The ever-ready Tape ARchive tool, still handy in 2024.

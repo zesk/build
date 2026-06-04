@@ -1,7 +1,6 @@
 # Bash Substitution Cheatsheet
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 Took forever for me to understand the purpose of Bash `#` and `%` substitutions - they are immensely useful for string

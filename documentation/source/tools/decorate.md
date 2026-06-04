@@ -1,7 +1,6 @@
 # Decoration and Console Colors
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 For color console support use `decorate style` where `style` is a color name or a _semantic meaning_, each of which

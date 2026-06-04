@@ -1,7 +1,6 @@
 # Release notes
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE header 1 -->
 <hr />
 
 {releaseNotesPage}
@@ -11,6 +10,6 @@ Built on <span class="time-moment" data-timestamp="{timestamp}">{timestampString
 <!-- TEMPLATE footer 5 -->
 <hr />
 
-[⬅ Parent ](../index.md)
+[⬅ Home ](../index.md)
 
 

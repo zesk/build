@@ -1,7 +1,6 @@
 # All Indexes
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE header 1 -->
 <hr />
 
 - [Functions](./function.md)
@@ -11,4 +10,4 @@
 <!-- TEMPLATE footer 5 -->
 <hr />
 
-[⬅ Parent ](../index.md)
+[⬅ Home ](../index.md)

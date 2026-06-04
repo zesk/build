@@ -1,7 +1,6 @@
 # {applicationName} Environment Variables
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE header 1 -->
 <hr />
 
 **{applicationName}** supports environment variables and certain patterns around their usage to assist in documentation
@@ -79,4 +78,6 @@ See also:
 <!-- TEMPLATE footer 5 -->
 <hr />
 
-[⬅ Parent ](../index.md)
+[⬅ Home ](../index.md)
+
+

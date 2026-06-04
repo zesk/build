@@ -1,7 +1,6 @@
 # Environment files
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 Environment values files can adhere to the **Docker** format (no quotes) or be bash-compatible (`source` compatible) but

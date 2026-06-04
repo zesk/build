@@ -1,7 +1,6 @@
 # Binaries
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 These utilities can be accessed via the shell in the `PATH` by adding:

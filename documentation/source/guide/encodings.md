@@ -2,8 +2,7 @@
 
 {!skip}
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 A place to store and organize the various encodings used throughout this project.

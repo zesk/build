@@ -1,7 +1,6 @@
 # darwin (Mac OS X) Tools
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 Tools to work with Darwin, Mac OS X's version of UNIX.

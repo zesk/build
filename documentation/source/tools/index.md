@@ -1,7 +1,6 @@
-# Tools
+# Tools by category
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE header 1 -->
 <hr />
 
 ## Terminal Tools
@@ -158,9 +157,9 @@ Once included, [all functions here](../index/function.md) are available for use.
 ## Indexes
 
 - [Index home](../index/index.md)
-  - [All functions](../index/function.md)
-  - [All environment variables](../index/environment.md)
-  - [All functions by group](../index/group.md)
+    - [All functions](../index/function.md)
+    - [All environment variables](../index/environment.md)
+    - [All functions by group](../index/group.md)
 
 # New or Obsolete
 
@@ -170,4 +169,4 @@ Once included, [all functions here](../index/function.md) are available for use.
 <!-- TEMPLATE footer 5 -->
 <hr />
 
-[⬅ Parent ](../index.md)
+[⬅ Home ](../index.md)

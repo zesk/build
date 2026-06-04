@@ -1,7 +1,6 @@
 # Testing
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 {applicationName} has a complete testing and assertion platform which allows you to write tests for your Bash scripts

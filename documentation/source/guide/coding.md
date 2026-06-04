@@ -1,7 +1,6 @@
 # Bash Coding Patterns
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 We follow various patterns in our `bash` coding to make life easier. These patterns are adopted to make coding in Bash

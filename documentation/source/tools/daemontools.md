@@ -1,7 +1,6 @@
 # daemontools Tools
 
-<!-- TEMPLATE toolHeader 2 -->
-[🛠️ Tools ](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE toolHeader 1 -->
 <hr />
 
 Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.html).

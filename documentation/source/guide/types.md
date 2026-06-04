@@ -1,7 +1,6 @@
 # Guide to types and validation
 
-<!-- TEMPLATE guideHeader 2 -->
-[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<!-- TEMPLATE guideHeader 1 -->
 <hr />
 
 We have an extensive validation library in `validate` and support for argument types in

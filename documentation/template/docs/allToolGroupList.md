@@ -86,7 +86,7 @@
 - [Tests Functions]({rel}tools/test.md)
 - [Text Functions]({rel}tools/text.md)
 - [Timing]({rel}tools/timing.md)
-- [Tools]({rel}tools/index.md)
+- [Tools by category]({rel}tools/index.md)
 - [Type Functions]({rel}tools/type.md)
 - [Unused functions]({rel}tools/unused.md)
 - [URL Functions]({rel}tools/url.md)
