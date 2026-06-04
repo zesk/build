@@ -1,0 +1,1 @@
+[dockerComposeCommandIsValid]({rel}tools/docker-compose.md#dockercomposecommandisvalid) - Validate docker compose subcommands ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker-compose.sh#L126))
