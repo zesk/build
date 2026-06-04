@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--title keyTitle - String. Optional. Title of the key.\n--name keyName - String. Required. Name of the key used to generate file names.\n--url remoteUrl - URL. Required. Remote URL of gpg key.\n--help - Flag. Optional. Display this help.\n'
 base="apt.sh"

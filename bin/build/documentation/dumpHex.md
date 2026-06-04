@@ -1,8 +1,8 @@
-## `dumpHex`
+### `dumpHex`
 
 > Output to hex
 
-### Usage
+#### Usage
 
     dumpHex [ --size size ]
 
@@ -10,11 +10,11 @@ Output to hex
 
 > Location: `bin/build/tools/dump.sh`
 
-### Arguments
+#### Arguments
 
 - `--size size` - Integer. Output at most size bytes of data.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

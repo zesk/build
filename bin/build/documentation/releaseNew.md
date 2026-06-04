@@ -1,8 +1,8 @@
-## `releaseNew`
+### `releaseNew`
 
 > Generate a new release notes and bump the version
 
-### Usage
+#### Usage
 
     releaseNew [ --non-interactive ] [ versionName ]
 
@@ -20,12 +20,12 @@ also added to `git` the first time.
 
 > Location: `bin/build/tools/version.sh`
 
-### Arguments
+#### Arguments
 
 - `--non-interactive` - Flag. Optional. If new version is needed, use default version
 - `versionName - Optional. Set the new version name to this` - must be after live version in version order
 
-### Return codes
+#### Return codes
 
 - `0` - Release generated or has already been generated
 - `1` - If new version needs to be created and `--non-interactive`

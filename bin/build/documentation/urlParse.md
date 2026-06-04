@@ -1,8 +1,8 @@
-## `urlParse`
+### `urlParse`
 
 > Simple URL Parsing
 
-### Usage
+#### Usage
 
     urlParse [ --help ] url [ --prefix prefix ] [ --stringUppercase ]
 
@@ -24,19 +24,19 @@ Now works on multiple URLs, output is separated by a blank line for new entries
 
 > Location: `bin/build/tools/url.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `url` - String. Required. a Uniform Resource Locator
 - `--prefix prefix` - String. Optional. Prefix variable names with this string.
 - `--stringUppercase` - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default).
 
-### Examples
+#### Examples
 
     eval "$(urlParse scheme://user:password@host:port/path)"
     echo $name
 
-### Return codes
+#### Return codes
 
 - `0` - If parsing succeeds
 - `1` - If parsing fails

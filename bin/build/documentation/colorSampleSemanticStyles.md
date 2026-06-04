@@ -1,8 +1,8 @@
-## `colorSampleSemanticStyles`
+### `colorSampleSemanticStyles`
 
 > Output colors
 
-### Usage
+#### Usage
 
     colorSampleSemanticStyles
 
@@ -10,11 +10,11 @@ Outputs sample sentences for the `action` commands to see what they look like.
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

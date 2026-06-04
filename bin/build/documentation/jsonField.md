@@ -1,8 +1,8 @@
-## `jsonField`
+### `jsonField`
 
 > Fetch a non-blank field from a JSON file with error
 
-### Usage
+#### Usage
 
     jsonField [ --help ] handler jsonFile [ ... ]
 
@@ -10,23 +10,33 @@ Fetch a non-blank field from a JSON file with error handling
 
 > Location: `bin/build/tools/json.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `handler` - Function. Required. Error handler.
 - `jsonFile` - File. Required. A JSON file to parse
 - `...` - Arguments. Optional. Passed directly to jq
 
-### Writes to standard output
+#### Writes to standard output
 
 selected field
 
-### Writes to standard error
+#### Writes to standard error
 
 error messages
 
-### Return codes
+#### Return codes
 
 - `0` - Field was found and was non-blank
 - `1` - Field was not found or is blank
+
+#### Requires
+
+- jq
+- {SEE:executableExists}
+- {SEE:throwEnvironment}
+- [`printf`]({rel}/guide/builtin.md#printf)
+- rm
+- {SEE:decorate}
+- head
 

@@ -3,7 +3,9 @@
 <!-- TEMPLATE toolHeader 1 -->
 <hr />
 
-# `errorHandler` signature
+Documentation to write callback functions in your code.
+
+## `errorHandler` signature
 
 The following function signatures are used prevalently as callbacks:
 

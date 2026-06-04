@@ -1,8 +1,8 @@
-## `assertFileDoesNotContain`
+### `assertFileDoesNotContain`
 
 > Assert a file does not contains any occurrence of one
 
-### Usage
+#### Usage
 
     assertFileDoesNotContain fileName string ... [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -10,7 +10,7 @@ Assert a file does not contains any occurrence of one or more strings
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `fileName` - File. Required. File to search
 - `string ...` - String. Required. One or more strings which must NOT be found anywhere in `fileName`
@@ -33,17 +33,17 @@ Assert a file does not contains any occurrence of one or more strings
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Examples
+#### Examples
 
     assertFileDoesNotContain $logFile error Error ERROR
     assertFileDoesNotContain $logFile warning Warning WARNING
 
-### Return codes
+#### Return codes
 
 - `1` - If the assertions fails
 - `0` - If the assertion succeeds
 
-### Environment
+#### Environment
 
 - If the file does not exist, this will fail.
 

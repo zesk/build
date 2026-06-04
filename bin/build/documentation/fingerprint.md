@@ -1,8 +1,8 @@
-## `fingerprint`
+### `fingerprint`
 
 > Update file from `APPLICATION_JSON` with application fingerprint.
 
-### Usage
+#### Usage
 
     fingerprint [ --help ] [ --handler handler ] [ --cached fingerprint ] [ --verbose ] [ --quiet ] [ --audit ] [ --check ] [ --key ]
 
@@ -10,7 +10,7 @@ Update file from `APPLICATION_JSON` with application fingerprint.
 
 > Location: `bin/build/tools/fingerprint.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -21,15 +21,19 @@ Update file from `APPLICATION_JSON` with application fingerprint.
 - `--check` - Flag. Optional. Check if the fingerprint is up to date and output the current value.
 - `--key` - String. Optional. Update this key in the JSON file.
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `fingerprint` - By default be verbose even if the flag is not specified. (Use `--quiet` to silence if needed)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:BUILD_DEBUG}
 

@@ -1,8 +1,8 @@
-## `filesOpenStatus`
+### `filesOpenStatus`
 
 > Output current open files
 
-### Usage
+#### Usage
 
     filesOpenStatus
 
@@ -11,11 +11,11 @@ stdout
 
 > Location: `bin/build/tools/debug.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

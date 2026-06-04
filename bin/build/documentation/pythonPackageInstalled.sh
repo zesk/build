@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'pipPackage ... - String. Required. Package name(s) to check.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.\n'
+argument="pipPackage ... - String. Required. Package name(s) to check."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed."$'\n'""
 base="python.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Is a package installed for python?\n\n'
+description="Is a package installed for python?"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/python.sh"
 fn="pythonPackageInstalled"
 fnMarker="pythonpackageinstalled"
 foundNames=([0]="argument" [1]="return_code")
 line="252"
-rawComment=$'Is a package installed for python?\nArgument: pipPackage ... - String. Required. Package name(s) to check.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.\nReturn Code: 0 - All packages are installed (or at least one package with `--any`)\nReturn Code: 1 - All packages are not installed (or NO packages are installed with `--any`)\n\n'
-return_code=$'0 - All packages are installed (or at least one package with `--any`)\n1 - All packages are not installed (or NO packages are installed with `--any`)\n'
+rawComment="Is a package installed for python?"$'\n'"Argument: pipPackage ... - String. Required. Package name(s) to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed."$'\n'"Return Code: 0 - All packages are installed (or at least one package with \`--any\`)"$'\n'"Return Code: 1 - All packages are not installed (or NO packages are installed with \`--any\`)"$'\n'""$'\n'""
+return_code="0 - All packages are installed (or at least one package with \`--any\`)"$'\n'"1 - All packages are not installed (or NO packages are installed with \`--any\`)"$'\n'""
 sourceFile="bin/build/tools/python.sh"
 sourceHash="41488c39a086a773d0c97f580808181e9997f5f8"
 sourceLine="252"

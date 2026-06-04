@@ -1,8 +1,8 @@
-## `mariadbDump`
+### `mariadbDump`
 
 > Dump a MariaDB database to raw SQL
 
-### Usage
+#### Usage
 
     mariadbDump [ --help ] [ --print ] [ --binary ] [ --lock ] [ --password password ] [ --user user ] [ --host host ] [ --port port ]
 
@@ -10,7 +10,7 @@ Dump a MariaDB database to raw SQL
 
 > Location: `bin/build/tools/mariadb.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--print` - Flag. Optional. Show the command.
@@ -21,7 +21,7 @@ Dump a MariaDB database to raw SQL
 - `--host host` - String. Optional. Host to connect
 - `--port port` - Integer. Optional. Port to connect
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

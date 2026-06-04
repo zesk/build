@@ -1,8 +1,8 @@
-## `validate`
+### `validate`
 
 > Validate a value by type
 
-### Usage
+#### Usage
 
     validate handler type name value
 
@@ -10,7 +10,7 @@ Validation sets are passed as three arguments, optionally repeated: `type` `name
 
 Types are case-insensitive:
 
-#### Text and formats
+##### Text and formats
 
 - `EmptyString` - (alias `string?`, `any`) - Any value at all
 - `String` - (no aliases) - Any non-empty string
@@ -19,7 +19,7 @@ Types are case-insensitive:
 - `Date` - (no aliases) - A valid date in the form `YYYY-MM-DD`
 - `URL` - (no aliases) - A Universal Resource Locator in the form `scheme://user:password@host:port/path`
 
-#### Numbers
+##### Numbers
 
 - `Flag` - (no aliases) - Presence of an option to enables a feature. (e.g. `--debug` is a `flag`)
 - `Boolean` - (alias `bool`) - A value `true` or `false`
@@ -29,7 +29,7 @@ Types are case-insensitive:
 - `PositiveInteger` - (alias `positive`) - Any integer 1 or greater
 - `Number` - (alias `number`) - Any integer or real number
 
-#### File system
+##### File system
 
 - `Exists` - (no aliases - A file (or directory) which exists in the file system of any type
 - `File` - (no aliases) - A file which exists in the file system which is not any special type
@@ -41,20 +41,20 @@ Types are case-insensitive:
 - `RealFile` - (alias `real`) - The real path of a file which must exist.
 - `RemoteDirectory` - (alias `remotedir`) - The path to a directory on a remote host.
 
-#### Application-relative
+##### Application-relative
 
 - `ApplicationDirectory` - (alias `appdir`) - A directory path relative to `BUILD_HOME`
 - `ApplicationFile` - (alias `appfile`) - A file path relative to `BUILD_HOME`
 - `ApplicationDirectoryList` - (alias `appdirlist`) - One or more arguments of type `ApplicationDirectory`
 
-#### Functional
+##### Functional
 
 - `Type` - (no aliases) - A type which can be validated by `validate`
 - `Function` - (alias `function`) - A defined function
 - `Callable` - (alias `callable`) - A function or executable
 - `Executable` - (alias `bin`) - Any binary available within the `PATH`
 
-#### Lists
+##### Lists
 
 - `Array` - (no aliases) - Zero or more arguments
 - `List` - (no  aliases) - Zero or more arguments
@@ -80,20 +80,20 @@ Internally the function `_validateTypeMapperDefault` is the default type mapper 
 
 > Location: `bin/build/tools/validate.sh`
 
-### Arguments
+#### Arguments
 
 - `handler` - Function. Required. Error handler.
 - `type` - Type. Required. Type to validate. If more than validation set is specified, specifying a `type` of "" inherits the previous `type`. Blank `types` are not allowed.
 - `name` - String. Required. Name of the variable which is being validated. If more than validation set is specified, specifying a name of "" inherits the previous name. Blank names are not allowed.
 - `value` - EmptyString. Required. Value to validate.
 
-### Return codes
+#### Return codes
 
 - `0` - `value` is valid, stdout is a filtered version of the value to be used
 - `2` - `value` is invalid, output reason to stderr
 - `120` - `value` is invalid, return calling function immediately
 
-### Requires
+#### Requires
 
 - {SEE:__validateTypeString}
 - {SEE:__validateTypePositiveInteger}

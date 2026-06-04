@@ -1,8 +1,8 @@
-## `urlFetch`
+### `urlFetch`
 
 > Fetch URL content
 
-### Usage
+#### Usage
 
     urlFetch [ --help ] [ --dump headerFile ] [ --header header ] [ --wget ] [ --redirect-max maxRedirections ] [ --curl ] [ --binary binaryName ] [ --argument-format format ] [ --user userName ] [ --password password ] [ --agent userAgent ] [ --timeout timeoutSeconds ] url [ file ]
 
@@ -10,7 +10,7 @@ Fetch URL content
 
 > Location: `bin/build/tools/url.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--dump headerFile` - String. Optional. Dump the headers to the file specified, specify `-` to output to `stdout`.
@@ -27,13 +27,17 @@ Fetch URL content
 - `url` - URL. Required. URL to fetch to target file.
 - `file` - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Environment
+
+- {SEE:BUILD_URL_TIMEOUT}
+
+#### Requires
 
 - {SEE:returnMessage}
 - {SEE:executableExists}

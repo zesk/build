@@ -1,8 +1,8 @@
-## `installInstallBuild`
+### `installInstallBuild`
 
 > Installs `install-bin-build.sh` the first time in a new project, and
 
-### Usage
+#### Usage
 
     installInstallBuild [ --help ] [ --diff ] [ --local ] [ path ] [ applicationHome ] [ --help ]
 
@@ -10,7 +10,7 @@ Installs `install-bin-build.sh` the first time in a new project, and modifies it
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. This help.
 - `--diff` - Flag. Optional. Show differences between new and old files if changed.
@@ -19,7 +19,7 @@ Installs `install-bin-build.sh` the first time in a new project, and modifies it
 - `applicationHome` - Directory. Optional. Path to the application home directory. Default is current directory.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

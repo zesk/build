@@ -1,8 +1,8 @@
-## `environmentValueConvertArray`
+### `environmentValueConvertArray`
 
 > Convert an array value which was loaded already
 
-### Usage
+#### Usage
 
     environmentValueConvertArray encodedValue [ --help ]
 
@@ -10,16 +10,16 @@ Convert an array value which was loaded already
 
 > Location: `bin/build/tools/environment/io.sh`
 
-### Arguments
+#### Arguments
 
 - `encodedValue` - String. Required. Value to convert to tokens, one per line
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 Array values separated by newlines
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

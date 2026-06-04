@@ -1,23 +1,24 @@
-## `bashPromptMarkers`
+### `bashPromptMarkers`
 
 > Set markers for terminal integration
 
-### Usage
+#### Usage
 
     bashPromptMarkers [ --help ] [ prefix ] [ suffix ]
 
-Set markers for terminal integration
+Set markers for terminal integration; these markers are terminal commands which mark the start and finish of the bash prompt for easier text selection by
+some terminals.
 Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
 
 > Location: `bin/build/tools/prompt.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `prefix` - EmptyString. Optional. Prefix for all prompts.
 - `suffix` - EmptyString. Optional. Suffix for all prompts.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `gitBranchMergeCurrent`
+### `gitBranchMergeCurrent`
 
 > Merge the current branch with another, push to remote, and
 
-### Usage
+#### Usage
 
     gitBranchMergeCurrent branch [ --skip-ip ] [ --comment ] [ --help ]
 
@@ -10,14 +10,14 @@ Merge the current branch with another, push to remote, and then return to the or
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `branch` - String. Required. Branch to merge the current branch with.
 - `--skip-ip` - Boolean. Optional. Do not add the IP address to the comment.
 - `--comment` - String. Optional. Comment for merge commit.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

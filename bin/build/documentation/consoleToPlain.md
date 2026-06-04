@@ -1,8 +1,8 @@
-## `consoleToPlain`
+### `consoleToPlain`
 
 > Strip ANSI console escape sequences from a file
 
-### Usage
+#### Usage
 
     consoleToPlain [ None. ]
 
@@ -10,29 +10,29 @@ Strip ANSI console escape sequences from a file
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - None.
 
-### Reads standard input
+#### Reads standard input
 
 arbitrary text which may contain ANSI escape sequences for the terminal
 
-### Writes to standard output
+#### Writes to standard output
 
 the same text with those ANSI escape sequences removed
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - None.
 
-### Credits
+#### Credits
 
 Thanks to [commandlinefu tripleee
 ](https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc

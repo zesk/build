@@ -14,6 +14,54 @@ Bash function naming:
 
 This document lists functionality which was removed, why, and when.
 
+### Reelase v0.43.0 
+
+Reworked the documentation code so renamed utility functions to generic names:
+
+- `buildFunctionSeeTemplate` -> `bashDocumentationDeriveSee
+- `buildFunctionMarkdownDocumentation` -> `bashDocumentationDeriveFunction
+- `documentationBuildEnvironment` -> `documentationEnvironmentMake
+- `documentationBuildCache` -> `documentationCache
+- `documentationTemplateUpdate` -> `documentationIdenticalRepair
+
+### Release v0.42.3
+
+Made `__help` a first-class function so renamed it to remove the underscores:
+
+- `__help` -> `helpArgument`
+
+### Release v0.42.1
+
+Basically `isUpToDate` is just a decoration so:
+
+- `isUpToDate` -> `decorate expired`
+
+And some more naming corrections:
+
+- `versionSort` -> `textVersionSort`
+- `hostnameFull` -> `networkNameFull`
+- `ipLookup` -> `networkIPLookup`
+
+### Release v0.42.0
+
+Renamed a few functions to match noun-verb syntax, or match similar function name spaces:
+
+- `newlineHide` -> `stringHideNewlines`
+- `plural` -> `localePlural`
+- `pluralWord` -> `localePluralWord`
+- `cannon` -> `textCannon`
+- `logRotates`, `logsRotate`, `rotateLogs` -> `logDirectoryRotate`
+
+For some reason `usageDocument` felt wrong so changed it to `bashDocumentation` globally:
+
+- `__usageDocumentCached` -> `__bashDocumentationCached`
+- `usageDocument` -> `bashDocumentation`
+- `usageDocumentSimple` -> `bashSimpleDocumentation`
+
+And renamed our prompt module from `binBuild` to `BuildProject` as it represents what it's doing more accurately:
+
+- `bashPromptModule_binBuild` -> `bashPromptModule_BuildProject`
+
 ### Release v0.41.3
 
 Continuing naming fixes to be consistent across the library. `noun-verb`

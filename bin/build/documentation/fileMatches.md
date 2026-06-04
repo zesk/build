@@ -1,8 +1,8 @@
-## `fileMatches`
+### `fileMatches`
 
 > Find one or more patterns in a list of files,
 
-### Usage
+#### Usage
 
     fileMatches [ --help ] pattern ... -- [ exception ... ] -- file ...
 
@@ -10,7 +10,7 @@ Find one or more patterns in a list of files, with a list of file name pattern e
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `pattern ...` - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
@@ -19,7 +19,7 @@ Find one or more patterns in a list of files, with a list of file name pattern e
 - `--` - Delimiter. Required. file.
 - `file ...` - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

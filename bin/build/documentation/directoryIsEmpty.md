@@ -1,8 +1,8 @@
-## `directoryIsEmpty`
+### `directoryIsEmpty`
 
 > Does a directory exist and is it empty?
 
-### Usage
+#### Usage
 
     directoryIsEmpty [ directory ]
 
@@ -10,11 +10,11 @@ Does a directory exist and is it empty?
 
 > Location: `bin/build/tools/directory.sh`
 
-### Arguments
+#### Arguments
 
 - `directory` - Directory. Optional. Directory to check if empty.
 
-### Return codes
+#### Return codes
 
 - `2` - Directory does not exist
 - `1` - Directory is not empty

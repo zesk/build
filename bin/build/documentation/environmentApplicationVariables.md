@@ -1,8 +1,8 @@
-## `environmentApplicationVariables`
+### `environmentApplicationVariables`
 
 > List environment variables related to application deployments
 
-### Usage
+#### Usage
 
     environmentApplicationVariables [ --help ]
 
@@ -10,11 +10,11 @@ List environment variables related to application deployments
 
 > Location: `bin/build/tools/environment/application.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

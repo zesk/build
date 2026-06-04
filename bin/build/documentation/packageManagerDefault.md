@@ -1,8 +1,8 @@
-## `packageManagerDefault`
+### `packageManagerDefault`
 
 > Determine the default package manager on this platform.
 
-### Usage
+#### Usage
 
     packageManagerDefault
 
@@ -12,17 +12,17 @@ Output is one of:
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### See Also
+#### See Also
 
 - {SEE:platform}
 

@@ -1,8 +1,8 @@
-## `gitInstallHooks`
+### `gitInstallHooks`
 
 > Install one or more git hooks from Zesk Build hooks.
 
-### Usage
+#### Usage
 
     gitInstallHooks [ --copy ] [ --verbose ] [ --application home ] [ hookName ] [ --help ]
 
@@ -21,7 +21,7 @@ Hook types:
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--copy` - Flag. Optional. Copy the hook but do not execute it.
 - `--verbose` - Flag. Optional. Be verbose about what is done.
@@ -29,9 +29,13 @@ Hook types:
 - `hookName` - String. Optional. A hook or hook names to install. See `gitHookTypes`
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### See Also
+
+- [gitHookTypes]({rel}tools/git.md#githooktypes)- `` - List current valid git hook types ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L718))
 

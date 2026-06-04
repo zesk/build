@@ -1,8 +1,8 @@
-## `buildDebugStart`
+### `buildDebugStart`
 
 > Start build debugging if it is enabled.
 
-### Usage
+#### Usage
 
     buildDebugStart [ moduleName ]
 
@@ -15,26 +15,26 @@ Example:     buildDebugStart || :
 
 > Location: `bin/build/tools/debug.sh`
 
-### Arguments
+#### Arguments
 
 - `moduleName` - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.
 
-### Examples
+#### Examples
 
     # ... complex code here
     buildDebugStop || :. -
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_DEBUG}
 
-### Requires
+#### Requires
 
 - {SEE:buildDebugEnabled}
 

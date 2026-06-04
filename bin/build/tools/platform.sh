@@ -113,7 +113,8 @@ _fileReverseLines() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Makes all `*.sh` files executable
+# Summary: Make shell files executable
+# Makes all `*.sh` files executable.
 #
 # TODO: - findArguments is different here than other places
 # Argument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.

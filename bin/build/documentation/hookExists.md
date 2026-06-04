@@ -1,8 +1,8 @@
-## `hookExists`
+### `hookExists`
 
 > Determine if a hook exists
 
-### Usage
+#### Usage
 
     hookExists [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] [ hookName0 ]
 
@@ -12,14 +12,18 @@ Check if one or more hook exists. All hooks must exist to succeed.
 
 > Location: `bin/build/tools/hook.sh`
 
-### Arguments
+#### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 - `--next scriptName` - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
 - `hookName0` - one or more hook names which must exist
 
-### Return codes
+#### Return codes
 
 - `0` - If all hooks exist
+
+#### Environment
+
+- {SEE:BUILD_HOOK_EXTENSIONS} {SEE:BUILD_HOOK_DIRS} {SEE:BUILD_DEBUG}
 

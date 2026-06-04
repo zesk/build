@@ -1,8 +1,8 @@
-## `environmentLoad`
+### `environmentLoad`
 
 > Safely load an environment from stdin (no code execution)
 
-### Usage
+#### Usage
 
     environmentLoad [ --verbose ] [ --debug ] [ --prefix ] [ --context ] [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]
 
@@ -10,7 +10,7 @@ Safely load an environment from stdin (no code execution)
 
 > Location: `bin/build/tools/environment/io.sh`
 
-### Arguments
+#### Arguments
 
 - `--verbose` - Flag. Optional. Output errors with variables.
 - `--debug` - Flag. Optional. Debugging mode, for developers probably.
@@ -22,7 +22,7 @@ Safely load an environment from stdin (no code execution)
 - `--execute arguments ...` - Callable. Optional. All additional arguments are passed to callable after loading environment.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `2` - if file does not exist; outputs an error
 - `0` - if files are loaded successfully

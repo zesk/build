@@ -1,8 +1,8 @@
-## `documentationMaker`
+### `documentationMaker`
 
 > Generate documentation using source markdown and a mapping function.
 
-### Usage
+#### Usage
 
     documentationMaker [ --verbose ] [ --default defaultValue ] sourcePath [ targetPath ] [ mapFunction ... ]
 
@@ -10,7 +10,7 @@ Generate documentation using source markdown and a mapping function.
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--verbose` - Flag. Optional. Be wordy.
 - `--default defaultValue` - EmptyString. Optional. Pass `--default` flag to `mapFunction`
@@ -18,7 +18,7 @@ Generate documentation using source markdown and a mapping function.
 - `targetPath` - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.
 - `mapFunction ...` - Function. Optional. Mapping function to use, and any arguments.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Template file not found

@@ -1,8 +1,8 @@
-## `gitShowChanges`
+### `gitShowChanges`
 
 > Show changed files from HEAD
 
-### Usage
+#### Usage
 
     gitShowChanges [ --help ]
 
@@ -10,11 +10,11 @@ Show changed files from HEAD
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - the repo has been modified
 - `1` - the repo has NOT bee modified

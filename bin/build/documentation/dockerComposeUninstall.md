@@ -1,8 +1,8 @@
-## `dockerComposeUninstall`
+### `dockerComposeUninstall`
 
 > Uninstall `docker-compose`
 
-### Usage
+#### Usage
 
     dockerComposeUninstall
 
@@ -10,15 +10,15 @@ Uninstalls `docker-compose`
 
 > Location: `bin/build/tools/docker-compose.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Writes to standard error
+#### Writes to standard error
 
 Upon failure error log is output
 
-### Return codes
+#### Return codes
 
 - `1` - If installation fails
 - `0` - If installation succeeds

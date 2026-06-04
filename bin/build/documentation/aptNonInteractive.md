@@ -1,8 +1,8 @@
-## `aptNonInteractive`
+### `aptNonInteractive`
 
 > Run apt-get non-interactively
 
-### Usage
+#### Usage
 
     aptNonInteractive [ ... ]
 
@@ -10,11 +10,11 @@ Run apt-get non-interactively
 
 > Location: `bin/build/tools/apt.sh`
 
-### Arguments
+#### Arguments
 
 - `...` - Arguments. Pass through arguments to `apt-get`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `pipeRunner`
+### `pipeRunner`
 
 > Single reader, multiple writers
 
-### Usage
+#### Usage
 
     pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]
 
@@ -11,14 +11,14 @@ Attempt at having docker communicate back to the outside world.
 
 > Location: `bin/build/tools/utilities.sh`
 
-### Arguments
+#### Arguments
 
 - `--mode mode` - String. Optional.
 - namedPipe
 - `--writer line ...` - When encountered all additional arguments are written to the runner.
 - `readerExecutable ...` - Callable. Optional.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

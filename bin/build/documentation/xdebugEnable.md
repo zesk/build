@@ -1,26 +1,28 @@
-## `xdebugEnable`
+### `xdebugEnable`
 
-> Enable Xdebug on systems that have it
+> Enable Xdebug
 
-### Usage
+#### Usage
 
     xdebugEnable [ --help ]
 
-Enable Xdebug on systems that have it
+Enable Xdebug on systems that have it.
+
+This changes the value of `XDEBUG_ENABLED` to `true`. Programs must honor this and invoke the debugger.
 
 > Location: `bin/build/tools/xdebug.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:XDEBUG_ENABLED}
 

@@ -1,8 +1,8 @@
-## `jsonPath`
+### `jsonPath`
 
 > Generate `jq` paths
 
-### Usage
+#### Usage
 
     jsonPath [ path ]
 
@@ -12,11 +12,11 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/json.sh`
 
-### Arguments
+#### Arguments
 
 - `path` - String. Output a json path separated by dots.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

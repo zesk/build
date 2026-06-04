@@ -1,8 +1,8 @@
-## `bashDocumentationAllEnvironment`
+### `bashDocumentationAllEnvironment`
 
 > Generate markdown for a list of all functions
 
-### Usage
+#### Usage
 
     bashDocumentationAllEnvironment [ --help ]
 
@@ -11,15 +11,15 @@ Output to `allEnvironmentList.md` typically.
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 EnvironmentVariable. One per line.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

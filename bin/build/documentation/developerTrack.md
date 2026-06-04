@@ -1,8 +1,8 @@
-## `developerTrack`
+### `developerTrack`
 
 > Track changes to the bash environment
 
-### Usage
+#### Usage
 
     developerTrack [ --verbose ] [ --list ] [ --profile ] [ --developer ]
 
@@ -12,18 +12,18 @@ In general, you will add `developerTrack --profile` at the end of your `.bashrc`
 
 > Location: `bin/build/tools/developer.sh`
 
-### Arguments
+#### Arguments
 
 - `--verbose` - Flag. Optional. Be verbose about what the function is doing.
 - `--list` - Flag. Optional. Show the list of what has changed since the first invocation.
 - `--profile` - Flag. Optional. Mark the end of profile definitions.
 - `--developer` - Flag. Optional. Mark the start of developer definitions.
 
-### Writes to standard output
+#### Writes to standard output
 
 list of function|alias|environment
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

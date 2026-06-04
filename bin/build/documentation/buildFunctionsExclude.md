@@ -1,8 +1,8 @@
-## `buildFunctionsExclude`
+### `buildFunctionsExclude`
 
 > Exclude any function which is a build function
 
-### Usage
+#### Usage
 
     buildFunctionsExclude [ --help ]
 
@@ -10,19 +10,19 @@ Removes any function from the text stream which is in `buildFunctions`
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 line:Function
 
-### Writes to standard output
+#### Writes to standard output
 
 line:Function
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

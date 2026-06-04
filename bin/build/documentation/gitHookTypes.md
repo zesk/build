@@ -1,8 +1,8 @@
-## `gitHookTypes`
+### `gitHookTypes`
 
 > List current valid git hook types
 
-### Usage
+#### Usage
 
     gitHookTypes [ --help ]
 
@@ -19,15 +19,15 @@ Hook types:
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Sample Output
+#### Sample Output
 
 lines:gitHookType
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

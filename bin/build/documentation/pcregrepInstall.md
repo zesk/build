@@ -1,8 +1,8 @@
-## `pcregrepInstall`
+### `pcregrepInstall`
 
 > Install pcregrep binary
 
-### Usage
+#### Usage
 
     pcregrepInstall [ --help ]
 
@@ -10,11 +10,11 @@ Install pcregrep binary
 
 > Location: `bin/build/tools/pcregrep.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `mariadbUninstall`
+### `mariadbUninstall`
 
 > Uninstall `mariadb`
 
-### Usage
+#### Usage
 
     mariadbUninstall
 
@@ -12,11 +12,11 @@ When this tool succeeds the `mariadb` binary will no longer be available in the 
 
 > Location: `bin/build/tools/mariadb.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `1` - If uninstallation fails
 - `0` - If uninstallation succeeds

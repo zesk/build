@@ -1,8 +1,8 @@
-## `gitCommitHash`
+### `gitCommitHash`
 
 > Get the commit hash
 
-### Usage
+#### Usage
 
     gitCommitHash
 
@@ -10,11 +10,11 @@ Get the commit hash
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

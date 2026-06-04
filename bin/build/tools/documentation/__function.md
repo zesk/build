@@ -1,8 +1,8 @@
-## `{fn}`
+### `{fn}`
 
 > {summary}
 
-### Usage
+#### Usage
 
 {usage}
 
@@ -10,64 +10,64 @@
 
 > Location: `{file}`
 
-### Arguments
+#### Arguments
 
 {argument}
 
-### Reads standard input
+#### Reads standard input
 
 {stdin}
 
-### Writes to standard output
+#### Writes to standard output
 
 {stdout}
 
-### Writes to standard error
+#### Writes to standard error
 
 {stderr}
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 {build_debug}
 
-### Examples
+#### Examples
 
 {example}
 
-### Sample Output
+#### Sample Output
 
 {output}
 
-### Return codes
+#### Return codes
 
 {return_code}
 
-### Local cache
+#### Local cache
 
 {local_cache}
 
-### Environment
+#### Environment
 
 {environment}
 
-### Requires
+#### Requires
 
 {requires}
 
-### See Also
+#### See Also
 
 {see}
 
-### Credits
+#### Credits
 
 Thanks to [{credits}]({source}).
 
-### Review Status
+#### Review Status
 
 File `{file}`, function `{fn}` was reviewed {reviewed}.
 
-### Errors
+#### Errors
 
 {error}

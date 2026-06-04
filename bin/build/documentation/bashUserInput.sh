@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)\n'
 base="prompt.sh"
@@ -16,7 +16,7 @@ rawComment=$'Prompt the user properly honoring any attached console.\nArguments 
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'read\n'
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="b61c792ae723865297730f9775c4f0b5fcba937d"
+sourceHash="c8be00d8dedfc8df4976cb58038790d9cdce3c69"
 sourceLine="100"
 summary="Prompt the user properly honoring any attached console."
 summaryComputed="true"

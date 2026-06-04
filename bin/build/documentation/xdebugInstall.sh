@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="xdebug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Install the xdebug PHP Debugger\n\n'
+description=$'Install the xdebug PHP Debugger using `pear` and `pecl`.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/xdebug.sh"
 fn="xdebugInstall"
 fnMarker="xdebuginstall"
-foundNames=([0]="argument")
-line="16"
-rawComment=$'Install the xdebug PHP Debugger\nArgument: --help - Flag. Optional. Display this help.\n\n'
+foundNames=([0]="summary" [1]="argument")
+line="19"
+rawComment=$'Summary: Install the xdebug PHP Debugger\nInstall the xdebug PHP Debugger using `pear` and `pecl`.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/xdebug.sh"
-sourceHash="2fc83b70f12c5979d5fb5d8f25133b769c1fa267"
-sourceLine="16"
+sourceHash="7f9e2ea2b3b9a370ead8571ef15416ec1291d14d"
+sourceLine="19"
 summary="Install the xdebug PHP Debugger"
-summaryComputed="true"
+summaryComputed=""
 usage="xdebugInstall [ --help ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mxdebugInstall'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Install the xdebug PHP Debugger'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mxdebugInstall'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Install the xdebug PHP Debugger using '$'\e''[[(code)]mpear'$'\e''[[(reset)]m and '$'\e''[[(code)]mpecl'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
 # shellcheck disable=SC2016
-helpPlain='Usage: xdebugInstall [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Install the xdebug PHP Debugger'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+helpPlain='Usage: xdebugInstall [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Install the xdebug PHP Debugger using pear and pecl.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
 documentationPath="documentation/source/tools/xdebug.md"

@@ -1,8 +1,8 @@
-## `stringTrimWords`
+### `stringTrimWords`
 
 > Remove words from the end of a phrase
 
-### Usage
+#### Usage
 
     stringTrimWords [ wordCount ] [ word0 ... ]
 
@@ -10,16 +10,16 @@ Remove words from the end of a phrase
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `wordCount` - PositiveInteger. Words to output
 - `word0 ...` - EmptyString. One or more words to output
 
-### Examples
+#### Examples
 
     printf "%s: %s\n" "Summary:" "$(stringTrimWords 10 $description)"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `fileExtractLines`
+### `fileExtractLines`
 
 > Extract a range of lines from a file
 
-### Usage
+#### Usage
 
     fileExtractLines startLine endLine [ --help ]
 
@@ -10,21 +10,21 @@ Extract a range of lines from a file
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `startLine` - Integer. Required. Starting line number.
 - `endLine` - Integer. Required. Ending line number.
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Reads lines until EOF
 
-### Writes to standard output
+#### Writes to standard output
 
 Outputs the selected lines only
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

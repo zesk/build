@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--env-file envFile - File. Optional. One or more environment files which are suitable to load for docker; must be valid\n--env envVariable=envValue - File. Optional. One or more environment variables to set.\n--platform platform - String. Optional. Platform to run (arm vs intel).\nextraArgs - Mixed. Optional. The first non-file argument to `alpineContainer` is passed directly through to `docker run` as arguments\n'
 base="apk.sh"

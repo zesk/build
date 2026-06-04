@@ -1,8 +1,8 @@
-## `gitTagAgain`
+### `gitTagAgain`
 
 > Remove a tag everywhere and tag again on the current
 
-### Usage
+#### Usage
 
     gitTagAgain [ tag ]
 
@@ -10,11 +10,11 @@ Remove a tag everywhere and tag again on the current branch
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `tag` - String. Optional. The tag to tag again.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

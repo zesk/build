@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'codePath ... - Directory. Required. OneOrMore. Path where code (`.sh` files) is stored (should remain identical between invocations)\n--target targetPath - Optional. Location to store the index file, called `code.index`.\n--verbose - Flag. Optional. Talk voluminously.\n'
 base="documentation.sh"
@@ -11,14 +11,14 @@ file="bin/build/tools/documentation.sh"
 fn="documentationIndexGenerate"
 fnMarker="documentationindexgenerate"
 foundNames=([0]="argument" [1]="see" [2]="requires")
-line="364"
+line="365"
 rawComment=$'Generate a function index for bash files.\nArgument: codePath ... - Directory. Required. OneOrMore. Path where code (`.sh` files) is stored (should remain identical between invocations)\nArgument: --target targetPath - Optional. Location to store the index file, called `code.index`.\nArgument: --verbose - Flag. Optional. Talk voluminously.\nSee: __documentationIndexLookup\nRequires: __pcregrep\n\n'
 requires=$'__pcregrep\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'__documentationIndexLookup\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a3794434b7e4d336ccd6c9cbf964150d59b552f0"
-sourceLine="364"
+sourceHash="ba0c1b09de9318e5d93a3d83b2f6b1368cb126e4"
+sourceLine="365"
 summary="Generate a function index for bash files."
 summaryComputed="true"
 usage="documentationIndexGenerate codePath ... [ --target targetPath ] [ --verbose ]"

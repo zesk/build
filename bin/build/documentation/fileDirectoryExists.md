@@ -1,8 +1,8 @@
-## `fileDirectoryExists`
+### `fileDirectoryExists`
 
 > Does the file's directory exist?
 
-### Usage
+#### Usage
 
     fileDirectoryExists directory
 
@@ -10,11 +10,11 @@ Does the file's directory exist?
 
 > Location: `bin/build/tools/directory.sh`
 
-### Arguments
+#### Arguments
 
 - `directory` - Directory. Required. Test if file directory exists (file does not have to exist)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

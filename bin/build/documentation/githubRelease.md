@@ -1,8 +1,8 @@
-## `githubRelease`
+### `githubRelease`
 
 > Generate a release on GitHub using API
 
-### Usage
+#### Usage
 
     githubRelease [ --help ] [ --handler handler ] [ --token token ] [ --owner owner ] [ --name name ] [ --expire expireString ] descriptionFilePath releaseName commitish
 
@@ -17,7 +17,7 @@ Think of them of the "source" (user) and "target" (ssh key) access. Both must ex
 
 > Location: `bin/build/tools/github.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -29,13 +29,13 @@ Think of them of the "source" (user) and "target" (ssh key) access. Both must ex
 - `releaseName` - String. Required. Name of the release (e.g. `v1.0.0`)
 - `commitish` - String. Required. The GIT short SHA tag for the release
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - - `GITHUB_ACCESS_TOKEN` - Access to GitHub to publish releases
 - - `GITHUB_ACCESS_TOKEN_EXPIRE` - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)

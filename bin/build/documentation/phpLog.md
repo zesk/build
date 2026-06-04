@@ -1,8 +1,8 @@
-## `phpLog`
+### `phpLog`
 
 > Outputs the path to the PHP log file
 
-### Usage
+#### Usage
 
     phpLog
 
@@ -10,11 +10,11 @@ Outputs the path to the PHP log file
 
 > Location: `bin/build/tools/php.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

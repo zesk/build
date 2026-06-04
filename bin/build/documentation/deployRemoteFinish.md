@@ -1,8 +1,8 @@
-## `deployRemoteFinish`
+### `deployRemoteFinish`
 
 > This is **run on the remote system** after deployment; environment
 
-### Usage
+#### Usage
 
     deployRemoteFinish [ --debug ] [ --deploy ] [ --revert ] [ --cleanup ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]
 
@@ -16,7 +16,7 @@ Note that these MAY be the same or different directories depending on how the ap
 
 > Location: `bin/build/tools/deployment.sh`
 
-### Arguments
+#### Arguments
 
 - `--debug` - Enable debugging. Defaults to `BUILD_DEBUG`
 - `--deploy - Flag. Optional. default setting` - handles the remote deploy.
@@ -27,7 +27,7 @@ Note that these MAY be the same or different directories depending on how the ap
 - `--application applicationPath` - String. Required. Path on the remote system where the application is live
 - `--target targetPackage` - Filename. Optional. Package name, defaults to `app.tar.gz`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `urlOpener`
+### `urlOpener`
 
 > URL opener stream filter
 
-### Usage
+#### Usage
 
     urlOpener [ --exec ] [ --help ]
 
@@ -11,20 +11,20 @@ Open URLs which appear in a stream
 
 > Location: `bin/build/tools/url.sh`
 
-### Arguments
+#### Arguments
 
 - `--exec` - Executable. Optional. If not supplied uses `urlOpen`.
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 text
 
-### Writes to standard output
+#### Writes to standard output
 
 text
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

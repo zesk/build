@@ -1,8 +1,8 @@
-## `timingReport`
+### `timingReport`
 
 > Output the time elapsed
 
-### Usage
+#### Usage
 
     timingReport [ --slow slowMilliseconds ] [ --fast fastMilliseconds ] [ --style style ] [ --color style ] [ --end endTimestamp ] start [ message ] [ --help ] [ --handler handler ]
 
@@ -13,7 +13,7 @@ Condition additions `--slow` and `--fast` allow display conditional on the time 
 
 > Location: `bin/build/tools/timing.sh`
 
-### Arguments
+#### Arguments
 
 - `--slow slowMilliseconds` - UnsignedInteger. Optional. Display output if the displayed time is slower (longer) than this threshold.
 - `--fast fastMilliseconds` - UnsignedInteger. Optional. Display output if the displayed time is faster (shorter) than this threshold.
@@ -25,7 +25,7 @@ Condition additions `--slow` and `--fast` allow display conditional on the time 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 
-### Examples
+#### Examples
 
     init=$(timingStart)
     ...
@@ -33,11 +33,11 @@ Condition additions `--slow` and `--fast` allow display conditional on the time 
     timingReport "$start" --slow 5000 "Reporting should be completed in less than 5 seconds."
     timingReport "$start" --fast 1000 --style error "Deployment completed too quickly; please check systems."
 
-### Return codes
+#### Return codes
 
 - `0` - Exits with exit code zero
 
-### See Also
+#### See Also
 
 - {SEE:timingStart}
 

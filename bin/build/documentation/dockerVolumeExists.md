@@ -1,8 +1,8 @@
-## `dockerVolumeExists`
+### `dockerVolumeExists`
 
 > Does a docker volume exist with name?
 
-### Usage
+#### Usage
 
     dockerVolumeExists name
 
@@ -10,11 +10,11 @@ Does a docker volume exist with name?
 
 > Location: `bin/build/tools/docker.sh`
 
-### Arguments
+#### Arguments
 
 - `name` - String. Required.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `stringHideNewlines`
+### `stringHideNewlines`
 
 > Replace newlines in text with a replacement token for single-line output
 
-### Usage
+#### Usage
 
     stringHideNewlines [ --help ] text [ replace ]
 
@@ -11,17 +11,17 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `text` - String. Required. Text to replace.
 - `replace` - String. Optional. Replacement string for newlines. Default is `␤`
 
-### Writes to standard output
+#### Writes to standard output
 
 The text with the newline replaced with another character, suitable typically for single-line output
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

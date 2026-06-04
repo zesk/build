@@ -1,8 +1,8 @@
-## `packageNeedRestartFlag`
+### `packageNeedRestartFlag`
 
 > INTERNAL - has `packageUpdate` set the `restart` flag at some
 
-### Usage
+#### Usage
 
     packageNeedRestartFlag [ value ]
 
@@ -10,11 +10,11 @@ INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - `value` - Set the restart flag to this value (blank to remove)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

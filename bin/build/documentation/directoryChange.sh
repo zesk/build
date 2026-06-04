@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'directory - Directory. Required. Directory to change to prior to running command.\ncommand - Callable. Required. Thing to do in this directory.\n... - Arguments. Optional. Arguments to `command`.\n'
 base="directory.sh"
@@ -16,7 +16,7 @@ rawComment=$'Argument: directory - Directory. Required. Directory to change to p
 requires=$'pushd popd\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/directory.sh"
-sourceHash="da838a55948477df4605f58aff4c29b4f13319f7"
+sourceHash="72fb531bf15b4fc22d2cd595509333fbeece21df"
 sourceLine="32"
 summary="Run a command after changing directory to it and then"
 summaryComputed="true"

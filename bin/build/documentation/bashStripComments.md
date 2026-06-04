@@ -1,8 +1,8 @@
-## `bashStripComments`
+### `bashStripComments`
 
 > Pipe to strip comments from a bash file
 
-### Usage
+#### Usage
 
     bashStripComments [ --help ]
 
@@ -10,11 +10,11 @@ Removes literally any line which begins with zero or more whitespace characters 
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

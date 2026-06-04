@@ -1,8 +1,8 @@
-## `npmUninstall`
+### `npmUninstall`
 
 > Core as part of some systems - so this succeeds
 
-### Usage
+#### Usage
 
     npmUninstall
 
@@ -10,11 +10,11 @@ Core as part of some systems - so this succeeds and it still exists
 
 > Location: `bin/build/tools/npm.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

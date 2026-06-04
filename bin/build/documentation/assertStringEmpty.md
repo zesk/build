@@ -1,8 +1,8 @@
-## `assertStringEmpty`
+### `assertStringEmpty`
 
 > Assert a string is empty.
 
-### Usage
+#### Usage
 
     assertStringEmpty [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] [ string ... ]
 
@@ -12,7 +12,7 @@ If this fails it will output an error and exit.
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -34,17 +34,17 @@ If this fails it will output an error and exit.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 - `string ...` - Empty strings
 
-### Examples
+#### Examples
 
     assertEquals "$(textAlignRight 4 "hi")" "  hi" "textAlignRight not working"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertStringEmpty` was reviewed 2023-11-12
 .

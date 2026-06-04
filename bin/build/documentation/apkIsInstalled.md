@@ -1,8 +1,8 @@
-## `apkIsInstalled`
+### `apkIsInstalled`
 
 > Is this an Alpine system and is apk installed?
 
-### Usage
+#### Usage
 
     apkIsInstalled [ --help ]
 
@@ -10,11 +10,11 @@ Is this an Alpine system and is apk installed?
 
 > Location: `bin/build/tools/apk.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - System is an alpine system and apk is installed
 - `1` - System is not an alpine system or apk is not installed

@@ -1,1 +1,1 @@
-[documentationIndexGenerate]({rel}tools/documentation.md#documentationindexgenerate) - Generate a function index for bash files. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L364))
+[documentationIndexGenerate]({rel}tools/documentation.md#documentationindexgenerate) - Generate a function index for bash files. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L365))

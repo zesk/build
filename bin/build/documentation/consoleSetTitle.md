@@ -1,8 +1,8 @@
-## `consoleSetTitle`
+### `consoleSetTitle`
 
 > Set the title of the window for the console
 
-### Usage
+#### Usage
 
     consoleSetTitle
 
@@ -10,11 +10,11 @@ Set the title of the window for the console
 
 > Location: `bin/build/tools/console.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

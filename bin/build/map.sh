@@ -645,7 +645,7 @@ _returnCodeString() {
 #
 # Types are case-insensitive:
 #
-# #### Text and formats
+# ##### Text and formats
 #
 # - `EmptyString` - (alias `string?`, `any`) - Any value at all
 # - `String` - (no aliases) - Any non-empty string
@@ -654,7 +654,7 @@ _returnCodeString() {
 # - `Date` - (no aliases) - A valid date in the form `YYYY-MM-DD`
 # - `URL` - (no aliases) - A Universal Resource Locator in the form `scheme://user:password@host:port/path`
 #
-# #### Numbers
+# ##### Numbers
 #
 # - `Flag` - (no aliases) - Presence of an option to enables a feature. (e.g. `--debug` is a `flag`)
 # - `Boolean` - (alias `bool`) - A value `true` or `false`
@@ -664,7 +664,7 @@ _returnCodeString() {
 # - `PositiveInteger` - (alias `positive`) - Any integer 1 or greater
 # - `Number` - (alias `number`) - Any integer or real number
 #
-# #### File system
+# ##### File system
 #
 # - `Exists` - (no aliases - A file (or directory) which exists in the file system of any type
 # - `File` - (no aliases) - A file which exists in the file system which is not any special type
@@ -676,20 +676,20 @@ _returnCodeString() {
 # - `RealFile` - (alias `real`) - The real path of a file which must exist.
 # - `RemoteDirectory` - (alias `remotedir`) - The path to a directory on a remote host.
 #
-# #### Application-relative
+# ##### Application-relative
 #
 # - `ApplicationDirectory` - (alias `appdir`) - A directory path relative to `BUILD_HOME`
 # - `ApplicationFile` - (alias `appfile`) - A file path relative to `BUILD_HOME`
 # - `ApplicationDirectoryList` - (alias `appdirlist`) - One or more arguments of type `ApplicationDirectory`
 #
-# #### Functional
+# ##### Functional
 #
 # - `Type` - (no aliases) - A type which can be validated by `validate`
 # - `Function` - (alias `function`) - A defined function
 # - `Callable` - (alias `callable`) - A function or executable
 # - `Executable` - (alias `bin`) - Any binary available within the `PATH`
 #
-# #### Lists
+# ##### Lists
 #
 # - `Array` - (no aliases) - Zero or more arguments
 # - `List` - (no  aliases) - Zero or more arguments

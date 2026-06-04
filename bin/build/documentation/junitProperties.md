@@ -1,8 +1,8 @@
-## `junitProperties`
+### `junitProperties`
 
 > Full properties output. Properties are output depending on content containing
 
-### Usage
+#### Usage
 
     junitProperties
 
@@ -10,11 +10,11 @@ Full properties output. Properties are output depending on content containing a 
 
 > Location: `bin/build/tools/junit.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

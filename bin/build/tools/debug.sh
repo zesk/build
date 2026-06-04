@@ -130,7 +130,8 @@ _isBashDebug() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Place this in code where you suspect an infinite loop occurs
+# Summary: Recursion detection
+# Place this in code where you suspect an infinite loop occurs.
 # It will fail upon a second call; to reset call with `--end`
 # Argument: --end - Flag. Optional. Stop testing for recursion.
 # When called twice, fails on the second invocation and dumps a call stack to stderr.
@@ -286,7 +287,7 @@ _isErrorExit() {
 
 # Run command and detect any global or local leaks
 # Requires: declare diff grep
-# Requires: throwArgument decorate usageArgumentString isCallable
+# Requires: throwArgument decorate validate isCallable
 # Requires: fileTemporaryName textRemoveFields
 # Argument: command ... - Callable. Command to run
 # Argument: --temporary tempPath - Directory. Optional. Use this for the temporary path.

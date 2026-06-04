@@ -1,8 +1,8 @@
-## `awsCredentialsFile`
+### `awsCredentialsFile`
 
 > Get the path to the AWS credentials file
 
-### Usage
+#### Usage
 
     awsCredentialsFile [ --help ] [ --verbose ] [ --create ] [ --home homeDirectory ]
 
@@ -17,18 +17,18 @@ If not found, returns with exit code 1.
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--verbose` - Flag. Optional. Verbose mode
 - `--create` - Flag. Optional. Create the directory and file if it does not exist
 - `--home homeDirectory` - Directory. Optional. Home directory to use instead of `$HOME`.
 
-### Examples
+#### Examples
 
     credentials=$(awsCredentialsFile) || throwEnvironment "$handler" "No credentials file found" || return $?
 
-### Return codes
+#### Return codes
 
 - `1` - If `$HOME` is not a directory or credentials file does not exist
 - `0` - If credentials file is found and output to stdout

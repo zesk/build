@@ -1,8 +1,8 @@
-## `environmentParseVariables`
+### `environmentParseVariables`
 
 > Parse variables from an environment variable stream
 
-### Usage
+#### Usage
 
     environmentParseVariables [ --help ]
 
@@ -18,19 +18,19 @@ Details:
 
 > Location: `bin/build/tools/environment.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Environment File
 
-### Writes to standard output
+#### Writes to standard output
 
 EnvironmentVariable. One per line.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

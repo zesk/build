@@ -1,8 +1,8 @@
-## `logRotate`
+### `logRotate`
 
 > Rotate a log file
 
-### Usage
+#### Usage
 
     logRotate [ --help ] [ --dry-run ] [ --cull cullCount ] logFile count
 
@@ -23,7 +23,7 @@ But maintains file descriptors for `logFile`.
 
 > Location: `bin/build/tools/log.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--dry-run` - Flag. Optional. Do not change anything.
@@ -31,7 +31,7 @@ But maintains file descriptors for `logFile`.
 - `logFile` - File. Required. A log file which exists.
 - `count` - PositiveInteger. Required. Integer of log file backups to maintain.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

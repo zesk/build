@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'command ... - Callable. Command to run\n--temporary tempPath - Directory. Optional. Use this for the temporary path.\n--leak envName ... - EnvironmentVariable. Variable name which is OK to leak.\n--verbose - Flag. Optional. Be verbose.\n--help - Flag. Optional. Display this help.\n'
 base="debug.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/debug.sh"
 fn="plumber"
 fnMarker="plumber"
 foundNames=([0]="requires" [1]="argument" [2]="build_debug")
-line="298"
-rawComment=$'Run command and detect any global or local leaks\nRequires: declare diff grep\nRequires: throwArgument decorate usageArgumentString isCallable\nRequires: fileTemporaryName textRemoveFields\nArgument: command ... - Callable. Command to run\nArgument: --temporary tempPath - Directory. Optional. Use this for the temporary path.\nArgument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak.\nArgument: --verbose - Flag. Optional. Be verbose.\nArgument: --help - Flag. Optional. Display this help.\nBUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after\n\n'
-requires=$'declare diff grep\nthrowArgument decorate usageArgumentString isCallable\nfileTemporaryName textRemoveFields\n'
+line="299"
+rawComment=$'Run command and detect any global or local leaks\nRequires: declare diff grep\nRequires: throwArgument decorate validate isCallable\nRequires: fileTemporaryName textRemoveFields\nArgument: command ... - Callable. Command to run\nArgument: --temporary tempPath - Directory. Optional. Use this for the temporary path.\nArgument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak.\nArgument: --verbose - Flag. Optional. Be verbose.\nArgument: --help - Flag. Optional. Display this help.\nBUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after\n\n'
+requires=$'declare diff grep\nthrowArgument decorate validate isCallable\nfileTemporaryName textRemoveFields\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="20094ded2fe440d8caa5368a60b92d19047e793c"
-sourceLine="298"
+sourceHash="f8901f960335e712ac2680d77a17c49c8edcae50"
+sourceLine="299"
 summary="Run command and detect any global or local leaks"
 summaryComputed="true"
 usage="plumber [ command ... ] [ --temporary tempPath ] [ --leak envName ... ] [ --verbose ] [ --help ]"

@@ -1,8 +1,8 @@
-## `processCountWatcher`
+### `processCountWatcher`
 
 > Watch the number of processes matching `token` and fail if
 
-### Usage
+#### Usage
 
     processCountWatcher [ --help ] [ --handler handler ] [ threshold ] [ ... ] [ --handler handler ] [ --quiet ] [ --hook hookName ] [ --sleep sleepTime ] [ --timeout timeoutTime ]
 
@@ -11,7 +11,7 @@ Argument:
 
 > Location: `bin/build/tools/process.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -23,7 +23,7 @@ Argument:
 - `--sleep sleepTime` - PositiveInteger. Optional. Sleep time between checks in milliseconds.
 - `--timeout timeoutTime` - PositiveInteger. Optional. Time out watching after `timeoutTime` milliseconds.
 
-### Return codes
+#### Return codes
 
 - `0` - Sleep was interrupted
 - `1` - Process count exceeded threshold

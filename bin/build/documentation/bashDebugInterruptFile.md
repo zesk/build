@@ -1,8 +1,8 @@
-## `bashDebugInterruptFile`
+### `bashDebugInterruptFile`
 
 > Adds a trap to capture the debugging stack on interrupt
 
-### Usage
+#### Usage
 
     bashDebugInterruptFile [ --help ] [ --handler handler ] [ --error ] [ --clear ] [ --interrupt ] [ --already-error ]
 
@@ -12,7 +12,7 @@ determine where the problem or loop exists.
 
 > Location: `bin/build/tools/debug.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -21,9 +21,13 @@ determine where the problem or loop exists.
 - `--interrupt` - Flag. Add INT trap.
 - `--already-error` - Flag. If the signals are already installed, then throw an error. Otherwise exits 0.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Requires
+
+- [`trap`]({rel}/guide/builtin.md#trap)
 

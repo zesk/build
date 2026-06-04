@@ -1,8 +1,8 @@
-## `mapValueTrim`
+### `mapValueTrim`
 
 > Maps a string using an environment file
 
-### Usage
+#### Usage
 
     mapValueTrim mapFile [ value ]
 
@@ -10,12 +10,12 @@ Maps a string using an environment file
 
 > Location: `bin/build/tools/map.sh`
 
-### Arguments
+#### Arguments
 
 - `mapFile` - File. Required. a file containing bash environment definitions
 - `value` - String. Optional. One or more values to map using said environment file.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

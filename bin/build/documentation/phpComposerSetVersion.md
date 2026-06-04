@@ -1,8 +1,8 @@
-## `phpComposerSetVersion`
+### `phpComposerSetVersion`
 
 > For any project, ensures the `version` field in `composer.json` matches
 
-### Usage
+#### Usage
 
     phpComposerSetVersion [ --version ] [ --home ] [ --status ] [ --quiet ]
 
@@ -14,14 +14,14 @@ Typically the version is copied in without the leading `v`.
 
 > Location: `bin/build/tools/php-composer.sh`
 
-### Arguments
+#### Arguments
 
 - `--version` - String. Use this version instead of current version.
 - `--home` - Directory. Optional. Use this directory for the location of `composer.json`.
 - `--status` - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same
 - `--quiet` - Flag. Optional. Do not output anything to stdout and just do the action and exit.
 
-### Return codes
+#### Return codes
 
 - `0` - File was updated successfully.
 - `1` - Environment error

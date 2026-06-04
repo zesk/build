@@ -1,8 +1,8 @@
-## `aptSourcesDirectory`
+### `aptSourcesDirectory`
 
 > Get APT source list path
 
-### Usage
+#### Usage
 
     aptSourcesDirectory
 
@@ -10,11 +10,11 @@ Get APT source list path
 
 > Location: `bin/build/tools/apt.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

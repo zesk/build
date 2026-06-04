@@ -1,8 +1,8 @@
-## `isBashDebug`
+### `isBashDebug`
 
 > Returns whether the shell has the debugging flag set
 
-### Usage
+#### Usage
 
     isBashDebug
 
@@ -12,11 +12,11 @@ Useful if you need to temporarily enable or disable it.
 
 > Location: `bin/build/tools/debug.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

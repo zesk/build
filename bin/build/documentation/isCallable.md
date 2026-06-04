@@ -1,8 +1,8 @@
-## `isCallable`
+### `isCallable`
 
 > Test if all arguments are callable as a command
 
-### Usage
+#### Usage
 
     isCallable string
 
@@ -11,16 +11,16 @@ If no arguments are passed, returns exit code 1.
 
 > Location: `bin/build/tools/type.sh`
 
-### Arguments
+#### Arguments
 
 - `string` - EmptyString. Required. Path to binary to test if it is executable.
 
-### Return codes
+#### Return codes
 
 - `0` - All arguments are callable as a command
 - `1` - One or or more arguments are callable as a command
 
-### Requires
+#### Requires
 
 - {SEE:throwArgument}
 - {SEE:helpArgument}

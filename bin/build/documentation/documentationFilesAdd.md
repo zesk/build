@@ -1,8 +1,8 @@
-## `documentationFilesAdd`
+### `documentationFilesAdd`
 
 > Git add documentation files
 
-### Usage
+#### Usage
 
     documentationFilesAdd [ --help ]
 
@@ -11,11 +11,11 @@ Just the first path.
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

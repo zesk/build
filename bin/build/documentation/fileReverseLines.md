@@ -1,8 +1,8 @@
-## `fileReverseLines`
+### `fileReverseLines`
 
 > Reverse output lines
 
-### Usage
+#### Usage
 
     fileReverseLines
 
@@ -12,17 +12,17 @@ Not recommended on big files.
 
 > Location: `bin/build/tools/platform.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Credits
+#### Credits
 
 Thanks to [Eric Pement
 ](https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt

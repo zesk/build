@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="vendor.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Are we within the JetBrains PyCharm terminal?\n\n'
+description="Are we within the JetBrains PyCharm terminal?"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/vendor.sh"
 fn="isPyCharm"
 fnMarker="ispycharm"
 foundNames=([0]="argument" [1]="return_code" [2]="see")
 line="41"
-rawComment=$'Are we within the JetBrains PyCharm terminal?\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - within the PyCharm terminal\nReturn Code: 1 - not within the PyCharm terminal AFAIK\nSee: contextOpen\n\n'
-return_code=$'0 - within the PyCharm terminal\n1 - not within the PyCharm terminal AFAIK\n'
-see=$'contextOpen\n'
+rawComment="Are we within the JetBrains PyCharm terminal?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - within the PyCharm terminal"$'\n'"Return Code: 1 - not within the PyCharm terminal AFAIK"$'\n'"See: contextOpen"$'\n'""$'\n'""
+return_code="0 - within the PyCharm terminal"$'\n'"1 - not within the PyCharm terminal AFAIK"$'\n'""
+see="contextOpen"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
 sourceHash="6a1c6758472ed8ae9048cda1a9a026cbbe718421"
 sourceLine="41"

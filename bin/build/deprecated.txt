@@ -1,4 +1,7 @@
+# v0.44.0
+
 # v0.43.2
+isDockerComposeCommand|dockerComposeCommandIsValid|
 
 # v0.43.1
 
@@ -181,7 +184,7 @@ catchEnvironment "$handler" userH|catchReturn "$handler" userH
 # v0.40.1
 
 # v0.40.0
-markdown_removeUnfinishedSections|markdownRemoveUnfinishedSections
+markdown_\removeUnfinishedSections|markdownRemoveUnfinishedSections
 markdown_FormatList|markdownFormatList
 simpleMarkdownToConsole|markdownToConsole
 

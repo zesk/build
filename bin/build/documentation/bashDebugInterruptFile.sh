@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--error - Flag. Add ERR trap.\n--clear - Flag. Remove all traps.\n--interrupt - Flag. Add INT trap.\n--already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0.\n'
 base="debug.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/debug.sh"
 fn="bashDebugInterruptFile"
 fnMarker="bashdebuginterruptfile"
 foundNames=([0]="requires" [1]="argument")
-line="187"
+line="188"
 rawComment=$'Adds a trap to capture the debugging stack on interrupt\nUse this in a bash script which runs forever or runs in an infinite loop to\ndetermine where the problem or loop exists.\nRequires: trap\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --error - Flag. Add ERR trap.\nArgument: --clear - Flag. Remove all traps.\nArgument: --interrupt - Flag. Add INT trap.\nArgument: --already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0.\n\n'
 requires=$'trap\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="20094ded2fe440d8caa5368a60b92d19047e793c"
-sourceLine="187"
+sourceHash="f8901f960335e712ac2680d77a17c49c8edcae50"
+sourceLine="188"
 summary="Adds a trap to capture the debugging stack on interrupt"
 summaryComputed="true"
 usage="bashDebugInterruptFile [ --help ] [ --handler handler ] [ --error ] [ --clear ] [ --interrupt ] [ --already-error ]"

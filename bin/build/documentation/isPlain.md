@@ -1,8 +1,8 @@
-## `isPlain`
+### `isPlain`
 
 > Check if text contains plain text only (no ANSI escape
 
-### Usage
+#### Usage
 
     isPlain text
 
@@ -11,11 +11,11 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `text` - String. Required. Text to search for mapping tokens.
 
-### Return codes
+#### Return codes
 
 - `0` - Text is plain
 - `1` - Text contains non-plain characters

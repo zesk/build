@@ -2,7 +2,7 @@
 base="IP_URL.sh"
 category="Build Configuration"
 derivations=([0]="env" [1]="envMarker" [2]="name")
-description=$'URL to look up IP my address remotely\n\n'
+description="URL to look up IP my address remotely"$'\n'""$'\n'""
 descriptionLineCount="2"
 env="IP_URL"
 envMarker="ip_url"
@@ -10,8 +10,8 @@ file="bin/build/env/IP_URL.sh"
 fn="IP_URL"
 foundNames=([0]="name" [1]="see" [2]="type" [3]="category")
 name="IP Lookup URL"
-rawComment=$'Name: IP Lookup URL\nURL to look up IP my address remotely\nSee: networkIPLookup\nType: URL\nCategory: Build Configuration\n\n'
-see=$'networkIPLookup\n'
+rawComment="Name: IP Lookup URL"$'\n'"URL to look up IP my address remotely"$'\n'"See: networkIPLookup"$'\n'"Type: URL"$'\n'"Category: Build Configuration"$'\n'""$'\n'""
+see="networkIPLookup"$'\n'""
 sourceFile="bin/build/env/IP_URL.sh"
 sourceHash="d0ada727686791742bfeb989028ccc07f4d7ce0a"
 sourceLine=""

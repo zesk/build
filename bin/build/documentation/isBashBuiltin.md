@@ -1,8 +1,8 @@
-## `isBashBuiltin`
+### `isBashBuiltin`
 
 > Is a token a bash builtin?
 
-### Usage
+#### Usage
 
     isBashBuiltin builtin
 
@@ -11,11 +11,11 @@ Implementation taken directly from the Bash man page.
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `builtin` - String. Required. String to check if it's a bash builtin.
 
-### Return codes
+#### Return codes
 
 - `0` - Yes, this string is a bash builtin command.
 - `1` - No, this is not a bash builtin command

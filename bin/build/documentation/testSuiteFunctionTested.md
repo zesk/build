@@ -1,8 +1,8 @@
-## `testSuiteFunctionTested`
+### `testSuiteFunctionTested`
 
 > When environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and assertion
 
-### Usage
+#### Usage
 
     testSuiteFunctionTested [ --help ] [ --help ] [ --verbose ] [ functionName ... ]
 
@@ -10,19 +10,19 @@ When environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and 
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--help` - Flag. Optional. Display this help.
 - `--verbose` - Flag. Optional. Show list of true results when all arguments pass.
 - `functionName ...` - String. Function to look up to see if it has been tested. One or more.
 
-### Return codes
+#### Return codes
 
 - `0` - All functions were tested by the test suite at least once.
 - `1` - At least one function was not tested by the test suite at least once.
 
-### Environment
+#### Environment
 
 - {SEE:TEST_TRACK_ASSERTIONS}
 

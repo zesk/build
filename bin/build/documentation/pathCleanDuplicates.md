@@ -1,8 +1,8 @@
-## `pathCleanDuplicates`
+### `pathCleanDuplicates`
 
 > Cleans the path and removes non-directory entries and duplicates
 
-### Usage
+#### Usage
 
     pathCleanDuplicates [ --help ]
 
@@ -12,17 +12,17 @@ Maintains ordering.
 
 > Location: `bin/build/tools/path.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:PATH}
 

@@ -1,8 +1,8 @@
-## `environmentValueWriteArray`
+### `environmentValueWriteArray`
 
 > Write an array value as NAME=([0]="a" [1]="b" [2]="c")
 
-### Usage
+#### Usage
 
     environmentValueWriteArray [ --help ] [ value ... ] [ --help ]
 
@@ -15,13 +15,13 @@ Bash outputs on different versions:
 
 > Location: `bin/build/tools/environment/io.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `value ...` - Arguments. Optional. Array values as arguments.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

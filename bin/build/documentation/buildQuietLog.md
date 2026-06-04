@@ -1,8 +1,8 @@
-## `buildQuietLog`
+### `buildQuietLog`
 
 > Generate the path for a quiet log in the build
 
-### Usage
+#### Usage
 
     buildQuietLog name [ --no-create ]
 
@@ -10,12 +10,12 @@ Generate the path for a quiet log in the build cache directory, creating it if n
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `name` - String. Required. The log file name to create. Trims leading `_` if present.
 - `--no-create` - Flag. Optional. Do not require creation of the directory where the log file will appear.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

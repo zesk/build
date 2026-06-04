@@ -1,8 +1,8 @@
-## `confirmMenu`
+### `confirmMenu`
 
 > Ask the user for a menu of options
 
-### Usage
+#### Usage
 
     confirmMenu --choice choiceCharacter [ --default default ] --result resultFile [ --attempts attemptCount ] [ --timeout timeoutSeconds ] [ --prompt promptString ] [ message ]
 
@@ -10,7 +10,7 @@ Ask the user for a menu of options
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `--choice choiceCharacter` - String. Required. Character to accept.
 - `--default default` - String. Optional. Character to choose when there is a timeout or other failure.
@@ -20,7 +20,7 @@ Ask the user for a menu of options
 - `--prompt promptString` - String. Optional. String to suffix the prompt with (usually tells the user what to do)
 - `message` - String. Optional. Display this message as the confirmation menu.
 
-### Return codes
+#### Return codes
 
 - `interrupt` - Attempts exceeded
 - `timeout` - Timeout

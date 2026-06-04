@@ -66,7 +66,9 @@ _markdownIndentHeading() {
 # If you need a section to always be displayed; provide default values or blank values for the variables in those sections
 # to prevent removal.
 #
-# Argument: None
+# Argument: --preprocess preprocessFunction - Function. Optional. OneOrMore. A function to filter content via `stdin` prior to checking for tokens.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Depends: read printf
 # Return Code: 0
 # Environment: None
@@ -74,25 +76,46 @@ _markdownIndentHeading() {
 # Example:     map.sh < $templateFile | markdownRemoveUnfinishedSections
 #
 markdownRemoveUnfinishedSections() {
-  local line section=() foundVar=false foundContent=false
-  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  local line section=() foundVar=false foundContent=false preprocess=()
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --preprocess) shift && preprocess+=("$(validate "$handler" Function "$argument" "${1-}")") || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
   local tokenClasses='[_A-Za-z0-9]'
   local lastLine="" line && while IFS='' read -r line; do
-    local trimmed && trimmed=$(textTrim "$line")
+    local check=false trimmed && trimmed=$(textTrim "$line")
     if [ "${line:0:1}" = "#" ]; then
       # Heading line
       if ! $foundVar && $foundContent && [ ${#section[@]} -gt 0 ]; then
         printf "%s\n" "${section[@]+${section[@]}}"
       fi
-      foundVar=false
-      foundContent=false
-      section=()
-      ! isMappable --token "$tokenClasses" "$trimmed" || foundVar=true
+      foundVar=false && foundContent=false && section=() && check=true
     else
       if [ -n "$trimmed" ]; then
-        foundContent=true
-        ! isMappable --token "$tokenClasses" "$trimmed" || foundVar=true
+        foundContent=true && check=true
       fi
+    fi
+    if $check; then
+      local cleaned="$trimmed"
+      [ "${#preprocess[@]}" -eq 0 ] || local preprocessFunction && for preprocessFunction in "${preprocess[@]}"; do
+        cleaned=$("$preprocessFunction" <<<"$trimmed")
+      done
+      ! isMappable --token "$tokenClasses" "$cleaned" || foundVar=true
     fi
     [ -z "$trimmed$lastLine" ] || section+=("$line")
     lastLine="$trimmed"

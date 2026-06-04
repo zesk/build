@@ -1,8 +1,8 @@
-## `bashCommentVariable`
+### `bashCommentVariable`
 
 > Gets a list of the variable values from a bash
 
-### Usage
+#### Usage
 
     bashCommentVariable variableName [ --prefix ] [ --insensitive | -i ] [ --help ]
 
@@ -10,18 +10,18 @@ Gets a list of the variable values from a bash function comment
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `variableName` - String. Required. Get this variable value.
 - `--prefix` - Flag. Optional. Find variables with the prefix `variableName`
 --insensitive |- ` -i` - Flag. Optional. Match case insensitive.
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Comment source (`# ` removed)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

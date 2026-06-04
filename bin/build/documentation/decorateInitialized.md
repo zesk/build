@@ -1,8 +1,8 @@
-## `decorateInitialized`
+### `decorateInitialized`
 
 > Is the decorate color system initialized yet?
 
-### Usage
+#### Usage
 
     decorateInitialized [ --help ]
 
@@ -11,17 +11,17 @@ Useful to set our global color environment at the top level of a script if it ha
 
 > Location: `bin/build/tools/decorate/core.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:helpArgument}
 

@@ -1,8 +1,8 @@
-## `identicalCheck`
+### `identicalCheck`
 
 > When, for whatever reason, you need code to match between
 
-### Usage
+#### Usage
 
     identicalCheck --extension extension --prefix prefix [ --exclude pattern ] [ --cd directory ] [ --repair directory ] [ --skip file ] [ --ignore-singles ] [ --no-map ] [ --debug ] [ --help ] [ --singles singlesFiles ] [ --single singleToken ] [ --token token ] [ token ... ]
 
@@ -40,7 +40,7 @@ This is best used as a pre-commit check, for example.
 
 > Location: `bin/build/tools/identical.sh`
 
-### Arguments
+#### Arguments
 
 - `--extension extension` - String. Required. One or more extensions to search for in the current directory.
 - `--prefix prefix` - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
@@ -57,19 +57,19 @@ This is best used as a pre-commit check, for example.
 - `--token token` - String. Optional. Replace this token (only). May be specified more than once. Old method, deprecated but here for compatibility.
 - `token ...` - String. Optional. Replace this token (only). May be specified more than once.
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `identical-compare` - Show verbose comparisons when things differ between identical sections
 
-### Return codes
+#### Return codes
 
 - `2` - Argument error
 - `0` - Success, everything matches
 - `100` - Failures
 
-### See Also
+#### See Also
 
 - {SEE:identicalWatch}
 

@@ -1,8 +1,8 @@
-## `iTerm2ColorTypes`
+### `iTerm2ColorTypes`
 
 > Colors for various UI elements
 
-### Usage
+#### Usage
 
     iTerm2ColorTypes
 
@@ -10,11 +10,11 @@ Colors for various UI elements
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

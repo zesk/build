@@ -1,8 +1,8 @@
-## `isFunction`
+### `isFunction`
 
 > Test if argument are bash functions
 
-### Usage
+#### Usage
 
     isFunction string [ --help ]
 
@@ -11,13 +11,21 @@ If no arguments are passed, returns exit code 1.
 
 > Location: `bin/build/tools/type.sh`
 
-### Arguments
+#### Arguments
 
 - `string` - String. Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - argument is bash function
 - `1` - argument is not a bash function
+
+#### Requires
+
+- {SEE:catchArgument}
+- {SEE:isUnsignedInteger}
+- {SEE:bashDocumentation}
+- [`type`]({rel}/guide/builtin.md#type)
+- {SEE:helpArgument}
 

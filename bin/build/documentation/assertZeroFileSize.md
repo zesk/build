@@ -1,8 +1,8 @@
-## `assertZeroFileSize`
+### `assertZeroFileSize`
 
 > Assert a file is empty (zero sized)
 
-### Usage
+#### Usage
 
     assertZeroFileSize [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] - fileName ...
 
@@ -10,7 +10,7 @@ Assert a file is empty (zero sized)
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -32,17 +32,17 @@ Assert a file is empty (zero sized)
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 - `fileName ...` - File. Required. One ore more file which should be zero bytes in size.
 
-### Examples
+#### Examples
 
     assertZeroFileSize .config
     assertZeroFileSize /var/www/log/error.log
 
-### Return codes
+#### Return codes
 
 - `1` - If the assertions fails
 - `0` - If the assertion succeeds
 
-### Environment
+#### Environment
 
 - If the file does not exist, this will fail.
 

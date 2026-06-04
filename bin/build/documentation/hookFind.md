@@ -1,8 +1,8 @@
-## `hookFind`
+### `hookFind`
 
 > Find the path to a hook binary file
 
-### Usage
+#### Usage
 
     hookFind [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] hookName0 [ hookName1 ]
 
@@ -17,7 +17,7 @@ If a file named `hookName` with the extension `.sh` is found which is executable
 
 > Location: `bin/build/tools/hook.sh`
 
-### Arguments
+#### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
@@ -25,9 +25,13 @@ If a file named `hookName` with the extension `.sh` is found which is executable
 - `hookName0` - String. Required. Hook to locate
 - `hookName1` - String. Optional. Additional hooks to locate.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:BUILD_HOOK_EXTENSIONS} {SEE:BUILD_HOOK_DIRS} {SEE:BUILD_DEBUG}
 

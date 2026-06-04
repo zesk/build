@@ -1,8 +1,8 @@
-## `githubURLParse`
+### `githubURLParse`
 
 > Parse a GitHub URL and return the owner and project
 
-### Usage
+#### Usage
 
     githubURLParse url
 
@@ -10,11 +10,11 @@ Parse a GitHub URL and return the owner and project name
 
 > Location: `bin/build/tools/github.sh`
 
-### Arguments
+#### Arguments
 
 - `url` - URL. Required. URL to parse.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

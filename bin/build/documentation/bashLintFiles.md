@@ -1,8 +1,8 @@
-## `bashLintFiles`
+### `bashLintFiles`
 
-> Check files for the existence of a string
+> Lint multiple bash files
 
-### Usage
+#### Usage
 
     bashLintFiles [ --verbose ] [ --fix ] [ --interactive ] [ --exec binary ] [ --delay ] [ findArgs ]
 
@@ -10,7 +10,7 @@ Run `bashLint` on a set of bash files.
 
 > Location: `bin/build/tools/lint.sh`
 
-### Arguments
+#### Arguments
 
 - `--verbose` - Flag. Optional. Verbose mode.
 - `--fix` - Flag. Optional. Fix errors when possible.
@@ -19,20 +19,20 @@ Run `bashLint` on a set of bash files.
 - `--delay` - Integer. Optional. Delay between checks in interactive mode.
 - `findArgs` - Additional find arguments for .sh files (or exclude directories).
 
-### Examples
+#### Examples
 
     if bashLintFiles; then git commit -m "saving things" -a; fi
 
-### Sample Output
+#### Sample Output
 
 This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 
-### Return codes
+#### Return codes
 
 - `0` - All found files pass `shellcheck` and `bash -n`
 - `1` - One or more files did not pass
 
-### Environment
+#### Environment
 
 - This operates in the current working directory
 

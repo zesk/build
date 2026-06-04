@@ -1,8 +1,8 @@
-## `dockerPlatformDefault`
+### `dockerPlatformDefault`
 
 > Fetch the default platform for docker
 
-### Usage
+#### Usage
 
     dockerPlatformDefault
 
@@ -10,11 +10,11 @@ Fetch the default platform for docker
 
 > Location: `bin/build/tools/docker.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `bashDocumentationDeriveSee`
+### `bashDocumentationDeriveSee`
 
 > Generate SEE markdown content
 
-### Usage
+#### Usage
 
     bashDocumentationDeriveSee [ --help ] [ --check ] settingsFile
 
@@ -11,13 +11,13 @@ File is next to `settingsFile`; `--check` checks to see if the file needs to be 
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--check` - Flag. Optional. Check to see if an update is needed
 - `settingsFile` - File. Required. Settings file for function to document.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `fileNewest`
+### `fileNewest`
 
 > Output the newest file in the list
 
-### Usage
+#### Usage
 
     fileNewest file ... [ --help ] [ --ignore ]
 
@@ -10,13 +10,13 @@ Output the newest file in the list
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `file ...` - File. Required. One or more files to examine
 - `--help` - Flag. Optional. Display this help.
 - `--ignore` - Flag. Optional. Ignore files which do not exist.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

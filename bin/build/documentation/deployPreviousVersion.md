@@ -1,8 +1,8 @@
-## `deployPreviousVersion`
+### `deployPreviousVersion`
 
 > Get the previous version of the supplied version
 
-### Usage
+#### Usage
 
     deployPreviousVersion deployHome versionName
 
@@ -10,12 +10,12 @@ Get the previous version of the supplied version
 
 > Location: `bin/build/tools/deploy.sh`
 
-### Arguments
+#### Arguments
 
 - `deployHome` - Directory. Required. Deployment database home.
 - `versionName` - String. Required. Application ID to look for
 
-### Return codes
+#### Return codes
 
 - `1` - No version exists
 - `2` - Argument error

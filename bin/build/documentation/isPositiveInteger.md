@@ -1,8 +1,8 @@
-## `isPositiveInteger`
+### `isPositiveInteger`
 
 > Test if an argument is a positive integer (non-zero)
 
-### Usage
+#### Usage
 
     isPositiveInteger value [ --help ]
 
@@ -11,17 +11,17 @@ Takes one argument only.
 
 > Location: `bin/build/tools/type.sh`
 
-### Arguments
+#### Arguments
 
 - `value` - EmptyString. Required. Value to check if it is an unsigned integer
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - if it is a positive integer
 - `1` - if it is not a positive integer
 
-### Requires
+#### Requires
 
 - {SEE:catchArgument}
 - {SEE:isUnsignedInteger}

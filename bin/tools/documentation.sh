@@ -64,6 +64,8 @@ buildDocumentationBuild() {
     return 0
   fi
 
+  catchReturn "$handler" pcregrepInstall || return $?
+
   local templateSource="$home/documentation/template/docs"
 
   bashDocumentationDefaults --handler "$handler" --target "$templateSource" || return $?

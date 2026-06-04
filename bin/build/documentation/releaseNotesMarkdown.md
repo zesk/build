@@ -1,8 +1,8 @@
-## `releaseNotesMarkdown`
+### `releaseNotesMarkdown`
 
 > Generate markdown for release notes
 
-### Usage
+#### Usage
 
     releaseNotesMarkdown [ --count fullCount ] [ --title titleText ] [ --rel rel ] [ --help ] [ --handler handler ]
 
@@ -15,7 +15,7 @@ Output show release notes in reverse version order:
 
 > Location: `bin/build/tools/version.sh`
 
-### Arguments
+#### Arguments
 
 - `--count fullCount` - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.
 - `--title titleText` - EmptyString. Markdown text to display between the recent release notes and the links to release notes.
@@ -23,11 +23,11 @@ Output show release notes in reverse version order:
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 
-### Writes to standard output
+#### Writes to standard output
 
 markdown
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `consoleLink`
+### `consoleLink`
 
 > console hyperlinks
 
-### Usage
+#### Usage
 
     consoleLink link [ text ] [ --help ]
 
@@ -12,13 +12,13 @@ No way to test ability, I think. Maybe `tput`.
 
 > Location: `bin/build/tools/console.sh`
 
-### Arguments
+#### Arguments
 
 - `link` - EmptyString. Required. Link to output.
 - `text` - String. Optional. Text to display, if none then uses `link`.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

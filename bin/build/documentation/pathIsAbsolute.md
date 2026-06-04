@@ -1,8 +1,8 @@
-## `pathIsAbsolute`
+### `pathIsAbsolute`
 
 > Is a path an absolute path?
 
-### Usage
+#### Usage
 
     pathIsAbsolute [ path ]
 
@@ -10,11 +10,11 @@ Is a path an absolute path?
 
 > Location: `bin/build/tools/directory.sh`
 
-### Arguments
+#### Arguments
 
 - `path` - String. Optional. Path to check.
 
-### Return codes
+#### Return codes
 
 - `0` - if all paths passed in are absolute paths (begin with `/`).
 - `1` - one ore more paths are not absolute paths

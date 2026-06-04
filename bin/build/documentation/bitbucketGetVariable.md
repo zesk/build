@@ -1,8 +1,8 @@
-## `bitbucketGetVariable`
+### `bitbucketGetVariable`
 
 > Fetch a value from the pipelines YAML file
 
-### Usage
+#### Usage
 
     bitbucketGetVariable [ varName ] [ defaultValue ]
 
@@ -27,16 +27,16 @@ On this file, the value of `$(bitbucketGetVariable MARIADB_ROOT_PASSWORD)` is `s
 
 > Location: `bin/build/tools/bitbucket.sh`
 
-### Arguments
+#### Arguments
 
 - `varName` - Name of the value to extract from `bitbucket-pipelines.yml`
 - `defaultValue` - Value if not found in pipelines
 
-### Examples
+#### Examples
 
     MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(bitbucketGetVariable MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

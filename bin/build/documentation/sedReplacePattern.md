@@ -1,8 +1,8 @@
-## `sedReplacePattern`
+### `sedReplacePattern`
 
 > Quote a sed command for search and replace
 
-### Usage
+#### Usage
 
     sedReplacePattern searchPattern replacePattern
 
@@ -11,12 +11,12 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/sed.sh`
 
-### Arguments
+#### Arguments
 
 - `searchPattern` - String. Required. The string to search for.
 - `replacePattern` - String. Required. The replacement to replace with.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

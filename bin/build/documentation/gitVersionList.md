@@ -1,8 +1,8 @@
-## `gitVersionList`
+### `gitVersionList`
 
 > Fetches a list of tags from git and filters those
 
-### Usage
+#### Usage
 
     gitVersionList [ --help ]
 
@@ -11,11 +11,11 @@ them sorted by version correctly.
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `1` - If the `.git` directory does not exist
 - `0` - Success

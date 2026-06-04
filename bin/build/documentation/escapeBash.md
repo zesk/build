@@ -1,8 +1,8 @@
-## `escapeBash`
+### `escapeBash`
 
 > Bash-string escape
 
-### Usage
+#### Usage
 
     escapeBash [ string ]
 
@@ -10,19 +10,19 @@ Converts strings to shell escaped strings. Newlines become another string line.
 
 > Location: `bin/build/tools/quote.sh`
 
-### Arguments
+#### Arguments
 
 - `string` - String. Optional. String to convert to a bash-compatible string.
 
-### Reads standard input
+#### Reads standard input
 
 text - Optional.
 
-### Writes to standard output
+#### Writes to standard output
 
 bash-compatible string
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

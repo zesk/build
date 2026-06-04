@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--check - Flag. Optional. Check to see if an update is needed\nsettingsFile - File. Required. Settings file for function to document.\n'
 base="documentation.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationDeriveFunction"
 fnMarker="bashdocumentationderivefunction"
 foundNames=([0]="summary" [1]="argument")
-line="821"
+line="833"
 rawComment=$'Summary: Generate markdown documentation page\nGenerate function derived files.\nFile(s) are generated next to `settingsFile`.\n- `--check` checks to see if the file needs to be generated or updated. Returns 0 if up to date.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --check - Flag. Optional. Check to see if an update is needed\nArgument: settingsFile - File. Required. Settings file for function to document.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a3794434b7e4d336ccd6c9cbf964150d59b552f0"
-sourceLine="821"
+sourceHash="ba0c1b09de9318e5d93a3d83b2f6b1368cb126e4"
+sourceLine="833"
 summary="Generate markdown documentation page"
 summaryComputed=""
 usage="bashDocumentationDeriveFunction [ --help ] [ --check ] settingsFile"

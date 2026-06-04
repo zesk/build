@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'directory - Directory. Required. Directory to search for the newest file.\n--find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)\n'
+argument="directory - Directory. Required. Directory to search for the newest file."$'\n'"--find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Find the newest modified file in a directory\n\n'
+description="Find the newest modified file in a directory"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/file.sh"
 fn="directoryNewestFile"
 fnMarker="directorynewestfile"
 foundNames=([0]="argument")
 line="855"
-rawComment=$'Find the newest modified file in a directory\nArgument: directory - Directory. Required. Directory to search for the newest file.\nArgument: --find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Find the newest modified file in a directory"$'\n'"Argument: directory - Directory. Required. Directory to search for the newest file."$'\n'"Argument: --find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
 sourceLine="855"

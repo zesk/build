@@ -1,8 +1,8 @@
-## `sshKnownHostAdd`
+### `sshKnownHostAdd`
 
 > Adds the host to the `~/.known_hosts` if it is not
 
-### Usage
+#### Usage
 
     sshKnownHostAdd [ hostName ... ]
 
@@ -21,11 +21,11 @@ If no arguments are passed, the default behavior is to set up the `~/.ssh` direc
 
 > Location: `bin/build/tools/ssh.sh`
 
-### Arguments
+#### Arguments
 
 - `hostName ...` - String. Optional. One ore more hosts to add to the known hosts file
 
-### Return codes
+#### Return codes
 
 - `1` - Environment errors
 - `0` - All hosts exist in or were successfully added to the known hosts file

@@ -1,8 +1,8 @@
-## `deployToRemote`
+### `deployToRemote`
 
 > Deploy current application to one or more hosts
 
-### Usage
+#### Usage
 
     deployToRemote [ --target target ] [ --deploy ] [ --cleanup ] [ --revert ] [ --commands ] [ --skip-ssh-host ] [ --add-ssh-host ] [ --debug ] --versions --id applicationId --application applicationPath userAtHost [ --help ]
 
@@ -18,19 +18,19 @@ When this tool succeeds the application:
 
 Operation:
 
-## Deploy `--deploy` Operation
+##### Deploy `--deploy` Operation
 
 - On each host, `app.tar.gz` is uploaded to the `applicationPath` first
 - On each host, via the shell, change to the `applicationPath` directory
 - Decompress the application package, and run the `deploy-remote-finish.sh` script
 
-## Cleanup `--cleanup` Operation
+##### Cleanup `--cleanup` Operation
 
 - On each host, via the shell, change to the `applicationPath` directory
 - Run the `deploy-remote-finish.sh` script which ...
 - Deletes the application package if it still exists, and runs the `deploy-cleanup` hook
 
-## Undo `--revert` Operation
+##### Undo `--revert` Operation
 
 - On each host, via the shell, change to the `applicationPath` directory
 - Run the `deploy-remote-finish.sh` script which ...
@@ -43,7 +43,7 @@ The `userAtHost` can be passed as follows:
 
 > Location: `bin/build/tools/deployment.sh`
 
-### Arguments
+#### Arguments
 
 - `--target target` - String. Optional. Build target file base name, defaults to `app.tar.gz`
 - `--deploy` - Default. Flag. deploy an application to a remote host
@@ -59,20 +59,24 @@ The `userAtHost` can be passed as follows:
 - `userAtHost` - Strings. Required. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
 - `--help` - Flag. Optional. Display this help.
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `ssh` - Debug ssh commands with verbose options
 - `ssh-debug` - Debug ssh commands with LOTS of verbose options
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Local cache
+#### Local cache
 
 `deployHome` is considered a state directory so removing entries in this should be managed separately.
+
+#### Environment
+
+- {SEE:BUILD_DEBUG}
 

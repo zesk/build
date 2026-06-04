@@ -1,8 +1,8 @@
-## `iTerm2SetColors`
+### `iTerm2SetColors`
 
 > Set terminal colors
 
-### Usage
+#### Usage
 
     iTerm2SetColors [ --verbose | -v ] [ --skip-errors ] [ --ignore | -i ] colorSetting ...
 
@@ -26,18 +26,18 @@ If no arguments are supplied which match a valid color setting values are read o
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 --verbose |- ` -v` - Flag. Optional. Verbose mode. Show what you are doing.
 - `--skip-errors - Flag. Optional. Skip errors in color settings and continue` - if loading a file containing a color scheme will load most of the file and skip any color settings with errors.
 --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 - `colorSetting ...` - String. Required. colorName=colorFormat string
 
-### Reads standard input
+#### Reads standard input
 
 `colorName=colorFormat`. One per line. Only if no arguments passed with `colorSetting` format.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

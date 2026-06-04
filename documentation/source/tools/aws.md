@@ -3,15 +3,7 @@
 <!-- TEMPLATE toolHeader 1 -->
 <hr />
 
-       ▄▄    ▄▄      ▄▄   ▄▄▄▄
-      ████   ██      ██ ▄█▀▀▀▀█
-      ████   ▀█▄ ██ ▄█▀ ██▄
-     ██  ██   ██ ██ ██   ▀████▄
-     ██████   ███▀▀███       ▀██
-    ▄██  ██▄  ███  ███  █▄▄▄▄▄█▀
-    ▀▀    ▀▀  ▀▀▀  ▀▀▀   ▀▀▀▀▀
-
-AWS stands for Amazon Web Services and tools related to interacting with the `aws` binary.
+AWS stands for **A**mazon **W**eb **S**ervices and tools related to interacting with the `aws` binary.
 
 {awsInstall}
 
@@ -46,6 +38,8 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 {awsProfilesList}
 
 ## S3 Tools
+
+S3 stands for **S**imple **S**torage **S**ervice and is AWS's object storage service.
 
 {isS3URL}
 

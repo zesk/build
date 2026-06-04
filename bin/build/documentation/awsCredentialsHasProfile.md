@@ -1,8 +1,8 @@
-## `awsCredentialsHasProfile`
+### `awsCredentialsHasProfile`
 
 > Get credentials and output environment variables for AWS authentication
 
-### Usage
+#### Usage
 
     awsCredentialsHasProfile [ profileName ] [ --help ]
 
@@ -13,12 +13,12 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `profileName` - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     setFile=$(fileTemporaryName "$handler") || return $?
     if awsEnvironment "$profile" > "$setFile"; then
@@ -29,7 +29,7 @@ If the AWS credentials file is incomplete, returns exit code 1 and outputs nothi
     exit 1
     fi
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

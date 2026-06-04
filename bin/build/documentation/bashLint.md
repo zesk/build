@@ -1,8 +1,8 @@
-## `bashLint`
+### `bashLint`
 
 > Check bash files for common errors
 
-### Usage
+#### Usage
 
     bashLint [ --help ] [ --fix ] [ --verbose ] [ script ]
 
@@ -18,23 +18,28 @@ Shell comments must not be immediately after a function end, e.g. this is invali
 
 > Location: `bin/build/tools/lint.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--fix` - Flag. Optional. Fix files when possible.
 - `--verbose` - Flag. Optional. Be verbose.
 - `script` - File. Optional. Shell script to validate
 
-### Examples
+#### Examples
 
     bashLint goo.sh
 
-### Sample Output
+#### Sample Output
 
 This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 
-### Return codes
+#### Return codes
 
 - `0` - All found files pass `shellcheck` and `bash -n` and shell comment syntax
 - `1` - One or more files did not pass
+
+#### See Also
+
+- {SEE:shellcheck}
+- [bashSanitize]({rel}tools/lint.md#bashsanitize) - Sanitize bash files for code quality. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L33))
 

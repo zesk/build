@@ -87,6 +87,7 @@ _reloadChanges() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Monitor home directory for new `.` files
 # Watches your HOME directory for `.` files which are added and unknown to you.
 #
 # Example:     bashPrompt bashPromptModule_dotFilesWatcher

@@ -1,8 +1,8 @@
-## `returnIdentical`
+### `returnIdentical`
 
 > Identical return code
 
-### Usage
+#### Usage
 
     returnIdentical
 
@@ -10,11 +10,11 @@ Return code is `identical`
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - 105
 

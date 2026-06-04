@@ -1,8 +1,8 @@
-## `githubLatest`
+### `githubLatest`
 
 > Get the latest JSON structure
 
-### Usage
+#### Usage
 
     githubLatest projectName
 
@@ -10,17 +10,17 @@ Get the latest JSON structure
 
 > Location: `bin/build/tools/github.sh`
 
-### Arguments
+#### Arguments
 
 - `projectName` - String. Required. Github project name in the form of `owner/repository`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:GITHUB_ACCESS_TOKEN}
 

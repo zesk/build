@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'file ... - File. Required. One or more files to examine\n--help - Flag. Optional. Display this help.\n'
+argument="file ... - File. Required. One or more files to examine"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Prints seconds since modified\n\n'
+description="Prints seconds since modified"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/file.sh"
 fn="fileModifiedSeconds"
 fnMarker="filemodifiedseconds"
 foundNames=([0]="argument" [1]="return_code")
 line="393"
-rawComment=$'Prints seconds since modified\nArgument: file ... - File. Required. One or more files to examine\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - Success\nReturn Code: 2 - Can not get modification time\n\n'
-return_code=$'0 - Success\n2 - Can not get modification time\n'
+rawComment="Prints seconds since modified"$'\n'"Argument: file ... - File. Required. One or more files to examine"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Can not get modification time"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"2 - Can not get modification time"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
 sourceLine="393"

@@ -1,8 +1,8 @@
-## `junitTestCaseFailureClose`
+### `junitTestCaseFailureClose`
 
 > Close tag for `failure` - test failed
 
-### Usage
+#### Usage
 
     junitTestCaseFailureClose [ --help ]
 
@@ -10,11 +10,11 @@ Close tag for `failure` - test failed
 
 > Location: `bin/build/tools/junit.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `installInstallBinary`
+### `installInstallBinary`
 
 > Installs an installer the first time in a new project,
 
-### Usage
+#### Usage
 
     installInstallBinary [ --diff ] [ --url ] [ --url-function ] --source [ --local ] --bin [ path ] [ applicationHome ] [ --help ]
 
@@ -10,7 +10,7 @@ Installs an installer the first time in a new project, and modifies it to work i
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `--diff` - Flag. Optional. Show differences between new and old files if changed.
 - `--url` - URL. Optional. A remote URL to download the installation script.
@@ -22,7 +22,7 @@ Installs an installer the first time in a new project, and modifies it to work i
 - `applicationHome` - Directory. Optional. Path to the application home directory. Default is current directory.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

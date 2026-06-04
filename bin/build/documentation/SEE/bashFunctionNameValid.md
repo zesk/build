@@ -1,1 +1,1 @@
-[bashFunctionNameValid]({rel}tools/bash.md#bashfunctionnamevalid) - Is a string a valid function name? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L638))
+[bashFunctionNameValid]({rel}tools/bash.md#bashfunctionnamevalid) - Is a string a valid function name? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L641))

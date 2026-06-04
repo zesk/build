@@ -1,8 +1,8 @@
-## `manPathCleanDuplicates`
+### `manPathCleanDuplicates`
 
 > Cleans the MANPATH and removes non-directory entries and duplicates
 
-### Usage
+#### Usage
 
     manPathCleanDuplicates [ --help ]
 
@@ -12,11 +12,11 @@ Maintains ordering.
 
 > Location: `bin/build/tools/manpath.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

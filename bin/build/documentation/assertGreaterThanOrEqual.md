@@ -1,8 +1,8 @@
-## `assertGreaterThanOrEqual`
+### `assertGreaterThanOrEqual`
 
 > Assert actual value is greater than or equal to expected value
 
-### Usage
+#### Usage
 
     assertGreaterThanOrEqual [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] leftValue rightValue [ message ]
 
@@ -10,7 +10,7 @@ Assert `leftValue >= rightValue`
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -34,17 +34,17 @@ Assert `leftValue >= rightValue`
 - `rightValue` - Integer. Required. Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
 
-### Examples
+#### Examples
 
     assertGreaterThanOrEqual 3 $found
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertGreaterThanOrEqual` was reviewed 2023-11-12
 .

@@ -1,8 +1,8 @@
-## `documentationTemplateFunctionCompile`
+### `documentationTemplateFunctionCompile`
 
 > Generate a function documentation block using `functionTemplate` for `functionName`
 
-### Usage
+#### Usage
 
     documentationTemplateFunctionCompile [ --env-file envFile ] functionName functionTemplate [ --help ]
 
@@ -14,14 +14,14 @@ Template is output to stdout.
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--env-file envFile` - File. Optional. One (or more) environment files used during map of `functionTemplate`
 - `functionName` - Required. The function name to document.
 - `functionTemplate` - Required. The template for individual functions.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - If success
 - `1` - Issue with file generation

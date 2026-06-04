@@ -1,8 +1,8 @@
-## `fileModifiedDays`
+### `fileModifiedDays`
 
 > Prints days (integer) since modified
 
-### Usage
+#### Usage
 
     fileModifiedDays file ... [ --help ]
 
@@ -10,12 +10,12 @@ Prints days (integer) since modified
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `file ...` - File. Required. One or more files to examine
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `2` - Can not get modification time

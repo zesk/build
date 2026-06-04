@@ -1,8 +1,8 @@
-## `assertFileSize`
+### `assertFileSize`
 
 > Assert a file has an expected size in bytes
 
-### Usage
+#### Usage
 
     assertFileSize expectedSize fileName ... [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -10,7 +10,7 @@ Assert a file has an expected size in bytes
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `expectedSize` - PositiveInteger. Required. Integer file size which `fileName` should be, in bytes.
 - `fileName ...` - File. Required. One ore more file which should be `expectedSize` bytes in size.
@@ -33,17 +33,17 @@ Assert a file has an expected size in bytes
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Examples
+#### Examples
 
     assertFileSize 22 .config
     assertFileSize 0 .env
 
-### Return codes
+#### Return codes
 
 - `1` - If the assertions fails
 - `0` - If the assertion succeeds
 
-### Environment
+#### Environment
 
 - If the file does not exist, this will fail.
 

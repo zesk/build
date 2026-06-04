@@ -115,6 +115,7 @@ _dockerComposeCommandList() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Validate docker compose subcommands
 # Is this a docker compose command?
 # Argument: command - String. Required. The command to test.
 # See: dockerComposeCommandList

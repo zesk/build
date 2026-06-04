@@ -1,8 +1,8 @@
-## `junitClose`
+### `junitClose`
 
 > Close tag for `testsuites`
 
-### Usage
+#### Usage
 
     junitClose [ --help ]
 
@@ -10,11 +10,11 @@ Close tag for `testsuites`
 
 > Location: `bin/build/tools/junit.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

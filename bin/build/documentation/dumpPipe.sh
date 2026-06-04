@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'--symbol symbol - String. Optional. Symbol to place before each line. (Blank is ok).\n--tail - Flag. Optional. Show the tail of the file and not the head when not enough can be shown.\n--head - Flag. Optional. Show the head of the file when not enough can be shown. (default)\n--lines - UnsignedInteger. Optional. Number of lines to show.\n--vanish file - UnsignedInteger. Optional. Number of lines to show.\nname - String. Optional. The item name or title of this output.\n'
+argument="--symbol symbol - String. Optional. Symbol to place before each line. (Blank is ok)."$'\n'"--tail - Flag. Optional. Show the tail of the file and not the head when not enough can be shown."$'\n'"--head - Flag. Optional. Show the head of the file when not enough can be shown. (default)"$'\n'"--lines - UnsignedInteger. Optional. Number of lines to show."$'\n'"--vanish file - UnsignedInteger. Optional. Number of lines to show."$'\n'"name - String. Optional. The item name or title of this output."$'\n'""
 base="dump.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Dump a pipe with a title and stats\n\n'
+description="Dump a pipe with a title and stats"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/dump.sh"
 fn="dumpPipe"
 fnMarker="dumppipe"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="99"
-rawComment=$'Dump a pipe with a title and stats\nArgument: --symbol symbol - String. Optional. Symbol to place before each line. (Blank is ok).\nArgument: --tail - Flag. Optional. Show the tail of the file and not the head when not enough can be shown.\nArgument: --head - Flag. Optional. Show the head of the file when not enough can be shown. (default)\nArgument: --lines - UnsignedInteger. Optional. Number of lines to show.\nArgument: --vanish file - UnsignedInteger. Optional. Number of lines to show.\nArgument: name - String. Optional. The item name or title of this output.\nstdin: text\nstdout: formatted text for debugging\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Dump a pipe with a title and stats"$'\n'"Argument: --symbol symbol - String. Optional. Symbol to place before each line. (Blank is ok)."$'\n'"Argument: --tail - Flag. Optional. Show the tail of the file and not the head when not enough can be shown."$'\n'"Argument: --head - Flag. Optional. Show the head of the file when not enough can be shown. (default)"$'\n'"Argument: --lines - UnsignedInteger. Optional. Number of lines to show."$'\n'"Argument: --vanish file - UnsignedInteger. Optional. Number of lines to show."$'\n'"Argument: name - String. Optional. The item name or title of this output."$'\n'"stdin: text"$'\n'"stdout: formatted text for debugging"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
 sourceHash="63d0b744477aa020f81137dccf35c889f1754a76"
 sourceLine="99"
-stdin=$'text\n'
-stdout=$'formatted text for debugging\n'
+stdin="text"$'\n'""
+stdout="formatted text for debugging"$'\n'""
 summary="Dump a pipe with a title and stats"
 summaryComputed="true"
 usage="dumpPipe [ --symbol symbol ] [ --tail ] [ --head ] [ --lines ] [ --vanish file ] [ name ]"

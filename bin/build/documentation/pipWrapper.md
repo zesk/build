@@ -1,8 +1,8 @@
-## `pipWrapper`
+### `pipWrapper`
 
 > Run pip whether it is installed as a module or
 
-### Usage
+#### Usage
 
     pipWrapper [ --bin binary ] [ --handler handler ] [ --help ] [ --debug ] [ ... ]
 
@@ -10,7 +10,7 @@ Run pip whether it is installed as a module or as a binary
 
 > Location: `bin/build/tools/python.sh`
 
-### Arguments
+#### Arguments
 
 - `--bin binary` - Executable. Optional. Binary for `pip`.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -18,7 +18,7 @@ Run pip whether it is installed as a module or as a binary
 - `--debug` - Flag. Optional. Show outputs to `which` and `command -v` for `pip`
 - `...` - Arguments. Optional. Arguments passed to `pip`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'environmentFile - EnvironmentFile. Required. File to convert to a settings file.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationEnvironmentFileParse"
 fnMarker="documentationenvironmentfileparse"
 foundNames=([0]="summary" [1]="argument")
-line="199"
+line="200"
 rawComment=$'Summary: Convert an environment comment to environment variables\nArgument: environmentFile - EnvironmentFile. Required. File to convert to a settings file.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a3794434b7e4d336ccd6c9cbf964150d59b552f0"
-sourceLine="199"
+sourceHash="ba0c1b09de9318e5d93a3d83b2f6b1368cb126e4"
+sourceLine="200"
 summary="Convert an environment comment to environment variables"
 summaryComputed=""
 usage="documentationEnvironmentFileParse environmentFile [ --help ]"

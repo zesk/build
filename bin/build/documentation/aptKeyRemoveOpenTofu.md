@@ -1,8 +1,8 @@
-## `aptKeyRemoveOpenTofu`
+### `aptKeyRemoveOpenTofu`
 
 > Remove keys to disable apt to download tofu from opentofu.org
 
-### Usage
+#### Usage
 
     aptKeyRemoveOpenTofu [ --help ]
 
@@ -10,12 +10,16 @@ Remove keys to disable apt to download tofu from opentofu.org
 
 > Location: `bin/build/tools/tofu.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `1` - Environment problems
 - `0` - All good to install tofu
+
+#### See Also
+
+- [aptKeyAddOpenTofu]({rel}tools/tofu.md#aptkeyaddopentofu)- `` - Add keys to enable apt to download tofu directly from ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L19))
 

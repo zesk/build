@@ -1,8 +1,8 @@
-## `serviceToStandardPort`
+### `serviceToStandardPort`
 
 > Handle standard services
 
-### Usage
+#### Usage
 
     serviceToStandardPort [ --help ] [ service ... ]
 
@@ -19,17 +19,21 @@ Backup when `/etc/services` does not exist.
 
 > Location: `bin/build/tools/platform.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `service ...` - String. Optional. A unix service typically found in `/etc/services`
 
-### Sample Output
+#### Sample Output
 
 Port number of associated service (integer) one per line
 
-### Return codes
+#### Return codes
 
 - `1` - service not found
 - `0` - service found and output is an integer
+
+#### See Also
+
+- [serviceToPort]({rel}tools/service.md#servicetoport) - Get the port number associated with a service ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L264))
 

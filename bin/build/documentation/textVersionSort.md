@@ -1,8 +1,8 @@
-## `textVersionSort`
+### `textVersionSort`
 
 > Sort versions in the format v0.0.0
 
-### Usage
+#### Usage
 
     textVersionSort [ -r | --reverse ] [ --help ]
 
@@ -16,22 +16,22 @@ Odd you can't globally flip sort order with -r - that only works with non-keyed 
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 -r |- ` --reverse` - Reverse the sort order (optional)
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     git tag | grep -e '^v[0-9.]*$' | textVersionSort
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:throwArgument}
 - sort

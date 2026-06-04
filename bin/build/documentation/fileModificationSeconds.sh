@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'filename ... - File to fetch modification time\n'
+argument="filename ... - File to fetch modification time"$'\n'""
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Fetch the modification time in seconds from now of a file as a timestamp\n\n'
+description="Fetch the modification time in seconds from now of a file as a timestamp"$'\n'""$'\n'""
 descriptionLineCount="2"
-example=$'    fileModificationTime ~/.bash_profile\n'
+example="    fileModificationTime ~/.bash_profile"$'\n'""
 file="bin/build/tools/file.sh"
 fn="fileModificationSeconds"
 fnMarker="filemodificationseconds"
 foundNames=([0]="argument" [1]="return_code" [2]="example")
 line="84"
-rawComment=$'Fetch the modification time in seconds from now of a file as a timestamp\nArgument: filename ... - File to fetch modification time\nReturn Code: 2 - If file does not exist\nReturn Code: 0 - If file exists and modification times are output, one per line\nExample:     fileModificationTime ~/.bash_profile\n\n'
-return_code=$'2 - If file does not exist\n0 - If file exists and modification times are output, one per line\n'
+rawComment="Fetch the modification time in seconds from now of a file as a timestamp"$'\n'"Argument: filename ... - File to fetch modification time"$'\n'"Return Code: 2 - If file does not exist"$'\n'"Return Code: 0 - If file exists and modification times are output, one per line"$'\n'"Example:     fileModificationTime ~/.bash_profile"$'\n'""$'\n'""
+return_code="2 - If file does not exist"$'\n'"0 - If file exists and modification times are output, one per line"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
 sourceLine="84"

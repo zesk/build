@@ -1,8 +1,8 @@
-## `listRemove`
+### `listRemove`
 
 > Remove one or more items from a text-delimited list
 
-### Usage
+#### Usage
 
     listRemove listValue separator [ item ] [ --help ]
 
@@ -10,14 +10,14 @@ Remove one or more items from a text-delimited list
 
 > Location: `bin/build/tools/list.sh`
 
-### Arguments
+#### Arguments
 
 - `listValue` - Required. List value to modify.
 - `separator` - Required. Separator string for item values (typically `:`)
 - `item` - the item to be removed from the `listValue`
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

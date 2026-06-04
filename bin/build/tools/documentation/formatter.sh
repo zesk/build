@@ -39,7 +39,7 @@ _documentationTemplateFormatter_requires() {
 _documentationTemplateFormatter_see() {
   local eof=false && while ! $eof; do
     local seeTokens=() && IFS=" " read -d $'\n' -r -a seeTokens || eof=true
-    [ "${#seeTokens[@]}" -eq 0 ] || printf "%s\n" "${seeTokens[@]}" | _documentationTemplateFormatterSeeStream | markdownFormatList
+    [ "${#seeTokens[@]}" -eq 0 ] || printf "%s\n" "${seeTokens[@]}" | _documentationTemplateFormatterSeeStream | sed 's/^/- /g'
   done
 }
 

@@ -1,8 +1,8 @@
-## `packageGroupInstall`
+### `packageGroupInstall`
 
 > Install a package group
 
-### Usage
+#### Usage
 
     packageGroupInstall group
 
@@ -11,11 +11,11 @@ Any unrecognized groups are installed using the name as-is.
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - `group` - String. Required. Currently allowed: "python"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

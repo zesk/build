@@ -1,8 +1,8 @@
-## `documentationIndexLookup`
+### `documentationIndexLookup`
 
 > Looks up information in the function index
 
-### Usage
+#### Usage
 
     documentationIndexLookup [ --settings ] [ --comment ] [ --source ] [ --line ] [ --combined ] [ --file ] [ matchText ]
 
@@ -11,7 +11,7 @@ Looks up information in the function index
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--settings` - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings
 - `--comment` - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings
@@ -21,7 +21,7 @@ Looks up information in the function index
 - `--file` - Flag. Optional. `matchText` is a file name. Find files which match this base file name.
 - `matchText` - String. Token to look up in the index.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

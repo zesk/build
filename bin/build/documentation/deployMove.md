@@ -1,8 +1,8 @@
-## `deployMove`
+### `deployMove`
 
 > Safe application deployment by moving
 
-### Usage
+#### Usage
 
     deployMove applicationPath
 
@@ -12,11 +12,11 @@ Deploy current application to target path
 
 > Location: `bin/build/tools/deploy.sh`
 
-### Arguments
+#### Arguments
 
 - `applicationPath` - Directory. Required. Application target path.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

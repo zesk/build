@@ -1,8 +1,8 @@
-## `bashUserInput`
+### `bashUserInput`
 
 > Prompt the user properly honoring any attached console.
 
-### Usage
+#### Usage
 
     bashUserInput [ --help ] [ ... ]
 
@@ -14,18 +14,18 @@ Arguments are the same as `read`, except:
 
 > Location: `bin/build/tools/prompt.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `...` - Arguments. Optional. Identical arguments to `read` (but includes `-r`)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### See Also
+#### See Also
 
 - {SEE:read}
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationAllEnvironment"
 fnMarker="bashdocumentationallenvironment"
 foundNames=([0]="summary" [1]="argument" [2]="stdin")
-line="674"
+line="684"
 rawComment=$'Summary: Generate markdown for a list of all functions\nUses list of functions passed in `stdin`; using the `SEE` template.\nOutput to `allEnvironmentList.md` typically.\nArgument: --help - Flag. Optional. Display this help.\nstdin: EnvironmentVariable. One per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a3794434b7e4d336ccd6c9cbf964150d59b552f0"
-sourceLine="674"
+sourceHash="ba0c1b09de9318e5d93a3d83b2f6b1368cb126e4"
+sourceLine="684"
 stdin=$'EnvironmentVariable. One per line.\n'
 summary="Generate markdown for a list of all functions"
 summaryComputed=""

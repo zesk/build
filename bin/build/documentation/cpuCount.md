@@ -1,8 +1,8 @@
-## `cpuCount`
+### `cpuCount`
 
 > Return integer count of CPUs on this system
 
-### Usage
+#### Usage
 
     cpuCount [ --handler handler ] [ --help ]
 
@@ -10,16 +10,16 @@ Return integer count of CPUs on this system
 
 > Location: `bin/build/tools/platform.sh`
 
-### Arguments
+#### Arguments
 
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 PositiveInteger
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

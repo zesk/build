@@ -1,8 +1,8 @@
-## `consoleGetColor`
+### `consoleGetColor`
 
 > Get the console foreground or background color
 
-### Usage
+#### Usage
 
     consoleGetColor [ --foreground ] [ --background ]
 
@@ -10,12 +10,12 @@ Gets the RGB console color using an `xterm` escape sequence supported by some te
 
 > Location: `bin/build/tools/console.sh`
 
-### Arguments
+#### Arguments
 
 - `--foreground` - Flag. Optional. Get the console text color.
 - `--background` - Flag. Optional. Get the console background color.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

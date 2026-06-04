@@ -1,1 +1,1 @@
-[bashCoverageEnabled]({rel}#bashcoverageenabled) - Is bash coverage currently running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/coverage.sh#L114))
+[bashCoverageEnabled]({rel}tools/coverage.md#bashcoverageenabled) - Is bash coverage currently running? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/coverage.sh#L114))

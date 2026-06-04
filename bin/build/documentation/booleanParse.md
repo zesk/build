@@ -1,8 +1,8 @@
-## `booleanParse`
+### `booleanParse`
 
 > Parses text and determines if it's true-ish
 
-### Usage
+#### Usage
 
     booleanParse
 
@@ -12,11 +12,11 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - true
 - `1` - false
@@ -24,7 +24,7 @@ Without arguments, displays help.
 - `0` - Text is plain
 - `1` - Text contains non-plain characters
 
-### Requires
+#### Requires
 
 - {SEE:stringLowercase}
 - {SEE:helpArgument}

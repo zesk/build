@@ -1,8 +1,8 @@
-## `iTerm2PromptSupport`
+### `iTerm2PromptSupport`
 
 > Add support for iTerm2 to bashPrompt
 
-### Usage
+#### Usage
 
     iTerm2PromptSupport [ --help ]
 
@@ -13,22 +13,22 @@ It also reports the host, user and current directory back to iTerm2 on every pro
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - __ITERM2_HOST
 - __ITERM2_HOST_TIME
 
-### Requires
+#### Requires
 
 - {SEE:catchEnvironment}
 - {SEE:muzzle}
@@ -38,4 +38,8 @@ It also reports the host, user and current directory back to iTerm2 on every pro
 - {SEE:__iTerm2_mark}
 - {SEE:__iTerm2_suffix}
 - {SEE:__iTerm2UpdateState}
+
+#### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt)- `` - Bash prompt creates the \`PS1\` prompt with the following extra ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
 

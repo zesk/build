@@ -1,8 +1,8 @@
-## `fileLineMaximum`
+### `fileLineMaximum`
 
 > Outputs the maximum line length passed into stdin
 
-### Usage
+#### Usage
 
     fileLineMaximum [ --help ]
 
@@ -10,19 +10,19 @@ Outputs the maximum line length passed into stdin
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Lines are read from standard in and line length is computed for each line
 
-### Writes to standard output
+#### Writes to standard output
 
 `UnsignedInteger`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'--map - Flag. Optional. Map environment values into file before copying.\n--escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges.\nsource - File. Required. Source path\ndestination - File. Required. Destination path\n'
+argument="--map - Flag. Optional. Map environment values into file before copying."$'\n'"--escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges."$'\n'"source - File. Required. Source path"$'\n'"destination - File. Required. Destination path"$'\n'""
 base="interactive.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Copy file from source to destination\n\nSupports mapping the file using the current environment, or escalated privileges.\n\n'
+description="Copy file from source to destination"$'\n'""$'\n'"Supports mapping the file using the current environment, or escalated privileges."$'\n'""$'\n'""
 descriptionLineCount="4"
 file="bin/build/tools/interactive.sh"
 fn="fileCopy"
 fnMarker="filecopy"
 foundNames=([0]="argument" [1]="return_code")
 line="55"
-rawComment=$'Copy file from source to destination\nSupports mapping the file using the current environment, or escalated privileges.\nArgument: --map - Flag. Optional. Map environment values into file before copying.\nArgument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges.\nArgument: source - File. Required. Source path\nArgument: destination - File. Required. Destination path\nReturn Code: 0 - Success\nReturn Code: 1 - Failed\n\n'
-return_code=$'0 - Success\n1 - Failed\n'
+rawComment="Copy file from source to destination"$'\n'"Supports mapping the file using the current environment, or escalated privileges."$'\n'"Argument: --map - Flag. Optional. Map environment values into file before copying."$'\n'"Argument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges."$'\n'"Argument: source - File. Required. Source path"$'\n'"Argument: destination - File. Required. Destination path"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Failed"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Failed"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
 sourceHash="378aca49779b1c4a5f70a0c419c2a078d3e0d369"
 sourceLine="55"

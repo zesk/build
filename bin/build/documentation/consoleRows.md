@@ -1,8 +1,8 @@
-## `consoleRows`
+### `consoleRows`
 
 > Row count in current console
 
-### Usage
+#### Usage
 
     consoleRows [ --help ]
 
@@ -10,26 +10,26 @@ Output the number of columns in the terminal. Default is 60 if not able to be de
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     tail -n $(consoleRows) "$file"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - - `COLUMNS` - May be defined after calling this
 - - `LINES` - May be defined after calling this
 
-### See Also
+#### See Also
 
 - {SEE:stty}
 

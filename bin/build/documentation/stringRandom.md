@@ -1,8 +1,8 @@
-## `stringRandom`
+### `stringRandom`
 
 > Outputs 40 random hexadecimal characters, stringLowercase.
 
-### Usage
+#### Usage
 
     stringRandom
 
@@ -10,23 +10,23 @@ Outputs 40 random hexadecimal characters, stringLowercase.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Writes to standard output
+#### Writes to standard output
 
 `String`. A random hexadecimal string.
 
-### Examples
+#### Examples
 
     testPassword="$(stringRandom)"
 
-### Sample Output
+#### Sample Output
 
 cf7861b50054e8c680a9552917b43ec2b9edae2b
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

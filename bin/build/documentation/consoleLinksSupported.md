@@ -1,8 +1,8 @@
-## `consoleLinksSupported`
+### `consoleLinksSupported`
 
 > Are console links (likely) supported?
 
-### Usage
+#### Usage
 
     consoleLinksSupported
 
@@ -11,11 +11,11 @@ Unfortunately there's no way to test for this feature currently
 
 > Location: `bin/build/tools/console.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

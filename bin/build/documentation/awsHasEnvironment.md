@@ -1,8 +1,8 @@
-## `awsHasEnvironment`
+### `awsHasEnvironment`
 
 > Test whether the AWS environment variables are set or not
 
-### Usage
+#### Usage
 
     awsHasEnvironment [ --help ]
 
@@ -11,22 +11,22 @@ Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     if awsHasEnvironment; then
     ...
     fi
 
-### Return codes
+#### Return codes
 
 - `0` - If environment needs to be updated
 - `1` - If the environment seems to be set already
 
-### Environment
+#### Environment
 
 - {SEE:AWS_ACCESS_KEY_ID} - Read-only. If blank, this function succeeds (environment needs to be updated)
 - {SEE:AWS_SECRET_ACCESS_KEY} - Read-only. If blank, this function succeeds (environment needs to be updated)

@@ -1,8 +1,8 @@
-## `returnExit`
+### `returnExit`
 
 > Exit return code
 
-### Usage
+#### Usage
 
     returnExit
 
@@ -10,11 +10,11 @@ Return code is `exit`
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - 120
 

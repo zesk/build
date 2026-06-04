@@ -1,8 +1,8 @@
-## `identicalCheckShell`
+### `identicalCheckShell`
 
 > Identical check for shell files
 
-### Usage
+#### Usage
 
     identicalCheckShell [ --help ] [ --singles singlesFiles ] [ --single singleToken ] [ --repair directory ] [ --internal-only ] [ --interactive ] [ ... ]
 
@@ -23,7 +23,7 @@ This allows for overlapping identical sections within templates with the intent:
 
 > Location: `bin/build/tools/identical.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--singles singlesFiles` - File. Optional. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
@@ -33,7 +33,7 @@ This allows for overlapping identical sections within templates with the intent:
 - `--interactive` - Flag. Optional. Interactive mode on fixing errors.
 - `...` - Arguments. Optional. Additional arguments are passed directly to `identicalCheck`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

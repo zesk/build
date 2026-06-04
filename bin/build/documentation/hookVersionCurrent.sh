@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n--application application - Directory. Optional. Application home directory.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'"--application application - Directory. Optional. Application home directory."$'\n'""
 base="hooks.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Application current version\n\nExtracts the version from the repository\n\n'
+description="Application current version"$'\n'""$'\n'"Extracts the version from the repository"$'\n'""$'\n'""
 descriptionLineCount="4"
 file="bin/build/tools/hooks.sh"
 fn="hookVersionCurrent"
 fnMarker="hookversioncurrent"
 foundNames=([0]="argument")
 line="68"
-rawComment=$'Application current version\nExtracts the version from the repository\nArgument: --help - Flag. Optional. Display this help.\nArgument: --application application - Directory. Optional. Application home directory.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Application current version"$'\n'"Extracts the version from the repository"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --application application - Directory. Optional. Application home directory."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/hooks.sh"
 sourceHash="570428982fce9483238ecdd12bae69f0c2276727"
 sourceLine="68"

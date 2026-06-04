@@ -1,8 +1,8 @@
-## `gitEnsureSafeDirectory`
+### `gitEnsureSafeDirectory`
 
 > When running git operations on a deployment host, at times
 
-### Usage
+#### Usage
 
     gitEnsureSafeDirectory [ --help ] directory
 
@@ -13,12 +13,12 @@ This adds the directory passed to that directory in the local user's environment
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `directory` - Directory. Required. The directory to add to the `git` `safe.directory` configuration directive
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `2` - Argument is not a valid directory

@@ -1,8 +1,8 @@
-## `sshKnownHostRemove`
+### `sshKnownHostRemove`
 
 > Adds the host to the `~/.known_hosts` if it is not
 
-### Usage
+#### Usage
 
     sshKnownHostRemove [ hostName ... ] [ --skip-backup | --no-backup ] [ --verbose ]
 
@@ -21,13 +21,13 @@ If no arguments are passed, the default behavior is to set up the `~/.ssh` direc
 
 > Location: `bin/build/tools/ssh.sh`
 
-### Arguments
+#### Arguments
 
 - `hostName ...` - String. Optional. One ore more hosts to add to the known hosts file
 --skip-backup |- ` --no-backup` - Flag. Optional. Skip the file backup as `name.$(dateToday)`
 - `--verbose` - Flag. Optional. Be verbose.
 
-### Return codes
+#### Return codes
 
 - `1` - Environment errors
 - `0` - All hosts exist in or were successfully added to the known hosts file

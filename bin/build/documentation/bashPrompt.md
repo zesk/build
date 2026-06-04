@@ -1,8 +1,8 @@
-## `bashPrompt`
+### `bashPrompt`
 
-> Bash prompt creates the `PS1` prompt with the following extra
+> Bash prompt toolkit
 
-### Usage
+#### Usage
 
     bashPrompt [ module ] [ --remove module ] [ --reset ] [ --list ] [ --first ] [ --last ] [ --order order ] [ --format promptFormat ] [ --success successText ] [ --failure failureText ] [ --label promptLabel ] [ --colors colorsText ] [ --skip-prompt ] [ --help ]
 
@@ -13,11 +13,11 @@ Bash prompt creates the `PS1` prompt with the following extra features:
 - Return code of prior command dynamically displayed in following prompt
 - Easily extend your bash prompt with modules
 
-### PROMPT MODULES
+##### PROMPT MODULES
 
 Modules are any binary or executable to run each prompt, and can be added, removed or managed here.
 
-## COLORS
+##### COLORS
 
 The `--colors` are currently a `:`-separated list of color **names** (not escape codes), in order:
 
@@ -27,7 +27,7 @@ The `--colors` are currently a `:`-separated list of color **names** (not escape
 4. Host color (Array index 3)
 5. Directory color (Array index 4)
 
-### Arguments
+#### Arguments
 
 - `module` - Callable. Optional. Module to enable or disable.
 - `--remove module` - Callable. Optional. Remove the module specified (should match exactly)
@@ -44,19 +44,19 @@ The `--colors` are currently a `:`-separated list of color **names** (not escape
 - `--skip-prompt` - Flag. Optional. Do not modify the prompt.
 - `--help` - Flag. Optional. Display this help.
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `bashPrompt` - Debug prompt command execution
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:PROMPT_COMMAND}
 

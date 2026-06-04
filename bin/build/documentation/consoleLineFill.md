@@ -1,8 +1,8 @@
-## `consoleLineFill`
+### `consoleLineFill`
 
 > Clear a line in the console
 
-### Usage
+#### Usage
 
     consoleLineFill [ textToOutput ]
 
@@ -14,11 +14,11 @@ Intended to be run on an interactive console. Should support $(tput cols).
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - `textToOutput` - String. Optional. Text to display on the new cleared line.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

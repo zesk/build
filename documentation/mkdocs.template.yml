@@ -6,11 +6,11 @@ site_author: "{BUILD_COMPANY}"
 nav:
   - Home: "index.md"
   - "tools/index.md"
-  - Environment: "env/index.md"
   - "guide/index.md"
+  - Environment: "env/index.md"
+  - Indexes: "index/index.md"
   - Releases: "release/index.md"
   - about.md
-  - "index/index.md"
 not_in_nav: |
   nada.md
 #footer:

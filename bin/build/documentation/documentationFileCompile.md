@@ -1,8 +1,8 @@
-## `documentationFileCompile`
+### `documentationFileCompile`
 
 > Extract and build the documentation settings cache
 
-### Usage
+#### Usage
 
     documentationFileCompile [ --clean ] [ --git ] [ --all ] --source sourcePath [ --derive command ... -- ] [ functionName ... ] [ --help ]
 
@@ -10,7 +10,7 @@ Extract and build the documentation settings cache
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--clean` - Flag. Optional. Clean everything and then exit.
 - `--git` - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
@@ -20,11 +20,11 @@ Extract and build the documentation settings cache
 - `functionName ...` - String. Optional. Specific functions to compile.
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 functionName - File with function names one per line.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `awsIsKeyUpToDate`
+### `awsIsKeyUpToDate`
 
 > Test whether the AWS keys do not need to be updated
 
-### Usage
+#### Usage
 
     awsIsKeyUpToDate [ upToDateDays ]
 
@@ -22,24 +22,24 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `upToDateDays` - PositiveInteger.
 
-### Examples
+#### Examples
 
     if ! awsIsKeyUpToDate 90; then
         decorate big Failed, update key and reset date
         exit 99
     fi
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:AWS_ACCESS_KEY_DATE} - Variable used to test
 - {SEE:AWS_ACCESS_KEY_DATE} - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.

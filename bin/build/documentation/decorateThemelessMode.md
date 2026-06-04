@@ -1,8 +1,8 @@
-## `decorateThemelessMode`
+### `decorateThemelessMode`
 
 > Converts decoration style to a mode where the theme can
 
-### Usage
+#### Usage
 
     decorateThemelessMode [ --end ] [ --help ]
 
@@ -11,18 +11,22 @@ All decorate calls made after this call will output with special codes not to be
 
 > Location: `bin/build/tools/decorate/theme.sh`
 
-### Arguments
+#### Arguments
 
 - `--end` - Flag. Optional. End themeless mode.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - __BUILD_DECORATE
+
+#### See Also
+
+- [decorateThemed]({rel}tools/decoration.md#decoratethemed)- `` - Applies the current theme to text rendered using \`decorateThemelessMode\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L70))
 

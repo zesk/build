@@ -1,8 +1,8 @@
-## `integerClamp`
+### `integerClamp`
 
 > Clamp digits between two integers
 
-### Usage
+#### Usage
 
     integerClamp [ minimum ] [ maximum ] [ --help ]
 
@@ -11,13 +11,13 @@ Reads stdin digits, one per line, and outputs only integer values between $min a
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - `minimum` - Integer|Empty. Minimum integer value to output.
 - `maximum` - Integer|Empty. Maximum integer value to output.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

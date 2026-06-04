@@ -1,8 +1,8 @@
-## `buildEnvironmentNames`
+### `buildEnvironmentNames`
 
 > List known environment names
 
-### Usage
+#### Usage
 
     buildEnvironmentNames [ --help ]
 
@@ -11,13 +11,27 @@ Output the list of environment variable names which can be loaded via `buildEnvi
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:BUILD_ENVIRONMENT_DIRS} {SEE:BUILD_HOME}
+
+#### Requires
+
+- {SEE:convertValue}
+- {SEE:_buildEnvironmentPath}
+- find
+- sort
+- [`read`]({rel}/guide/builtin.md#read)
+- {SEE:helpArgument}
+- {SEE:catchEnvironment}
 

@@ -1,8 +1,8 @@
-## `executeEcho`
+### `executeEcho`
 
 > Output the `command ...` to stdout prior to running, then
 
-### Usage
+#### Usage
 
     executeEcho [ command ... ] [ --help ]
 
@@ -10,16 +10,16 @@ Output the `command ...` to stdout prior to running, then `execute` it
 
 > Location: `bin/build/tools/_sugar.sh`
 
-### Arguments
+#### Arguments
 
 - `command ...` - Any command and arguments to run.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - Any
 
-### Requires
+#### Requires
 
 - {SEE:helpArgument}
 - {SEE:decorate}

@@ -23,3 +23,7 @@ Valid values are:
 
 If not specified, uses the default for the current platform.
 
+### See Also
+
+- [dockerLocalContainer]({rel}tools/docker.md#dockerlocalcontainer) - Run a build container using given docker image. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L119))- [dockerPlatformDefault]({rel}tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
+

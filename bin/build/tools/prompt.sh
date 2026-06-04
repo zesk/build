@@ -35,7 +35,7 @@ __promptLoader() {
 # Argument: --skip-prompt - Flag. Optional. Do not modify the prompt.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-#
+# Summary: Bash prompt toolkit
 # Bash prompt creates the `PS1` prompt with the following extra features:
 #
 # - Easy colorization
@@ -44,11 +44,11 @@ __promptLoader() {
 # - Easily extend your bash prompt with modules
 #
 #
-# ### PROMPT MODULES
+# ##### PROMPT MODULES
 #
 # Modules are any binary or executable to run each prompt, and can be added, removed or managed here.
 #
-# ## COLORS
+# ##### COLORS
 #
 # The `--colors` are currently a `:`-separated list of color **names** (not escape codes), in order:
 #
@@ -58,7 +58,7 @@ __promptLoader() {
 # 4. Host color (Array index 3)
 # 5. Directory color (Array index 4)
 #
-# ### PROMPT FORMATTING
+# ##### PROMPT FORMATTING
 #
 # Prompts respond to the prior command by changing the status text and color based on the exit code. The **prompt color** for success and failure can be
 # set using the `--colors` option.
@@ -118,7 +118,9 @@ _bashUserInput() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Set markers for terminal integration
+# Summary: Set markers for terminal integration
+# Set markers for terminal integration; these markers are terminal commands which mark the start and finish of the bash prompt for easier text selection by
+# some terminals.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: prefix - EmptyString. Optional. Prefix for all prompts.
@@ -155,11 +157,17 @@ _bashPromptMarkers() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Color schemes for prompts
+# Summary: Color scheme values for prompts
+#
+# Color schemes for prompts. Use this as an argument to `bashPrompt --colors`.
+#
+# Example:     bashPrompt --colors "$(bashPromptColorScheme dark)"
 # Options are:
+#
 # - forest
 # - light (default)
 # - dark
+#
 # Argument: colorScheme - String. Optional. Color scheme to choose: `light`, `dark`, `forest`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -189,7 +197,8 @@ _bashPromptColorScheme() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Given a list of color names, generate the color codes in a colon separated list
+# Summary: Convert colors to escape codes
+# Given a list of color names, generate the color codes in a colon separated list.
 # Argument: text - String. Required. List of color names in a colon separated list.
 # stdout: Outputs color *codes* separated by colons.
 # Requires: decorations read inArray decorate listJoin
@@ -216,6 +225,7 @@ _bashPromptColorsFormat() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Terminal colors to match projects
 # Sets the console colors based on the project you are currently in.
 # Define your color configuration file (values of `bg=FFF` etc. one per line, comments allowed)
 #

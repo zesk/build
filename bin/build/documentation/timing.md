@@ -1,8 +1,8 @@
-## `timing`
+### `timing`
 
 > Time command, similar to `time` but uses internal functions
 
-### Usage
+#### Usage
 
     timing command [ --help ] [ --name ] [ --slow slowMilliseconds ] [ --fast fastMilliseconds ]
 
@@ -11,7 +11,7 @@ Outputs time as `timingReport`
 
 > Location: `bin/build/tools/timing.sh`
 
-### Arguments
+#### Arguments
 
 - `command` - Executable. Required. Command to run.
 - `--help` - Flag. Optional. Display this help.
@@ -19,7 +19,7 @@ Outputs time as `timingReport`
 - `--slow slowMilliseconds` - UnsignedInteger. Optional. Display output if the underlying commend takes is slower (longer) than this threshold.
 - `--fast fastMilliseconds` - UnsignedInteger. Optional. Display output if the underlying commend runs is faster (shorter) than this threshold.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

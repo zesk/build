@@ -1,8 +1,8 @@
-## `documentationCache`
+### `documentationCache`
 
 > Get the default cache directory for the documentation
 
-### Usage
+#### Usage
 
     documentationCache [ suffix ] [ --help ]
 
@@ -10,12 +10,12 @@ Get the default cache directory for the documentation
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `suffix - String. Optional. Directory suffix` - created if does not exist.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

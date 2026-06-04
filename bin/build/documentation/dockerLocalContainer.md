@@ -1,8 +1,8 @@
-## `dockerLocalContainer`
+### `dockerLocalContainer`
 
 > Run a build container using given docker image.
 
-### Usage
+#### Usage
 
     dockerLocalContainer [ --help ] [ --handler handler ] [ --image imageName ] [ --path imageApplicationPath ] [ --platform platform ] [ --env-file envFile ] [ --env envVariable=envValue ] [ extraArgs ]
 
@@ -14,7 +14,7 @@ Runs ARM64 by default.
 
 > Location: `bin/build/tools/docker.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -25,13 +25,13 @@ Runs ARM64 by default.
 --env envVariable=- `envValue` - File. Optional. One or more environment variables to set.
 - `extraArgs` - Mixed. Optional. The first non-file argument to `dockerLocalContainer` is passed directly through to `docker run` as arguments
 
-### Return codes
+#### Return codes
 
 - `1` - If already inside docker, or the environment file passed is not valid
 - `0` - Success
 - `Any` - `docker run` error code is returned if non-zero
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_DOCKER_PLATFORM}
 

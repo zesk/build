@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\ndirectory - Directory. Optional. Set the application home to this directory.\n--go - Flag. Optional. Change to the current saved application home directory.\n'
 base="application.sh"

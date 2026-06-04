@@ -7,18 +7,34 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+#
 # This function is not used. It's here simply to provide documentation.
+#
 
 # fn: errorHandler
 # Argument: exitCode - Integer. Required. The exit code to handle.
 # Argument: message ... - EmptyString. Optional. The message to display to the user about what caused the error.
 # The main error handler signature used in Zesk Build.
 #
-# Example: Here, `handler` is a string variable which references our `errorHandler` function – when used in your code:
-# Example
+# Example: Here, `handler` is a string variable which references our `_handlerImplementation` function – when used in your code:
+# Example:
+# Example:     _handlerImplementation() {
+# Example:       local exitCode="$1" && shift
+# Example:       local message="$*"
+# Example:       [ "$exitCode" = "0" ] && decorate notice "$message" || decorate error "$message" 1>&2 || :
+# Example:       return $exitCode
+# Example:     }
+# Example:
+# Example:     handler="_handlerImplementation"
 # Example:     tempFile=$(fileTemporaryName "$handler") || return $?
 # Example:     catchEnvironment "$handler" rm -f "$tempFile" || return $?
 # Example:     muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" curl sftp || return $?
+# Example:
+# Example: However, most of the time, your error handler will use the default `bashDocumentation` handler:
+# Example:
+# Example:     _handlerImplementation() {
+# Example:       bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+# Example:     }
 __errorHandler() {
   return 0
 }

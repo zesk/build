@@ -1,8 +1,8 @@
-## `textTrimHead`
+### `textTrimHead`
 
 > Removes any blank lines from the beginning of a stream
 
-### Usage
+#### Usage
 
     textTrimHead [ --help ]
 
@@ -10,19 +10,19 @@ Removes any blank lines from the beginning of a stream
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Reads lines from stdin until EOF
 
-### Writes to standard output
+#### Writes to standard output
 
 Outputs modified lines
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

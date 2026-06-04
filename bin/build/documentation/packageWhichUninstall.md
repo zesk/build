@@ -1,8 +1,8 @@
-## `packageWhichUninstall`
+### `packageWhichUninstall`
 
 > Install tools using `apt-get` if they are not found
 
-### Usage
+#### Usage
 
     packageWhichUninstall [ --manager packageManager ] binary packageInstallPackage
 
@@ -13,23 +13,23 @@ Confirms that `binary` is installed after installation succeeds.
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
 - `binary` - String. Required. The binary to look for.
 - `packageInstallPackage` - String. Required. The package name to uninstall if the binary is found in the `$PATH`.
 
-### Examples
+#### Examples
 
     packageWhichUninstall mariadb mariadb-client
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - Technically this will uninstall the binary and any related files as a package.
 

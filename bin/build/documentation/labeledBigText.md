@@ -1,8 +1,8 @@
-## `labeledBigText`
+### `labeledBigText`
 
 > Outputs a label before a decorate big for output.
 
-### Usage
+#### Usage
 
     labeledBigText [ --top ] [ --bottom ] [ --prefix prefixText ] [ --tween tweenText ] [ --suffix suffixText ] label text
 
@@ -12,7 +12,7 @@ This function will strip any ANSI from the label to calculate correct string siz
 
 > Location: `bin/build/tools/decorate/big.sh`
 
-### Arguments
+#### Arguments
 
 - `--top` - Flag. Optional. Place label at the top.
 - `--bottom` - Flag. Optional. Place label at the bottom.
@@ -22,7 +22,7 @@ This function will strip any ANSI from the label to calculate correct string siz
 - `label` - String. Required. Label to place on the left of big text.
 - `text` - String. Required. Text for `decorate big`.
 
-### Examples
+#### Examples
 
     > bin/build/tools.sh labeledBigText --top "Neat: " Done
     Neat: ▛▀▖
@@ -35,7 +35,7 @@ This function will strip any ANSI from the label to calculate correct string siz
           ▌ ▌▌ ▌▌ ▌▛▀
     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

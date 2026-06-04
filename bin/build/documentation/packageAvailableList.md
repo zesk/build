@@ -1,8 +1,8 @@
-## `packageAvailableList`
+### `packageAvailableList`
 
 > List installed packages on this system using package manager
 
-### Usage
+#### Usage
 
     packageAvailableList
 
@@ -10,11 +10,11 @@ List installed packages on this system using package manager
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

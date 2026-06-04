@@ -1,8 +1,8 @@
-## `notify`
+### `notify`
 
 > Notify after running a binary. Uses the `notify` hook with
 
-### Usage
+#### Usage
 
     notify [ --help ] [ --handler handler ] [ --verbose ] [ --title title ] [ --message message ] [ --fail failMessage ] [ --sound soundName ] [ --fail-title title ] [ --fail-sound soundName ]
 
@@ -13,7 +13,7 @@ If a value is not specified for failure, it will use the `success` value.
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -25,7 +25,7 @@ If a value is not specified for failure, it will use the `success` value.
 - `--fail-title title` - String. Optional. Sets the title for the notification if the binary fails.
 - `--fail-sound soundName` - String. Optional. Sets the sound played for the notification if the binary fails.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

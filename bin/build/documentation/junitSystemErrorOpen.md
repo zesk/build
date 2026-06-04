@@ -1,8 +1,8 @@
-## `junitSystemErrorOpen`
+### `junitSystemErrorOpen`
 
 > Open tag for `system-err` - test errors
 
-### Usage
+#### Usage
 
     junitSystemErrorOpen [ --help ]
 
@@ -10,11 +10,11 @@ Open tag for `system-err` - test errors
 
 > Location: `bin/build/tools/junit.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

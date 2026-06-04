@@ -1,15 +1,17 @@
 # Git Functions
 
+{applicationName} provides pre-commit functionality and many tools to aid with `git` development.
+
 <!-- TEMPLATE toolHeader 1 -->
 <hr />
 
-## git Installation
+## Installation
 
 {gitInstall}
 
 {gitEnsureSafeDirectory}
 
-## git Tags
+## Tagging
 
 {gitTagDelete}
 
@@ -23,7 +25,7 @@
 
 {gitTagVee}
 
-## git Branches
+## Branches
 
 {gitBranchExists}
 
@@ -35,9 +37,7 @@
 
 {gitBranchMergeCurrent}
 
-## git Development
-
-{gitCommitHash}
+## Development
 
 {gitCommit}
 
@@ -45,17 +45,21 @@
 
 {gitFindHome}
 
+## Hooks
+
 {gitHookTypes}
 
 {gitInstallHook}
 
 {gitInstallHooks}
 
-## git History
+{gitInsideHook}
+
+## History
 
 {gitRemoveFileFromHistory}
 
-## git Working Tree State
+## Working Tree State
 
 {gitRepositoryChanged}
 
@@ -63,15 +67,15 @@
 
 {gitShowStatus}
 
-{gitInsideHook}
-
 {gitRemoteHosts}
+
+{gitCommitHash}
 
 {gitCurrentBranch}
 
 {gitHasAnyRefs}
 
-## git pre-commit hook
+## `pre-commit` hook Tools
 
 {gitPreCommitSetup}
 

@@ -1,8 +1,8 @@
-## `buildEnvironmentGetDirectory`
+### `buildEnvironmentGetDirectory`
 
 > Load and print one or more environment settings which represents
 
-### Usage
+#### Usage
 
     buildEnvironmentGetDirectory [ envName ] [ --subdirectory subdirectory ] [ --mode fileMode ] [ --owner ownerName ] [ --no-create ]
 
@@ -15,7 +15,7 @@ Modifies local environment. Not usually run within a subshell.
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `envName` - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 - `--subdirectory subdirectory` - String. Optional. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
@@ -23,9 +23,14 @@ Modifies local environment. Not usually run within a subshell.
 - `--owner ownerName` - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.
 - `--no-create` - Flag. Optional. Do not create the subdirectory if it does not exist.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- $envName
+- {SEE:BUILD_ENVIRONMENT_DIRS} - `:` separated list of paths to load env files
 

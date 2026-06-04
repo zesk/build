@@ -1,8 +1,8 @@
-## `returnArgument`
+### `returnArgument`
 
 > Return `argument` error code. Outputs `message ...` to `stderr`.
 
-### Usage
+#### Usage
 
     returnArgument [ message ... ]
 
@@ -10,15 +10,15 @@ Return `argument` error code. Outputs `message ...` to `stderr`.
 
 > Location: `bin/build/tools/_sugar.sh`
 
-### Arguments
+#### Arguments
 
 - `message ...` - String. Optional. Message to output.
 
-### Return codes
+#### Return codes
 
 - 2
 
-### Requires
+#### Requires
 
 - {SEE:returnMessage}
 

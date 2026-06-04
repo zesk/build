@@ -1,8 +1,8 @@
-## `pause`
+### `pause`
 
 > Pause for user input
 
-### Usage
+#### Usage
 
     pause [ --help ] [ -- ] [ message ... ]
 
@@ -10,13 +10,13 @@ Pause for user input
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--` - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 - `message ...` - Display this message while pausing
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

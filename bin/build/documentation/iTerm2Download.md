@@ -1,8 +1,8 @@
-## `iTerm2Download`
+### `iTerm2Download`
 
 > Download an file from remote to terminal host
 
-### Usage
+#### Usage
 
     iTerm2Download [ file ] [ --name name ] [ --ignore | -i ]
 
@@ -11,17 +11,17 @@ Argument:
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - `file` - File. Optional. File to download.
 - `--name name` - String. Optional. Target name of the file once downloaded.
 --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 
-### Reads standard input
+#### Reads standard input
 
 file
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

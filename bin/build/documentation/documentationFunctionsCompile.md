@@ -1,8 +1,8 @@
-## `documentationFunctionsCompile`
+### `documentationFunctionsCompile`
 
 > Extract and build the documentation settings cache and generate derived
 
-### Usage
+#### Usage
 
     documentationFunctionsCompile [ --clean ] [ --all ] [ --fingerprint ] --source [ --key fingerprintKey ] [ functionName ... ]
 
@@ -10,7 +10,7 @@ Extract and build the documentation settings cache and generate derived files
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--clean` - Flag. Optional. Clean everything and then exit.
 - `--all` - Flag. Optional. Do everything regardless of cache state.
@@ -19,11 +19,11 @@ Extract and build the documentation settings cache and generate derived files
 - `--key fingerprintKey` - String. Optional. Use this name to cache results in application JSON file if available.
 - `functionName ...` - String. Optional. Specific functions to compile.
 
-### Reads standard input
+#### Reads standard input
 
 Function. Name of functions, one per line to compile if `--all` is not specified.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

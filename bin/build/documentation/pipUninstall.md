@@ -1,8 +1,8 @@
-## `pipUninstall`
+### `pipUninstall`
 
 > Utility to uninstall python dependencies via pip
 
-### Usage
+#### Usage
 
     pipUninstall [ --help ] [ --handler handler ] pipPackage [ ... ]
 
@@ -10,13 +10,13 @@ Utility to uninstall python dependencies via pip
 
 > Location: `bin/build/tools/python.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - pipPackage [ ... ]- `` - String. Required. Pip package name to uninstall.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

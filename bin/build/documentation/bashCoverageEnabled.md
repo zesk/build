@@ -1,8 +1,8 @@
-## `bashCoverageEnabled`
+### `bashCoverageEnabled`
 
 > Is bash coverage currently running?
 
-### Usage
+#### Usage
 
     bashCoverageEnabled [ --help ]
 
@@ -10,11 +10,11 @@ Is bash coverage currently running?
 
 > Location: `bin/build/tools/coverage.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Yes, it's running.
 - `1` - No, it is not running.=

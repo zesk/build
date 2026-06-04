@@ -1,8 +1,8 @@
-## `tarExtractPattern`
+### `tarExtractPattern`
 
 > Platform agnostic tar extract with wildcards
 
-### Usage
+#### Usage
 
     tarExtractPattern [ pattern ]
 
@@ -14,19 +14,19 @@ e.g. `tar -xf '*/file.json'` or `tar -xf --wildcards '*/file.json'` depending on
 
 > Location: `bin/build/tools/tar.sh`
 
-### Arguments
+#### Arguments
 
 - `pattern` - The file pattern to extract
 
-### Reads standard input
+#### Reads standard input
 
 A gzipped-tar file
 
-### Writes to standard output
+#### Writes to standard output
 
 The desired file
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

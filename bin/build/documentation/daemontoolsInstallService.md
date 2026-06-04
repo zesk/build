@@ -1,8 +1,8 @@
-## `daemontoolsInstallService`
+### `daemontoolsInstallService`
 
 > Install a daemontools service which runs a binary as the
 
-### Usage
+#### Usage
 
     daemontoolsInstallService [ --home serviceHome ] serviceFile [ serviceName ] [ --name serviceName ] [ --log logHome ] [ --escalate ] [ --log-arguments ... -- ] [ --arguments ... -- ] [ -- ... ]
 
@@ -12,7 +12,7 @@ Installs a `daemontools` service with an optional logging daemon process. Uses `
 
 > Location: `bin/build/tools/daemontools.sh`
 
-### Arguments
+#### Arguments
 
 - `--home serviceHome` - Path. Optional. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
 - `serviceFile` - Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
@@ -24,7 +24,7 @@ Installs a `daemontools` service with an optional logging daemon process. Uses `
 - `--arguments ... --` - ArgumentsList. Optional. List of arguments for the service.
 - `-- ...` - Arguments. Optional. List of arguments for the service.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

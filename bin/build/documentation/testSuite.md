@@ -1,4 +1,4 @@
-#### Tag filters
+##### Tag filters
 
 Prefix a tag with `+` for `--tag` or `--skip-tag` queries to add the meaning "previous *AND*".
 
@@ -33,7 +33,7 @@ Filters (`--tag` and `--skip-tag`) are applied in order after the function patte
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--clean` - Flag. Optional. Delete test artifact files and exit. (No tests run)
@@ -63,19 +63,28 @@ Filters (`--tag` and `--skip-tag`) are applied in order after the function patte
 - `--skip-tag tagName` - String. Optional. Skip tests tagged with this name.
 - `testFunctionPattern ...` - String. Optional. Test function (or substring of function name) to run.
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `test-dump-environment` - When set tests will dump the environment at the end.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_TEST_FLAGS} {SEE:BUILD_DEBUG}
+
+#### Requires
+
+- {SEE:decorate}
+- {SEE:cpuLoadAverage}
+- {SEE:consoleConfigureColorMode}
+- {SEE:buildEnvironmentLoad}
+- {SEE:catchEnvironment}
+- {SEE:bashCoverage}
 

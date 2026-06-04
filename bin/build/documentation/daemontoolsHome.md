@@ -1,8 +1,8 @@
-## `daemontoolsHome`
+### `daemontoolsHome`
 
 > Print the daemontools service home path
 
-### Usage
+#### Usage
 
     daemontoolsHome
 
@@ -10,11 +10,11 @@ Print the daemontools service home path
 
 > Location: `bin/build/tools/daemontools.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - success
 - `1` - No environment file found

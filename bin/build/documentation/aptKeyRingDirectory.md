@@ -1,8 +1,8 @@
-## `aptKeyRingDirectory`
+### `aptKeyRingDirectory`
 
 > Get key ring directory path
 
-### Usage
+#### Usage
 
     aptKeyRingDirectory
 
@@ -10,11 +10,11 @@ Get key ring directory path
 
 > Location: `bin/build/tools/apt.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"--fix - Flag. Optional. Fix files when possible."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"script - File. Optional. Shell script to validate"$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n--fix - Flag. Optional. Fix files when possible.\n--verbose - Flag. Optional. Be verbose.\nscript - File. Optional. Shell script to validate\n'
 base="lint.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Run \`shellcheck\` and \`bash -n\` on a set of bash files."$'\n'""$'\n'"This can be run on any directory tree to test scripts in any application."$'\n'""$'\n'"Shell comments must not be immediately after a function end, e.g. this is invalid:"$'\n'""$'\n'"    myFunc() {"$'\n'"    }"$'\n'"    # Hey"$'\n'""$'\n'""
+description=$'Run `shellcheck` and `bash -n` on a set of bash files.\n\nThis can be run on any directory tree to test scripts in any application.\n\nShell comments must not be immediately after a function end, e.g. this is invalid:\n\n    myFunc() {\n    }\n    # Hey\n\n'
 descriptionLineCount="10"
-example="    bashLint goo.sh"$'\n'""
+example=$'    bashLint goo.sh\n'
 file="bin/build/tools/lint.sh"
 fn="bashLint"
 fnMarker="bashlint"
 foundNames=([0]="summary" [1]="see" [2]="example" [3]="argument" [4]="side_effect" [5]="return_code" [6]="output")
 line="33"
-output="This outputs \`statusMessage\`s to \`stdout\` and errors to \`stderr\`."$'\n'""
-rawComment="Summary: Check bash files for common errors"$'\n'"See: shellcheck"$'\n'"See: bashSanitize"$'\n'"Run \`shellcheck\` and \`bash -n\` on a set of bash files."$'\n'"This can be run on any directory tree to test scripts in any application."$'\n'"Shell comments must not be immediately after a function end, e.g. this is invalid:"$'\n'"    myFunc() {"$'\n'"    }"$'\n'"    # Hey"$'\n'"Example:     bashLint goo.sh"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --fix - Flag. Optional. Fix files when possible."$'\n'"Argument: --verbose - Flag. Optional. Be verbose."$'\n'"Argument: script - File. Optional. Shell script to validate"$'\n'"Side-effect: Status written to stdout, errors written to stderr"$'\n'"Return Code: 0 - All found files pass \`shellcheck\` and \`bash -n\` and shell comment syntax"$'\n'"Return Code: 1 - One or more files did not pass"$'\n'"Output: This outputs \`statusMessage\`s to \`stdout\` and errors to \`stderr\`."$'\n'""$'\n'""
-return_code="0 - All found files pass \`shellcheck\` and \`bash -n\` and shell comment syntax"$'\n'"1 - One or more files did not pass"$'\n'""
-see="shellcheck"$'\n'"bashSanitize"$'\n'""
-side_effect="Status written to stdout, errors written to stderr"$'\n'""
+output=$'This outputs `statusMessage`s to `stdout` and errors to `stderr`.\n'
+rawComment=$'Summary: Check bash files for common errors\nSee: shellcheck\nSee: bashSanitize\nRun `shellcheck` and `bash -n` on a set of bash files.\nThis can be run on any directory tree to test scripts in any application.\nShell comments must not be immediately after a function end, e.g. this is invalid:\n    myFunc() {\n    }\n    # Hey\nExample:     bashLint goo.sh\nArgument: --help - Flag. Optional. Display this help.\nArgument: --fix - Flag. Optional. Fix files when possible.\nArgument: --verbose - Flag. Optional. Be verbose.\nArgument: script - File. Optional. Shell script to validate\nSide-effect: Status written to stdout, errors written to stderr\nReturn Code: 0 - All found files pass `shellcheck` and `bash -n` and shell comment syntax\nReturn Code: 1 - One or more files did not pass\nOutput: This outputs `statusMessage`s to `stdout` and errors to `stderr`.\n\n'
+return_code=$'0 - All found files pass `shellcheck` and `bash -n` and shell comment syntax\n1 - One or more files did not pass\n'
+see=$'shellcheck\nbashSanitize\n'
+side_effect=$'Status written to stdout, errors written to stderr\n'
 sourceFile="bin/build/tools/lint.sh"
-sourceHash="11ce70536d7c631bbc2e620d25550754388e6278"
+sourceHash="71423c08273aafee79d8f16d56c6eade0b9ff496"
 sourceLine="33"
 summary="Check bash files for common errors"
 summaryComputed=""

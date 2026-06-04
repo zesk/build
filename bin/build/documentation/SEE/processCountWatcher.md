@@ -1,1 +1,1 @@
-[processCountWatcher]({rel}#processcountwatcher) - Watch the number of processes matching \`token\` and fail if ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L318))
+[processCountWatcher]({rel}tools/process.md#processcountwatcher) - Watch the number of processes matching \`token\` and fail if ([source](https://github.com/zesk/build/blob/main/bin/build/tools/process.sh#L318))

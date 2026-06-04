@@ -1,8 +1,8 @@
-## `aptIsInstalled`
+### `aptIsInstalled`
 
 > Is apt-get installed?
 
-### Usage
+#### Usage
 
     aptIsInstalled
 
@@ -10,11 +10,11 @@ Is apt-get installed?
 
 > Location: `bin/build/tools/apt.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

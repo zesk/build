@@ -1,8 +1,8 @@
-## `mapValue`
+### `mapValue`
 
 > Maps a string using an environment file
 
-### Usage
+#### Usage
 
     mapValue [ --help ] [ --handler handler ] mapFile [ value ] [ --prefix ] [ --suffix ] [ --search-filter ] [ --replace-filter ]
 
@@ -10,7 +10,7 @@ Maps a string using an environment file
 
 > Location: `bin/build/tools/map.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -21,7 +21,7 @@ Maps a string using an environment file
 - `--search-filter` - Zero or more. Callable. Filter for search tokens. (e.g. `stringLowercase`)
 - `--replace-filter` - Zero or more. Callable. Filter for replacement strings. (e.g. `textTrim`)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

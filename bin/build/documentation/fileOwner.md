@@ -1,8 +1,8 @@
-## `fileOwner`
+### `fileOwner`
 
 > Get the file owner name
 
-### Usage
+#### Usage
 
     fileOwner [ file ] [ --help ]
 
@@ -11,12 +11,12 @@ Outputs the file owner for each file passed on the command line
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `file` - File to get the owner for
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Unable to access file

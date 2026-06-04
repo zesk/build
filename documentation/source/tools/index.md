@@ -28,7 +28,7 @@
   commands.
 - [Readline](./readline.md) – Edit `readline` configuration
 
-## Testing
+## Testing Tools
 
 - [Assertion](./assert.md) – Complete assertion and testing toolkit
 - [Coverage](./coverage.md) – EXPERIMENTAL. Bash coverage tools.
@@ -70,7 +70,7 @@
 - [User](./user.md) – User database tools (also [Group](./group.md))
 - [Watch](./watch.md) – Watch files or directories and take actions
 
-## Formats
+## File Format Tools
 
 - [Environment](./environment.md) – Anything you could need to manipulate, load, modify, or generate environment files.
 - [jUnit](./junit.md) – Generate `junit.xml` output for testing (EXPERIMENTAL)
@@ -98,12 +98,12 @@
 - [Version](./version.md) – Release version management for your application
 - [Web](./web.md) – Web tools
 
-# Specifications
+## Specifications
 
 - [Function interfaces](./interface.md)
 - [Internal tools](./internal.md) – Tools used during development of this project
 
-# Software Integration
+## Software Integration Tools
 
 - [Amazon Web Services](./aws.md)
 - [BitBucket](./bitbucket.md)
@@ -170,3 +170,5 @@ Once included, [all functions here](../index/function.md) are available for use.
 <hr />
 
 [⬅ Home ](../index.md)
+
+

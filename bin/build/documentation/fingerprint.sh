@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--cached fingerprint - String. Optional. Instead of computing the \`application-fingerprint\` using the hook, use this value."$'\n'"--verbose - Flag. Optional. Be verbose. Default based on value of \`fingerprint\` in \`BUILD_DEBUG\`."$'\n'"--quiet - Flag. Optional. Be quiet (turns verbose off)."$'\n'"--audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn't; or should be ignored."$'\n'"--check - Flag. Optional. Check if the fingerprint is up to date and output the current value."$'\n'"--key - String. Optional. Update this key in the JSON file."$'\n'""
 base="fingerprint.sh"

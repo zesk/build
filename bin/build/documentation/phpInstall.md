@@ -1,8 +1,8 @@
-## `phpInstall`
+### `phpInstall`
 
 > Install `php`
 
-### Usage
+#### Usage
 
     phpInstall [ package ]
 
@@ -14,11 +14,11 @@ When this tool succeeds the `php` binary is available in the local operating sys
 
 > Location: `bin/build/tools/php.sh`
 
-### Arguments
+#### Arguments
 
 - `package` - Additional packages to install
 
-### Return codes
+#### Return codes
 
 - `1` - If installation fails
 - `0` - If installation succeeds

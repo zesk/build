@@ -1,8 +1,8 @@
-## `userAgentDefault`
+### `userAgentDefault`
 
 > Default user agent string for web agents
 
-### Usage
+#### Usage
 
     userAgentDefault [ --help ]
 
@@ -10,15 +10,15 @@ A default user agent which looks more like a browser and less like a UNIX comman
 
 > Location: `bin/build/tools/url.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 String
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

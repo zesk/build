@@ -1,8 +1,8 @@
-## `fileIsNewest`
+### `fileIsNewest`
 
 > Check to see if the first file is the newest
 
-### Usage
+#### Usage
 
     fileIsNewest [ --ignore ] sourceFile [ targetFile ... ] [ --help ]
 
@@ -13,14 +13,14 @@ Otherwise return `1``
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `--ignore` - Flag. Optional. Ignore files which do not exist.
 - `sourceFile` - File. Required. File to check
 - `targetFile ...` - File. Optional. One or more files to compare. All must exist.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `1` - `sourceFile`, 'targetFile' does not exist, or
 - `0` - All files exist and `sourceFile` is the oldest file

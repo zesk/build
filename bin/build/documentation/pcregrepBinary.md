@@ -1,8 +1,8 @@
-## `pcregrepBinary`
+### `pcregrepBinary`
 
 > The name of the `pcregrep` binary on this operating system
 
-### Usage
+#### Usage
 
     pcregrepBinary [ --help ]
 
@@ -10,15 +10,15 @@ The name of the `pcregrep` binary on this operating system
 
 > Location: `bin/build/tools/pcregrep.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 String. Name of binary for pcregrep.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

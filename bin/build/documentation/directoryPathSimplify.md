@@ -1,8 +1,8 @@
-## `directoryPathSimplify`
+### `directoryPathSimplify`
 
 > Normalizes segments of `/./` and `/../` in a path without
 
-### Usage
+#### Usage
 
     directoryPathSimplify path ...
 
@@ -11,11 +11,11 @@ Removes dot and dot-dot paths from a path correctly
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `path ...` - File. Required. One or more paths to simplify
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

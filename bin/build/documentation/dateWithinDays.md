@@ -1,8 +1,8 @@
-## `dateWithinDays`
+### `dateWithinDays`
 
 > Is a date in the past beyond its expiration date?
 
-### Usage
+#### Usage
 
     dateWithinDays keyDate [ upToDateDays ] [ --name name ] [ --help ]
 
@@ -17,26 +17,26 @@ It will also fail if:
 
 > Location: `bin/build/tools/date.sh`
 
-### Arguments
+#### Arguments
 
 - `keyDate` - Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
 - `upToDateDays` - Integer. Optional. Days that key expires after `keyDate`. Default is 90.
 - `--name name` - String. Optional. Name of the expiring item for error messages.
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 - UnsignedInteger. Days until expiration.
 - UnsignedInteger. Expiration timestamp.
 
-### Examples
+#### Examples
 
     if ! dateWithinDays "$AWS_ACCESS_KEY_DATE" 90; then
       decorate big Failed, update key and reset date
       exit 99
     fi
 
-### Return codes
+#### Return codes
 
 - `0` - The date has not expired.
 - `1` - The date has expired.

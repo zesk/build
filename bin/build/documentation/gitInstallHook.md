@@ -1,8 +1,8 @@
-## `gitInstallHook`
+### `gitInstallHook`
 
 > Install the most recent version of this hook and RUN
 
-### Usage
+#### Usage
 
     gitInstallHook [ --application ] [ --copy ] [ hook ] [ --help ]
 
@@ -14,20 +14,20 @@ When running within your hook, pass additional arguments so they can be preserve
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--application` - Directory. Optional. Path to application home.
 - `--copy` - Flag. Optional. Do not execute the hook if it has changed.
 - `hook` - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - the file was not updated
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - BUILD-HOME - The default application home directory used for `.git` and build hooks.
 

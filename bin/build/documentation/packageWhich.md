@@ -1,8 +1,8 @@
-## `packageWhich`
+### `packageWhich`
 
 > Install tools using `apt-get` if they are not found
 
-### Usage
+#### Usage
 
     packageWhich [ --manager packageManager ] binary [ packageName ... ]
 
@@ -13,23 +13,23 @@ Confirms that `binary` is installed after installation succeeds.
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
 - `binary` - String. Required. The binary to look for
 - `packageName ...` - String. Optional. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.
 
-### Examples
+#### Examples
 
     packageWhich mariadb mariadb-client
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - Technically this will install the binary and any related files as a package.
 

@@ -1,8 +1,8 @@
-## `alpineContainer`
+### `alpineContainer`
 
 > Open an Alpine container shell
 
-### Usage
+#### Usage
 
     alpineContainer [ --help ] [ --env-file envFile ] [ --env envVariable=envValue ] [ --platform platform ] [ extraArgs ]
 
@@ -10,7 +10,7 @@ Open an Alpine container shell
 
 > Location: `bin/build/tools/apk.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--env-file envFile` - File. Optional. One or more environment files which are suitable to load for docker; must be valid
@@ -18,7 +18,7 @@ Open an Alpine container shell
 - `--platform platform` - String. Optional. Platform to run (arm vs intel).
 - `extraArgs` - Mixed. Optional. The first non-file argument to `alpineContainer` is passed directly through to `docker run` as arguments
 
-### Return codes
+#### Return codes
 
 - `1` - If already inside docker, or the environment file passed is not valid
 - `0` - Success

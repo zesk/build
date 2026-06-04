@@ -1,12 +1,12 @@
-## `bashDocumentationExtract`
+### `bashDocumentationExtract`
 
-> Generate a set of name/value pairs to document bash entities
+> Extract documentation from bash commentsGenerate a set of name/value pairs to document bash entities
 
-### Usage
+#### Usage
 
     bashDocumentationExtract [ --generate ] [ --no-cache | --cache ] [ --help ] handler function sourceFile
     
-Extract documentation variables from a comment stripped of the '# ' prefixes.
+Extract documentation variables from a comment stripped of the `# ` prefixes.
 
 A few special values are generated/computed:
 
@@ -15,20 +15,20 @@ A few special values are generated/computed:
 - `base` - The basename of the file
 - `file` - The relative path name of the file from the application root
 - `summary` - Defaults to first ten words of `description`
-- `exit_code` - Defaults to `0 - Always succeeds`
-- `reviewed`  - Defaults to `Never`
-- `environment"  - Defaults to `No environment dependencies or modifications.`
+- `exit_code` - Defaults to standard value
+- `reviewed`  - No default
+- `environment"  - No default
+- `usage` - Computed based on arguments
 
 Otherwise the assumed variables (in addition to above) to define functions are:
 
 - `argument` - Individual arguments
-- `usage` - Canonical usage example (code)
 - `example` - An example of usage (code, many)
 - `depends` - Any dependencies (list)
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `fn` - String. Required. Name of `fn`
 - `sourceFile` - File. Required.
@@ -40,17 +40,17 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 - `--environment` - Flag. Optional. Environment variable derivations `env` `envMarker`
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Pipe stripped comments to extract information
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `usage-cache-skip` - Skip caching by default (override with `--cache`)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

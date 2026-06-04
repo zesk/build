@@ -1,8 +1,8 @@
-## `brewInstall`
+### `brewInstall`
 
 > Install Homebrew
 
-### Usage
+#### Usage
 
     brewInstall [ --help ]
 
@@ -10,11 +10,11 @@ Install Homebrew
 
 > Location: `bin/build/tools/brew.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

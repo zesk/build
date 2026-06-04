@@ -1,8 +1,8 @@
-## `iTerm2ColorNames`
+### `iTerm2ColorNames`
 
 > Solely the color names (e.g blue), not anything else
 
-### Usage
+#### Usage
 
     iTerm2ColorNames [ --help ]
 
@@ -10,11 +10,11 @@ Solely the color names (e.g blue), not anything else
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

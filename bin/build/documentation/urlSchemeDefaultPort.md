@@ -1,8 +1,8 @@
-## `urlSchemeDefaultPort`
+### `urlSchemeDefaultPort`
 
 > Output the port for the given scheme
 
-### Usage
+#### Usage
 
     urlSchemeDefaultPort [ --help ] [ --handler handler ] scheme ...
 
@@ -10,13 +10,13 @@ Output the port for the given scheme
 
 > Location: `bin/build/tools/url.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - `scheme ...` - String. Required. Scheme to look up the default port used for that scheme.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

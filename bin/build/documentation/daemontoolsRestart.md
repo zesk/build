@@ -1,8 +1,8 @@
-## `daemontoolsRestart`
+### `daemontoolsRestart`
 
 > Restart the daemontools processes from scratch.
 
-### Usage
+#### Usage
 
     daemontoolsRestart
 
@@ -11,11 +11,11 @@ Dangerous. Stops any running services and restarts them.
 
 > Location: `bin/build/tools/daemontools.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

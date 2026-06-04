@@ -445,19 +445,19 @@ _deploySuccessful() {
 #
 # Operation:
 #
-# ## Deploy `--deploy` Operation
+# ##### Deploy `--deploy` Operation
 #
 # - On each host, `app.tar.gz` is uploaded to the `applicationPath` first
 # - On each host, via the shell, change to the `applicationPath` directory
 # - Decompress the application package, and run the `deploy-remote-finish.sh` script
 #
-# ## Cleanup `--cleanup` Operation
+# ##### Cleanup `--cleanup` Operation
 #
 # - On each host, via the shell, change to the `applicationPath` directory
 # - Run the `deploy-remote-finish.sh` script which ...
 # - Deletes the application package if it still exists, and runs the `deploy-cleanup` hook
 #
-# ## Undo `--revert` Operation
+# ##### Undo `--revert` Operation
 #
 # - On each host, via the shell, change to the `applicationPath` directory
 # - Run the `deploy-remote-finish.sh` script which ...

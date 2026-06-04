@@ -1,8 +1,8 @@
-## `phpBuild`
+### `phpBuild`
 
 > Build deployment using composer, adding environment values to .env and
 
-### Usage
+#### Usage
 
     phpBuild [ --skip-tag | --no-tag ] [ --name tarFileName ] [ --composer arg ] [ --help ] [ environmentVariable ... ] -- file1 file2 dir3 ...
 
@@ -23,7 +23,7 @@ Files are specified from the application root directory.
 
 > Location: `bin/build/tools/php.sh`
 
-### Arguments
+#### Arguments
 
 --skip-tag |- ` --no-tag` - Flag. Optional. Do not tag the release.
 - `--name tarFileName` - String. Optional. Set BUILD_TARGET via command line (wins)
@@ -33,13 +33,13 @@ Files are specified from the application root directory.
 - `--` - Separator. Required. Separates environment variables to file list
 - `file1 file2 dir3 ...` - File|Directory. Required. List of files and directories to build into the application package.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### See Also
+#### See Also
 
 - {SEE:BUILD_TARGET.sh}
 

@@ -1,8 +1,8 @@
-## `processMemoryUsage`
+### `processMemoryUsage`
 
 > Outputs value of resident memory used by a process, value
 
-### Usage
+#### Usage
 
     processMemoryUsage pid
 
@@ -10,19 +10,19 @@ Outputs value of resident memory used by a process, value is in kilobytes
 
 > Location: `bin/build/tools/process.sh`
 
-### Arguments
+#### Arguments
 
 - `pid` - Integer. Required. Process ID of running process
 
-### Examples
+#### Examples
 
     > processMemoryUsage 23
 
-### Sample Output
+#### Sample Output
 
 423
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `2` - Argument error

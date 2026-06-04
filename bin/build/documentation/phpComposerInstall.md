@@ -1,8 +1,8 @@
-## `phpComposerInstall`
+### `phpComposerInstall`
 
 > Install composer for PHP
 
-### Usage
+#### Usage
 
     phpComposerInstall
 
@@ -10,11 +10,11 @@ Install composer for PHP
 
 > Location: `bin/build/tools/php-composer.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

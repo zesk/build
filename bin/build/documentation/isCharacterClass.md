@@ -1,8 +1,8 @@
-## `isCharacterClass`
+### `isCharacterClass`
 
 > Poor-man's bash character class matching
 
-### Usage
+#### Usage
 
     isCharacterClass className [ character ... ] [ --help ]
 
@@ -16,13 +16,13 @@ Returns true if all `characters` are of `className`
 
 > Location: `bin/build/tools/character.sh`
 
-### Arguments
+#### Arguments
 
 - `className` - String. Required. Class to check.
 - `character ...` - String. Optional. Characters to test.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

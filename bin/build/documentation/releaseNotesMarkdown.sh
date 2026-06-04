@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-31
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.\n--title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes.\n--rel rel - EmptyString. Relative link text to display before links. Defaults to `.`\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="version.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/version.sh"
 fn="releaseNotesMarkdown"
 fnMarker="releasenotesmarkdown"
 foundNames=([0]="summary" [1]="argument" [2]="stdout")
-line="66"
+line="69"
 rawComment=$'Summary: Generate markdown for release notes\nOutputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.\nOutput show release notes in reverse version order:\n- the catenation of the release notes files (`count` items)\n- a blank line\n- the title line and a blank line (or nothing if title line is blank)\n- list links to remaining release notes (`- [v0.0.1](./0.0.1.md)` for example)\nArgument: --count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.\nArgument: --title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes.\nArgument: --rel rel - EmptyString. Relative link text to display before links. Defaults to `.`\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nstdout: markdown\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/version.sh"
-sourceHash="becf1625ab0c25e8e0c878614987861b134eca85"
-sourceLine="66"
+sourceHash="cb6d9642368b7b2c276fb293b83d8e5124812afb"
+sourceLine="69"
 stdout=$'markdown\n'
 summary="Generate markdown for release notes"
 summaryComputed=""

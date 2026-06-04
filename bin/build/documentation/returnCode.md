@@ -1,8 +1,8 @@
-## `returnCode`
+### `returnCode`
 
 > Print one or more return codes by name.
 
-### Usage
+#### Usage
 
     returnCode [ name ... ]
 
@@ -27,19 +27,19 @@ Unknown error code is 254, end of range is 255 which is not used. Use `returnCod
 
 > Location: `bin/build/tools/_sugar.sh`
 
-### Arguments
+#### Arguments
 
 - `name ...` - String. Optional. Exit code value to output.
 
-### Return codes
+#### Return codes
 
 - `0` - success
 
-### Requires
+#### Requires
 
 - {SEE:bashDocumentation}
 
-### See Also
+#### See Also
 
 - [stackoverflow.com](https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux)
 - {SEE:returnCodeString}

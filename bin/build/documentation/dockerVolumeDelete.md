@@ -1,8 +1,8 @@
-## `dockerVolumeDelete`
+### `dockerVolumeDelete`
 
 > Delete a docker volume
 
-### Usage
+#### Usage
 
     dockerVolumeDelete name
 
@@ -10,11 +10,11 @@ Delete a docker volume
 
 > Location: `bin/build/tools/docker.sh`
 
-### Arguments
+#### Arguments
 
 - `name` - String. Required. Volume name to delete.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

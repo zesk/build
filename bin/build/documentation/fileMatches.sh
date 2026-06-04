@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\npattern ... - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.\n-- - Delimiter. Required. exception.\nexception ... - String. Optional. `grep -e` File pattern which should be ignored.\n-- - Delimiter. Required. file.\nfile ... - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'"pattern ... - String. Required.\`grep -e\` Pattern to find in files. No quoting is added so ensure these are compatible with \`grep -e\`."$'\n'"-- - Delimiter. Required. exception."$'\n'"exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"-- - Delimiter. Required. file."$'\n'"file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Find one or more patterns in a list of files, with a list of file name pattern exceptions.\n\n'
+description="Find one or more patterns in a list of files, with a list of file name pattern exceptions."$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/file.sh"
 fn="fileMatches"
 fnMarker="filematches"
 foundNames=([0]="argument")
 line="694"
-rawComment=$'Find one or more patterns in a list of files, with a list of file name pattern exceptions.\nArgument: --help - Flag. Optional. Display this help.\nArgument: pattern ... - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.\nArgument: -- - Delimiter. Required. exception.\nArgument: exception ... - String. Optional. `grep -e` File pattern which should be ignored.\nArgument: -- - Delimiter. Required. file.\nArgument: file ... - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Find one or more patterns in a list of files, with a list of file name pattern exceptions."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pattern ... - String. Required.\`grep -e\` Pattern to find in files. No quoting is added so ensure these are compatible with \`grep -e\`."$'\n'"Argument: -- - Delimiter. Required. exception."$'\n'"Argument: exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"Argument: -- - Delimiter. Required. file."$'\n'"Argument: file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
 sourceLine="694"

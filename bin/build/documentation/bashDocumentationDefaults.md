@@ -1,8 +1,8 @@
-## `bashDocumentationDefaults`
+### `bashDocumentationDefaults`
 
 > Generate base template files for Bash code documentation.
 
-### Usage
+#### Usage
 
     bashDocumentationDefaults --target templateTarget [ --help ] [ --handler handler ]
 
@@ -16,13 +16,13 @@ Generates the following (with example content):
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--target templateTarget` - FileDirectory. Required. Create templates here.
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

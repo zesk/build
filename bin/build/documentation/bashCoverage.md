@@ -1,8 +1,8 @@
-## `bashCoverage`
+### `bashCoverage`
 
 > Collect code coverage statistics for a code sample
 
-### Usage
+#### Usage
 
     bashCoverage [ --target reportFile ] thingToRun
 
@@ -11,18 +11,18 @@ Convert resulting files using `bashCoverageReport`
 
 > Location: `bin/build/tools/coverage.sh`
 
-### Arguments
+#### Arguments
 
 - `--target reportFile` - File. Optional. Write coverage data to this file.
 - `thingToRun` - Callable. Required. Function to run and collect coverage data.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### See Also
+#### See Also
 
 - {SEE:bashCoverageReport}
 

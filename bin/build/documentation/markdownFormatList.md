@@ -1,8 +1,8 @@
-## `markdownFormatList`
+### `markdownFormatList`
 
 > Simple function to make list-like things more list-like in Markdown
 
-### Usage
+#### Usage
 
     markdownFormatList
 
@@ -15,19 +15,19 @@ Simple function to make list-like things more list-like in Markdown
 
 > Location: `bin/build/tools/markdown.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Reads standard input
+#### Reads standard input
 
 reads input from stdin
 
-### Writes to standard output
+#### Writes to standard output
 
 formatted markdown list
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

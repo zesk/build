@@ -1,8 +1,8 @@
-## `environmentFileDockerToBashCompatible`
+### `environmentFileDockerToBashCompatible`
 
 > Ensure an environment file is compatible with non-quoted docker environment
 
-### Usage
+#### Usage
 
     environmentFileDockerToBashCompatible [ filename ... ]
 
@@ -15,19 +15,19 @@ Any output to stderr is errors in the file but is written to be compatible with 
 
 > Location: `bin/build/tools/environment/convert.sh`
 
-### Arguments
+#### Arguments
 
 - `filename ...` - File. Optional. Docker environment file to convert.
 
-### Reads standard input
+#### Reads standard input
 
 An environment file of any format
 
-### Writes to standard output
+#### Writes to standard output
 
 Environment file in Bash-compatible format
 
-### Return codes
+#### Return codes
 
 - `1` - if errors occur
 - `0` - if file is valid

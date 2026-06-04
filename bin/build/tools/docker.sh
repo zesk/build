@@ -58,13 +58,15 @@ ___dumpDockerTestFile() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Are we inside a docker container?
 # Are we inside a docker container right now?
 #
+# Does a standard test to determine if we're inside Docker or not.
+# File: /proc/1/cmdline
 # Return Code: 0 - Yes
 # Return Code: 1 - No
 #
-# TODO: This changed 2023 ...
-# Checked: 2025-07-09
+# Checked: 2026-06-04
 # TODO: Write a test to check this date every oh, say, 3 months
 dockerInside() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"

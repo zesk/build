@@ -1,8 +1,8 @@
-## `bashPromptModule_TermColors`
+### `bashPromptModule_TermColors`
 
-> Sets the console colors based on the project you are
+> Terminal colors to match projects
 
-### Usage
+#### Usage
 
     bashPromptModule_TermColors
 
@@ -17,31 +17,31 @@ Support for iTerm2 is built-in and automatic
 
 > Location: `bin/build/tools/prompt.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `term-colors` - When `bashPromptModule_TermColors` is enabled, will show colors and how they are applied
 
-### Examples
+#### Examples
 
     bashPrompt --order 80 bashPromptModule_TermColors
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_TERM_COLORS_STATE}
 
-### Requires
+#### Requires
 
 - {SEE:buildHome}
 - {SEE:statusMessage}
@@ -53,7 +53,7 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - {SEE:iTerm2SetColors}
 - {SEE:consoleConfigureColorMode}
 
-### See Also
+#### See Also
 
-- {SEE:consoleConfigureColorMode}
+- [consoleConfigureColorMode]({rel}tools/console.md#consoleconfigurecolormode) - Print the suggested color mode for the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L110))
 

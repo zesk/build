@@ -1,8 +1,8 @@
-## `listAppend`
+### `listAppend`
 
 > Add an item to a character-delimited list.
 
-### Usage
+#### Usage
 
     listAppend listValue separator [ --first ] [ --last ] [ item ] [ --help ]
 
@@ -11,7 +11,7 @@ Add an item to the beginning or end of a text-delimited list
 
 > Location: `bin/build/tools/list.sh`
 
-### Arguments
+#### Arguments
 
 - `listValue` - Required. List value to modify.
 - `separator` - Required. Separator string for item values (typically `:`)
@@ -20,7 +20,7 @@ Add an item to the beginning or end of a text-delimited list
 - `item` - the value to be added to the `listValue`
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

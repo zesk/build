@@ -1,26 +1,28 @@
-## `xdebugDisable`
+### `xdebugDisable`
 
-> Disable Xdebug on systems that have it
+> Disable Xdebug
 
-### Usage
+#### Usage
 
     xdebugDisable [ --help ]
 
-Disable Xdebug on systems that have it
+Disable Xdebug on systems that have it.
+
+This changes the value of `XDEBUG_ENABLED` to `false`. Programs must honor this and then skip invoking the debugger.
 
 > Location: `bin/build/tools/xdebug.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:XDEBUG_ENABLED}
 

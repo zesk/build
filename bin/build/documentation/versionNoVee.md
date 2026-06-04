@@ -1,28 +1,30 @@
-## `versionNoVee`
+### `versionNoVee`
 
-> Strip leading vee from version tags
+> Remove `v` from versions
 
-### Usage
+#### Usage
 
     versionNoVee [ --help ]
+
+Strip leading `v` from version tags. Useful when you standardize on the non-`v` versions or wish to sort without the `v`.
 
 Take one or more versions and strip the leading `v`
 
 > Location: `bin/build/tools/version.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Versions containing a preceding `v` character (optionally)
 
-### Writes to standard output
+#### Writes to standard output
 
 Versions with the initial `v` (if it exists) removed
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

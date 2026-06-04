@@ -1,8 +1,8 @@
-## `incrementor`
+### `incrementor`
 
 > Set or increment a incrementor state based on a state
 
-### Usage
+#### Usage
 
     incrementor [ count ] [ variable ] [ --path cacheDirectory ] [ --reset ] [ --separator ] [ --line ]
 
@@ -37,7 +37,7 @@ The default cache `--path` is placed within the `buildCacheDirectory`.
 
 > Location: `bin/build/tools/utilities.sh`
 
-### Arguments
+#### Arguments
 
 - `count` - Integer. Optional. Sets the value for any following named variables to this value.
 - `variable` - String. Optional. Variable to change or increment.
@@ -46,9 +46,13 @@ The default cache `--path` is placed within the `buildCacheDirectory`.
 - `--separator` - String. Optional. When dumping all variables use this as the separator between name and value. (Default is space: `"  "`)
 - `--line` - String. Optional. When dumping all variables use this as the separator between values. (Default is newline: `$'\n'`)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### See Also
+
+- [buildCacheDirectory]({rel}tools/build.md#buildcachedirectory)- `` - Path to cache directory for build system. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L155))
 

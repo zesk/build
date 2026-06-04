@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Does not check if a function is defined, just whether the name would be acceptable as a function name in Bash."$'\n'""$'\n'""
+description=$'Does not check if a function is defined, just whether the name would be acceptable as a function name in Bash.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashFunctionNameValid"
 fnMarker="bashfunctionnamevalid"
 foundNames=([0]="summary" [1]="argument" [2]="return_code")
-line="638"
-rawComment="Summary: Is a string a valid function name?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Does not check if a function is defined, just whether the name would be acceptable as a function name in Bash."$'\n'"Return Code: 0 - All values passed are valid function names for bash functions"$'\n'"Return Code: 1 - One or more values passed are NOT valid function names for bash functions"$'\n'""$'\n'""
-return_code="0 - All values passed are valid function names for bash functions"$'\n'"1 - One or more values passed are NOT valid function names for bash functions"$'\n'""
+line="641"
+rawComment=$'Summary: Is a string a valid function name?\nArgument: --help - Flag. Optional. Display this help.\nDoes not check if a function is defined, just whether the name would be acceptable as a function name in Bash.\nReturn Code: 0 - All values passed are valid function names for bash functions\nReturn Code: 1 - One or more values passed are NOT valid function names for bash functions\n\n'
+return_code=$'0 - All values passed are valid function names for bash functions\n1 - One or more values passed are NOT valid function names for bash functions\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
-sourceLine="638"
+sourceHash="112376f9f627c10da9943f372ddc2bf96eecf81e"
+sourceLine="641"
 summary="Is a string a valid function name?"
 summaryComputed=""
 usage="bashFunctionNameValid [ --help ]"

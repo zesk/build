@@ -1,8 +1,8 @@
-## `pipUpgrade`
+### `pipUpgrade`
 
 > Utility to upgrade pip correctly
 
-### Usage
+#### Usage
 
     pipUpgrade [ --help ] [ --bin binary ]
 
@@ -10,12 +10,12 @@ Utility to upgrade pip correctly
 
 > Location: `bin/build/tools/python.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--bin binary` - Executable. Optional. Binary for `pip`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

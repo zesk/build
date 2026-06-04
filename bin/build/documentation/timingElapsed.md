@@ -1,8 +1,8 @@
-## `timingElapsed`
+### `timingElapsed`
 
 > Show elapsed time from a start time
 
-### Usage
+#### Usage
 
     timingElapsed timingOffset [ --help ]
 
@@ -10,32 +10,32 @@ Show elapsed time from a start time
 
 > Location: `bin/build/tools/timing.sh`
 
-### Arguments
+#### Arguments
 
 - `timingOffset` - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 UnsignedInteger
 
-### Examples
+#### Examples
 
     init=$(timingStart)
     ...
     timingElapsed "$init"
 
-### Sample Output
+#### Sample Output
 
 4232
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:__timestamp}
 - {SEE:returnEnvironment}

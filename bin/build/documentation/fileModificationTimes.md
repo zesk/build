@@ -1,8 +1,8 @@
-## `fileModificationTimes`
+### `fileModificationTimes`
 
 > Lists files in a directory recursively along with their modification
 
-### Usage
+#### Usage
 
     fileModificationTimes directory [ findArgs ]
 
@@ -12,22 +12,22 @@ Output is unsorted.
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `directory - Directory. Required. Must exists` - directory to list.
 - `findArgs` - Arguments. Optional. Optional additional arguments to modify the find query
 
-### Examples
+#### Examples
 
 fileModificationTimes $myDir ! -path "*/.*/*"
 
-### Sample Output
+#### Sample Output
 
 1705347087 bin/build/tools.sh
 1704312758 bin/build/deprecated.sh
 1705442647 bin/build/build.json
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

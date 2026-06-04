@@ -1,8 +1,8 @@
-## `gitTagVee`
+### `gitTagVee`
 
 > Given a tag in the form "1.1.3" convert it to
 
-### Usage
+#### Usage
 
     gitTagVee
 
@@ -11,11 +11,11 @@ Delete the old tag as well
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

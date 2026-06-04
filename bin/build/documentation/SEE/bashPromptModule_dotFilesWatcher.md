@@ -1,1 +1,1 @@
-[bashPromptModule_dotFilesWatcher]({rel}tools/prompt.md#bashpromptmodule_dotfileswatcher) - Watches your HOME directory for \`.\` files which are added ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L94))
+[bashPromptModule_dotFilesWatcher]({rel}tools/prompt.md#bashpromptmodule_dotfileswatcher) - Monitor home directory for new \`.\` files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt-modules.sh#L95))

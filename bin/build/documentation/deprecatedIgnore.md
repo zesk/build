@@ -1,8 +1,8 @@
-## `deprecatedIgnore`
+### `deprecatedIgnore`
 
 > Output a list of tokens for `find` to ignore in
 
-### Usage
+#### Usage
 
     deprecatedIgnore
 
@@ -11,13 +11,17 @@ Skips dot directories and release notes by default and any file named `deprecate
 
 > Location: `bin/build/tools/deprecated-tools.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:BUILD_RELEASE_NOTES}
 

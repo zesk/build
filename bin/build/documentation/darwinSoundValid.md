@@ -1,8 +1,8 @@
-## `darwinSoundValid`
+### `darwinSoundValid`
 
 > Is a Darwin sound name valid?
 
-### Usage
+#### Usage
 
     darwinSoundValid
 
@@ -10,11 +10,11 @@ Is a Darwin sound name valid?
 
 > Location: `bin/build/tools/darwin.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `mockConsoleAnimationStart`
+### `mockConsoleAnimationStart`
 
 > Fake `consoleHasAnimation` for testing
 
-### Usage
+#### Usage
 
     mockConsoleAnimationStart [ true | false ] [ --help ]
 
@@ -10,12 +10,12 @@ Fake `consoleHasAnimation` for testing
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - true |- ` false` - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

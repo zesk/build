@@ -1,8 +1,8 @@
-## `decorate`
+### `decorate`
 
 > Singular decoration function
 
-### Usage
+#### Usage
 
     decorate style [ text ... ]
 
@@ -11,27 +11,27 @@ You can extend this function by writing a your own extension `__decorationExtens
 
 > Location: `bin/build/tools/decorate/core.sh`
 
-### Arguments
+#### Arguments
 
 - `style` - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration
 - `text ...` - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
 
-### Writes to standard output
+#### Writes to standard output
 
 Decorated text
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - __BUILD_DECORATE - String. Cached color lookup.
 - {SEE:BUILD_COLORS} - Boolean. Colors enabled (`true` or `false`).
 
-### Requires
+#### Requires
 
 - {SEE:isFunction}
 - {SEE:catchArgument}

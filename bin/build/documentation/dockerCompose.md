@@ -1,8 +1,8 @@
-## `dockerCompose`
+### `dockerCompose`
 
 > docker compose wrapper with automatic .env support
 
-### Usage
+#### Usage
 
     dockerCompose [ --help ] [ --handler handler ] [ --production ] [ --staging ] [ --deployment deploymentName ] [ --volume ] [ --build ] [ --clean ] [ --keep ] [ --default-env | --env environmentNameValue ] [ --env environmentNameValue ] [ --arg environmentNameValue ] [ composeCommand ]
 
@@ -22,7 +22,7 @@ Volume name, by default is named after the directory name of the project suffixe
 
 > Location: `bin/build/tools/docker-compose.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -38,7 +38,7 @@ Volume name, by default is named after the directory name of the project suffixe
 - `--arg environmentNameValue` - EnvironmentNameValue. Passed as an ARG to the build environment – a variable name and value (in the form `NAME=value` to require in the `.env` file. If set already in the file or in the environment then has no effect.
 - `composeCommand` - You can send any compose command and arguments thereafter are passed to `docker compose`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

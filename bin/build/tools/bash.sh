@@ -39,7 +39,8 @@ _bashSanitize() {
 }
 
 # Argument: script - File. Required. Bash script to fetch requires tokens from.
-# Gets a list of the `Requires:` comments in a bash file
+# Summary: Fetch requirements lines from a bash file
+# Gets a list of the `Requires:` comments in a bash file.
 # Returns a unique list of tokens
 bashGetRequires() {
   __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
@@ -311,7 +312,7 @@ _bashStripComments() {
 # Return Code: 0 - Function is used within the file
 # Return Code: 1 - Function is *not* used within the file
 # This check is simplistic and does not verify actual coverage or code paths.
-# Requires: throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep
+# Requires: throwArgument decorate validate quoteGrepPattern bashStripComments cat grep
 bashShowUsage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -350,13 +351,15 @@ _bashShowUsage() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List functions in a given shell file
+# Summary: List functions in a bash file
+# List functions in a given bash file.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: file - File. Optional. File(s) to list bash functions defined within.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Requires: __bashListFunctions throwArgument decorate usageArgumentFile
+# TODO: Try shfmt parsing to json + jq
 bashListFunctions() {
   local handler="_${FUNCNAME[0]}"
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/debug.sh"
 fn="isErrorExit"
 fnMarker="iserrorexit"
 foundNames=([0]="requires")
-line="275"
+line="276"
 rawComment=$'Returns whether the shell has the error exit flag set\nUseful if you need to temporarily enable or disable it.\nOctober 2024 - Does appear to be inherited by subshells\n    set -e\n    printf "$(isErrorExit; printf %d $?)"\nOutputs `1` always\nRequires: -\n\n'
 requires=$'-\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="20094ded2fe440d8caa5368a60b92d19047e793c"
-sourceLine="275"
+sourceHash="f8901f960335e712ac2680d77a17c49c8edcae50"
+sourceLine="276"
 summary="Returns whether the shell has the error exit flag set"
 summaryComputed="true"
 usage="isErrorExit"

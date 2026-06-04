@@ -1,8 +1,8 @@
-## `bashDebuggerEnable`
+### `bashDebuggerEnable`
 
 > Enable the debugger
 
-### Usage
+#### Usage
 
     bashDebuggerEnable [ --help ]
 
@@ -12,13 +12,17 @@ Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 
 > Location: `bin/build/tools/debugger.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### See Also
+
+- [bashDebug]({rel}tools/debug.md#bashdebug) - Bash debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L43))[bashDebuggerDisable]({rel}tools/debug.md#bashdebuggerdisable) - Disable the debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L98))
 

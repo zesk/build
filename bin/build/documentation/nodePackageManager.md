@@ -1,8 +1,8 @@
-## `nodePackageManager`
+### `nodePackageManager`
 
 > Run an action using the current node package manager
 
-### Usage
+#### Usage
 
     nodePackageManager [ action ] ...
 
@@ -12,12 +12,12 @@ Optionally will output the current node package manager when no arguments are pa
 
 > Location: `bin/build/tools/node.sh`
 
-### Arguments
+#### Arguments
 
 - `action` - String. Optional. Action to perform: install run update uninstall
 - `...` - Arguments. Required. Passed to the node package manager. Required. when action is provided.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

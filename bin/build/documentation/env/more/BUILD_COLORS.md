@@ -5,3 +5,7 @@
 
 If true then colors are shown, blank means guess the value, false means no colors
 
+### See Also
+
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+

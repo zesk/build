@@ -1,8 +1,8 @@
-## `aptKeyAdd`
+### `aptKeyAdd`
 
 > Add keys to enable apt to download terraform directly from
 
-### Usage
+#### Usage
 
     aptKeyAdd [ --title keyTitle ] --name keyName --url remoteUrl [ --help ]
 
@@ -10,14 +10,14 @@ Add keys to enable apt to download terraform directly from hashicorp.com
 
 > Location: `bin/build/tools/apt.sh`
 
-### Arguments
+#### Arguments
 
 - `--title keyTitle` - String. Optional. Title of the key.
 - `--name keyName` - String. Required. Name of the key used to generate file names.
 - `--url remoteUrl` - URL. Required. Remote URL of gpg key.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `1` - if environment is awry
 - `0` - Apt key is installed AOK

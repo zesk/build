@@ -1,8 +1,8 @@
-## `dateToTimestamp`
+### `dateToTimestamp`
 
 > Converts a date to an integer timestamp
 
-### Usage
+#### Usage
 
     dateToTimestamp [ date ] [ --help ]
 
@@ -10,21 +10,21 @@ Converts a date to an integer timestamp
 
 > Location: `bin/build/tools/date.sh`
 
-### Arguments
+#### Arguments
 
 - `date` - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     timestamp=$(dateToTimestamp '2023-10-15')
 
-### Return codes
+#### Return codes
 
 - `1` - if parsing fails
 - `0` - if parsing succeeds
 
-### Environment
+#### Environment
 
 - Compatible with BSD and GNU date.
 

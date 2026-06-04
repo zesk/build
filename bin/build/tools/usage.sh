@@ -42,15 +42,15 @@ _bashDocumentationMarkdown() {
 #
 # Simplifies documentation and keeps it with the code.
 #
-# Example: goldenGoose() {
-# Example:    local handler="_${FUNCNAME[0]}"
-# Example:    local home && home=$(catchReturn "$handler" buildHome) || return $?
-# Example:    ...
-# Example: }
-# Example: _goldenGoose() {
-# Example:   # __IDENTICAL__ bashDocumentation 1
-# Example:   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-# Example: }
+# Example:     goldenGoose() {
+# Example:        local handler="_${FUNCNAME[0]}"
+# Example:        local home && home=$(catchReturn "$handler" buildHome) || return $?
+# Example:        ...
+# Example:     }
+# Example:     _goldenGoose() {
+# Example:       # __IDENTICAL__ bashDocumentation 1
+# Example:       bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+# Example:     }
 #
 # Environment: BUILD_DEBUG
 # BUILD_DEBUG: fast-usage - `bashDocumentation` does not output formatted help for performance reasons

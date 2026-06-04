@@ -1,8 +1,8 @@
-## `consoleHasAnimation`
+### `consoleHasAnimation`
 
 > Does the console support animation?
 
-### Usage
+#### Usage
 
     consoleHasAnimation
 
@@ -10,11 +10,11 @@ Does the console support animation?
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Supports console animation
 - `1` - Does not support console animation

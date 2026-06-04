@@ -1,8 +1,8 @@
-## `colorParse`
+### `colorParse`
 
 > Parse a color and output R G B decimal values
 
-### Usage
+#### Usage
 
     colorParse [ color ] [ --help ]
 
@@ -11,16 +11,16 @@ Takes arguments or stdin.
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - `color` - String. Optional. Color to parse.
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 list:colors
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

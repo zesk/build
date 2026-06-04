@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="count - The number of times to run the binary"$'\n'"binary - The binary to run"$'\n'"args ... - Any arguments to pass to the binary each run"$'\n'""
+argument=$'count - The number of times to run the binary\nbinary - The binary to run\nargs ... - Any arguments to pass to the binary each run\n'
 base="platform.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
 description="Run a binary count times"
@@ -12,10 +12,10 @@ fn="executeCount"
 fnMarker="executecount"
 foundNames=([0]="argument" [1]="return_code" [2]="summary")
 line="59"
-rawComment="Argument: count - The number of times to run the binary"$'\n'"Argument: binary - The binary to run"$'\n'"Argument: args ... - Any arguments to pass to the binary each run"$'\n'"Return Code: 0 - success"$'\n'"Return Code: 2 - \`count\` is not an unsigned number"$'\n'"Return Code: Any - If \`binary\` fails, the exit code is returned"$'\n'"Summary: Run a binary count times"$'\n'""$'\n'""
-return_code="0 - success"$'\n'"2 - \`count\` is not an unsigned number"$'\n'"Any - If \`binary\` fails, the exit code is returned"$'\n'""
+rawComment=$'Argument: count - The number of times to run the binary\nArgument: binary - The binary to run\nArgument: args ... - Any arguments to pass to the binary each run\nReturn Code: 0 - success\nReturn Code: 2 - `count` is not an unsigned number\nReturn Code: Any - If `binary` fails, the exit code is returned\nSummary: Run a binary count times\n\n'
+return_code=$'0 - success\n2 - `count` is not an unsigned number\nAny - If `binary` fails, the exit code is returned\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="1d635d1bdc5db7d6b439cb90eb034f236822dd22"
+sourceHash="a68934b9dea91af485e7b209bfc126a7dc7af004"
 sourceLine="59"
 summary="Run a binary count times"
 summaryComputed=""

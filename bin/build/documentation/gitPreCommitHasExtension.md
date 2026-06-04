@@ -1,8 +1,8 @@
-## `gitPreCommitHasExtension`
+### `gitPreCommitHasExtension`
 
 > Does this commit have the following file extensions?
 
-### Usage
+#### Usage
 
     gitPreCommitHasExtension [ extension ] [ --help ]
 
@@ -10,12 +10,12 @@ Does this commit have the following file extensions?
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `extension` - String. Optional. Extension to check. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - if all extensions are present
 - `1` - if any extension is not present

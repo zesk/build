@@ -1,8 +1,8 @@
-## `awsCredentialsRemove`
+### `awsCredentialsRemove`
 
 > Remove credentials from the AWS credentials file
 
-### Usage
+#### Usage
 
     awsCredentialsRemove [ --profile profileName ] [ --comments ] [ profileName ] [ --help ]
 
@@ -14,14 +14,14 @@ You can supply the profile using the `--profile` or directly, but just one.
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `--profile profileName` - String. Optional. The credentials profile to remove.
 - `--comments` - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 - `profileName` - String. Optional. The credentials profile to remove.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

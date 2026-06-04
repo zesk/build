@@ -1,8 +1,8 @@
-## `darwinSoundDirectory`
+### `darwinSoundDirectory`
 
 > Directory for user sounds
 
-### Usage
+#### Usage
 
     darwinSoundDirectory
 
@@ -10,11 +10,11 @@ Directory for user sounds
 
 > Location: `bin/build/tools/darwin.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

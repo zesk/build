@@ -1,8 +1,8 @@
-## `urlOpen`
+### `urlOpen`
 
 > Open a URL using the operating system
 
-### Usage
+#### Usage
 
     urlOpen [ --help ] [ --ignore ] [ --wait ] [ --url url ]
 
@@ -11,22 +11,22 @@ Usage urlOpen [ --help ]
 
 > Location: `bin/build/tools/url.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--ignore` - Flag. Optional. Ignore any invalid URLs found.
 - `--wait` - Flag. Optional. Display this help.
 - `--url url` - URL. Optional. URL to download.
 
-### Reads standard input
+#### Reads standard input
 
 line:URL
 
-### Writes to standard output
+#### Writes to standard output
 
 none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

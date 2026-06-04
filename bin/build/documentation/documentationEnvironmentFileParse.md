@@ -1,8 +1,8 @@
-## `documentationEnvironmentFileParse`
+### `documentationEnvironmentFileParse`
 
 > Convert an environment comment to environment variables
 
-### Usage
+#### Usage
 
     documentationEnvironmentFileParse environmentFile [ --help ]
 
@@ -10,12 +10,12 @@ Convert an environment comment to environment variables
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `environmentFile` - EnvironmentFile. Required. File to convert to a settings file.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

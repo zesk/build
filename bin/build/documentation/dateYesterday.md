@@ -1,8 +1,8 @@
-## `dateYesterday`
+### `dateYesterday`
 
 > Yesterday's date (UTC time)
 
-### Usage
+#### Usage
 
     dateYesterday [ --local ] [ --help ]
 
@@ -10,22 +10,22 @@ Returns yesterday's date, in `YYYY-MM-DD` format. (same as `%F`)
 
 > Location: `bin/build/tools/date.sh`
 
-### Arguments
+#### Arguments
 
 - `--local` - Flag. Optional. Local yesterday
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     rotated="$log.$(dateYesterday --local)"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:throwArgument}
 - date

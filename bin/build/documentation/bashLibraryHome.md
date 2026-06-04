@@ -1,8 +1,8 @@
-## `bashLibraryHome`
+### `bashLibraryHome`
 
 > Output the home for a library in the parent path
 
-### Usage
+#### Usage
 
     bashLibraryHome libraryRelativePath [ startDirectory ] [ --help ]
 
@@ -14,21 +14,21 @@ Note that the `libraryRelativePath` given must be both executable and a file.
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `libraryRelativePath` - RelativeFile. Required. Path of file to find from the home directory. Must also be executable.
 - `startDirectory` - Directory. Optional. Place to start searching. Uses `pwd` if not specified.
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 Parent path where `libraryRelativePath` exists
 
-### Examples
+#### Examples
 
     libFound=$(bashLibraryHome "bin/watcher/server.py")
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

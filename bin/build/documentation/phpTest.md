@@ -1,8 +1,8 @@
-## `phpTest`
+### `phpTest`
 
 > Test a docker-based PHP application during build
 
-### Usage
+#### Usage
 
     phpTest [ --env-file envFile ] [ --home homeDirectory ]
 
@@ -10,12 +10,12 @@ Test a docker-based PHP application during build
 
 > Location: `bin/build/tools/php.sh`
 
-### Arguments
+#### Arguments
 
 - `--env-file envFile` - File. Optional. Environment file to load.
 - `--home homeDirectory` - Directory. Optional. Directory for application home.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

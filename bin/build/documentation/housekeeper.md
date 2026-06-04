@@ -1,8 +1,8 @@
-## `housekeeper`
+### `housekeeper`
 
 > Run a command and ensure files are not modified
 
-### Usage
+#### Usage
 
     housekeeper [ --ignore grepPattern ] [ --temporary temporaryPath ] [ --cache cacheDirectory ] [ --overhead ] [ --path path ] [ path ] [ callable ] [ --help ] [ --handler handler ]
 
@@ -10,7 +10,7 @@ Run a command and ensure files are not modified
 
 > Location: `bin/build/tools/debug.sh`
 
-### Arguments
+#### Arguments
 
 - `--ignore grepPattern` - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
 - `--temporary temporaryPath` - Directory. Optional. Use this as a temporary directory instead of the default.
@@ -22,7 +22,7 @@ Run a command and ensure files are not modified
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

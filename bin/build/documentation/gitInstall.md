@@ -1,8 +1,8 @@
-## `gitInstall`
+### `gitInstall`
 
 > Install git if needed
 
-### Usage
+#### Usage
 
     gitInstall [ package ]
 
@@ -10,11 +10,11 @@ Installs the `git` binary
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `package` - Additional packages to install
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

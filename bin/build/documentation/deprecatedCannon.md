@@ -1,8 +1,8 @@
-## `deprecatedCannon`
+### `deprecatedCannon`
 
 > undocumented
 
-### Usage
+#### Usage
 
     deprecatedCannon [ --path cannonPath ] findArgumentFunction search replace [ extraCannonArguments ]
 
@@ -10,7 +10,7 @@ No documentation for `deprecatedCannon`.
 
 > Location: `bin/build/tools/deprecated-tools.sh`
 
-### Arguments
+#### Arguments
 
 - `--path cannonPath` - Directory. Optional. Run textCannon operation starting in this directory.
 - `findArgumentFunction` - Function. Required. Find arguments (for `find`) for cannon.
@@ -18,7 +18,7 @@ No documentation for `deprecatedCannon`.
 - `replace` - EmptyString. Required. Replacement string.
 - `extraCannonArguments` - Arguments. Optional. Any additional arguments are passed to `cannon`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `fileTeeAtomic`
+### `fileTeeAtomic`
 
 > tee but atomic (EXPERIMENTAL)
 
-### Usage
+#### Usage
 
     fileTeeAtomic [ -a ] target [ --help ]
 
@@ -11,21 +11,21 @@ EXPERIMENTAL not a lot of testing of this don't use quite yet.
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `-a` - Flag. Optional. Append target (atomically as well).
 - `target` - File. Required. File to target
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Piped to a temporary file until EOF and then moved to target
 
-### Writes to standard output
+#### Writes to standard output
 
 A copy of stdin
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

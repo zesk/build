@@ -1,8 +1,8 @@
-## `assertDirectoryNotEmpty`
+### `assertDirectoryNotEmpty`
 
 > Test that a directory does not exist
 
-### Usage
+#### Usage
 
     assertDirectoryNotEmpty [ directory ] [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -10,7 +10,7 @@ Test that a directory does not exist
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `directory` - Directory. Directory that should exist and not be empty
 - `message ...` - String. Optional. An error message if this fails
@@ -33,12 +33,12 @@ Test that a directory does not exist
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Return codes
+#### Return codes
 
 - `0` - If the assertion succeeds
 - `1` - If the assertion fails
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertDirectoryNotEmpty` was reviewed 2023-11-12
 .

@@ -189,7 +189,7 @@ __documentationFunctionCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --clean | --verbose) aa+=("$argument") ;;
+    --clean | --verbose | --force) aa+=("$argument") ;;
     --source) shift && aa+=("$argument" "${1-}") ;;
     --documentation) shift && documentationSource=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return "$(convertValue $? 120 0)" ;;
@@ -214,7 +214,7 @@ __documentationFunctionCompile() {
 __documentationFileCompile() {
   local handler="$1" && shift
 
-  local cleanFlag=false aa=() functions=() verboseFlag=false sourcePath=""
+  local cleanFlag=false aa=() functions=() verboseFlag=false sourcePath="" forceFlag=false
 
   decorateInitialized || decorate info --
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -230,6 +230,7 @@ __documentationFileCompile() {
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
     --clean) cleanFlag=true ;;
+    --force) forceFlag=true ;;
     --source) shift && sourcePath=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --derive) aa+=("--") && shift && while [ $# -gt 0 ]; do
       [ "$1" != "--" ] || break
@@ -292,7 +293,7 @@ __documentationFileCompile() {
     [ -n "$fun" ] || continue
     bashFunctionNameValid "$fun" || continue
     (
-      statusMessage timing --name "$prefix $fun" __documentationFileCompileFunction "$handler" "$docPath" "$sourcePath" "$fun" "" "$prefix" "${aa[@]+"${aa[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
+      statusMessage timing --name "$prefix $fun" __documentationFileCompileFunction "$handler" "$docPath" "$sourcePath" "$fun" "" "$prefix" "$forceFlag" "${aa[@]+"${aa[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     ) || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
   shopt -s expand_aliases || :
@@ -309,7 +310,8 @@ __documentationFileCompile() {
 # Argument: sourcePath - Directory. Required. Directory to find function definitions if not found.
 # Argument: function - String. Required. Function to extract
 # Argument: sourceFile - File|EmptyString. Required. Source file or blank if not known.
-# Argument: prefix ... - String. Optional. Prefix the status line with this text.
+# Argument: prefix - String. Optional. Prefix the status line with this text.
+# Argument: force - Boolean. Optional. Force file generation without caching.
 # Argument: derived  - .... Optional. Derived functions to run on new or modified files.
 __documentationFileCompileFunction() {
   export BUILD_DEBUG
@@ -328,6 +330,7 @@ __documentationFileCompileFunction() {
   local fun && fun=$(validate "$handler" String "function" "${1-}") && shift || return $?
   local sourceHash="" sourceFile="${1-}" && shift || return $?
   local prefix="$1" && shift && [ -z "$prefix" ] || prefix="${prefix% } "
+  local force="$1" && shift
   local derived=("$@") && set --
 
   local prettyFun && prettyFun=$(catchReturn "$handler" decorate code "$fun") || return $?
@@ -391,7 +394,7 @@ __documentationFileCompileFunction() {
 
   pathIsAbsolute "$sourceFile" || sourceFile="$home/$sourceFile"
 
-  if [ -n "$sourceHash" ]; then
+  if ! $force && [ -n "$sourceHash" ]; then
     local computedHash && computedHash=$(catchEnvironment "$handler" textSHA <"$sourceFile") || return $?
 
     if [ "$computedHash" = "$sourceHash" ]; then
@@ -432,7 +435,8 @@ __documentationFileCompileFunction() {
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
   (
-    catchReturn "$handler" bashDocumentationExtract --function --generate "$fun" "$sourceFile" <"$tempComment" >"$documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
+    local nc=() && $force || nc=(--no-cache)
+    catchReturn "$handler" bashDocumentationExtract "${nc[@]+"${nc[@]}"}" --function --generate "$fun" "$sourceFile" <"$tempComment" >"$documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
   ) || return $?
 
   __profileLabel="bashDocumentationExtract"

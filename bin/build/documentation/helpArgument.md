@@ -1,8 +1,8 @@
-## `helpArgument`
+### `helpArgument`
 
 > Simple help argument handler.
 
-### Usage
+#### Usage
 
     helpArgument [ --only ] handlerFunction [ arguments ... ]
 
@@ -22,13 +22,13 @@ Example:
 
 > Location: `bin/build/tools/argument.sh`
 
-### Arguments
+#### Arguments
 
 - `--only` - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
 - `handlerFunction` - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
 - `arguments ...` - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
 
-### Examples
+#### Examples
 
     # NOT DEFINED handler
     helpArgument "_${FUNCNAME[0]}" "$@" || return 0
@@ -46,13 +46,13 @@ Example:
     [ $# -gt 0 ] || helpArgument "_${FUNCNAME[0]}" --help || return 0
     [ $# -gt 0 ] || helpArgument "$handler" --help || return 0
 
-### Return codes
+#### Return codes
 
 - `0` - Help was not found or displayed
 - `1` - Help was found and displayed
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:throwArgument}
 - {SEE:bashDocumentation}

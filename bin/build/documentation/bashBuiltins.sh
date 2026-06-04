@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument="none"
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="List bash builtin functions, one per line"$'\n'""$'\n'""
+description=$'List bash builtin functions, one per line\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashBuiltins"
 fnMarker="bashbuiltins"
 foundNames=([0]="stdout")
-line="82"
-rawComment="List bash builtin functions, one per line"$'\n'"stdout: line:function"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="83"
+rawComment=$'List bash builtin functions, one per line\nstdout: line:function\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
-sourceLine="82"
-stdout="line:function"$'\n'""
+sourceHash="112376f9f627c10da9943f372ddc2bf96eecf81e"
+sourceLine="83"
+stdout=$'line:function\n'
 summary="List bash builtin functions, one per line"
 summaryComputed="true"
 usage="bashBuiltins"

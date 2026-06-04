@@ -1,8 +1,8 @@
-## `assertFileContains`
+### `assertFileContains`
 
 > Assert a file contains one or more strings
 
-### Usage
+#### Usage
 
     assertFileContains fileName string ... [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -10,7 +10,7 @@ Assert a file contains one or more strings
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `fileName` - File. Required. File to search
 - `string ...` - String. Required. One or more strings which must be found on at least one line in the file
@@ -33,21 +33,21 @@ Assert a file contains one or more strings
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Examples
+#### Examples
 
     assertFileContains $logFile Success
     assertFileContains $logFile "is up to date"
 
-### Return codes
+#### Return codes
 
 - `0` - If the assertion succeeds
 - `1` - If the assertion fails
 
-### Environment
+#### Environment
 
 - If the file does not exist, this will fail.
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertFileContains` was reviewed 2023-11-12
 .

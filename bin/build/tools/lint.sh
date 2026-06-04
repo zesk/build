@@ -98,7 +98,7 @@ _bashLint() {
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
 # Environment: This operates in the current working directory
-# Summary: Check files for the existence of a string
+# Summary: Lint multiple bash files
 # Return Code: 0 - All found files pass `shellcheck` and `bash -n`
 # Return Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.

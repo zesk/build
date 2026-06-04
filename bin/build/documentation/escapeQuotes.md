@@ -1,8 +1,8 @@
-## `escapeQuotes`
+### `escapeQuotes`
 
 > Quote strings for inclusion in shell quoted strings
 
-### Usage
+#### Usage
 
     escapeQuotes [ text ]
 
@@ -11,23 +11,23 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `text` - Text to quote
 
-### Writes to standard output
+#### Writes to standard output
 
 The input text properly quoted
 
-### Examples
+#### Examples
 
     escapeQuotes "Now I can't not include this in a bash string."
 
-### Sample Output
+#### Sample Output
 
 Single quotes are prefixed with a backslash
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `interactiveCountdown`
+### `interactiveCountdown`
 
 > Display a message and count down display
 
-### Usage
+#### Usage
 
     interactiveCountdown [ --help ] [ --badge text ] [ --prefix prefix ] counter binary [ ... ]
 
@@ -10,7 +10,7 @@ Display a message and count down display
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--badge text` - String. Display this text as decorate at
@@ -19,7 +19,7 @@ Display a message and count down display
 - `binary` - Callable. Required. Run this with any additional arguments when the countdown is completed.
 - `...` - Arguments. Optional. Passed to binary.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

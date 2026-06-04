@@ -1,8 +1,8 @@
-## `consoleConfigureColorMode`
+### `consoleConfigureColorMode`
 
 > Print the suggested color mode for the current environment
 
-### Usage
+#### Usage
 
     consoleConfigureColorMode [ backgroundColor ]
 
@@ -10,11 +10,11 @@ Print the suggested color mode for the current environment
 
 > Location: `bin/build/tools/console.sh`
 
-### Arguments
+#### Arguments
 
 - `backgroundColor` - String. Optional. Background color.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

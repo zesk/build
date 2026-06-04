@@ -1,8 +1,8 @@
-## `isiTerm2`
+### `isiTerm2`
 
 > Is the current console iTerm2?
 
-### Usage
+#### Usage
 
     isiTerm2 [ --help ]
 
@@ -11,17 +11,17 @@ Succeeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:LC_TERMINAL}
 - {SEE:TERM}

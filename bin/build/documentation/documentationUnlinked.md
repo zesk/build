@@ -1,8 +1,8 @@
-## `documentationUnlinked`
+### `documentationUnlinked`
 
 > List unlinked functions in documentation index
 
-### Usage
+#### Usage
 
     documentationUnlinked [ --help ]
 
@@ -10,11 +10,11 @@ List unlinked functions in documentation index
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

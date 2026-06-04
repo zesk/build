@@ -1,8 +1,8 @@
-## `awsInstall`
+### `awsInstall`
 
 > aws Command-Line install
 
-### Usage
+#### Usage
 
     awsInstall
 
@@ -12,17 +12,17 @@ Installs x86 or aarch64 binary based on `HOSTTYPE`.
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:packageInstall}
 - {SEE:urlFetch}

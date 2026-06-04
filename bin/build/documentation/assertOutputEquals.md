@@ -1,8 +1,8 @@
-## `assertOutputEquals`
+### `assertOutputEquals`
 
 > Assert output of a binary equals a string
 
-### Usage
+#### Usage
 
     assertOutputEquals [ expected ] binary [ ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -12,7 +12,7 @@ If this fails it will output an error and exit.
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `expected` - EmptyString. Expected string to match output.
 - `binary` - Callable. Required. Binary to run and evaluate output
@@ -36,17 +36,17 @@ If this fails it will output an error and exit.
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Examples
+#### Examples
 
     assertOutputEquals "2023" date +%Y
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertOutputEquals` was reviewed 2023-11-12
 .

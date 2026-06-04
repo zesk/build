@@ -1,8 +1,8 @@
-## `websiteScrape`
+### `websiteScrape`
 
 > Scrape a website.
 
-### Usage
+#### Usage
 
     websiteScrape [ --help ] url
 
@@ -15,12 +15,12 @@ This is not final yet and may not work properly.
 
 > Location: `bin/build/tools/web.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `url` - URL. Required. Url to scrape recursively.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

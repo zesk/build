@@ -1,8 +1,8 @@
-## `directoryRelativePath`
+### `directoryRelativePath`
 
 > Given a path to a file, compute the path back
 
-### Usage
+#### Usage
 
     directoryRelativePath [ directory ]
 
@@ -16,15 +16,15 @@ Essentially converts the slash `/` to a `..`, so convert your source appropriate
 
 > Location: `bin/build/tools/directory.sh`
 
-### Arguments
+#### Arguments
 
 - `directory` - String. A path to convert.
 
-### Writes to standard output
+#### Writes to standard output
 
 Relative paths, one per line
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

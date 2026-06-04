@@ -1,8 +1,8 @@
-## `linkRename`
+### `linkRename`
 
 > Rename a link
 
-### Usage
+#### Usage
 
     linkRename from to
 
@@ -11,18 +11,18 @@ Renames a link forcing replacement, and works on different versions of `mv` whic
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `from` - Link. Required. Link to rename.
 - `to` - FileDirectory. Required. New link path.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### See Also
+#### See Also
 
 - {SEE:mv}
 

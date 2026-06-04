@@ -1,8 +1,8 @@
-## `bashPromptModule_dotFilesWatcher`
+### `bashPromptModule_dotFilesWatcher`
 
-> Watches your HOME directory for `.` files which are added
+> Monitor home directory for new `.` files
 
-### Usage
+#### Usage
 
     bashPromptModule_dotFilesWatcher
 
@@ -10,17 +10,33 @@ Watches your HOME directory for `.` files which are added and unknown to you.
 
 > Location: `bin/build/tools/prompt-modules.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Examples
+#### Examples
 
     bashPrompt bashPromptModule_dotFilesWatcher
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Requires
+
+- sort
+- {SEE:buildEnvironmentGetDirectory}
+- touch
+- {SEE:returnEnvironment}
+- [`read`]({rel}/guide/builtin.md#read)
+- basename
+- {SEE:inArray}
+- {SEE:decorate}
+- [`printf`]({rel}/guide/builtin.md#printf)
+- {SEE:confirmYesNo}
+- {SEE:statusMessage}
+- grep
+- rm
 

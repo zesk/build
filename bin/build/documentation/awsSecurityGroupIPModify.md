@@ -1,8 +1,8 @@
-## `awsSecurityGroupIPModify`
+### `awsSecurityGroupIPModify`
 
 > Modify an EC2 Security Group
 
-### Usage
+#### Usage
 
     awsSecurityGroupIPModify --remove [ --add ] [ --register ] --group group [ --region region ] --port port --description description --ip ip [ --help ]
 
@@ -15,7 +15,7 @@ Modify an EC2 Security Group and add or remove an IP/port combination to the gro
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `--remove - Flag. Optional. Remove instead of add` - only `group`, and `description` required.
 - `--add` - Flag. Optional. Add to security group (default).
@@ -27,7 +27,7 @@ Modify an EC2 Security Group and add or remove an IP/port combination to the gro
 - `--ip ip` - Required. for `--add` only. String. IP Address to add or remove.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

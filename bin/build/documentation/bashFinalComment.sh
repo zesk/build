@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Extracts the final comment from a stream"$'\n'""$'\n'""
+description=$'Extracts the final comment from a stream\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashFinalComment"
 fnMarker="bashfinalcomment"
 foundNames=([0]="argument" [1]="requires")
-line="555"
-rawComment="Extracts the final comment from a stream"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: fileReverseLines sed cut grep convertValue"$'\n'""$'\n'""
-requires="fileReverseLines sed cut grep convertValue"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="558"
+rawComment=$'Extracts the final comment from a stream\nArgument: --help - Flag. Optional. Display this help.\nRequires: fileReverseLines sed cut grep convertValue\n\n'
+requires=$'fileReverseLines sed cut grep convertValue\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
-sourceLine="555"
+sourceHash="112376f9f627c10da9943f372ddc2bf96eecf81e"
+sourceLine="558"
 summary="Extracts the final comment from a stream"
 summaryComputed="true"
 usage="bashFinalComment [ --help ]"

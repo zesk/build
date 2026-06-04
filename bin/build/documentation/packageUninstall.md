@@ -1,8 +1,8 @@
-## `packageUninstall`
+### `packageUninstall`
 
 > Removes packages using package manager
 
-### Usage
+#### Usage
 
     packageUninstall package [ --manager packageManager ]
 
@@ -10,16 +10,16 @@ Removes packages using the current package manager.
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - `package` - String. Required. One or more packages to uninstall
 - `--manager packageManager` - String. Optional. Package manager to use. (apk, apt, brew)
 
-### Examples
+#### Examples
 
     packageUninstall shellcheck
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

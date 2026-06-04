@@ -1,8 +1,8 @@
-## `readlineConfigurationAdd`
+### `readlineConfigurationAdd`
 
 > Add configuration to `~/.inputrc` for a key binding
 
-### Usage
+#### Usage
 
     readlineConfigurationAdd [ --help ] keyStroke action
 
@@ -10,17 +10,17 @@ Add configuration to `~/.inputrc` for a key binding
 
 > Location: `bin/build/tools/readline.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `keyStroke` - String. Required.
 - `action` - String. Required.
 
-### Examples
+#### Examples
 
 readlineConfigurationAdd "\ep" history-search-backward
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

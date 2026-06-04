@@ -1,8 +1,8 @@
-## `phpUninstall`
+### `phpUninstall`
 
 > Uninstall `php`
 
-### Usage
+#### Usage
 
     phpUninstall [ package ]
 
@@ -14,11 +14,11 @@ When this tool succeeds the `php` binary is no longer available in the local ope
 
 > Location: `bin/build/tools/php.sh`
 
-### Arguments
+#### Arguments
 
 - `package` - Additional packages to install
 
-### Return codes
+#### Return codes
 
 - `1` - If uninstallation fails
 - `0` - If uninstallation succeeds

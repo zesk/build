@@ -1,8 +1,8 @@
-## `gitRemoveFileFromHistory`
+### `gitRemoveFileFromHistory`
 
 > Has a lot of caveats
 
-### Usage
+#### Usage
 
     gitRemoveFileFromHistory
 
@@ -14,11 +14,11 @@ usually have to `git push --force`
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `dockerListContext`
+### `dockerListContext`
 
 > List the files which would be included in the docker
 
-### Usage
+#### Usage
 
     dockerListContext
 
@@ -10,11 +10,11 @@ List the files which would be included in the docker image
 
 > Location: `bin/build/tools/docker.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

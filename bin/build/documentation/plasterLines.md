@@ -1,8 +1,8 @@
-## `plasterLines`
+### `plasterLines`
 
 > Outputs a line and fills the remainder with space
 
-### Usage
+#### Usage
 
     plasterLines
 
@@ -10,11 +10,11 @@ Outputs a line and fills the remainder with space
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

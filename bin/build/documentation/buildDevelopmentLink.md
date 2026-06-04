@@ -1,8 +1,8 @@
-## `buildDevelopmentLink`
+### `buildDevelopmentLink`
 
 > Add a development link to the local version of Zesk
 
-### Usage
+#### Usage
 
     buildDevelopmentLink [ --copy ] [ --reset ]
 
@@ -14,12 +14,12 @@ Useful when you want to test a fix on a current project.
 
 > Location: `bin/build/tools/developer.sh`
 
-### Arguments
+#### Arguments
 
 - `--copy - Flag. Optional. Copy the files instead of creating a link` - more compatible with Docker but slower and requires synchronization.
 - `--reset` - Flag. Optional. Revert the link and reinstall using the original binary.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

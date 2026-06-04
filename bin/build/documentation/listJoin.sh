@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'separator - EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.\ntext0 ... - String. Optional. One or more strings to join\n--help - Flag. Optional. Display this help.\n'
 base="list.sh"

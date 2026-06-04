@@ -1,8 +1,8 @@
-## `directoryClobber`
+### `directoryClobber`
 
 > Copy directory over another sort-of-atomically
 
-### Usage
+#### Usage
 
     directoryClobber source target
 
@@ -10,12 +10,12 @@ Copy directory over another sort-of-atomically
 
 > Location: `bin/build/tools/directory.sh`
 
-### Arguments
+#### Arguments
 
 - `source` - Directory. Required. target
 - `target` - FileDirectory. Required.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

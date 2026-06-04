@@ -1,8 +1,8 @@
-## `bashFunctionNameValid`
+### `bashFunctionNameValid`
 
 > Is a string a valid function name?
 
-### Usage
+#### Usage
 
     bashFunctionNameValid [ --help ]
 
@@ -10,11 +10,11 @@ Does not check if a function is defined, just whether the name would be acceptab
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - All values passed are valid function names for bash functions
 - `1` - One or more values passed are NOT valid function names for bash functions

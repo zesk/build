@@ -1,8 +1,8 @@
-## `environmentLines`
+### `environmentLines`
 
 > List lines of environment values set in a bash state
 
-### Usage
+#### Usage
 
     environmentLines [ --help ]
 
@@ -10,15 +10,15 @@ List lines of environment values set in a bash state file
 
 > Location: `bin/build/tools/environment/io.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     environmentLines < "$stateFile"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

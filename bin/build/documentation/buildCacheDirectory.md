@@ -1,8 +1,8 @@
-## `buildCacheDirectory`
+### `buildCacheDirectory`
 
 > Path to cache directory for build system.
 
-### Usage
+#### Usage
 
     buildCacheDirectory [ pathSegment ] [ --help ]
 
@@ -14,18 +14,22 @@ Appends any passed in arguments as path segments.
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `pathSegment` - One or more directory or file path, concatenated as path segments using `/`
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     logFile=$(buildCacheDirectory test.log)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:XDG_CACHE_HOME}
 

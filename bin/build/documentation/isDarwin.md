@@ -1,8 +1,8 @@
-## `isDarwin`
+### `isDarwin`
 
 > Are we on Mac OS X?
 
-### Usage
+#### Usage
 
     isDarwin
 
@@ -10,11 +10,11 @@ Are we on Mac OS X?
 
 > Location: `bin/build/tools/darwin.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

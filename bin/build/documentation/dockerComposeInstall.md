@@ -1,8 +1,8 @@
-## `dockerComposeInstall`
+### `dockerComposeInstall`
 
 > Install `docker-compose`
 
-### Usage
+#### Usage
 
     dockerComposeInstall [ package ]
 
@@ -14,16 +14,16 @@ When this tool succeeds the `docker-compose` binary is available in the local op
 
 > Location: `bin/build/tools/docker-compose.sh`
 
-### Arguments
+#### Arguments
 
 - `package` - Additional packages to install (using `pipInstall`)
 
-### Return codes
+#### Return codes
 
 - `1` - If installation fails
 - `0` - If installation succeeds
 
-### See Also
+#### See Also
 
 - {SEE:pipInstall}
 

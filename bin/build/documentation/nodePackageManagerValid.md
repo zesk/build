@@ -1,8 +1,8 @@
-## `nodePackageManagerValid`
+### `nodePackageManagerValid`
 
 > Is the passed node package manager name valid?
 
-### Usage
+#### Usage
 
     nodePackageManagerValid [ --help ] managerName
 
@@ -11,12 +11,12 @@ Without arguments, shows the valid package manager names.
 
 > Location: `bin/build/tools/node.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `managerName` - String. Required. The node package manager name to check.
 
-### Return codes
+#### Return codes
 
 - `0` - Yes, it's a valid package manager name.
 - `1` - No, it's not a valid package manager name.

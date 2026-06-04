@@ -1,8 +1,8 @@
-## `consoleHasColors`
+### `consoleHasColors`
 
 > Sets the environment variable `BUILD_COLORS` if not set, uses `TERM`
 
-### Usage
+#### Usage
 
     consoleHasColors [ --help ]
 
@@ -10,20 +10,20 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 > Location: `bin/build/tools/decorate/core.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Console or output supports colors
 - `1` - Colors are likely not supported by console
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_COLORS} - Boolean. Optional. Whether the build system will output ANSI colors.
 
-### Requires
+#### Requires
 
 - {SEE:isPositiveInteger}
 - tput

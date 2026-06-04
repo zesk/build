@@ -1,8 +1,8 @@
-## `documentationEnvironmentMake`
+### `documentationEnvironmentMake`
 
 > Build documentation files for environment variables
 
-### Usage
+#### Usage
 
     documentationEnvironmentMake [ --source sourcePath ] [ --template templatePath ] [ --target targetPath ] [ --clean ] [ --force ] [ --verbose ] [ --link linkURI ] [ --help ]
 
@@ -51,7 +51,7 @@ Target templates created:
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--source sourcePath` - Directory. Optional. Path to source environment files (`*.sh` files). Defaults to `$(buildHome)/bin/env` if not specified.
 - `--template templatePath` - Directory. Optional. Path for environment template files.
@@ -62,9 +62,13 @@ Target templates created:
 - `--link linkURI` - String. Optional. Sets the `link` variable in templates. Defaults to `/env/`.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Issue with environment
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:BUILD_DOCUMENTATION_PATH}
 

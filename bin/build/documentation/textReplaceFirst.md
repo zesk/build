@@ -1,8 +1,8 @@
-## `textReplaceFirst`
+### `textReplaceFirst`
 
 > Replaces the first and only the first occurrence of a
 
-### Usage
+#### Usage
 
     textReplaceFirst [ searchString ] [ replaceString ]
 
@@ -11,20 +11,20 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `searchString` - String. Thing to search for.
 - `replaceString` - String. Thing to replace search string with.
 
-### Reads standard input
+#### Reads standard input
 
 Reads lines from stdin until EOF
 
-### Writes to standard output
+#### Writes to standard output
 
 Outputs modified lines
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

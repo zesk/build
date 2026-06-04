@@ -1,8 +1,8 @@
-## `gitShowStatus`
+### `gitShowStatus`
 
 > Show changed files from HEAD with their status prefix character:
 
-### Usage
+#### Usage
 
     gitShowStatus [ --help ]
 
@@ -20,11 +20,11 @@ Show changed files from HEAD with their status prefix character:
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - the repo has been modified
 - `1` - the repo has NOT bee modified

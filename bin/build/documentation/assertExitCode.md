@@ -1,8 +1,8 @@
-## `assertExitCode`
+### `assertExitCode`
 
 > Assert a process runs and exits with the correct exit
 
-### Usage
+#### Usage
 
     assertExitCode expectedExitCode command [ arguments ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -12,7 +12,7 @@ If this fails it will output an error and exit.
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `expectedExitCode` - UnsignedInteger. Required. A numeric exit code expected from the command.
 - `command` - Callable. Required. The command to run
@@ -36,12 +36,12 @@ If this fails it will output an error and exit.
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Return codes
+#### Return codes
 
 - `0` - If the process exits with the provided exit code
 - `1` - If the process exits with a different exit code
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertExitCode` was reviewed 2023-11-12
 .

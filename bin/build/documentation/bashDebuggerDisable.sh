@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="debugger.sh"
@@ -16,7 +16,7 @@ rawComment=$'Summary: Disable the debugger\nDisables the debugger immediately.\n
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'bashDebug bashDebuggerEnable\n'
 sourceFile="bin/build/tools/debugger.sh"
-sourceHash="88503835f6348f148bb8f4c15fc6b863517030bb"
+sourceHash="bd55a6573cd344af04d89e81c9efb1b1eaf00e5a"
 sourceLine="98"
 summary="Disable the debugger"
 summaryComputed=""

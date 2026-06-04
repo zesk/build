@@ -1,8 +1,8 @@
-## `cursorSet`
+### `cursorSet`
 
 > Move the cursor to x y
 
-### Usage
+#### Usage
 
     cursorSet x y
 
@@ -10,12 +10,12 @@ Move the cursor to x y
 
 > Location: `bin/build/tools/cursor.sh`
 
-### Arguments
+#### Arguments
 
 - `x` - UnsignedInteger. Required. Column to place the cursor.
 - `y` - UnsignedInteger. Required. Row to place the cursor.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

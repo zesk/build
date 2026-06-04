@@ -1,8 +1,8 @@
-## `fileDirectoryRequire`
+### `fileDirectoryRequire`
 
 > Given a list of files, ensure their parent directories exist
 
-### Usage
+#### Usage
 
     fileDirectoryRequire [ --handler handler ] [ --help ] [ --mode fileMode ] [ --owner ownerName ] fileDirectory ...
 
@@ -12,7 +12,7 @@ Creates the directories for all files passed in.
 
 > Location: `bin/build/tools/directory.sh`
 
-### Arguments
+#### Arguments
 
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - `--help` - Flag. Optional. Display this help.
@@ -20,22 +20,21 @@ Creates the directories for all files passed in.
 - `--owner ownerName` - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 - `fileDirectory ...` - FileDirectory. Required. Test if file directory exists (file does not have to exist)
 
-### Examples
+#### Examples
 
     logFile=./.build/$me.log
     fileDirectoryRequire "$logFile"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - chmod
 - {SEE:throwArgument}
-- usageArgumentString
 - {SEE:decorate}
 - {SEE:catchEnvironment}
 - dirname

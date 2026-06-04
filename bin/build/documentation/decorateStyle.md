@@ -1,8 +1,8 @@
-## `decorateStyle`
+### `decorateStyle`
 
 > Get or modify a decoration style
 
-### Usage
+#### Usage
 
     decorateStyle style [ newFormat ]
 
@@ -11,12 +11,12 @@ Otherwise sets the new style.
 
 > Location: `bin/build/tools/decorate/style.sh`
 
-### Arguments
+#### Arguments
 
 - `style` - String. Required. The style to fetch or replace.
 - `newFormat` - String. Optional. The new style formatting options as a string in the form `escapeCodes label`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `isArray`
+### `isArray`
 
 > Is a variable declared as an array?
 
-### Usage
+#### Usage
 
     isArray variableName [ --help ]
 
@@ -10,12 +10,12 @@ Is a variable declared as an array?
 
 > Location: `bin/build/tools/type.sh`
 
-### Arguments
+#### Arguments
 
 - `variableName` - String. Required. Variable name to check.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

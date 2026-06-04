@@ -1,8 +1,8 @@
-## `deployBuildEnvironment`
+### `deployBuildEnvironment`
 
 > Deploy to a host
 
-### Usage
+#### Usage
 
     deployBuildEnvironment [ --env-file envFile ] [ --debug ] [ --first ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]
 
@@ -13,7 +13,7 @@ Not possible to deploy to different paths on different hosts, currently. Hosts a
 
 > Location: `bin/build/tools/deployment.sh`
 
-### Arguments
+#### Arguments
 
 - `--env-file envFile - File. Optional. Environment file to load` - can handle any format.
 - `--debug` - Flag. Optional. Enable debugging.
@@ -23,9 +23,17 @@ Not possible to deploy to different paths on different hosts, currently. Hosts a
 - `--application applicationPath` - String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_HOME` environment.
 - `--target targetPackage` - Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:DEPLOY_REMOTE_HOME} - path on remote host for deployment data
+- {SEE:APPLICATION_REMOTE_HOME} - path on remote host for application
+- {SEE:DEPLOY_USER_HOSTS} - list of user@host (will be tokenized by spaces regardless of shell quoting)
+- {SEE:APPLICATION_ID} - Version to be deployed
+- {SEE:BUILD_TARGET} - The application package name
 

@@ -1,8 +1,8 @@
-## `listCleanDuplicates`
+### `listCleanDuplicates`
 
 > Removes duplicates from a list and maintains ordering.
 
-### Usage
+#### Usage
 
     listCleanDuplicates separator listText [ --removed ] [ --test testFunction ] [ --help ]
 
@@ -10,7 +10,7 @@ Removes duplicates from a list and maintains ordering.
 
 > Location: `bin/build/tools/list.sh`
 
-### Arguments
+#### Arguments
 
 - `separator` - String. Required. List separator character.
 - `listText` - String. Required. List to clean duplicates.
@@ -18,7 +18,7 @@ Removes duplicates from a list and maintains ordering.
 - `--test testFunction` - Function. Optional. Run this function on each item in the list and if the return code is non-zero, then remove it from the list.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

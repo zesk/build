@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'globalName - EnvironmentVariable. Required. Global to change temporarily to a value.\nvalue - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.\n... - Continue passing pairs of globalName value to mock additional values.\n--help - Flag. Optional. Display this help.\n'
 base="test.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/test.sh"
 fn="mockEnvironmentStart"
 fnMarker="mockenvironmentstart"
 foundNames=([0]="argument")
-line="1440"
+line="1439"
 rawComment=$'Fake a value for testing\nArgument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value.\nArgument: value - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.\nArgument: ... - Continue passing pairs of globalName value to mock additional values.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/test.sh"
-sourceHash="78c7da5cbc1777fd8206d96854e19720ad1957a9"
-sourceLine="1440"
+sourceHash="74049261be4311898ae206f18f3c43621dd42ffa"
+sourceLine="1439"
 summary="Fake a value for testing"
 summaryComputed="true"
 usage="mockEnvironmentStart globalName [ value ] [ ... ] [ --help ]"

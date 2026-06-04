@@ -30,7 +30,10 @@ _isVersion() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Summary: Strip leading vee from version tags
+# Summary: Remove `v` from versions
+#
+# Strip leading `v` from version tags. Useful when you standardize on the non-`v` versions or wish to sort without the `v`.
+#
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Take one or more versions and strip the leading `v`

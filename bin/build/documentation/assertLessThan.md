@@ -1,8 +1,8 @@
-## `assertLessThan`
+### `assertLessThan`
 
 > Assert `leftValue < rightValue`
 
-### Usage
+#### Usage
 
     assertLessThan [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ] leftValue rightValue [ message ]
 
@@ -10,7 +10,7 @@ Assert `leftValue < rightValue`
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -34,16 +34,16 @@ Assert `leftValue < rightValue`
 - `rightValue` - Integer. Required. Value to compare on the right hand side of the comparison
 - `message` - Message to output if the assertion fails
 
-### Examples
+#### Examples
 
     assertLessThan 3 $found
 
-### Return codes
+#### Return codes
 
 - `0` - expected less than to actual
 - `1` - expected greater than or equal to actual, or invalid numbers
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertLessThan` was reviewed 2023-11-12
 .

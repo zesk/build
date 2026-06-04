@@ -1,8 +1,8 @@
-## `fileNotMatches`
+### `fileNotMatches`
 
 > Find list of files which do NOT match a specific
 
-### Usage
+#### Usage
 
     fileNotMatches [ --help ] pattern ... -- [ exception ... ] -- file ...
 
@@ -10,7 +10,7 @@ Find list of files which do NOT match a specific pattern or patterns and output 
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `pattern ...` - String. Required.`grep -e` Pattern to find in files.
@@ -19,7 +19,7 @@ Find list of files which do NOT match a specific pattern or patterns and output 
 - `--` - Delimiter. Required. file.
 - `file ...` - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

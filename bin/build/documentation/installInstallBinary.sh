@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument="--diff - Flag. Optional. Show differences between new and old files if changed."$'\n'"--url - URL. Optional. A remote URL to download the installation script."$'\n'"--url-function - Callable. Optional. Fetch the remote URL where the installation script is found."$'\n'"--source - File. Required. The local copy of the \`--bin\` file."$'\n'"--local - Flag. Optional. Use local copy \`--bin\` instead of downloaded version."$'\n'"--bin - String. Required. Name of the installer file."$'\n'"path - Directory. Optional. Path to install the binary. Default is \`bin\`. If ends with \`.sh\` will name the binary this name."$'\n'"applicationHome - Directory. Optional. Path to the application home directory. Default is current directory."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="build.sh"

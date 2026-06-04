@@ -1,8 +1,8 @@
-## `packageDefault`
+### `packageDefault`
 
 > Fetch the binary name for the default package in a
 
-### Usage
+#### Usage
 
     packageDefault
 
@@ -13,11 +13,11 @@ Groups are:
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

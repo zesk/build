@@ -1,1 +1,1 @@
-[bashGetRequires]({rel}tools/bash.md#bashgetrequires) - Gets a list of the \`Requires:\` comments in a bash ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L44))
+[bashGetRequires]({rel}tools/bash.md#bashgetrequires) - Fetch requirements lines from a bash file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L45))

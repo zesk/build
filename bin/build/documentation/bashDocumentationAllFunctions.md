@@ -1,8 +1,8 @@
-## `bashDocumentationAllFunctions`
+### `bashDocumentationAllFunctions`
 
 > Generate markdown for a list of all functions
 
-### Usage
+#### Usage
 
     bashDocumentationAllFunctions [ --help ]
 
@@ -11,15 +11,15 @@ Output to `allFunctionList.md` typically.
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Function. Function names one per line.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

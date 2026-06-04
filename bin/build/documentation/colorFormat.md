@@ -1,8 +1,8 @@
-## `colorFormat`
+### `colorFormat`
 
 > Take r g b decimal values and convert them to
 
-### Usage
+#### Usage
 
     colorFormat [ format ] [ red ] [ green ] [ blue ] [ --help ]
 
@@ -11,7 +11,7 @@ Takes arguments or stdin values in groups of 3.
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - `format` - String. Optional. Formatting string.
 - `red` - UnsignedInteger. Optional. Red component.
@@ -19,11 +19,11 @@ Takes arguments or stdin values in groups of 3.
 - `blue` - UnsignedInteger. Optional. Green component.
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 list:UnsignedInteger
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `isExecutable`
+### `isExecutable`
 
 > Test if all arguments are executable binaries
 
-### Usage
+#### Usage
 
     isExecutable string
 
@@ -11,16 +11,22 @@ If no arguments are passed, returns exit code 1.
 
 > Location: `bin/build/tools/type.sh`
 
-### Arguments
+#### Arguments
 
 - `string` - String. Required. Path to binary to test if it is executable.
 
-### Return codes
+#### Return codes
 
 - `0` - All arguments are executable binaries
 - `1` - One or or more arguments are not executable binaries
 
-### Environment
+#### Environment
 
 - {SEE:PATH}
+
+#### Requires
+
+- {SEE:throwArgument}
+- {SEE:helpArgument}
+- [`type`]({rel}/guide/builtin.md#type)
 

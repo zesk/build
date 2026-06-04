@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'listValue - Required. List value to modify.\nseparator - Required. Separator string for item values (typically `:`)\n--first - Flag. Optional. Place any items after this flag first in the list\n--last - Flag. Optional. Place any items after this flag last in the list. Default.\nitem - the value to be added to the `listValue`\n--help - Flag. Optional. Display this help.\n'
 base="list.sh"

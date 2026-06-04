@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="functionName - String. Required. Function which should be called somewhere within a file."$'\n'"file - File. Required. File to search for function handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'functionName - String. Required. Function which should be called somewhere within a file.\nfile - File. Required. File to search for function handler.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Show function handler in files"$'\n'"This check is simplistic and does not verify actual coverage or code paths."$'\n'""$'\n'""
+description=$'Show function handler in files\nThis check is simplistic and does not verify actual coverage or code paths.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/bash.sh"
 fn="bashShowUsage"
 fnMarker="bashshowusage"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
-line="315"
-rawComment="Show function handler in files"$'\n'"Argument: functionName - String. Required. Function which should be called somewhere within a file."$'\n'"Argument: file - File. Required. File to search for function handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Function is used within the file"$'\n'"Return Code: 1 - Function is *not* used within the file"$'\n'"This check is simplistic and does not verify actual coverage or code paths."$'\n'"Requires: throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep"$'\n'""$'\n'""
-requires="throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep"$'\n'""
-return_code="0 - Function is used within the file"$'\n'"1 - Function is *not* used within the file"$'\n'""
+line="316"
+rawComment=$'Show function handler in files\nArgument: functionName - String. Required. Function which should be called somewhere within a file.\nArgument: file - File. Required. File to search for function handler.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - Function is used within the file\nReturn Code: 1 - Function is *not* used within the file\nThis check is simplistic and does not verify actual coverage or code paths.\nRequires: throwArgument decorate validate quoteGrepPattern bashStripComments cat grep\n\n'
+requires=$'throwArgument decorate validate quoteGrepPattern bashStripComments cat grep\n'
+return_code=$'0 - Function is used within the file\n1 - Function is *not* used within the file\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
-sourceLine="315"
+sourceHash="112376f9f627c10da9943f372ddc2bf96eecf81e"
+sourceLine="316"
 summary="Show function handler in files"
 summaryComputed="true"
 usage="bashShowUsage functionName file [ --help ]"

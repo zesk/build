@@ -1,8 +1,8 @@
-## `tarCreate`
+### `tarCreate`
 
 > Platform agnostic tar cfz which ignores owner and attributes
 
-### Usage
+#### Usage
 
     tarCreate target [ files ]
 
@@ -12,16 +12,16 @@ Platform agnostic tar cfz which ignores owner and attributes
 
 > Location: `bin/build/tools/tar.sh`
 
-### Arguments
+#### Arguments
 
 - `target` - FileDirectory. Required.The tar.gz file to create.
 - `files` - File. Optional. A list of files to include in the tar file.
 
-### Reads standard input
+#### Reads standard input
 
 A list of files to include in the tar file
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

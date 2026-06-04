@@ -1,8 +1,8 @@
-## `documentationMake`
+### `documentationMake`
 
 > Make documentation for Bash functions
 
-### Usage
+#### Usage
 
     documentationMake [ --clean ] --template templateDirectory --source sourceDirectory --target targetDirectory [ --help ]
 
@@ -20,7 +20,7 @@ Uses cached files at `BUILD_DOCUMENTATION_PATH`, assumes documentation cache str
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--clean` - Flag. Optional. Erase the cache before starting.
 - `--template templateDirectory` - Directory. Required. Location of additional documentation template files to generate documentation.
@@ -28,7 +28,7 @@ Uses cached files at `BUILD_DOCUMENTATION_PATH`, assumes documentation cache str
 - `--target targetDirectory` - Directory. Required. Location of documentation build target.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Issue with environment

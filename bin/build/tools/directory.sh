@@ -115,7 +115,7 @@ _directoryClobber() {
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)
-# Requires: chmod throwArgument usageArgumentString decorate catchEnvironment dirname
+# Requires: chmod throwArgument decorate catchEnvironment dirname
 fileDirectoryRequire() {
   local handler="_${FUNCNAME[0]}"
 
@@ -189,7 +189,7 @@ _fileDirectoryExists() {
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
-# Requires: throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname
+# Requires: throwArgument decorate catchEnvironment dirname
 # Requires: chmod chown
 directoryRequire() {
   local handler="_${FUNCNAME[0]}"

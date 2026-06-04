@@ -1,8 +1,8 @@
-## `deployPackageName`
+### `deployPackageName`
 
 > Outputs the build target name which is based on the
 
-### Usage
+#### Usage
 
     deployPackageName deployHome
 
@@ -13,17 +13,17 @@ If this is called on a non-deployment system, use the application root instead o
 
 > Location: `bin/build/tools/deploy.sh`
 
-### Arguments
+#### Arguments
 
 - `deployHome` - Directory. Required. Deployment database home.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_TARGET}
 

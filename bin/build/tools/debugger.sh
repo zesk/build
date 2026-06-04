@@ -11,7 +11,7 @@
 # Summary: Bash debugger
 # `{fn}`: Simple debugger to walk through a program.
 #
-# Usage:     bashDebug command
+# Usage:     bashDebug [ --help ] command ...
 #
 # Argument: commandToDebug ... - Callable. Required. Command to debug.
 # DOC TEMPLATE: --help 1
@@ -19,7 +19,7 @@
 #
 # Debugger accepts the following keystrokes:
 #
-# ### Flow control
+# ##### Flow control
 #
 # - `.` or ` ` or Return - Repeat last flow command
 #
@@ -29,12 +29,12 @@
 # - `q`         - Quit debugger (and continue execution)
 # - `!`         - Enter a command to execute
 #
-# ### Watching
+# ##### Watching
 #
 # - `w`         - Enter a watch expression
 # - `u`         - Remove a watch expression
 #
-# ### Utilities
+# ##### Utilities
 #
 # `k`         - Display call stack
 # `*`         - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)

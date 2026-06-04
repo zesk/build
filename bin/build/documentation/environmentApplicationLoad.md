@@ -1,8 +1,8 @@
-## `environmentApplicationLoad`
+### `environmentApplicationLoad`
 
 > Loads application environment variables, set them to their default values
 
-### Usage
+#### Usage
 
     environmentApplicationLoad [ --help ]
 
@@ -10,17 +10,17 @@ Loads application environment variables, set them to their default values if nee
 
 > Location: `bin/build/tools/environment/application.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_TIMESTAMP}
 - {SEE:APPLICATION_BUILD_DATE}

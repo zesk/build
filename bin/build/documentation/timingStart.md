@@ -1,8 +1,8 @@
-## `timingStart`
+### `timingStart`
 
 > Start a timer
 
-### Usage
+#### Usage
 
     timingStart [ --help ]
 
@@ -12,25 +12,33 @@ Only fails if `date` is not installed
 
 > Location: `bin/build/tools/timing.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 UnsignedInteger
 
-### Sample Output
+#### Examples
+
+    init=$(timingStart)
+    ...
+    timingReport "$init" "Completed in"
+    start=$(timingStart) && printf "%d\n" "$start"
+    1777501474602
+
+#### Sample Output
 
 1777501474602
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - __timestamp,
 - {SEE:returnEnvironment}

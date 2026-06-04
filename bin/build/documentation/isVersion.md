@@ -1,8 +1,8 @@
-## `isVersion`
+### `isVersion`
 
 > Check if something matches a version
 
-### Usage
+#### Usage
 
     isVersion [ --help ] binary
 
@@ -10,12 +10,12 @@ Check if something matches a version
 
 > Location: `bin/build/tools/version.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `binary` - String. Required. The binary to look for.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `printfOutputSuffix`
+### `printfOutputSuffix`
 
 > Pipe to output some text after any output, otherwise, nothing
 
-### Usage
+#### Usage
 
     printfOutputSuffix ...
 
@@ -11,19 +11,19 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `...` - Arguments. Required. printf arguments.
 
-### Reads standard input
+#### Reads standard input
 
 text (Optional)
 
-### Writes to standard output
+#### Writes to standard output
 
 stdin text and then printf output IFF stdin text is non-blank
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

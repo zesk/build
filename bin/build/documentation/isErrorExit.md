@@ -1,8 +1,8 @@
-## `isErrorExit`
+### `isErrorExit`
 
 > Returns whether the shell has the error exit flag set
 
-### Usage
+#### Usage
 
     isErrorExit
 
@@ -19,17 +19,17 @@ Outputs `1` always
 
 > Location: `bin/build/tools/debug.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - -
 

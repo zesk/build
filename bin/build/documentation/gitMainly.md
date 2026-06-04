@@ -1,8 +1,8 @@
-## `gitMainly`
+### `gitMainly`
 
 > Merge `staging` and `main` branches of a git repository into
 
-### Usage
+#### Usage
 
     gitMainly
 
@@ -14,11 +14,11 @@ Current repository should be clean and have no modified files.
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `1` - Already in main, staging, or HEAD, or git merge failed
 - `0` - git merge succeeded

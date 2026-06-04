@@ -1,8 +1,8 @@
-## `bashSimpleDocumentation`
+### `bashSimpleDocumentation`
 
 > Simpler `bashDocumentation`
 
-### Usage
+#### Usage
 
     bashSimpleDocumentation [ --help ] source function returnCode [ message ... ]
 
@@ -10,7 +10,7 @@ Output a simple error message for a function.
 
 > Location: `bin/build/tools/usage.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `source` - File. Required. File where documentation exists.
@@ -18,9 +18,20 @@ Output a simple error message for a function.
 - `returnCode` - UnsignedInteger. Required. Exit code to return.
 - `message ...` - String. Optional. Message to display to the user.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Requires
+
+- {SEE:bashFunctionComment}
+- {SEE:decorate}
+- [`read`]({rel}/guide/builtin.md#read)
+- [`printf`]({rel}/guide/builtin.md#printf)
+- {SEE:returnCodeString}
+- {SEE:helpArgument}
+- {SEE:bashDocumentation}
+- {SEE:__bashDocumentationCached}
 

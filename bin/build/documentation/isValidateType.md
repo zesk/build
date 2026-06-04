@@ -1,25 +1,25 @@
-## `isValidateType`
+### `isValidateType`
 
-> Are all arguments passed a valid validate type?
+> Are validate type names valid?
 
-### Usage
+#### Usage
 
     isValidateType [ --help ] [ type ]
 
-Are all arguments passed a valid validate type?
+Are all arguments passed a valid `validate` type?
 
 > Location: `bin/build/tools/validate.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `type` - String. Optional. Type to validate as `validate` type.
 
-### Examples
+#### Examples
 
     isValidateType string || returnMessage 1 "string is not a type."
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

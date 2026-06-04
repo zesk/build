@@ -1,8 +1,8 @@
-## `pythonInstall`
+### `pythonInstall`
 
 > Install `python`
 
-### Usage
+#### Usage
 
     pythonInstall [ --help ]
 
@@ -12,11 +12,11 @@ When this tool succeeds the `python` binary is available in the local operating 
 
 > Location: `bin/build/tools/python.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `1` - If installation fails
 - `0` - If installation succeeds

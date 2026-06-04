@@ -1,8 +1,8 @@
-## `deprecatedCannonFile`
+### `deprecatedCannonFile`
 
 > Run textCannon using a configuration file or files.
 
-### Usage
+#### Usage
 
     deprecatedCannonFile findArgumentFunction cannonFile
 
@@ -22,12 +22,12 @@ Sample file:
 
 > Location: `bin/build/tools/deprecated-tools.sh`
 
-### Arguments
+#### Arguments
 
 - `findArgumentFunction` - Function. Required. Find arguments (for `find`) for cannon.
 - `cannonFile` - File. Required. One or more files delimited with `|` characters, one per line `search|replace|findArguments|...`. If not files are supplied then pipe file via stdin.
 
-### Return codes
+#### Return codes
 
 - `0` - No changes were made in any files.
 - `1` - changes were made in at least one file.

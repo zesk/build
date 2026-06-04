@@ -1,8 +1,8 @@
-## `bashBuiltins`
+### `bashBuiltins`
 
 > List bash builtin functions, one per line
 
-### Usage
+#### Usage
 
     bashBuiltins
 
@@ -10,15 +10,15 @@ List bash builtin functions, one per line
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Writes to standard output
+#### Writes to standard output
 
 line:function
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

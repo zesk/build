@@ -1,8 +1,8 @@
-## `packageInstall`
+### `packageInstall`
 
 > Install packages using a package manager
 
-### Usage
+#### Usage
 
     packageInstall [ package ] [ --verbose ] [ --manager packageManager ] [ --force ] [ --show-log ]
 
@@ -15,7 +15,7 @@ Supported managers:
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - `package` - One or more packages to install
 - `--verbose` - Flag. Optional. Display progress to the terminal.
@@ -23,11 +23,11 @@ Supported managers:
 - `--force` - Flag. Optional. Force even if it was updated recently.
 - `--show-log` - Flag. Optional. Show package manager logs.
 
-### Examples
+#### Examples
 
     packageInstall shellcheck
 
-### Return codes
+#### Return codes
 
 - `0` - If `apk` is not installed, returns 0.
 - `1` - If `apk` fails to install the packages

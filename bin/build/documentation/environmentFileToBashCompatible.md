@@ -1,8 +1,8 @@
-## `environmentFileToBashCompatible`
+### `environmentFileToBashCompatible`
 
 > Takes any environment file and makes it bash-compatible
 
-### Usage
+#### Usage
 
     environmentFileToBashCompatible [ filename ... ]
 
@@ -12,19 +12,19 @@ Outputs the compatible env to stdout
 
 > Location: `bin/build/tools/environment/convert.sh`
 
-### Arguments
+#### Arguments
 
 - `filename ...` - File. Optional. One or more files to convert.
 
-### Reads standard input
+#### Reads standard input
 
 environment file
 
-### Writes to standard output
+#### Writes to standard output
 
 bash-compatible environment statements
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

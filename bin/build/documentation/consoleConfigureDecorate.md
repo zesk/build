@@ -1,8 +1,8 @@
-## `consoleConfigureDecorate`
+### `consoleConfigureDecorate`
 
 > Modify the decoration environment for light or dark.
 
-### Usage
+#### Usage
 
     consoleConfigureDecorate [ backgroundColor ] [ --help ]
 
@@ -14,12 +14,12 @@ Update the color scheme for a light or dark scheme
 
 > Location: `bin/build/tools/console.sh`
 
-### Arguments
+#### Arguments
 
 - `backgroundColor` - String. Optional. Background color.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

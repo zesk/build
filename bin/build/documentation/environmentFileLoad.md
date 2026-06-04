@@ -1,8 +1,8 @@
-## `environmentFileLoad`
+### `environmentFileLoad`
 
 > Safely load an environment file (no code execution)
 
-### Usage
+#### Usage
 
     environmentFileLoad [ --prefix ] --require [ --optional ] [ --verbose ] environmentFile [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]
 
@@ -10,7 +10,7 @@ Safely load an environment file (no code execution)
 
 > Location: `bin/build/tools/environment/io.sh`
 
-### Arguments
+#### Arguments
 
 - `--prefix` - EnvironmentVariable|Blank. Optional. All subsequent environment variables are prefixed with this prefix.
 - `--require` - Flag. Optional. All subsequent environment files on the command line will be required.
@@ -23,7 +23,7 @@ Safely load an environment file (no code execution)
 - `--execute arguments ...` - Callable. Optional. All additional arguments are passed to callable after loading environment files.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `2` - if file does not exist; outputs an error
 - `0` - if files are loaded successfully

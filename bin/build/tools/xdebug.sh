@@ -10,7 +10,10 @@ __xdebugInstallationArtifact() {
   printf -- "%s\n" "/etc/xdebug-enabled"
 }
 
-# Install the xdebug PHP Debugger
+# Summary: Install the xdebug PHP Debugger
+#
+# Install the xdebug PHP Debugger using `pear` and `pecl`.
+#
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 xdebugInstall() {
@@ -47,7 +50,12 @@ __xdebug_Require() {
   [ -f "$artifact" ] || throwArgument "$1" "xdebug is not installed on this system" || return $?
 }
 
-# Enable Xdebug on systems that have it
+# Summary: Enable Xdebug
+#
+# Enable Xdebug on systems that have it.
+#
+# This changes the value of `XDEBUG_ENABLED` to `true`. Programs must honor this and invoke the debugger.
+#
 # Environment: XDEBUG_ENABLED
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -63,7 +71,12 @@ _xdebugEnable() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Disable Xdebug on systems that have it
+# Summary: Disable Xdebug
+#
+# Disable Xdebug on systems that have it.
+#
+# This changes the value of `XDEBUG_ENABLED` to `false`. Programs must honor this and then skip invoking the debugger.
+#
 # Environment: XDEBUG_ENABLED
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.

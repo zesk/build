@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'separator - String. Required. List separator character.\nlistText - String. Required. List to clean duplicates.\n--removed - Flag. Optional. Show removed items instead of the new list.\n--test testFunction - Function. Optional. Run this function on each item in the list and if the return code is non-zero, then remove it from the list.\n--help - Flag. Optional. Display this help.\n'
 base="list.sh"

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument="none"
 base="python.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Uninstall python\n\n'
+description="Uninstall python"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/python.sh"
 fn="pythonUninstall"
 fnMarker="pythonuninstall"
 foundNames=()
 line="32"
-rawComment=$'Uninstall python\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Uninstall python"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/python.sh"
 sourceHash="41488c39a086a773d0c97f580808181e9997f5f8"
 sourceLine="32"

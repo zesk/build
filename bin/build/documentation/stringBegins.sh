@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'haystack - String. Required. String to search.\nneedle ... - String. Optional. One or more strings to find as the "start" of `haystack`.\n'
+argument="haystack - String. Required. String to search."$'\n'"needle ... - String. Optional. One or more strings to find as the \"start\" of \`haystack\`."$'\n'""
 base="text.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Does needle exist as a substring of haystack?\n\n'
+description="Does needle exist as a substring of haystack?"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/text.sh"
 fn="stringBegins"
 fnMarker="stringbegins"
 foundNames=([0]="argument" [1]="return_code" [2]="summary")
 line="526"
-rawComment=$'Argument: haystack - String. Required. String to search.\nArgument: needle ... - String. Optional. One or more strings to find as the "start" of `haystack`.\nReturn Code: 0 - IFF ANY needle matches as a substring of haystack\nReturn Code: 1 - No needles found in haystack\nSummary: Find whether a substring exists as teh beginning of one or more strings\nDoes needle exist as a substring of haystack?\n\n'
-return_code=$'0 - IFF ANY needle matches as a substring of haystack\n1 - No needles found in haystack\n'
+rawComment="Argument: haystack - String. Required. String to search."$'\n'"Argument: needle ... - String. Optional. One or more strings to find as the \"start\" of \`haystack\`."$'\n'"Return Code: 0 - IFF ANY needle matches as a substring of haystack"$'\n'"Return Code: 1 - No needles found in haystack"$'\n'"Summary: Find whether a substring exists as teh beginning of one or more strings"$'\n'"Does needle exist as a substring of haystack?"$'\n'""$'\n'""
+return_code="0 - IFF ANY needle matches as a substring of haystack"$'\n'"1 - No needles found in haystack"$'\n'""
 sourceFile="bin/build/tools/text.sh"
 sourceHash="b913e34543d2ae704942cadce5473f26955cd42e"
 sourceLine="526"

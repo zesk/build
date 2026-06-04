@@ -7,10 +7,13 @@
 # Test: bin-tests.sh
 #
 
-# Install yarn in the build environment
-# If this fails it will output the installation log.
+# Summary: Install yarn
+# Install yarn in the build environment.
+#
 # Notes: `yarn` is part of node, I think, so no clean uninstall.
+#
 # When this tool succeeds the `yarn` binary is available in the local operating system.
+#
 # Environment: - BUILD_YARN_VERSION
 # Return Code: 1 - If installation of yarn fails
 # Return Code: 0 - If yarn is already installed or installed without error

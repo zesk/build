@@ -2,7 +2,7 @@
 base="BUILD_DEVELOPMENT_HOME.sh"
 category="Development"
 derivations=([0]="env" [1]="envMarker" [2]="name")
-description=$'Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)\n\n'
+description="Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)"$'\n'""$'\n'""
 descriptionLineCount="2"
 env="BUILD_DEVELOPMENT_HOME"
 envMarker="build_development_home"
@@ -10,8 +10,8 @@ file="bin/build/env/BUILD_DEVELOPMENT_HOME.sh"
 fn="BUILD_DEVELOPMENT_HOME"
 foundNames=([0]="name" [1]="type" [2]="category" [3]="see")
 name="Home for Zesk Build development"
-rawComment=$'Name: Home for Zesk Build development\nType: String\nCategory: Development\nDirectory where Zesk Build is being developed in the file system (for other projects to test against a changed version)\nSee: buildDevelopmentLink\n\n'
-see=$'buildDevelopmentLink\n'
+rawComment="Name: Home for Zesk Build development"$'\n'"Type: String"$'\n'"Category: Development"$'\n'"Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)"$'\n'"See: buildDevelopmentLink"$'\n'""$'\n'""
+see="buildDevelopmentLink"$'\n'""
 sourceFile="bin/build/env/BUILD_DEVELOPMENT_HOME.sh"
 sourceHash="916cb79c14daf9162cab3466f6b83870543664b4"
 sourceLine=""

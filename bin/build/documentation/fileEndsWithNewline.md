@@ -1,8 +1,8 @@
-## `fileEndsWithNewline`
+### `fileEndsWithNewline`
 
 > Does a file end with a newline or is empty?
 
-### Usage
+#### Usage
 
     fileEndsWithNewline file ...
 
@@ -12,11 +12,11 @@ Typically used to determine if a newline is needed before appending a file.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `file ...` - File. Required. File to check if the last character is a newline.
 
-### Return codes
+#### Return codes
 
 - `0` - All files ends with a newline
 - `1` - One or more files ends with a non-newline

@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="source - File. Required. File where the function is defined."$'\n'"functionName - String. Required. The name of the bash function to extract the documentation for."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'source - File. Required. File where the function is defined.\nfunctionName - String. Required. The name of the bash function to extract the documentation for.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Extract a bash comment from a file. Excludes lines containing the following tokens:"$'\n'""$'\n'""
+description=$'Extract a bash comment from a file. Excludes lines containing the following tokens:\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashFunctionComment"
 fnMarker="bashfunctioncomment"
 foundNames=([0]="argument" [1]="requires")
-line="619"
-rawComment="Extract a bash comment from a file. Excludes lines containing the following tokens:"$'\n'"Argument: source - File. Required. File where the function is defined."$'\n'"Argument: functionName - String. Required. The name of the bash function to extract the documentation for."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: grep cut fileReverseLines helpArgument"$'\n'"Requires: bashDocumentation"$'\n'""$'\n'""
-requires="grep cut fileReverseLines helpArgument"$'\n'"bashDocumentation"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="622"
+rawComment=$'Extract a bash comment from a file. Excludes lines containing the following tokens:\nArgument: source - File. Required. File where the function is defined.\nArgument: functionName - String. Required. The name of the bash function to extract the documentation for.\nArgument: --help - Flag. Optional. Display this help.\nRequires: grep cut fileReverseLines helpArgument\nRequires: bashDocumentation\n\n'
+requires=$'grep cut fileReverseLines helpArgument\nbashDocumentation\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="aacd731aa1df64fbee5b48bdf1d0f86bc8ed4f3e"
-sourceLine="619"
+sourceHash="112376f9f627c10da9943f372ddc2bf96eecf81e"
+sourceLine="622"
 summary="Extract a bash comment from a file. Excludes lines containing"
 summaryComputed="true"
 usage="bashFunctionComment source functionName [ --help ]"

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'file ... - File. Required. One or more files to examine\n--help - Flag. Optional. Display this help.\n--ignore - Flag. Optional. Ignore files which do not exist.\n'
+argument="file ... - File. Required. One or more files to examine"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--ignore - Flag. Optional. Ignore files which do not exist."$'\n'""
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Output the newest file in the list\n\n'
+description="Output the newest file in the list"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/file.sh"
 fn="fileNewest"
 fnMarker="filenewest"
 foundNames=([0]="argument")
 line="378"
-rawComment=$'Output the newest file in the list\nArgument: file ... - File. Required. One or more files to examine\nArgument: --help - Flag. Optional. Display this help.\nArgument: --ignore - Flag. Optional. Ignore files which do not exist.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Output the newest file in the list"$'\n'"Argument: file ... - File. Required. One or more files to examine"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --ignore - Flag. Optional. Ignore files which do not exist."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
 sourceLine="378"

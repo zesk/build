@@ -1,8 +1,8 @@
-## `daemontoolsManager`
+### `daemontoolsManager`
 
 > Runs a daemon which monitors files and operates on services.
 
-### Usage
+#### Usage
 
     daemontoolsManager [ --home serviceHome ] [ --interval intervalSeconds ] [ --stat statFile ] [ --chirp chirpSeconds ] [ --action actions ] service0 file1
 
@@ -16,7 +16,7 @@ Specify actions more than once on the command line to specify more than one set 
 
 > Location: `bin/build/tools/daemontools.sh`
 
-### Arguments
+#### Arguments
 
 - `--home serviceHome` - Directory. Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.
 - `--interval intervalSeconds` - PositiveInteger. Optional. Number of seconds to check for presence of the file. Defaults to 10.
@@ -26,9 +26,13 @@ Specify actions more than once on the command line to specify more than one set 
 - `service0` - Directory. Required. Service to control (e.g. `/etc/service/application/`)
 - `file1` - File. Required. Absolute path to a file. Presence of  `file` triggers `action`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:DAEMONTOOLS_HOME} - The default home directory for `daemontools`
 

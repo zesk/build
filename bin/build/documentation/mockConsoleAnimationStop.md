@@ -1,8 +1,8 @@
-## `mockConsoleAnimationStop`
+### `mockConsoleAnimationStop`
 
 > Stop faking `consoleHasAnimation` for testing
 
-### Usage
+#### Usage
 
     mockConsoleAnimationStop [ --help ]
 
@@ -10,11 +10,11 @@ Stop faking `consoleHasAnimation` for testing
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

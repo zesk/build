@@ -1,8 +1,8 @@
-## `markdownIndentHeading`
+### `markdownIndentHeading`
 
 > Add an indent to all markdown headings
 
-### Usage
+#### Usage
 
     markdownIndentHeading
 
@@ -10,11 +10,11 @@ Add an indent to all markdown headings
 
 > Location: `bin/build/tools/markdown.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

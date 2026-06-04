@@ -1,8 +1,8 @@
-## `deployLink`
+### `deployLink`
 
 > Link deployment to new version of the application
 
-### Usage
+#### Usage
 
     deployLink applicationLinkPath [ applicationPath ]
 
@@ -14,18 +14,18 @@ in order to activate it.
 
 > Location: `bin/build/tools/deploy.sh`
 
-### Arguments
+#### Arguments
 
 - `applicationLinkPath` - Path. Required. Path where the link is created.
 - `applicationPath` - Path. Optional. Path where the link will point to. If not supplied uses current working directory.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - PWD
 

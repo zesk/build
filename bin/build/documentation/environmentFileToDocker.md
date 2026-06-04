@@ -1,8 +1,8 @@
-## `environmentFileToDocker`
+### `environmentFileToDocker`
 
 > Takes any environment file and makes it docker-compatible
 
-### Usage
+#### Usage
 
     environmentFileToDocker envFile ...
 
@@ -12,11 +12,11 @@ Outputs the compatible env to stdout
 
 > Location: `bin/build/tools/environment/convert.sh`
 
-### Arguments
+#### Arguments
 
 - `envFile ...` - File. Required. One or more files to convert.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

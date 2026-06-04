@@ -1,8 +1,8 @@
-## `returnMap`
+### `returnMap`
 
 > map a return value from one value to another
 
-### Usage
+#### Usage
 
     returnMap [ --help ] [ value ] [ from ] [ to ] [ ... ]
 
@@ -10,7 +10,7 @@ map a return value from one value to another
 
 > Location: `bin/build/tools/sugar.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `value` - Integer. A return value.
@@ -18,7 +18,7 @@ map a return value from one value to another
 - `to` - Integer. The value to return when `from` matches `value`
 - `...` - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

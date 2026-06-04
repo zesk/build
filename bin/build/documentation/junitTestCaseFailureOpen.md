@@ -1,8 +1,8 @@
-## `junitTestCaseFailureOpen`
+### `junitTestCaseFailureOpen`
 
 > Open tag for `failure` - test failed
 
-### Usage
+#### Usage
 
     junitTestCaseFailureOpen [ message ]
 
@@ -13,17 +13,17 @@ Attributes:
 
 > Location: `bin/build/tools/junit.sh`
 
-### Arguments
+#### Arguments
 
 - `message` - Optional. String. Why failure occurred.
 
-### Examples
+#### Examples
 
     <failure message="Expected value did not match." type="AssertionError">
         Failure description or stack trace
     </failure>
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

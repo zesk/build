@@ -1,8 +1,8 @@
-## `cursorGet`
+### `cursorGet`
 
 > Get the current cursor position
 
-### Usage
+#### Usage
 
     cursorGet
 
@@ -11,19 +11,19 @@ Output is <x> <newline> <y> <newline>
 
 > Location: `bin/build/tools/cursor.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Writes to standard output
+#### Writes to standard output
 
 UnsignedInteger
 
-### Examples
+#### Examples
 
     IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

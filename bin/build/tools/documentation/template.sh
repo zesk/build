@@ -265,6 +265,10 @@ __documentationTemplateCompile() {
       fi
     done < <(mapTokens <"$template" | sort -u)
     ! $debugFlag || statusMessage decorate info "Finished formatters" 1>&2
-    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdownRemoveUnfinishedSections || return $?
+    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdownRemoveUnfinishedSections --preprocess __removeRel || return $?
   ) || throwEnvironment "$handler" "${FUNCNAME[0]} failed: ${saved[*]}" || return $?
+}
+
+__removeRel() {
+  sed 's/{rel}//g'
 }

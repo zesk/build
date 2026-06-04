@@ -1,8 +1,8 @@
-## `iTerm2IsColorType`
+### `iTerm2IsColorType`
 
 > This is faster than inArray etc.
 
-### Usage
+#### Usage
 
     iTerm2IsColorType
 
@@ -10,11 +10,11 @@ This is faster than inArray etc.
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

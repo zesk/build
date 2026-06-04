@@ -1,8 +1,8 @@
-## `characterFromInteger`
+### `characterFromInteger`
 
 > Given a list of integers, output the character codes associated
 
-### Usage
+#### Usage
 
     characterFromInteger [ --help ]
 
@@ -10,11 +10,11 @@ Given a list of integers, output the character codes associated with them (e.g. 
 
 > Location: `bin/build/tools/character.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

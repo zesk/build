@@ -1,8 +1,8 @@
-## `returnLeak`
+### `returnLeak`
 
 > Leak return code
 
-### Usage
+#### Usage
 
     returnLeak
 
@@ -10,11 +10,11 @@ Return code is `leak`
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - 108
 

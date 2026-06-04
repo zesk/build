@@ -1,8 +1,8 @@
-## `assertOutputDoesNotContain`
+### `assertOutputDoesNotContain`
 
 > Run a command and expect the output to not contain
 
-### Usage
+#### Usage
 
     assertOutputDoesNotContain expected binary [ ... ] [ --exit ] [ --stderr ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -12,7 +12,7 @@ If this fails it will output the command result to stdout.
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `expected` - String. Required. A string NOT to expect in the output
 - `binary` - Callable. Required. Binary to run and evaluate output
@@ -38,16 +38,16 @@ If this fails it will output the command result to stdout.
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Examples
+#### Examples
 
     assertOutputDoesNotContain Success complex-thing.sh --dry-run
 
-### Return codes
+#### Return codes
 
 - `0` - If the output contains at least one occurrence of the string
 - `1` - If output does not contain string
 
-### Review Status
+#### Review Status
 
 File `bin/build/tools/test.sh`, function `assertOutputDoesNotContain` was reviewed 2023-11-12
 .

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'directory - Directory. Optional. Directory to check if empty.\n'
 base="directory.sh"
@@ -15,7 +15,7 @@ line="256"
 rawComment=$'Argument: directory - Directory. Optional. Directory to check if empty.\nDoes a directory exist and is it empty?\nReturn Code: 2 - Directory does not exist\nReturn Code: 1 - Directory is not empty\nReturn Code: 0 - Directory is empty\n\n'
 return_code=$'2 - Directory does not exist\n1 - Directory is not empty\n0 - Directory is empty\n'
 sourceFile="bin/build/tools/directory.sh"
-sourceHash="da838a55948477df4605f58aff4c29b4f13319f7"
+sourceHash="72fb531bf15b4fc22d2cd595509333fbeece21df"
 sourceLine="256"
 summary="Does a directory exist and is it empty?"
 summaryComputed="true"

@@ -1,8 +1,8 @@
-## `markdownToConsole`
+### `markdownToConsole`
 
 > Converts backticks, bold and italic to console colors.
 
-### Usage
+#### Usage
 
     markdownToConsole [ --help ]
 
@@ -10,19 +10,19 @@ Converts backticks, bold and italic to console colors.
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 Markdown
 
-### Writes to standard output
+#### Writes to standard output
 
 decorated console output
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

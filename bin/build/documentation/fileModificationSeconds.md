@@ -1,8 +1,8 @@
-## `fileModificationSeconds`
+### `fileModificationSeconds`
 
 > Fetch the modification time in seconds from now of a
 
-### Usage
+#### Usage
 
     fileModificationSeconds [ filename ... ]
 
@@ -10,15 +10,15 @@ Fetch the modification time in seconds from now of a file as a timestamp
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `filename ...` - File to fetch modification time
 
-### Examples
+#### Examples
 
     fileModificationTime ~/.bash_profile
 
-### Return codes
+#### Return codes
 
 - `2` - If file does not exist
 - `0` - If file exists and modification times are output, one per line

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--help - Flag. Optional. Display this help.\n--verbose - Flag. Optional. Show list of true results when all arguments pass.\nfunctionName ... - String. Function to look up to see if it has been tested. One or more.\n'
 base="test.sh"
@@ -13,12 +13,12 @@ fn="testSuiteFunctionTested"
 fnMarker="testsuitefunctiontested"
 foundNames=([0]="argument" [1]="return_code" [2]="important" [3]="environment")
 important=$'If you test your function\'s `--help` function then you can ignore it using\n'
-line="513"
+line="512"
 rawComment=$'Argument: --help - Flag. Optional. Display this help.\nWhen environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and assertion functions track which functions take a function value (for example, `assertExitCode`) and track functions which are run, and stores them in the testing cache directory which accumulate after each test run unless the cache is cleared.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --verbose - Flag. Optional. Show list of true results when all arguments pass.\nArgument: functionName ... - String. Function to look up to see if it has been tested. One or more.\nReturn Code: 0 - All functions were tested by the test suite at least once.\nReturn Code: 1 - At least one function was not tested by the test suite at least once.\nImportant: If you test your function\'s `--help` function then you can ignore it using\nEnvironment: TEST_TRACK_ASSERTIONS\n\n'
 return_code=$'0 - All functions were tested by the test suite at least once.\n1 - At least one function was not tested by the test suite at least once.\n'
 sourceFile="bin/build/tools/test.sh"
-sourceHash="78c7da5cbc1777fd8206d96854e19720ad1957a9"
-sourceLine="513"
+sourceHash="74049261be4311898ae206f18f3c43621dd42ffa"
+sourceLine="512"
 summary="When environment variable \`TEST_TRACK_ASSERTIONS\` is \`true\` – \`testSuite\` and assertion"
 summaryComputed="true"
 usage="testSuiteFunctionTested [ --help ] [ --help ] [ --verbose ] [ functionName ... ]"

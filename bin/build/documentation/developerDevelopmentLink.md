@@ -1,8 +1,8 @@
-## `developerDevelopmentLink`
+### `developerDevelopmentLink`
 
 > Link a current library with another version being developed nearby
 
-### Usage
+#### Usage
 
     developerDevelopmentLink [ --copy ] [ --reset ] [ --development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path. ] --version-json jsonFile [ --version-selector jsonFile ] --variable variableNameValue [ --binary ] [ --composer composerPackage ] --path applicationPath
 
@@ -11,7 +11,7 @@ Does not work inside docker containers unless you explicitly do some magic with 
 
 > Location: `bin/build/tools/developer.sh`
 
-### Arguments
+#### Arguments
 
 - `--copy - Flag. Optional. Copy the files instead of creating a link` - more compatible with Docker but slower and requires synchronization.
 - `--reset` - Flag. Optional. Revert the link and reinstall using the original binary.
@@ -23,9 +23,13 @@ Does not work inside docker containers unless you explicitly do some magic with 
 - `--composer composerPackage` - String. Optional. The composer package to convert to a link (or copy.). API.
 - `--path applicationPath` - ApplicationDirectory. Required. The library path to convert to a link (or copy). API.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### See Also
+
+- [buildDevelopmentLink]({rel}tools/developer.md#builddevelopmentlink)- `` - Add a development link to the local version of Zesk ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L181))
 

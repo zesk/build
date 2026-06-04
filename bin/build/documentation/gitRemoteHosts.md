@@ -1,8 +1,8 @@
-## `gitRemoteHosts`
+### `gitRemoteHosts`
 
 > List remote hosts for the current git repository
 
-### Usage
+#### Usage
 
     gitRemoteHosts
 
@@ -11,11 +11,11 @@ Parses `user@host:path/project.git` and extracts `host`
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

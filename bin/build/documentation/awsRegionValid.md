@@ -1,8 +1,8 @@
-## `awsRegionValid`
+### `awsRegionValid`
 
 > Check an AWS region code for validity
 
-### Usage
+#### Usage
 
     awsRegionValid region ... [ --help ]
 
@@ -11,12 +11,12 @@ Note that passing no parameters returns success.
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `region ...` - String. Required. The AWS Region to validate.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - All regions are valid AWS region
 - `1` - One or more regions are NOT a valid AWS region

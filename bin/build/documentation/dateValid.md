@@ -1,8 +1,8 @@
-## `dateValid`
+### `dateValid`
 
 > Is a date valid?
 
-### Usage
+#### Usage
 
     dateValid [ --help ] [ -- ] text
 
@@ -10,13 +10,13 @@ Checks a date syntax and ensures it's a valid calendar date.
 
 > Location: `bin/build/tools/date.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--` - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 - `text` - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

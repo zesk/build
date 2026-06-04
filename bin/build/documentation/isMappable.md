@@ -1,8 +1,8 @@
-## `isMappable`
+### `isMappable`
 
 > Check if text contains mappable tokens
 
-### Usage
+#### Usage
 
     isMappable [ --help ] [ --prefix ] [ --suffix ] [ --token ] [ text ]
 
@@ -11,7 +11,7 @@ If any text passed contains a token which can be mapped, succeed.
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--prefix` - String. Optional. Token prefix defaults to `{`.
@@ -19,7 +19,7 @@ If any text passed contains a token which can be mapped, succeed.
 - `--token` - String. Optional. Classes permitted in a token
 - `text` - String. Optional. Text to search for mapping tokens.
 
-### Return codes
+#### Return codes
 
 - `0` - Text contains mapping tokens
 - `1` - Text does not contain mapping tokens

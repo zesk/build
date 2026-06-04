@@ -1,8 +1,8 @@
-## `dumpLoadAverages`
+### `dumpLoadAverages`
 
 > Print the load averages
 
-### Usage
+#### Usage
 
     dumpLoadAverages [ --help ]
 
@@ -10,11 +10,11 @@ Print the load averages
 
 > Location: `bin/build/tools/dump.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

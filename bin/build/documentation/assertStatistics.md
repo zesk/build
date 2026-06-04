@@ -1,8 +1,8 @@
-## `assertStatistics`
+### `assertStatistics`
 
 > Output assertion counts
 
-### Usage
+#### Usage
 
     assertStatistics [ --reset ] [ --total ] [ --help ]
 
@@ -10,21 +10,21 @@ Output the total number of assertion failures and assertion successes, separated
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `--reset` - Flag. Optional. Reset statistics to zero.
 - `--total` - Flag. Optional. Just output the total.
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 UnsignedInteger. 2 lines.
 
-### Examples
+#### Examples
 
     read -r failures successes < <(assertStatistics) || return $?
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

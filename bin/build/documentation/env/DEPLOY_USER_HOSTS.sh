@@ -2,7 +2,7 @@
 base="DEPLOY_USER_HOSTS.sh"
 category="Deployment"
 derivations=([0]="env" [1]="envMarker" [2]="name")
-description=$'A list of one ore more user@host for installation of the application\n\n'
+description="A list of one ore more user@host for installation of the application"$'\n'""$'\n'""
 descriptionLineCount="2"
 env="DEPLOY_USER_HOSTS"
 envMarker="deploy_user_hosts"
@@ -10,8 +10,8 @@ file="bin/build/env/DEPLOY_USER_HOSTS.sh"
 fn="DEPLOY_USER_HOSTS"
 foundNames=([0]="name" [1]="category" [2]="see" [3]="type")
 name="Host list for deployment"
-rawComment=$'Name: Host list for deployment\nA list of one ore more user@host for installation of the application\nCategory: Deployment\nSee: deployApplication\nType: String\n\n'
-see=$'deployApplication\n'
+rawComment="Name: Host list for deployment"$'\n'"A list of one ore more user@host for installation of the application"$'\n'"Category: Deployment"$'\n'"See: deployApplication"$'\n'"Type: String"$'\n'""$'\n'""
+see="deployApplication"$'\n'""
 sourceFile="bin/build/env/DEPLOY_USER_HOSTS.sh"
 sourceHash="687b423c650b24b46ac613558517d2b8b91ca567"
 sourceLine=""

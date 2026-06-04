@@ -1,8 +1,8 @@
-## `mariadbInstall`
+### `mariadbInstall`
 
 > Install `mariadb`
 
-### Usage
+#### Usage
 
     mariadbInstall
 
@@ -12,11 +12,11 @@ When this tool succeeds the `mariadb` binary is available in the local operating
 
 > Location: `bin/build/tools/mariadb.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `1` - If installation fails
 - `0` - If installation succeeds

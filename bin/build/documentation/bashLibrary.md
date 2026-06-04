@@ -1,8 +1,8 @@
-## `bashLibrary`
+### `bashLibrary`
 
 > Run or source a library
 
-### Usage
+#### Usage
 
     bashLibrary libraryRelativePath [ command ] [ --help ]
 
@@ -11,13 +11,13 @@ Has security implications - only load trusted code sources and prevent user inje
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `libraryRelativePath` - Path. Required. Path to library source file.
 - `command` - Callable. Optional. Command to run after loading the library.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `bashCoverageReport`
+### `bashCoverageReport`
 
 > Experimental. Likely abandon.
 
-### Usage
+#### Usage
 
     bashCoverageReport [ --cache cacheDirectory ] [ --target targetDirectory ] statsFile
 
@@ -12,17 +12,17 @@ Generate a coverage report using the coverage statistics file
 
 > Location: `bin/build/tools/coverage.sh`
 
-### Arguments
+#### Arguments
 
 - `--cache cacheDirectory` - Optional. Directory.
 - `--target targetDirectory` - Optional. Directory.
 - `statsFile` - File. Required.
 
-### Reads standard input
+#### Reads standard input
 
 Accepts a stats file
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

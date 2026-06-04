@@ -1,8 +1,8 @@
-## `daemontoolsExecute`
+### `daemontoolsExecute`
 
 > Launch the daemontools daemon
 
-### Usage
+#### Usage
 
     daemontoolsExecute [ --help ]
 
@@ -12,11 +12,11 @@ Run the daemontools root daemon
 
 > Location: `bin/build/tools/daemontools.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

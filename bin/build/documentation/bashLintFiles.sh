@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument="--verbose - Flag. Optional. Verbose mode."$'\n'"--fix - Flag. Optional. Fix errors when possible."$'\n'"--interactive - Flag. Optional. Interactive mode on fixing errors."$'\n'"--exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"--delay - Integer. Optional. Delay between checks in interactive mode."$'\n'"findArgs - Additional find arguments for .sh files (or exclude directories)."$'\n'""
+argument=$'--verbose - Flag. Optional. Verbose mode.\n--fix - Flag. Optional. Fix errors when possible.\n--interactive - Flag. Optional. Interactive mode on fixing errors.\n--exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.\n--delay - Integer. Optional. Delay between checks in interactive mode.\nfindArgs - Additional find arguments for .sh files (or exclude directories).\n'
 base="lint.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Run \`bashLint\` on a set of bash files."$'\n'""$'\n'""
+description=$'Run `bashLint` on a set of bash files.\n\n'
 descriptionLineCount="2"
-environment="This operates in the current working directory"$'\n'""
-example="    if bashLintFiles; then git commit -m \"saving things\" -a; fi"$'\n'""
+environment=$'This operates in the current working directory\n'
+example=$'    if bashLintFiles; then git commit -m "saving things" -a; fi\n'
 file="bin/build/tools/lint.sh"
 fn="bashLintFiles"
 fnMarker="bashlintfiles"
 foundNames=([0]="example" [1]="argument" [2]="side_effect" [3]="environment" [4]="summary" [5]="return_code" [6]="output")
 line="105"
-output="This outputs \`statusMessage\`s to \`stdout\` and errors to \`stderr\`."$'\n'""
-rawComment="Run \`bashLint\` on a set of bash files."$'\n'"Example:     if bashLintFiles; then git commit -m \"saving things\" -a; fi"$'\n'"Argument: --verbose - Flag. Optional. Verbose mode."$'\n'"Argument: --fix - Flag. Optional. Fix errors when possible."$'\n'"Argument: --interactive - Flag. Optional. Interactive mode on fixing errors."$'\n'"Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"Argument: --delay - Integer. Optional. Delay between checks in interactive mode."$'\n'"Argument: findArgs - Additional find arguments for .sh files (or exclude directories)."$'\n'"Side-effect: Status written to stdout, errors written to stderr"$'\n'"Environment: This operates in the current working directory"$'\n'"Summary: Check files for the existence of a string"$'\n'"Return Code: 0 - All found files pass \`shellcheck\` and \`bash -n\`"$'\n'"Return Code: 1 - One or more files did not pass"$'\n'"Output: This outputs \`statusMessage\`s to \`stdout\` and errors to \`stderr\`."$'\n'""$'\n'""
-return_code="0 - All found files pass \`shellcheck\` and \`bash -n\`"$'\n'"1 - One or more files did not pass"$'\n'""
-side_effect="Status written to stdout, errors written to stderr"$'\n'""
+output=$'This outputs `statusMessage`s to `stdout` and errors to `stderr`.\n'
+rawComment=$'Run `bashLint` on a set of bash files.\nExample:     if bashLintFiles; then git commit -m "saving things" -a; fi\nArgument: --verbose - Flag. Optional. Verbose mode.\nArgument: --fix - Flag. Optional. Fix errors when possible.\nArgument: --interactive - Flag. Optional. Interactive mode on fixing errors.\nArgument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.\nArgument: --delay - Integer. Optional. Delay between checks in interactive mode.\nArgument: findArgs - Additional find arguments for .sh files (or exclude directories).\nSide-effect: Status written to stdout, errors written to stderr\nEnvironment: This operates in the current working directory\nSummary: Lint multiple bash files\nReturn Code: 0 - All found files pass `shellcheck` and `bash -n`\nReturn Code: 1 - One or more files did not pass\nOutput: This outputs `statusMessage`s to `stdout` and errors to `stderr`.\n\n'
+return_code=$'0 - All found files pass `shellcheck` and `bash -n`\n1 - One or more files did not pass\n'
+side_effect=$'Status written to stdout, errors written to stderr\n'
 sourceFile="bin/build/tools/lint.sh"
-sourceHash="11ce70536d7c631bbc2e620d25550754388e6278"
+sourceHash="71423c08273aafee79d8f16d56c6eade0b9ff496"
 sourceLine="105"
-summary="Check files for the existence of a string"
+summary="Lint multiple bash files"
 summaryComputed=""
 usage="bashLintFiles [ --verbose ] [ --fix ] [ --interactive ] [ --exec binary ] [ --delay ] [ findArgs ]"
 # shellcheck disable=SC2016

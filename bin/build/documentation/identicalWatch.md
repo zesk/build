@@ -1,8 +1,8 @@
-## `identicalWatch`
+### `identicalWatch`
 
 > Watch a project for changes and propagate them immediately upon
 
-### Usage
+#### Usage
 
     identicalWatch [ --help ] [ --handler handler ] ...
 
@@ -11,13 +11,13 @@ Still a known bug which trims the last end bracket from files
 
 > Location: `bin/build/tools/identical.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - `...` - Arguments. Required. Arguments to `identicalCheck` for your watch.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

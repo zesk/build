@@ -1,8 +1,8 @@
-## `documentationIndexUnlinkedFunctions`
+### `documentationIndexUnlinkedFunctions`
 
 > List functions without documentation pages.
 
-### Usage
+#### Usage
 
     documentationIndexUnlinkedFunctions indexPath [ --help ]
 
@@ -10,12 +10,12 @@ List functions without documentation pages.
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `indexPath` - Directory. Required. Index path.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `hookVersionLive`
+### `hookVersionLive`
 
 > Application deployed version
 
-### Usage
+#### Usage
 
     hookVersionLive [ --help ] [ --application application ]
 
@@ -10,12 +10,12 @@ Application deployed version
 
 > Location: `bin/build/tools/hooks.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--application application` - Directory. Optional. Application home directory.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

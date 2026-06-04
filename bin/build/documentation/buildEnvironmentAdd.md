@@ -1,8 +1,8 @@
-## `buildEnvironmentAdd`
+### `buildEnvironmentAdd`
 
 > Adds an environment variable file to a project
 
-### Usage
+#### Usage
 
     buildEnvironmentAdd [ --help ] [ --force ] [ --quiet ] [ --verbose ] [ --value value ] environmentName ...
 
@@ -10,7 +10,7 @@ Adds an environment variable file to a project
 
 > Location: `bin/build/tools/build.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--force` - Flag. Optional. Replace the existing file if it exists or create it if it does not.
@@ -19,7 +19,7 @@ Adds an environment variable file to a project
 - `--value value` - String. Optional. Set the value to this fixed string in the file. Only valid when a single `environmentName` is used.
 - `environmentName ...` - EnvironmentName. Required. One or more environment variable names to add to this project.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

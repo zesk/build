@@ -1,8 +1,8 @@
-## `deprecatedTokensFile`
+### `deprecatedTokensFile`
 
 > Run deprecated tokens file search
 
-### Usage
+#### Usage
 
     deprecatedTokensFile
 
@@ -10,11 +10,11 @@ Run deprecated tokens file search
 
 > Location: `bin/build/tools/deprecated-tools.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `assertFileExists`
+### `assertFileExists`
 
 > Test that a file exists
 
-### Usage
+#### Usage
 
     assertFileExists item ... [ message ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -10,7 +10,7 @@ Test that a file exists
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `item ...` - File. Required. One or more files which MUST exist.
 - `message ...` - String. Optional. An error message if this fails
@@ -33,16 +33,16 @@ Test that a file exists
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Examples
+#### Examples
 
     assertDirectoryExists "$HOME" "HOME not found"
 
-### Return codes
+#### Return codes
 
 - `0` - If the assertion succeeds
 - `1` - If the assertion fails
 
-### Environment
+#### Environment
 
 - - This fails if `file` is anything but a `file`
 

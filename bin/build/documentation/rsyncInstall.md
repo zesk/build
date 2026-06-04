@@ -1,8 +1,8 @@
-## `rsyncInstall`
+### `rsyncInstall`
 
 > Install `rsync`.
 
-### Usage
+#### Usage
 
     rsyncInstall [ --help ]
 
@@ -13,11 +13,11 @@ file systems, remote systems, and locations.
 
 > Location: `bin/build/tools/rsync.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

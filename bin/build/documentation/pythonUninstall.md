@@ -1,8 +1,8 @@
-## `pythonUninstall`
+### `pythonUninstall`
 
 > Uninstall python
 
-### Usage
+#### Usage
 
     pythonUninstall
 
@@ -10,11 +10,11 @@ Uninstall python
 
 > Location: `bin/build/tools/python.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

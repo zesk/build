@@ -1,8 +1,8 @@
-## `assertContains`
+### `assertContains`
 
 > Assert one string contains another (case-sensitive)
 
-### Usage
+#### Usage
 
     assertContains [ needle ] [ haystack ... ] [ --help ] [ --handler handler ] [ --display ] [ --debug ] [ --line lineNumber ] [ --line-depth depth ] [ --stdout-match ] [ --stdout-no-match ] [ --stderr-ok ] [ --stderr-match ] [ --stderr-no-match ] [ --dump ] [ --dump-binary ] [ --plumber ] [ --leak globalName ] [ --skip-plumber ] [ --head ] [ --tail ]
 
@@ -10,7 +10,7 @@ Assert one string contains another (case-sensitive)
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - `needle` - String. Text we are looking for.
 - `haystack ... - String. One or more strings to find `needle` in` - it must be found in all haystacks.
@@ -33,7 +33,7 @@ Assert one string contains another (case-sensitive)
 - `--head` - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 - `--tail` - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 
-### Return codes
+#### Return codes
 
 - `0` - The assertion succeeded
 - `1` - Assertion failed

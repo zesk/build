@@ -1,8 +1,8 @@
-## `gitTagVersion`
+### `gitTagVersion`
 
 > Generates a git tag for a build version, so `v1.0d1`,
 
-### Usage
+#### Usage
 
     gitTagVersion [ --suffix versionSuffix ]
 
@@ -17,13 +17,13 @@ When this tool succeeds the git repository contains a tag with the suffix and an
 
 > Location: `bin/build/tools/git.sh`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_VERSION_SUFFIX} - String. Version suffix to use as a default. If not specified the default is `rc`.
 - {SEE:BUILD_MAXIMUM_TAGS_PER_VERSION} - Integer. Number of integers to attempt to look for when incrementing.

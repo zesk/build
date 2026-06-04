@@ -1,8 +1,8 @@
-## `decoratePath`
+### `decoratePath`
 
 > Display file paths and replace prefixes with icons
 
-### Usage
+#### Usage
 
     decoratePath [ --help ] [ --path pathName=icon ] [ --no-app ] [ --skip-app ] [ path ]
 
@@ -14,7 +14,7 @@ Icons used:
 
 > Location: `bin/build/tools/decorate/path.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 --path pathName=- `icon` - Flag. Optional. Add an additional path mapping to icon.
@@ -22,13 +22,13 @@ Icons used:
 - `--skip-app` - Flag. Optional. Synonym for `--no-app`.
 - `path` - String. Path to display and replace matching paths with icons.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - TMPDIR
 - {SEE:BUILD_HOME}

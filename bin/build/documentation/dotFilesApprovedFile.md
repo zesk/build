@@ -1,8 +1,8 @@
-## `dotFilesApprovedFile`
+### `dotFilesApprovedFile`
 
 > The dot files approved file. Add files to this to
 
-### Usage
+#### Usage
 
     dotFilesApprovedFile [ --help ]
 
@@ -10,11 +10,11 @@ The dot files approved file. Add files to this to approve.
 
 > Location: `bin/build/tools/prompt-modules.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

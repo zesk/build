@@ -1,8 +1,8 @@
-## `directoryWatch`
+### `directoryWatch`
 
 > Watch a directory
 
-### Usage
+#### Usage
 
     directoryWatch [ --help ] [ --handler handler ] [ --verbose ] [ --file modifiedFile ] [ --modified modifiedTimestamp ] [ --timeout secondsToRun ] [ --state stateFile ] directory [ findArguments ... ]
 
@@ -10,7 +10,7 @@ Watch a directory
 
 > Location: `bin/build/tools/watch.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -22,7 +22,7 @@ Watch a directory
 - `directory` - Directory. Required. Directory to watch
 - `findArguments ...` - Arguments. Optional. Passed to find to filter the files examined.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `consoleTrimWidth`
+### `consoleTrimWidth`
 
 > Truncate console output width
 
-### Usage
+#### Usage
 
     consoleTrimWidth width [ text ]
 
@@ -10,20 +10,20 @@ Truncate console output width
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `width` - UnsignedInteger. Required. Width to maintain.
 - `text` - String. Optional. Text to trim to a console width.
 
-### Reads standard input
+#### Reads standard input
 
 String. Optional. Text to trim to a console width.
 
-### Writes to standard output
+#### Writes to standard output
 
 String. Console string trimmed to the width requested.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

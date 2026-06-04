@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'goAlias - String. Alias for `applicationHome --go`. Default is `g`.\nsetAlias - String. Alias for `applicationHome`. Default is `G`.\n'
 base="application.sh"

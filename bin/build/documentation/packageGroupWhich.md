@@ -1,8 +1,8 @@
-## `packageGroupWhich`
+### `packageGroupWhich`
 
 > Install a package group to have a binary installed
 
-### Usage
+#### Usage
 
     packageGroupWhich binary group
 
@@ -11,12 +11,12 @@ Any unrecognized groups are installed using the name as-is.
 
 > Location: `bin/build/tools/package.sh`
 
-### Arguments
+#### Arguments
 
 - `binary` - String. Required. Binary which will exist in PATH after `group` is installed if it does not exist.
 - `group` - String. Required. Package group.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

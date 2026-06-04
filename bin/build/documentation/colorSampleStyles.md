@@ -1,8 +1,8 @@
-## `colorSampleStyles`
+### `colorSampleStyles`
 
 > Output colors
 
-### Usage
+#### Usage
 
     colorSampleStyles
 
@@ -10,11 +10,11 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

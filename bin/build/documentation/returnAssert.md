@@ -1,8 +1,8 @@
-## `returnAssert`
+### `returnAssert`
 
 > Assertion return code
 
-### Usage
+#### Usage
 
     returnAssert
 
@@ -10,11 +10,11 @@ Return code is `assert`
 
 > Location: `bin/build/tools/test.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - 97
 

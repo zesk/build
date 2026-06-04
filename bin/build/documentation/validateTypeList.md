@@ -1,20 +1,24 @@
-## `validateTypeList`
+### `validateTypeList`
 
-> List types which can be validated
+> Types which can be validated
 
-### Usage
+#### Usage
 
-    validateTypeList
+    validateTypeList [ --help ]
 
-List types which can be validated
+List types which can be validated.
 
 > Location: `bin/build/tools/validate.sh`
 
-### Arguments
+#### Arguments
 
-- none
+- `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Writes to standard output
+
+Type
+
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

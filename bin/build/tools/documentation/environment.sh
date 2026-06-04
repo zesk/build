@@ -123,11 +123,11 @@ __documentationEnvironmentMake() {
       ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$settings") ..." 1>&2
       set -a # UNDO ok
       __documentationEnvironmentFileParse "$handler" "$envFile" >"$settings" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
-      statusMessage --last timingReport "$start" "Generated $(decorate file "$settings") ..." 1>&2
+      ! $verboseFlag || statusMessage --last timingReport "$start" "Generated $(decorate file "$settings") ..." 1>&2
     else
       ! $verboseFlag || statusMessage decorate notice "Cached $(decorate file "$settings") ..." 1>&2
       catchReturn "$handler" touch "$settings" || return $?
-      if [ -f "$envTarget" ] && fileIsNewest "$envTarget" "$settings"; then
+      if [ -f "$envTarget" ] && [ -f "$seeTarget" ] && fileIsNewest "$envTarget" "$settings" "$seeTarget"; then
         skipGenerate=true
         catchReturn "$handler" touch "$envTarget" || return $?
       fi

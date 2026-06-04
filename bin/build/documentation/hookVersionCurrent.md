@@ -1,8 +1,8 @@
-## `hookVersionCurrent`
+### `hookVersionCurrent`
 
 > Application current version
 
-### Usage
+#### Usage
 
     hookVersionCurrent [ --help ] [ --application application ]
 
@@ -12,12 +12,12 @@ Extracts the version from the repository
 
 > Location: `bin/build/tools/hooks.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--application application` - Directory. Optional. Application home directory.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

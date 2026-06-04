@@ -1,8 +1,8 @@
-## `characterToInteger`
+### `characterToInteger`
 
 > Convert a character to the corresponding ASCII code
 
-### Usage
+#### Usage
 
     characterToInteger [ character ] [ --help ]
 
@@ -11,12 +11,12 @@ Requires a single character to be passed
 
 > Location: `bin/build/tools/character.sh`
 
-### Arguments
+#### Arguments
 
 - `character` - String. Optional. One or more characters to convert to their ASCII equivalent.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

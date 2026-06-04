@@ -10,7 +10,7 @@
 #   _            _
 #  | |_ _____  _| |_
 #  | __/ _ \ \/ / __|
-#  | ||  __/>  <| |_
+#  | ||  __/>  <| |_.
 #   \__\___/_/\_\\__|
 #
 
@@ -25,7 +25,7 @@ __testLoader() {
 #
 # You can also use `BUILD_TEST_FLAGS` to change the default flags.
 #
-# #### Tag filters
+# ##### Tag filters
 #
 # Prefix a tag with `+` for `--tag` or `--skip-tag` queries to add the meaning "previous *AND*".
 #
@@ -93,9 +93,8 @@ __testLoader() {
 # Hook: test-pass
 # Hook: test-fail
 # Hook: tests-stop
-# Requires: head tee printf trap
 # Requires: decorate cpuLoadAverage consoleConfigureColorMode
-# Requires: buildEnvironmentLoad usageArgumentString catchEnvironment
+# Requires: buildEnvironmentLoad catchEnvironment
 # Requires: bashCoverage
 # BUILD_DEBUG: test-dump-environment - When set tests will dump the environment at the end.
 testSuite() {

@@ -1,8 +1,8 @@
-## `awsIPAccess`
+### `awsIPAccess`
 
 > Grant access to AWS security group for this IP only using Amazon IAM credentials
 
-### Usage
+#### Usage
 
     awsIPAccess [ --profile profileName ] --services service0,service1,... [ --id developerId ] --group securityGroup [ --ip ip ] [ --revoke ] [ --help ]
 
@@ -16,7 +16,7 @@ You can also simply supply a list of port numbers, and mix and match: `--service
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `--profile profileName` - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
 --services service0,service1,- `...` - List. Required. List of services to add or remove (service names or port numbers)
@@ -26,13 +26,13 @@ You can also simply supply a list of port numbers, and mix and match: `--service
 - `--revoke` - Flag. Optional. Remove permissions
 - `--help` - Flag. Optional. Show this help
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:AWS_REGION}
 - DEVELOPER_ID

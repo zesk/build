@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="prompt-modules.sh"
@@ -11,12 +11,12 @@ file="bin/build/tools/prompt-modules.sh"
 fn="dotFilesApprovedFile"
 fnMarker="dotfilesapprovedfile"
 foundNames=([0]="argument")
-line="105"
+line="106"
 rawComment=$'The dot files approved file. Add files to this to approve.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/prompt-modules.sh"
-sourceHash="88deb9ee5685724c1450f2249c6ebd6a9df5a223"
-sourceLine="105"
+sourceHash="2bee64ea201a03444ec1e39db3efb63042869b7e"
+sourceLine="106"
 summary="The dot files approved file. Add files to this to"
 summaryComputed="true"
 usage="dotFilesApprovedFile [ --help ]"

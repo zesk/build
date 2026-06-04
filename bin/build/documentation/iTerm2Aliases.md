@@ -1,8 +1,8 @@
-## `iTerm2Aliases`
+### `iTerm2Aliases`
 
 > Installs iTerm2 aliases which are:
 
-### Usage
+#### Usage
 
     iTerm2Aliases [ --help ]
 
@@ -29,11 +29,11 @@ Internally supported:
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `gitPreCommitCleanup`
+### `gitPreCommitCleanup`
 
 > Clean up after our pre-commit (deletes cache directory)
 
-### Usage
+#### Usage
 
     gitPreCommitCleanup [ --help ]
 
@@ -10,11 +10,11 @@ Clean up after our pre-commit (deletes cache directory)
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

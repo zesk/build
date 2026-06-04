@@ -1,8 +1,8 @@
-## `darwinSoundNames`
+### `darwinSoundNames`
 
 > List valid sound names usable for notifications in Darwin
 
-### Usage
+#### Usage
 
     darwinSoundNames
 
@@ -10,11 +10,11 @@ List valid sound names usable for notifications in Darwin
 
 > Location: `bin/build/tools/darwin.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

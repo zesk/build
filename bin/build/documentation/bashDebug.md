@@ -1,16 +1,16 @@
-## `bashDebug`
+### `bashDebug`
 
 > Bash debugger
 
-### Usage
+#### Usage
 
-        bashDebug command
+        bashDebug [ --help ] command ...
     
 `bashDebug`: Simple debugger to walk through a program.
 
 Debugger accepts the following keystrokes:
 
-### Flow control
+##### Flow control
 
 - `.` or ` ` or Return - Repeat last flow command
 
@@ -20,12 +20,12 @@ Debugger accepts the following keystrokes:
 - `q`         - Quit debugger (and continue execution)
 - `!`         - Enter a command to execute
 
-### Watching
+##### Watching
 
 - `w`         - Enter a watch expression
 - `u`         - Remove a watch expression
 
-### Utilities
+##### Utilities
 
 `k`         - Display call stack
 `*`         - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)
@@ -33,12 +33,12 @@ Debugger accepts the following keystrokes:
 
 > Location: `bin/build/tools/debugger.sh`
 
-### Arguments
+#### Arguments
 
 - `commandToDebug ...` - Callable. Required. Command to debug.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

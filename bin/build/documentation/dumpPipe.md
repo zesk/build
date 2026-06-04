@@ -1,8 +1,8 @@
-## `dumpPipe`
+### `dumpPipe`
 
 > Dump a pipe with a title and stats
 
-### Usage
+#### Usage
 
     dumpPipe [ --symbol symbol ] [ --tail ] [ --head ] [ --lines ] [ --vanish file ] [ name ]
 
@@ -10,7 +10,7 @@ Dump a pipe with a title and stats
 
 > Location: `bin/build/tools/dump.sh`
 
-### Arguments
+#### Arguments
 
 - `--symbol symbol` - String. Optional. Symbol to place before each line. (Blank is ok).
 - `--tail` - Flag. Optional. Show the tail of the file and not the head when not enough can be shown.
@@ -19,15 +19,15 @@ Dump a pipe with a title and stats
 - `--vanish file` - UnsignedInteger. Optional. Number of lines to show.
 - `name` - String. Optional. The item name or title of this output.
 
-### Reads standard input
+#### Reads standard input
 
 text
 
-### Writes to standard output
+#### Writes to standard output
 
 formatted text for debugging
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

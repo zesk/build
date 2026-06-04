@@ -1,8 +1,8 @@
-## `filesRename`
+### `filesRename`
 
 > Rename a list of files usually to back them up temporarily
 
-### Usage
+#### Usage
 
     filesRename oldSuffix newSuffix actionVerb file ...
 
@@ -16,20 +16,20 @@ Renames files which have `oldSuffix` to then have `newSuffix` and output a messa
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `oldSuffix` - String. Required. Old suffix to look rename from.
 - `newSuffix` - String. Required. New suffix to rename to.
 - `actionVerb` - String. Required. Description to output for found files.
 - `file ...` - String. Required. One or more files to rename, if found, renaming occurs.
 
-### Examples
+#### Examples
 
     filesRename "" ".$$.backup" hiding etc/app.json etc/config.json
     ...
     filesRename ".$$.backup" "" restoring etc/app.json etc/config.json
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

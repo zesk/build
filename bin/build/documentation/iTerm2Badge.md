@@ -1,8 +1,8 @@
-## `iTerm2Badge`
+### `iTerm2Badge`
 
 > Set the badge for the iTerm2 console
 
-### Usage
+#### Usage
 
     iTerm2Badge [ --ignore | -i ] message ...
 
@@ -10,18 +10,18 @@ Set the badge for the iTerm2 console
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 - `message ...` - String. Required. Any message to display as the badge
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:LC_TERMINAL}
 

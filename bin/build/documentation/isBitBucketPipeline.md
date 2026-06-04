@@ -1,8 +1,8 @@
-## `isBitBucketPipeline`
+### `isBitBucketPipeline`
 
 > Are we currently in the BitBucket pipeline?
 
-### Usage
+#### Usage
 
     isBitBucketPipeline
 
@@ -10,11 +10,11 @@ Are we currently in the BitBucket pipeline?
 
 > Location: `bin/build/tools/bitbucket.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - is BitBucket pipeline
 - `1` - Not a BitBucket pipeline

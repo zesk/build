@@ -1,8 +1,8 @@
-## `releaseNotes`
+### `releaseNotes`
 
 > Output path to current release notes
 
-### Usage
+#### Usage
 
     releaseNotes [ --application application ] [ version ]
 
@@ -14,23 +14,27 @@ When this tool succeeds it outputs the path to the current release notes file
 
 > Location: `bin/build/tools/version.sh`
 
-### Arguments
+#### Arguments
 
 - `--application application` - Directory. Optional. Application home directory.
 - `version` - String. Optional. Version for the release notes path. If not specified uses the current version.
 
-### Examples
+#### Examples
 
     open $(bin/build/release-notes.sh)
     vim $(releaseNotes)
 
-### Sample Output
+#### Sample Output
 
 docs/release/version.md
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Environment
+
+- {SEE:BUILD_RELEASE_NOTES}
 

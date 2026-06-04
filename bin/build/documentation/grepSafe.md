@@ -1,8 +1,8 @@
-## `grepSafe`
+### `grepSafe`
 
 > `grep` but returns 0 when nothing matches
 
-### Usage
+#### Usage
 
     grepSafe [ --help ] [ ... ]
 
@@ -15,21 +15,21 @@ Allow blank files or no matches:
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `...` - Arguments. Passed directly to `grep`.
 
-### Return codes
+#### Return codes
 
 - `0` - Normal operation
 
-### Requires
+#### Requires
 
 - grep
 - {SEE:returnMap}
 
-### See Also
+#### See Also
 
 - {SEE:grep}
 

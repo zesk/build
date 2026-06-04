@@ -1,8 +1,8 @@
-## `dateToday`
+### `dateToday`
 
 > Today's date in UTC
 
-### Usage
+#### Usage
 
     dateToday [ --local ] [ --help ]
 
@@ -10,22 +10,22 @@ Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 
 > Location: `bin/build/tools/date.sh`
 
-### Arguments
+#### Arguments
 
 - `--local` - Flag. Optional. Local today.
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     date="$(dateToday)"
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - Compatible with BSD and GNU date.
 

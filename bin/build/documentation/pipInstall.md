@@ -1,8 +1,8 @@
-## `pipInstall`
+### `pipInstall`
 
 > Utility to install python dependencies via pip
 
-### Usage
+#### Usage
 
     pipInstall [ --help ] [ --handler handler ] pipPackage [ ... ]
 
@@ -11,13 +11,13 @@ Installs python if it hasn't been using `pythonInstall`.
 
 > Location: `bin/build/tools/python.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - pipPackage [ ... ]- `` - String. Required. Pip package name to install.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

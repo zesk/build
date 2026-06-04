@@ -1,8 +1,8 @@
-## `deployApplication`
+### `deployApplication`
 
 > Deploy an application from a deployment repository
 
-### Usage
+#### Usage
 
     deployApplication [ --help ] [ --first ] [ --revert ] --home deployHome --id applicationId --application applicationPath [ --target targetPackage ] [ --message message ]
 
@@ -10,7 +10,7 @@ This acts on the local file system only but used in tandem with [deployment](./d
 
 > Location: `bin/build/tools/deploy.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. This help.
 - `--first` - Flag. Optional. The first deployment has no prior version and can not be reverted.
@@ -21,21 +21,21 @@ This acts on the local file system only but used in tandem with [deployment](./d
 - `--target targetPackage` - Filename. Optional. Package name, defaults to `BUILD_TARGET`
 - `--message message` - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.
 
-### Examples
+#### Examples
 
 deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:BUILD_TARGET} {SEE:APPLICATION_ID} {SEE:APPLICATION_TAG}
 
-### See Also
+#### See Also
 
 - {SEE:deployToRemote}
 

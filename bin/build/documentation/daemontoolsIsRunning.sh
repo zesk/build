@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="daemontools.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Is daemontools running?\n\n'
+description="Is daemontools running?"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/daemontools.sh"
 fn="daemontoolsIsRunning"
 fnMarker="daemontoolsisrunning"
 foundNames=([0]="argument")
 line="243"
-rawComment=$'Is daemontools running?\nArgument: --help - Flag. Optional. Display this help.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Is daemontools running?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/daemontools.sh"
 sourceHash="e7272ea2b43766f6539702f962a0e5b92c54b968"
 sourceLine="243"

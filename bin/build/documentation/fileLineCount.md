@@ -1,8 +1,8 @@
-## `fileLineCount`
+### `fileLineCount`
 
 > Outputs the number of lines read from stdin (or supplied
 
-### Usage
+#### Usage
 
     fileLineCount [ --help ] [ --handler handler ] [ file ]
 
@@ -11,22 +11,22 @@ This is essentially a wrapper around `wc -l` which strips whitespace and does ty
 
 > Location: `bin/build/tools/text.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - `file` - File. Optional. Output line count for each file specified. If no files specified, uses stdin.
 
-### Reads standard input
+#### Reads standard input
 
 Lines are read from standard in and counted
 
-### Writes to standard output
+#### Writes to standard output
 
 UnsignedInteger
 `UnsignedInteger`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

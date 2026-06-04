@@ -1,8 +1,8 @@
-## `deployApplicationVersion`
+### `deployApplicationVersion`
 
 > Extracts version from an application either from `.deploy` files or
 
-### Usage
+#### Usage
 
     deployApplicationVersion applicationHome
 
@@ -13,11 +13,11 @@ Checks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.
 
 > Location: `bin/build/tools/deploy.sh`
 
-### Arguments
+#### Arguments
 
 - `applicationHome` - Directory. Required. Application home to get the version from.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

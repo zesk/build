@@ -1,8 +1,8 @@
-## `textCannon`
+### `textCannon`
 
 > Replace text `fromText` with `toText` in files
 
-### Usage
+#### Usage
 
     textCannon [ --help ] [ --handler handler ] [ --path cannonPath ] fromText toText [ findArgs ... ]
 
@@ -13,7 +13,7 @@ The term `textCannon` is not a mistake - it will break something at some point.
 
 > Location: `bin/build/tools/map.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
@@ -22,11 +22,11 @@ The term `textCannon` is not a mistake - it will break something at some point.
 - `toText` - Required. String of text to replace.
 - `findArgs ...` - Arguments. Optional. Any additional arguments are meant to filter files.
 
-### Examples
+#### Examples
 
     textCannon master main ! -path '*/old-version/*')
 
-### Return codes
+#### Return codes
 
 - `0` - Success, no files changed
 - `3` - At least one or more files were modified successfully

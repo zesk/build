@@ -22,7 +22,8 @@ __documentationLoader() {
   __buildFunctionLoader __bashDocumentationExtract documentation "$@" || return $?
 }
 
-# Extract documentation variables from a comment stripped of the '# ' prefixes.
+# Summary: Extract documentation from bash comments
+# Extract documentation variables from a comment stripped of the `# ` prefixes.
 #
 # Usage: {fn} [ --generate ] [ --no-cache | --cache ] [ --help ] handler function sourceFile
 #
@@ -33,14 +34,14 @@ __documentationLoader() {
 # - `base` - The basename of the file
 # - `file` - The relative path name of the file from the application root
 # - `summary` - Defaults to first ten words of `description`
-# - `exit_code` - Defaults to `0 - Always succeeds`
-# - `reviewed`  - Defaults to `Never`
-# - `environment"  - Defaults to `No environment dependencies or modifications.`
+# - `exit_code` - Defaults to standard value
+# - `reviewed`  - No default
+# - `environment"  - No default
+# - `usage` - Computed based on arguments
 #
 # Otherwise the assumed variables (in addition to above) to define functions are:
 #
 # - `argument` - Individual arguments
-# - `usage` - Canonical usage example (code)
 # - `example` - An example of usage (code, many)
 # - `depends` - Any dependencies (list)
 #
@@ -507,8 +508,16 @@ documentationFunctionsCompile() {
         bashListFunctions <"$changedFile" | grepSafe -v '^_' >>"$funFile"
       done
     else
-      statusMessage --last decorate success "Up to date."
-      return 0
+      local missingFunction && while read -r missingFunction; do
+        ! muzzle __documentationFile "$home" "$missingFunction" || continue
+        printf "%s\n" "$missingFunction" >>"$funFile"
+      done < <(buildFunctions)
+      if fileIsEmpty "$funFile"; then
+        statusMessage --last decorate success "Up to date."
+        catchReturn "$handler" rm -f "${clean[@]}" || return $?
+        return 0
+      fi
+      statusMessage decorate success "Filling in missing functions"
       # fileModificationTimesBefore "$target" "$sourceTimestamp" -maxdepth 1 -mindepth 1 -name '*.sh' | textRemoveFields 1 | cut -c "$((${#target} + 2))-" | cut -f 1 -d . >"$funFile"
     fi
     documentationFunctionCompile "${aa[@]}" "$@" <"$funFile" || returnClean $? "${clean[@]}" || return $?
@@ -525,10 +534,11 @@ _documentationFunctionsCompile() {
 
 # - `--documentation` is required for `SEE:` files
 #
+# Argument: --force - Flag. Optional. Create files regardless of cache status.
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
 # Argument: --source codeSource - Directory. Required. Code source to find functions.
 # Argument: --documentation documentationSource - Directory. Documentation source to find documentation links.
-# Argument: --all - Flag. Optional. Do everything regardless of cache state.
+# Argument: --all - Flag. Optional. Check all functions.
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
 # Argument: functionName ... - String. Optional. Specific functions to compile.
 # stdin: functionName - File with function names one per line.
@@ -746,8 +756,10 @@ _bashDocumentationDefaults() {
 # Summary: Generate templates of functions missing from documentation
 #
 # Generates:
+#
 # - `missingFunctionTotal.md`
 # - `missingFunctionList.md`
+#
 # in the target directory.
 #
 # Argument: --index indexPath - Directory. Required. Where to store documentation indexes for later use.

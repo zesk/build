@@ -1,8 +1,8 @@
-## `bashSourcePath`
+### `bashSourcePath`
 
 > Load a directory of bash scripts
 
-### Usage
+#### Usage
 
     bashSourcePath [ --exclude pattern ] directory ... [ --help ]
 
@@ -14,13 +14,13 @@ Has security implications. Use with caution and ensure your directory is protect
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `--exclude pattern` - String. Optional. String passed to `! -path pattern` in `find`
 - `directory ...` - Directory. Required. Directory to `source` all `.sh` files used.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

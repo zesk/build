@@ -1,8 +1,8 @@
-## `environmentVariables`
+### `environmentVariables`
 
 > Output a list of environment variables and ignore function definitions
 
-### Usage
+#### Usage
 
     environmentVariables
 
@@ -13,13 +13,21 @@ exported variables
 
 > Location: `bin/build/tools/environment.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### Requires
+
+- [`declare`]({rel}/guide/builtin.md#declare)
+- grep
+- cut
+- {SEE:bashDocumentation}
+- {SEE:helpArgument}
 

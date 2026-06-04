@@ -1,8 +1,8 @@
-## `statusMessage`
+### `statusMessage`
 
 > Output a status message and display correctly on consoles with animation and in log files
 
-### Usage
+#### Usage
 
     statusMessage [ --last ] [ --first ] [ --inline ] command
 
@@ -26,30 +26,30 @@ $(--inline) - Outputs the message at the cursor with a newline
 
 > Location: `bin/build/tools/colors.sh`
 
-### Arguments
+#### Arguments
 
 - `--last` - Flag. Optional. Last message to be output, so output a newline as well at the end.
 - `--first` - Flag. Optional. First message to be output, only clears line if available.
 - `--inline` - Flag. Optional. Inline message displays with newline when animation is NOT available.
 - `command` - Required. Commands which output a message.
 
-### Examples
+#### Examples
 
     statusMessage decorate info "Loading ..."
     bin/load.sh >>"$loadLogFile"
     consoleLineFill
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - Intended to be run on an interactive console. Should support $(tput cols).
 
-### Requires
+#### Requires
 
 - {SEE:throwArgument}
 - {SEE:consoleHasAnimation}

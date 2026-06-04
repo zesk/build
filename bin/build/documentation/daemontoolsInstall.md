@@ -1,8 +1,8 @@
-## `daemontoolsInstall`
+### `daemontoolsInstall`
 
 > Install daemontools and dependencies
 
-### Usage
+#### Usage
 
     daemontoolsInstall
 
@@ -10,11 +10,11 @@ Install daemontools and dependencies
 
 > Location: `bin/build/tools/daemontools.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

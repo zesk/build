@@ -1,8 +1,8 @@
-## `fileType`
+### `fileType`
 
 > Better type handling of shell objects
 
-### Usage
+#### Usage
 
     fileType [ item ] [ --help ]
 
@@ -14,12 +14,12 @@ Outputs one of `type` output or enhancements:
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `item` - String. Optional. Thing to classify
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `processOpenPipes`
+### `processOpenPipes`
 
 > Output the number of open files for a process ID
 
-### Usage
+#### Usage
 
     processOpenPipes [ --help ]
 
@@ -11,11 +11,11 @@ Not completed yet
 
 > Location: `bin/build/tools/process.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

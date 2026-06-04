@@ -1,8 +1,8 @@
-## `groupID`
+### `groupID`
 
 > Convert a group name to a group ID
 
-### Usage
+#### Usage
 
     groupID groupName
 
@@ -10,17 +10,28 @@ Convert a group name to a group ID
 
 > Location: `bin/build/tools/group.sh`
 
-### Arguments
+#### Arguments
 
 - `groupName` - String. Required. Group name to convert to a group ID
 
-### Writes to standard output
+#### Writes to standard output
 
 `Integer`. One line for each group name passed as an argument.
 
-### Return codes
+#### Return codes
 
 - `0` - All groups were found in the database and IDs were output successfully
 - `1` - Any group is not found in the database.
 - `2` - Argument errors (blank argument)
+
+#### Requires
+
+- {SEE:throwArgument}
+- getent
+- cut
+- [`printf`]({rel}/guide/builtin.md#printf)
+- {SEE:bashDocumentation}
+- {SEE:decorate}
+- grep
+- {SEE:quoteGrepPattern}
 

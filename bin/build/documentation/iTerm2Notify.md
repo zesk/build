@@ -1,8 +1,8 @@
-## `iTerm2Notify`
+### `iTerm2Notify`
 
 > Sends a notification message via Mac OS X from iTerm2
 
-### Usage
+#### Usage
 
     iTerm2Notify message
 
@@ -10,11 +10,11 @@ Sends a notification message via Mac OS X from iTerm2
 
 > Location: `bin/build/tools/iterm2.sh`
 
-### Arguments
+#### Arguments
 
 - `message` - String. Required. Text to display.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

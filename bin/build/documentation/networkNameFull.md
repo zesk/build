@@ -1,8 +1,8 @@
-## `networkNameFull`
+### `networkNameFull`
 
 > Platform-agnostic host name
 
-### Usage
+#### Usage
 
     networkNameFull
 
@@ -11,17 +11,17 @@ Formerly `hostname``Full`.
 
 > Location: `bin/build/tools/host.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:helpArgument}
 - {SEE:__hostname}

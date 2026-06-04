@@ -1,8 +1,8 @@
-## `gitHasAnyRefs`
+### `gitHasAnyRefs`
 
 > Does git have any tags?
 
-### Usage
+#### Usage
 
     gitHasAnyRefs [ --help ]
 
@@ -11,11 +11,11 @@ May need to `git pull --tags`, or no tags exist.
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - At least one tag exists
 - `1` - No tags exist

@@ -1,8 +1,8 @@
-## `sysvInitScriptUninstall`
+### `sysvInitScriptUninstall`
 
 > Remove an initialization script
 
-### Usage
+#### Usage
 
     sysvInitScriptUninstall binary [ --help ]
 
@@ -10,12 +10,12 @@ Remove an initialization script
 
 > Location: `bin/build/tools/sysvinit.sh`
 
-### Arguments
+#### Arguments
 
 - `binary` - String. Required. Basename of installed script to remove.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

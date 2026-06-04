@@ -1,8 +1,8 @@
-## `awsEnvironmentFromCredentials`
+### `awsEnvironmentFromCredentials`
 
 > Get credentials and output environment variables for AWS authentication
 
-### Usage
+#### Usage
 
     awsEnvironmentFromCredentials [ profileName ] [ --profile profileName ] [ --comments ] [ --help ]
 
@@ -15,14 +15,14 @@ Both forms can be used, but the profile should be supplied once and only once.
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `profileName` - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 - `--profile profileName` - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 - `--comments` - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 - `--help` - Flag. Optional. Display this help.
 
-### Examples
+#### Examples
 
     setFile=$(fileTemporaryName "$handler") || return $?
     if awsEnvironment "$profile" > "$setFile"; then
@@ -33,7 +33,7 @@ Both forms can be used, but the profile should be supplied once and only once.
     exit 1
     fi
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

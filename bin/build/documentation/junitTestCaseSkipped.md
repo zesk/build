@@ -1,8 +1,8 @@
-## `junitTestCaseSkipped`
+### `junitTestCaseSkipped`
 
 > Output test skipped XML
 
-### Usage
+#### Usage
 
     junitTestCaseSkipped [ message ]
 
@@ -10,11 +10,11 @@ Output test skipped XML
 
 > Location: `bin/build/tools/junit.sh`
 
-### Arguments
+#### Arguments
 
 - `message` - Why test was skipped.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

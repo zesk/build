@@ -1,8 +1,8 @@
-## `bashSanitize`
+### `bashSanitize`
 
 > Sanitize bash files for code quality.
 
-### Usage
+#### Usage
 
     bashSanitize [ --help ] [ -- ] [ --home home ] [ --interactive ] [ --check checkDirectory ] [ ... ]
 
@@ -13,7 +13,7 @@ TODO - use one mechanism for bashSanitize.conf format
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--` - Flag. Optional. Interactive mode on fixing errors.
@@ -22,7 +22,7 @@ TODO - use one mechanism for bashSanitize.conf format
 - `--check checkDirectory` - Directory. Optional. Check shell scripts in this directory for common errors.
 - `...` - Additional arguments are passed to `bashLintFiles` `validateFileContents`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `gitBranchExists`
+### `gitBranchExists`
 
 > Does a branch exist locally or remotely?
 
-### Usage
+#### Usage
 
     gitBranchExists branch ... [ --help ]
 
@@ -10,12 +10,12 @@ Does a branch exist locally or remotely?
 
 > Location: `bin/build/tools/git.sh`
 
-### Arguments
+#### Arguments
 
 - `branch ...` - String. Required. List of branch names to check.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - All branches passed exist
 - `1` - At least one branch does not exist locally or remotely

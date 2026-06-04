@@ -1,8 +1,8 @@
-## `evalCheck`
+### `evalCheck`
 
 > Check files to ensure `eval`s in code have been checked
 
-### Usage
+#### Usage
 
     evalCheck
 
@@ -10,11 +10,11 @@ Check files to ensure `eval`s in code have been checked
 
 > Location: `bin/build/tools/security.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

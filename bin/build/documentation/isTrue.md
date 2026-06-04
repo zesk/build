@@ -1,8 +1,8 @@
-## `isTrue`
+### `isTrue`
 
 > True-ish
 
-### Usage
+#### Usage
 
     isTrue [ --help ] [ value ... ]
 
@@ -11,12 +11,12 @@ Succeeds when all arguments are "true"-ish
 
 > Location: `bin/build/tools/type.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `value ...` - EmptyString. One or more values to test.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

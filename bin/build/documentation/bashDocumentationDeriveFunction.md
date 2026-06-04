@@ -1,8 +1,8 @@
-## `bashDocumentationDeriveFunction`
+### `bashDocumentationDeriveFunction`
 
 > Generate markdown documentation page
 
-### Usage
+#### Usage
 
     bashDocumentationDeriveFunction [ --help ] [ --check ] settingsFile
 
@@ -14,13 +14,13 @@ File(s) are generated next to `settingsFile`.
 
 > Location: `bin/build/tools/documentation.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--check` - Flag. Optional. Check to see if an update is needed
 - `settingsFile` - File. Required. Settings file for function to document.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

@@ -1,8 +1,8 @@
-## `environmentClean`
+### `environmentClean`
 
 > Clean *most* exported variables from the current context except a
 
-### Usage
+#### Usage
 
     environmentClean [ keepEnvironment ]
 
@@ -14,11 +14,11 @@ Use with caution. Any additional environment variables you wish to preserve, sim
 
 > Location: `bin/build/tools/environment.sh`
 
-### Arguments
+#### Arguments
 
 - `keepEnvironment` - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

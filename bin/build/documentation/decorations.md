@@ -1,8 +1,8 @@
-## `decorations`
+### `decorations`
 
 > Output a list of build-in decoration styles, one per line
 
-### Usage
+#### Usage
 
     decorations [ --help ]
 
@@ -10,17 +10,17 @@ Output a list of build-in decoration styles, one per line
 
 > Location: `bin/build/tools/decorate/core.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:helpArgument}
 - {SEE:convertValue}

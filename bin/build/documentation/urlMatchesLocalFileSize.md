@@ -1,8 +1,8 @@
-## `urlMatchesLocalFileSize`
+### `urlMatchesLocalFileSize`
 
 > Compare a remote file size with a local file size
 
-### Usage
+#### Usage
 
     urlMatchesLocalFileSize [ --help ] url file
 
@@ -10,13 +10,13 @@ Compare a remote file size with a local file size
 
 > Location: `bin/build/tools/web.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `url` - URL. Required. URL to check.
 - `file` - File. Required. File to compare.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

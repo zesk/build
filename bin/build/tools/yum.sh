@@ -7,8 +7,8 @@
 # Docs: o ./documentation/source/tools/yum.md
 # Test: o ./test/tools/yum-tests.sh
 
-#
-# Is yum installed?
+# Summary: Is yum installed?
+# Is the yum package manager installed?
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 yumIsInstalled() {

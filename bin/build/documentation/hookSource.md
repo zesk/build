@@ -1,8 +1,8 @@
-## `hookSource`
+### `hookSource`
 
 > Run a project hook
 
-### Usage
+#### Usage
 
     hookSource [ --application applicationHome ] [ --extensions extensionList ] hookName ...
 
@@ -21,24 +21,33 @@ Default hooks (scripts) can be found in the current build version at `bin/build/
 
 > Location: `bin/build/tools/hook.sh`
 
-### Arguments
+#### Arguments
 
 - `--application applicationHome` - Path. Optional. Directory of alternate application home.
 - `--extensions extensionList` - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 - `hookName ...` - String. Required. Hook to source.
 
-### Debugging settings
+#### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `hook` - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
 
-### Examples
+#### Examples
 
     version="$(hookSource version-current)"
 
-### Return codes
+#### Return codes
 
 - `Any` - The hook exit code is returned if it is run
 - `1` - is returned if the hook is not found
+
+#### Environment
+
+- {SEE:BUILD_HOOK_EXTENSIONS} {SEE:BUILD_HOOK_DIRS} {SEE:BUILD_DEBUG}
+
+#### See Also
+
+- {SEE:hooks.md}
+- [hookRunOptional]({rel}tools/hook.md#hookrunoptional)- `` - Identical to \`hookRun\` but returns exit code zero if the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L154))
 

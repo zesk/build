@@ -1,8 +1,8 @@
-## `returnEnvironment`
+### `returnEnvironment`
 
 > Return `environment` error code. Outputs `message ...` to `stderr`.
 
-### Usage
+#### Usage
 
     returnEnvironment [ message ... ]
 
@@ -10,15 +10,15 @@ Return `environment` error code. Outputs `message ...` to `stderr`.
 
 > Location: `bin/build/tools/_sugar.sh`
 
-### Arguments
+#### Arguments
 
 - `message ...` - String. Optional. Message to output.
 
-### Return codes
+#### Return codes
 
 - 1
 
-### Requires
+#### Requires
 
 - {SEE:returnMessage}
 

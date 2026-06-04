@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument=$'directoryOrFile - Exists. Required. Directory or file to `source` `.sh` files found.\n--info - Flag. Optional. Show user what they should do (press a key).\n--no-info - Flag. Optional. Hide user info (what they should do ... press a key)\n--verbose - Flag. Optional. Show what is done as status messages.\n--clear - Flag. Optional. Clear the approval status for file given.\n--prefix - String. Optional. Display this text before each status messages.\n'
 base="interactive.sh"

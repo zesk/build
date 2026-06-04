@@ -1,8 +1,8 @@
-## `environmentCompile`
+### `environmentCompile`
 
 > Compile an environment file to evaluated names and values
 
-### Usage
+#### Usage
 
     environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --variables ] [ --parse ] environmentFile
 
@@ -11,7 +11,7 @@ Do not perform this operation on files which are untrusted.
 
 > Location: `bin/build/tools/environment/compile.sh`
 
-### Arguments
+#### Arguments
 
 - `--underscore` - Flag. Optional. Include environment variables which begin with underscore `_`.
 - `--secure` - Flag. Optional. Include environment variables which are in `environmentSecureVariables`
@@ -20,7 +20,7 @@ Do not perform this operation on files which are untrusted.
 - `--parse` - Flag. Optional. Parse the file for things which look like variables to output (basically `^foo=`)
 - `environmentFile` - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible).
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

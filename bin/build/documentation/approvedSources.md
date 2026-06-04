@@ -1,8 +1,8 @@
-## `approvedSources`
+### `approvedSources`
 
 > List approved Bash script sources which can be loaded automatically
 
-### Usage
+#### Usage
 
     approvedSources [ --debug ] [ --no-delete ] [ --delete ]
 
@@ -13,23 +13,23 @@ Stale files are ones which no longer are associated with a file's current finger
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `--debug` - Flag. Optional. Show a lot of information about the approved cache.
 - `--no-delete` - Flag. Optional. Do not delete stale approval files.
 - `--delete` - Flag. Optional. Delete stale approval files.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Environment
+#### Environment
 
 - {SEE:XDG_STATE_HOME}
 
-### See Also
+#### See Also
 
 - {SEE:XDG_STATE_HOME.sh}
 

@@ -1,8 +1,8 @@
-## `backgroundProcess`
+### `backgroundProcess`
 
 > Background process manager for shell (UNSTABLE)
 
-### Usage
+#### Usage
 
     backgroundProcess [ --verbose ] [ --report ] [ --summary ] [ --monitor ] [ --watch ] [ --verbose-toggle ] [ --terminate ] [ --go ] [ --new-only ] [ --stop stopSeconds ] [ --wait waitSeconds ] [ --frequency checkSeconds ] condition ... -- command ... [ --help ]
 
@@ -40,7 +40,7 @@ To see status, try:
 
 > Location: `bin/build/tools/prompt-modules.sh`
 
-### Arguments
+#### Arguments
 
 - `--verbose` - Flag. Optional. Be verbose.
 - `--report` - Flag. Optional. Show a long report of all processes.
@@ -59,7 +59,7 @@ To see status, try:
 - `command ...` - Callable. Required. Function to run in the background.
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

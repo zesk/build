@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
-argument=$'package - Additional packages to install (using `pipInstall`)\n'
+argument="package - Additional packages to install (using \`pipInstall\`)"$'\n'""
 base="docker-compose.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Install `docker-compose`\n\nIf this fails it will output the installation log.\n\nWhen this tool succeeds the `docker-compose` binary is available in the local operating system.\n\n'
+description="Install \`docker-compose\`"$'\n'""$'\n'"If this fails it will output the installation log."$'\n'""$'\n'"When this tool succeeds the \`docker-compose\` binary is available in the local operating system."$'\n'""$'\n'""
 descriptionLineCount="6"
 file="bin/build/tools/docker-compose.sh"
 fn="dockerComposeInstall"
 fnMarker="dockercomposeinstall"
 foundNames=([0]="argument" [1]="summary" [2]="return_code" [3]="see")
 line="37"
-rawComment=$'Install `docker-compose`\nIf this fails it will output the installation log.\nArgument: package - Additional packages to install (using `pipInstall`)\nSummary: Install `docker-compose`\nWhen this tool succeeds the `docker-compose` binary is available in the local operating system.\nReturn Code: 1 - If installation fails\nReturn Code: 0 - If installation succeeds\nSee: pipInstall\n\n'
-return_code=$'1 - If installation fails\n0 - If installation succeeds\n'
-see=$'pipInstall\n'
+rawComment="Install \`docker-compose\`"$'\n'"If this fails it will output the installation log."$'\n'"Argument: package - Additional packages to install (using \`pipInstall\`)"$'\n'"Summary: Install \`docker-compose\`"$'\n'"When this tool succeeds the \`docker-compose\` binary is available in the local operating system."$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'"See: pipInstall"$'\n'""$'\n'""
+return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""
+see="pipInstall"$'\n'""
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="fd46ba45b4bfb981e0a17b3510aa593d2fe8dec6"
+sourceHash="a10cd9abf0ca14f427ce8a440b925933d82759e8"
 sourceLine="37"
 summary="Install \`docker-compose\`"
 summaryComputed=""

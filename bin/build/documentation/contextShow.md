@@ -1,8 +1,8 @@
-## `contextShow`
+### `contextShow`
 
 > Show the current editor being used as a text string
 
-### Usage
+#### Usage
 
     contextShow
 
@@ -10,15 +10,15 @@ Show the current editor being used as a text string
 
 > Location: `bin/build/tools/vendor.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `1` - If no editor or running program can be determined
 
-### Environment
+#### Environment
 
 - {SEE:EDITOR} - Used as a default editor (first)
 - {SEE:VISUAL} - Used as another default editor (last)

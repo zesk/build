@@ -1,8 +1,8 @@
-## `confirmYesNo`
+### `confirmYesNo`
 
 > Read user input and return success on yes
 
-### Usage
+#### Usage
 
     confirmYesNo [ --default defaultValue ] [ --attempts attempts ] [ --timeout seconds ] [ --info ] [ --yes ] [ --no ] [ --help ] [ --handler handler ] [ message ... ]
 
@@ -13,7 +13,7 @@ Example:
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `--default defaultValue` - Boolean. Optional. Value to return if no value given by user
 - `--attempts attempts` - PositiveInteger. Optional. User can give us a bad response this many times before we return the default.
@@ -25,11 +25,11 @@ Example:
 - `--handler handler` - Function. Optional. Use this error handler instead of the default error handler.
 - `message ...` - String. Any additional arguments are considered part of the message.
 
-### Examples
+#### Examples
 
     confirmYesNo --timeout 10 "Stop the timer!"
 
-### Return codes
+#### Return codes
 
 - `0` - Yes
 - `1` - No

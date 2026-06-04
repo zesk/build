@@ -1,8 +1,8 @@
-## `darwinDialog`
+### `darwinDialog`
 
 > Display a dialog using `osascript` with the choices provided. Typically
 
-### Usage
+#### Usage
 
     darwinDialog [ --choice choiceText ] [ --ok ] [ --cancel ] --default buttonIndex [ --help ] message ...
 
@@ -11,7 +11,7 @@ Outputs the selected button text upon exit.
 
 > Location: `bin/build/tools/darwin.sh`
 
-### Arguments
+#### Arguments
 
 - `--choice choiceText` - String. Optional. Title of the thing.
 - `--ok` - Flag. Optional. Adds "OK" as an option.
@@ -20,7 +20,7 @@ Outputs the selected button text upon exit.
 - `--help` - Flag. Optional. Display this help.
 - `message ...` - String. Required. The message to display in the dialog.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

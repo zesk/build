@@ -1,8 +1,8 @@
-## `logDirectoryRotate`
+### `logDirectoryRotate`
 
 > Rotate log files
 
-### Usage
+#### Usage
 
     logDirectoryRotate [ --help ] [ --dry-run ] [ --cull cullCount ] logPath count
 
@@ -10,7 +10,7 @@ For all log files in logPath with extension `.log`, rotate them safely.
 
 > Location: `bin/build/tools/log.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 - `--dry-run` - Flag. Optional. Do not change anything.
@@ -18,13 +18,13 @@ For all log files in logPath with extension `.log`, rotate them safely.
 - `logPath` - Directory. Required. Path where log files exist. Looks for files which match `*.log`.
 - `count` - PositiveInteger. Required. Integer of log files to maintain.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### See Also
+#### See Also
 
-- {SEE:logRotate}
+- [logRotate]({rel}tools/log.md#logrotate) - Rotate a log file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/log.sh#L33))
 

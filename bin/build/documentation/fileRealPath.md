@@ -1,8 +1,8 @@
-## `fileRealPath`
+### `fileRealPath`
 
 > Find the full, actual path of a file avoiding symlinks
 
-### Usage
+#### Usage
 
     fileRealPath file ...
 
@@ -11,17 +11,17 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `file ...` - File. Required. One or more files to `realpath`.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:executableExists}
 - realpath
@@ -29,7 +29,7 @@ Without arguments, displays help.
 - {SEE:bashDocumentation}
 - {SEE:returnArgument}
 
-### See Also
+#### See Also
 
 - {SEE:readlink}
 - {SEE:realpath}

@@ -1,8 +1,8 @@
-## `isS3URL`
+### `isS3URL`
 
 > Is the URL passed in a S3 URL?
 
-### Usage
+#### Usage
 
     isS3URL [ value ]
 
@@ -11,11 +11,11 @@ Without arguments, displays help.
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `value` - EmptyString. Value to check.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

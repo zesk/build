@@ -1,8 +1,8 @@
-## `fileModificationTimesAfter`
+### `fileModificationTimesAfter`
 
 > List files modified after a specific timestamp (inclusive)
 
-### Usage
+#### Usage
 
     fileModificationTimesAfter directory timestamp [ findArgs ]
 
@@ -12,23 +12,23 @@ Output is sorted from newest time to oldest time (reverse chronological).
 
 > Location: `bin/build/tools/file.sh`
 
-### Arguments
+#### Arguments
 
 - `directory - Directory. Required. Must exist` - directory to list.
 - `timestamp` - PositiveInteger. Required. Timestamp to compare file timestamps with.
 - `findArgs` - Arguments. Optional. Optional additional arguments to modify the find query
 
-### Examples
+#### Examples
 
 fileModificationTimesAfter "$myDir" "$yesterdayNoon" ! -path "*/.*/*"
 
-### Sample Output
+#### Sample Output
 
 1704312758 bin/build/deprecated.sh
 1705347087 bin/build/tools.sh
 1705442647 bin/build/build.json
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

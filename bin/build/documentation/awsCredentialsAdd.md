@@ -1,8 +1,8 @@
-## `awsCredentialsAdd`
+### `awsCredentialsAdd`
 
 > Write an AWS profile to the AWS credentials file
 
-### Usage
+#### Usage
 
     awsCredentialsAdd [ --profile profileName ] [ --force ] [ --comments ] [ --help ] [ key ] [ secret ]
 
@@ -12,7 +12,7 @@ If the AWS credentials file is not found, it is created
 
 > Location: `bin/build/tools/aws.sh`
 
-### Arguments
+#### Arguments
 
 - `--profile profileName` - String. Optional. The credentials profile to write (default value is `default`)
 - `--force` - Flag. Optional. Write the credentials file even if the profile already exists
@@ -21,7 +21,7 @@ If the AWS credentials file is not found, it is created
 - `key` - The AWS_ACCESS_KEY_ID to write
 - `secret` - The AWS_SECRET_ACCESS_KEY to write
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

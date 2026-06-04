@@ -1,8 +1,8 @@
-## `phpIniFile`
+### `phpIniFile`
 
 > Outputs the path to the PHP ini file
 
-### Usage
+#### Usage
 
     phpIniFile
 
@@ -10,11 +10,11 @@ Outputs the path to the PHP ini file
 
 > Location: `bin/build/tools/php.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

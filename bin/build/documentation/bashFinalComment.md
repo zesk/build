@@ -1,8 +1,8 @@
-## `bashFinalComment`
+### `bashFinalComment`
 
 > Extracts the final comment from a stream
 
-### Usage
+#### Usage
 
     bashFinalComment [ --help ]
 
@@ -10,17 +10,17 @@ Extracts the final comment from a stream
 
 > Location: `bin/build/tools/bash.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:fileReverseLines}
 - sed

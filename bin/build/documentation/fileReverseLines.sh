@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-01
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument="none"
 base="platform.sh"
-credits="Eric Pement"$'\n'""
-depends="awk"$'\n'""
+credits=$'Eric Pement\n'
+depends=$'awk\n'
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Reverses a pipe's input lines to output using an awk trick."$'\n'""$'\n'"Not recommended on big files."$'\n'""$'\n'""
+description=$'Reverses a pipe\'s input lines to output using an awk trick.\n\nNot recommended on big files.\n\n'
 descriptionLineCount="4"
 file="bin/build/tools/platform.sh"
 fn="fileReverseLines"
 fnMarker="filereverselines"
 foundNames=([0]="summary" [1]="source" [2]="credits" [3]="depends")
 line="106"
-rawComment="Reverses a pipe's input lines to output using an awk trick."$'\n'"Not recommended on big files."$'\n'"Summary: Reverse output lines"$'\n'"Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'"Credits: Eric Pement"$'\n'"Depends: awk"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-source="https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'""
+rawComment=$'Reverses a pipe\'s input lines to output using an awk trick.\nNot recommended on big files.\nSummary: Reverse output lines\nSource: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt\nCredits: Eric Pement\nDepends: awk\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+source=$'https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="1d635d1bdc5db7d6b439cb90eb034f236822dd22"
+sourceHash="a68934b9dea91af485e7b209bfc126a7dc7af004"
 sourceLine="106"
 summary="Reverse output lines"
 summaryComputed=""

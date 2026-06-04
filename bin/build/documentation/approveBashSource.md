@@ -1,8 +1,8 @@
-## `approveBashSource`
+### `approveBashSource`
 
 > Loads files or a directory of `.sh` files using `source`
 
-### Usage
+#### Usage
 
     approveBashSource directoryOrFile [ --info ] [ --no-info ] [ --verbose ] [ --clear ] [ --prefix ]
 
@@ -13,7 +13,7 @@ Stale files are ones which no longer are associated with a file's current finger
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `directoryOrFile` - Exists. Required. Directory or file to `source` `.sh` files found.
 - `--info` - Flag. Optional. Show user what they should do (press a key).
@@ -22,13 +22,17 @@ Stale files are ones which no longer are associated with a file's current finger
 - `--clear` - Flag. Optional. Clear the approval status for file given.
 - `--prefix` - String. Optional. Display this text before each status messages.
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### See Also
+#### Environment
+
+- {SEE:XDG_STATE_HOME}
+
+#### See Also
 
 - {SEE:XDG_STATE_HOME.sh}
 

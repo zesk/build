@@ -1,8 +1,8 @@
-## `deprecatedFind`
+### `deprecatedFind`
 
 > Find files which match a token or tokens
 
-### Usage
+#### Usage
 
     deprecatedFind findArgumentFunction search [ --path cannonPath ]
 
@@ -10,14 +10,18 @@ Find files which match a token or tokens
 
 > Location: `bin/build/tools/deprecated-tools.sh`
 
-### Arguments
+#### Arguments
 
 - `findArgumentFunction` - Function. Required. Find arguments (for `find`) for `textCannon`.
 - `search` - String. Required. String to search for (one or more)
 - `--path cannonPath` - Directory. Optional. Run `textCannon` operation starting in this directory.
 
-### Return codes
+#### Return codes
 
 - `0` - One of the search tokens was found in a file (which matches find arguments)
 - `1` - Search tokens were not found in any file (which matches find arguments)
+
+#### See Also
+
+- [buildHome]({rel}tools/build.md#buildhome)- `` - Prints the build home directory (usually same as the application ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L172))
 

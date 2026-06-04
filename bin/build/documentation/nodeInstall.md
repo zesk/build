@@ -1,8 +1,8 @@
-## `nodeInstall`
+### `nodeInstall`
 
 > Install nodejs
 
-### Usage
+#### Usage
 
     nodeInstall
 
@@ -10,11 +10,11 @@ Install nodejs
 
 > Location: `bin/build/tools/node.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

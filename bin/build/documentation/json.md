@@ -1,8 +1,8 @@
-## `json`
+### `json`
 
 > JSON pretty
 
-### Usage
+#### Usage
 
     json [ --help ]
 
@@ -10,23 +10,23 @@ Format something neatly as JSON
 
 > Location: `bin/build/tools/json.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Reads standard input
+#### Reads standard input
 
 JSONFile
 
-### Writes to standard output
+#### Writes to standard output
 
 JSONFile pretty formatted
 
-### Examples
+#### Examples
 
     json < inputFile > outputFile
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

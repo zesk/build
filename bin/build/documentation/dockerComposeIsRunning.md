@@ -1,8 +1,8 @@
-## `dockerComposeIsRunning`
+### `dockerComposeIsRunning`
 
 > Is docker compose currently running?
 
-### Usage
+#### Usage
 
     dockerComposeIsRunning [ --help ]
 
@@ -10,11 +10,11 @@ Is docker compose currently running?
 
 > Location: `bin/build/tools/docker-compose.sh`
 
-### Arguments
+#### Arguments
 
 - `--help` - Flag. Optional. Display this help.
 
-### Return codes
+#### Return codes
 
 - `1` - Not running
 - `0` - Running

@@ -1,8 +1,8 @@
-## `deployNextVersion`
+### `deployNextVersion`
 
 > Get the next version of the supplied version
 
-### Usage
+#### Usage
 
     deployNextVersion deployHome versionName
 
@@ -10,12 +10,12 @@ Get the next version of the supplied version
 
 > Location: `bin/build/tools/deploy.sh`
 
-### Arguments
+#### Arguments
 
 - `deployHome` - Directory. Required. Deployment database home.
 - `versionName` - String. Required. Application ID to look for
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

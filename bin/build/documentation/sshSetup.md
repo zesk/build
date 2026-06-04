@@ -1,8 +1,8 @@
-## `sshSetup`
+### `sshSetup`
 
 > Set up SSH for a user with ID and backup
 
-### Usage
+#### Usage
 
     sshSetup [ --force ] server
 
@@ -16,18 +16,18 @@ You will need the password for this server for the current user.
 
 > Location: `bin/build/tools/ssh.sh`
 
-### Arguments
+#### Arguments
 
 - `--force` - Flag. Optional. Force the program to create a new key if one exists
 - `server` - String. Required. Servers to connect to to set up authorization
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-### Requires
+#### Requires
 
 - {SEE:userRecordHome}
 - {SEE:catchEnvironment}

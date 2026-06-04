@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-03
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 ##
 ##
@@ -13,12 +13,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationIndexLookup"
 fnMarker="documentationindexlookup"
 foundNames=([0]="argument")
-line="329"
+line="330"
 rawComment=$'Looks up information in the function index\n##\nArgument: --settings - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings\nArgument: --comment - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings\nArgument: --source - Flag. Optional. `matchText` is a function name. Outputs the source code path to where the function is defined\nArgument: --line - Flag. Optional. `matchText` is a function name. Outputs the source code line where the function is defined\nArgument: --combined - Flag. Optional. `matchText` is a function name. Outputs the source code path and line where the function is defined as `path:line`\nArgument: --file - Flag. Optional. `matchText` is a file name. Find files which match this base file name.\nArgument: matchText - String. Token to look up in the index.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a3794434b7e4d336ccd6c9cbf964150d59b552f0"
-sourceLine="329"
+sourceHash="ba0c1b09de9318e5d93a3d83b2f6b1368cb126e4"
+sourceLine="330"
 summary="Looks up information in the function index"
 summaryComputed="true"
 usage="documentationIndexLookup [ --settings ] [ --comment ] [ --source ] [ --line ] [ --combined ] [ --file ] [ matchText ]"

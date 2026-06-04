@@ -1,8 +1,8 @@
-## `isType`
+### `isType`
 
 > Bash types beyond `type -t`
 
-### Usage
+#### Usage
 
     isType
 
@@ -10,11 +10,11 @@ Bash types beyond `type -t`
 
 > Location: `bin/build/tools/type.sh`
 
-### Arguments
+#### Arguments
 
 - none
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

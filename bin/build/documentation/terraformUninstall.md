@@ -1,8 +1,8 @@
-## `terraformUninstall`
+### `terraformUninstall`
 
 > Remove terraform binary
 
-### Usage
+#### Usage
 
     terraformUninstall [ package ... ]
 
@@ -10,11 +10,11 @@ Remove terraform binary
 
 > Location: `bin/build/tools/terraform.sh`
 
-### Arguments
+#### Arguments
 
 - `package ...` - String. Optional. Additional packages to uninstall using `packageUninstall`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

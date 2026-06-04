@@ -1,8 +1,8 @@
-## `returnCodeString`
+### `returnCodeString`
 
 > Output the exit code as a string
 
-### Usage
+#### Usage
 
     returnCodeString [ code ... ] [ --help ]
 
@@ -10,18 +10,22 @@ Output the exit code as a string
 
 > Location: `bin/build/tools/_sugar.sh`
 
-### Arguments
+#### Arguments
 
 - `code ...` - UnsignedInteger. String. Exit code value to output.
 - `--help` - Flag. Optional. Display this help.
 
-### Writes to standard output
+#### Writes to standard output
 
 exitCodeToken, one per line
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### See Also
+
+- [returnCode]({rel}tools/sugar-core.md#returncode) - Print one or more return codes by name. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L42))
 

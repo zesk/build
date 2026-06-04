@@ -6,6 +6,10 @@
 
 List of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.
 
+### See Also
+
+- [iTerm2Init]({rel}tools/iterm2.md#iterm2init) - Add iTerm2 support to console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L828))- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
 
 ## `__BASH_PROMPT_MODULES`
 
@@ -24,6 +28,10 @@ To report on each command and timing.
 
 An automatic reporting occurs when commands exceed 0.3s.
 
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
 
 ## `__BASH_PROMPT_PREVIOUS`
 
@@ -32,6 +40,10 @@ An automatic reporting occurs when commands exceed 0.3s.
 
 Previous result code
 
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
 
 ## `__BASH_PROMPT_SLOW`
 
@@ -39,6 +51,10 @@ Previous result code
 > > **Type**: *PositiveInteger* • **Category**: *Bash Prompt*
 
 Number of milliseconds after which a `bashPrompt` command is considered slow.
+
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
 
 
 ## `__BUILD_HAS_TTY`
@@ -192,6 +208,10 @@ Default profile for Amazon Web Services
 
 Region for Amazon Web Services
 
+### See Also
+
+- [awsIPAccess]({rel}tools/aws.md#awsipaccess) - Grant access to AWS security group for this IP only using Amazon IAM credentials ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L311))
+
 
 ## `AWS_SECRET_ACCESS_KEY`
 
@@ -242,6 +262,10 @@ Cache MAY be deleted at any time. If you need your files to be preserved, store 
 
 If true then colors are shown, blank means guess the value, false means no colors
 
+### See Also
+
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+
 
 ## `BUILD_COMPANY_LINK`
 
@@ -265,6 +289,10 @@ Legal copyright holder for this codebase
 > > **Type**: *String* • **Category**: *Installation*
 
 Version of composer to use for building vendor directory
+
+### See Also
+
+- [phpComposer]({rel}tools/php.md#phpcomposer) - Run Composer commands on code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php-composer.sh#L29))
 
 
 ## `BUILD_DEBUG_LINES`
@@ -291,6 +319,10 @@ Enable debugging globally in the build scripts. Set to a comma (`,`) delimited l
 
 Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)
 
+### See Also
+
+- [buildDevelopmentLink]({rel}tools/developer.md#builddevelopmentlink) - Add a development link to the local version of Zesk ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L181))
+
 
 ## `BUILD_DOCKER_IMAGE`
 
@@ -299,6 +331,10 @@ Directory where Zesk Build is being developed in the file system (for other proj
 
 Default docker image to use when launching `dockerLocalContainer`
 
+### See Also
+
+- [dockerLocalContainer]({rel}tools/docker.md#dockerlocalcontainer) - Run a build container using given docker image. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L119))
+
 
 ## `BUILD_DOCKER_PATH`
 
@@ -306,6 +342,10 @@ Default docker image to use when launching `dockerLocalContainer`
 > > **Type**: *RemoteDirectory* • **Category**: *Docker*
 
 Default path for the shell to map the current directory to when launching `dockerLocalContainer`
+
+### See Also
+
+- [dockerLocalContainer]({rel}tools/docker.md#dockerlocalcontainer) - Run a build container using given docker image. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L119))
 
 
 ## `BUILD_DOCKER_PLATFORM`
@@ -332,6 +372,10 @@ Valid values are:
 - `linux/arm/v6`
 
 If not specified, uses the default for the current platform.
+
+### See Also
+
+- [dockerLocalContainer]({rel}tools/docker.md#dockerlocalcontainer) - Run a build container using given docker image. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L119))- [dockerPlatformDefault]({rel}tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
 
 
 ## `BUILD_DOCUMENTATION_PATH`
@@ -436,6 +480,10 @@ This value is set to `true` or `false`
 
 Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitTagVersion`
 
+### See Also
+
+- [gitTagVersion]({rel}tools/git.md#gittagversion) - Generates a git tag for a build version, so \`v1.0d1\`, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L336))
+
 
 ## `BUILD_NOTIFY_SOUND`
 
@@ -444,6 +492,10 @@ Number of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitT
 
 Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notification`.
 
+### See Also
+
+- [darwinNotification]({rel}tools/darwin.md#darwinnotification) - Display a notification for the user ([source](https://github.com/zesk/build/blob/main/bin/build/tools/darwin.sh#L127))
+
 
 ## `BUILD_NPM_VERSION`
 
@@ -451,6 +503,10 @@ Sound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notifi
 > > **Type**: *String* • **Category**: *Installation*
 
 Version of npm to install using native `npm` binary.
+
+### See Also
+
+- [npmInstall]({rel}tools/install.md#npminstall) - Install NPM in the build environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/npm.sh#L19))
 
 
 ## `BUILD_PACKAGE_MANAGER`
@@ -522,6 +578,10 @@ Colors are escape codes. Last entry is a reset simply to make environment output
 4. Host
 5. Path
 
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
 
 ## `BUILD_RELEASE_NOTES`
 
@@ -546,6 +606,10 @@ The file to generate when generating builds
 
 State to store state of current terminal color state
 
+### See Also
+
+- [bashPromptModule_TermColors]({rel}tools/prompt.md#bashpromptmodule_termcolors) - Terminal colors to match projects ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L247))
+
 
 ## `BUILD_TEST_FLAGS`
 
@@ -561,6 +625,13 @@ Test flags affect controls and how tests are run.
 > > **Type**: *Callable* • **Category**: *Decoration*
 
 Binary used to generate `decorate big`
+
+### See Also
+
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89)){SEE:big}
+- {SEE:__aptStandardPackages}
+- {SEE:__apkStandardPackages}
+- {SEE:__brewStandardPackages}
 
 
 ## `BUILD_TIMESTAMP`
@@ -578,6 +649,10 @@ Time when a build was initiated, set upon first invocation if not already
 
 Binary used in __urlOpen
 
+### See Also
+
+- [urlOpen]({rel}tools/url.md#urlopen) - Open a URL using the operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L419))
+
 
 ## `BUILD_URL_TIMEOUT`
 
@@ -585,6 +660,10 @@ Binary used in __urlOpen
 > > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
 
 Timeout in seconds for fetching URLs in `urlFetch`
+
+### See Also
+
+- [urlFetch]({rel}tools/url.md#urlfetch) - Fetch URL content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L559))
 
 
 ## `BUILD_VERSION_NO_OPEN`
@@ -602,6 +681,10 @@ Constant for whether to open release notes when a version is requested (see `ver
 
 Default suffix used in `gitTagVersion`
 
+### See Also
+
+- [gitTagVersion]({rel}tools/git.md#gittagversion) - Generates a git tag for a build version, so \`v1.0d1\`, ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L336))
+
 
 ## `BUILD_YARN_VERSION`
 
@@ -609,6 +692,10 @@ Default suffix used in `gitTagVersion`
 > > **Type**: *String* • **Category**: *Vendor*
 
 Version of yarn to install using `corepack`
+
+### See Also
+
+- [yarnInstall]({rel}tools/node.md#yarninstall) - Install yarn ([source](https://github.com/zesk/build/blob/main/bin/build/tools/yarn.sh#L24))
 
 
 ## `CI`
@@ -620,6 +707,10 @@ If this value is non-blank, then console `statusMessage`s are just output normal
 Continuous Integration - this is set to a non-blank value in:
 
 - Bitbucket pipelines
+
+### See Also
+
+- [statusMessage]({rel}tools/decorate.md#statusmessage) - Output a status message and display correctly on consoles with animation and in log files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L316))- [consoleHasAnimation]({rel}tools/decorate.md#consolehasanimation) - Does the console support animation? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L55))
 
 
 ## `COLORFGBG`
@@ -658,6 +749,10 @@ Path on the remote server where the application deployment home is (per applicat
 
 A list of one ore more user@host for installation of the application
 
+### See Also
+
+- [deployApplication]({rel}tools/deploy.md#deployapplication) - Deploy an application from a deployment repository ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L43))
+
 
 ## `DEPLOYMENT`
 
@@ -691,6 +786,10 @@ Binary for editing files
 
 Open links from git remotes in `gitCommit`
 
+### See Also
+
+- [gitCommit]({rel}tools/git.md#gitcommit) - Commits all files added to git and also update release ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L462))- [gitCommit]({rel}tools/git.md#gitcommit) - Commits all files added to git and also update release ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L462))
+
 
 ## `GITHUB_ACCESS_TOKEN_EXPIRE`
 
@@ -698,6 +797,10 @@ Open links from git remotes in `gitCommit`
 > > **Type**: *Date* • **Category**: *Development*
 
 GitHub Access token expiration date. Invalid AFTER this date.
+
+### See Also
+
+- [githubRelease]({rel}tools/github.md#githubrelease) - Generate a release on GitHub using API ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
 
 
 ## `GITHUB_ACCESS_TOKEN`
@@ -707,6 +810,10 @@ GitHub Access token expiration date. Invalid AFTER this date.
 
 Access token used for release
 
+### See Also
+
+- [githubRelease]({rel}tools/github.md#githubrelease) - Generate a release on GitHub using API ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
+
 
 ## `GITHUB_REPOSITORY_NAME`
 
@@ -715,6 +822,10 @@ Access token used for release
 
 Repository name for release
 
+### See Also
+
+- [githubRelease]({rel}tools/github.md#githubrelease) - Generate a release on GitHub using API ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
+
 
 ## `GITHUB_REPOSITORY_OWNER`
 
@@ -722,6 +833,10 @@ Repository name for release
 > > **Type**: *String* • **Category**: *Deployment: GitHub*
 
 Repository owner for release
+
+### See Also
+
+- [githubRelease]({rel}tools/github.md#githubrelease) - Generate a release on GitHub using API ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
 
 
 ## `HOME`
@@ -740,6 +855,10 @@ Current user's home directory.
 jq filter to parse IP_URL result (assuming JSON)
 if blank, no filter is used and raw result is returned
 
+### See Also
+
+- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L75))
+
 
 ## `IP_URL`
 
@@ -747,6 +866,10 @@ if blank, no filter is used and raw result is returned
 > > **Type**: *URL* • **Category**: *Build Configuration*
 
 URL to look up IP my address remotely
+
+### See Also
+
+- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L75))
 
 
 ## `LC_TERMINAL`
@@ -764,6 +887,10 @@ LC_TERMINAL typically identifies the terminal application
 
 A colon `:` separated list of paths to search for manual pages.
 See [`manPathConfigure`](/tools/platform/#manpathconfigure)
+
+### See Also
+
+- [manPathConfigure]({rel}tools/manpath.md#manpathconfigure) - Modify the MANPATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/manpath.sh#L16))
 
 
 ## `MARIADB_BINARY_CONNECT`
@@ -799,6 +926,10 @@ Default is `yarn`.
 A colon `:` separated list of paths to search for executables in `bash`.
 See [`pathConfigure`](/tools/platform/#pathconfigure)
 
+### See Also
+
+- [pathConfigure]({rel}tools/path.md#pathconfigure) - Modify the PATH environment variable to add a path. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/path.sh#L48))
+
 
 ## `PRODUCTION`
 
@@ -815,6 +946,10 @@ Is this a production system? e.g. remove unnecessary runtime checks.
 
 Command is run before displaying the prompt, receives exit status from the prior command.
 
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
 
 ## `PS1`
 
@@ -822,6 +957,10 @@ Command is run before displaying the prompt, receives exit status from the prior
 > > **Type**: *String* • **Category**: *Bash*
 
 Bash Prompt for terminals
+
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
 
 
 ## `SHFMT_ARGUMENTS`

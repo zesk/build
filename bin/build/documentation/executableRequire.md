@@ -1,8 +1,8 @@
-## `executableRequire`
+### `executableRequire`
 
 > Check that one or more binaries are installed
 
-### Usage
+#### Usage
 
     executableRequire usageFunction binary
 
@@ -12,12 +12,12 @@ Runs `handler` on failure
 
 > Location: `bin/build/tools/usage.sh`
 
-### Arguments
+#### Arguments
 
 - `usageFunction` - Required. `bash` function already defined to output handler
 - `binary` - Required. Binary which must have a `which` path.
 
-### Return codes
+#### Return codes
 
 - `1` - If any `binary` is not available within the current path
 

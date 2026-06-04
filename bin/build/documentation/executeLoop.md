@@ -1,8 +1,8 @@
-## `executeLoop`
+### `executeLoop`
 
 > Run checks interactively until errors are all fixed.
 
-### Usage
+#### Usage
 
     executeLoop loopCallable [ --delay delaySeconds ] [ --until exitCode ] [ --title title ] [ arguments ... ]
 
@@ -10,7 +10,7 @@ Run checks interactively until errors are all fixed.
 
 > Location: `bin/build/tools/interactive.sh`
 
-### Arguments
+#### Arguments
 
 - `loopCallable` - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
 - `--delay delaySeconds` - Integer. Optional. Delay in seconds between checks in interactive mode.
@@ -18,7 +18,7 @@ Run checks interactively until errors are all fixed.
 - `--title title` - String. Optional. Display this title instead of the command.
 - `arguments ...` - Optional. Arguments. Arguments to `loopCallable`
 
-### Return codes
+#### Return codes
 
 - `0` - Success
 - `1` - Environment error

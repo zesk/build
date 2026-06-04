@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-05-24
+# Generated on 2026-06-04
 # shellcheck disable=SC2034
 argument="none"
 base="markdown.sh"
@@ -15,7 +15,7 @@ line="15"
 rawComment=$'Add an indent to all markdown headings\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/markdown.sh"
-sourceHash="b0c6db65fd4dec5df3f8a36220ec0140b58ea621"
+sourceHash="0167c00ca92e715993ad69c1e276ff9016670d64"
 sourceLine="15"
 summary="Add an indent to all markdown headings"
 summaryComputed="true"
