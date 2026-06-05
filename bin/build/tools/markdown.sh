@@ -76,6 +76,8 @@ _markdownIndentHeading() {
 # Example:     map.sh < $templateFile | markdownRemoveUnfinishedSections
 #
 markdownRemoveUnfinishedSections() {
+  local handler="_${FUNCNAME[0]}"
+
   local line section=() foundVar=false foundContent=false preprocess=()
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -88,6 +90,7 @@ markdownRemoveUnfinishedSections() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --preprocess) shift && preprocess+=("$(validate "$handler" Function "$argument" "${1-}")") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -113,7 +116,7 @@ markdownRemoveUnfinishedSections() {
     if $check; then
       local cleaned="$trimmed"
       [ "${#preprocess[@]}" -eq 0 ] || local preprocessFunction && for preprocessFunction in "${preprocess[@]}"; do
-        cleaned=$("$preprocessFunction" <<<"$trimmed")
+        cleaned=$("$preprocessFunction" <<<"$cleaned")
       done
       ! isMappable --token "$tokenClasses" "$cleaned" || foundVar=true
     fi
