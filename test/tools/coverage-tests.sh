@@ -383,7 +383,6 @@ iTerm2ColorTypes
 mariadbInstall
 mariadbUninstall
 mariadbDumpClean
-markdownRemoveUnfinishedSections
 markdownFormatList
 mockConsoleAnimationStop
 nodePackageManagerInstall

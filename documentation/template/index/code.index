@@ -1740,10 +1740,10 @@ _mariadbDump bin/build/tools/mariadb.sh 114
 _mariadbDumpClean bin/build/tools/mariadb.sh 130
 _mariadbInstall bin/build/tools/mariadb.sh 20
 _mariadbUninstall bin/build/tools/mariadb.sh 36
-_markdownCheckIndex bin/build/tools/markdown.sh 207
-_markdownFormatList bin/build/tools/markdown.sh 153
+_markdownCheckIndex bin/build/tools/markdown.sh 218
+_markdownFormatList bin/build/tools/markdown.sh 164
 _markdownIndentHeading bin/build/tools/markdown.sh 47
-_markdownRemoveUnfinishedSections bin/build/tools/markdown.sh 126
+_markdownRemoveUnfinishedSections bin/build/tools/markdown.sh 137
 _markdownToConsole bin/build/tools/colors.sh 477
 _mockConsoleAnimationStart bin/build/tools/test.sh 1465
 _mockConsoleAnimationStop bin/build/tools/test.sh 1476
@@ -2736,10 +2736,10 @@ mariadbDump bin/build/tools/mariadb.sh 52
 mariadbDumpClean bin/build/tools/mariadb.sh 124
 mariadbInstall bin/build/tools/mariadb.sh 15
 mariadbUninstall bin/build/tools/mariadb.sh 31
-markdownCheckIndex bin/build/tools/markdown.sh 165
-markdownFormatList bin/build/tools/markdown.sh 141
+markdownCheckIndex bin/build/tools/markdown.sh 176
+markdownFormatList bin/build/tools/markdown.sh 152
 markdownIndentHeading bin/build/tools/markdown.sh 14
-markdownRemoveUnfinishedSections bin/build/tools/markdown.sh 77
+markdownRemoveUnfinishedSections bin/build/tools/markdown.sh 85
 markdownToConsole bin/build/tools/colors.sh 472
 maximumFieldLength bin/build/tools/deprecated.sh 529
 maximumLineLength bin/build/tools/deprecated.sh 536

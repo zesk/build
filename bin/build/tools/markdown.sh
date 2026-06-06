@@ -50,12 +50,12 @@ _markdownIndentHeading() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Remove markdown sections with tokens
+# Given a file containing Markdown, remove header and any section which has a variable value still valid.
 #
-# Given a file containing Markdown, remove header and any section which has a variable still
+# This EXPLICITLY ignores variables with a colon to work with `{SEE:other}` syntax, so these tokens are automatically considered ok.
 #
-# This EXPLICITLY ignores variables with a colon to work with `{SEE:other}` syntax
-#
-# This operates as a filter on a file. A section is any group of contiguous lines beginning with a line
+# This operates as a filter on a pipe. A section is any group of contiguous lines beginning with a line
 # which starts with a `#` character and then continuing to but not including the next line which starts with a `#`
 # character or the end of file; which corresponds roughly to headings in Markdown.
 #
@@ -66,14 +66,22 @@ _markdownIndentHeading() {
 # If you need a section to always be displayed; provide default values or blank values for the variables in those sections
 # to prevent removal.
 #
+# The preprocessor can be used to hide tokens which are OK or will later be replaced.
+#
+# Note the preprocessor function's purpose is to hide or remove content which should be ignored when looking for token
+# content; the actual results of this function are ultimately discarded; however the results are scanned for any valid
+# tokens and if any exist then a section is considered unfinished. All preprocessors are run and the final result is examined.
+#
 # Argument: --preprocess preprocessFunction - Function. Optional. OneOrMore. A function to filter content via `stdin` prior to checking for tokens.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Depends: read printf
 # Return Code: 0
 # Environment: None
-# Example:     markdownRemoveUnfinishedSections < inputFile > outputFile
-# Example:     map.sh < $templateFile | markdownRemoveUnfinishedSections
+# Example:     {fn} --preprocess __removeRelLinks < inputFile > outputFile
+# Example:     map.sh < "$templateFile" | {fn}
 #
 markdownRemoveUnfinishedSections() {
   local handler="_${FUNCNAME[0]}"
