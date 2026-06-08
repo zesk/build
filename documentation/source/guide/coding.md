@@ -83,7 +83,6 @@ prefixed with an underscore:
        catchEnvironment "$handler" ...
     }
     _usefulThing() {
-      # __IDENTICAL__ bashDocumentation 1
       bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -138,6 +137,10 @@ Upon first using `bash` it made sense to put `local` at the top of a function to
 this leads to moving declarations far away from usages at times and so we have shifted to doing `local` declarations at
 the scope needed as well as **as near to its initial usage** as possible. This leads to easier refactorings and better
 readability all around.
+
+This is the preferred pattern:
+
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
 
 ## Avoid depending on `set -eou pipefail`
 
@@ -206,7 +209,8 @@ Pattern:
       bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
-Typically, any defined function `deployApplication` has a mirror underscore-prefixed `bashDocumentation` function used for
+Typically, any defined function `deployApplication` has a mirror underscore-prefixed `bashDocumentation` function used
+for
 error handling:
 
     deployApplication() {
@@ -232,7 +236,8 @@ unsupported and will cause problems.
 
 ## Use `__functionLoader` for more complex code
 
-{applicationName} has grown in size over time and as such it makes sense to not load *the entire codebase* unless needed.
+{applicationName} has grown in size over time and as such it makes sense to not load *the entire codebase* unless
+needed.
 
 The function `__functionLoader` was added which runs an internal function which checks whether a primary function is
 defined, and if it is NOT it then loads an entire directory at `./bin/build/tools/libraryName` where `libraryName` is
@@ -251,7 +256,7 @@ And then the actual implementation for a function consists of:
 The arguments passed are the error handler (`_awsInstall` here as expanded via `${FUNCNAME[0]}`), and the actual
 function to call (`__awsInstall` - defined in `./bin/build/tools/aws/install.sh`)
 
-This allows us to defer loading of entire modules of code until needed.
+This allows us to defer loading code until needed making {applicationName} initialization time faster.
 
 ## Standard error codes
 
