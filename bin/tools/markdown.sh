@@ -48,7 +48,7 @@ __buildBuildUpdateMarkdown() {
   local handler="$1" && shift
   local home="$1" && shift
 
-  local f && for f in "$home/documentation/.template/README.md" "$home/documentation/template/docs/LICENSE.txt"; do
+  local f && for f in "$home/documentation/.template/SECURITY.md" "$home/documentation/.template/README.md" "$home/documentation/template/docs/LICENSE.txt"; do
     [ ! -f "$f" ] || __buildBuildAddNoteTo "$handler" "$home" "$f"
   done
 }

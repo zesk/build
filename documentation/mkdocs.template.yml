@@ -10,6 +10,7 @@ nav:
   - Environment: "env/index.md"
   - Indexes: "index/index.md"
   - Releases: "release/index.md"
+  - Security Policy: "SECURITY.md"
   - about.md
 not_in_nav: |
   nada.md

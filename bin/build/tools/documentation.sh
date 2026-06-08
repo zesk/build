@@ -708,6 +708,7 @@ _bashDocumentationAllEnvironment() {
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Failure is dirty; target directory may be modified even on failure.
 bashDocumentationDefaults() {
   local handler="_${FUNCNAME[0]}"
 
@@ -740,8 +741,12 @@ bashDocumentationDefaults() {
 
   local applicationName && applicationName=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
 
+  local uriTarget && uriTarget=$(directoryRequire --handler "$handler" "$templateTarget/uri") || return $?
   catchReturn "$handler" printf "%s" "$applicationName" >"$templateTarget/applicationName.md" || return $?
-  catchReturn "$handler" printf "%s" "$(buildEnvironmentGet APPLICATION_OWNER)" >"$templateTarget/applicationOwner.md" || return $?
+  local owner && owner=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_OWNER) || return $?
+  catchReturn "$handler" printf "%s" "$owner" >"$templateTarget/applicationOwner.md" || return $?
+  catchReturn "$handler" jq -Rr @uri <<<"$owner" >"$uriTarget/applicationOwner.md" || return $?
+  catchReturn "$handler" jq -Rr @uri <<<"$applicationName" >"$uriTarget/applicationName.md" || return $?
   catchReturn "$handler" printf "%s" "$(date +%Y)" >"$templateTarget/year.md" || return $?
   catchReturn "$handler" hookVersionCurrent >"$templateTarget/version.md" || return $?
   catchReturn "$handler" date -u "+%s" >"$templateTarget/timestamp.md" || return $?

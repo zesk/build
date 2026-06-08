@@ -2,12 +2,15 @@
 
 Inspired by the baskets of `bash` scripts in each project which seemed eerily similar.
 
+- Read our [Security Policy](./SECURITY.md)
+- [applicationOwner]
+
 Copyright &copy; 2024-2025 Market Acumen, Inc. All rights reserved.
 
 **{applicationName}** was written
 by [Kent Davidson](https://kentdavidson.com/?crcat=web&crsource=zesk-build&crcpn=about&crkw=Kent+Davidson). Contact him
 via [LinkedIn](https://kentdavidson.com/), via his consulting
-company [Market Acumen, Inc.](https://www.marketacumen.com/?crsource=zesk-build&crcat=code&crkw=about), or
+company [Market Acumen, Inc.](https://www.marketacumen.com/?crsource=zesk-build&crcat=code&crkw=Market+Acumen+Inc.), or
 via [GitHub](https://github.com/razzed). Credits to a few recipes are given within the code and documentation.
 
 **If you find this project useful and you find yourself in need of help** with existing code,
