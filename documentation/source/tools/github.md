@@ -15,6 +15,8 @@
 
 {githubProjectJSON}
 
+{githubVersionLive}
+
 <!-- TEMPLATE toolFooter 3 -->
 <hr />
 

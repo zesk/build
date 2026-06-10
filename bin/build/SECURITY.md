@@ -2,7 +2,8 @@
 
 ## Supported Versions
 
-We support security patches for all versions.
+We support security patches for all versions listed [on our release page](./release/index.md) at the time of the
+incident.
 
 We will provide security patches as a new patch or minor version.
 

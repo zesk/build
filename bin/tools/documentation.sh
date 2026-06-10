@@ -107,6 +107,9 @@ buildDocumentationBuild() {
   statusMessage decorate notice "Making templates ..."
   statusMessage --last timing --name "Made templates in" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
 
+  statusMessage decorate info "Copying common files around ..."
+  statusMessage --last timing --name "Copied common files around in" __buildBuildUpdateMarkdown "$handler" "$home" || return $?
+
   # Make source
   statusMessage decorate notice "Making source ..."
   statusMessage --last timing --name "Made source" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$documentationSource" --target "$documentationTarget" || return $?

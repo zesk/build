@@ -315,3 +315,50 @@ _githubRelease() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Fetch the current live version of software using GitHub APIs
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --name name - String. Optional. GitHub repository name to use. If not specified, uses `{env:GITHUB_REPOSITORY_NAME}`.
+# Argument: --owner owner - String. Optional. GitHub repository owner to use. If not specified, uses `{env:GITHUB_REPOSITORY_OWNER}`.
+# Environment: GITHUB_REPOSITORY_OWNER
+# Environment: GITHUB_REPOSITORY_NAME
+githubVersionLive() {
+  local handler="_${FUNCNAME[0]}"
+
+  local name="" owner=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --owner) shift && owner="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$name" ] || name=$(catchReturn "$handler" buildEnvironmentGet --quiet GITHUB_REPOSITORY_NAME) || return $?
+  [ -n "$name" ] || throwEnvironment "$handler" "--name required (or GITHUB_REPOSITORY_NAME should be non-blank)" || return $?
+
+  [ -n "$owner" ] || owner=$(catchReturn "$handler" buildEnvironmentGet --quiet GITHUB_REPOSITORY_OWNER) || return $?
+  [ -n "$owner" ] || throwEnvironment "$handler" "--owner required (or GITHUB_REPOSITORY_OWNER should be non-blank)" || return $?
+  catchEnvironment "$handler" githubLatestRelease "$owner/$name" "$@" || return $?
+}
+_githubVersionLive() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

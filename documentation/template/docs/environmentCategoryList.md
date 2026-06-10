@@ -102,9 +102,9 @@
 - `APPLICATION_VERSION` &mdash; Application Version *String*. This is the version number which can be displayed [notes](#application_version)
 - `BUILD_TARGET` &mdash; Build Application Target File Name *String*. The file to generate when generating builds [notes](#build_target)
 - `BUILD_TIMESTAMP` &mdash; Build Timestamp *UnsignedInteger*. Time when a build was initiated, set upon first invocation [notes](#build_timestamp)
+- `DEPLOYMENT` &mdash; Deployment Code *String*. Target deployment for this code [notes](#deployment)
 - `DEPLOY_REMOTE_HOME` &mdash; Remote directory for deployment *RemoteDirectory*. Path on the remote server where the application deployment home [notes](#deploy_remote_home)
 - `DEPLOY_USER_HOSTS` &mdash; Host list for deployment *String*. A list of one ore more user@host for installation of [notes](#deploy_user_hosts)
-- `DEPLOYMENT` &mdash; Deployment Code *String*. Target deployment for this code [notes](#deployment)
 
 ## Deployment: GitHub
 
@@ -113,12 +113,12 @@
 ## Development
 
 - `BUILD_DEVELOPMENT_HOME` &mdash; Home for Zesk Build development *String*. Directory where Zesk Build is being developed in the file [notes](#build_development_home)
-- `GIT_BRANCH_FORMAT` &mdash; Git Branch Format String *String*. undocumented 
-- `GIT_OPEN_LINKS` &mdash; Git Open Links Flag *Boolean*. Open links from git remotes in `gitCommit` [notes](#git_open_links)
-- `GIT_REMOTE` &mdash; GitHub Remote Name *String*. undocumented 
 - `GITHUB_ACCESS_TOKEN` &mdash; GitHub Access Token *Secret*. Access token used for release [notes](#github_access_token)
 - `GITHUB_ACCESS_TOKEN_EXPIRE` &mdash; GitHub Access Token Expiration Date *Date*. GitHub Access token expiration date. Invalid AFTER this date. [notes](#github_access_token_expire)
 - `GITHUB_REPOSITORY_NAME` &mdash; GitHub Repository Name *String*. Repository name for release [notes](#github_repository_name)
+- `GIT_BRANCH_FORMAT` &mdash; Git Branch Format String *String*. undocumented 
+- `GIT_OPEN_LINKS` &mdash; Git Open Links Flag *Boolean*. Open links from git remotes in `gitCommit` [notes](#git_open_links)
+- `GIT_REMOTE` &mdash; GitHub Remote Name *String*. undocumented 
 
 ## Docker
 

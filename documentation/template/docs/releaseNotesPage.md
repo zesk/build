@@ -1,4 +1,12 @@
 
+## Zesk Build release v0.44.1
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.44.0
+- Added [SECURITY.md](../SECURITY.md)
+- Added `./uri/` subdirectory to templates; allows for URI-escaped versions of variables
+
 ## Zesk Build release v0.44.0
 
 > Copyright &copy; 2026 Market Acumen, Inc.
@@ -92,20 +100,9 @@ Deprecated:
 - Added `--key` to `bin/build/deprecated.sh` and `bin/build/repair.sh` for `--fingerprint` usage in alternate projects.
 - Fixed `buildFunctionsRemoveDeprecated`
 
-## Zesk Build release v0.42.4
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.42.3
-- Added better error handling for `__fileListColumn` and also `fileOwner`
-- Added `__validateTypeFingerprint` aka `validate "$handler" Fingerprint ...`
-- `--fingerprint` is now required for `deprecated.sh` and `repair.sh` and `buildFunctionsCompile`
-- Added `returnExit` function
-  - {SEE:returnExit}
-- `validate` semantics changed so that any `__validateType` function which returns 120 (`exit`) the function will exit immediately.
-
 # Past Releases
 
+- [v0.42.4](./v0.42.4.md)
 - [v0.42.3](./v0.42.3.md)
 - [v0.42.2](./v0.42.2.md)
 - [v0.42.1](./v0.42.1.md)
