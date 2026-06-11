@@ -45,6 +45,7 @@ testCoverageNeedToUpdate() {
   assertEquals "$home" "$home" || return $?
 }
 
+# Test-Platform: darwin
 testCoverageReportThing() {
   local codes expected template
 
