@@ -1,1 +1,1 @@
-[markdownCheckIndex]({rel}tools/markdown.md#markdowncheckindex) - Displays any markdown files next to the given index file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L166))
+[markdownCheckIndex]({rel}tools/markdown.md#markdowncheckindex) - Displays any markdown files next to the given index file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/markdown.sh#L177))

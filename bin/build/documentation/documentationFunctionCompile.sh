@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-11
 # shellcheck disable=SC2034
-argument=$'--force - Flag. Optional. Create files regardless of cache status.\n--clean - Flag. Optional. Clean everything and then exit.\n--source codeSource - Directory. Required. Code source to find functions.\n--documentation documentationSource - Directory. Documentation source to find documentation links.\n--all - Flag. Optional. Check all functions.\n--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nfunctionName ... - String. Optional. Specific functions to compile.\n'
+argument="--force - Flag. Optional. Create files regardless of cache status."$'\n'"--clean - Flag. Optional. Clean everything and then exit."$'\n'"--source codeSource - Directory. Required. Code source to find functions."$'\n'"--documentation documentationSource - Directory. Documentation source to find documentation links."$'\n'"--all - Flag. Optional. Check all functions."$'\n'"--fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date."$'\n'"functionName ... - String. Optional. Specific functions to compile."$'\n'""
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'- `--documentation` is required for `SEE:` files\n\n'
+description="- \`--documentation\` is required for \`SEE:\` files"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/documentation.sh"
 fn="documentationFunctionCompile"
 fnMarker="documentationfunctioncompile"
 foundNames=([0]="argument" [1]="stdin")
 line="545"
-rawComment=$'- `--documentation` is required for `SEE:` files\nArgument: --force - Flag. Optional. Create files regardless of cache status.\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --source codeSource - Directory. Required. Code source to find functions.\nArgument: --documentation documentationSource - Directory. Documentation source to find documentation links.\nArgument: --all - Flag. Optional. Check all functions.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: functionName - File with function names one per line.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="- \`--documentation\` is required for \`SEE:\` files"$'\n'"Argument: --force - Flag. Optional. Create files regardless of cache status."$'\n'"Argument: --clean - Flag. Optional. Clean everything and then exit."$'\n'"Argument: --source codeSource - Directory. Required. Code source to find functions."$'\n'"Argument: --documentation documentationSource - Directory. Documentation source to find documentation links."$'\n'"Argument: --all - Flag. Optional. Check all functions."$'\n'"Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date."$'\n'"Argument: functionName ... - String. Optional. Specific functions to compile."$'\n'"stdin: functionName - File with function names one per line."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ba0c1b09de9318e5d93a3d83b2f6b1368cb126e4"
+sourceHash="27710a9141283b9bb677e2d559eed326e8761d6f"
 sourceLine="545"
-stdin=$'functionName - File with function names one per line.\n'
+stdin="functionName - File with function names one per line."$'\n'""
 summary="- \`--documentation\` is required for \`SEE:\` files"
 summaryComputed="true"
 usage="documentationFunctionCompile [ --force ] [ --clean ] --source codeSource [ --documentation documentationSource ] [ --all ] [ --fingerprint ] [ functionName ... ]"

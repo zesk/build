@@ -4,7 +4,7 @@
 
 #### Usage
 
-    urlParse [ --help ] url [ --prefix prefix ] [ --stringUppercase ]
+    urlParse [ --help ] url [ --prefix prefix ] [ --integer-port ] [ --stringUppercase ]
 
 Simple URL parsing. Converts a `url` into values which can be parsed or evaluated.
 
@@ -29,7 +29,8 @@ Now works on multiple URLs, output is separated by a blank line for new entries
 - `--help` - Flag. Optional. Display this help.
 - `url` - String. Required. a Uniform Resource Locator
 - `--prefix prefix` - String. Optional. Prefix variable names with this string.
-- `--stringUppercase` - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default).
+- `--integer-port` - Flag. Optional. Force the value of `port` to an integer value even if the URL does not provide the port number explicitly.
+- `--stringUppercase` - Flag. Optional. Output variable names in upper case, not lower case (the default).
 
 #### Examples
 

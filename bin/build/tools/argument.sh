@@ -532,7 +532,7 @@ _commentArgumentsRemainder() {
   printf "%s\n" "$stateFile" "$@"
 }
 
-# IDENTICAL helpArgument 60
+# IDENTICAL helpArgument 59
 
 # Simple help argument handler.
 #
@@ -553,13 +553,12 @@ _commentArgumentsRemainder() {
 # Example:     [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 # Example:     # Argument 1 absolutely exists
-# Example:     [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 # Example:
 # Example:     # DEFINED handler
 # Example:
 # Example:     local handler="_${FUNCNAME[0]}"
 # Example:     helpArgument "$handler" "$@" || return 0
-# Example:     [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 # Example:     [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 # Example:

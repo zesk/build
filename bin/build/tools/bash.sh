@@ -656,3 +656,25 @@ _bashFunctionNameValid() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Which bash actually honors this? Is it a `shopt` or
+#
+#       ${parameter@operator}
+#
+#              Parameter transformation.  The expansion is either a transformation of the value of parameter or information about parameter itself, depending on the value of operator.  Each operator is a single letter:
+#              U      The expansion is a string that is the value of parameter with lowercase alphabetic characters converted to uppercase.
+#              u      The expansion is a string that is the value of parameter with the first character converted to uppercase, if it is alphabetic.
+#              L      The expansion is a string that is the value of parameter with uppercase alphabetic characters converted to lowercase.
+#              Q      The expansion is a string that is the value of parameter quoted in a format that can be reused as input.
+#              E      The expansion is a string that is the value of parameter with backslash escape sequences expanded as with the $'...' quoting mechanism.
+#              P      The expansion is a string that is the result of expanding the value of parameter as if it were a prompt string (see PROMPTING below).
+#              A      The expansion is a string in the form of an assignment statement or declare command that, if evaluated, recreates parameter with its attributes and value.
+#              K      Produces a possibly-quoted version of the value of parameter, except that it prints the values of indexed and associative arrays as a sequence of quoted key-value pairs (see Arrays above).  The keys and
+#                     values are quoted in a format that can be reused as input.
+#              a      The expansion is a string consisting of flag values representing parameter's attributes.
+#              k      Like the K transformation, but expands the keys and values of indexed and associative arrays to separate words after word splitting.
+#
+#              If parameter is @ or *, the operation is applied to each positional parameter in turn, and the expansion is the resultant list.  If parameter is an array variable subscripted with @ or *, the operation is applied
+#              to each member of the array in turn, and the expansion is the resultant list.
+#
+#              The result of the expansion is subject to word splitting and pathname expansion as described below.

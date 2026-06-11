@@ -35,11 +35,10 @@ Example:
     [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
     # Argument 1 absolutely exists
-    [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
+    [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
     # DEFINED handler
     local handler="_${FUNCNAME[0]}"
     helpArgument "$handler" "$@" || return 0
-    [ "$1" != "--help" ] || helpArgument "$handler" "$@" || return 0
     [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
     [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
     # Blank Arguments for help

@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-11
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Extracts the final comment from a stream.\nExcludes lines similarly to `bashFirstComment`.\n\n'
+description="Extracts the final comment from a stream."$'\n'"Excludes lines similarly to \`bashFirstComment\`."$'\n'""$'\n'""
 descriptionLineCount="3"
 file="bin/build/tools/bash.sh"
 fn="bashFinalComment"
 fnMarker="bashfinalcomment"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="requires")
 line="561"
-rawComment=$'Summary: Extract final comment from a stream\nExtracts the final comment from a stream.\nExcludes lines similarly to `bashFirstComment`.\nSee: bashFirstComment\nArgument: --help - Flag. Optional. Display this help.\nRequires: fileReverseLines sed cut grep convertValue\n\n'
-requires=$'fileReverseLines sed cut grep convertValue\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
-see=$'bashFirstComment\n'
+rawComment="Summary: Extract final comment from a stream"$'\n'"Extracts the final comment from a stream."$'\n'"Excludes lines similarly to \`bashFirstComment\`."$'\n'"See: bashFirstComment"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: fileReverseLines sed cut grep convertValue"$'\n'""$'\n'""
+requires="fileReverseLines sed cut grep convertValue"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+see="bashFirstComment"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="0bec62237f4e812ee319f8b7f774905396bb742b"
+sourceHash="c338e57d5d9111ed127b37263341910041a4b278"
 sourceLine="561"
 summary="Extract final comment from a stream"
 summaryComputed=""

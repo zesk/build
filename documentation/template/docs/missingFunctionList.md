@@ -2,3 +2,7 @@
 
 {isDockerComposeCommand}
 
+{networkIPValid}
+
+{networkNameValid}
+

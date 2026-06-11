@@ -35,7 +35,7 @@ Fetch URL content
 
 #### Environment
 
-- {SEE:BUILD_URL_TIMEOUT}
+- [`BUILD_URL_TIMEOUT` URL Timeout]({rel}/env/#build_configuration) – **PositiveInteger**. Timeout in seconds for fetching URLs in `urlFetch`
 
 #### Requires
 

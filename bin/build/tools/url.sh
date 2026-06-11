@@ -86,7 +86,8 @@ _urlSchemeDefaultPort() {
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: url - String. Required. a Uniform Resource Locator
 # Argument: --prefix prefix - String. Optional. Prefix variable names with this string.
-# Argument: --stringUppercase - Flag. Optional. Output variable names in uppercase, not stringLowercase (the default).
+# Argument: --integer-port - Flag. Optional. Force the value of `port` to an integer value even if the URL does not provide the port number explicitly.
+# Argument: --stringUppercase - Flag. Optional. Output variable names in upper case, not lower case (the default).
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
 # Example:     echo $name
 urlParse() {
@@ -156,6 +157,16 @@ urlParse() {
         error=""
         portDefault="$(urlSchemeDefaultPort --handler "$handler" "$scheme" 2>/dev/null || :)"
         ! $intPort || isPositiveInteger "$port" || port="$portDefault" || return $?
+        if [ -n "$port" ] && ! isPositiveInteger "$port"; then
+          error="invalid-port"
+        fi
+        if isPositiveInteger "$portDefault"; then
+          if [ -z "$host" ]; then
+            error="no-host"
+          elif ! networkNameValid "$host" 2>/dev/null; then
+            error="invalid-host"
+          fi
+        fi
       else
         error="no-scheme"
         scheme=""
@@ -179,7 +190,21 @@ _urlParse() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Extract a component from one or more URLs
+# Extract a component from one or more URLs.
+# Component names are the same as returned by the base `urlParse` function:
+# - `url`
+# - `url`
+# - `path`
+# - `name`
+# - `scheme`
+# - `user`
+# - `password`
+# - `host`
+# - `port`
+# - `portDefault`
+# - `error`
+# The component `error` changes the behavior of the function – the function succeeds and returns the error string even if the URL is invalid. This
+# permits the retrieval of the error message without any additional formatting if needed.
 # Summary: Get a URL component directly
 # Argument: component - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection
@@ -187,7 +212,7 @@ _urlParse() {
 urlParseItem() {
   local handler="_${FUNCNAME[0]}"
 
-  local component="" url=""
+  local component="" counter=0
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -204,20 +229,24 @@ urlParseItem() {
       if [ -z "$component" ]; then
         component=$(validate "$handler" String "component" "$1") || return $?
       else
-        url="$1"
-        # subshell hides variable scope
+        # subshell hides variable scope, yee-haw
         (
-          local url path name scheme user password host port error=""
-          eval "$(urlParse "$url")" || throwEnvironment "$handler" "Unable to parse $url" || return $?
-          [ -z "$error" ] || throwEnvironment "$handler" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
+          local url="$1" path name scheme user password host port portDefault error=""
+          if [ "$component" = "error" ]; then
+            eval "$(urlParse "$url")" || :
+          else
+            eval "$(urlParse "$url")" || throwEnvironment "$handler" "Unable to parse $url" || return $?
+            [ -z "$error" ] || throwEnvironment "$handler" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
+          fi
           printf "%s\n" "${!component-}"
         ) || return $?
+        ((++counter))
       fi
       ;;
     esac
     shift
   done
-  [ -n "$url" ] || throwArgument "$handler" "Need at least one URL" || return $?
+  [ $counter -gt 0 ] || throwArgument "$handler" "Need at least one URL" || return $?
 }
 _urlParseItem() {
   # __IDENTICAL__ bashDocumentation 1
@@ -245,9 +274,7 @@ urlValid() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    *)
-      urlParse "$1" >/dev/null 2>&1 || return 1
-      ;;
+    *) urlParse "$1" >/dev/null 2>&1 || return 1 ;;
     esac
     shift
   done
@@ -281,10 +308,7 @@ urlOpener() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --exec)
-      shift
-      binary=$(validate "$handler" Executable "$argument" "${1-}") || return $?
-      ;;
+    --exec) shift && binary=$(validate "$handler" Executable "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -344,7 +368,8 @@ _urlExtract() {
   done
 }
 
-# Open URLs which appear in a stream
+# Summary: Extract URLs from arbitrary text content
+# Output URLs which appear in a stream.
 # Argument: --show-file - Boolean. Optional. Show the file name in the output (suffix with `: `)
 # Argument: --file name - String. Optional. The file name to display - can be any text.
 # Argument: file - File. Optional. A file to read and output URLs found.
@@ -368,20 +393,10 @@ urlFilter() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --show-file)
-      aa=("$argument")
-      showFile=true
-      ;;
-    --debug)
-      debugFlag=true
-      ;;
-    --file)
-      shift
-      file="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
-    *)
-      files+=("$(validate "$handler" File "file" "$1")") || return $?
-      ;;
+    --show-file) aa=("$argument") && showFile=true ;;
+    --debug) debugFlag=true ;;
+    --file) shift && file="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    *) files+=("$(validate "$handler" File "file" "$1")") || return $? ;;
     esac
     shift
   done
@@ -407,15 +422,19 @@ _urlFilter() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Open a URL using the operating system
-# Usage {fn} [ --help ]
+# Summary: Opens the default browser for a URL on the host operating system
+# Open a URL using the operating system.
+# Uses the operating system's `open` functionality to open URLs. On Linux uses `xdg-open` or `kde-open`.
+#
+# > Note: Tested only on Mac OS X.
+#
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --ignore - Flag. Optional. Ignore any invalid URLs found.
-# Argument: --wait - Flag. Optional. Display this help.
-# Argument: --url url - URL. Optional. URL to download.
-# stdin: line:URL
-# stdout: none
+# Argument: --wait - Flag. When multiple URLs are passed, make a single `open` call with all URLs as command line arguments after all URLs are validated; otherwise each URL is opened individually with the system's `open` call.
+# Argument: --url url - URL. Optional. URL to open.
+# stdin: line - URL. Optional. URL to open
+# Environment: BUILD_URL_BINARY
 urlOpen() {
   local handler="_${FUNCNAME[0]}"
 
@@ -432,29 +451,19 @@ urlOpen() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --ignore)
-      ignoreFlag=true
-      ;;
-    --wait)
-      waitFlag=true
-      ;;
-    *)
-      urls+=("$(validate "$handler" String "url" "$1")") || return $?
-      ;;
+    --ignore) ignoreFlag=true ;;
+    --wait) waitFlag=true ;;
+    *) urls+=("$(validate "$handler" String "url" "$1")") || return $? ;;
     esac
     shift
   done
 
-  local url exitCode
   if [ ${#urls[@]} -eq 0 ]; then
     # stdin mode
-    while IFS=' ' read -d$'\n' -r url; do
-      exitCode=0
-      __urlOpenInnerLoop "$handler" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
-      if [ "$exitCode" != 0 ]; then
-        if [ "$exitCode" != 120 ]; then
-          return $exitCode
-        fi
+    local url && while IFS=' ' read -d$'\n' -r url; do
+      local returnCode=0 && __urlOpenInnerLoop "$handler" "$url" "$ignoreFlag" "$waitFlag" || returnCode=$?
+      if [ "$returnCode" != 0 ]; then
+        [ "$returnCode" = 120 ] || return $returnCode
         urls+=("$url")
       fi
     done
@@ -463,16 +472,14 @@ urlOpen() {
     set - "${urls[@]}"
     urls=()
     while [ $# -gt 0 ]; do
-      url="$1"
-      exitCode=0
-      __urlOpenInnerLoop "$handler" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
-      if [ "$exitCode" != 0 ]; then
-        if [ "$exitCode" != 120 ]; then
-          return $exitCode
+      local url="$1" returnCode=0 && shift
+      __urlOpenInnerLoop "$handler" "$url" "$ignoreFlag" "$waitFlag" || returnCode=$?
+      if [ "$returnCode" != 0 ]; then
+        if [ "$returnCode" != 120 ]; then
+          return $returnCode
         fi
         urls+=("$url")
       fi
-      shift
     done
   fi
   $waitFlag || [ "${#urls[@]}" -eq 0 ] || catchReturn "$handler" __urlOpen "${urls[@]}" || return $?

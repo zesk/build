@@ -1,0 +1,1 @@
+[githubVersionLive]({rel}tools/github.md#githubversionlive) - Fetch the current live version of software using GitHub APIs ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L328))

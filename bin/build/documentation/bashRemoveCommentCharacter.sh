@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-11
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Remove comment character and leading spaces from lines.\n\n'
+description="Remove comment character and leading spaces from lines."$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashRemoveCommentCharacter"
 fnMarker="bashremovecommentcharacter"
 foundNames=([0]="summary" [1]="argument" [2]="requires")
 line="609"
-rawComment=$'Summary: Remove comment character\nRemove comment character and leading spaces from lines.\nArgument: --help - Flag. Optional. Display this help.\nRequires: fileReverseLines sed cut grep convertValue\n\n'
-requires=$'fileReverseLines sed cut grep convertValue\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Remove comment character"$'\n'"Remove comment character and leading spaces from lines."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: fileReverseLines sed cut grep convertValue"$'\n'""$'\n'""
+requires="fileReverseLines sed cut grep convertValue"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="0bec62237f4e812ee319f8b7f774905396bb742b"
+sourceHash="c338e57d5d9111ed127b37263341910041a4b278"
 sourceLine="609"
 summary="Remove comment character"
 summaryComputed=""

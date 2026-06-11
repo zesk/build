@@ -1,0 +1,1 @@
+[networkIPValid]({rel}#networkipvalid) - Is a network IP valid? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L63))

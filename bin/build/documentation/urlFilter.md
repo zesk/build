@@ -1,12 +1,12 @@
 ### `urlFilter`
 
-> Open URLs which appear in a stream
+> Extract URLs from arbitrary text content
 
 #### Usage
 
     urlFilter [ --show-file ] [ --file name ] [ file ]
 
-Open URLs which appear in a stream
+Output URLs which appear in a stream.
 Takes a text file and outputs any `https://` or `http://` URLs found within.
 URLs are explicitly trimmed at quote, whitespace and escape boundaries.
 

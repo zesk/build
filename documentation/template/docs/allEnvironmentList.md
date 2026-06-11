@@ -1,3 +1,8 @@
+- [`__BASH_PROMPT_MARKERS` Prompt marker list]({rel}/env/#bash_prompt) – **Array:EmptyString**. Bash Prompt escape codes for prompt reporting
+- [`__BASH_PROMPT_MODULES` Prompt module list]({rel}/env/#bash_prompt) – **Array:Callable**. List of functions to run each prompt command
+- [`__BASH_PROMPT_PREVIOUS` Prompt command previous result]({rel}/env/#bash_prompt) – **Array**. Previous result code
+- [`__BASH_PROMPT_SLOW` Prompt command slow threshold]({rel}/env/#bash_prompt) – **PositiveInteger**. Bash Prompt slow timer
+- [`__BUILD_HAS_TTY` TTY Cached Result]({rel}/env/#internal) – **Boolean**. Cached value of the availability of `/dev/tty`.
 - [`APACHE_HOME` Apache Home Directory]({rel}/env/#vendor) – **Directory**. Constant for the Apache configuration home directory.
 - [`APPLICATION_BUILD_DATE` Application Build Date]({rel}/env/#deployment) – **String**. Time when a build was initiated, set upon first invocation
 - [`APPLICATION_CODE` Application Code Name]({rel}/env/#application) – **String**. This is the unique code name of the application. Use
@@ -64,18 +69,18 @@
 - [`CI` Continuous Integration]({rel}/env/#continuous_integration) – **String**. If this value is non-blank, then console `statusMessage`s are just
 - [`COLORFGBG` Terminal Foreground and Background]({rel}/env/#decoration) – **String**. Standard way to express the foreground and background colors
 - [`DAEMONTOOLS_HOME` Daemontools Home]({rel}/env/#vendor) – **Directory**. Constant for the directory where services are monitored by daemontools
-- [`DEPLOYMENT` Deployment Code]({rel}/env/#deployment) – **String**. Target deployment for this code
 - [`DEPLOY_REMOTE_HOME` Remote directory for deployment]({rel}/env/#deployment) – **RemoteDirectory**. Path on the remote server where the application deployment home
 - [`DEPLOY_USER_HOSTS` Host list for deployment]({rel}/env/#deployment) – **String**. A list of one ore more user@host for installation of
+- [`DEPLOYMENT` Deployment Code]({rel}/env/#deployment) – **String**. Target deployment for this code
 - [`DISPLAY` X Display]({rel}/env/#bash) – **String**. Environment variable for X windows display.
 - [`EDITOR` Editor Command]({rel}/env/#bash) – **Callable**. Binary for editing files
+- [`GIT_BRANCH_FORMAT` Git Branch Format String]({rel}/env/#development) – **String**. undocumented
+- [`GIT_OPEN_LINKS` Git Open Links Flag]({rel}/env/#development) – **Boolean**. Open links from git remotes in `gitCommit`
+- [`GIT_REMOTE` GitHub Remote Name]({rel}/env/#development) – **String**. undocumented
 - [`GITHUB_ACCESS_TOKEN` GitHub Access Token]({rel}/env/#development) – **Secret**. Access token used for release
 - [`GITHUB_ACCESS_TOKEN_EXPIRE` GitHub Access Token Expiration Date]({rel}/env/#development) – **Date**. GitHub Access token expiration date. Invalid AFTER this date.
 - [`GITHUB_REPOSITORY_NAME` GitHub Repository Name]({rel}/env/#development) – **String**. Repository name for release
 - [`GITHUB_REPOSITORY_OWNER` GitHub Repository Owner]({rel}/env/#deployment:_github) – **String**. Repository owner for release
-- [`GIT_BRANCH_FORMAT` Git Branch Format String]({rel}/env/#development) – **String**. undocumented
-- [`GIT_OPEN_LINKS` Git Open Links Flag]({rel}/env/#development) – **Boolean**. Open links from git remotes in `gitCommit`
-- [`GIT_REMOTE` GitHub Remote Name]({rel}/env/#development) – **String**. undocumented
 - [`HOME` User Home]({rel}/env/#bash) – **Directory**. Current user's home directory.
 - [`IP_URL` IP Lookup URL]({rel}/env/#build_configuration) – **URL**. URL to look up IP my address remotely
 - [`IP_URL_FILTER` Filter for IP Lookup]({rel}/env/#build_configuration) – **String**. jq filter to parse IP_URL result (assuming JSON)
@@ -99,8 +104,3 @@
 - [`XDG_DATA_DIRS` Data Path Directories]({rel}/env/#build_configuration) – **DirectoryList**. Data Path Directories
 - [`XDG_DATA_HOME` Data Home Directory]({rel}/env/#build_configuration) – **Directory**. Data Home Directory
 - [`XDG_STATE_HOME` State Home Directory]({rel}/env/#build_configuration) – **Directory**. State Home Directory
-- [`__BASH_PROMPT_MARKERS` Prompt marker list]({rel}/env/#bash_prompt) – **Array:EmptyString**. Bash Prompt escape codes for prompt reporting
-- [`__BASH_PROMPT_MODULES` Prompt module list]({rel}/env/#bash_prompt) – **Array:Callable**. List of functions to run each prompt command
-- [`__BASH_PROMPT_PREVIOUS` Prompt command previous result]({rel}/env/#bash_prompt) – **Array**. Previous result code
-- [`__BASH_PROMPT_SLOW` Prompt command slow threshold]({rel}/env/#bash_prompt) – **PositiveInteger**. Bash Prompt slow timer
-- [`__BUILD_HAS_TTY` TTY Cached Result]({rel}/env/#internal) – **Boolean**. Cached value of the availability of `/dev/tty`.

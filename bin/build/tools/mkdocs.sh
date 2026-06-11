@@ -3,14 +3,20 @@
 # Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# Build documentation using mkdocs and a template
+# Summary: mkdocs Utility
+# Build documentation using `mkdocs` and a template.
 # Argument: --path documentationPath - Directory. Optional. Directory where documentation root exists.
-# Argument: --template yamlTemplate - File. Optional. Name of mkdocs.yml template file to generate final file. Default is `mkdocs.template.yml`.
-#
+# Argument: --template yamlTemplate - File. Optional. Name of `mkdocs.yml` template file to generate final file. Default is `mkdocs.template.yml`.
+# Argument: --package packageName - String. Optional. Install this python package when setting up `mkdocs`.
+# Argument: --version version - String. Optional. Use this for current version of documentation; defaults to `hookVersionCurrent`
+# Argument: --clean - Flag. Optional. Clean the python virtual environment first.
+# See: hookVersionCurrent
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 documentationMkdocs() {
   local handler="_${FUNCNAME[0]}"
 
-  local rootPath="" template="" packages=("mkdocs") pv=()
+  local rootPath="" template="" packages=("mkdocs") pv=() version=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -25,6 +31,7 @@ documentationMkdocs() {
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
     --package) shift && packages+=("$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
+    --version) shift && version="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --path) shift && rootPath="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
     --clean) pv+=("--clean") ;;
     *)
@@ -37,13 +44,15 @@ documentationMkdocs() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
+  [ -n "$version" ] || version=$(catchReturn "$handler" hookVersionCurrent) || return $?
+
   [ -n "$rootPath" ] || rootPath="$home"
   catchEnvironment "$handler" pythonVirtual "${pv[@]+"${pv[@]}"}" --application "$rootPath" "${packages[@]}" || return $?
 
   catchEnvironment "$handler" muzzle pushd "$rootPath" || return $?
   statusMessage --last decorate notice "Updating mkdocs.yml ..."
 
-  __mkdocsConfiguration "$handler" "$template" || returnUndo $? muzzle popd || return $?
+  version="$version" __mkdocsConfiguration "$handler" "$template" || returnUndo $? muzzle popd || return $?
   local tempLog && tempLog=$(fileTemporaryName "$handler") || returnUndo $? muzzle popd || return $?
   statusMessage --last decorate notice "Building with mkdocs ..."
   catchEnvironmentQuiet "$handler" "$tempLog" python -m mkdocs build || returnUndo $? dumpPipe "mkdocs log" <"$tempLog" || returnUndo $? muzzle popd || returnClean $? "$tempLog" || return $?

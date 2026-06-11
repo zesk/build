@@ -13,6 +13,7 @@ Generates the following (with example content):
 - `version.md` - `v0.43.2`
 - `timestamp.md` - `1779910142`
 - `timestampString.md` - `2026-05-27 15:29:15`
+Failure is dirty; target directory may be modified even on failure.
 
 > Location: `bin/build/tools/documentation.sh`
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-11
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="557"
 rawComment="Git add documentation files"$'\n'"Just the first path."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ba0c1b09de9318e5d93a3d83b2f6b1368cb126e4"
+sourceHash="27710a9141283b9bb677e2d559eed326e8761d6f"
 sourceLine="557"
 summary="Git add documentation files"
 summaryComputed="true"

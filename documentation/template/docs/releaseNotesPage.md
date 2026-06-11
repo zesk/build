@@ -1,4 +1,17 @@
 
+## Zesk Build release v0.44.2
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.44.1
+- Added `{SEE:githubVersionLive}`
+- Removed `githubVersionLive` identical template
+- Added `networkIPValid` `networkHostValid`
+- Added validation and additional errors to `urlParse`
+- Changed semantics of `urlParseItem` when the component is `error`
+- Added `validate "$handler" IP`
+- Added `validate "$handler" Host` 
+
 ## Zesk Build release v0.44.1
 
 > Copyright &copy; 2026 Market Acumen, Inc.
@@ -90,18 +103,9 @@ Deprecated:
 - `returnMessage` cleaned up and made smaller
 - `bashCoverage` added `bashCoverageEnabled` and fixed issue when unsetting `BUILD_HOME`
 
-## Zesk Build release v0.42.5
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.42.4
-- Fixed an issue with `identicalCheck` which would double-check some files; also output now more detailed and
-  consistent.
-- Added `--key` to `bin/build/deprecated.sh` and `bin/build/repair.sh` for `--fingerprint` usage in alternate projects.
-- Fixed `buildFunctionsRemoveDeprecated`
-
 # Past Releases
 
+- [v0.42.5](./v0.42.5.md)
 - [v0.42.4](./v0.42.4.md)
 - [v0.42.3](./v0.42.3.md)
 - [v0.42.2](./v0.42.2.md)

@@ -1,0 +1,1 @@
+[networkNameValid]({rel}#networknamevalid) - Is a network host name valid? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L115))

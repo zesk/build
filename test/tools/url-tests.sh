@@ -24,7 +24,7 @@ testUrlSchemeDefaultPort() {
 
 # Tag: slow
 testUrlParseItem() {
-  local url=foo://user:hard-to-type@identity:4232/dbname
+  local url="foo://user:hard-to-type@identity:4232/dbname"
 
   assertEquals "$url" "$(urlParseItem "url" "$url")" || return $?
   assertEquals user "$(urlParseItem "user" "$url")" || return $?
@@ -36,6 +36,19 @@ testUrlParseItem() {
   assertEquals hard-to-type "$(urlParseItem "password" "$url")" || return $?
   assertEquals "" "$(urlParseItem "error" "$url")" || return $?
   assertEquals "foo" "$(urlParseItem "scheme" "$url")" || return $?
+
+  assertEquals "no-scheme" "$(urlParseItem "error" "http:not-url")" || return $?
+  assertEquals "no-host" "$(urlParseItem "error" "http://")" || return $?
+  assertEquals "invalid-port" "$(urlParseItem "error" "https://host:ssl/")" || return $?
+  assertEquals "invalid-port" "$(urlParseItem "error" "https://host:-99/")" || return $?
+  assertEquals "invalid-port" "$(urlParseItem "error" "https://host:0/")" || return $?
+  assertEquals "invalid-host" "$(urlParseItem "error" "https://<><><><>/host-is-diamonds")" || return $?
+
+  url="https://[2111:db8:85a3:8d3:1319:8a2e:370:7348]:443/ip6-is-wacky"
+  assertExitCode 0 urlParse "$url" || return $?
+  assertEquals "443" "$(urlParseItem "port" "$url")" || return $?
+  assertEquals "[2111:db8:85a3:8d3:1319:8a2e:370:7348]" "$(urlParseItem "host" "$url")" || return $?
+  assertEquals "https" "$(urlParseItem "scheme" "$url")" || return $?
 
   url="https://george:soma@identity:1984/orwell"
 

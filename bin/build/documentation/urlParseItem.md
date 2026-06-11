@@ -6,7 +6,21 @@
 
     urlParseItem [ component ] url ...
 
-Extract a component from one or more URLs
+Extract a component from one or more URLs.
+Component names are the same as returned by the base `urlParse` function:
+- `url`
+- `url`
+- `path`
+- `name`
+- `scheme`
+- `user`
+- `password`
+- `host`
+- `port`
+- `portDefault`
+- `error`
+The component `error` changes the behavior of the function – the function succeeds and returns the error string even if the URL is invalid. This
+permits the retrieval of the error message without any additional formatting if needed.
 
 > Location: `bin/build/tools/url.sh`
 

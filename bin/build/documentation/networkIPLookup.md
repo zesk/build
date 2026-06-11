@@ -22,6 +22,6 @@ Get the current IP address of a host
 
 #### Environment
 
-- {SEE:IP_URL}
-- {SEE:IP_URL_FILTER}
+- [`IP_URL` IP Lookup URL]({rel}/env/#build_configuration) – **URL**. URL to look up IP my address remotely
+- [`IP_URL_FILTER` Filter for IP Lookup]({rel}/env/#build_configuration) – **String**. jq filter to parse IP_URL result (assuming JSON)
 

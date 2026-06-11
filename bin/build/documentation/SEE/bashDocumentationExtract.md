@@ -1,1 +1,1 @@
-[bashDocumentationExtract]({rel}tools/documentation.md#bashdocumentationextract) - $'Extract documentation from bash commentsGenerate a set of name/value pairs to document bash entities\n' ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L61))
+[bashDocumentationExtract]({rel}tools/documentation.md#bashdocumentationextract) - Extract documentation from bash commentsGenerate a set of name/value pairs to document bash entities"$'\n'" ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L61))

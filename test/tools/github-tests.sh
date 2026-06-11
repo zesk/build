@@ -13,6 +13,10 @@ __testGithubURLParseData() {
 EOF
 }
 
+testGithubVersionLive() {
+  assertExitCode --stdout-match "v0." 0 githubVersionLive || return $?
+}
+
 testGithubURLParse() {
   local url expected
   while read -r url expected; do

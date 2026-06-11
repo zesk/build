@@ -225,27 +225,29 @@ __bashCoverageReportConvertFiles() {
 # Argument: uncoveredTexts
 # Argument: template
 __bashCoveragePartialLine() {
-  local line="$1" template="$3" codes=() code index search replace
+  local line="$1" template="$3" codes=()
 
   IFS=$'\n' read -d '' -r -a codes < <(printf -- "%s\n" "$2") || :
   if [ "${#codes[@]}" -eq 0 ]; then
     line="$(__htmlCode "$line")<em class=\"error\">NO CODES: \"$2\"<em>"
   else
-    index=0
-    for code in "${codes[@]}"; do
-      replace="%%%%$index%%%%"
+    local index=0
+    local code && for code in "${codes[@]}"; do
+      local replace="%%%%$index%%%%"
       # DO NOT QUOTE $replace it adds quotes to the line
       line="${line//"$code"/$replace}"
-      index=$((index + 1))
+      ((++index))
     done
-    line=$(__htmlCode "$line")
+    line="$(__htmlCode "$line")"
     index=0
     for code in "${codes[@]}"; do
-      replace="$(content="$(__htmlCode "$code")" mapEnvironment content <"$template")"
-      search="%%%%$index%%%%"
+      local search="%%%%$index%%%%"
+      local replace && replace="$(sed "s/{content}/$(quoteSedReplacement "$(__htmlCode "$code")")/g" <"$template")"
+      # & gets replaced by search string or something so escape that
+      replace="${replace//&/\\&}"
       # DO NOT QUOTE $replace it adds quotes to the line
       line="${line//"$search"/$replace}"
-      index=$((index + 1))
+      ((++index))
     done
   fi
   printf -- "%s\n" "$line"

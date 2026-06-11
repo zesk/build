@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-11
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="url.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)"$'\n'""$'\n'""
+description=$'A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/url.sh"
 fn="userAgentDefault"
 fnMarker="useragentdefault"
 foundNames=([0]="summary" [1]="stdout" [2]="argument")
-line="527"
-rawComment="Summary: Default user agent string for web agents"$'\n'"A default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)"$'\n'"stdout: String"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="534"
+rawComment=$'Summary: Default user agent string for web agents\nA default user agent which looks more like a browser and less like a UNIX command-line tool (debatable)\nstdout: String\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="8a95c52ce8bb5cc766609fdc6a03daab47743e41"
-sourceLine="527"
-stdout="String"$'\n'""
+sourceHash="5888613ceea13bebc1d11eb2f7336dca1a856d50"
+sourceLine="534"
+stdout=$'String\n'
 summary="Default user agent string for web agents"
 summaryComputed=""
 usage="userAgentDefault [ --help ]"

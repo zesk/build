@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-11
 # shellcheck disable=SC2034
-argument=$'variableName - String. Required. Get this variable value.\n--prefix - Flag. Optional. Find variables with the prefix `variableName`\n--insensitive | -i - Flag. Optional. Match case insensitive.\n--help - Flag. Optional. Display this help.\n'
+argument="variableName - String. Required. Get this variable value."$'\n'"--prefix - Flag. Optional. Find variables with the prefix \`variableName\`"$'\n'"--insensitive | -i - Flag. Optional. Match case insensitive."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Gets a list of the variable values from a bash function comment\n\n'
+description="Gets a list of the variable values from a bash function comment"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/bash.sh"
 fn="bashCommentVariable"
 fnMarker="bashcommentvariable"
 foundNames=([0]="argument" [1]="stdin")
 line="452"
-rawComment=$'Gets a list of the variable values from a bash function comment\nArgument: variableName - String. Required. Get this variable value.\nstdin: Comment source (`# ` removed)\nArgument: --prefix - Flag. Optional. Find variables with the prefix `variableName`\nArgument: --insensitive | -i - Flag. Optional. Match case insensitive.\nArgument: --help - Flag. Optional. Display this help.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Gets a list of the variable values from a bash function comment"$'\n'"Argument: variableName - String. Required. Get this variable value."$'\n'"stdin: Comment source (\`# \` removed)"$'\n'"Argument: --prefix - Flag. Optional. Find variables with the prefix \`variableName\`"$'\n'"Argument: --insensitive | -i - Flag. Optional. Match case insensitive."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="0bec62237f4e812ee319f8b7f774905396bb742b"
+sourceHash="c338e57d5d9111ed127b37263341910041a4b278"
 sourceLine="452"
-stdin=$'Comment source (`# ` removed)\n'
+stdin="Comment source (\`# \` removed)"$'\n'""
 summary="Gets a list of the variable values from a bash"
 summaryComputed="true"
 usage="bashCommentVariable variableName [ --prefix ] [ --insensitive | -i ] [ --help ]"

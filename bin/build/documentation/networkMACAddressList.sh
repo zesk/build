@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-11
 # shellcheck disable=SC2034
 argument="--install - Flag. Optional. Install any packages required to get \`ifconfig\` installed first."$'\n'"--help - Flag. Optional. This help."$'\n'""
 base="network.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/network.sh"
 fn="networkMACAddressList"
 fnMarker="networkmacaddresslist"
 foundNames=([0]="output" [1]="argument")
-line="60"
+line="169"
 output="lines:IPv4"$'\n'""
 rawComment="List MAC addresses associated with this system using \`ifconfig\`"$'\n'"Output: lines:IPv4"$'\n'"Argument: --install - Flag. Optional. Install any packages required to get \`ifconfig\` installed first."$'\n'"Argument: --help - Flag. Optional. This help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/network.sh"
-sourceHash="23f35705edd9cb61b7c0f0d8c20699a767a97a90"
-sourceLine="60"
+sourceHash="c6bb29c8fed5128e9b6862594b56a1536f11596a"
+sourceLine="169"
 summary="List MAC addresses associated with this system using \`ifconfig\`"
 summaryComputed="true"
 usage="networkMACAddressList [ --install ] [ --help ]"

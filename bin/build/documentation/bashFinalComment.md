@@ -31,5 +31,5 @@ Excludes lines similarly to `bashFirstComment`.
 
 #### See Also
 
-- [bashFirstComment]({rel}tools/bash.md#bashfirstcomment) - Extracts the first comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L578))
+- [bashFirstComment]({rel}tools/bash.md#bashfirstcomment) - Extract first comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L588))
 
