@@ -17,7 +17,7 @@
 
 {characterToInteger}
 
-{isCharacterClasses}
+{characterIsClass}
 
 {stringValidate}
 

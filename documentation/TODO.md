@@ -226,7 +226,7 @@ Heading towards a 1.0 release:
 - interactiveCountdown
 - interactiveManager
 - isBashBuiltin
-- isCharacterClasses
+- characterIsClass
 - dockerComposeCommandIsValid
 - isExecutableHack
 - isPHPStorm
@@ -553,7 +553,7 @@ On a "2x" machine:
 - interactiveManager
 - networkIPLookup
 - isBashBuiltin
-- isCharacterClasses
+- characterIsClass
 - isDarwin
 - dockerComposeCommandIsValid
 - isPHPStorm

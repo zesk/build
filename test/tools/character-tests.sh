@@ -77,17 +77,33 @@ testCharacterClassReport() {
 testCharacterClasses() {
   local c m=()
 
+  # All
   m=()
   for c in alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit; do
     m+=(--stdout-match "$c")
   done
   assertExitCode "${m[@]}" 0 characterClasses || return $?
 
+  # a
+  m=()
+  for c in alnum alpha ascii graph lower print word xdigit; do
+    m+=(--stdout-match "$c")
+  done
+  assertExitCode "${m[@]}" 0 characterClasses a || return $?
+
+  # Z
+  m=()
+  for c in alnum alpha ascii graph print upper word; do
+    m+=(--stdout-match "$c")
+  done
+  assertExitCode "${m[@]}" 0 characterClasses Z || return $?
+
+  # A
   m=()
   for c in alnum alpha ascii graph print upper word xdigit; do
     m+=(--stdout-match "$c")
   done
-  for c in blank cntrl '^digit' lower punct space; do
+  for c in blank cntrl ' digit' lower punct space; do
     m+=(--stdout-no-match "$c")
   done
   assertExitCode "${m[@]}" 0 characterClasses A || return $?
@@ -127,6 +143,6 @@ testIsCharacterClasses() {
   while IFS="|" read -r -a testRow; do
     set -- "${testRow[@]}"
     local expected="$1" && shift
-    assertExitCode "$expected" isCharacterClasses "$@" || return $?
+    assertExitCode "$expected" characterIsClass "$@" || return $?
   done < <(__dataIsCharacterClasses)
 }

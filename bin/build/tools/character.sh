@@ -26,31 +26,6 @@ _characterClassReport() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Ensure that every character in a text string passes all character class tests
-# Argument: text - Text to validate
-# Argument: class0 ... - One or more character classes that the characters in string should match
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# Note: This is slow.
-stringValidate() {
-  local handler="_${FUNCNAME[0]}"
-
-  [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
-
-  local text="${1-}" && shift || throwArgument "$handler" "missing text" || return $?
-
-  [ $# -gt 0 ] || throwArgument "$handler" "missing class" || return $?
-  local character && for character in $(printf "%s" "$text" | grep -o .); do
-    if ! isCharacterClasses "$character" "$@"; then
-      return 1
-    fi
-  done
-}
-_stringValidate() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Summary: Convert a character to the corresponding ASCII code
 # Argument: character - String. Optional. One or more characters to convert to their ASCII equivalent.
 # DOC TEMPLATE: --help 1
@@ -58,15 +33,12 @@ _stringValidate() {
 # Convert one or more characters from their ascii representation to an integer value.
 # Requires a single character to be passed
 characterToInteger() {
-  local index
+  local handler="_${FUNCNAME[0]}"
 
-  index=0
-  while [ $# -gt 0 ]; do
-    [ "$1" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
-    index=$((index + 1))
+  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
+  local index=1 && while [ $# -gt 0 ]; do
     [ "${#1}" = 1 ] || throwArgument "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    LC_CTYPE=C printf '%d' "'$1" || throwEnvironment "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    shift
+    LC_CTYPE=C printf -- "%d\n" "'$1" && shift && ((++index))
   done
 }
 _characterToInteger() {
@@ -74,14 +46,14 @@ _characterToInteger() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Summary: Check a character matches any character class
 # Does this character match one or more character classes?
-#
+# See:
 # Argument: character - Required. Single character to test.
 # Argument: class ... - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-isCharacterClasses() {
+characterIsClass() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
@@ -104,7 +76,7 @@ isCharacterClasses() {
   done
   return 1
 }
-_isCharacterClasses() {
+_characterIsClass() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -174,7 +146,7 @@ characterClasses() {
       case "$character" in [[:upper:]]) matchedClasses+=("upper") ;; esac
       case "$character" in [[:word:]]) matchedClasses+=("word") ;; esac
       case "$character" in [[:xdigit:]]) matchedClasses+=("xdigit") ;; esac
-      printf "%s\n" "${matchedClasses[@]}"
+      printf "%s\n" "${matchedClasses[*]}"
       shift
     done
   fi
