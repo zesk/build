@@ -1,0 +1,25 @@
+### `characterIsClass`
+
+> Check a character matches any character class
+
+#### Usage
+
+    characterIsClass character [ class ... ] [ --help ]
+
+Does this character match one or more character classes?
+See:
+
+> Location: `bin/build/tools/character.sh`
+
+#### Arguments
+
+- `character` - Required. Single character to test.
+- `class ...` - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
+- `--help` - Flag. Optional. Display this help.
+
+#### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+

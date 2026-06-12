@@ -1,0 +1,1 @@
+[characterIsClass]({rel}tools/character.md#characterisclass) - Check a character matches any character class ([source](https://github.com/zesk/build/blob/main/bin/build/tools/character.sh#L56))
