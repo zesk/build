@@ -19,8 +19,6 @@
 
 {characterIsClass}
 
-{stringValidate}
-
 <!-- TEMPLATE toolFooter 3 -->
 <hr />
 

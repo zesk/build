@@ -250,6 +250,7 @@ catchReturn documentation/source/tools/sugar.md
 characterClasses documentation/source/tools/character.md
 characterClassReport documentation/source/tools/character.md
 characterFromInteger documentation/source/tools/character.md
+characterIsClass documentation/source/tools/character.md
 characterToInteger documentation/source/tools/character.md
 clampDigits documentation/source/tools/unused.md
 clearLine documentation/source/tools/unused.md
@@ -587,7 +588,6 @@ isBitBucketPipeline documentation/source/tools/bitbucket.md
 isBoolean documentation/source/tools/sugar-core.md
 isCallable documentation/source/tools/type.md
 isCharacterClass documentation/source/tools/character.md
-isCharacterClasses documentation/source/tools/character.md
 isDarwin documentation/source/tools/darwin.md
 isErrorExit documentation/source/tools/debug.md
 isExecutable documentation/source/tools/type.md
@@ -833,7 +833,6 @@ stringReplace documentation/source/tools/unused.md
 stringTrimWords documentation/source/tools/text.md
 stringUnquote documentation/source/tools/text.md
 stringUppercase documentation/source/tools/text.md
-stringValidate documentation/source/tools/character.md
 sysvInitScriptInstall documentation/source/tools/sysvinit.md
 sysvInitScriptUninstall documentation/source/tools/sysvinit.md
 tarCreate documentation/source/tools/tar.md

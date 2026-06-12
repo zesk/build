@@ -1199,10 +1199,11 @@ _buildTestSuiteIndex bin/tools/test.sh 60
 _buildToolsCompile bin/tools/compile.sh 82
 _catchCode bin/build/identical/_sugar.sh 205
 _catchCode bin/build/tools/_sugar.sh 205
-_characterClasses bin/build/tools/character.sh 181
+_characterClasses bin/build/tools/character.sh 153
 _characterClassReport bin/build/tools/character.sh 23
-_characterFromInteger bin/build/tools/character.sh 143
-_characterToInteger bin/build/tools/character.sh 71
+_characterFromInteger bin/build/tools/character.sh 115
+_characterIsClass bin/build/tools/character.sh 78
+_characterToInteger bin/build/tools/character.sh 43
 _choose bin/build/tools/deprecated.sh 822
 _colorBrightness bin/build/tools/colors.sh 527
 _colorFormat bin/build/tools/colors.sh 683
@@ -1630,8 +1631,7 @@ _isCallable bin/build/install-bin-build.sh 1551
 _isCallable bin/build/install.sample.sh 1391
 _isCallable bin/build/map.sh 517
 _isCallable bin/build/tools/type.sh 206
-_isCharacterClass bin/build/tools/character.sh 217
-_isCharacterClasses bin/build/tools/character.sh 106
+_isCharacterClass bin/build/tools/character.sh 189
 _isDarwin bin/build/tools/darwin.sh 13
 _isErrorExit bin/build/tools/debug.sh 281
 _isExecutable bin/build/identical/isCallable.sh 56
@@ -1910,7 +1910,6 @@ _stringRandom bin/build/tools/text.sh 1050
 _stringTrimWords bin/build/tools/text.sh 598
 _stringUnquote bin/build/tools/quote.sh 127
 _stringUppercase bin/build/tools/text.sh 897
-_stringValidate bin/build/tools/character.sh 48
 _sysvInitScriptInstall bin/build/tools/sysvinit.sh 53
 _sysvInitScriptUninstall bin/build/tools/sysvinit.sh 95
 _tarCreate bin/build/tools/tar.sh 101
@@ -2216,10 +2215,11 @@ catchReturn bin/build/install-bin-build.sh 2063
 catchReturn bin/build/install.sample.sh 2015
 catchReturn bin/build/map.sh 123
 catchReturn bin/build/tools/_sugar.sh 283
-characterClasses bin/build/tools/character.sh 152
+characterClasses bin/build/tools/character.sh 124
 characterClassReport bin/build/tools/character.sh 20
-characterFromInteger bin/build/tools/character.sh 117
-characterToInteger bin/build/tools/character.sh 59
+characterFromInteger bin/build/tools/character.sh 89
+characterIsClass bin/build/tools/character.sh 55
+characterToInteger bin/build/tools/character.sh 34
 clampDigits bin/build/tools/deprecated.sh 404
 clearLine bin/build/tools/deprecated.sh 705
 colorBrightness bin/build/tools/colors.sh 503
@@ -2608,8 +2608,7 @@ isCallable bin/build/install-bin-build.sh 1543
 isCallable bin/build/install.sample.sh 1383
 isCallable bin/build/map.sh 509
 isCallable bin/build/tools/type.sh 198
-isCharacterClass bin/build/tools/character.sh 199
-isCharacterClasses bin/build/tools/character.sh 83
+isCharacterClass bin/build/tools/character.sh 171
 isDarwin bin/build/tools/darwin.sh 9
 isDockerComposeCommand bin/build/tools/deprecated.sh 21
 isErrorExit bin/build/tools/debug.sh 275
@@ -2937,7 +2936,6 @@ stringReplace bin/build/tools/deprecated.sh 418
 stringTrimWords bin/build/tools/text.sh 578
 stringUnquote bin/build/tools/quote.sh 118
 stringUppercase bin/build/tools/text.sh 887
-stringValidate bin/build/tools/character.sh 34
 sysvInitScriptInstall bin/build/tools/sysvinit.sh 11
 sysvInitScriptUninstall bin/build/tools/sysvinit.sh 62
 tarCreate bin/build/tools/tar.sh 65

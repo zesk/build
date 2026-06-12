@@ -50,18 +50,6 @@ testValidateCharacterClass() {
   rm "$temp" || :
 }
 
-testStringValidate() {
-  assertExitCode 0 stringValidate string alpha || return $?
-  assertExitCode 0 stringValidate string alnum || return $?
-  assertNotExitCode 0 stringValidate str0ng alpha || return $?
-  assertExitCode 0 stringValidate str0ng alnum || return $?
-  assertExitCode 0 stringValidate string alpha alnum || return $?
-  assertExitCode 0 stringValidate string alpha digit || return $?
-  assertExitCode 0 stringValidate string digit alpha || return $?
-  assertExitCode 0 stringValidate A_B_C upper _ || return $?
-  assertExitCode 1 stringValidate A_B_C lower _ || return $?
-}
-
 testCharacterFromInteger() {
   assertEquals l "$(characterFromInteger "$(returnCode leak)")" || return $?
   assertEquals a "$(characterFromInteger "$(returnCode assert)")" || return $?

@@ -11,6 +11,7 @@
 - Changed semantics of `urlParseItem` when the component is `error`
 - Added `validate "$handler" IP`
 - Added `validate "$handler" Host` 
+- Deprecated `stringValidate`
 
 ## Zesk Build release v0.44.1
 
