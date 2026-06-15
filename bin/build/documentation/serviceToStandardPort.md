@@ -35,5 +35,5 @@ Port number of associated service (integer) one per line
 
 #### See Also
 
-- [serviceToPort]({rel}tools/service.md#servicetoport) - Get the port number associated with a service ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L264))
+- [serviceToPort]({rel}tools/service.md#servicetoport) - Get the port number associated with a service ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L263))
 

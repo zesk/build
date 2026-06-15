@@ -36,5 +36,5 @@ docs/release/version.md
 
 #### Environment
 
-- {SEE:BUILD_RELEASE_NOTES}
+- [`BUILD_RELEASE_NOTES` Release Notes Application Path]({rel}env/#build_configuration) – **ApplicationDirectory**. Constant for the release notes path. Defaults to `./docs/release`.
 

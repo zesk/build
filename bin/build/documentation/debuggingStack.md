@@ -30,11 +30,9 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### Environment
 
-- {SEE:BUILD_DEBUG}
+- [`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
 
 #### Requires
 
 - [`printf`]({rel}/guide/builtin.md#printf)
-- {SEE:bashDocumentation}
-- {SEE:throwArgument}
 

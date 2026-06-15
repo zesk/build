@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'directoryOrFile - Exists. Required. Directory or file to `source` `.sh` files found.\n--info - Flag. Optional. Show user what they should do (press a key).\n--no-info - Flag. Optional. Hide user info (what they should do ... press a key)\n--verbose - Flag. Optional. Show what is done as status messages.\n--clear - Flag. Optional. Clear the approval status for file given.\n--prefix - String. Optional. Display this text before each status messages.\n'
 base="interactive.sh"
@@ -11,15 +11,14 @@ environment=$'XDG_STATE_HOME\n'
 file="bin/build/tools/interactive.sh"
 fn="approveBashSource"
 fnMarker="approvebashsource"
-foundNames=([0]="argument" [1]="security" [2]="environment" [3]="see")
-line="92"
-rawComment=$'Argument: directoryOrFile - Exists. Required. Directory or file to `source` `.sh` files found.\nArgument: --info - Flag. Optional. Show user what they should do (press a key).\nArgument: --no-info - Flag. Optional. Hide user info (what they should do ... press a key)\nArgument: --verbose - Flag. Optional. Show what is done as status messages.\nArgument: --clear - Flag. Optional. Clear the approval status for file given.\nArgument: --prefix - String. Optional. Display this text before each status messages.\nSecurity: Loads bash files\nLoads files or a directory of `.sh` files using `source` to make the code available.\nHas security implications. Use with caution and ensure your directory is protected.\nApproved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.\nStale files are ones which no longer are associated with a file\'s current fingerprint.\nEnvironment: XDG_STATE_HOME\nSee: XDG_STATE_HOME.sh\n\n'
+foundNames=([0]="argument" [1]="security" [2]="environment")
+line="91"
+rawComment=$'Argument: directoryOrFile - Exists. Required. Directory or file to `source` `.sh` files found.\nArgument: --info - Flag. Optional. Show user what they should do (press a key).\nArgument: --no-info - Flag. Optional. Hide user info (what they should do ... press a key)\nArgument: --verbose - Flag. Optional. Show what is done as status messages.\nArgument: --clear - Flag. Optional. Clear the approval status for file given.\nArgument: --prefix - String. Optional. Display this text before each status messages.\nSecurity: Loads bash files\nLoads files or a directory of `.sh` files using `source` to make the code available.\nHas security implications. Use with caution and ensure your directory is protected.\nApproved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.\nStale files are ones which no longer are associated with a file\'s current fingerprint.\nEnvironment: XDG_STATE_HOME\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 security=$'Loads bash files\n'
-see=$'XDG_STATE_HOME.sh\n'
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="378aca49779b1c4a5f70a0c419c2a078d3e0d369"
-sourceLine="92"
+sourceHash="e498f36ea8a183a8b53d5b3a569214c3365c46ed"
+sourceLine="91"
 summary="Loads files or a directory of \`.sh\` files using \`source\`"
 summaryComputed="true"
 usage="approveBashSource directoryOrFile [ --info ] [ --no-info ] [ --verbose ] [ --clear ] [ --prefix ]"

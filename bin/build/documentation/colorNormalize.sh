@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Redistribute color values to make brightness adjustments more balanced"$'\n'""$'\n'""
+description=$'Redistribute color values to make brightness adjustments more balanced\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/colors.sh"
 fn="colorNormalize"
 fnMarker="colornormalize"
 foundNames=([0]="argument" [1]="requires")
 line="560"
-rawComment="Redistribute color values to make brightness adjustments more balanced"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize"$'\n'""$'\n'""
-requires="bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Redistribute color values to make brightness adjustments more balanced\nArgument: --help - Flag. Optional. Display this help.\nRequires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich\n\n'
+requires=$'bc catchEnvironment read usageArgumentUnsignedInteger packageWhich\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="07796ffc2b7321ebd8b87945b7b797d05510cb69"
+sourceHash="5fd233b8bd09bd24d690dfb4794e1b25841c43c3"
 sourceLine="560"
 summary="Redistribute color values to make brightness adjustments more balanced"
 summaryComputed="true"

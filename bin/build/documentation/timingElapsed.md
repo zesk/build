@@ -38,7 +38,7 @@ UnsignedInteger
 #### Requires
 
 - {SEE:__timestamp}
-- {SEE:returnEnvironment}
-- {SEE:validate}
+- [returnEnvironment]({rel}tools/sugar-core.md#returnenvironment) - Return \`environment\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L265))
+- [validate]({rel}tools/validate.md#validate) - Validate a value by type ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L95))
 - date
 

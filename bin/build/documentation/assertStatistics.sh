@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument=$'--reset - Flag. Optional. Reset statistics to zero.\n--total - Flag. Optional. Just output the total.\n--help - Flag. Optional. Display this help.\n'
+argument="--reset - Flag. Optional. Reset statistics to zero."$'\n'"--total - Flag. Optional. Just output the total."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="test.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Output the total number of assertion failures and assertion successes, separated by a space and terminated with a newline\n\n'
+description="Output the total number of assertion failures and assertion successes, separated by a space and terminated with a newline"$'\n'""$'\n'""
 descriptionLineCount="2"
-example=$'    read -r failures successes < <(assertStatistics) || return $?\n'
+example="    read -r failures successes < <(assertStatistics) || return \$?"$'\n'""
 file="bin/build/tools/test.sh"
 fn="assertStatistics"
 fnMarker="assertstatistics"
 foundNames=([0]="summary" [1]="argument" [2]="stdout" [3]="example")
 line="116"
-rawComment=$'Summary: Output assertion counts\nOutput the total number of assertion failures and assertion successes, separated by a space and terminated with a newline\nArgument: --reset - Flag. Optional. Reset statistics to zero.\nArgument: --total - Flag. Optional. Just output the total.\nArgument: --help - Flag. Optional. Display this help.\nstdout: UnsignedInteger. 2 lines.\nExample:     read -r failures successes < <({fn}) || return $?\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Output assertion counts"$'\n'"Output the total number of assertion failures and assertion successes, separated by a space and terminated with a newline"$'\n'"Argument: --reset - Flag. Optional. Reset statistics to zero."$'\n'"Argument: --total - Flag. Optional. Just output the total."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: UnsignedInteger. 2 lines."$'\n'"Example:     read -r failures successes < <({fn}) || return \$?"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="74049261be4311898ae206f18f3c43621dd42ffa"
+sourceHash="1643b40c1684bb3bbf723c7097d1aba261079515"
 sourceLine="116"
-stdout=$'UnsignedInteger. 2 lines.\n'
+stdout="UnsignedInteger. 2 lines."$'\n'""
 summary="Output assertion counts"
 summaryComputed=""
 usage="assertStatistics [ --reset ] [ --total ] [ --help ]"

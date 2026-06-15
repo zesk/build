@@ -33,9 +33,9 @@ deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/ap
 
 #### Environment
 
-- {SEE:BUILD_TARGET} {SEE:APPLICATION_ID} {SEE:APPLICATION_TAG}
+- [`BUILD_TARGET` Build Application Target File Name]({rel}env/#deployment) – **String**. The file to generate when generating builds [`APPLICATION_ID` Application ID]({rel}env/#deployment) – **String**. This is the unique hash which represents the source code [`APPLICATION_TAG` Application Tag]({rel}env/#deployment) – **String**. This is the full version number including debugging or release
 
 #### See Also
 
-- {SEE:deployToRemote}
+- [deployToRemote]({rel}tools/deployment.md#deploytoremote) - Deploy current application to one or more hosts ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deployment.sh#L479))
 

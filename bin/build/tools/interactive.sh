@@ -88,7 +88,6 @@ _fileCopyWouldChange() {
 # Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
 # Stale files are ones which no longer are associated with a file's current fingerprint.
 # Environment: XDG_STATE_HOME
-# See: XDG_STATE_HOME.sh
 approveBashSource() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -106,7 +105,6 @@ _approveBashSource() {
 # Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
 # Stale files are ones which no longer are associated with a file's current fingerprint.
 # Environment: XDG_STATE_HOME
-# See: XDG_STATE_HOME.sh
 approvedSources() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

@@ -93,7 +93,7 @@ _bashPrompt() {
 #
 # `-r` is implied and does not need to be specified
 #
-# See: read
+# See: [read]({rel}guide/builtin.md#read)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)

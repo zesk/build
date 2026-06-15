@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="iterm2.sh"
@@ -18,7 +18,7 @@ requires="catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashPrompt"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="13698f5ecbedc059696bbffbebc13f8cf7096e44"
+sourceHash="addbed4a0b68e5f665a51ab97d2b99c073dd7c02"
 sourceLine="129"
 summary="Add support for iTerm2 to bashPrompt"
 summaryComputed="true"

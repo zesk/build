@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument="none"
 base="test.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Return code is `assert`\n\n'
+description="Return code is \`assert\`"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/test.sh"
 fn="returnAssert"
 fnMarker="returnassert"
 foundNames=([0]="summary" [1]="return_code")
 line="1487"
-rawComment=$'Return code is `assert`\nSummary: Assertion return code\nReturn Code: 97\n\n'
-return_code=$'97\n'
+rawComment="Return code is \`assert\`"$'\n'"Summary: Assertion return code"$'\n'"Return Code: 97"$'\n'""$'\n'""
+return_code="97"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="74049261be4311898ae206f18f3c43621dd42ffa"
+sourceHash="1643b40c1684bb3bbf723c7097d1aba261079515"
 sourceLine="1487"
 summary="Assertion return code"
 summaryComputed=""

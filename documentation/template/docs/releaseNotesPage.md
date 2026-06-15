@@ -4,13 +4,18 @@
 > Copyright &copy; 2026 Market Acumen, Inc.
 
 - Previous version: v0.44.2
+- {SEE:documentationFunctionsCompile} does better and creating missing `SEE` files
+- Fixed issue with some SEE tokens not being replaced
+- Documentation templates now support literals to allow for using curly braces in documentation. Use `"{""TOKEN""}"` in
+  your code to output a literal bracketed value which is coverted into the non-quoted version in the final template.
+- Fixed old release notes with improperly code-quoted `{"SEE:..."}` clauses.
 
 ## Zesk Build release v0.44.2
 
 > Copyright &copy; 2026 Market Acumen, Inc.
 
 - Previous version: v0.44.1
-- Added `{SEE:githubVersionLive}`
+- Added {SEE:githubVersionLive}
 - Removed `githubVersionLive` identical template
 - Added `networkIPValid` `networkHostValid`
 - Added validation and additional errors to `urlParse`
@@ -32,11 +37,11 @@
 > Copyright &copy; 2026 Market Acumen, Inc.
 
 - Previous version: v0.43.1
-- `{releaseNotesPage}` was renamed as it was the same name as a function previously.
+- {SEE:releaseNotesPage} was renamed as it was the same name as a function previously.
 - Reorganized documentation indexes.
 - Made documentation function heading depth one level deeper to provide better outlined structure
 - `markdownRemoveUnfinishedSections --preprocess` allows a function to sanitize sections prior to checking for tokens to
-  allow for various tokens to persist. Added `__removeRel` to allow `{``SEE``}` tokens to persist with replaced values.
+  allow for various tokens to persist. Added `__removeRel` to allow `{"SEE"}` tokens to persist with replaced values.
   `See Also` sections should now appear in documentation.
 - `usageArgument` functions have been removed from the codebase.
 - More documentation cleanup and adding of `Summary:` comments. 

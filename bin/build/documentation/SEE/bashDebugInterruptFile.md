@@ -1,1 +1,1 @@
-[bashDebugInterruptFile]({rel}tools/debug.md#bashdebuginterruptfile) - Output debugging stack on program termination ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L202))
+[bashDebugInterruptFile]({rel}tools/debug.md#bashdebuginterruptfile) - Output debugging stack on program termination ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L203))

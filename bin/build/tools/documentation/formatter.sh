@@ -19,18 +19,16 @@ _documentationTemplateFormatter_requires() {
   local eof=false && while ! $eof; do
     local requiresTokens=() && IFS=" " read -d $'\n' -r -a requiresTokens || eof=true
     [ "${#requiresTokens[@]}" -eq 0 ] || local token && for token in "${requiresTokens[@]+"${requiresTokens[@]}"}"; do
-      if isFunction "$token"; then
-        local f="_documentationTemplateFormatter_builtin"
-        if isBashBuiltin "$token" && isFunction "$f"; then
-          "$f" <<<"$token"
-        else
-          printf -- "{SEE:%s}\n" "$token"
-        fi
+      local f="_documentationTemplateFormatter_builtin"
+      if isBashBuiltin "$token" && isFunction "$f"; then
+        printf -- "%s\n" "$("$f" <<<"$token")"
+      elif isFunction "$token"; then
+        _documentationTemplateFormatterSeeStream <<<"$token"
       else
         printf -- "%s\n" "$token"
       fi
     done
-  done | decorate wrap "- " ""
+  done | sed 's/^/- /g'
 }
 
 #
@@ -51,11 +49,11 @@ _documentationTemplateFormatterSeeStream() {
   local handler="_${FUNCNAME[0]}"
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   local seeItems=() && while IFS=" " read -r -a seeItems; do
-    local seeItem && for seeItem in "${seeItems[@]+${seeItems[@]}}"; do
+    local seeItem && for seeItem in "${seeItems[@]+"${seeItems[@]}"}"; do
       seeItem="$(textTrim "$seeItem")"
       if [ -n "$seeItem" ]; then
         local seeFile && if seeFile=$(__documentationFile "$home" "SEE/$seeItem"); then
-          cat "$seeFile"
+          printf "%s\n" "$(cat "$seeFile")"
         elif urlValid "$seeItem"; then
           printf -- "[%s](%s)\n" "$(urlParseItem host "$seeItem")" "$seeItem"
         else

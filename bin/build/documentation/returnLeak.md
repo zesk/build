@@ -16,5 +16,5 @@ Return code is `leak`
 
 #### Return codes
 
-- 108
+- `108` - A leak was detected in the command
 

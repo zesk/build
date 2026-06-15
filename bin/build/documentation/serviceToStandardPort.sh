@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nservice ... - String. Optional. A unix service typically found in `/etc/services`\n'
 base="platform.sh"
@@ -11,14 +11,14 @@ file="bin/build/tools/platform.sh"
 fn="serviceToStandardPort"
 fnMarker="servicetostandardport"
 foundNames=([0]="argument" [1]="output" [2]="return_code" [3]="summary" [4]="see")
-line="222"
+line="221"
 output=$'Port number of associated service (integer) one per line\n'
 rawComment=$'Hard-coded services for:\n- `ssh` -> 22\n- `http`-> 80\n- `https`-> 80\n- `postgres`-> 5432\n- `mariadb`-> 3306\n- `mysql`-> 3306\nBackup when `/etc/services` does not exist.\nArgument: --help - Flag. Optional. Display this help.\nArgument: service ... - String. Optional. A unix service typically found in `/etc/services`\nOutput: Port number of associated service (integer) one per line\nReturn Code: 1 - service not found\nReturn Code: 0 - service found and output is an integer\nSummary: Handle standard services\nSee: serviceToPort\n\n'
 return_code=$'1 - service not found\n0 - service found and output is an integer\n'
 see=$'serviceToPort\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="a68934b9dea91af485e7b209bfc126a7dc7af004"
-sourceLine="222"
+sourceHash="d7df02b1e70f9738cebc0806fb800f2bd1519995"
+sourceLine="221"
 summary="Handle standard services"
 summaryComputed=""
 usage="serviceToStandardPort [ --help ] [ service ... ]"

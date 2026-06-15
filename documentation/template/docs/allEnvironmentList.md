@@ -12,7 +12,7 @@
 - [`APPLICATION_JSON` Application JSON File]({rel}env/#application) – **ApplicationFile**. Path to the application configuration JSON
 - [`APPLICATION_JSON_PREFIX` Application JSON Prefix]({rel}env/#application) – **String**. Prefix to place we can store things in the JSON
 - [`APPLICATION_NAME` Application Name]({rel}env/#application) – **String**. This is the display name of the application
-- [`APPLICATION_OWNER` APPLICATION_OWNER]({rel}env/#application) – ****. 
+- [`APPLICATION_OWNER` Application Legal Owner]({rel}env/#application) – **String**. The entity which owns or manages the application. Typically the
 - [`APPLICATION_REMOTE_HOME` Application Remote Home Directory]({rel}env/#deployment) – **RemoteDirectory**. Path on the remote server where the application is served
 - [`APPLICATION_TAG` Application Tag]({rel}env/#deployment) – **String**. This is the full version number including debugging or release
 - [`APPLICATION_VERSION` Application Version]({rel}env/#deployment) – **String**. This is the version number which can be displayed

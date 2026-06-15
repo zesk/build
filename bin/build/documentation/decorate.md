@@ -29,18 +29,18 @@ Decorated text
 #### Environment
 
 - __BUILD_DECORATE - String. Cached color lookup.
-- {SEE:BUILD_COLORS} - Boolean. Colors enabled (`true` or `false`).
+- [`BUILD_COLORS` Build Colors Flag]({rel}env/#decoration) – **Boolean**. If true then colors are shown, blank means guess the - Boolean. Colors enabled (`true` or `false`).
 
 #### Requires
 
-- {SEE:isFunction}
-- {SEE:catchArgument}
-- {SEE:catchReturn}
+- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
+- [catchArgument]({rel}tools/sugar-core.md#catchargument) - Run \`command\`, upon failure run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L238))
+- [catchReturn]({rel}tools/sugar.md#catchreturn) - Run binary and catch errors with handler ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L284))
 - awk
-- {SEE:bashDocumentation}
-- {SEE:helpArgument}
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 - {SEE:_decorateInitialize}
 - {SEE:__decorateStyle}
 - {SEE:__decorate}
-- {SEE:executeInputSupport}
+- [executeInputSupport]({rel}tools/sugar.md#executeinputsupport) - Support arguments and stdin as arguments to an executor ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L167))
 

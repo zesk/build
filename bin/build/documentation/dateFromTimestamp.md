@@ -33,9 +33,9 @@ Converts an integer date to a date formatted timestamp (e.g. `%Y-%m-%d %H:%M:%S`
 
 #### Requires
 
-- {SEE:throwArgument}
-- {SEE:decorate}
-- {SEE:validate}
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [validate]({rel}tools/validate.md#validate) - Validate a value by type ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L95))
 - {SEE:__dateFromTimestamp}
-- {SEE:bashDocumentation}
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 

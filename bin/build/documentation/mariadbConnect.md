@@ -24,5 +24,5 @@ Connect to a mariadb-type database using a URL
 
 #### Environment
 
-- {SEE:MARIADB_BINARY_CONNECT}
+- [`MARIADB_BINARY_CONNECT` mariadb Connect Executable]({rel}env/#vendor) – **Executable**. MariaDB binary for database connections
 

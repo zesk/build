@@ -25,7 +25,4 @@ Extract a bash comment from a file. Excludes lines containing the following toke
 #### Requires
 
 - head
-- {SEE:bashFinalComment}
-- {SEE:helpArgument}
-- {SEE:bashDocumentation}
 

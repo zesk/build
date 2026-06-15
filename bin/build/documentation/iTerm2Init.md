@@ -22,10 +22,10 @@ Add iTerm2 support to console
 
 #### Environment
 
-- {SEE:LC_TERMINAL}
-- {SEE:TERM}
+- [`LC_TERMINAL` Terminal Application]({rel}env/#bash) – **String**. LC_TERMINAL typically identifies the terminal application
+- [`TERM` Terminal Type]({rel}env/#bash) – **String**. The current terminal type.
 
 #### See Also
 
-- [iTerm2Aliases]({rel}tools/iterm2.md#iterm2aliases)- `` - Installs iTerm2 aliases which are: ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L163)){SEE:iTerm2PromptSupport}
+- [iTerm2Aliases]({rel}tools/iterm2.md#iterm2aliases) - Installs iTerm2 aliases which are: ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L163))[iTerm2PromptSupport]({rel}tools/iterm2.md#iterm2promptsupport) - Add support for iTerm2 to bashPrompt ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L129))
 

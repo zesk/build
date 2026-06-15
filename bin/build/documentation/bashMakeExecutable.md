@@ -27,5 +27,5 @@ Makes all `*.sh` files executable.
 
 #### See Also
 
-- [bashMakeExecutable]({rel}tools/bash.md#bashmakeexecutable) - Make shell files executable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L125))- {SEE:chmod-sh.sh}
+- [bashMakeExecutable]({rel}tools/bash.md#bashmakeexecutable) - Make shell files executable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L124))
 

@@ -1,1 +1,1 @@
-[buildDebugStop]({rel}tools/debug.md#builddebugstop) - Stop bash debugging ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L115))
+[buildDebugStop]({rel}tools/debug.md#builddebugstop) - Stop bash debugging ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L116))

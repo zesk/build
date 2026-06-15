@@ -62,15 +62,14 @@ __crontabGenerate() {
 # Argument: --mapper envMapper - Binary. Optional. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
 # Example:     {fn} --env-file /etc/myCoolApp.conf --user www-data /var/www/applications
 # Example:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
-# See: whoami
 crontabApplicationUpdate() {
   local handler="_${FUNCNAME[0]}"
 
   catchReturn "$handler" packageWhich crontab cron || return $?
 
-  local rootEnv="" appPath="" user
-  user=$(whoami) || throwEnvironment "$handler" whoami || return $?
-  [ -n "$user" ] || throwEnvironment "$handler" "whoami user is blank" || return $?
+  local rootEnv="" appPath=""
+  local user && user=$(catchReturn "$handler" id -un) || return $?
+  [ -n "$user" ] || throwEnvironment "$handler" "id -un user is blank" || return $?
 
   local environmentMapper="" flagDiff=false flagShow=false
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -121,8 +120,7 @@ crontabApplicationUpdate() {
     __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper"
     return 0
   fi
-  local newCrontab returnCode
-  newCrontab=$(fileTemporaryName "$handler")
+  local newCrontab && newCrontab=$(fileTemporaryName "$handler")
   __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" >"$newCrontab" || return $?
 
   if [ ! -s "$newCrontab" ]; then
@@ -142,7 +140,8 @@ crontabApplicationUpdate() {
     return 0
   fi
   statusMessage printf "%s %s ...\n" "$(decorate info "Updating crontab on ")" "$(decorate value "$(date)")"
-  returnCode=0
+
+  local returnCode=0
   catchEnvironment "$handler" crontab -u "$user" - <"$newCrontab" 2>/dev/null || returnCode=$?
   catchEnvironment "$handler" rm -f "$newCrontab" || return $?
   [ $returnCode -eq 0 ] || return "$returnCode"

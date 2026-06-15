@@ -16,5 +16,5 @@ Return code is `identical`
 
 #### Return codes
 
-- 105
+- `105` - The identical check found discrepancies.
 

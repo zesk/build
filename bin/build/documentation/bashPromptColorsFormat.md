@@ -26,9 +26,6 @@ Outputs color *codes* separated by colons.
 
 #### Requires
 
-- {SEE:decorations}
-- [`read`]({rel}/guide/builtin.md#read)
-- {SEE:inArray}
-- {SEE:decorate}
-- {SEE:listJoin}
+- [decorations]({rel}tools/decorate.md#decorations) - Output a list of build-in decoration styles, one per line ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L66))[`read`]({rel}/guide/builtin.md#read)
+- [inArray]({rel}tools/text.md#inarray) - Check if an element exists in an array ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L393))[decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))[listJoin]({rel}tools/list.md#listjoin) - Output a list of items joined by a character ([source](https://github.com/zesk/build/blob/main/bin/build/tools/list.sh#L25))
 

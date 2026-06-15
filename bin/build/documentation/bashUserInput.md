@@ -27,5 +27,5 @@ Arguments are the same as `read`, except:
 
 #### See Also
 
-- {SEE:read}
+- {SEE:[read]({rel}guide/builtin.md#read)}
 

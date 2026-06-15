@@ -8,6 +8,8 @@
 
 Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
 
+`COLUMNS` and `LINES` environment variables may be modified by calling this function.
+
 > Location: `bin/build/tools/colors.sh`
 
 #### Arguments
@@ -26,8 +28,7 @@ Output the number of columns in the terminal. Default is 60 if not able to be de
 
 #### Environment
 
-- - `COLUMNS` - May be defined after calling this
-- - `LINES` - May be defined after calling this
+- COLUMNS LINES
 
 #### See Also
 

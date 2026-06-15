@@ -24,5 +24,5 @@ This changes the value of `XDEBUG_ENABLED` to `true`. Programs must honor this a
 
 #### Environment
 
-- {SEE:XDEBUG_ENABLED}
+- [`XDEBUG_ENABLED` xDebug Enabled Flag]({rel}env/#php) – **Boolean**. Is xdebug enabled? The application can honor this environment variable
 

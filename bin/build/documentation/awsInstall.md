@@ -22,8 +22,3 @@ Installs x86 or aarch64 binary based on `HOSTTYPE`.
 - `1` - Environment error
 - `2` - Argument error
 
-#### Requires
-
-- {SEE:packageInstall}
-- {SEE:urlFetch}
-

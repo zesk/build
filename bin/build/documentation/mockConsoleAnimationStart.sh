@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument=$'true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value.\n--help - Flag. Optional. Display this help.\n'
+argument="true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="test.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Fake `consoleHasAnimation` for testing\n\n'
+description="Fake \`consoleHasAnimation\` for testing"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/test.sh"
 fn="mockConsoleAnimationStart"
 fnMarker="mockconsoleanimationstart"
 foundNames=([0]="argument")
 line="1463"
-rawComment=$'Fake `consoleHasAnimation` for testing\nArgument: true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value.\nArgument: --help - Flag. Optional. Display this help.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Fake \`consoleHasAnimation\` for testing"$'\n'"Argument: true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="74049261be4311898ae206f18f3c43621dd42ffa"
+sourceHash="1643b40c1684bb3bbf723c7097d1aba261079515"
 sourceLine="1463"
 summary="Fake \`consoleHasAnimation\` for testing"
 summaryComputed="true"

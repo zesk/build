@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'--debug - Flag. Optional. Show a lot of information about the approved cache.\n--no-delete - Flag. Optional. Do not delete stale approval files.\n--delete - Flag. Optional. Delete stale approval files.\n'
 base="interactive.sh"
@@ -11,14 +11,13 @@ environment=$'XDG_STATE_HOME\n'
 file="bin/build/tools/interactive.sh"
 fn="approvedSources"
 fnMarker="approvedsources"
-foundNames=([0]="argument" [1]="environment" [2]="see")
-line="110"
-rawComment=$'List approved Bash script sources which can be loaded automatically by project hooks.\nArgument: --debug - Flag. Optional. Show a lot of information about the approved cache.\nArgument: --no-delete - Flag. Optional. Do not delete stale approval files.\nArgument: --delete - Flag. Optional. Delete stale approval files.\nApproved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.\nStale files are ones which no longer are associated with a file\'s current fingerprint.\nEnvironment: XDG_STATE_HOME\nSee: XDG_STATE_HOME.sh\n\n'
+foundNames=([0]="argument" [1]="environment")
+line="108"
+rawComment=$'List approved Bash script sources which can be loaded automatically by project hooks.\nArgument: --debug - Flag. Optional. Show a lot of information about the approved cache.\nArgument: --no-delete - Flag. Optional. Do not delete stale approval files.\nArgument: --delete - Flag. Optional. Delete stale approval files.\nApproved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.\nStale files are ones which no longer are associated with a file\'s current fingerprint.\nEnvironment: XDG_STATE_HOME\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
-see=$'XDG_STATE_HOME.sh\n'
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="378aca49779b1c4a5f70a0c419c2a078d3e0d369"
-sourceLine="110"
+sourceHash="e498f36ea8a183a8b53d5b3a569214c3365c46ed"
+sourceLine="108"
 summary="List approved Bash script sources which can be loaded automatically"
 summaryComputed="true"
 usage="approvedSources [ --debug ] [ --no-delete ] [ --delete ]"

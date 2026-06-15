@@ -46,6 +46,9 @@ __hostname() {
   hostname -f
 }
 
+# Summary: Internal Platform Date from timestamp
+# This is the OS-specific implementation of `dateFromTimestamp`.
+# See: dateFromTimestamp
 # Requires: date
 # Argument: value - Integer. Required.
 # Argument: format - String. Required.

@@ -461,7 +461,7 @@ _documentationMaker() {
 
 # Extract and build the documentation settings cache and generate derived files
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
-# Argument: --all - Flag. Optional. Do everything regardless of cache state.
+# Argument: --all | --stdin- Flag. Optional. Read function names from stdin for examination.
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
 # Argument: --source - Directory. Required. Directory where functions are defined.
 # Argument: --key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available.
@@ -481,7 +481,7 @@ documentationFunctionsCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --all) allFlag=true ;;
+    --all | --stdin) allFlag=true ;;
     --target) shift && target=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --source) shift && source=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --key) shift && aa+=("$argument" "${1-}") ;;

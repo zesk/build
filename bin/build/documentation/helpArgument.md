@@ -53,7 +53,7 @@ Example:
 
 #### Requires
 
-- {SEE:throwArgument}
-- {SEE:bashDocumentation}
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 - {SEE:_helpArgument}
 

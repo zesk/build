@@ -7,7 +7,7 @@ _documentationTemplateFormatter_builtin() {
   local eof=false && while ! $eof; do
     local tokens=() && IFS=" " read -d $'\n' -r -a tokens || eof=true
     [ "${#tokens[@]}" -eq 0 ] || local token && for token in "${tokens[@]}"; do
-      printf -- "[\`%s\`]({rel}/guide/builtin.md#%s)\n" "$token" "$(stringLowercase "$token")"
+      printf -- "[\`%s\`]({rel}guide/builtin.md#%s)\n" "$token" "$(stringLowercase "$token")"
     done
   done
 }

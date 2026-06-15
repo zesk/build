@@ -22,10 +22,3 @@ List functions in a given bash file.
 - `1` - Environment error
 - `2` - Argument error
 
-#### Requires
-
-- {SEE:__bashListFunctions}
-- {SEE:throwArgument}
-- {SEE:decorate}
-- usageArgumentFile
-

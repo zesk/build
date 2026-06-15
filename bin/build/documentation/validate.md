@@ -100,8 +100,8 @@ Internally the function `_validateTypeMapperDefault` is the default type mapper 
 - {SEE:__validateTypeFunction}
 - {SEE:__validateTypeCallable}
 - {SEE:__validateTypeType}
-- {SEE:isFunction}
-- {SEE:throwArgument}
-- {SEE:helpArgument}
-- {SEE:decorate}
+- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
 

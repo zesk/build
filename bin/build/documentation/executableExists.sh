@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'--any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.\nbinary ... - String. Required. One or more Binaries to find in the system `PATH`.\n--help - Flag. Optional. Display this help.\n'
 base="platform.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/platform.sh"
 fn="executableExists"
 fnMarker="executableexists"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="example" [4]="requires")
-line="175"
+line="174"
 rawComment=$'Summary: Does a binary exist in the PATH?\nArgument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.\nArgument: binary ... - String. Required. One or more Binaries to find in the system `PATH`.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag\nReturn Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.\nExample:     executableExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?\nExample:     executableExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?\nExample:     executableExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?\nRequires: throwArgument decorate __decorateExtensionEach command\n\n'
 requires=$'throwArgument decorate __decorateExtensionEach command\n'
 return_code=$'0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag\n1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="a68934b9dea91af485e7b209bfc126a7dc7af004"
-sourceLine="175"
+sourceHash="d7df02b1e70f9738cebc0806fb800f2bd1519995"
+sourceLine="174"
 summary="Does a binary exist in the PATH?"
 summaryComputed=""
 usage="executableExists [ --any ] binary ... [ --help ]"

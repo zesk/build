@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'count - The number of times to run the binary\nbinary - The binary to run\nargs ... - Any arguments to pass to the binary each run\n'
 base="platform.sh"
@@ -15,7 +15,7 @@ line="59"
 rawComment=$'Argument: count - The number of times to run the binary\nArgument: binary - The binary to run\nArgument: args ... - Any arguments to pass to the binary each run\nReturn Code: 0 - success\nReturn Code: 2 - `count` is not an unsigned number\nReturn Code: Any - If `binary` fails, the exit code is returned\nSummary: Run a binary count times\n\n'
 return_code=$'0 - success\n2 - `count` is not an unsigned number\nAny - If `binary` fails, the exit code is returned\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="a68934b9dea91af485e7b209bfc126a7dc7af004"
+sourceHash="d7df02b1e70f9738cebc0806fb800f2bd1519995"
 sourceLine="59"
 summary="Run a binary count times"
 summaryComputed=""

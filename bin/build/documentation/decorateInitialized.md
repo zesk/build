@@ -23,5 +23,5 @@ Useful to set our global color environment at the top level of a script if it ha
 
 #### Requires
 
-- {SEE:helpArgument}
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 

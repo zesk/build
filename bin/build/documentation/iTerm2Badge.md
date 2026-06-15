@@ -1,10 +1,10 @@
 ### `iTerm2Badge`
 
-> Set the badge for the iTerm2 console
+> Set Badge Message
 
 #### Usage
 
-    iTerm2Badge [ --ignore | -i ] message ...
+    iTerm2Badge [ --ignore | -i ] [ message ... ]
 
 Set the badge for the iTerm2 console
 
@@ -13,7 +13,11 @@ Set the badge for the iTerm2 console
 #### Arguments
 
 --ignore |- ` -i` - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
-- `message ...` - String. Required. Any message to display as the badge
+- `message ...` - String. Optional. Any message to display as the badge
+
+#### Reads standard input
+
+message - String. Optional. Message to display if not supplied as an argument.
 
 #### Return codes
 
@@ -23,5 +27,5 @@ Set the badge for the iTerm2 console
 
 #### Environment
 
-- {SEE:LC_TERMINAL}
+- [`LC_TERMINAL` Terminal Application]({rel}env/#bash) – **String**. LC_TERMINAL typically identifies the terminal application
 

@@ -121,7 +121,6 @@ _fileReverseLines() {
 # Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.
 # Environment: Works from the current directory
 # See: bashMakeExecutable
-# See: chmod-sh.sh
 bashMakeExecutable() {
   local handler="_${FUNCNAME[0]}"
 

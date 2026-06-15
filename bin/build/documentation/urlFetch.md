@@ -27,24 +27,62 @@ Fetch URL content
 - `url` - URL. Required. URL to fetch to target file.
 - `file` - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
 
+#### Reads standard input
+
+{stdin}
+
+#### Writes to standard output
+
+{stdout}
+
+#### Writes to standard error
+
+{stderr}
+
+#### Debugging settings
+
+Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+
+{build_debug}
+
+#### Examples
+
+{example}
+
+#### Sample Output
+
+{output}
+
 #### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
+#### Local cache
+
+{local_cache}
+
 #### Environment
 
-- [`BUILD_URL_TIMEOUT` URL Timeout]({rel}/env/#build_configuration) – **PositiveInteger**. Timeout in seconds for fetching URLs in `urlFetch`
+- [`BUILD_URL_TIMEOUT` URL Timeout]({rel}env/#build_configuration) – **PositiveInteger**. Timeout in seconds for fetching URLs in `urlFetch`
 
 #### Requires
 
-- {SEE:returnMessage}
-- {SEE:executableExists}
-- {SEE:decorate}
-- {SEE:validate}
-- {SEE:throwArgument}
-- {SEE:catchArgument}
-- {SEE:throwEnvironment}
-- {SEE:catchEnvironment}
 
+
+#### See Also
+
+{see}
+
+#### Credits
+
+Thanks to [{credits}]({source}).
+
+#### Review Status
+
+File `bin/build/tools/url.sh`, function `urlFetch` was reviewed {reviewed}.
+
+#### Errors
+
+{error}

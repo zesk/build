@@ -1,1 +1,1 @@
-[returnExit]({rel}tools/assert.md#returnexit) - Exit return code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1532))
+[returnExit]({rel}tools/assert.md#returnexit) - Exit return code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/test.sh#L1535))

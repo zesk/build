@@ -1,1 +1,1 @@
-[serviceToStandardPort]({rel}tools/service.md#servicetostandardport) - Handle standard services ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L222))
+[serviceToStandardPort]({rel}tools/service.md#servicetostandardport) - Handle standard services ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L221))

@@ -46,7 +46,3 @@ Any files not found are skipped. Note that environment values are not carried be
 - `1` - Environment error
 - `2` - Argument error
 
-#### See Also
-
-- {SEE:whoami}
-

@@ -436,9 +436,10 @@ _consoleColumns() {
 # Argument: --help - Flag. Optional. Display this help.
 # See: stty
 # Example:     tail -n $(consoleRows) "$file"
-# Environment: - `COLUMNS` - May be defined after calling this
-# Environment: - `LINES` - May be defined after calling this
-# Side Effect: MAY define two environment variables
+#
+# `COLUMNS` and `LINES` environment variables may be modified by calling this function.
+#
+# Environment: COLUMNS LINES
 consoleRows() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
@@ -556,7 +557,7 @@ __colorNormalize() {
 # Redistribute color values to make brightness adjustments more balanced
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
+# Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
 

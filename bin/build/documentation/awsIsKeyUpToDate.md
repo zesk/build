@@ -41,6 +41,6 @@ Otherwise, the tool *may* output a message to the console warning of pending day
 
 #### Environment
 
-- {SEE:AWS_ACCESS_KEY_DATE} - Variable used to test
-- {SEE:AWS_ACCESS_KEY_DATE} - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
+- [`AWS_ACCESS_KEY_DATE` AWS Access Key Issue Date]({rel}env/#amazon_web_services) – **Date**. Date of key expiration which can be checked in pipelines. - Variable used to test
+- [`AWS_ACCESS_KEY_DATE` AWS Access Key Issue Date]({rel}env/#amazon_web_services) – **Date**. Date of key expiration which can be checked in pipelines. - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 

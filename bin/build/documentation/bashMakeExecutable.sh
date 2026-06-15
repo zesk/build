@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'--find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.\npath ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.\n'
 base="platform.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/platform.sh"
 fn="bashMakeExecutable"
 fnMarker="bashmakeexecutable"
 foundNames=([0]="summary" [1]="todo" [2]="argument" [3]="environment" [4]="see")
-line="125"
-rawComment=$'Summary: Make shell files executable\nMakes all `*.sh` files executable.\nTODO: - findArguments is different here than other places\nArgument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.\nArgument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.\nEnvironment: Works from the current directory\nSee: bashMakeExecutable\nSee: chmod-sh.sh\n\n'
+line="124"
+rawComment=$'Summary: Make shell files executable\nMakes all `*.sh` files executable.\nTODO: - findArguments is different here than other places\nArgument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.\nArgument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.\nEnvironment: Works from the current directory\nSee: bashMakeExecutable\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
-see=$'bashMakeExecutable\nchmod-sh.sh\n'
+see=$'bashMakeExecutable\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="a68934b9dea91af485e7b209bfc126a7dc7af004"
-sourceLine="125"
+sourceHash="d7df02b1e70f9738cebc0806fb800f2bd1519995"
+sourceLine="124"
 summary="Make shell files executable"
 summaryComputed=""
 todo=$'- findArguments is different here than other places\n'

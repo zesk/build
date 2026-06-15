@@ -213,7 +213,7 @@ _buildEnvironmentPath() {
 # Output the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Requires: convertValue _buildEnvironmentPath find sort read helpArgument catchEnvironment
+# Requires: convertValue find sort read helpArgument catchReturn
 # Environment: BUILD_ENVIRONMENT_DIRS BUILD_HOME
 buildEnvironmentNames() {
   local handler="_${FUNCNAME[0]}"
@@ -226,7 +226,7 @@ buildEnvironmentNames() {
       pathIsAbsolute "$path" || path="$home/$path"
       find "$path" -type f -name '*.sh' -exec basename {} \; | cut -d . -f 1
     done
-  ) | catchEnvironment "$handler" sort -u || return $?
+  ) | catchReturn "$handler" sort -u || return $?
 }
 _buildEnvironmentNames() {
   true || buildEnvironmentNames --help || return $?

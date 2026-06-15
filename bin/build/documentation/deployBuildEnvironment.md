@@ -31,9 +31,9 @@ Not possible to deploy to different paths on different hosts, currently. Hosts a
 
 #### Environment
 
-- {SEE:DEPLOY_REMOTE_HOME} - path on remote host for deployment data
-- {SEE:APPLICATION_REMOTE_HOME} - path on remote host for application
-- {SEE:DEPLOY_USER_HOSTS} - list of user@host (will be tokenized by spaces regardless of shell quoting)
-- {SEE:APPLICATION_ID} - Version to be deployed
-- {SEE:BUILD_TARGET} - The application package name
+- [`DEPLOY_REMOTE_HOME` Remote directory for deployment]({rel}env/#deployment) – **RemoteDirectory**. Path on the remote server where the application deployment home - path on remote host for deployment data
+- [`APPLICATION_REMOTE_HOME` Application Remote Home Directory]({rel}env/#deployment) – **RemoteDirectory**. Path on the remote server where the application is served - path on remote host for application
+- [`DEPLOY_USER_HOSTS` Host list for deployment]({rel}env/#deployment) – **String**. A list of one ore more user@host for installation of - list of user@host (will be tokenized by spaces regardless of shell quoting)
+- [`APPLICATION_ID` Application ID]({rel}env/#deployment) – **String**. This is the unique hash which represents the source code - Version to be deployed
+- [`BUILD_TARGET` Build Application Target File Name]({rel}env/#deployment) – **String**. The file to generate when generating builds - The application package name
 

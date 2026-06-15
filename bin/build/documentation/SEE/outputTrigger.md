@@ -1,1 +1,1 @@
-[outputTrigger]({rel}tools/debug.md#outputtrigger) - Check output for content and trigger environment error if found ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L527))
+[outputTrigger]({rel}tools/debug.md#outputtrigger) - Check output for content and trigger environment error if found ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L528))

@@ -16,5 +16,5 @@ Return code is `exit`
 
 #### Return codes
 
-- 120
+- `120` - Calling function should exit
 

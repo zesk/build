@@ -4,7 +4,7 @@
 
 #### Usage
 
-    documentationFunctionsCompile [ --clean ] [ --all ] [ --fingerprint ] --source [ --key fingerprintKey ] [ functionName ... ]
+    documentationFunctionsCompile [ --clean ] [ --all | --stdin- Flag. Optional. Read function names from stdin for examination. ] [ --fingerprint ] --source [ --key fingerprintKey ] [ functionName ... ]
 
 Extract and build the documentation settings cache and generate derived files
 
@@ -13,7 +13,7 @@ Extract and build the documentation settings cache and generate derived files
 #### Arguments
 
 - `--clean` - Flag. Optional. Clean everything and then exit.
-- `--all` - Flag. Optional. Do everything regardless of cache state.
+--all | --stdin- Flag. Optional. Read function names from stdin for examination.
 - `--fingerprint` - Flag. Optional. Use fingerprint to ensure results are up to date.
 - `--source` - Directory. Required. Directory where functions are defined.
 - `--key fingerprintKey` - String. Optional. Use this name to cache results in application JSON file if available.

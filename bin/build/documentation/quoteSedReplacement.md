@@ -15,14 +15,34 @@ Quote sed replacement strings for shell use
 - `text` - EmptyString. Required. Text to quote
 - `separatorChar` - The character used to separate the sed pattern and replacement. Defaults to `/`.
 
+#### Reads standard input
+
+{stdin}
+
+#### Writes to standard output
+
+{stdout}
+
+#### Writes to standard error
+
+{stderr}
+
+#### Debugging settings
+
+Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+
+{build_debug}
+
 #### Examples
 
     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
     needSlash=$(quoteSedPattern '$.*/[\]^')
 
+
 #### Sample Output
 
 string quoted and appropriate to insert in a `sed` replacement phrase
+
 
 #### Return codes
 
@@ -30,10 +50,31 @@ string quoted and appropriate to insert in a `sed` replacement phrase
 - `1` - Environment error
 - `2` - Argument error
 
+#### Local cache
+
+{local_cache}
+
+#### Environment
+
+{environment}
+
 #### Requires
 
 - [`printf`]({rel}/guide/builtin.md#printf)
 - sed
-- {SEE:bashDocumentation}
-- {SEE:helpArgument}
 
+#### See Also
+
+{see}
+
+#### Credits
+
+Thanks to [{credits}]({source}).
+
+#### Review Status
+
+File `bin/build/tools/sed.sh`, function `quoteSedReplacement` was reviewed {reviewed}.
+
+#### Errors
+
+{error}

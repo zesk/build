@@ -23,5 +23,5 @@ Remove a path from the MANPATH environment variable
 
 #### Environment
 
-- {SEE:MANPATH}
+- [`MANPATH` Manual Pages Path]({rel}env/#bash) – **DirectoryList**. A colon `:` separated list of paths to search for
 

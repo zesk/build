@@ -34,8 +34,8 @@ You can also simply supply a list of port numbers, and mix and match: `--service
 
 #### Environment
 
-- {SEE:AWS_REGION}
+- [`AWS_REGION` AWS Region]({rel}env/#amazon_web_services) – **String**. Region for Amazon Web Services
 - DEVELOPER_ID
-- {SEE:AWS_ACCESS_KEY_ID}
-- {SEE:AWS_SECRET_ACCESS_KEY}
+- [`AWS_ACCESS_KEY_ID` AWS Access Key]({rel}env/#amazon_web_services) – **String**. Amazon Web Services IAM Identity
+- [`AWS_SECRET_ACCESS_KEY` AWS Secret Access Key]({rel}env/#amazon_web_services) – **Secret**. Private Secret Password for AWS
 

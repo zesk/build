@@ -24,8 +24,3 @@ Without arguments, displays help.
 - `0` - Text is plain
 - `1` - Text contains non-plain characters
 
-#### Requires
-
-- {SEE:stringLowercase}
-- {SEE:helpArgument}
-
