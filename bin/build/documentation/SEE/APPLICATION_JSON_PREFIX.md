@@ -1,1 +1,1 @@
-[`APPLICATION_JSON_PREFIX` Application JSON Prefix]({rel}/env/#application) – **String**. Prefix to place we can store things in the JSON
+[`APPLICATION_JSON_PREFIX` Application JSON Prefix]({rel}env/#application) – **String**. Prefix to place we can store things in the JSON

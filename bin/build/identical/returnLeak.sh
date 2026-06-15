@@ -12,7 +12,8 @@
 
 # Summary: Leak return code
 # Return code is `leak`
-# Return Code: 108
+# DOC TEMPLATE: returnCodeLeak 1
+# Return Code: 108 - A leak was detected in the command
 returnLeak() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnLeakCode 1

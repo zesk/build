@@ -1,1 +1,1 @@
-[`LC_TERMINAL` Terminal Application]({rel}/env/#bash) – **String**. LC_TERMINAL typically identifies the terminal application
+[`LC_TERMINAL` Terminal Application]({rel}env/#bash) – **String**. LC_TERMINAL typically identifies the terminal application

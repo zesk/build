@@ -1,1 +1,1 @@
-[`BUILD_PROJECT_DEACTIVATE` Project Deactivation Function]({rel}/env/#application) – **Function**. Set this to a function which cleans up the project
+[`BUILD_PROJECT_DEACTIVATE` Project Deactivation Function]({rel}env/#application) – **Function**. Set this to a function which cleans up the project

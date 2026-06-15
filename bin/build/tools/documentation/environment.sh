@@ -35,7 +35,7 @@ __documentationEnvironmentMake() {
 
   local cleanFlag=false forceFlag=false
   local verboseFlag=false
-  local templateFiles=() sources=() seeLink="/env/" targetPath=""
+  local templateFiles=() sources=() seeLink="env/" targetPath=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -118,7 +118,7 @@ __documentationEnvironmentMake() {
     local settings="$cacheDirectory/$env.sh"
     local skipGenerate=false
     if $forceFlag || [ ! -f "$settings" ] || ! fileIsNewest "$settings" "$envFile" "$newestTemplate"; then
-      ! $verboseFlag || statusMessage --last printf -- "WHY: forceFlag=%s settings=%s envTarget=%s newestFile=%s\n" "$forceFlag" "$([ -f "$settings" ] && printf exists || printf not-found)" "$([ -f "$envTarget" ] && printf "%s" "$envTarget" || printf not-found)" "$(fileNewest --ignore "$envTarget" "$settings" "$envFile" "$newestTemplate")" 1>&2
+      # ! $verboseFlag || statusMessage --last printf -- "WHY: forceFlag=%s settings=%s envTarget=%s newestFile=%s\n" "$forceFlag" "$([ -f "$settings" ] && printf exists || printf not-found)" "$([ -f "$envTarget" ] && printf "%s" "$envTarget" || printf not-found)" "$(fileNewest --ignore "$envTarget" "$settings" "$envFile" "$newestTemplate")" 1>&2
       local start && start=$(catchReturn "$handler" timingStart) || return $?
       ! $verboseFlag || statusMessage decorate notice "Generating $(decorate file "$settings") ..." 1>&2
       set -a # UNDO ok
@@ -163,7 +163,7 @@ __documentationEnvironmentMake() {
       more="[notes](#$envMarker)"
     fi
 
-    if $skipGenerate; then
+    if [ -f "$envTarget" ] && [ -f "$seeTarget" ] && ! $forceFlag && $skipGenerate; then
       ! $verboseFlag || statusMessage decorate notice "Skipping $env ..." 1>&2
     else
       local categoryMarker && categoryMarker=$(stringLowercase "$categoryFileName")

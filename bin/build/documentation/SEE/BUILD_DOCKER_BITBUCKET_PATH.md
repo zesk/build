@@ -1,1 +1,1 @@
-[`BUILD_DOCKER_BITBUCKET_PATH` Docker Path for Bitbucket Containers]({rel}/env/#continuous_integration:_bitbucket) – **RemoteDirectory**. undocumented
+[`BUILD_DOCKER_BITBUCKET_PATH` Docker Path for Bitbucket Containers]({rel}env/#continuous_integration:_bitbucket) – **RemoteDirectory**. undocumented

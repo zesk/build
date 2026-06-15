@@ -18,7 +18,6 @@ Useful if you need to temporarily enable or disable it.
 
 #### Return codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `0` - bash debugging (`set -x`) is enabled
+- `1` - bash debugging (`set -x`) is not enabled
 

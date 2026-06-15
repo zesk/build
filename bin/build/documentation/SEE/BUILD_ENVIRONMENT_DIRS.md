@@ -1,1 +1,1 @@
-[`BUILD_ENVIRONMENT_DIRS` Build Environment Directory List]({rel}/env/#build_configuration) – **DirectoryList**. Search directory for environment definition files. `:` separated.
+[`BUILD_ENVIRONMENT_DIRS` Build Environment Directory List]({rel}env/#build_configuration) – **DirectoryList**. Search directory for environment definition files. `:` separated.

@@ -1,1 +1,1 @@
-[bashDocumentationDeriveFunction]({rel}tools/internal.md#bashdocumentationderivefunction) - Generate markdown documentation page ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L838))
+[bashDocumentationDeriveFunction]({rel}tools/internal.md#bashdocumentationderivefunction) - Generate markdown documentation page ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L839))

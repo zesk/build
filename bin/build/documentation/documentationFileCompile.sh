@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="--clean - Flag. Optional. Clean everything and then exit."$'\n'"--git - Flag. Optional. Do some handy \`git\` changes. (Adding/removing files)"$'\n'"--all - Flag. Optional. Do everything regardless of cache state."$'\n'"--source sourcePath - Directory. Required. Find function source code definition in this directory."$'\n'"--derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files."$'\n'"functionName ... - String. Optional. Specific functions to compile."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--clean - Flag. Optional. Clean everything and then exit.\n--git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)\n--all - Flag. Optional. Do everything regardless of cache state.\n--source sourcePath - Directory. Required. Find function source code definition in this directory.\n--derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files.\nfunctionName ... - String. Optional. Specific functions to compile.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Extract and build the documentation settings cache"$'\n'""$'\n'""
+description=$'Extract and build the documentation settings cache\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/documentation.sh"
 fn="documentationFileCompile"
 fnMarker="documentationfilecompile"
 foundNames=([0]="argument" [1]="stdin")
-line="650"
-rawComment="Extract and build the documentation settings cache"$'\n'"Argument: --clean - Flag. Optional. Clean everything and then exit."$'\n'"Argument: --git - Flag. Optional. Do some handy \`git\` changes. (Adding/removing files)"$'\n'"Argument: --all - Flag. Optional. Do everything regardless of cache state."$'\n'"Argument: --source sourcePath - Directory. Required. Find function source code definition in this directory."$'\n'"Argument: --derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files."$'\n'"Argument: functionName ... - String. Optional. Specific functions to compile."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: functionName - File with function names one per line."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="651"
+rawComment=$'Extract and build the documentation settings cache\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)\nArgument: --all - Flag. Optional. Do everything regardless of cache state.\nArgument: --source sourcePath - Directory. Required. Find function source code definition in this directory.\nArgument: --derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nArgument: --help - Flag. Optional. Display this help.\nstdin: functionName - File with function names one per line.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="27710a9141283b9bb677e2d559eed326e8761d6f"
-sourceLine="650"
-stdin="functionName - File with function names one per line."$'\n'""
+sourceHash="b31ecab0f7db7528ee0d4002e2ae77d5ce2c71c9"
+sourceLine="651"
+stdin=$'functionName - File with function names one per line.\n'
 summary="Extract and build the documentation settings cache"
 summaryComputed="true"
 usage="documentationFileCompile [ --clean ] [ --git ] [ --all ] --source sourcePath [ --derive command ... -- ] [ functionName ... ] [ --help ]"

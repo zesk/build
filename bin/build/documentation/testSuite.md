@@ -77,7 +77,7 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### Environment
 
-- {SEE:BUILD_TEST_FLAGS} {SEE:BUILD_DEBUG}
+- [`BUILD_TEST_FLAGS` Test Flags]({rel}env/#testing) – **String**. Test flags affect controls and how tests are run. [`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
 
 #### Requires
 

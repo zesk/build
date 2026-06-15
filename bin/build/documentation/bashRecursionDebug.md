@@ -18,9 +18,7 @@ When called twice, fails on the second invocation and dumps a call stack to stde
 
 #### Return codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `91` - Recursion failure. Exits, actually after sleeping for 99 seconds.
 
 #### Environment
 

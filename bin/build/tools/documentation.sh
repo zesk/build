@@ -507,19 +507,18 @@ documentationFunctionsCompile() {
       local changedFile && for changedFile in "${changed[@]}"; do
         bashListFunctions <"$changedFile" | grepSafe -v '^_' >>"$funFile"
       done
-    else
-      local missingFunction && while read -r missingFunction; do
-        ! muzzle __documentationFile "$home" "$missingFunction" || continue
-        printf "%s\n" "$missingFunction" >>"$funFile"
-      done < <(buildFunctions)
-      if fileIsEmpty "$funFile"; then
-        statusMessage --last decorate success "Up to date."
-        catchReturn "$handler" rm -f "${clean[@]}" || return $?
-        return 0
-      fi
-      statusMessage decorate success "Filling in missing functions"
-      # fileModificationTimesBefore "$target" "$sourceTimestamp" -maxdepth 1 -mindepth 1 -name '*.sh' | textRemoveFields 1 | cut -c "$((${#target} + 2))-" | cut -f 1 -d . >"$funFile"
     fi
+    local missingFunction && while read -r missingFunction; do
+      ! muzzle __documentationFile "$home" "$missingFunction" || continue
+      ! muzzle __documentationFile "SEE/$home" "$missingFunction" || continue
+      printf "%s\n" "$missingFunction" >>"$funFile"
+    done < <(buildFunctions)
+    if fileIsEmpty "$funFile"; then
+      statusMessage --last decorate success "Up to date."
+      catchReturn "$handler" rm -f "${clean[@]}" || return $?
+      return 0
+    fi
+    statusMessage decorate success "Filling in missing functions"
     documentationFunctionCompile "${aa[@]}" "$@" <"$funFile" || returnClean $? "${clean[@]}" || return $?
     catchReturn "$handler" rm -f "${clean[@]}" || return $?
   fi

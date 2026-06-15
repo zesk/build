@@ -1,1 +1,1 @@
-[`EDITOR` Editor Command]({rel}/env/#bash) – **Callable**. Binary for editing files
+[`EDITOR` Editor Command]({rel}env/#bash) – **Callable**. Binary for editing files

@@ -38,9 +38,7 @@ __documentationMake() {
   [ -n "$source" ] || throwArgument "$handler" "--source is required" || return $?
   [ -n "$target" ] || throwArgument "$handler" "--target is required" || return $?
 
-  export __DOCUMENTATION_LOG_PREFIX
-  local missingLog="$target/tokens.txt" || return $?
-  local foundLog="$target/replaced.txt" || return $?
+  local logs=("$target/make-not-found.txt" "$target/make-found.txt" "$target/make-all.txt")
 
   local path && path="$(catchReturn "$handler" buildEnvironmentGet BUILD_DOCUMENTATION_PATH)" || return $?
   [ -z "$path" ] || path="${path%:}:"
@@ -48,55 +46,33 @@ __documentationMake() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  printf -- "" | muzzle tee "$foundLog" "$missingLog"
+  catchReturn "$handler" muzzle directoryRequire "$target" || return $?
+  catchReturn "$handler" find "$target" -name 'make-*.txt' -type f -delete || return $?
+  catchReturn "$handler" printf "%s\n" "pwd=$(pwd)" "BUILD_DOCUMENTATION_PATH=$path" "__DOCUMENTATION_MAKE_PATH=$target" | catchReturn "$handler" muzzle tee "${logs[@]}" || return $?
   __DOCUMENTATION_MAKE_PATH="$target" BUILD_HOME="$home" BUILD_DOCUMENTATION_PATH="$path" __documentationMaker "$handler" "${aa[@]+"${aa[@]}"}" "$source" "$target" __documentationMakeHandler || return $?
 
-  catchReturn "$handler" fileUniqueLines "$missingLog" "$foundLog" || return $?
+  # catchReturn "$handler" fileUniqueLines "${logs[@]}" || return $?
 }
 
 __documentationMakeHandler() {
   local handler="returnMessage"
+  local file="$1" && shift
+  local token="$1" && shift
+  local offset="$1" && shift
+  local total="$1" && shift
+
   export BUILD_HOME __DOCUMENTATION_MAKE_PATH
   [ -n "${BUILD_HOME-}" ] || throwEnvironment "$handler" "BUILD_HOME is blank?" || return $?
   [ -n "${__DOCUMENTATION_MAKE_PATH-}" ] || throwEnvironment "$handler" "__DOCUMENTATION_MAKE_PATH is blank?" || return $?
-  if muzzle __documentationFile "${BUILD_HOME-}" "$1"; then
-    printf "%s\n" "$1" >>"$__DOCUMENTATION_MAKE_PATH/replaced.txt"
-    return 1
+  local allFile="$__DOCUMENTATION_MAKE_PATH/make-all.txt"
+  local logFile="$__DOCUMENTATION_MAKE_PATH/make-not-found.txt" suffix=""
+  local targetFile && if targetFile=$(__documentationFile "${BUILD_HOME-}" "$token"); then
+    # catchReturn "$handler" cat "$targetFile" || return $?
+    logFile="$__DOCUMENTATION_MAKE_PATH/make-found.txt"
+    suffix=" -> $targetFile"
   fi
-  printf "%s\n" "$1" >>"$__DOCUMENTATION_MAKE_PATH/tokens.txt"
+  catchReturn "$handler" printf "%s %s %s %s%s\n" "$file" "$token" "$offset" "$total" "$suffix" | catchReturn "$handler" tee -a "$allFile" >>"$logFile" || return $?
   return 1
-}
-
-# Argument: token offset total
-__documentationMakerMapper() {
-  local nextMapper=()
-  while [ $# -gt 0 ]; do if [ "$1" = "--" ]; then shift && break; fi && nextMapper+=("$1") && shift; done
-  [ $# -ge 3 ] || throwArgument "$handler" "Missing arguments? $# $*" || return $?
-  local fileName="$1" && shift
-  local original="$1" tokenName="${1//://}" && shift
-  local offset="$1" && shift
-  local total="$1" && shift
-  local returnCode=0
-  case "$tokenName" in
-  "!skip") return 141 ;;
-  esac
-  case "$tokenName" in *[^_[:alnum:]/-]*) printf -- "{%s}" "$original" && return 0 ;; esac
-  # printf "%s\n" "TOKEN: $tokenName" 1>&2
-  if [ "${#nextMapper[@]}" -gt 0 ]; then
-    "${nextMapper[@]}" "$fileName" "$tokenName" "$offset" "$total" || returnCode=$?
-    [ "$returnCode" -eq 1 ] || return $returnCode
-  fi
-  export BUILD_HOME && local template && if template=$(__documentationFile "${BUILD_HOME-}" "$tokenName"); then
-    # Remove everything but slashes
-    local rel="${fileName//[^\/]/}"
-    # Length is number of dot-dots to the root
-    rel=$(textRepeat "${#rel}" "../")
-    # printf "DUMPING %s\n" "$template" 1>&2
-    # Trims trailing newline automatically
-    rel="$rel" mapEnvironment <"$template"
-  else
-    return 1
-  fi
 }
 
 __documentationMaker() {
@@ -130,48 +106,83 @@ __documentationMaker() {
 
   mapper=("${aa[@]+"${aa[@]}"}" __documentationMakerMapper "${mapper[@]+"${mapper[@]}"}" --)
 
+  local fileGenerator=() mapStart && mapStart=$(timingStart)
   if [ -f "$sourcePath" ]; then
-    local mapStart && mapStart=$(timingStart)
-    ! $verboseFlag || statusMessage decorate info "Generating $(decorate file "$targetFile")" 1>&2
-    local returnCode=0
-    if [ "$targetPath" = "-" ]; then
-      mapFunction --handler "$handler" "${mapper[@]}" "-" <"$sourcePath" || returnCode=$?
-    else
-      local targetName
-      if [ -d "$targetPath" ]; then
-        targetName=$(basename "$sourcePath")
-        targetPath="${targetPath%/}/$targetName"
-      else
-        targetName=$(basename "$targetPath")
-      fi
-      targetPath=$(catchReturn "$handler" fileDirectoryRequire "$targetPath") || return $?
-      mapFunction --handler "$handler" "${mapper[@]}" "$targetName" <"$sourcePath" >"$targetPath" || returnCode=$?
-    fi
-    case "$returnCode" in 120 | 130) return "$returnCode" ;; 141) catchReturn "$handler" cp "$sourceFile" "$targetFile" ;; esac
-    ! $verboseFlag || statusMessage reportTiming "$mapStart" "Generated $(decorate file "$targetFile")" 1>&2
-    return $returnCode
-  elif [ "$targetPath" = "-" ]; then
-    throwArgument "$handler" "Can not output directory to stdout (-)" || return $?
+    fileGenerator=(printf "%s\n" "$sourcePath")
+    sourcePath="${sourcePath%/*}"
+  else
+    targetPath=$(catchReturn "$handler" directoryRequire "$targetPath") || return $?
+    fileGenerator=(find "$sourcePath" -type f -name "*.md" ! -path '*/\.*/*')
   fi
-  # Directory of files to another directory of files
-  targetPath=$(catchReturn "$handler" directoryRequire "$targetPath") || return $?
-  local sourceFile && while read -r sourceFile; do
+  local targetFile sourceFile && while read -r sourceFile; do
     local targetName="${sourceFile#"$sourcePath/"}"
-    local targetFile="${targetPath%/}/${sourceFile#"$sourcePath/"}"
-    targetFile=$(catchReturn "$handler" fileDirectoryRequire "$targetFile") || return $?
-    local returnCode=0 && mapFunction --handler "$handler" "${mapper[@]}" "$targetName" <"$sourceFile" >"$targetFile" || returnCode=$?
-    local errorString=""
+    if [ "$targetPath" = "-" ]; then
+      targetFile="$targetPath"
+      ! $verboseFlag || statusMessage decorate info "Generating $(decorate file "$sourceFile") to stdout" 1>&2
+      mapFunction --handler "$handler" "${mapper[@]}" "-" <"$sourceFile" || returnCode=$?
+    else
+      targetFile="${targetPath%/}/$targetName"
+      targetFile=$(catchReturn "$handler" fileDirectoryRequire "$targetFile") || return $?
+      local returnCode=0 && mapFunction --handler "$handler" "${mapper[@]}" "$targetName" <"$sourceFile" >"$targetFile" || returnCode=$?
+    fi
+    # ! $verboseFlag || echo "mapFunction --handler" "$handler" "${mapper[@]}" "$targetName" "<$sourceFile" ">${targetFile} (${#targetFile}), \"$targetName\" ${#targetName} targetPath=$targetPath ${#targetPath}" 1>&2
+    local errorString="" verbString="Generated"
     case "$returnCode" in
     0) ;;
     120 | 130) return "$returnCode" ;;
-    141) catchReturn "$handler" cp "$sourceFile" "$targetFile" || return $? ;;
+    141) catchReturn "$handler" cp "$sourceFile" "$targetFile" && verbString="Copied" || return $? ;;
     *)
       errorString="$(decorate error "[ERROR $returnCode] <- ")"
       $verboseFlag || printf "%s%s\n" "$errorString" "$(decorate file "$sourceFile")" 1>&2
       ;;
     esac
-    ! $verboseFlag || statusMessage decorate info "${errorString}Generated $(decorate file "$targetFile")"
-  done < <(find "$sourcePath" -type f -name "*.md" ! -path '*/\.*/*' | sort)
+    ! $verboseFlag || statusMessage timingReport "$mapStart" "${errorString}(.) $verbString $(decorate file "$targetFile")"
+  done < <("${fileGenerator[@]}" | sort)
+}
+
+# Argument: token offset total
+__documentationMakerMapper() {
+  local nextMapper=()
+  while [ $# -gt 0 ]; do if [ "$1" = "--" ]; then shift && break; fi && nextMapper+=("$1") && shift; done
+  [ $# -ge 3 ] || throwArgument "$handler" "Missing arguments? $# $*" || return $?
+  local fileName="$1" && shift
+  local original="$1" tokenName="${1//://}" && shift
+  local offset="$1" && shift
+  local total="$1" && shift
+  local returnCode=0
+  export __DOCUMENTATION_MAKE_PATH
+  [ ! -d "$__DOCUMENTATION_MAKE_PATH" ] || printf "%s %s %s %s\n" "$fileName" "$original" "$offset" "$total" >>"$__DOCUMENTATION_MAKE_PATH/make-maker.txt" || return $?
+  case "$tokenName" in
+  '"'*'"')
+    [ ! -d "$__DOCUMENTATION_MAKE_PATH" ] || printf "%s %s %s %s\n" "$fileName" "$original" "$offset" "$total" >>"$__DOCUMENTATION_MAKE_PATH/make-maker-quoted.txt" || return $?
+    catchReturn "$handler" printf -- "{%s}" "$original" || return $?
+    return 0
+    ;;
+  "!skip")
+    [ ! -d "$__DOCUMENTATION_MAKE_PATH" ] || printf "%s %s %s %s\n" "$fileName" "$original" "$offset" "$total" >>"$__DOCUMENTATION_MAKE_PATH/make-maker-skip.txt" || return $?
+    return 141
+    ;;
+  *[!:_[:alnum:]/-]*)
+    [ ! -d "$__DOCUMENTATION_MAKE_PATH" ] || printf "%s %s %s %s\n" "$fileName" "$original" "$offset" "$total" >>"$__DOCUMENTATION_MAKE_PATH/make-maker-mismatch.txt" || return $?
+    catchReturn "$handler" printf -- "{NOT-%s}" "$original" || return $?
+    return 0
+    ;;
+  esac
+  if [ "${#nextMapper[@]}" -gt 0 ]; then
+    "${nextMapper[@]}" "$fileName" "$tokenName" "$offset" "$total" || returnCode=$?
+    [ "$returnCode" -eq 1 ] || return $returnCode
+  fi
+  export BUILD_HOME && local template && if template=$(__documentationFile "${BUILD_HOME-}" "$tokenName"); then
+    # Remove everything but slashes
+    local rel="${fileName//[^\/]/}"
+    # Length is number of dot-dots to the root
+    rel=$(textRepeat "${#rel}" "../")
+    # printf "DUMPING %s\n" "$template" 1>&2
+    # Trims trailing newline automatically
+    rel="$rel" mapEnvironment <"$template"
+  else
+    return 1
+  fi
 }
 
 __documentationFunctionCompile() {

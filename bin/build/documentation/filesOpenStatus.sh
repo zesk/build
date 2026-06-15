@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Output current open files\nstdout\n\n'
+description="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
 descriptionLineCount="3"
 file="bin/build/tools/debug.sh"
 fn="filesOpenStatus"
 fnMarker="filesopenstatus"
 foundNames=()
-line="563"
-rawComment=$'Output current open files\nstdout\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+line="583"
+rawComment="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="f8901f960335e712ac2680d77a17c49c8edcae50"
-sourceLine="563"
+sourceHash="a63c90aa53321caabf6938f3b520f7e90fa9bc48"
+sourceLine="583"
 summary="Output current open files"
 summaryComputed="true"
 usage="filesOpenStatus"

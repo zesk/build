@@ -1,1 +1,1 @@
-[`GIT_REMOTE` GitHub Remote Name]({rel}/env/#development) – **String**. undocumented
+[`GIT_REMOTE` GitHub Remote Name]({rel}env/#development) – **String**. undocumented

@@ -1494,11 +1494,12 @@ _returnAssert() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL returnIdentical 13
+# IDENTICAL returnIdentical 14
 
 # Summary: Identical return code
 # Return code is `identical`
-# Return Code: 105
+# DOC TEMPLATE: returnCodeIdentical 1
+# Return Code: 105 - The identical check found discrepancies.
 returnIdentical() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnIdenticalCode 1
@@ -1509,11 +1510,12 @@ _returnIdentical() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL returnLeak 13
+# IDENTICAL returnLeak 14
 
 # Summary: Leak return code
 # Return code is `leak`
-# Return Code: 108
+# DOC TEMPLATE: returnCodeLeak 1
+# Return Code: 108 - A leak was detected in the command
 returnLeak() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnLeakCode 1
@@ -1524,11 +1526,12 @@ _returnLeak() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL returnExit 13
+# IDENTICAL returnExit 14
 
 # Summary: Exit return code
 # Return code is `exit`
-# Return Code: 120
+# DOC TEMPLATE: returnCodeExit 1
+# Return Code: 120 - Calling function should exit
 returnExit() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnExitCode 1

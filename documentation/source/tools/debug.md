@@ -5,11 +5,11 @@
 
 ## Debugging
 
-The global `BUILD_DEBUG` can be set to a comma-delimited list of values to enable debugging for areas of {applicationName}.
+The global `BUILD_DEBUG` can be set to a comma-delimited list of values to enable debugging for areas of
+{applicationName}.
 
-Known tags are:
-
-FunctionAttributeList: BUILD_DEBUG
+You can use `# BUILD_DEBUG: tokenName - descriptions` as an function comment to document meanings of debug tokens
+honored by your function.
 
 {buildDebugEnabled}
 
@@ -39,7 +39,7 @@ FunctionAttributeList: BUILD_DEBUG
 
 {bashDebuggerEnable}
 
-## Debug
+## Debugging Internal Tools
 
 {bashDebugInterruptFile}
 

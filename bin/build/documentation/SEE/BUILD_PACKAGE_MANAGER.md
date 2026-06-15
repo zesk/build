@@ -1,1 +1,1 @@
-[`BUILD_PACKAGE_MANAGER` Package Manager Binary]({rel}/env/#installation) – **Executable**. The default package manager on systems which have more than
+[`BUILD_PACKAGE_MANAGER` Package Manager Binary]({rel}env/#installation) – **Executable**. The default package manager on systems which have more than

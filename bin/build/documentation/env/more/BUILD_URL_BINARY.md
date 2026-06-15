@@ -7,5 +7,5 @@ Binary used in __urlOpen
 
 ### See Also
 
-- [urlOpen]({rel}tools/url.md#urlopen) - Open a URL using the operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L419))
+- [urlOpen]({rel}tools/url.md#urlopen) - Opens the default browser for a URL on the host operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L438))
 

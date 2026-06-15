@@ -1,1 +1,1 @@
-[`BUILD_COMPANY` Company Name]({rel}/env/#application) – **String**. Legal copyright holder for this codebase
+[`BUILD_COMPANY` Company Name]({rel}env/#application) – **String**. Legal copyright holder for this codebase

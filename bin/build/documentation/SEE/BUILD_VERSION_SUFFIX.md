@@ -1,1 +1,1 @@
-[`BUILD_VERSION_SUFFIX` Build Version Suffix]({rel}/env/#build_configuration) – **String**. Default suffix used in `gitTagVersion`
+[`BUILD_VERSION_SUFFIX` Build Version Suffix]({rel}env/#build_configuration) – **String**. Default suffix used in `gitTagVersion`

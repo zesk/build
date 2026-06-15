@@ -1,1 +1,1 @@
-[`XDG_STATE_HOME` State Home Directory]({rel}/env/#build_configuration) – **Directory**. State Home Directory
+[`XDG_STATE_HOME` State Home Directory]({rel}env/#build_configuration) – **Directory**. State Home Directory

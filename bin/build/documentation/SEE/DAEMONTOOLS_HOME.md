@@ -1,1 +1,1 @@
-[`DAEMONTOOLS_HOME` Daemontools Home]({rel}/env/#vendor) – **Directory**. Constant for the directory where services are monitored by daemontools
+[`DAEMONTOOLS_HOME` Daemontools Home]({rel}env/#vendor) – **Directory**. Constant for the directory where services are monitored by daemontools

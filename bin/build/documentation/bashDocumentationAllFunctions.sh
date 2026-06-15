@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Uses list of functions passed in \`stdin\`; using the \`SEE\` template."$'\n'"Output to \`allFunctionList.md\` typically."$'\n'""$'\n'""
+description=$'Uses list of functions passed in `stdin`; using the `SEE` template.\nOutput to `allFunctionList.md` typically.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/documentation.sh"
 fn="bashDocumentationAllFunctions"
 fnMarker="bashdocumentationallfunctions"
 foundNames=([0]="summary" [1]="argument" [2]="stdin")
-line="664"
-rawComment="Summary: Generate markdown for a list of all functions"$'\n'"Uses list of functions passed in \`stdin\`; using the \`SEE\` template."$'\n'"Output to \`allFunctionList.md\` typically."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Function. Function names one per line."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="665"
+rawComment=$'Summary: Generate markdown for a list of all functions\nUses list of functions passed in `stdin`; using the `SEE` template.\nOutput to `allFunctionList.md` typically.\nArgument: --help - Flag. Optional. Display this help.\nstdin: Function. Function names one per line.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="27710a9141283b9bb677e2d559eed326e8761d6f"
-sourceLine="664"
-stdin="Function. Function names one per line."$'\n'""
+sourceHash="b31ecab0f7db7528ee0d4002e2ae77d5ce2c71c9"
+sourceLine="665"
+stdin=$'Function. Function names one per line.\n'
 summary="Generate markdown for a list of all functions"
 summaryComputed=""
 usage="bashDocumentationAllFunctions [ --help ]"

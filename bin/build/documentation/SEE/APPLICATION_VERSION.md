@@ -1,1 +1,1 @@
-[`APPLICATION_VERSION` Application Version]({rel}/env/#deployment) – **String**. This is the version number which can be displayed
+[`APPLICATION_VERSION` Application Version]({rel}env/#deployment) – **String**. This is the version number which can be displayed

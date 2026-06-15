@@ -1,1 +1,1 @@
-[`AWS_PROFILE` AWS Profile]({rel}/env/#amazon_web_services) – **String**. Default profile for Amazon Web Services
+[`AWS_PROFILE` AWS Profile]({rel}env/#amazon_web_services) – **String**. Default profile for Amazon Web Services

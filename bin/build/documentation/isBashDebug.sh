@@ -1,28 +1,27 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
-depends=$'-\n'
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Returns whether the shell has the debugging flag set\n\nUseful if you need to temporarily enable or disable it.\n\n'
+description="Returns whether the shell has the debugging flag set"$'\n'""$'\n'"Useful if you need to temporarily enable or disable it."$'\n'""$'\n'""
 descriptionLineCount="4"
 file="bin/build/tools/debug.sh"
 fn="isBashDebug"
 fnMarker="isbashdebug"
-foundNames=([0]="depends")
-line="123"
-rawComment=$'Returns whether the shell has the debugging flag set\nUseful if you need to temporarily enable or disable it.\nDepends: -\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+foundNames=([0]="return_code")
+line="133"
+rawComment="Returns whether the shell has the debugging flag set"$'\n'"Useful if you need to temporarily enable or disable it."$'\n'"Return Code: 0 - bash debugging (\`set -x\`) is enabled"$'\n'"Return Code: 1 - bash debugging (\`set -x\`) is not enabled"$'\n'""$'\n'""
+return_code="0 - bash debugging (\`set -x\`) is enabled"$'\n'"1 - bash debugging (\`set -x\`) is not enabled"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="f8901f960335e712ac2680d77a17c49c8edcae50"
-sourceLine="123"
+sourceHash="a63c90aa53321caabf6938f3b520f7e90fa9bc48"
+sourceLine="133"
 summary="Returns whether the shell has the debugging flag set"
 summaryComputed="true"
 usage="isBashDebug"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misBashDebug'$'\e''[0m'$'\n'''$'\n''Returns whether the shell has the debugging flag set'$'\n'''$'\n''Useful if you need to temporarily enable or disable it.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misBashDebug'$'\e''[0m'$'\n'''$'\n''Returns whether the shell has the debugging flag set'$'\n'''$'\n''Useful if you need to temporarily enable or disable it.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - bash debugging ('$'\e''[[(code)]mset -x'$'\e''[[(reset)]m) is enabled'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - bash debugging ('$'\e''[[(code)]mset -x'$'\e''[[(reset)]m) is not enabled'
 # shellcheck disable=SC2016
-helpPlain='Usage: isBashDebug'$'\n'''$'\n''Returns whether the shell has the debugging flag set'$'\n'''$'\n''Useful if you need to temporarily enable or disable it.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+helpPlain='Usage: isBashDebug'$'\n'''$'\n''Returns whether the shell has the debugging flag set'$'\n'''$'\n''Useful if you need to temporarily enable or disable it.'$'\n'''$'\n''Return codes:'$'\n''- 0 - bash debugging (set -x) is enabled'$'\n''- 1 - bash debugging (set -x) is not enabled'
 documentationPath="documentation/source/tools/debug.md"

@@ -1,1 +1,1 @@
-[`BITBUCKET_WORKSPACE` Bitbucket Workspace]({rel}/env/#continuous_integration) – **String**. Defined in BITBUCKET Pipelines. represents the project workspace.
+[`BITBUCKET_WORKSPACE` Bitbucket Workspace]({rel}env/#continuous_integration) – **String**. Defined in BITBUCKET Pipelines. represents the project workspace.

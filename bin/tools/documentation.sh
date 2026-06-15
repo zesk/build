@@ -15,7 +15,7 @@ _documentationTemplateFormatter_builtin() {
 __buildDocumentationCleanDirectory() {
   local handler="$1" && shift
   local home="$1" && shift
-  catchEnvironment "$handler" rm -rf "$home/documentation/.docs" "$home/documentation/.site" "$home/documentation/.template" || return $?
+  catchEnvironment "$handler" rm -rf "$home/documentation/.docs" "$home/documentation/.site" "$home/documentation/.template" "$home/documentation/mkdocs.yml" || return $?
 }
 
 # Build the build documentation
@@ -66,7 +66,7 @@ buildDocumentationBuild() {
 
   catchReturn "$handler" pcregrepInstall || return $?
 
-  local templateSource="$home/documentation/template/docs"
+  local templateSource && __buildDocumentationPath_templateSource "$home"
 
   bashDocumentationDefaults --handler "$handler" --target "$templateSource" || return $?
 
@@ -76,7 +76,7 @@ buildDocumentationBuild() {
   local indexHome="$home/documentation/template/index"
   local documentationSource="$home/documentation/source"
   local documentationTarget="$home/documentation/.docs"
-  local templateCompiled="$home/documentation/.template"
+  local templateCompiled && __buildDocumentationPath_templateCompiled "$home"
 
   # Ensure we have our target
   catchEnvironment "$handler" muzzle directoryRequire "$documentationTarget" "$templateCompiled" "$indexHome" || return $?
@@ -97,15 +97,16 @@ buildDocumentationBuild() {
   catchReturn "$handler" buildDocumentationEnvironment "${vv[@]+"${vv[@]}"}" || return $?
 
   statusMessage decorate info "Updating example ..."
-  statusMessage --last timing --name "Updated example" catchReturn "$handler" sed 's/^/    /g' <"$home/bin/build/tools/example.sh" >"$templateSource/example.md" || return $?
+  {
+    catchReturn "$handler" printf "%s\n" "<!-- {!skip} -->" "" || return $?
+    statusMessage --last timing --name "Updated example" catchReturn "$handler" sed 's/^/    /g' <"$home/bin/build/tools/example.sh" || return $?
+  } >"$templateSource/example.md" || return $?
 
   statusMessage decorate info "Building missing ..."
   statusMessage --last timing --name "Built missing in" bashDocumentationMissing --handler "$handler" --index "$home/documentation/template/index" --source "$home/bin" --documentation "$home/documentation/source" --target "$templateSource"
   # __buildDocumentationBuildMissing "$handler" "$home" "$templateSource" || return $?
 
-  # Make templates
-  statusMessage decorate notice "Making templates ..."
-  statusMessage --last timing --name "Made templates in" documentationMake "${vv[@]+"${vv[@]}"}" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
+  catchReturn "$handler" buildDocumentationTemplates || return $?
 
   statusMessage decorate info "Copying common files around ..."
   statusMessage --last timing --name "Copied common files around in" __buildBuildUpdateMarkdown "$handler" "$home" || return $?
@@ -124,6 +125,31 @@ _buildDocumentationBuild() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__buildDocumentationPath_templateSource() {
+  templateSource="$1/documentation/template/docs"
+}
+
+__buildDocumentationPath_templateCompiled() {
+  templateCompiled="$1/documentation/.template"
+}
+
+buildDocumentationTemplates() {
+  local handler="_${FUNCNAME[0]}"
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local templateSource && __buildDocumentationPath_templateSource "$home"
+  local templateCompiled && __buildDocumentationPath_templateCompiled "$home"
+
+  # Make templates
+  statusMessage decorate notice "Making templates ..."
+  statusMessage --last timing --name "Made templates in" executeEcho documentationMake "$@" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
+}
+_buildDocumentationTemplates() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 buildDocumentationEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -131,8 +157,8 @@ buildDocumentationEnvironment() {
 
   local templateSource="$home/documentation/template/docs"
 
-  statusMessage decorate info "Updating environmentPage ..."
-  statusMessage --last timing --name "Updated environmentPage in" documentationEnvironmentMake "$@" --template "$home/documentation/template/env" --source "$home/bin/build/env" --target "$templateSource" || return $?
+  statusMessage decorate info "Updating environment page ..."
+  statusMessage --last timing --name "Updated environment page in" documentationEnvironmentMake "$@" --template "$home/documentation/template/env" --source "$home/bin/build/env" --target "$templateSource" || return $?
 }
 _buildDocumentationEnvironment() {
   # __IDENTICAL__ bashDocumentation 1

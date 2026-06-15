@@ -1,1 +1,1 @@
-[`BUILD_MAINTENANCE_MESSAGE_VARIABLE` Maintenance Variable Message Name]({rel}/env/#application) – **EnvironmentVariable**. Name of the environment variable (if any) which reflects the
+[`BUILD_MAINTENANCE_MESSAGE_VARIABLE` Maintenance Variable Message Name]({rel}env/#application) – **EnvironmentVariable**. Name of the environment variable (if any) which reflects the

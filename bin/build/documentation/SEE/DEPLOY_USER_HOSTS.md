@@ -1,1 +1,1 @@
-[`DEPLOY_USER_HOSTS` Host list for deployment]({rel}/env/#deployment) – **String**. A list of one ore more user@host for installation of
+[`DEPLOY_USER_HOSTS` Host list for deployment]({rel}env/#deployment) – **String**. A list of one ore more user@host for installation of

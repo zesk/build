@@ -89,9 +89,9 @@ _fingerprint() {
 
 # Validates an application fingerprint
 # Argument: name - Use `-` for the default hook, or pass in a hook name to use to calculate the fingerprint.
-# Argument: value - String. Path. The value used is the stored fingerprint path in the application JSON file. Specify `hookName:jsonPath` to specify a custom hook name for the value.
+# Argument: fingerprintSpec - String. Required. The value used is the stored fingerprint path in the application JSON file. Specify `hookName:jsonPath` to specify a custom hook name for the value.
 # Default hook is `application-fingerprint`.
-# fn: validate "$handler" Fingerprint name "value"
+# fn: validate "$handler" Fingerprint name "fingerprintSpec"
 # Example usage:
 #
 #     case "$argument" in
@@ -102,8 +102,9 @@ _fingerprint() {
 #
 #     [ -z "$fingerprint" ] || fingerprint --cached "$fingerprint" --verbose
 #
-# Return code: 120 - Exit when fingerprint matches.
-# Argument: value - Key value to use. Required.
+# DOC TEMPLATE: returnCodeExit 1
+# Return Code: 120 - Calling function should exit
+# This function returns the exit return code when fingerprint matches; the calling function should return immediately with a successful exit code.
 __validateTypeFingerprint() {
   local fingerprint=""
 

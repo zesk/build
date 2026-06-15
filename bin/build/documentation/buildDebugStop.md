@@ -1,12 +1,12 @@
 ### `buildDebugStop`
 
-> Stop build debugging if it is enabled
+> Stop bash debugging
 
 #### Usage
 
     buildDebugStop [ --help ]
 
-Stop build debugging if it is enabled
+Stop bash debugging if it is enabled.
 
 > Location: `bin/build/tools/debug.sh`
 
@@ -16,9 +16,8 @@ Stop build debugging if it is enabled
 
 #### Return codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `0` - bash debugging was stopped
+- `1` - bash debugging was not stopped because token did not match.
 
 #### Requires
 
@@ -26,5 +25,5 @@ Stop build debugging if it is enabled
 
 #### See Also
 
-- [buildDebugStart]({rel}tools/debug.md#builddebugstart) - Start build debugging if it is enabled. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L88))
+- [buildDebugStart]({rel}tools/debug.md#builddebugstart) - Start bash debugging ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L95))
 

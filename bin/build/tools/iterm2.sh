@@ -655,10 +655,12 @@ _iTerm2Attention() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Set Badge Message
 # Set the badge for the iTerm2 console
 # DOC TEMPLATE: iTerm2IgnoreArgument 1
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
-# Argument: message ... - String. Required. Any message to display as the badge
+# Argument: message ... - String. Optional. Any message to display as the badge
+# stdin: message - String. Optional. Message to display if not supplied as an argument.
 # Environment: LC_TERMINAL
 iTerm2Badge() {
   local handler="_${FUNCNAME[0]}"
@@ -682,7 +684,11 @@ iTerm2Badge() {
     esac
     shift
   done
-
+  [ "${#message[@]}" -gt 0 ] || local done=false && while ! $done; do
+    IFS="" read -d $'\n' -r line || done=true
+    message+=("$line")
+  done
+  [ "${#message[@]}" -gt 0 ] || throwArgument "$handler" "Message required (blank ok)" || return $?
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then
     ! $ignoreErrors || return 0

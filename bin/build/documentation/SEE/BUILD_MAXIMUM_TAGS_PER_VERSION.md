@@ -1,1 +1,1 @@
-[`BUILD_MAXIMUM_TAGS_PER_VERSION` Maximum Git Tags per Version]({rel}/env/#build_configuration) – **PositiveInteger**. Number of versions tags (d0, d1, d2, etc.) to look
+[`BUILD_MAXIMUM_TAGS_PER_VERSION` Maximum Git Tags per Version]({rel}env/#build_configuration) – **PositiveInteger**. Number of versions tags (d0, d1, d2, etc.) to look

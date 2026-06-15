@@ -1,1 +1,1 @@
-[`APPLICATION_REMOTE_HOME` Application Remote Home Directory]({rel}/env/#deployment) – **RemoteDirectory**. Path on the remote server where the application is served
+[`APPLICATION_REMOTE_HOME` Application Remote Home Directory]({rel}env/#deployment) – **RemoteDirectory**. Path on the remote server where the application is served

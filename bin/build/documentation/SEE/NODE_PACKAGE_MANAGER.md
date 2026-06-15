@@ -1,1 +1,1 @@
-[`NODE_PACKAGE_MANAGER` node Package Manager]({rel}/env/#vendor) – **Executable**. The package manager used for node operations. Usually `yarn` or
+[`NODE_PACKAGE_MANAGER` node Package Manager]({rel}env/#vendor) – **Executable**. The package manager used for node operations. Usually `yarn` or

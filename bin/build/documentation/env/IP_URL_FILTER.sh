@@ -2,7 +2,7 @@
 base="IP_URL_FILTER.sh"
 category="Build Configuration"
 derivations=([0]="env" [1]="envMarker" [2]="name")
-description="jq filter to parse IP_URL result (assuming JSON)"$'\n'"if blank, no filter is used and raw result is returned"$'\n'""$'\n'""
+description=$'jq filter to parse IP_URL result (assuming JSON)\nif blank, no filter is used and raw result is returned\n\n'
 descriptionLineCount="3"
 env="IP_URL_FILTER"
 envMarker="ip_url_filter"
@@ -10,8 +10,8 @@ file="bin/build/env/IP_URL_FILTER.sh"
 fn="IP_URL_FILTER"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Filter for IP Lookup"
-rawComment="Name: Filter for IP Lookup"$'\n'"jq filter to parse IP_URL result (assuming JSON)"$'\n'"if blank, no filter is used and raw result is returned"$'\n'"See: networkIPLookup"$'\n'"Category: Build Configuration"$'\n'"Type: String"$'\n'""$'\n'""
-see="networkIPLookup"$'\n'""
+rawComment=$'Name: Filter for IP Lookup\njq filter to parse IP_URL result (assuming JSON)\nif blank, no filter is used and raw result is returned\nSee: networkIPLookup\nCategory: Build Configuration\nType: String\n\n'
+see=$'networkIPLookup\n'
 sourceFile="bin/build/env/IP_URL_FILTER.sh"
 sourceHash="0c7aeb2eb7f2a99397e2631e70ee2c8439266578"
 sourceLine=""

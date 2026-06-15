@@ -1,1 +1,1 @@
-[bashDebugInterruptFile]({rel}tools/debug.md#bashdebuginterruptfile) - Adds a trap to capture the debugging stack on interrupt ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L188))
+[bashDebugInterruptFile]({rel}tools/debug.md#bashdebuginterruptfile) - Output debugging stack on program termination ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L202))

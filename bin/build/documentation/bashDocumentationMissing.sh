@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="--index indexPath - Directory. Required. Where to store documentation indexes for later use."$'\n'"--source sourcePath - Directory. Required. The source"$'\n'"--target templateTarget - FileDirectory. Required. Create templates here."$'\n'""
+argument=$'--index indexPath - Directory. Required. Where to store documentation indexes for later use.\n--source sourcePath - Directory. Required. The source\n--target templateTarget - FileDirectory. Required. Create templates here.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Generates:"$'\n'""$'\n'"- \`missingFunctionTotal.md\`"$'\n'"- \`missingFunctionList.md\`"$'\n'""$'\n'"in the target directory."$'\n'""$'\n'""
+description=$'Generates:\n\n- `missingFunctionTotal.md`\n- `missingFunctionList.md`\n\nin the target directory.\n\n'
 descriptionLineCount="7"
 file="bin/build/tools/documentation.sh"
 fn="bashDocumentationMissing"
 fnMarker="bashdocumentationmissing"
 foundNames=([0]="summary" [1]="argument")
-line="773"
-rawComment="Summary: Generate templates of functions missing from documentation"$'\n'"Generates:"$'\n'"- \`missingFunctionTotal.md\`"$'\n'"- \`missingFunctionList.md\`"$'\n'"in the target directory."$'\n'"Argument: --index indexPath - Directory. Required. Where to store documentation indexes for later use."$'\n'"Argument: --source sourcePath - Directory. Required. The source"$'\n'"Argument: --target templateTarget - FileDirectory. Required. Create templates here."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="774"
+rawComment=$'Summary: Generate templates of functions missing from documentation\nGenerates:\n- `missingFunctionTotal.md`\n- `missingFunctionList.md`\nin the target directory.\nArgument: --index indexPath - Directory. Required. Where to store documentation indexes for later use.\nArgument: --source sourcePath - Directory. Required. The source\nArgument: --target templateTarget - FileDirectory. Required. Create templates here.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="27710a9141283b9bb677e2d559eed326e8761d6f"
-sourceLine="773"
+sourceHash="b31ecab0f7db7528ee0d4002e2ae77d5ce2c71c9"
+sourceLine="774"
 summary="Generate templates of functions missing from documentation"
 summaryComputed=""
 usage="bashDocumentationMissing --index indexPath --source sourcePath --target templateTarget"

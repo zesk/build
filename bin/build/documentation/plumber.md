@@ -23,12 +23,13 @@ Run command and detect any global or local leaks
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `plumber-verbose` - The plumber outputs the exact variable captures before and after
+- `plumber-verbose` - The plumber outputs the exact variable captures before and after
 
 #### Return codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `0` - No leaks detected in the command
+- `108` - A leak was detected in the command
+- `1` - Argument error, plumber was called incorrectly.
 
 #### Requires
 

@@ -1,1 +1,1 @@
-[`BUILD_VERSION_NO_OPEN` Build Version No Open Flag]({rel}/env/#build_configuration) – **Boolean**. Constant for whether to open release notes when a version
+[`BUILD_VERSION_NO_OPEN` Build Version No Open Flag]({rel}env/#build_configuration) – **Boolean**. Constant for whether to open release notes when a version

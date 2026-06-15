@@ -651,7 +651,7 @@ Binary used in __urlOpen
 
 ### See Also
 
-- [urlOpen]({rel}tools/url.md#urlopen) - Open a URL using the operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L419))
+- [urlOpen]({rel}tools/url.md#urlopen) - Opens the default browser for a URL on the host operating system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L438))
 
 
 ## `BUILD_URL_TIMEOUT`
@@ -663,7 +663,7 @@ Timeout in seconds for fetching URLs in `urlFetch`
 
 ### See Also
 
-- [urlFetch]({rel}tools/url.md#urlfetch) - Fetch URL content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L559))
+- [urlFetch]({rel}tools/url.md#urlfetch) - Fetch URL content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L566))
 
 
 ## `BUILD_VERSION_NO_OPEN`
@@ -857,7 +857,7 @@ if blank, no filter is used and raw result is returned
 
 ### See Also
 
-- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L75))
+- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L184))
 
 
 ## `IP_URL`
@@ -869,7 +869,7 @@ URL to look up IP my address remotely
 
 ### See Also
 
-- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L75))
+- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L184))
 
 
 ## `LC_TERMINAL`

@@ -1,14 +1,15 @@
 ### `bashDebugInterruptFile`
 
-> Adds a trap to capture the debugging stack on interrupt
+> Output debugging stack on program termination
 
 #### Usage
 
     bashDebugInterruptFile [ --help ] [ --handler handler ] [ --error ] [ --clear ] [ --interrupt ] [ --already-error ]
 
-Adds a trap to capture the debugging stack on interrupt
+Adds a trap to capture the debugging stack on interrupt.
 Use this in a bash script which runs forever or runs in an infinite loop to
 determine where the problem or loop exists.
+The file is named `./.interrupt.log` and is appended each time the program is terminated or exits improperly.
 
 > Location: `bin/build/tools/debug.sh`
 

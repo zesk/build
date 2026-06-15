@@ -1,4 +1,10 @@
 
+## Zesk Build release v0.44.3
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.44.2
+
 ## Zesk Build release v0.44.2
 
 > Copyright &copy; 2026 Market Acumen, Inc.
@@ -59,53 +65,9 @@
 - `pythonVirtual` now deletes non-compatible `.venv` environments when created on another platform (issue with Docker)
 - Added `--audit` flag to `fingerprint` hook, now used for both `application-fingerprint` and `documentation-fingerprint`
 
-## Zesk Build release v0.43.0
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-### Documentation Updates
-
-`documentationBuild` was too slow; we are caching documentation effectively using `bin/build/documentation` files so
-changing documentation generation was updated to improve speed. Added `mapFunction` to avoid issues with
-`mapEnvironment` and to simplify template generation.
-
-Added:
-
-- {SEE:mapFunction}
-- {SEE:documentationMaker}
-- {SEE:documentationMake}
-- Renamed: `documentationBuildEnvironment` -> {SEE:documentationEnvironmentMake}
-- Renamed: `documentationBuildCache` -> {SEE:documentationCache}
-- Renamed: `documentationTemplateUpdate` -> {SEE:documentationIdenticalRepair}
-
-Deprecated:
-
-- `documentationTemplateFileCompile`
-- `documentationTemplateDirectoryCompile`
-- `documentationBuild`
-
-### Other updates
-
-- Previous version: v0.42.5
-- Added {SEE:mapFunction}
-- Added `muzzle` identical template `# IDENTICAL muzzle n`
-- Added `--slow slowMilliseconds` to `timing` and `timingReport` to output timing information only if it is slower than
-  the specified `slowMilliseconds`.
-    - {SEE:timing} and {SEE:timingReport}
-- Documentation `/release/` index file generation was broken, now fixed.
-- `decorate box --width auto` did not support `stdin` but now does
-    - {SEE:__decorateExtensionBox}
-- `markdownRemoveUnfinishedSections` now keeps `SEE:token` variables
-- `identicalCheck --repair` now added a new macro `__NAME__` which is `__BASE__` without an extension.
-- Made `bashDocumentationDeriveSee` and `bashDocumentationDeriveFunction` part of documentation system
-- Fixing doc caching issue
-- Adding timing debugging to see why test overhead is so high, removed double cleanup after tests
-- Ignore `.index` files which were showing up in deprecated runs
-- `returnMessage` cleaned up and made smaller
-- `bashCoverage` added `bashCoverageEnabled` and fixed issue when unsetting `BUILD_HOME`
-
 # Past Releases
 
+- [v0.43.0](./v0.43.0.md)
 - [v0.42.5](./v0.42.5.md)
 - [v0.42.4](./v0.42.4.md)
 - [v0.42.3](./v0.42.3.md)

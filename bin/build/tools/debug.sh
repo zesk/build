@@ -18,6 +18,9 @@
 # Example:     unset BUILD_DEBUG # All debugging is disabled
 # Example:     BUILD_DEBUG=true # All debugging is enabled
 # Example:     BUILD_DEBUG=handler,bashPrompt # Debug `handler` and `bashPrompt` calls
+# Example:     if buildDebugEnabled bashPrompt; then
+# Example:         # ... prompt debugging code
+# Example:     fi
 buildDebugEnabled() {
   [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
 
@@ -52,16 +55,17 @@ _buildDebugEnabled() {
 }
 
 # __buildDebugEnable x2 (comment) (code) buildDebugStart x1 (comment)
-# Debugging: 513a78fb762a9632315fc564b560d644fd280f89
-# Debugging: f6bef8d783239932a1b4311d027289c42d9d4b3f
-# Debugging: c14d97f2fca824204ca0df151f444f4a7f08f556
+# Debugging: 296eed5e9dc3dfdffecf295867c572771d21f94d
+# Debugging: 0bcacf220ec68c71ade2ff37b9cc98327d71a0d8
 
 # Internal: true
 # Argument: setArgs - EmptyString. Optional. Extra characters to `set -`.
 # Turn on debugging and additional `set` arguments
+# Debugging: 513a78fb762a9632315fc564b560d644fd280f89
 # Actually does 'set -x` - should be only occurrence.
 # Depends: -
 __buildDebugEnable() {
+  # Debugging: f6bef8d783239932a1b4311d027289c42d9d4b3f
   set "-x${1-}" # Debugging
 }
 
@@ -73,18 +77,22 @@ __buildDebugDisable() {
   set "+x${1-}" # Debugging off
 }
 
-#
-# Start build debugging if it is enabled.
-# This does `set -x` which traces and outputs every shell command
+# Argument: moduleName - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.
+# Summary: Start bash debugging
+# Start bash debugging if it is enabled.
+# This does `set` `-x` which traces and outputs every shell command.
 # Use it to debug when you can not figure out what is happening internally.
 #
 # `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
+#
 # Environment: BUILD_DEBUG
-# Argument: moduleName - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.
+# Example:
 # Example:     buildDebugStart || :
 # Example:     # ... complex code here
 # Example:     buildDebugStop || :. -
 # Requires: buildDebugEnabled
+# Return Code: 0 - bash debugging was started
+# Return Code: 1 - bash debugging was not started because token did not match.
 buildDebugStart() {
   [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   if ! buildDebugEnabled "$@"; then
@@ -97,12 +105,14 @@ _buildDebugStart() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Stop build debugging if it is enabled
+# Summary: Stop bash debugging
+# Stop bash debugging if it is enabled.
 # See: buildDebugStart
 # Requires: buildDebugEnabled
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Return Code: 0 - bash debugging was stopped
+# Return Code: 1 - bash debugging was not stopped because token did not match.
 buildDebugStop() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! buildDebugEnabled "$@"; then
@@ -119,7 +129,8 @@ _buildDebugStop() {
 # Returns whether the shell has the debugging flag set
 #
 # Useful if you need to temporarily enable or disable it.
-# Depends: -
+# Return Code: 0 - bash debugging (`set -x`) is enabled
+# Return Code: 1 - bash debugging (`set -x`) is not enabled
 isBashDebug() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   case $- in *x*) return 0 ;; esac
@@ -136,6 +147,7 @@ _isBashDebug() {
 # Argument: --end - Flag. Optional. Stop testing for recursion.
 # When called twice, fails on the second invocation and dumps a call stack to stderr.
 # Requires: printf unset  export debuggingStack exit
+# Return Code: 91 - Recursion failure. Exits, actually after sleeping for 99 seconds.
 # Environment: __BUILD_RECURSION
 bashRecursionDebug() {
   local handler="_${FUNCNAME[0]}"
@@ -173,9 +185,12 @@ _bashRecursionDebug() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Adds a trap to capture the debugging stack on interrupt
+# Summary: Output debugging stack on program termination
+# Adds a trap to capture the debugging stack on interrupt.
 # Use this in a bash script which runs forever or runs in an infinite loop to
 # determine where the problem or loop exists.
+# The file is named `./.interrupt.log` and is appended each time the program is terminated or exits improperly.
+#
 # Requires: trap
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -221,11 +236,11 @@ bashDebugInterruptFile() {
     catchEnvironment "$handler" trap - "${traps[@]}" || return $?
     return 0
   fi
-  local currentTraps installed=()
-  currentTraps=$(fileTemporaryName "$handler") || return $?
+
+  local currentTraps && currentTraps=$(fileTemporaryName "$handler") || return $?
   local clean=("$currentTraps")
   catchEnvironment "$handler" trap >"$currentTraps" || returnClean $? "${clean[@]}" || return $?
-  for trap in "${traps[@]}"; do
+  local installed=() && for trap in "${traps[@]}"; do
     if grep "$name" "$currentTraps" | grep -q " SIG${trap}"; then
       installed+=("$trap")
     fi
@@ -296,6 +311,12 @@ _isErrorExit() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
+# Return Code: 0 - No leaks detected in the command
+# DOC TEMPLATE: returnCodeLeak 1
+# Return Code: 108 - A leak was detected in the command
+# DOC TEMPLATE: returnCodeArgument 1
+# Return Code: 1 - Argument error, {fn} was called incorrectly.
+# BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
 plumber() {
   local handler="_${FUNCNAME[0]}"
 
@@ -350,7 +371,7 @@ plumber() {
         dumpPipe BEFORE <"$__before" 1>&2
         dumpPipe AFTER <"$__after" 1>&2
       fi
-      __result=$(returnCode leak)
+      returnLeak || __result=$?
     fi
   else
     __result=$?

@@ -1,4 +1,4 @@
-# [Zesk Build v0.44.2](https://build.zesk.com)
+# [Zesk Build v0.44.3](https://build.zesk.com)
 
 Documentation can be found 
 at [https://build.zesk.com](https://build.zesk.com). ([Next version](https://stage-build.zesk.com))
@@ -45,7 +45,7 @@ To install globally:
 Directly from the web:
 
     mkdir -p bin/build && cd bin/build
-    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/v0.44.2/bin/build/install-bin-build.sh" | bash
+    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/v0.44.3/bin/build/install-bin-build.sh" | bash
 
 ## Main entry points
 
@@ -96,13 +96,13 @@ Optional:
 As a shortcut to running functions:
 
     #!/usr/bin/env bash
-    "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh" decorate orange "The code is working."
+    "${NOT-BASH_SOURCE[0]%/*}/../bin/build/tools.sh" decorate orange "The code is working."
 
 To load all functions:
 
     #!/usr/bin/env bash
     # shellcheck source=/dev/null
-    if source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh"; then 
+    if source "${NOT-BASH_SOURCE[0]%/*}/../bin/build/tools.sh"; then 
         decorate orange "The code is working."
         decorate big "Hooray."
     else

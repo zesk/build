@@ -1,1 +1,1 @@
-[`BUILD_DOCKER_PATH` Docker Mapped Path]({rel}/env/#docker) – **RemoteDirectory**. Default path for the shell to map the current directory
+[`BUILD_DOCKER_PATH` Docker Mapped Path]({rel}env/#docker) – **RemoteDirectory**. Default path for the shell to map the current directory

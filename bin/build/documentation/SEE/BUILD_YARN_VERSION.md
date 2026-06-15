@@ -1,1 +1,1 @@
-[`BUILD_YARN_VERSION` Yarn Version]({rel}/env/#vendor) – **String**. Version of yarn to install using `corepack`
+[`BUILD_YARN_VERSION` Yarn Version]({rel}env/#vendor) – **String**. Version of yarn to install using `corepack`

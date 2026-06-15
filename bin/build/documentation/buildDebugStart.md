@@ -1,16 +1,18 @@
 ### `buildDebugStart`
 
-> Start build debugging if it is enabled.
+> Start bash debugging
 
 #### Usage
 
     buildDebugStart [ moduleName ]
 
-Start build debugging if it is enabled.
-This does `set -x` which traces and outputs every shell command
+Start bash debugging if it is enabled.
+This does `set` `-x` which traces and outputs every shell command.
 Use it to debug when you can not figure out what is happening internally.
 
 `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
+
+Example:
 Example:     buildDebugStart || :
 
 > Location: `bin/build/tools/debug.sh`
@@ -26,13 +28,12 @@ Example:     buildDebugStart || :
 
 #### Return codes
 
-- `0` - Success
-- `1` - Environment error
-- `2` - Argument error
+- `0` - bash debugging was started
+- `1` - bash debugging was not started because token did not match.
 
 #### Environment
 
-- {SEE:BUILD_DEBUG}
+- [`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
 
 #### Requires
 

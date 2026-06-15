@@ -34,6 +34,7 @@ buildStepInitialize() {
   [ "${BUILD_TEST_DUMP_ENVIRONMENT-}" != "true" ] || catchReturn "$handler" dumpEnvironment || return $?
 }
 _buildStepInitialize() {
+  true || buildStepInitialize --help
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -80,7 +81,12 @@ __buildBuildShowSettings() {
   consoleLine "."
 }
 
-#
+__buildStatus() {
+  catchReturn "$handler" statusMessage "$@" | tee > >(consoleToPlain >"$messageFile") || return $?
+  ! isiTerm2 || catchReturn "$handler" iTerm2Badge <"$messageFile" || return $?
+}
+
+# fn: bin/build.sh
 # Build Zesk Build
 #
 # Argument: --debug - Flag. Debug TERM info.
@@ -135,63 +141,66 @@ __buildBuild() {
   done
 
   local start && start=$(timingStart)
+  local messageFile && messageFile=$(fileTemporaryName "$handler") || return $?
+  local clean=("$messageFile")
+  (
+    __buildStatus decorate success "🛠️ Building"
 
-  iTerm2Badge -i "🛠️ Building"
+    ! $debugFlag || __buildStatus decorate info "Installing dependencies ..."
+    catchReturn "$handler" packageInstall || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" packageGroupInstall pcregrep || returnClean $? "${clean[@]}" || return $?
 
-  ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
-  catchReturn "$handler" packageInstall || return $?
-  catchReturn "$handler" packageGroupInstall pcregrep || return $?
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local home && home=$(catchReturn "$handler" buildHome) || return $?
+    catchReturn "$handler" decorate big "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
+    consoleLine "#"
 
-  catchReturn "$handler" decorate big "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
-  buildStepInitialize
-  consoleLine "#"
+    ! $debugFlag || __buildStatus decorate warning "Running deprecated ..."
+    "$home/bin/build/deprecated.sh" --fingerprint || throwEnvironment "$handler" "Deprecated failed" || return $?
 
-  ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
-  "$home/bin/build/deprecated.sh" --fingerprint || throwEnvironment "$handler" "Deprecated failed" || return $?
+    ! $debugFlag || __buildStatus decorate warning "Running identical ..."
+    "$home/bin/build/repair.sh" --internal --fingerprint || throwEnvironment "$handler" "Identical repair failed" || return $?
 
-  ! $debugFlag || statusMessage decorate warning "Running identical ..."
-  "$home/bin/build/repair.sh" --internal --fingerprint || throwEnvironment "$handler" "Identical repair failed" || return $?
+    ! $debugFlag || __buildStatus decorate warning "Running function build ..."
+    buildFunctionsCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?
 
-  ! $debugFlag || statusMessage decorate warning "Running function build ..."
-  buildFunctionsCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?
+    ! $debugFlag || __buildStatus decorate info "Updating markdown ..."
+    if ! __buildBuildUpdateMarkdown "$handler" "$home"; then
+      catchEnvironment "$handler" "Can not update the Markdown files" || return $?
+    fi
 
-  ! $debugFlag || statusMessage decorate info "Updating markdown ..."
-  if ! __buildBuildUpdateMarkdown "$handler" "$home"; then
-    catchEnvironment "$handler" "Can not update the Markdown files" || return $?
-  fi
+    if $makeDocumentation; then
+      local rootPath="$home/documentation/.site"
+      local rootShow && rootShow=$(decorate file "$rootPath")
+      local path && for path in "$rootPath" "$home/documentation/.docs"; do
+        if [ -d "$path" ]; then
+          ! $debugFlag || __buildStatus decorate warning "Removing $path for build" || return $?
+          catchEnvironment "$handler" rm -rf "$path" || return $?
+        fi
+      done
+      ! $debugFlag || __buildStatus decorate warning "Building documentation ..."
+      catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
 
-  if $makeDocumentation; then
-    local rootPath="$home/documentation/.site"
-    local rootShow && rootShow=$(decorate file "$rootPath")
-    local path && for path in "$rootPath" "$home/documentation/.docs"; do
-      if [ -d "$path" ]; then
-        statusMessage decorate warning "Removing $path for build" || return $?
-        catchEnvironment "$handler" rm -rf "$path" || return $?
-      fi
-    done
-    ! $debugFlag || statusMessage decorate warning "Building documentation ..."
-    catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
+      [ -d "$rootPath" ] || throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
 
-    [ -d "$rootPath" ] || throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
+    fi
 
-  fi
-
-  if $commitChanges && gitRepositoryChanged; then
-    ! $debugFlag || statusMessage decorate info "Repository changed, committing ..."
-    printf -- "%s\n" "CHANGES:" || :
-    gitShowChanges | decorate code | decorate wrap "    "
-    {
-      ! git commit -m "Build version $(hookRun version-current)" -a && git push origin
-    } || statusMessage --last decorate error "Commit or push failed. Continuing."
-  elif gitRepositoryChanged; then
-    ! $debugFlag || statusMessage --last decorate warning "Local repository changed."
-  fi
-  envFile="$home/.build.env"
-  environmentOutput >"$envFile"
-  decorate info "Wrote $(decorate file "$envFile") $(localePluralWord "$(fileSize "$envFile")" byte)" || return $?
-  statusMessage --last timingReport "$start" "Built successfully in"
+    if $commitChanges && gitRepositoryChanged; then
+      ! $debugFlag || __buildStatus decorate info "Repository changed, committing ..."
+      printf -- "%s\n" "CHANGES:" || :
+      gitShowChanges | decorate code | decorate wrap "    "
+      {
+        ! git commit -m "Build version $(hookRun version-current)" -a && git push origin
+      } || __buildStatus --last decorate error "Commit or push failed. Continuing."
+    elif gitRepositoryChanged; then
+      ! $debugFlag || __buildStatus --last decorate warning "Local repository changed."
+    fi
+    envFile="$home/.build.env"
+    environmentOutput >"$envFile"
+    decorate info "Wrote $(decorate file "$envFile") $(localePluralWord "$(fileSize "$envFile")" byte)" || return $?
+  ) || returnClean $? "${clean[@]}" || return $?
+  __buildStatus --last timingReport "$start" "Built successfully in"
+  returnClean 0 "${clean[@]}" || return $?
 }
 ___buildBuild() {
   # __IDENTICAL__ bashDocumentation 1

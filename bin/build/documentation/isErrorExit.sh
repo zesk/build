@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Returns whether the shell has the error exit flag set\n\nUseful if you need to temporarily enable or disable it.\n\nOctober 2024 - Does appear to be inherited by subshells\n\n    set -e\n    printf "$(isErrorExit; printf %d $?)"\n\nOutputs `1` always\n\n'
+description="Returns whether the shell has the error exit flag set"$'\n'""$'\n'"Useful if you need to temporarily enable or disable it."$'\n'""$'\n'"October 2024 - Does appear to be inherited by subshells"$'\n'""$'\n'"    set -e"$'\n'"    printf \"\$(isErrorExit; printf %d \$?)\""$'\n'""$'\n'"Outputs \`1\` always"$'\n'""$'\n'""
 descriptionLineCount="11"
 file="bin/build/tools/debug.sh"
 fn="isErrorExit"
 fnMarker="iserrorexit"
 foundNames=([0]="requires")
-line="276"
-rawComment=$'Returns whether the shell has the error exit flag set\nUseful if you need to temporarily enable or disable it.\nOctober 2024 - Does appear to be inherited by subshells\n    set -e\n    printf "$(isErrorExit; printf %d $?)"\nOutputs `1` always\nRequires: -\n\n'
-requires=$'-\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+line="290"
+rawComment="Returns whether the shell has the error exit flag set"$'\n'"Useful if you need to temporarily enable or disable it."$'\n'"October 2024 - Does appear to be inherited by subshells"$'\n'"    set -e"$'\n'"    printf \"\$(isErrorExit; printf %d \$?)\""$'\n'"Outputs \`1\` always"$'\n'"Requires: -"$'\n'""$'\n'""
+requires="-"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="f8901f960335e712ac2680d77a17c49c8edcae50"
-sourceLine="276"
+sourceHash="a63c90aa53321caabf6938f3b520f7e90fa9bc48"
+sourceLine="290"
 summary="Returns whether the shell has the error exit flag set"
 summaryComputed="true"
 usage="isErrorExit"

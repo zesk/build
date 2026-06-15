@@ -1,1 +1,1 @@
-[`BUILD_DOCKER_IMAGE` Docker Image]({rel}/env/#docker) – **String**. Default docker image to use when launching `dockerLocalContainer`
+[`BUILD_DOCKER_IMAGE` Docker Image]({rel}env/#docker) – **String**. Default docker image to use when launching `dockerLocalContainer`

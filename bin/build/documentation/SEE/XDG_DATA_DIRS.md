@@ -1,1 +1,1 @@
-[`XDG_DATA_DIRS` Data Path Directories]({rel}/env/#build_configuration) – **DirectoryList**. Data Path Directories
+[`XDG_DATA_DIRS` Data Path Directories]({rel}env/#build_configuration) – **DirectoryList**. Data Path Directories

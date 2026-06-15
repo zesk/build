@@ -1,1 +1,1 @@
-[`BITBUCKET_CLONE_DIR` Bitbucket Clone Directory]({rel}/env/#continuous_integration) – **Directory**. Defined in BITBUCKET Pipelines
+[`BITBUCKET_CLONE_DIR` Bitbucket Clone Directory]({rel}env/#continuous_integration) – **Directory**. Defined in BITBUCKET Pipelines

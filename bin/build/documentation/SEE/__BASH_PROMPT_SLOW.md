@@ -1,1 +1,1 @@
-[`__BASH_PROMPT_SLOW` Prompt command slow threshold]({rel}/env/#bash_prompt) – **PositiveInteger**. Bash Prompt slow timer
+[`__BASH_PROMPT_SLOW` Prompt command slow threshold]({rel}env/#bash_prompt) – **PositiveInteger**. Bash Prompt slow timer

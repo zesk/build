@@ -1,1 +1,1 @@
-[`APPLICATION_NAME` Application Name]({rel}/env/#application) – **String**. This is the display name of the application
+[`APPLICATION_NAME` Application Name]({rel}env/#application) – **String**. This is the display name of the application

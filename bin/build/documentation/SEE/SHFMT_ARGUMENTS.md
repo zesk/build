@@ -1,1 +1,1 @@
-[`SHFMT_ARGUMENTS` Shell Formatting Arguments]({rel}/env/#bash) – **Array**. Arguments passed to shfmt when running as a pre-commit hook
+[`SHFMT_ARGUMENTS` Shell Formatting Arguments]({rel}env/#bash) – **Array**. Arguments passed to shfmt when running as a pre-commit hook

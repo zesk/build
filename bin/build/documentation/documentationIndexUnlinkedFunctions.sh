@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="indexPath - Directory. Required. Index path."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'indexPath - Directory. Required. Index path.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="List functions without documentation pages."$'\n'""$'\n'""
+description=$'List functions without documentation pages.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/documentation.sh"
 fn="documentationIndexUnlinkedFunctions"
 fnMarker="documentationindexunlinkedfunctions"
 foundNames=([0]="argument")
 line="416"
-rawComment="List functions without documentation pages."$'\n'"Argument: indexPath - Directory. Required. Index path."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'List functions without documentation pages.\nArgument: indexPath - Directory. Required. Index path.\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="27710a9141283b9bb677e2d559eed326e8761d6f"
+sourceHash="8e2a28a02b1c50a760e8c795766abea583f308e2"
 sourceLine="416"
 summary="List functions without documentation pages."
 summaryComputed="true"

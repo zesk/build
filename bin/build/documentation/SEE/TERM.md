@@ -1,1 +1,1 @@
-[`TERM` Terminal Type]({rel}/env/#bash) – **String**. The current terminal type.
+[`TERM` Terminal Type]({rel}env/#bash) – **String**. The current terminal type.

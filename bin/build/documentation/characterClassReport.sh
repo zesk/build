@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument="--class - Flag. Optional. Show class and then characters in that class."$'\n'"--char - Flag. Optional. Show characters and then class for that character."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="character.sh"
@@ -15,7 +15,7 @@ line="21"
 rawComment="Write a report of the character classes"$'\n'"TODO: This is super-slow"$'\n'"Argument: --class - Flag. Optional. Show class and then characters in that class."$'\n'"Argument: --char - Flag. Optional. Show characters and then class for that character."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/character.sh"
-sourceHash="5a2e05ecbe74faca818a547fd009b4342c8f9e78"
+sourceHash="79294e27750fb832d5811293e7b59bef672c64a7"
 sourceLine="21"
 summary="Write a report of the character classes"
 summaryComputed="true"

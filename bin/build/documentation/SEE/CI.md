@@ -1,1 +1,1 @@
-[`CI` Continuous Integration]({rel}/env/#continuous_integration) – **String**. If this value is non-blank, then console `statusMessage`s are just
+[`CI` Continuous Integration]({rel}env/#continuous_integration) – **String**. If this value is non-blank, then console `statusMessage`s are just

@@ -1,1 +1,1 @@
-[`GIT_OPEN_LINKS` Git Open Links Flag]({rel}/env/#development) – **Boolean**. Open links from git remotes in `gitCommit`
+[`GIT_OPEN_LINKS` Git Open Links Flag]({rel}env/#development) – **Boolean**. Open links from git remotes in `gitCommit`

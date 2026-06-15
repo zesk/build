@@ -1,1 +1,1 @@
-[`BUILD_DEBUG` Debugging Flag]({rel}/env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
+[`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors

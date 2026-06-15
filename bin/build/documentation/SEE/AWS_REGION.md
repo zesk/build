@@ -1,1 +1,1 @@
-[`AWS_REGION` AWS Region]({rel}/env/#amazon_web_services) – **String**. Region for Amazon Web Services
+[`AWS_REGION` AWS Region]({rel}env/#amazon_web_services) – **String**. Region for Amazon Web Services

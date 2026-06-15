@@ -1,1 +1,1 @@
-[`BUILD_COMPANY_LINK` Company URL]({rel}/env/#application) – **URL**. Legal copyright holder website for this codebase
+[`BUILD_COMPANY_LINK` Company URL]({rel}env/#application) – **URL**. Legal copyright holder website for this codebase

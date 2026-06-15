@@ -1,1 +1,1 @@
-[`GITHUB_REPOSITORY_NAME` GitHub Repository Name]({rel}/env/#development) – **String**. Repository name for release
+[`GITHUB_REPOSITORY_NAME` GitHub Repository Name]({rel}env/#development) – **String**. Repository name for release

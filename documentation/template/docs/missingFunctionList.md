@@ -1,5 +1,7 @@
 {buildDocumentationEnvironment}
 
+{buildDocumentationTemplates}
+
 {isDockerComposeCommand}
 
 {networkIPValid}

@@ -1,1 +1,1 @@
-[buildDebugStart]({rel}tools/debug.md#builddebugstart) - Start build debugging if it is enabled. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L88))
+[buildDebugStart]({rel}tools/debug.md#builddebugstart) - Start bash debugging ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L95))

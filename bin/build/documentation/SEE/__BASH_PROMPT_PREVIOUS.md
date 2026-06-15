@@ -1,1 +1,1 @@
-[`__BASH_PROMPT_PREVIOUS` Prompt command previous result]({rel}/env/#bash_prompt) – **Array**. Previous result code
+[`__BASH_PROMPT_PREVIOUS` Prompt command previous result]({rel}env/#bash_prompt) – **Array**. Previous result code

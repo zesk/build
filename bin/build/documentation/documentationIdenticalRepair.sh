@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="templatePath - Directory. Required. Path to the templates to repair."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'templatePath - Directory. Required. Path to the templates to repair.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Map template files using our identical functionality"$'\n'""$'\n'""
+description=$'Map template files using our identical functionality\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/documentation.sh"
 fn="documentationIdenticalRepair"
 fnMarker="documentationidenticalrepair"
 foundNames=([0]="argument")
 line="236"
-rawComment="Map template files using our identical functionality"$'\n'"Argument: templatePath - Directory. Required. Path to the templates to repair."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Map template files using our identical functionality\nArgument: templatePath - Directory. Required. Path to the templates to repair.\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="27710a9141283b9bb677e2d559eed326e8761d6f"
+sourceHash="b31ecab0f7db7528ee0d4002e2ae77d5ce2c71c9"
 sourceLine="236"
 summary="Map template files using our identical functionality"
 summaryComputed="true"

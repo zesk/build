@@ -1,1 +1,1 @@
-[`BUILD_TERM_COLORS_STATE` Terminal Color State]({rel}/env/#application) – **String**. State to store state of current terminal color state
+[`BUILD_TERM_COLORS_STATE` Terminal Color State]({rel}env/#application) – **String**. State to store state of current terminal color state

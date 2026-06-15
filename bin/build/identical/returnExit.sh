@@ -12,7 +12,8 @@
 
 # Summary: Exit return code
 # Return code is `exit`
-# Return Code: 120
+# DOC TEMPLATE: returnCodeExit 1
+# Return Code: 120 - Calling function should exit
 returnExit() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # _IDENTICAL_ returnExitCode 1

@@ -1,1 +1,1 @@
-[`XDG_CACHE_HOME` Main Cache Directory]({rel}/env/#build_configuration) – **Directory**. Main Cache Directory
+[`XDG_CACHE_HOME` Main Cache Directory]({rel}env/#build_configuration) – **Directory**. Main Cache Directory
