@@ -1,29 +1,29 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source."$'\n'""
+argument=$'--application applicationHome - Path. Optional. Directory of alternate application home.\n--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nhookName ... - String. Required. Hook to source.\n'
 base="hook.sh"
-build_debug="hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""
+build_debug=$'hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information\n'
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Run a hook in the project located at \`./bin/hooks/\`"$'\n'""$'\n'"See (Hooks documentation)[../hooks/index.md] for standard hooks."$'\n'""$'\n'"Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at \`./bin/hooks/\` and are named \`hookName\` with a \`.sh\` extension added."$'\n'"So the hook for \`version-current\` would be a file at:"$'\n'""$'\n'"    bin/hooks/version-current.sh"$'\n'""$'\n'"Sample hooks (scripts) can be found in the build source code at \`./bin/hooks/\`."$'\n'""$'\n'"Default hooks (scripts) can be found in the current build version at \`bin/build/hooks/\`"$'\n'""$'\n'""
+description=$'Run a hook in the project located at `./bin/hooks/`\n\nSee (Hooks documentation)[../hooks/index.md] for standard hooks.\n\nHooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.\nSo the hook for `version-current` would be a file at:\n\n    bin/hooks/version-current.sh\n\nSample hooks (scripts) can be found in the build source code at `./bin/hooks/`.\n\nDefault hooks (scripts) can be found in the current build version at `bin/build/hooks/`\n\n'
 descriptionLineCount="13"
-environment="BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'""
-example="    version=\"\$(hookSource version-current)\""$'\n'""
+environment=$'BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG\n'
+example=$'    version="$(hookSource version-current)"\n'
 file="bin/build/tools/hook.sh"
 fn="hookSource"
 fnMarker="hooksource"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="example" [4]="see" [5]="test" [6]="environment" [7]="build_debug")
 line="186"
-rawComment="Run a hook in the project located at \`./bin/hooks/\`"$'\n'"See (Hooks documentation)[../hooks/index.md] for standard hooks."$'\n'"Summary: Run a project hook"$'\n'"Hooks provide an easy way to customize your build. Hooks are binary files located in your project directory at \`./bin/hooks/\` and are named \`hookName\` with a \`.sh\` extension added."$'\n'"So the hook for \`version-current\` would be a file at:"$'\n'"    bin/hooks/version-current.sh"$'\n'"Sample hooks (scripts) can be found in the build source code at \`./bin/hooks/\`."$'\n'"Default hooks (scripts) can be found in the current build version at \`bin/build/hooks/\`"$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: hookName ... - String. Required. Hook to source."$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 1 - is returned if the hook is not found"$'\n'"Example:     version=\"\$({fn} version-current)\""$'\n'"See: hooks.md hookRunOptional"$'\n'"Test: testHookSystem"$'\n'"Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'"BUILD_DEBUG: hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""$'\n'""
-return_code="Any - The hook exit code is returned if it is run"$'\n'"1 - is returned if the hook is not found"$'\n'""
-see="hooks.md hookRunOptional"$'\n'""
+rawComment=$'Run a hook in the project located at `./bin/hooks/`\nSee (Hooks documentation)[../hooks/index.md] for standard hooks.\nSummary: Run a project hook\nHooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.\nSo the hook for `version-current` would be a file at:\n    bin/hooks/version-current.sh\nSample hooks (scripts) can be found in the build source code at `./bin/hooks/`.\nDefault hooks (scripts) can be found in the current build version at `bin/build/hooks/`\nArgument: --application applicationHome - Path. Optional. Directory of alternate application home.\nArgument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nArgument: hookName ... - String. Required. Hook to source.\nReturn Code: Any - The hook exit code is returned if it is run\nReturn Code: 1 - is returned if the hook is not found\nExample:     version="$({fn} version-current)"\nSee: hookExists hookRun hookRunOptional hookSourceOptional\nTest: testHookSystem\nEnvironment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG\nBUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information\n\n'
+return_code=$'Any - The hook exit code is returned if it is run\n1 - is returned if the hook is not found\n'
+see=$'hookExists hookRun hookRunOptional hookSourceOptional\n'
 sourceFile="bin/build/tools/hook.sh"
-sourceHash="d0ba2dabdb14bfd56f5a5830f74f73a903e5184b"
+sourceHash="6238c9ff87d29d71c91395b97242252de0f96fd5"
 sourceLine="186"
 summary="Run a project hook"
 summaryComputed=""
-test="testHookSystem"$'\n'""
+test=$'testHookSystem\n'
 usage="hookSource [ --application applicationHome ] [ --extensions extensionList ] hookName ..."
 version=""
 # shellcheck disable=SC2016

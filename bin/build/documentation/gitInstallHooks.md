@@ -37,5 +37,5 @@ Hook types:
 
 #### See Also
 
-- [gitHookTypes]({rel}tools/git.md#githooktypes)- `` - List current valid git hook types ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L718))
+- [gitHookTypes]({rel}tools/git.md#githooktypes) - List current valid git hook types ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L718))
 

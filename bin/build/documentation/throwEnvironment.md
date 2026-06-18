@@ -8,8 +8,6 @@
 
 Run `handler` with an environment error
 
-
-
 > Location: `bin/build/tools/_sugar.sh`
 
 #### Arguments
@@ -17,62 +15,16 @@ Run `handler` with an environment error
 - `handler` - Function. Required. Error handler.
 - `message ...` - String. Optional. Error message
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
-#### Debugging settings
-
-Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
-
-{build_debug}
-
-#### Examples
-
-{example}
-
-#### Sample Output
-
-{output}
-
 #### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-#### Local cache
-
-{local_cache}
-
-#### Environment
-
-{environment}
-
 #### Requires
 
+- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
+- [returnArgument]({rel}tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L257))
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [debuggingStack]({rel}tools/dump.md#debuggingstack) - Dump the function and include stacks and the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L18))
 
-
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/_sugar.sh`, function `throwEnvironment` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

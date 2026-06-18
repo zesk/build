@@ -39,6 +39,8 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### See Also
 
-- {SEE:hooks.md}
+- [hookExists]({rel}tools/hook.md#hookexists) - Determine if a hook exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L230))
 - [hookRun]({rel}tools/hook.md#hookrun) - Run a project hook ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L128))
+- [hookRunOptional]({rel}tools/hook.md#hookrunoptional) - Optionally run a project hook ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L154))
+- [hookSource]({rel}tools/hook.md#hooksource) - Run a project hook ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L186))
 

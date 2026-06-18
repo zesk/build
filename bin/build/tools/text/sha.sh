@@ -16,7 +16,7 @@ __textSHA() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -82,10 +82,10 @@ __textSHACached() {
     local file && for file in "${files[@]}"; do
       cacheFile="$cacheDirectory/${file#/}"
       cacheFile=$(catchReturn "$handler" fileDirectoryRequire "$cacheFile") || return $?
-      if [ -f "$cacheFile" ] && [ "$cacheFile" -nt "$1" ]; then
+      if [ -f "$cacheFile" ] && [ "$cacheFile" -nt "$file" ]; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        ___textSHA "$handler" "$argument" | catchEnvironment "$handler" tee "$cacheFile" || return $?
+        ___textSHA "$handler" "$file" | catchEnvironment "$handler" tee "$cacheFile" || return $?
       fi
     done
   else

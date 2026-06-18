@@ -22,7 +22,7 @@ __hookRunner() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
@@ -38,7 +38,7 @@ __hookRunner() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -52,7 +52,7 @@ __hookRunner() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -121,7 +121,7 @@ __hookRunner() {
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
-# See: hooks.md hookRunOptional hookRun hookSource hookSourceOptional
+# See: hookExists hookRunOptional hookSource hookSourceOptional
 # Test: testHookSystem
 # Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
 # BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
@@ -133,7 +133,7 @@ _hookRun() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Summary: Optionally run a project hook
 # Identical to `hookRun` but returns exit code zero if the hook does not exist.
 #
 # Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
@@ -146,7 +146,7 @@ _hookRun() {
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
-# See: hooks.md hookRunOptional hookRun
+# See: hookExists hookRun hookSource hookSourceOptional
 # Test: testHookSystem
 # Environment: BUILD_HOOK_EXTENSIONS
 # Environment: BUILD_HOOK_DIRS
@@ -179,7 +179,7 @@ _hookRunOptional() {
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
-# See: hooks.md hookRunOptional
+# See: hookExists hookRun hookRunOptional hookSourceOptional
 # Test: testHookSystem
 # Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
 # BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
@@ -201,7 +201,7 @@ _hookSource() {
 # Return Code: 0 - is returned if the hook is not found
 # Example:     {fn} test-cleanup
 # Test: testHookSystem
-# See: hooks.md hookRun
+# See: hookExists hookRun hookRunOptional hookSource
 # Environment: BUILD_HOOK_EXTENSIONS
 # Environment: BUILD_HOOK_DIRS
 # Environment: BUILD_DEBUG
@@ -224,6 +224,7 @@ _hookSourceOptional() {
 # Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: hookName0 - one or more hook names which must exist
 # Return Code: 0 - If all hooks exist
+# See: hookRun hookRunOptional hookSource hookSourceOptional
 # Test: testHookSystem
 # Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
 hookExists() {
@@ -236,7 +237,7 @@ hookExists() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -289,7 +290,7 @@ hookFind() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -364,7 +365,12 @@ _hookFind() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Load hook environment variables used to find hooks
+# Load hook environment variables used to find hooks.
+#
+# Ensures `BUILD_HOOK_EXTENSIONS` and `BUILD_HOOK_DIRS` are set to their proper defaults.
+#
+# If already loaded, this function has no effect.
+#
 # Summary: Load hook-related environment variables
 # Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS
 # DOC TEMPLATE: --help 1

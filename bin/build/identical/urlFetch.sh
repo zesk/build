@@ -42,7 +42,7 @@
 # Argument: file - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage executableExists decorate
 # Requires: validate
-# Requires: throwArgument catchArgument
+# Requires: throwArgument
 # Requires: throwEnvironment catchEnvironment
 # Environment: BUILD_URL_TIMEOUT
 urlFetch() {
@@ -52,19 +52,21 @@ urlFetch() {
   local binary=() userHasColons=false user="" password="" format="" url="" target=""
   local maxRedirections=9 timeoutSeconds="" debugFlag=false saveHeadersFile=""
 
+  local data="" hasData=false method=""
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --header)
-      shift && local name="${1%%:}" value="${1#*:}"
+      shift && local name="${1%%:*}" value="${1#*:}"
       if [ "$name" = "${1-}" ] || [ "$value" = "${1-}" ]; then
-        catchArgument "$handler" "Invalid $argument ${1-} passed" || return $?
+        throwArgument "$handler" "Invalid $argument ${1-} passed" || return $?
       fi
       headers+=("$1")
       curlArgs+=("--header" "$1")
@@ -92,6 +94,8 @@ urlFetch() {
       ;;
     --redirect-max) shift && maxRedirections=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --password) shift && password="$1" ;;
+    --data) shift && data="$1" && hasData=true ;;
+    --method) shift && method=$(validate "$handler" String "$argument" "${1-}") && method=$(stringUppercase "$method") || return $? ;;
     --user)
       shift && user=$(validate "$handler" String "$argument (user)" "$user") || return $?
       if [ "$user" != "${user#*:}" ]; then
@@ -120,8 +124,8 @@ urlFetch() {
         shift
         break
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -160,12 +164,17 @@ urlFetch() {
     wgetArgs+=("--tries=1 --timeout=$timeoutSeconds")
     genericArgs+=(--timeout "$timeoutSeconds")
   fi
-
+  if [ -n "$method" ]; then
+    curlArgs+=(-X "$method")
+    wgetArgs+=(-X "$method")
+    genericArgs+=(--method "$method")
+  fi
   [ "${#binary[@]}" -gt 0 ] || throwEnvironment "$handler" "wget or curl required" || return $?
   [ -n "$format" ] || format="${binary[0]}"
   ! $debugFlag || binary=("decorate" "each" "code" "${binary[@]}")
   case "$format" in
   wget)
+    ! $hasData || wgetArgs+=(--post-data "$data")
     # -q - quiet
     wgetArgs+=(--max-redirect "$maxRedirections" -q)
     if [ -z "$saveHeadersFile" ]; then
@@ -180,6 +189,7 @@ urlFetch() {
     fi
     ;;
   curl)
+    ! $hasData || curlArgs+=(-d "$data")
     # -L - follow redirects, -s - silent, -f - (FAIL) ignore documents for 4XX or 5XX errors
     curlArgs+=(-L --max-redirs "$maxRedirections" -s -f --no-show-error)
     catchEnvironment "$handler" "${binary[@]}" "$url" "$@" "${curlArgs[@]+"${curlArgs[@]}"}" || return $?

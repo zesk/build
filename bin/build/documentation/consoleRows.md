@@ -32,5 +32,5 @@ Output the number of columns in the terminal. Default is 60 if not able to be de
 
 #### See Also
 
-- {SEE:stty}
+- [`stty`]({rel}guide/command.md#stty)
 

@@ -21,5 +21,5 @@ Remove keys to disable apt to download tofu from opentofu.org
 
 #### See Also
 
-- [aptKeyAddOpenTofu]({rel}tools/tofu.md#aptkeyaddopentofu)- `` - Add keys to enable apt to download tofu directly from ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L19))
+- [aptKeyAddOpenTofu]({rel}tools/tofu.md#aptkeyaddopentofu) - Add keys to enable apt to download tofu directly from ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L19))
 

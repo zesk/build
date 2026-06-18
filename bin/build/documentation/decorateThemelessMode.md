@@ -28,5 +28,5 @@ All decorate calls made after this call will output with special codes not to be
 
 #### See Also
 
-- [decorateThemed]({rel}tools/decoration.md#decoratethemed)- `` - Applies the current theme to text rendered using \`decorateThemelessMode\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L70))
+- [decorateThemed]({rel}tools/decoration.md#decoratethemed) - Applies the current theme to text rendered using \`decorateThemelessMode\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L70))
 

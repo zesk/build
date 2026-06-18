@@ -25,5 +25,8 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 #### Requires
 
-- [isPositiveInteger]({rel}tools/type.md#ispositiveinteger) - Test if an argument is a positive integer (non-zero) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L153))tput
+- [isPositiveInteger]({rel}tools/type.md#ispositiveinteger) - Test if an argument is a positive integer (non-zero) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L153))
+- [`tput`]({rel}guide/command.md#tput)
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
+- [convertValue]({rel}tools/sugar-core.md#convertvalue) - map a value from one value to another given from-to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L161))
 

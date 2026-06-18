@@ -1,1 +1,1 @@
-[gitFindHome]({rel}tools/git.md#gitfindhome) - Finds \`.git\` directory above or at \`startingDirectory\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L438))
+[gitFindHome]({rel}tools/git.md#gitfindhome) - Find \`git\` home directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L438))

@@ -19,11 +19,8 @@ _documentationTemplateFormatter_requires() {
   local eof=false && while ! $eof; do
     local requiresTokens=() && IFS=" " read -d $'\n' -r -a requiresTokens || eof=true
     [ "${#requiresTokens[@]}" -eq 0 ] || local token && for token in "${requiresTokens[@]+"${requiresTokens[@]}"}"; do
-      local f="_documentationTemplateFormatter_builtin"
-      if isBashBuiltin "$token" && isFunction "$f"; then
-        printf -- "%s\n" "$("$f" <<<"$token")"
-      elif isFunction "$token"; then
-        _documentationTemplateFormatterSeeStream <<<"$token"
+      if isFunction "$token" || isExecutable "$token" || isBashBuiltin "$token"; then
+        [ "${token#_}" != "$token" ] || _documentationTemplateFormatterSeeStream <<<"$token"
       else
         printf -- "%s\n" "$token"
       fi
@@ -35,10 +32,7 @@ _documentationTemplateFormatter_requires() {
 # Format see items as a list
 #
 _documentationTemplateFormatter_see() {
-  local eof=false && while ! $eof; do
-    local seeTokens=() && IFS=" " read -d $'\n' -r -a seeTokens || eof=true
-    [ "${#seeTokens[@]}" -eq 0 ] || printf "%s\n" "${seeTokens[@]}" | _documentationTemplateFormatterSeeStream | sed 's/^/- /g'
-  done
+  _documentationTemplateFormatterSeeStream | sed 's/^/- /g'
 }
 
 #
@@ -47,18 +41,33 @@ _documentationTemplateFormatter_see() {
 # stdout: token markup, one per line
 _documentationTemplateFormatterSeeStream() {
   local handler="_${FUNCNAME[0]}"
+
+  local bf="_documentationTemplateFormatter_builtin"
+  local ef="_documentationTemplateFormatter_executable"
+
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   local seeItems=() && while IFS=" " read -r -a seeItems; do
     local seeItem && for seeItem in "${seeItems[@]+"${seeItems[@]}"}"; do
       seeItem="$(textTrim "$seeItem")"
       if [ -n "$seeItem" ]; then
-        local seeFile && if seeFile=$(__documentationFile "$home" "SEE/$seeItem"); then
-          printf "%s\n" "$(cat "$seeFile")"
-        elif urlValid "$seeItem"; then
-          printf -- "[%s](%s)\n" "$(urlParseItem host "$seeItem")" "$seeItem"
-        else
-          printf -- "{SEE:%s}\n" "$seeItem"
-        fi
+        case "$seeItem" in
+        "["*)
+          printf -- "%s\n" "$seeItem"
+          ;;
+        *)
+          local seeFile && if seeFile=$(__documentationFile "$home" "SEE/$seeItem"); then
+            printf "%s\n" "$(cat "$seeFile")"
+          elif isBashBuiltin "$seeItem" && isFunction "$bf"; then
+            printf -- "%s\n" "$("$bf" <<<"$seeItem")"
+          elif isExecutable "$seeItem" && isFunction "$ef"; then
+            printf -- "%s\n" "$("$ef" <<<"$seeItem")"
+          elif urlValid "$seeItem"; then
+            printf -- "[%s](%s)\n" "$(urlParseItem host "$seeItem")" "$seeItem"
+          else
+            printf -- "{SEE:%s}\n" "$seeItem"
+          fi
+          ;;
+        esac
       fi
     done
   done

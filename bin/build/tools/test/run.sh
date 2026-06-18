@@ -149,7 +149,7 @@ __testRun() {
   ###########################################
   ! $verboseMode || decorate each code "${runner[@]}"
   local resultFlags=()
-  statusMessage timingReport "$__testStart" "__testRun setup"
+  statusMessage timingReport --slow "$TEST_HOOK_SLOW" "$__testStart" "__testRun setup"
   if "${runner[@]}" > >(tee -a "$captureStdout") 2> >(tee -a "$captureStderr"); then
     resultFlags+=("success")
     catchReturn "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?

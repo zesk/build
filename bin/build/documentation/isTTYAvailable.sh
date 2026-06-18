@@ -14,11 +14,11 @@ fn="isTTYAvailable"
 fnMarker="isttyavailable"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="environment" [4]="credits" [5]="url")
 line="376"
-rawComment=$'Summary: Quiet test for a TTY\nReturns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HAS_TTY` to avoid running the test each call.\nSee: stty /dev/tty\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: __BUILD_HAS_TTY\nCredits: Tim Perry\nURL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional\n\n'
+rawComment=$'Summary: Quiet test for a TTY\nReturns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HAS_TTY` to avoid running the test each call.\nSee: stty\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: __BUILD_HAS_TTY\nCredits: Tim Perry\nURL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
-see=$'stty /dev/tty\n'
+see=$'stty\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="c9d95fe989d5ed804848a3a372521fbf3bd72ba9"
+sourceHash="64a763a2e70568a8f8724961b50fb82c045e8f58"
 sourceLine="376"
 summary="Quiet test for a TTY"
 summaryComputed=""

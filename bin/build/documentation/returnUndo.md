@@ -10,8 +10,6 @@ Run a function and preserve exit code
 Returns `code`
 As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 
-
-
 > Location: `bin/build/tools/sugar.sh`
 
 #### Arguments
@@ -21,24 +19,6 @@ As a caveat, your command to `undo` can NOT take the argument `--` as a paramete
 - `undoFunction` - Callable. Optional. Command to run to undo something. Return status is ignored.
 - `--` - Flag. Optional. Used to delimit multiple commands.
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
-#### Debugging settings
-
-Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
-
-{build_debug}
-
 #### Examples
 
     local undo thing
@@ -47,41 +27,17 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
     thing=$(catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
     undo+=(-- deleteMassiveResource "$thing")
 
-
-#### Sample Output
-
-{output}
-
 #### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-#### Local cache
-
-{local_cache}
-
-#### Environment
-
-{environment}
-
 #### Requires
 
+- [isUnsignedInteger]({rel}tools/type.md#isunsignedinteger) - Is value an unsigned integer? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L162))
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [execute]({rel}tools/sugar-core.md#execute) - Run binary and output failed command upon error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L140))
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 
-
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/sugar.sh`, function `returnUndo` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

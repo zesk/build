@@ -24,8 +24,6 @@ $(--first) - outputs the message starting at the cursor, no newline
 $(--last) - outputs the message starting at the cursor, with a newline
 $(--inline) - Outputs the message at the cursor with a newline
 
-
-
 > Location: `bin/build/tools/colors.sh`
 
 #### Arguments
@@ -35,34 +33,11 @@ $(--inline) - Outputs the message at the cursor with a newline
 - `--inline` - Flag. Optional. Inline message displays with newline when animation is NOT available.
 - `command` - Required. Commands which output a message.
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
-#### Debugging settings
-
-Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
-
-{build_debug}
-
 #### Examples
 
     statusMessage decorate info "Loading ..."
     bin/load.sh >>"$loadLogFile"
     consoleLineFill
-
-
-#### Sample Output
-
-{output}
 
 #### Return codes
 
@@ -70,30 +45,16 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - `1` - Environment error
 - `2` - Argument error
 
-#### Local cache
-
-{local_cache}
-
 #### Environment
 
 - Intended to be run on an interactive console. Should support $(tput cols).
 
 #### Requires
 
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [consoleHasAnimation]({rel}tools/decorate.md#consolehasanimation) - Does the console support animation? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L55))
+- [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [validate]({rel}tools/validate.md#validate) - Validate a value by type ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L95))
+- [consoleLineFill]({rel}tools/decorate.md#consolelinefill) - Clear a line in the console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L251))
 
-
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/colors.sh`, function `statusMessage` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

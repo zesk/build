@@ -121,7 +121,12 @@ __testSuiteTestFileProcess() {
   local testFunction && while read -r testFunction; do
     __testSuiteTestFunctionProcess "$handler" "$testFileCache/$testFunction" "$filename" "$testFunction" "$suiteName" "$home" >>"$testFinderTemp" || returnClean $? "${clean[@]}" || return $?
   done < <(__testLoad "$handler" "$filename")
-  __testSuiteOrdering "$handler" --cache "$cacheDirectory" < <(catchReturn "$handler" sort -u "$testFinderTemp") >"$testFinder" || throwEnvironment "$handler" "Ordering failed $?" || returnClean $? "${clean[@]}" || return $?
+  if [ ! -f "$testFinderTemp" ] || fileIsEmpty "$testFinderTemp"; then
+    statusMessage --last decorate warning "No tests found in test file $(decorate file "$filename")"
+    catchReturn "$handler" printf -- "" >"$testFinder" || returnClean $? "${clean[@]}" || return $?
+  else
+    __testSuiteOrdering "$handler" --cache "$cacheDirectory" < <(catchReturn "$handler" sort -u "$testFinderTemp") >"$testFinder" || throwEnvironment "$handler" "Ordering failed $?" || returnClean $? "${clean[@]}" || return $?
+  fi
   catchEnvironment "$handler" rm -f "$testFinderTemp" || return $?
 }
 

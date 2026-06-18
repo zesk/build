@@ -361,7 +361,7 @@ testParseBoolean() {
   done < <(__dataParseBoolean)
 }
 
-__dataShaPipe() {
+__dataTextSHA() {
   cat <<'EOF'
 1d229271928d3f9e2bb0375bd6ce5db6c6d348d9|Hello
 adc83b19e793491b1c6ea0fd8b46cd9f32e592fc|
@@ -369,11 +369,23 @@ adc83b19e793491b1c6ea0fd8b46cd9f32e592fc|
 EOF
 }
 
-testShaPipe() {
+testTextSHA() {
   local expected content
   while IFS="|" read -r expected content; do
     assertEquals --display "${content:-blank}" "$expected" "$(textSHA <<<"$content")" || return $?
-  done < <(__dataShaPipe)
+  done < <(__dataTextSHA)
+}
+
+testTextSHACached() {
+  local handler="returnMessage"
+  local expected content
+
+  local temp && temp=$(fileTemporaryName "$handler" -d) || return $?
+  while IFS="|" read -r expected content; do
+    printf "%s" "$content" >"$temp/$expected"
+    assertEquals --display "${content:-blank}" "$expected" "$(textSHA --cache "$temp" "$temp/$expected")" || return $?
+  done < <(__dataTextSHA)
+  catchReturn "$handler" rm -rf "$temp" || return $?
 }
 
 __dataPlainLength() {

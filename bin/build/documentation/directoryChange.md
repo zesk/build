@@ -24,6 +24,6 @@ Run a command after changing directory to it and then returning to the previous 
 
 #### Requires
 
-- [`pushd`]({rel}/guide/builtin.md#pushd)
-- [`popd`]({rel}/guide/builtin.md#popd)
+- [`pushd`]({rel}guide/builtin.md#pushd)
+- [`popd`]({rel}guide/builtin.md#popd)
 

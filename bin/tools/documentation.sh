@@ -3,13 +3,22 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-_documentationTemplateFormatter_builtin() {
+__documentationTemplateFormatter_linkMaker() {
   local eof=false && while ! $eof; do
     local tokens=() && IFS=" " read -d $'\n' -r -a tokens || eof=true
     [ "${#tokens[@]}" -eq 0 ] || local token && for token in "${tokens[@]}"; do
-      printf -- "[\`%s\`]({rel}guide/builtin.md#%s)\n" "$token" "$(stringLowercase "$token")"
+      # shellcheck disable=SC2059
+      printf -- "$@" "$token" "$(stringLowercase "$token")"
     done
   done
+}
+
+_documentationTemplateFormatter_builtin() {
+  __documentationTemplateFormatter_linkMaker "[\`%s\`]({rel}guide/builtin.md#%s)\n"
+}
+
+_documentationTemplateFormatter_executable() {
+  __documentationTemplateFormatter_linkMaker "[\`%s\`]({rel}guide/command.md#%s)\n"
 }
 
 __buildDocumentationCleanDirectory() {
@@ -38,7 +47,7 @@ buildDocumentationBuild() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -46,7 +55,7 @@ buildDocumentationBuild() {
     --verbose) vv+=("$argument") && verboseFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift

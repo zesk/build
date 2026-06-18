@@ -35,5 +35,5 @@ Integer
 
 #### See Also
 
-- {SEE:stty}
+- [`stty`]({rel}guide/command.md#stty)
 

@@ -27,41 +27,11 @@ Fetch URL content
 - `url` - URL. Required. URL to fetch to target file.
 - `file` - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
-#### Debugging settings
-
-Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
-
-{build_debug}
-
-#### Examples
-
-{example}
-
-#### Sample Output
-
-{output}
-
 #### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Local cache
-
-{local_cache}
 
 #### Environment
 
@@ -69,20 +39,11 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### Requires
 
+- [returnMessage]({rel}tools/sugar-core.md#returnmessage) - Return passed in integer return code and output message to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L143))
+- [executableExists]({rel}tools/bash.md#executableexists) - Does a binary exist in the PATH? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L174))
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [validate]({rel}tools/validate.md#validate) - Validate a value by type ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L95))
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [throwEnvironment]({rel}tools/sugar-core.md#throwenvironment) - Run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L226))
+- [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
 
-
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/url.sh`, function `urlFetch` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

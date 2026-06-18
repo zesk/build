@@ -11,13 +11,13 @@ file="bin/build/tools/colors.sh"
 fn="colorNormalize"
 fnMarker="colornormalize"
 foundNames=([0]="argument" [1]="requires")
-line="560"
+line="561"
 rawComment=$'Redistribute color values to make brightness adjustments more balanced\nArgument: --help - Flag. Optional. Display this help.\nRequires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich\n\n'
 requires=$'bc catchEnvironment read usageArgumentUnsignedInteger packageWhich\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="5fd233b8bd09bd24d690dfb4794e1b25841c43c3"
-sourceLine="560"
+sourceHash="64a763a2e70568a8f8724961b50fb82c045e8f58"
+sourceLine="561"
 summary="Redistribute color values to make brightness adjustments more balanced"
 summaryComputed="true"
 usage="colorNormalize [ --help ]"

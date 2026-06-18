@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"--verbose - Flag. Optional. Display progress to the terminal."$'\n'"--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"--force - Flag. Optional. Force even if it was updated recently."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n--verbose - Flag. Optional. Display progress to the terminal.\n--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n--force - Flag. Optional. Force even if it was updated recently.\n'
 base="package.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Update packages lists and sources"$'\n'""$'\n'""
+description=$'Update packages lists and sources\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/package.sh"
 fn="packageUpdate"
 fnMarker="packageupdate"
 foundNames=([0]="argument")
 line="163"
-rawComment="Update packages lists and sources"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --verbose - Flag. Optional. Display progress to the terminal."$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: --force - Flag. Optional. Force even if it was updated recently."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Update packages lists and sources\nArgument: --help - Flag. Optional. Display this help.\nArgument: --verbose - Flag. Optional. Display progress to the terminal.\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nArgument: --force - Flag. Optional. Force even if it was updated recently.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"
-sourceHash="a864f8a04df8d4125b28600b085b2148235205d2"
+sourceHash="6c84223fe5bc14c2b9baec08ee22b36edea72ad6"
 sourceLine="163"
 summary="Update packages lists and sources"
 summaryComputed="true"

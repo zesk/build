@@ -24,5 +24,6 @@ Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 
 #### See Also
 
-- [bashDebug]({rel}tools/debug.md#bashdebug) - Bash debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L43))[bashDebuggerDisable]({rel}tools/debug.md#bashdebuggerdisable) - Disable the debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L98))
+- [bashDebug]({rel}tools/debug.md#bashdebug) - Bash debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L43))
+- [bashDebuggerDisable]({rel}tools/debug.md#bashdebuggerdisable) - Disable the debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L98))
 

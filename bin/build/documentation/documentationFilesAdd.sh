@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationFilesAdd"
 fnMarker="documentationfilesadd"
 foundNames=([0]="argument")
-line="556"
+line="554"
 rawComment=$'Git add documentation files\nJust the first path.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="38500aa3e5be0ae446052278e0b3ea877261e5a8"
-sourceLine="556"
+sourceHash="a8ddc3085c0bd75f808305b573edf755e62ddc0b"
+sourceLine="554"
 summary="Git add documentation files"
 summaryComputed="true"
 usage="documentationFilesAdd [ --help ]"

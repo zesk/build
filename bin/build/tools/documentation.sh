@@ -73,7 +73,7 @@ _bashDocumentationExtract() {
 # Uses cached files at `BUILD_DOCUMENTATION_PATH`, assumes documentation cache structure:
 #
 # - `$docHome/functionName.md` - Markdown documentation
-# - `$docHome/SEE/functionName.md` - Markdown documentation for `{SEE:functionName}`
+# - `$docHome/SEE/functionName.md` - Markdown documentation for `{"SEE:functionName"}`
 # - `$docHome/functionName.sh` - `functionName` settings
 # - `$docHome/env/environmentName.md` - Markdown documentation for `environmentName` environment variable
 # - `$docHome/env/environmentName.sh` - `environmentName` environment variable settings
@@ -147,7 +147,7 @@ _documentationTemplate() {
 # Documentation Files generated:
 #
 # - `ENV_NAME.md` - Documentation page for `ENV_NAME`
-# - `SEE/ENV_NAME.md` - `{SEE:ENV_NAME}` content
+# - `SEE/ENV_NAME.md` - `{"SEE:ENV_NAME"}` content
 # - `env/ENV_NAME.sh` - Settings extracted from environment file.
 # - `env/ENV_NAME.md` - Documentation line for `ENV_NAME`
 # - `env/more/ENV_NAME.md` - Documentation more for `ENV_NAME`. Only created if needed.
@@ -360,7 +360,7 @@ _documentationIndexDocumentation() {
 # Argument: codePath ... - Directory. Required. OneOrMore. Path where code (`.sh` files) is stored (should remain identical between invocations)
 # Argument: --target targetPath - Optional. Location to store the index file, called `code.index`.
 # Argument: --verbose - Flag. Optional. Talk voluminously.
-# See: __documentationIndexLookup
+# See: documentationIndexLookup
 # Requires: __pcregrep
 documentationIndexGenerate() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
@@ -422,13 +422,11 @@ _documentationIndexUnlinkedFunctions() {
 }
 
 # Document an item and generate a template (markdown). To custom format any
-# of the fields in this, write functions in the form `_documentationTemplateFormatter_${name}` such that
+# of the fields in this, write functions in the form `_documentationTemplateFormatter_${"name"}` such that
 # name matches the variable name (lower case alphanumeric characters and underscores).
 #
-# Filter functions should modify the input/output pipe; an example can be found by looking at
-# sample function `_documentationTemplateFormatter_return_code`.
+# Filter functions should modify the input/output pipe.
 #
-# See: _documentationTemplateFormatter_return_code
 # Argument: template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`
 # Argument: settingsFile - Required. Settings file to be loaded.
 # Return Code: 0 - Success
@@ -475,7 +473,7 @@ documentationFunctionsCompile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -590,7 +588,7 @@ documentationFunctionRemove() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -601,7 +599,7 @@ documentationFunctionRemove() {
     --git) gitRemove=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -718,7 +716,7 @@ bashDocumentationDefaults() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -728,7 +726,7 @@ bashDocumentationDefaults() {
     --release-title) shift && releaseTitle="$(validate "$handler" EmptyString "$argument" "${1-}")" || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -779,7 +777,7 @@ bashDocumentationMissing() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -791,7 +789,7 @@ bashDocumentationMissing() {
     --target) shift && templateTarget="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -844,7 +842,7 @@ bashDocumentationDeriveFunction() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -895,7 +893,7 @@ bashDocumentationDeriveSee() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

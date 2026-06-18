@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="format - String. Optional. Formatting string."$'\n'"red - UnsignedInteger. Optional. Red component."$'\n'"green - UnsignedInteger. Optional. Blue component."$'\n'"blue - UnsignedInteger. Optional. Green component."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'format - String. Optional. Formatting string.\nred - UnsignedInteger. Optional. Red component.\ngreen - UnsignedInteger. Optional. Blue component.\nblue - UnsignedInteger. Optional. Green component.\n--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Take r g b decimal values and convert them to hex color values"$'\n'"Takes arguments or stdin values in groups of 3."$'\n'""$'\n'""
+description=$'Take r g b decimal values and convert them to hex color values\nTakes arguments or stdin values in groups of 3.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/colors.sh"
 fn="colorFormat"
 fnMarker="colorformat"
 foundNames=([0]="stdin" [1]="argument")
-line="656"
-rawComment="Take r g b decimal values and convert them to hex color values"$'\n'"stdin: list:UnsignedInteger"$'\n'"Argument: format - String. Optional. Formatting string."$'\n'"Argument: red - UnsignedInteger. Optional. Red component."$'\n'"Argument: green - UnsignedInteger. Optional. Blue component."$'\n'"Argument: blue - UnsignedInteger. Optional. Green component."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Takes arguments or stdin values in groups of 3."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="657"
+rawComment=$'Take r g b decimal values and convert them to hex color values\nstdin: list:UnsignedInteger\nArgument: format - String. Optional. Formatting string.\nArgument: red - UnsignedInteger. Optional. Red component.\nArgument: green - UnsignedInteger. Optional. Blue component.\nArgument: blue - UnsignedInteger. Optional. Green component.\nArgument: --help - Flag. Optional. Display this help.\nTakes arguments or stdin values in groups of 3.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="07796ffc2b7321ebd8b87945b7b797d05510cb69"
-sourceLine="656"
-stdin="list:UnsignedInteger"$'\n'""
+sourceHash="64a763a2e70568a8f8724961b50fb82c045e8f58"
+sourceLine="657"
+stdin=$'list:UnsignedInteger\n'
 summary="Take r g b decimal values and convert them to"
 summaryComputed="true"
 usage="colorFormat [ format ] [ red ] [ green ] [ blue ] [ --help ]"

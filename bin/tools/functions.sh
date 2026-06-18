@@ -16,6 +16,18 @@ _buildFunctionsListSeeUnfinished() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+buildFunctionsSeeLoop() {
+  local count=99
+
+  while [ "$count" -gt 0 ]; do
+    count=$(buildFunctionsListSeeUnfinished | fileLineCount)
+    [ "$count" -gt 0 ] || break
+    decorate big "$count" | decorate red
+    buildFunctionsListSeeUnfinished | head -10
+    sleep 10 && clear
+  done
+}
+
 buildFunctionsSeeAgain() {
   local handler="_${FUNCNAME[0]}"
 
@@ -34,8 +46,10 @@ _buildFunctionsSeeAgain() {
 
 __buildInternalFunctions() {
   cat <<'EOF'
+_installRemotePackage
 __bashDocumentationCached
 __usageMessage
+__functionSettings
 __dateFromTimestamp
 EOF
 }
@@ -47,7 +61,10 @@ EOF
 # Argument: functionName ... - String. Optional. Specific functions to compile.
 buildFunctionsCompile() {
   local handler="_${FUNCNAME[0]}"
-  __buildFunctionsCompile "$handler" "$@" < <(buildFunctions && __buildInternalFunctions)
+  __buildFunctionsCompile "$handler" "$@" < <(
+    __buildInternalFunctions
+    buildFunctions
+  )
 }
 _buildFunctionsCompile() {
   # __IDENTICAL__ bashDocumentation 1

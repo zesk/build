@@ -29,5 +29,5 @@ Output a bar as wide as the console using the `=` symbol.
 
 #### See Also
 
-- [consoleColumns]({rel}tools/console.md#consolecolumns)- `` - Column count in current console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L407))
+- [consoleColumns]({rel}tools/console.md#consolecolumns) - Column count in current console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L407))
 

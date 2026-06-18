@@ -1,12 +1,12 @@
 ### `gitFindHome`
 
-> Finds `.git` directory above or at `startingDirectory`
+> Find `git` home directory
 
 #### Usage
 
     gitFindHome [ startingDirectory ]
 
-Finds `.git` directory above or at `startingDirectory`
+Finds `.git` directory above or at `startingDirectory`.
 
 > Location: `bin/build/tools/git.sh`
 
@@ -19,8 +19,4 @@ Finds `.git` directory above or at `startingDirectory`
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### See Also
-
-- {SEE:findFileHome}
 

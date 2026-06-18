@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="If you want to explore what colors are available in your terminal, try this."$'\n'""$'\n'""
+description=$'If you want to explore what colors are available in your terminal, try this.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/colors.sh"
 fn="colorSampleCodes"
 fnMarker="colorsamplecodes"
 foundNames=([0]="summary" [1]="argument")
 line="106"
-rawComment="Summary: Alternate color output"$'\n'"If you want to explore what colors are available in your terminal, try this."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Summary: Alternate color output\nIf you want to explore what colors are available in your terminal, try this.\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="07796ffc2b7321ebd8b87945b7b797d05510cb69"
+sourceHash="64a763a2e70568a8f8724961b50fb82c045e8f58"
 sourceLine="106"
 summary="Alternate color output"
 summaryComputed=""

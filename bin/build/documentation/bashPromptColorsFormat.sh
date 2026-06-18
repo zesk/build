@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'text - String. Required. List of color names in a colon separated list.\n'
 base="prompt.sh"
@@ -16,7 +16,7 @@ rawComment=$'Summary: Convert colors to escape codes\nGiven a list of color name
 requires=$'decorations read inArray decorate listJoin\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="c8be00d8dedfc8df4976cb58038790d9cdce3c69"
+sourceHash="2f5a82d1f8c3a101b06abd0c96a2942f9be434a5"
 sourceLine="205"
 stdout=$'Outputs color *codes* separated by colons.\n'
 summary="Convert colors to escape codes"

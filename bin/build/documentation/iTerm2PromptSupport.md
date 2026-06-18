@@ -35,9 +35,6 @@ It also reports the host, user and current directory back to iTerm2 on every pro
 - [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
 - [bashPromptMarkers]({rel}tools/prompt.md#bashpromptmarkers) - Set markers for terminal integration ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L129))
 - iTerm2UpdateState
-- {SEE:__iTerm2_mark}
-- {SEE:__iTerm2_suffix}
-- {SEE:__iTerm2UpdateState}
 
 #### See Also
 

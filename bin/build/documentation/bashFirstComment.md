@@ -23,7 +23,9 @@ Excludes lines containing the following tokens:
 
 #### Requires
 
-- - [fileReverseLines]({rel}tools/file.md#filereverselines) - Reverse output lines ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L106))sed
-- cut
-- grep
+- [fileReverseLines]({rel}tools/file.md#filereverselines) - Reverse output lines ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L106))
+- [`sed`]({rel}guide/command.md#sed)
+- [`cut`]({rel}guide/command.md#cut)
+- [`grep`]({rel}guide/command.md#grep)
+- [convertValue]({rel}tools/sugar-core.md#convertvalue) - map a value from one value to another given from-to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L161))
 

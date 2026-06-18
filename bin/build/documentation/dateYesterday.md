@@ -27,5 +27,9 @@ Returns yesterday's date, in `YYYY-MM-DD` format. (same as `%F`)
 
 #### Requires
 
-- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))date
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [`date`]({rel}guide/command.md#date)
+- [convertValue]({rel}tools/sugar-core.md#convertvalue) - map a value from one value to another given from-to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L161))
+- [dateFromTimestamp]({rel}tools/date.md#datefromtimestamp) - Converts an integer date to a date formatted timestamp (e.g. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L75))
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 

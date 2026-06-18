@@ -30,5 +30,5 @@ The file is named `./.interrupt.log` and is appended each time the program is te
 
 #### Requires
 
-- [`trap`]({rel}/guide/builtin.md#trap)
+- [`trap`]({rel}guide/builtin.md#trap)
 

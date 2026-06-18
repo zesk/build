@@ -93,21 +93,21 @@ __usageMessageStyle() {
 # Requires: decorate returnCodeString
 __usageMessage() {
   local returnCode="${1-0}"
+  # __IDENTICAL__ localTrace 1
+  local trace="${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]} -> "
   [ $# -eq 0 ] || shift
-  local suffix="$*"
+  local suffix="$*" icon="" style=""
+  __usageMessageIcon "$returnCode"
+  __usageMessageStyle "$returnCode" "$suffix"
   if [ "$returnCode" -eq 0 ]; then
     [ -n "$suffix" ] || return 0
-    __usageMessageStyle "$returnCode" "$suffix"
+    printf "%s %s\n" "$icon" "$(decorate "$style" "$suffix")"
   elif [ "$returnCode" != 2 ]; then
     [ -z "$suffix" ] || suffix=" $(decorate warning "$suffix")"
-    local icon && __usageMessageIcon "$returnCode"
-    local style && __usageMessageStyle "$returnCode"
-    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
     [ -z "$suffix" ] || suffix=" $(decorate error "$suffix")"
-    local icon && __usageMessageIcon "$returnCode"
-    local style && __usageMessageStyle "$returnCode"
-    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 

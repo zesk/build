@@ -24,5 +24,8 @@ Extract a bash comment from a file. Excludes lines containing the following toke
 
 #### Requires
 
-- head
+- [`head`]({rel}guide/command.md#head)
+- [bashFinalComment]({rel}tools/bash.md#bashfinalcomment) - Extract final comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L561))
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 

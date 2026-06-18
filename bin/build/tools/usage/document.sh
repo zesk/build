@@ -49,9 +49,9 @@ __bashDocumentation() {
 
   shift 2 || throwArgument "$handler" "Missing arguments" || return $?
 
-  local home returnCode="${1-NONE}"
+  local returnCode="${1-NONE}"
 
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   shift 2>/dev/null || :
 
@@ -76,7 +76,7 @@ __bashDocumentation() {
   case "$returnCode" in
   0) if buildDebugEnabled "fast-usage"; then __usageMessage "$returnCode" "$@" && return "$returnCode"; fi ;;
   2) if buildDebugEnabled "fast-usage"; then __usageMessage "$returnCode" "$@" 1>&2 && return "$returnCode"; fi ;;
-  *) __usageMessage "$returnCode" "$(decorate code " $functionName ")" "$@" 1>&2 && return "$returnCode" ;;
+  *) __usageMessage "$returnCode" "$(decorate code "[$functionName]")" "$@" 1>&2 && return "$returnCode" ;;
   esac
 
   [ "$returnCode" -eq 0 ] || exec 3>&1 1>&2

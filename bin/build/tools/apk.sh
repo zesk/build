@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildBashHeader 5
+#
+# apk.sh
+#
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Alpine package manager `apk`
 #

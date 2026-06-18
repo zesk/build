@@ -28,5 +28,5 @@ Convert text to uppercase
 
 #### Requires
 
-- tr
+- [`tr`]({rel}guide/command.md#tr)
 

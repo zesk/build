@@ -378,19 +378,6 @@ If not specified, uses the default for the current platform.
 - [dockerLocalContainer]({rel}tools/docker.md#dockerlocalcontainer) - Run a build container using given docker image. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L119))- [dockerPlatformDefault]({rel}tools/docker.md#dockerplatformdefault) - Fetch the default platform for docker ([source](https://github.com/zesk/build/blob/main/bin/build/tools/docker.sh#L22))
 
 
-## `BUILD_DOCUMENTATION_PATH`
-
-> **Build Documentation Path List** &mdash; Search path for documentation settings file.
-> > **Type**: *DirectoryList* • **Category**: *Bash*
-
-Search path for documentation settings file.
-A colon `:` separated list of paths to search for function documentation settings file for `__bashDocumentationCached`
-
-### See Also
-
-- {SEE:__bashDocumentationCached}
-
-
 ## `BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN`
 
 > **Build documentation URL Pattern** &mdash; Links in documentation
@@ -517,18 +504,6 @@ Version of npm to install using native `npm` binary.
 The default package manager on systems which have more than one package manager available.
 
 
-## `BUILD_PAIR_WIDTH`
-
-> **Pair Width** &mdash; Width for pairs. Defaults to `40`.
-> > **Type**: *PositiveInteger* • **Category**: *Decoration*
-
-Width for pairs. Defaults to `40`.
-
-### See Also
-
-- {SEE:__decorateExtensionPair}
-
-
 ## `BUILD_PRECOMMIT_EXTENSIONS`
 
 > **Pre-Commit Extension List** &mdash; List of extensions for which build hooks may be written
@@ -617,21 +592,6 @@ State to store state of current terminal color state
 > > **Type**: *String* • **Category**: *Testing*
 
 Test flags affect controls and how tests are run.
-
-
-## `BUILD_TEXT_BINARY`
-
-> **Text Executable** &mdash; Binary used to generate `decorate big`
-> > **Type**: *Callable* • **Category**: *Decoration*
-
-Binary used to generate `decorate big`
-
-### See Also
-
-- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89)){SEE:big}
-- {SEE:__aptStandardPackages}
-- {SEE:__apkStandardPackages}
-- {SEE:__brewStandardPackages}
 
 
 ## `BUILD_TIMESTAMP`
@@ -961,18 +921,6 @@ Bash Prompt for terminals
 ### See Also
 
 - [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
-
-
-## `SHFMT_ARGUMENTS`
-
-> **Shell Formatting Arguments** &mdash; Arguments passed to shfmt when running as a pre-commit hook
-> > **Type**: *Array* • **Category**: *Bash*
-
-Arguments passed to shfmt when running as a pre-commit hook
-
-### See Also
-
-- {SEE:pre-commit-sh.sh}
 
 
 ## `TERM`

@@ -313,7 +313,7 @@ _installRemotePackage() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -635,7 +635,7 @@ textVersionSort() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -644,7 +644,7 @@ textVersionSort() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -830,7 +830,7 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL urlFetch 168
+# IDENTICAL urlFetch 178
 
 # Summary: Fetch URL content
 # DOC TEMPLATE: --help 1
@@ -850,7 +850,7 @@ __validateTypeCallable() {
 # Argument: file - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage executableExists decorate
 # Requires: validate
-# Requires: throwArgument catchArgument
+# Requires: throwArgument
 # Requires: throwEnvironment catchEnvironment
 # Environment: BUILD_URL_TIMEOUT
 urlFetch() {
@@ -860,19 +860,21 @@ urlFetch() {
   local binary=() userHasColons=false user="" password="" format="" url="" target=""
   local maxRedirections=9 timeoutSeconds="" debugFlag=false saveHeadersFile=""
 
+  local data="" hasData=false method=""
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --header)
-      shift && local name="${1%%:}" value="${1#*:}"
+      shift && local name="${1%%:*}" value="${1#*:}"
       if [ "$name" = "${1-}" ] || [ "$value" = "${1-}" ]; then
-        catchArgument "$handler" "Invalid $argument ${1-} passed" || return $?
+        throwArgument "$handler" "Invalid $argument ${1-} passed" || return $?
       fi
       headers+=("$1")
       curlArgs+=("--header" "$1")
@@ -900,6 +902,8 @@ urlFetch() {
       ;;
     --redirect-max) shift && maxRedirections=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --password) shift && password="$1" ;;
+    --data) shift && data="$1" && hasData=true ;;
+    --method) shift && method=$(validate "$handler" String "$argument" "${1-}") && method=$(stringUppercase "$method") || return $? ;;
     --user)
       shift && user=$(validate "$handler" String "$argument (user)" "$user") || return $?
       if [ "$user" != "${user#*:}" ]; then
@@ -928,8 +932,8 @@ urlFetch() {
         shift
         break
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -968,12 +972,17 @@ urlFetch() {
     wgetArgs+=("--tries=1 --timeout=$timeoutSeconds")
     genericArgs+=(--timeout "$timeoutSeconds")
   fi
-
+  if [ -n "$method" ]; then
+    curlArgs+=(-X "$method")
+    wgetArgs+=(-X "$method")
+    genericArgs+=(--method "$method")
+  fi
   [ "${#binary[@]}" -gt 0 ] || throwEnvironment "$handler" "wget or curl required" || return $?
   [ -n "$format" ] || format="${binary[0]}"
   ! $debugFlag || binary=("decorate" "each" "code" "${binary[@]}")
   case "$format" in
   wget)
+    ! $hasData || wgetArgs+=(--post-data "$data")
     # -q - quiet
     wgetArgs+=(--max-redirect "$maxRedirections" -q)
     if [ -z "$saveHeadersFile" ]; then
@@ -988,6 +997,7 @@ urlFetch() {
     fi
     ;;
   curl)
+    ! $hasData || curlArgs+=(-d "$data")
     # -L - follow redirects, -s - silent, -f - (FAIL) ignore documents for 4XX or 5XX errors
     curlArgs+=(-L --max-redirs "$maxRedirections" -s -f --no-show-error)
     catchEnvironment "$handler" "${binary[@]}" "$url" "$@" "${curlArgs[@]+"${curlArgs[@]}"}" || return $?
@@ -1093,21 +1103,21 @@ __usageMessageStyle() {
 # Requires: decorate returnCodeString
 __usageMessage() {
   local returnCode="${1-0}"
+  # __IDENTICAL__ localTrace 1
+  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
   [ $# -eq 0 ] || shift
-  local suffix="$*"
+  local suffix="$*" icon="" style=""
+  __usageMessageIcon "$returnCode"
+  __usageMessageStyle "$returnCode" "$suffix"
   if [ "$returnCode" -eq 0 ]; then
     [ -n "$suffix" ] || return 0
-    __usageMessageStyle "$returnCode" "$suffix"
+    printf "%s %s\n" "$icon" "$(decorate "$style" "$suffix")"
   elif [ "$returnCode" != 2 ]; then
     [ -z "$suffix" ] || suffix=" $(decorate warning "$suffix")"
-    local icon && __usageMessageIcon "$returnCode"
-    local style && __usageMessageStyle "$returnCode"
-    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
     [ -z "$suffix" ] || suffix=" $(decorate error "$suffix")"
-    local icon && __usageMessageIcon "$returnCode"
-    local style && __usageMessageStyle "$returnCode"
-    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 
@@ -1512,7 +1522,7 @@ executableExists() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     --help) "$handler" 0 && return $? || return $? ;;
     --any) anyFlag=true ;;
@@ -1957,7 +1967,7 @@ _returnCodeString() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL returnMessage 31
+# IDENTICAL returnMessage 32
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -1967,9 +1977,10 @@ _returnCodeString() {
 returnMessage() {
   local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
   if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
-  local t="${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> "
-  isUnsignedInteger "$c" || returnMessage 2 "$t${h#_} non-integer \"$c\"" "$@" || return $?
-  if [ "$c" != "0" ]; then printf "%s%s %s\n" "❌ $t" "[$c]" "${*-§}" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
+  # __IDENTICAL__ localTrace 1
+  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
+  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\" ($trace)" "$@" || return $?
+  if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
 }
 _returnMessage() {
   # __IDENTICAL__ bashDocumentation 1

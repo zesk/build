@@ -19,6 +19,10 @@ Stop bash debugging if it is enabled.
 - `0` - bash debugging was stopped
 - `1` - bash debugging was not stopped because token did not match.
 
+#### Requires
+
+- [buildDebugEnabled]({rel}tools/debug.md#builddebugenabled) - Is build debugging enabled? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L24))
+
 #### See Also
 
 - [buildDebugStart]({rel}tools/debug.md#builddebugstart) - Start bash debugging ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L96))

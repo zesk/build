@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument="none"
 base="package.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="List installed packages on this system using package manager"$'\n'""$'\n'""
+description=$'List installed packages on this system using package manager\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/package.sh"
 fn="packageInstalledList"
 fnMarker="packageinstalledlist"
 foundNames=()
-line="639"
-rawComment="List installed packages on this system using package manager"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+line="638"
+rawComment=$'List installed packages on this system using package manager\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"
-sourceHash="a864f8a04df8d4125b28600b085b2148235205d2"
-sourceLine="639"
+sourceHash="6c84223fe5bc14c2b9baec08ee22b36edea72ad6"
+sourceLine="638"
 summary="List installed packages on this system using package manager"
 summaryComputed="true"
 usage="packageInstalledList"

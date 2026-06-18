@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationMaker"
 fnMarker="documentationmaker"
 foundNames=([0]="argument" [1]="return_code")
-line="454"
+line="452"
 rawComment=$'Generate documentation using source markdown and a mapping function.\nArgument: --verbose - Flag. Optional. Be wordy.\nArgument: --default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`\nArgument: sourcePath - Exists. Required. File or directory to convert.\nArgument: targetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.\nArgument: mapFunction ... - Function. Optional. Mapping function to use, and any arguments.\nReturn Code: 0 - Success\nReturn Code: 1 - Template file not found\n\n'
 return_code=$'0 - Success\n1 - Template file not found\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="38500aa3e5be0ae446052278e0b3ea877261e5a8"
-sourceLine="454"
+sourceHash="a8ddc3085c0bd75f808305b573edf755e62ddc0b"
+sourceLine="452"
 summary="Generate documentation using source markdown and a mapping function."
 summaryComputed="true"
 usage="documentationMaker [ --verbose ] [ --default defaultValue ] sourcePath [ targetPath ] [ mapFunction ... ]"

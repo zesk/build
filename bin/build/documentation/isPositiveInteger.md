@@ -9,8 +9,6 @@
 Test if an argument is a positive integer (non-zero)
 Takes one argument only.
 
-
-
 > Location: `bin/build/tools/type.sh`
 
 #### Arguments
@@ -18,61 +16,15 @@ Takes one argument only.
 - `value` - EmptyString. Required. Value to check if it is an unsigned integer
 - `--help` - Flag. Optional. Display this help.
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
-#### Debugging settings
-
-Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
-
-{build_debug}
-
-#### Examples
-
-{example}
-
-#### Sample Output
-
-{output}
-
 #### Return codes
 
 - `0` - if it is a positive integer
 - `1` - if it is not a positive integer
 
-#### Local cache
-
-{local_cache}
-
-#### Environment
-
-{environment}
-
 #### Requires
 
+- [catchArgument]({rel}tools/sugar-core.md#catchargument) - Run \`command\`, upon failure run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L238))
+- [isUnsignedInteger]({rel}tools/type.md#isunsignedinteger) - Is value an unsigned integer? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L162))
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 
-
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/type.sh`, function `isPositiveInteger` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

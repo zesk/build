@@ -26,6 +26,5 @@ Returns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HA
 
 #### See Also
 
-- {SEE:stty}
-- {SEE:/dev/tty}
+- [`stty`]({rel}guide/command.md#stty)
 

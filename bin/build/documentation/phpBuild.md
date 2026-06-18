@@ -39,7 +39,7 @@ Files are specified from the application root directory.
 - `1` - Environment error
 - `2` - Argument error
 
-#### See Also
+#### Environment
 
-- {SEE:BUILD_TARGET.sh}
+- [`BUILD_TARGET` Build Application Target File Name]({rel}env/#deployment) – **String**. The file to generate when generating builds [`BUILD_TIMESTAMP` Build Timestamp]({rel}env/#deployment) – **UnsignedInteger**. Time when a build was initiated, set upon first invocation [`APPLICATION_BUILD_DATE` Application Build Date]({rel}env/#deployment) – **String**. Time when a build was initiated, set upon first invocation [`APPLICATION_ID` Application ID]({rel}env/#deployment) – **String**. This is the unique hash which represents the source code [`APPLICATION_TAG` Application Tag]({rel}env/#deployment) – **String**. This is the full version number including debugging or release [`APPLICATION_VERSION` Application Version]({rel}env/#deployment) – **String**. This is the version number which can be displayed
 

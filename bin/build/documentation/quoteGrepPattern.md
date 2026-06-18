@@ -32,6 +32,6 @@ string quoted and appropriate to insert in a grep search or replacement phrase
 
 #### Requires
 
-- [`printf`]({rel}/guide/builtin.md#printf)
-- sed
+- [`printf`]({rel}guide/builtin.md#printf)
+- [`sed`]({rel}guide/command.md#sed)
 

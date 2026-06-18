@@ -1,5 +1,7 @@
+__bashDocumentationCached documentation/source/tools/internal.md
 __bashDocumentationCached documentation/source/tools/usage.md
 __buildIdenticalRepair documentation/source/tools/bin.md
+__dateFromTimestamp documentation/source/tools/internal.md
 __decorateExtensionAt documentation/source/tools/cursor.md
 __decorateExtensionAt documentation/source/tools/decorate.md
 __decorateExtensionBig documentation/source/tools/decorate.md
@@ -16,6 +18,7 @@ __decorateExtensionQuote documentation/source/tools/decorate.md
 __decorateExtensionSize documentation/source/tools/decorate.md
 __decorateExtensionWrap documentation/source/tools/decorate.md
 __errorHandler documentation/source/tools/interface.md
+__functionSettings documentation/source/tools/internal.md
 __functionSettings documentation/source/tools/usage.md
 __hookApplicationEnvironment documentation/source/tools/deploy.md
 __hookApplicationEnvironment documentation/source/tools/hooks.md
@@ -57,6 +60,7 @@ __installPackageConfiguration documentation/source/tools/build.md
 __packageCheckFunction documentation/source/tools/interface.md
 __packageUrlFunction documentation/source/tools/interface.md
 __packageVersionFunction documentation/source/tools/interface.md
+__usageMessage documentation/source/tools/internal.md
 __usageMessage documentation/source/tools/usage.md
 __usageMessageStyle documentation/source/tools/usage.md
 __validateTypeFingerprint documentation/source/tools/fingerprint.md
@@ -151,8 +155,8 @@ bashDocumentation documentation/source/tools/usage.md
 bashDocumentationAllEnvironment documentation/source/tools/documentation.md
 bashDocumentationAllFunctions documentation/source/tools/documentation.md
 bashDocumentationDefaults documentation/source/tools/documentation.md
-bashDocumentationDeriveFunction documentation/source/tools/internal.md
-bashDocumentationDeriveSee documentation/source/tools/internal.md
+bashDocumentationDeriveFunction documentation/source/tools/documentation.md
+bashDocumentationDeriveSee documentation/source/tools/documentation.md
 bashDocumentationExtract documentation/source/tools/documentation.md
 bashDocumentationMarkdown documentation/source/tools/usage.md
 bashDocumentationMissing documentation/source/tools/documentation.md
@@ -383,10 +387,10 @@ documentationBuild documentation/source/tools/unused.md
 documentationCache documentation/source/tools/documentation.md
 documentationEnvironmentFileParse documentation/source/tools/documentation.md
 documentationEnvironmentMake documentation/source/tools/documentation.md
-documentationFileCompile documentation/source/tools/internal.md
+documentationFileCompile documentation/source/tools/documentation.md
 documentationFileCompileParallel documentation/source/tools/internal.md
 documentationFilesAdd documentation/source/tools/documentation.md
-documentationFunctionCompile documentation/source/tools/internal.md
+documentationFunctionCompile documentation/source/tools/documentation.md
 documentationFunctionRemove documentation/source/tools/documentation.md
 documentationFunctionsCompile documentation/source/tools/documentation.md
 documentationIdenticalRepair documentation/source/tools/documentation.md

@@ -25,7 +25,7 @@ Variables applied to the environment template files:
 Documentation Files generated:
 
 - `ENV_NAME.md` - Documentation page for `ENV_NAME`
-- `SEE/ENV_NAME.md` - `{SEE:ENV_NAME}` content
+- `SEE/ENV_NAME.md` - `{"SEE:ENV_NAME"}` content
 - `env/ENV_NAME.sh` - Settings extracted from environment file.
 - `env/ENV_NAME.md` - Documentation line for `ENV_NAME`
 - `env/more/ENV_NAME.md` - Documentation more for `ENV_NAME`. Only created if needed.

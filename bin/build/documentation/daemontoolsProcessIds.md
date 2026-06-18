@@ -22,7 +22,7 @@ List any processes associated with daemontools supervisors
 
 #### Requires
 
-- pgrep
-- [`read`]({rel}/guide/builtin.md#read)
-- [`printf`]({rel}/guide/builtin.md#printf)
+- [`pgrep`]({rel}guide/command.md#pgrep)
+- [`read`]({rel}guide/builtin.md#read)
+- [`printf`]({rel}guide/builtin.md#printf)
 

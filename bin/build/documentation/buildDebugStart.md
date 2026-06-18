@@ -35,3 +35,7 @@ Example:     buildDebugStart || :
 
 - [`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
 
+#### Requires
+
+- [buildDebugEnabled]({rel}tools/debug.md#builddebugenabled) - Is build debugging enabled? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debug.sh#L24))
+

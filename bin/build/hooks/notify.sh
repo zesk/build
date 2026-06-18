@@ -34,7 +34,8 @@ __hookNotifySoundName() {
 __hookNotify() {
   local handler="_${FUNCNAME[0]}"
 
-  local title soundName="" ss=()
+  local soundName="" ss=() nn=() debugFlag=false
+  local title="" priority="" tags=""
 
   title="$(buildEnvironmentGet APPLICATION_NAME)"
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -42,18 +43,14 @@ __hookNotify() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --sound)
-      shift
-      soundName=$(validate "$handler" string "$argument" "${1-}") || return $?
-      ;;
-    --title)
-      shift
-      title=$(validate "$handler" string "$argument" "${1-}") || return $?
-      ;;
+    --debug) nn+=("$argument") && debugFlag=true ;;
+    --sound) shift && soundName=$(validate "$handler" string "$argument" "${1-}") || return $? ;;
+    --title) shift && title=$(validate "$handler" string "$argument" "${1-}") || return $? ;;
+    --tags | --priority) shift && nn+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     *)
       break
       ;;
@@ -61,7 +58,15 @@ __hookNotify() {
     shift
   done
 
+  bashDebugInterruptFile
+
+  [ -z "$priority" ] || nn+=(--priority "$priority")
+  [ -z "$tags" ] || nn+=(--priority "$priority")
+
+  local notificationExit=0 notificationReason=()
+
   if isDarwin; then
+    local ss=()
     if [ -n "$soundName" ]; then
       if [ "$soundName" = "-" ]; then
         ss=()
@@ -79,14 +84,29 @@ __hookNotify() {
     local message
     message="$(catchReturn "$handler" consoleToPlain <<<"$*")" || return $?
     [ -n "$message" ] || message="Silence is golden."
-    muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$message"
+    muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$message" || {
+      notificationExit=$? && notificationReason+=("darwinNotification")
+    }
   else
     decorate notice "NOTIFY: $title"
     printf "%s\n" "$*" | decorate info | decorate wrap "$(decorate notice "NOTIFY:")"
   fi
 
-  # IDENTICAL hookRunOptionalNext 1
-  catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+  if [ -n "$(buildEnvironmentGet --quiet NOTIFY_URL)" ]; then
+    ! $debugFlag && nn=(notifyURL) || nn=(executeEcho notifyURL "${nn[@]+"${nn[@]}"}")
+    local response && response=$(fileTemporaryName "$handler") || return $?
+    catchReturn "$handler" "${nn[@]+"${nn[@]}"}" --title "$title" "$message" >"$response" || {
+      notificationExit=$? && notificationReason+=("notifyURL")
+      dumpPipe "Response:" <"$response"
+      catchReturn "$handler" rm -f "$response" || return $?
+    }
+  fi
+
+  catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || {
+    notificationExit=$? && notificationReason+=("notify-next")
+  }
+  [ "$notificationExit" -eq 0 ] || printf "%s\n" "${notificationReason[@]}" 1>&2
+  return $notificationExit
 }
 ___hookNotify() {
   # __IDENTICAL__ bashDocumentation 1

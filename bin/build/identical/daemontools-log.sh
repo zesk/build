@@ -5,7 +5,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL returnMessage 31
+# IDENTICAL returnMessage 32
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -15,9 +15,10 @@
 returnMessage() {
   local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
   if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
-  local t="${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> "
-  isUnsignedInteger "$c" || returnMessage 2 "$t${h#_} non-integer \"$c\"" "$@" || return $?
-  if [ "$c" != "0" ]; then printf "%s%s %s\n" "❌ $t" "[$c]" "${*-§}" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
+  # __IDENTICAL__ localTrace 1
+  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
+  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\" ($trace)" "$@" || return $?
+  if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
 }
 _returnMessage() {
   # __IDENTICAL__ bashDocumentation 1

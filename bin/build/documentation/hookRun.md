@@ -51,9 +51,8 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### See Also
 
-- {SEE:hooks.md}
-- [hookRunOptional]({rel}tools/hook.md#hookrunoptional) - Identical to \`hookRun\` but returns exit code zero if the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L154))
-- [hookRun]({rel}tools/hook.md#hookrun) - Run a project hook ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L128))
+- [hookExists]({rel}tools/hook.md#hookexists) - Determine if a hook exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L230))
+- [hookRunOptional]({rel}tools/hook.md#hookrunoptional) - Optionally run a project hook ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L154))
 - [hookSource]({rel}tools/hook.md#hooksource) - Run a project hook ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L186))
 - [hookSourceOptional]({rel}tools/hook.md#hooksourceoptional) - Identical to \`hookRun\` but returns exit code zero if the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L209))
 

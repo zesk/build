@@ -11,7 +11,7 @@ Must faster than `documentationBuild` and intended to replace it.
 Uses cached files at `BUILD_DOCUMENTATION_PATH`, assumes documentation cache structure:
 
 - `$docHome/functionName.md` - Markdown documentation
-- `$docHome/SEE/functionName.md` - Markdown documentation for `{SEE:functionName}`
+- `$docHome/SEE/functionName.md` - Markdown documentation for `{"SEE:functionName"}`
 - `$docHome/functionName.sh` - `functionName` settings
 - `$docHome/env/environmentName.md` - Markdown documentation for `environmentName` environment variable
 - `$docHome/env/environmentName.sh` - `environmentName` environment variable settings

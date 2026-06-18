@@ -1,1 +1,1 @@
-[packageInstalledList]({rel}tools/package.md#packageinstalledlist) - List installed packages on this system using package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L639))
+[packageInstalledList]({rel}tools/package.md#packageinstalledlist) - List installed packages on this system using package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L638))

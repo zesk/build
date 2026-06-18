@@ -1,18 +1,3 @@
-### `testSuite`
-
-> Run bash test suites for {name}.
-
-#### Usage
-
-    testSuite [ --help ] [ --clean ] [ -l | --list ] [ --env-file environmentFile ] [ --index-file indexFile ] [ --cache-path cachePath ] [ --make-index ] [ --continue ] [ -c ] [ --delete directoryOrFile ] [ --delete-common ] [ --debug ] [ --verbose ] [ --stop ] [ --coverage ] [ --no-stats ] [ --messy ] [ --fail executor ] [ --cd-away ] [ --tap tapFile ] [ --junit junitFile ] [ --show | --suites ] [ -1 | --suite | --one testSuite ] [ --tag tagName ] [ --list-tags | --tags | --show-tags ] [ --skip-tag tagName ] [ testFunctionPattern ... ]
-
-Run bash test suites for {name}.
-
-Supports argument flags in tests:
-`TAP-Directive` `Test-Skip` `TODO`
-
-You can also use `BUILD_TEST_FLAGS` to change the default flags.
-
 ##### Tag filters
 
 Prefix a tag with `+` for `--tag` or `--skip-tag` queries to add the meaning "previous *AND*".
@@ -46,8 +31,6 @@ Environment variables:
 
 Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
 
-
-
 > Location: `bin/build/tools/test.sh`
 
 #### Arguments
@@ -80,31 +63,11 @@ Filters (`--tag` and `--skip-tag`) are applied in order after the function patte
 - `--skip-tag tagName` - String. Optional. Skip tests tagged with this name.
 - `testFunctionPattern ...` - String. Optional. Test function (or substring of function name) to run.
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
 #### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
 
 - `test-dump-environment` - When set tests will dump the environment at the end.
-
-#### Examples
-
-{example}
-
-#### Sample Output
-
-{output}
 
 #### Return codes
 
@@ -112,30 +75,16 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - `1` - Environment error
 - `2` - Argument error
 
-#### Local cache
-
-{local_cache}
-
 #### Environment
 
 - [`BUILD_TEST_FLAGS` Test Flags]({rel}env/#testing) – **String**. Test flags affect controls and how tests are run. [`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
 
 #### Requires
 
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [cpuLoadAverage]({rel}tools/cpu.md#cpuloadaverage) - Get the load average using uptime ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L390))
+- [consoleConfigureColorMode]({rel}tools/console.md#consoleconfigurecolormode) - Print the suggested color mode for the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L110))
+- [buildEnvironmentLoad]({rel}tools/build.md#buildenvironmentload) - Load one or more environment settings from the environment file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L411))
+- [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
+- [bashCoverage]({rel}tools/coverage.md#bashcoverage) - Collect code coverage statistics for a code sample ([source](https://github.com/zesk/build/blob/main/bin/build/tools/coverage.sh#L15))
 
-
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/test.sh`, function `testSuite` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

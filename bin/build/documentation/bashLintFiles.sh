@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'--verbose - Flag. Optional. Verbose mode.\n--fix - Flag. Optional. Fix errors when possible.\n--interactive - Flag. Optional. Interactive mode on fixing errors.\n--exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.\n--delay - Integer. Optional. Delay between checks in interactive mode.\nfindArgs - Additional find arguments for .sh files (or exclude directories).\n'
 base="lint.sh"
@@ -19,7 +19,7 @@ rawComment=$'Run `bashLint` on a set of bash files.\nExample:     if bashLintFil
 return_code=$'0 - All found files pass `shellcheck` and `bash -n`\n1 - One or more files did not pass\n'
 side_effect=$'Status written to stdout, errors written to stderr\n'
 sourceFile="bin/build/tools/lint.sh"
-sourceHash="71423c08273aafee79d8f16d56c6eade0b9ff496"
+sourceHash="001a8d080c4474bfc3bf86b18fd321bcc4aa033e"
 sourceLine="105"
 summary="Lint multiple bash files"
 summaryComputed=""

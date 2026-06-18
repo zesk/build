@@ -24,7 +24,7 @@ _hookContextWrapper() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -58,7 +58,32 @@ _hookContextWrapper() {
   catchEnvironment "$handler" hookRun --application "$application" "$hookName" "$@" || return $?
 }
 
-# Application current version
+# Summary: Send a notification
+#
+# Send a notification.
+#
+# Wrapper for the hook `notify`.
+#
+# Argument: --sound soundName - String. Optional. Sound name to play. Depends on context of notification.
+# Argument: --tags tagList - CommaDelimitedList. Optional. Tags for notification. e.g. `warning,production`
+# Argument: --priority priority - String. Optional. Priority of the notification. `low`, or `high`
+# Argument: --title title - String. Optional. Title of the notification.
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --application application - Directory. Optional. Application home directory.
+hookNotify() {
+  _hookContextWrapper "_${FUNCNAME[0]}" "notify" "$@"
+}
+_hookNotify() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Application current version
+# Get the application's current version.
+#
+# Wrapper for the hook `version-current`.
 #
 # Extracts the version from the repository
 #
@@ -73,7 +98,10 @@ _hookVersionCurrent() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Application deployed version
+# Summary: Application deployed version
+# Get the application's deployed (e.g. live and published) version.
+#
+# Wrapper for the hook `version-live`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --application application - Directory. Optional. Application home directory.

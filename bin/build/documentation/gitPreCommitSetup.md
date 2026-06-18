@@ -21,5 +21,5 @@ Set up a pre-commit hook and create a cache of our files by extension.
 
 #### See Also
 
-- [gitPreCommitCleanup]({rel}tools/git.md#gitprecommitcleanup)- `` - Clean up after our pre-commit (deletes cache directory) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L998))
+- [gitPreCommitCleanup]({rel}tools/git.md#gitprecommitcleanup) - Clean up after our pre-commit (deletes cache directory) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L998))
 

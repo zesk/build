@@ -8,8 +8,6 @@
 
 Run `command`, handle failure with `handler` with `code` and `command` as error
 
-
-
 > Location: `bin/build/tools/_sugar.sh`
 
 #### Arguments
@@ -19,62 +17,16 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 - `command ...` - Callable. Required. Command to run.
 - `...` - Arguments. Optional. Arguments to `command`
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
-#### Debugging settings
-
-Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
-
-{build_debug}
-
-#### Examples
-
-{example}
-
-#### Sample Output
-
-{output}
-
 #### Return codes
 
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
 
-#### Local cache
-
-{local_cache}
-
-#### Environment
-
-{environment}
-
 #### Requires
 
+- [isUnsignedInteger]({rel}tools/type.md#isunsignedinteger) - Is value an unsigned integer? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L162))
+- [returnArgument]({rel}tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L257))
+- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
+- [isCallable]({rel}tools/type.md#iscallable) - Test if all arguments are callable as a command ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L199))
 
-
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/_sugar.sh`, function `catchCode` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

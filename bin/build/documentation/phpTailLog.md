@@ -22,5 +22,5 @@ Tail the PHP log
 
 #### See Also
 
-- {SEE:tail}
+- [`tail`]({rel}guide/command.md#tail)
 

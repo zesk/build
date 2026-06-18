@@ -17,7 +17,7 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
-# IDENTICAL returnMessage 31
+# IDENTICAL returnMessage 32
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -27,9 +27,10 @@
 returnMessage() {
   local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
   if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
-  local t="${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> "
-  isUnsignedInteger "$c" || returnMessage 2 "$t${h#_} non-integer \"$c\"" "$@" || return $?
-  if [ "$c" != "0" ]; then printf "%s%s %s\n" "❌ $t" "[$c]" "${*-§}" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
+  # __IDENTICAL__ localTrace 1
+  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
+  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\" ($trace)" "$@" || return $?
+  if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
 }
 _returnMessage() {
   # __IDENTICAL__ bashDocumentation 1
@@ -160,21 +161,21 @@ __usageMessageStyle() {
 # Requires: decorate returnCodeString
 __usageMessage() {
   local returnCode="${1-0}"
+  # __IDENTICAL__ localTrace 1
+  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
   [ $# -eq 0 ] || shift
-  local suffix="$*"
+  local suffix="$*" icon="" style=""
+  __usageMessageIcon "$returnCode"
+  __usageMessageStyle "$returnCode" "$suffix"
   if [ "$returnCode" -eq 0 ]; then
     [ -n "$suffix" ] || return 0
-    __usageMessageStyle "$returnCode" "$suffix"
+    printf "%s %s\n" "$icon" "$(decorate "$style" "$suffix")"
   elif [ "$returnCode" != 2 ]; then
     [ -z "$suffix" ] || suffix=" $(decorate warning "$suffix")"
-    local icon && __usageMessageIcon "$returnCode"
-    local style && __usageMessageStyle "$returnCode"
-    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
     [ -z "$suffix" ] || suffix=" $(decorate error "$suffix")"
-    local icon && __usageMessageIcon "$returnCode"
-    local style && __usageMessageStyle "$returnCode"
-    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 
@@ -1271,7 +1272,7 @@ mapFunction() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
@@ -1364,7 +1365,7 @@ mapEnvironmentFun() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

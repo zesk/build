@@ -26,5 +26,5 @@ lines:Number
 
 #### Requires
 
-- uptime
+- [`uptime`]({rel}guide/command.md#uptime)
 

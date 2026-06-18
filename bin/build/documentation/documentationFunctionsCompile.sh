@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="documentationFunctionsCompile"
 fnMarker="documentationfunctionscompile"
 foundNames=([0]="argument" [1]="stdin")
-line="470"
+line="468"
 rawComment=$'Extract and build the documentation settings cache and generate derived files\nArgument: --clean - Flag. Optional. Clean everything and then exit.\nArgument: --all | --stdin- Flag. Optional. Read function names from stdin for examination.\nArgument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.\nArgument: --source - Directory. Required. Directory where functions are defined.\nArgument: --key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available.\nArgument: functionName ... - String. Optional. Specific functions to compile.\nstdin: Function. Name of functions, one per line to compile if `--all` is not specified.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="38500aa3e5be0ae446052278e0b3ea877261e5a8"
-sourceLine="470"
+sourceHash="a8ddc3085c0bd75f808305b573edf755e62ddc0b"
+sourceLine="468"
 stdin=$'Function. Name of functions, one per line to compile if `--all` is not specified.\n'
 summary="Extract and build the documentation settings cache and generate derived"
 summaryComputed="true"

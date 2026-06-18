@@ -10,29 +10,27 @@
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
   # Zesk Build Development
-  # - `buildPR` - Open URL to a new Pull Request
-  # - `buildTestSuiteIndex` - Build the test suite index
   # - `buildFunctionsCompile` - Compile the usage directory `./bin/build/documentation/` and derived files.
-  # - `buildFunctionsCompile` - Compile the usage directory `./bin/build/documentation/` and derived files.
-  # - `documentationFileCompile` - Compile the usage directory `./bin/build/documentation/` (just settings).
   # - `documentationFilesAdd` - `git add` any files in `bin/build/documentation` which should be added.
+  # - `buildFunctionsSeeLoop`, `buildFunctionsSeeAgain` - Find missing SEE references in documentation.
   # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
-  # - `buildContainer image` - Load Zesk Build in a container image
-  # - `buildBuildTiming` - Run the build with different setups to see which one is fastest
-  # - `__buildFingerUpdate` - Force update the deprecated and identical fingerprints
-  # - `bpr` -> `buildPR` shortcut
   #
   # Zesk Build Testing
+  # - `buildTestSuiteIndex` - Build the test suite index
+  # - `buildBuildTiming` - Run the build with different setups to see which one is fastest
+  # - `buildContainer image` - Load Zesk Build in a container image
   # - `bin/test.sh` - Test Zesk Build
   # - `buildQuickTest` - No professionals testing (no plumber or housekeeper) and no slow or package tests
   # - `buildStagingTest` - No professionals testing (no plumber or housekeeper)
   # - `buildProductionTest` - All professionals testing (yes plumber, yes housekeeper) but skip `slow-non-critical` tests
-  # - `buildTestPlatforms` - Test platforms
+  # - `buildTestPlatforms` - Test platforms. Experimental.
   #
   # Zesk Build Deployment
   # - `buildPreRelease` - Run pre-release steps on code (deprecated, identical)
+  # - `__buildFingerUpdate` - Force update the deprecated and identical fingerprints
+  # - `bpr` -> `buildPR` shortcut (skips fingerprinting step)
   # - `bin/build.sh`, `bin/deploy.sh`, `bin/documentation.sh` - Build, Deploy, Build Documentation for Zesk Build
-  #
+  # - `buildPR` - Open URL to a new Pull Request
   __buildHelp() {
     local handler="_${FUNCNAME[0]}"
 

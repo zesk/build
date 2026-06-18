@@ -11,12 +11,12 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationMissing"
 fnMarker="bashdocumentationmissing"
 foundNames=([0]="summary" [1]="argument")
-line="772"
+line="770"
 rawComment=$'Summary: Generate templates of functions missing from documentation\nGenerates:\n- `missingFunctionTotal.md`\n- `missingFunctionList.md`\nin the target directory.\nArgument: --index indexPath - Directory. Required. Where to store documentation indexes for later use.\nArgument: --source sourcePath - Directory. Required. The source\nArgument: --target templateTarget - FileDirectory. Required. Create templates here.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="38500aa3e5be0ae446052278e0b3ea877261e5a8"
-sourceLine="772"
+sourceHash="a8ddc3085c0bd75f808305b573edf755e62ddc0b"
+sourceLine="770"
 summary="Generate templates of functions missing from documentation"
 summaryComputed=""
 usage="bashDocumentationMissing --index indexPath --source sourcePath --target templateTarget"

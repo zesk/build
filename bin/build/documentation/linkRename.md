@@ -24,5 +24,5 @@ Renames a link forcing replacement, and works on different versions of `mv` whic
 
 #### See Also
 
-- {SEE:mv}
+- [`mv`]({rel}guide/command.md#mv)
 

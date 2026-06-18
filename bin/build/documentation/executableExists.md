@@ -31,6 +31,5 @@ Does a binary exist in the PATH?
 
 - [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
 - [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
-- {SEE:__decorateExtensionEach}
 - [`command`]({rel}guide/builtin.md#command)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nprefix - EmptyString. Optional. Prefix for all prompts.\nsuffix - EmptyString. Optional. Suffix for all prompts.\n'
 base="prompt.sh"
@@ -15,7 +15,7 @@ line="129"
 rawComment=$'Summary: Set markers for terminal integration\nSet markers for terminal integration; these markers are terminal commands which mark the start and finish of the bash prompt for easier text selection by\nsome terminals.\nArgument: --help - Flag. Optional. Display this help.\nArgument: prefix - EmptyString. Optional. Prefix for all prompts.\nArgument: suffix - EmptyString. Optional. Suffix for all prompts.\nOutputs the current marker settings, one per line (0, 1, or 2 lines will be output).\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="c8be00d8dedfc8df4976cb58038790d9cdce3c69"
+sourceHash="2f5a82d1f8c3a101b06abd0c96a2942f9be434a5"
 sourceLine="129"
 summary="Set markers for terminal integration"
 summaryComputed=""

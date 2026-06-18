@@ -5,6 +5,10 @@
 
 ## Building documentation
 
+{documentationFileCompile}
+
+{documentationFunctionCompile}
+
 {documentationFunctionsCompile}
 
 {documentationMake}
@@ -30,6 +34,10 @@
 ## Markdown generation
 
 {bashDocumentationDefaults}
+
+{bashDocumentationDeriveFunction}
+
+{bashDocumentationDeriveSee}
 
 {bashDocumentationMissing}
 

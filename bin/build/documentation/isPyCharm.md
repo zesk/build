@@ -21,5 +21,5 @@ Are we within the JetBrains PyCharm terminal?
 
 #### See Also
 
-- [contextOpen]({rel}tools/vendor.md#contextopen)- `` - Open a file in a shell using the program we ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L76))
+- [contextOpen]({rel}tools/vendor.md#contextopen) - Open a file in a shell using the program we ([source](https://github.com/zesk/build/blob/main/bin/build/tools/vendor.sh#L76))
 

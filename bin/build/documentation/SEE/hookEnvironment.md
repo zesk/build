@@ -1,1 +1,1 @@
-[hookEnvironment]({rel}tools/hook.md#hookenvironment) - Load hook-related environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L372))
+[hookEnvironment]({rel}tools/hook.md#hookenvironment) - Load hook-related environment variables ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L378))

@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-15
 # shellcheck disable=SC2034
-argument="package - One or more packages to install"$'\n'"--verbose - Flag. Optional. Display progress to the terminal."$'\n'"--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"--force - Flag. Optional. Force even if it was updated recently."$'\n'"--show-log - Flag. Optional. Show package manager logs."$'\n'""
-artifact="\`packageInstall.log\` is left in the \`buildCacheDirectory\`"$'\n'""
+argument=$'package - One or more packages to install\n--verbose - Flag. Optional. Display progress to the terminal.\n--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n--force - Flag. Optional. Force even if it was updated recently.\n--show-log - Flag. Optional. Show package manager logs.\n'
+artifact=$'`packageInstall.log` is left in the `buildCacheDirectory`\n'
 base="package.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Install packages using a package manager."$'\n'""$'\n'"Supported managers:"$'\n'"- apk"$'\n'"- apt-get"$'\n'"- brew"$'\n'""$'\n'""
+description=$'Install packages using a package manager.\n\nSupported managers:\n- apk\n- apt-get\n- brew\n\n'
 descriptionLineCount="7"
-example="    packageInstall shellcheck"$'\n'""
+example=$'    packageInstall shellcheck\n'
 file="bin/build/tools/package.sh"
 fn="packageInstall"
 fnMarker="packageinstall"
 foundNames=([0]="example" [1]="return_code" [2]="summary" [3]="argument" [4]="artifact")
 line="377"
-rawComment="Install packages using a package manager."$'\n'"Supported managers:"$'\n'"- apk"$'\n'"- apt-get"$'\n'"- brew"$'\n'"Example:     {fn} shellcheck"$'\n'"Return Code: 0 - If \`apk\` is not installed, returns 0."$'\n'"Return Code: 1 - If \`apk\` fails to install the packages"$'\n'"Summary: Install packages using a package manager"$'\n'"Argument: package - One or more packages to install"$'\n'"Artifact: \`{fn}.log\` is left in the \`buildCacheDirectory\`"$'\n'"Argument: --verbose - Flag. Optional. Display progress to the terminal."$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: --force - Flag. Optional. Force even if it was updated recently."$'\n'"Argument: --show-log - Flag. Optional. Show package manager logs."$'\n'""$'\n'""
-return_code="0 - If \`apk\` is not installed, returns 0."$'\n'"1 - If \`apk\` fails to install the packages"$'\n'""
+rawComment=$'Install packages using a package manager.\nSupported managers:\n- apk\n- apt-get\n- brew\nExample:     {fn} shellcheck\nReturn Code: 0 - If `apk` is not installed, returns 0.\nReturn Code: 1 - If `apk` fails to install the packages\nSummary: Install packages using a package manager\nArgument: package - One or more packages to install\nArtifact: `{fn}.log` is left in the `buildCacheDirectory`\nArgument: --verbose - Flag. Optional. Display progress to the terminal.\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nArgument: --force - Flag. Optional. Force even if it was updated recently.\nArgument: --show-log - Flag. Optional. Show package manager logs.\n\n'
+return_code=$'0 - If `apk` is not installed, returns 0.\n1 - If `apk` fails to install the packages\n'
 sourceFile="bin/build/tools/package.sh"
-sourceHash="a864f8a04df8d4125b28600b085b2148235205d2"
+sourceHash="6c84223fe5bc14c2b9baec08ee22b36edea72ad6"
 sourceLine="377"
 summary="Install packages using a package manager"
 summaryComputed=""

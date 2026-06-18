@@ -24,13 +24,13 @@ Without arguments, displays help.
 #### Requires
 
 - [executableExists]({rel}tools/bash.md#executableexists) - Does a binary exist in the PATH? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L174))
-- realpath
+- [`realpath`]({rel}guide/command.md#realpath)
 - [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 - [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 - [returnArgument]({rel}tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L257))
 
 #### See Also
 
-- {SEE:readlink}
-- {SEE:realpath}
+- [`readlink`]({rel}guide/command.md#readlink)
+- [`realpath`]({rel}guide/command.md#realpath)
 

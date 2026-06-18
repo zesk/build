@@ -6,7 +6,11 @@
 
     hookEnvironment [ --help ]
 
-Load hook environment variables used to find hooks
+Load hook environment variables used to find hooks.
+
+Ensures `BUILD_HOOK_EXTENSIONS` and `BUILD_HOOK_DIRS` are set to their proper defaults.
+
+If already loaded, this function has no effect.
 
 > Location: `bin/build/tools/hook.sh`
 

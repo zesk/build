@@ -31,5 +31,5 @@ Does not work inside docker containers unless you explicitly do some magic with 
 
 #### See Also
 
-- [buildDevelopmentLink]({rel}tools/developer.md#builddevelopmentlink)- `` - Add a development link to the local version of Zesk ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L181))
+- [buildDevelopmentLink]({rel}tools/developer.md#builddevelopmentlink) - Add a development link to the local version of Zesk ([source](https://github.com/zesk/build/blob/main/bin/build/tools/developer.sh#L181))
 

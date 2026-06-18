@@ -32,5 +32,5 @@ line - URL. Optional. URL to open
 
 #### Environment
 
-- [`BUILD_URL_BINARY` URL Executable]({rel}/env/#decoration) – **Callable**. Binary used in __urlOpen
+- [`BUILD_URL_BINARY` URL Executable]({rel}env/#decoration) – **Callable**. Binary used in __urlOpen
 

@@ -1,1 +1,1 @@
-[bashDocumentationDeriveSee]({rel}tools/internal.md#bashdocumentationderivesee) - Generate SEE markdown content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L888))
+[bashDocumentationDeriveSee]({rel}tools/documentation.md#bashdocumentationderivesee) - Generate SEE markdown content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L886))

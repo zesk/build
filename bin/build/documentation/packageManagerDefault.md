@@ -22,7 +22,3 @@ Output is one of:
 - `1` - Environment error
 - `2` - Argument error
 
-#### See Also
-
-- {SEE:platform}
-

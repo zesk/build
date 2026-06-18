@@ -23,5 +23,6 @@ Uninstall tofu binary and apt sources keys
 
 #### See Also
 
-- [tofuInstall]({rel}tools/tofu.md#tofuinstall) - Install tofu binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L59))[packageUninstall]({rel}tools/package.md#packageuninstall) - Removes packages using package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L524))
+- [tofuInstall]({rel}tools/tofu.md#tofuinstall) - Install tofu binary ([source](https://github.com/zesk/build/blob/main/bin/build/tools/tofu.sh#L59))
+- [packageUninstall]({rel}tools/package.md#packageuninstall) - Removes packages using package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L524))
 

@@ -238,6 +238,7 @@ testNetworkIPValid suite=network test/tools/network-tests.sh
 testNetworkMACAddressList suite=network test/tools/network-tests.sh
 testNetworkNameValid suite=network test/tools/network-tests.sh
 testNodeInstallation suite=node test/tools/node-tests.sh  tag=package-install
+testNotifyURL suite=notify test/tools/notify-tests.sh
 testNPMInstallations suite=npm test/tools/npm-tests.sh
 testOrderingA suite=ordering test/tools/ordering-tests.sh  tag=testSuite before=testOrderingC before=testOrderingE before=testOrderingF
 testOrderingC suite=ordering test/tools/ordering-tests.sh  tag=testSuite before=testOrderingE
@@ -345,7 +346,6 @@ testPluralWord suite=text test/tools/text-tests.sh
 testPrintfOutputEmpty suite=text test/tools/text-tests.sh
 testPrintfOutputPrefix suite=text test/tools/text-tests.sh
 testPrintfOutputSuffix suite=text test/tools/text-tests.sh
-testShaPipe suite=text test/tools/text-tests.sh
 testSingleBlankLines suite=text test/tools/text-tests.sh
 testStringBegins suite=text test/tools/text-tests.sh
 testStringBeginsInsensitive suite=text test/tools/text-tests.sh
@@ -355,6 +355,8 @@ testStringOffset suite=text test/tools/text-tests.sh
 testStringOffsetInsensitive suite=text test/tools/text-tests.sh
 testStringReplace suite=text test/tools/text-tests.sh
 testText suite=text test/tools/text-tests.sh
+testTextSHA suite=text test/tools/text-tests.sh
+testTextSHACached suite=text test/tools/text-tests.sh
 testTrimBoth suite=text test/tools/text-tests.sh
 testTrimHeadTail suite=text test/tools/text-tests.sh
 testTrimLeftSpace suite=text test/tools/text-tests.sh

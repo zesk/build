@@ -22,5 +22,5 @@ Get a project JSON structure
 
 #### Environment
 
-- [`GITHUB_ACCESS_TOKEN` GitHub Access Token]({rel}/env/#development) – **Secret**. Access token used for release
+- [`GITHUB_ACCESS_TOKEN` GitHub Access Token]({rel}env/#development) – **Secret**. Access token used for release
 

@@ -3,6 +3,18 @@
 <!-- TEMPLATE toolHeader 1 -->
 <hr />
 
+## Documentation Access
+
+{__bashDocumentationCached}
+
+{__functionSettings}
+
+{__usageMessage}
+
+## Platform Support
+
+{__dateFromTimestamp}
+
 ## Get a copy of the Apache License
 
 {buildFetchLicense}
@@ -17,17 +29,9 @@
 
 {buildFunctionsCompile}
 
-{documentationFileCompile}
-
-{documentationFunctionCompile}
-
 {documentationFileCompileParallel}
 
 {buildFunctionsRemoveDeprecated}
-
-{bashDocumentationDeriveFunction}
-
-{bashDocumentationDeriveSee}
 
 {buildToolsCompile}
 
@@ -62,7 +66,6 @@
 {buildBuildTiming}
 
 {buildContainer}
-
 <!-- TEMPLATE toolFooter 3 -->
 <hr />
 

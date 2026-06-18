@@ -25,8 +25,8 @@ groupID() {
   if executableExists getent; then
     while [ $# -gt 0 ]; do
       local argument="$1" __index=$((__count - $# + 1))
-      # __IDENTICAL__ __checkBlankArgumentHandler 1
-      [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
       gid="$(getent group "$argument" | cut -d: -f3)" || return 1
       isInteger "$gid" || return 1
       printf "%d\n" "$gid" && shift
@@ -36,8 +36,8 @@ groupID() {
     [ -f "$groupFile" ] || throwEnvironment "$handler" "Unable to access $groupFile" || return $?
     while [ $# -gt 0 ]; do
       local argument="$1" __index=$((__count - $# + 1))
-      # __IDENTICAL__ __checkBlankArgumentHandler 1
-      [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
       gid="$(grep -e "^$(quoteGrepPattern "$argument")" <"$groupFile" | cut -d: -f3)" || return 1
       isInteger "$gid" || return 1
       printf "%d\n" "$gid" && shift

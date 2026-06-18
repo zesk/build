@@ -8,8 +8,6 @@
 
 Run command and detect any global or local leaks
 
-
-
 > Location: `bin/build/tools/debug.sh`
 
 #### Arguments
@@ -20,18 +18,6 @@ Run command and detect any global or local leaks
 - `--verbose` - Flag. Optional. Be verbose.
 - `--help` - Flag. Optional. Display this help.
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
 #### Debugging settings
 
 Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
@@ -39,46 +25,21 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - `plumber-verbose` - The plumber outputs the exact variable captures before and after
 - `plumber-verbose` - The plumber outputs the exact variable captures before and after
 
-#### Examples
-
-{example}
-
-#### Sample Output
-
-{output}
-
 #### Return codes
 
 - `0` - No leaks detected in the command
 - `108` - A leak was detected in the command
 - `1` - Argument error, plumber was called incorrectly.
 
-#### Local cache
-
-{local_cache}
-
-#### Environment
-
-{environment}
-
 #### Requires
 
-- [`declare`]({rel}/guide/builtin.md#declare)
-- diff
-- grep
+- [`declare`]({rel}guide/builtin.md#declare)
+- [`diff`]({rel}guide/command.md#diff)
+- [`grep`]({rel}guide/command.md#grep)
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [validate]({rel}tools/validate.md#validate) - Validate a value by type ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L95))
+- [isCallable]({rel}tools/type.md#iscallable) - Test if all arguments are callable as a command ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L199))
+- [fileTemporaryName]({rel}tools/file.md#filetemporaryname) - Wrapper for \`mktemp\`. Generate a temporary file name, and fail ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L944))
+- [textRemoveFields]({rel}tools/text.md#textremovefields) - Remove fields from left to right from a text file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1104))
 
-#### See Also
-
-{see}
-
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/debug.sh`, function `plumber` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

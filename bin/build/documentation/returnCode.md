@@ -25,69 +25,22 @@ Known codes:
 
 Unknown error code is 254, end of range is 255 which is not used. Use `returnCodeString` to get a string from an exit code integer.
 
-
-
 > Location: `bin/build/tools/_sugar.sh`
 
 #### Arguments
 
 - `name ...` - String. Optional. Exit code value to output.
 
-#### Reads standard input
-
-{stdin}
-
-#### Writes to standard output
-
-{stdout}
-
-#### Writes to standard error
-
-{stderr}
-
-#### Debugging settings
-
-Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
-
-{build_debug}
-
-#### Examples
-
-{example}
-
-#### Sample Output
-
-{output}
-
 #### Return codes
 
 - `0` - success
 
-#### Local cache
-
-{local_cache}
-
-#### Environment
-
-{environment}
-
 #### Requires
 
-
+- [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 
 #### See Also
 
 - [stackoverflow.com](https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux)
 - [returnCodeString]({rel}tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L60))
 
-#### Credits
-
-Thanks to [{credits}]({source}).
-
-#### Review Status
-
-File `bin/build/tools/_sugar.sh`, function `returnCode` was reviewed {reviewed}.
-
-#### Errors
-
-{error}

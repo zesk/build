@@ -24,3 +24,8 @@ Without arguments, displays help.
 - `0` - Text is plain
 - `1` - Text contains non-plain characters
 
+#### Requires
+
+- [stringLowercase]({rel}tools/text.md#stringlowercase) - Convert text to stringLowercase ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L864))
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
+
