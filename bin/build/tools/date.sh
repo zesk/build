@@ -92,8 +92,8 @@ dateFromTimestamp() {
       elif [ -z "$format" ]; then
         format=$(validate "$handler" String "format" "$argument") || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -288,8 +288,8 @@ dateWithinDays() {
       elif [ -z "$upToDateDays" ]; then
         upToDateDays=$(validate "$handler" UnsignedInteger "upToDateDays" "$argument") || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

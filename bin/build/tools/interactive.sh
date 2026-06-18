@@ -261,8 +261,8 @@ interactiveOccasionally() {
       if [ -z "$name" ]; then
         name="$(validate "$handler" EnvironmentVariable "$argument" "${1-}")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

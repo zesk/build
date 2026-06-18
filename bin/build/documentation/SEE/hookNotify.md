@@ -1,0 +1,1 @@
+[hookNotify]({rel}#hooknotify) - Send a notification ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hooks.sh#L75))

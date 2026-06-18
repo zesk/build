@@ -304,8 +304,8 @@ bashFindUncaughtAssertions() {
     --list) listFlag=true ;;
     *)
       if [ -n "$directory" ]; then
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       directory=$(validate "$handler" Directory "directory" "$1") || return $?
       ;;

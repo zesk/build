@@ -375,8 +375,8 @@ __documentationTemplateFileCompile() {
       elif [ -z "$targetFile" ]; then
         targetFile="$(validate "$handler" FileDirectory targetFile "$argument")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -514,8 +514,8 @@ __documentationTemplateFunctionCompile() {
       elif [ -z "$functionTemplate" ]; then
         functionTemplate="$(validate "$handler" File functionTemplate "$argument")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -561,8 +561,8 @@ __documentationTemplateDirectoryCompile() {
       elif [ -z "$targetDirectory" ]; then
         targetDirectory=$(validate "$handler" Directory "targetDirectory" "$argument") || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -622,8 +622,8 @@ __documentationTemplateSettingsCompile() {
       elif [ -z "$functionTemplate" ]; then
         functionTemplate="$(validate "$handler" File functionTemplate "$argument")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

@@ -214,8 +214,8 @@ labeledBigText() {
       ;;
     *)
       if [ "$argument" != "${argument#-}" ]; then
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       label="$argument"
       plainLabel="$(printf -- "%s\n" "$label" | consoleToPlain)" || throwArgument "$handler" "Unable to clean label" || return $?

@@ -270,8 +270,8 @@ releaseNew() {
     --application) shift && application=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       if [ -n "$newVersion" ]; then
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       newVersion="${argument#v}"
       isVersion "$newVersion" || throwArgument "$handler" "$argument is not a version" || return $?

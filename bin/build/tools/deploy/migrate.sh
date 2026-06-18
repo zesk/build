@@ -24,8 +24,8 @@ __deployMigrateDirectoryToLink() {
       elif [ -z "$applicationPath" ]; then
         applicationPath="$(validate "$handler" Directory "applicationPath" "$1")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       shift
       ;;
