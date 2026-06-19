@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--copy - Flag. Optional. Copy the hook but do not execute it.\n--verbose - Flag. Optional. Be verbose about what is done.\n--application home - Directory. Optional. Set the application home directory to this prior to looking for hooks.\nhookName - String. Optional. A hook or hook names to install. See `gitHookTypes`\n--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -16,7 +16,7 @@ rawComment=$'Install one or more git hooks from Zesk Build hooks.\nZesk Build ho
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'gitHookTypes\n'
 sourceFile="bin/build/tools/git.sh"
-sourceHash="a0d23919137c5539c67fd2fa09a1b037d4933cfd"
+sourceHash="5e91a5d4b3beafc28e8b01755133cb215bd453d8"
 sourceLine="747"
 summary="Install one or more git hooks from Zesk Build hooks."
 summaryComputed="true"

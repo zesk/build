@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="haystack - String. Required. String to search."$'\n'"needle ... - String. Optional. One or more strings to find as a substring of \`haystack\`."$'\n'""
+argument=$'haystack - String. Required. String to search.\nneedle ... - String. Optional. One or more strings to find as a substring of `haystack`.\n'
 base="text.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Does needle exist as a substring of haystack?"$'\n'""$'\n'""
+description=$'Does needle exist as a substring of haystack?\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/text.sh"
 fn="stringContains"
 fnMarker="stringcontains"
 foundNames=([0]="argument" [1]="return_code" [2]="summary")
 line="418"
-rawComment="Argument: haystack - String. Required. String to search."$'\n'"Argument: needle ... - String. Optional. One or more strings to find as a substring of \`haystack\`."$'\n'"Return Code: 0 - IFF ANY needle matches as a substring of haystack"$'\n'"Return Code: 1 - No needles found in haystack"$'\n'"Summary: Find whether a substring exists in one or more strings"$'\n'"Does needle exist as a substring of haystack?"$'\n'""$'\n'""
-return_code="0 - IFF ANY needle matches as a substring of haystack"$'\n'"1 - No needles found in haystack"$'\n'""
+rawComment=$'Argument: haystack - String. Required. String to search.\nArgument: needle ... - String. Optional. One or more strings to find as a substring of `haystack`.\nReturn Code: 0 - IFF ANY needle matches as a substring of haystack\nReturn Code: 1 - No needles found in haystack\nSummary: Find whether a substring exists in one or more strings\nDoes needle exist as a substring of haystack?\n\n'
+return_code=$'0 - IFF ANY needle matches as a substring of haystack\n1 - No needles found in haystack\n'
 sourceFile="bin/build/tools/text.sh"
-sourceHash="b913e34543d2ae704942cadce5473f26955cd42e"
+sourceHash="6d769d6727070a6dc8632961d7250fe1f73eea0f"
 sourceLine="418"
 summary="Find whether a substring exists in one or more strings"
 summaryComputed=""

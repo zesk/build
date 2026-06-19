@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="applicationHome - Directory. Required. Application home to get the version from."$'\n'""
+argument=$'applicationHome - Directory. Required. Application home to get the version from.\n'
 base="deploy.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Extracts version from an application either from \`.deploy\` files or from the the \`.env\` if"$'\n'"that does not exist."$'\n'""$'\n'"Checks \`APPLICATION_ID\` and \`APPLICATION_TAG\` and uses first non-blank value."$'\n'""$'\n'""
+description=$'Extracts version from an application either from `.deploy` files or from the the `.env` if\nthat does not exist.\n\nChecks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.\n\n'
 descriptionLineCount="5"
 file="bin/build/tools/deploy.sh"
 fn="deployApplicationVersion"
 fnMarker="deployapplicationversion"
 foundNames=([0]="argument")
 line="59"
-rawComment="Argument: applicationHome - Directory. Required. Application home to get the version from."$'\n'"Extracts version from an application either from \`.deploy\` files or from the the \`.env\` if"$'\n'"that does not exist."$'\n'"Checks \`APPLICATION_ID\` and \`APPLICATION_TAG\` and uses first non-blank value."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Argument: applicationHome - Directory. Required. Application home to get the version from.\nExtracts version from an application either from `.deploy` files or from the the `.env` if\nthat does not exist.\nChecks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deploy.sh"
-sourceHash="9800c80d1e803796230e87b8fd398df05b0442b9"
+sourceHash="e0d57c87cddcd626993066f2fbdabd8666252165"
 sourceLine="59"
 summary="Extracts version from an application either from \`.deploy\` files or"
 summaryComputed="true"

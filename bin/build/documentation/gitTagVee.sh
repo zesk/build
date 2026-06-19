@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
@@ -15,7 +15,7 @@ line="185"
 rawComment=$'Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"\nDelete the old tag as well\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/git.sh"
-sourceHash="a0d23919137c5539c67fd2fa09a1b037d4933cfd"
+sourceHash="5e91a5d4b3beafc28e8b01755133cb215bd453d8"
 sourceLine="185"
 summary="Given a tag in the form \"1.1.3\" convert it to"
 summaryComputed="true"

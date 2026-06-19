@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.\n--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\n--next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.\nhookName0 - String. Required. Hook to locate\nhookName1 - String. Optional. Additional hooks to locate.\n'
 base="hook.sh"
@@ -16,7 +16,7 @@ line="283"
 rawComment=$'Summary: Find the path to a hook binary file\nDoes a hook exist in the local project?\nFind the path to a hook. The search path is:\n- `./bin/hooks/`\n- `./bin/build/hooks/`\nIf a file named `hookName` with the extension `.sh` is found which is executable, it is output.\nArgument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.\nArgument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nArgument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.\nArgument: hookName0 - String. Required. Hook to locate\nArgument: hookName1 - String. Optional. Additional hooks to locate.\nEnvironment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG\nTest: testHookSystem\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/hook.sh"
-sourceHash="6238c9ff87d29d71c91395b97242252de0f96fd5"
+sourceHash="d7e5ca8901bb43435b977751cbb2ef47e4b94072"
 sourceLine="283"
 summary="Find the path to a hook binary file"
 summaryComputed=""

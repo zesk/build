@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'listValue - Required. List value to search.\nseparator - Required. Separator string for item values (typically `:`)\nitem ... - Optional. the item to be searched for in the `listValue`\n--help - Flag. Optional. Display this help.\n'
 base="list.sh"
@@ -15,7 +15,7 @@ line="80"
 rawComment=$'Summary: Does a character-delimited list contain item(s)?\nReturn code 0 IFF all items are found in the list. If any item is not found, returns code 1.\nReturn code: 0 - All items are found in the `listValue`\nReturn code: 1 - One or more items were NOT found in the `listValue`\nIf no items are passed in the return value is 0 (true).\nArgument: listValue - Required. List value to search.\nArgument: separator - Required. Separator string for item values (typically `:`)\nArgument: item ... - Optional. the item to be searched for in the `listValue`\nArgument: --help - Flag. Optional. Display this help.\nAdd an item to the beginning or end of a text-delimited list\n\n'
 return_code=$'0 - All items are found in the `listValue`\n1 - One or more items were NOT found in the `listValue`\n'
 sourceFile="bin/build/tools/list.sh"
-sourceHash="8914fcd2d27b7643f86f1ce40b82da6b90c21455"
+sourceHash="1179b5a538eb132a6b38a5c32bf461f3f9ad5f78"
 sourceLine="80"
 summary="Does a character-delimited list contain item(s)?"
 summaryComputed=""

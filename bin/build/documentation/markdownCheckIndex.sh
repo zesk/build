@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="indexFile ... - File. Required. One or more index files to check."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""
+argument=$'indexFile ... - File. Required. One or more index files to check.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="markdown.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Displays any markdown files next to the given index file which are not found within the index file as links."$'\n'""$'\n'""
+description=$'Displays any markdown files next to the given index file which are not found within the index file as links.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/markdown.sh"
 fn="markdownCheckIndex"
 fnMarker="markdowncheckindex"
 foundNames=([0]="argument")
 line="177"
-rawComment="Argument: indexFile ... - File. Required. One or more index files to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Displays any markdown files next to the given index file which are not found within the index file as links."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Argument: indexFile ... - File. Required. One or more index files to check.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nDisplays any markdown files next to the given index file which are not found within the index file as links.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/markdown.sh"
-sourceHash="7317706e24f5c34eb1397080ff2d128cdc81c643"
+sourceHash="bb04291467a2d67a3035f0306a41d12cbd803a7a"
 sourceLine="177"
 summary="Displays any markdown files next to the given index file"
 summaryComputed="true"

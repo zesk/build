@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="file - File to get the owner for"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'file - File to get the owner for\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Get the file group name"$'\n'"Outputs the file group for each file passed on the command line"$'\n'""$'\n'""
+description=$'Get the file group name\nOutputs the file group for each file passed on the command line\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/file.sh"
 fn="fileGroup"
 fnMarker="filegroup"
 foundNames=([0]="argument" [1]="return_code")
 line="660"
-rawComment="Get the file group name"$'\n'"Argument: file - File to get the owner for"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Outputs the file group for each file passed on the command line"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Unable to access file"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Unable to access file"$'\n'""
+rawComment=$'Get the file group name\nArgument: file - File to get the owner for\nArgument: --help - Flag. Optional. Display this help.\nOutputs the file group for each file passed on the command line\nReturn Code: 0 - Success\nReturn Code: 1 - Unable to access file\n\n'
+return_code=$'0 - Success\n1 - Unable to access file\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
+sourceHash="c688f25ccc836a3de5e08fcee0b11da564d05e7a"
 sourceLine="660"
 summary="Get the file group name"
 summaryComputed="true"

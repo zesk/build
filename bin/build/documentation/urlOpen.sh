@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--ignore - Flag. Optional. Ignore any invalid URLs found.\n--wait - Flag. When multiple URLs are passed, make a single `open` call with all URLs as command line arguments after all URLs are validated; otherwise each URL is opened individually with the system\'s `open` call.\n--url url - URL. Optional. URL to open.\n'
 base="url.sh"
@@ -16,7 +16,7 @@ line="438"
 rawComment=$'Summary: Opens the default browser for a URL on the host operating system\nOpen a URL using the operating system.\nUses the operating system\'s `open` functionality to open URLs. On Linux uses `xdg-open` or `kde-open`.\n> Note: Tested only on Mac OS X.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --ignore - Flag. Optional. Ignore any invalid URLs found.\nArgument: --wait - Flag. When multiple URLs are passed, make a single `open` call with all URLs as command line arguments after all URLs are validated; otherwise each URL is opened individually with the system\'s `open` call.\nArgument: --url url - URL. Optional. URL to open.\nstdin: line - URL. Optional. URL to open\nEnvironment: BUILD_URL_BINARY\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="5888613ceea13bebc1d11eb2f7336dca1a856d50"
+sourceHash="3ed3b955b3a7b632b60fea2e330a81c2699cd660"
 sourceLine="438"
 stdin=$'line - URL. Optional. URL to open\n'
 summary="Opens the default browser for a URL on the host operating system"

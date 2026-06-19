@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--diff - Flag. Optional. Show differences between new and old files if changed.\n--url - URL. Optional. A remote URL to download the installation script.\n--url-function - Callable. Optional. Fetch the remote URL where the installation script is found.\n--source - File. Required. The local copy of the `--bin` file.\n--local - Flag. Optional. Use local copy `--bin` instead of downloaded version.\n--bin - String. Required. Name of the installer file.\npath - Directory. Optional. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.\napplicationHome - Directory. Optional. Path to the application home directory. Default is current directory.\n--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -15,7 +15,7 @@ line="32"
 rawComment=$'Installs an installer the first time in a new project, and modifies it to work in the application path.\nArgument: --diff - Flag. Optional. Show differences between new and old files if changed.\nArgument: --url - URL. Optional. A remote URL to download the installation script.\nArgument: --url-function - Callable. Optional. Fetch the remote URL where the installation script is found.\nArgument: --source - File. Required. The local copy of the `--bin` file.\nArgument: --local - Flag. Optional. Use local copy `--bin` instead of downloaded version.\nArgument: --bin - String. Required. Name of the installer file.\nArgument: path - Directory. Optional. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.\nArgument: applicationHome - Directory. Optional. Path to the application home directory. Default is current directory.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="4f33224ddeb67ea2ecba444cebf438f57c2d3683"
+sourceHash="d8ce2a61cda62a4ee857835d348af45ba012bbb2"
 sourceLine="32"
 summary="Installs an installer the first time in a new project,"
 summaryComputed="true"

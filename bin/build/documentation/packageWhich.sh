@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nbinary - String. Required. The binary to look for\npackageName ... - String. Optional. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.\n'
 base="package.sh"
@@ -17,7 +17,7 @@ line="233"
 rawComment=$'Installs an apt package if a binary does not exist in the which path.\nThe assumption here is that `packageInstallPackage` will install the desired `binary`.\nConfirms that `binary` is installed after installation succeeds.\nSummary: Install tools using `apt-get` if they are not found\nExample:     packageWhich mariadb mariadb-client\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nArgument: binary - String. Required. The binary to look for\nArgument: packageName ... - String. Optional. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.\nEnvironment: Technically this will install the binary and any related files as a package.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"
-sourceHash="6c84223fe5bc14c2b9baec08ee22b36edea72ad6"
+sourceHash="3044284fc1f27bf20924a72ed04c7da3af05f86f"
 sourceLine="233"
 summary="Install tools using \`apt-get\` if they are not found"
 summaryComputed=""

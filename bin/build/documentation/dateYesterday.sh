@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--local - Flag. Optional. Local yesterday"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--local - Flag. Optional. Local yesterday\n--help - Flag. Optional. Display this help.\n'
 base="date.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Returns yesterday's date, in \`YYYY-MM-DD\` format. (same as \`%F\`)"$'\n'""$'\n'""
+description=$'Returns yesterday\'s date, in `YYYY-MM-DD` format. (same as `%F`)\n\n'
 descriptionLineCount="2"
-example="    rotated=\"\$log.\$(dateYesterday --local)\""$'\n'""
+example=$'    rotated="$log.$(dateYesterday --local)"\n'
 file="bin/build/tools/date.sh"
 fn="dateYesterday"
 fnMarker="dateyesterday"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires")
 line="119"
-rawComment="Returns yesterday's date, in \`YYYY-MM-DD\` format. (same as \`%F\`)"$'\n'"Summary: Yesterday's date (UTC time)"$'\n'"Argument: --local - Flag. Optional. Local yesterday"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     rotated=\"\$log.\$({fn} --local)\""$'\n'"Requires: throwArgument date convertValue dateFromTimestamp bashDocumentation"$'\n'""$'\n'""
-requires="throwArgument date convertValue dateFromTimestamp bashDocumentation"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Returns yesterday\'s date, in `YYYY-MM-DD` format. (same as `%F`)\nSummary: Yesterday\'s date (UTC time)\nArgument: --local - Flag. Optional. Local yesterday\nArgument: --help - Flag. Optional. Display this help.\nExample:     rotated="$log.$({fn} --local)"\nRequires: throwArgument date convertValue dateFromTimestamp bashDocumentation\n\n'
+requires=$'throwArgument date convertValue dateFromTimestamp bashDocumentation\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 rotated=""
 sourceFile="bin/build/tools/date.sh"
-sourceHash="8b6a5808143207c1b2329179a4d73d95ea46d8cc"
+sourceHash="f805c1fba776a6a463c0d2a3bcdd87e48790701e"
 sourceLine="119"
 summary="Yesterday's date (UTC time)"
 summaryComputed=""

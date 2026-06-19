@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'source - Directory. Required. target\ntarget - FileDirectory. Required.\n'
 base="directory.sh"
@@ -15,7 +15,7 @@ line="76"
 rawComment=$'Argument: source - Directory. Required. target\nArgument: target - FileDirectory. Required.\nCopy directory over another sort-of-atomically\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/directory.sh"
-sourceHash="72fb531bf15b4fc22d2cd595509333fbeece21df"
+sourceHash="56e2e47efbd4d48b0fa152ed5f06ec8d0ff20d9e"
 sourceLine="76"
 summary="Copy directory over another sort-of-atomically"
 summaryComputed="true"

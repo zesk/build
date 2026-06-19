@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="barText - String. Required. Text to fill line with, repeated. If not specified uses \`-\`"$'\n'"displayText - String. Optional.  Text to display on the line before the fill bar."$'\n'""
+argument=$'barText - String. Required. Text to fill line with, repeated. If not specified uses `-`\ndisplayText - String. Optional.  Text to display on the line before the fill bar.\n'
 base="line.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Output a line and fill columns with a character"$'\n'""$'\n'""
+description=$'Output a line and fill columns with a character\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/decorate/line.sh"
 fn="consoleHeadingLine"
 fnMarker="consoleheadingline"
 foundNames=([0]="argument")
 line="60"
-rawComment="Output a line and fill columns with a character"$'\n'"Argument: barText - String. Required. Text to fill line with, repeated. If not specified uses \`-\`"$'\n'"Argument: displayText - String. Optional.  Text to display on the line before the fill bar."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Output a line and fill columns with a character\nArgument: barText - String. Required. Text to fill line with, repeated. If not specified uses `-`\nArgument: displayText - String. Optional.  Text to display on the line before the fill bar.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/line.sh"
-sourceHash="0f11ed0e19d9ca6840a81fdf07b6a1e8ab19a4c1"
+sourceHash="1f11a1a79d595a6144fdc9d230d37898d937db22"
 sourceLine="60"
 summary="Output a line and fill columns with a character"
 summaryComputed="true"

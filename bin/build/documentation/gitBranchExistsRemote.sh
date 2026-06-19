@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'branch ... - String. Required. List of branch names to check.\n--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -15,7 +15,7 @@ line="1062"
 rawComment=$'Does a branch exist remotely?\nArgument: branch ... - String. Required. List of branch names to check.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - All branches exist on the remote\nReturn Code: 1 - At least one branch does not exist remotely\n\n'
 return_code=$'0 - All branches exist on the remote\n1 - At least one branch does not exist remotely\n'
 sourceFile="bin/build/tools/git.sh"
-sourceHash="a0d23919137c5539c67fd2fa09a1b037d4933cfd"
+sourceHash="5e91a5d4b3beafc28e8b01755133cb215bd453d8"
 sourceLine="1062"
 summary="Does a branch exist remotely?"
 summaryComputed="true"

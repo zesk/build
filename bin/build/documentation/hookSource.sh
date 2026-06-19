@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--application applicationHome - Path. Optional. Directory of alternate application home.\n--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nhookName ... - String. Required. Hook to source.\n'
 base="hook.sh"
@@ -19,7 +19,7 @@ rawComment=$'Run a hook in the project located at `./bin/hooks/`\nSee (Hooks doc
 return_code=$'Any - The hook exit code is returned if it is run\n1 - is returned if the hook is not found\n'
 see=$'hookExists hookRun hookRunOptional hookSourceOptional\n'
 sourceFile="bin/build/tools/hook.sh"
-sourceHash="6238c9ff87d29d71c91395b97242252de0f96fd5"
+sourceHash="d7e5ca8901bb43435b977751cbb2ef47e4b94072"
 sourceLine="186"
 summary="Run a project hook"
 summaryComputed=""

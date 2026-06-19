@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nurl ... - String. URL. Required. A Uniform Resource Locator\n'
 base="url.sh"
@@ -15,7 +15,7 @@ line="263"
 rawComment=$'Summary: Is a URL valid?\nChecks if a URL is syntactically valid - solely a text check.\nArgument: --help - Flag. Optional. Display this help.\nArgument: url ... - String. URL. Required. A Uniform Resource Locator\nReturn Code: 0 - all URLs passed in are valid\nReturn Code: 1 - at least one URL passed in is not a valid URL\n\n'
 return_code=$'0 - all URLs passed in are valid\n1 - at least one URL passed in is not a valid URL\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="5888613ceea13bebc1d11eb2f7336dca1a856d50"
+sourceHash="3ed3b955b3a7b632b60fea2e330a81c2699cd660"
 sourceLine="263"
 summary="Is a URL valid?"
 summaryComputed=""

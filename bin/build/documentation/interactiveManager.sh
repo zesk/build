@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails."$'\n'"--exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"--delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"fileToCheck ... - File. Optional. Shell file to validate. May also supply file names via stdin."$'\n'""
+argument=$'loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.\n--exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.\n--delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.\nfileToCheck ... - File. Optional. Shell file to validate. May also supply file names via stdin.\n'
 base="interactive.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Run checks interactively until errors are all fixed."$'\n'"Not ready for prime time yet - written not tested."$'\n'""$'\n'""
+description=$'Run checks interactively until errors are all fixed.\nNot ready for prime time yet - written not tested.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/interactive.sh"
 fn="interactiveManager"
 fnMarker="interactivemanager"
 foundNames=([0]="argument")
 line="209"
-rawComment="Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails."$'\n'"Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"Argument: fileToCheck ... - File. Optional. Shell file to validate. May also supply file names via stdin."$'\n'"Run checks interactively until errors are all fixed."$'\n'"Not ready for prime time yet - written not tested."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.\nArgument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.\nArgument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.\nArgument: fileToCheck ... - File. Optional. Shell file to validate. May also supply file names via stdin.\nRun checks interactively until errors are all fixed.\nNot ready for prime time yet - written not tested.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="e498f36ea8a183a8b53d5b3a569214c3365c46ed"
+sourceHash="f4796c0b7d055e906c15497340e62fd7c9cdd8ad"
 sourceLine="209"
 summary="Run checks interactively until errors are all fixed."
 summaryComputed="true"

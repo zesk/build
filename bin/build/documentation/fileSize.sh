@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="file ... - Optional. One or more files to get size of."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'file ... - Optional. One or more files to get size of.\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="No documentation for \`fileSize\`."$'\n'""
+description=$'No documentation for `fileSize`.\n'
 descriptionLineCount=""
 file="bin/build/tools/file.sh"
 fn="fileSize"
 fnMarker="filesize"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="return_code")
 line="502"
-rawComment="Argument: file ... - Optional. One or more files to get size of."$'\n'"stdin: File. One or more files to get size of."$'\n'"stdout: UnsignedInteger"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Environment error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'""
+rawComment=$'Argument: file ... - Optional. One or more files to get size of.\nstdin: File. One or more files to get size of.\nstdout: UnsignedInteger\nReturn Code: 0 - Success\nReturn Code: 1 - Environment error\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
+sourceHash="c688f25ccc836a3de5e08fcee0b11da564d05e7a"
 sourceLine="502"
-stdin="File. One or more files to get size of."$'\n'""
-stdout="UnsignedInteger"$'\n'""
+stdin=$'File. One or more files to get size of.\n'
+stdout=$'UnsignedInteger\n'
 summary="undocumented"
 summaryComputed=""
 usage="fileSize [ file ... ] [ --help ]"

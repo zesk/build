@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="iterm2.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Is the current console iTerm2?"$'\n'"Succeeds when LC_TERMINAL is \`iTerm2\` AND TERM is NOT \`screen\`"$'\n'""$'\n'""
+description=$'Is the current console iTerm2?\nSucceeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`\n\n'
 descriptionLineCount="3"
-environment="LC_TERMINAL"$'\n'"TERM"$'\n'""
+environment=$'LC_TERMINAL\nTERM\n'
 file="bin/build/tools/iterm2.sh"
 fn="isiTerm2"
 fnMarker="isiterm2"
 foundNames=([0]="argument" [1]="environment")
 line="36"
-rawComment="Is the current console iTerm2?"$'\n'"Succeeds when LC_TERMINAL is \`iTerm2\` AND TERM is NOT \`screen\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: LC_TERMINAL"$'\n'"Environment: TERM"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Is the current console iTerm2?\nSucceeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: LC_TERMINAL\nEnvironment: TERM\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="addbed4a0b68e5f665a51ab97d2b99c073dd7c02"
+sourceHash="58eeb81a4d81f00507a1a74ca99c3238d4499cb1"
 sourceLine="36"
 summary="Is the current console iTerm2?"
 summaryComputed="true"

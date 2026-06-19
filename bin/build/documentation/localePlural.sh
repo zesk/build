@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'number - Number. Required. An integer or floating point number\nsingular - String. Required. The singular form of a noun\nlocalePlural - String. Optional. The localePlural form of a noun. If not specified uses `singular` plus an ess.\n'
 base="text.sh"
@@ -19,7 +19,7 @@ rawComment=$'Outputs the `singular` value to standard out when the value of `num
 return_code=$'1 - If count is non-numeric\n0 - If count is numeric\n'
 short_description=$'Output numeric messages which are grammatically accurate\n'
 sourceFile="bin/build/tools/text.sh"
-sourceHash="b913e34543d2ae704942cadce5473f26955cd42e"
+sourceHash="6d769d6727070a6dc8632961d7250fe1f73eea0f"
 sourceLine="829"
 stdout=$'`String`. The localePlural form for non-1 values. e.g. `$(localePlural 2 potato potatoes)` = `potatoes`\n'
 summary="Outputs the \`singular\` value to standard out when the value"

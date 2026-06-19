@@ -1,1 +1,1 @@
-[__dateFromTimestamp]({rel}tools/internal.md#__datefromtimestamp) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform/Darwin.sh#L37))
+[__dateFromTimestamp]({rel}tools/internal.md#__datefromtimestamp) - Platform \`dateFromTimestamp\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform/Darwin.sh#L39))

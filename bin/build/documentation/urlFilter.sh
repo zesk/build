@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--show-file - Boolean. Optional. Show the file name in the output (suffix with `: `)\n--file name - String. Optional. The file name to display - can be any text.\nfile - File. Optional. A file to read and output URLs found.\n'
 base="url.sh"
@@ -15,7 +15,7 @@ line="380"
 rawComment=$'Summary: Extract URLs from arbitrary text content\nOutput URLs which appear in a stream.\nArgument: --show-file - Boolean. Optional. Show the file name in the output (suffix with `: `)\nArgument: --file name - String. Optional. The file name to display - can be any text.\nArgument: file - File. Optional. A file to read and output URLs found.\nstdin: text\nstdout: line:URL\nTakes a text file and outputs any `https://` or `http://` URLs found within.\nURLs are explicitly trimmed at quote, whitespace and escape boundaries.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="5888613ceea13bebc1d11eb2f7336dca1a856d50"
+sourceHash="3ed3b955b3a7b632b60fea2e330a81c2699cd660"
 sourceLine="380"
 stdin=$'text\n'
 stdout=$'line:URL\n'

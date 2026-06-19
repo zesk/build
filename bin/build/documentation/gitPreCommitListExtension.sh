@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'extension - String. Optional. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.\n--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -15,7 +15,7 @@ line="979"
 rawComment=$'List the file(s) of an extension.\nArgument: extension - String. Optional. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.\nArgument: --help - Flag. Optional. Display this help.\nstdout: File. One per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/git.sh"
-sourceHash="a0d23919137c5539c67fd2fa09a1b037d4933cfd"
+sourceHash="5e91a5d4b3beafc28e8b01755133cb215bd453d8"
 sourceLine="979"
 stdout=$'File. One per line.\n'
 summary="List the file(s) of an extension."

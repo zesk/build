@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument="none"
 base="developer.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Announce a list of functions now available"$'\n'""$'\n'""
+description=$'Announce a list of functions now available\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/developer.sh"
 fn="developerAnnounce"
 fnMarker="developerannounce"
 foundNames=()
 line="9"
-rawComment="Announce a list of functions now available"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Announce a list of functions now available\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/developer.sh"
-sourceHash="78a593214724db23edf7c0ae664f15c226343bbd"
+sourceHash="cbbc092a821837875415856193f556aae0aabd6f"
 sourceLine="9"
 summary="Announce a list of functions now available"
 summaryComputed="true"

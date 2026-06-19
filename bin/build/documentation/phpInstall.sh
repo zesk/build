@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'package - Additional packages to install\n'
 base="php.sh"
@@ -15,7 +15,7 @@ line="21"
 rawComment=$'Install `php`\nIf this fails it will output the installation log.\nArgument: package - Additional packages to install\nSummary: Install `php`\nWhen this tool succeeds the `php` binary is available in the local operating system.\nReturn Code: 1 - If installation fails\nReturn Code: 0 - If installation succeeds\n\n'
 return_code=$'1 - If installation fails\n0 - If installation succeeds\n'
 sourceFile="bin/build/tools/php.sh"
-sourceHash="378499878da6ebea46229658d82d5ab6d4d07b85"
+sourceHash="68e65d580277934e4bece7a0bac2fe3f52ec49df"
 sourceLine="21"
 summary="Install \`php\`"
 summaryComputed=""

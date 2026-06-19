@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`\nsettingsFile - Required. Settings file to be loaded.\n'
 base="documentation.sh"
@@ -16,7 +16,7 @@ rawComment=$'Document an item and generate a template (markdown). To custom form
 return_code=$'0 - Success\n1 - Template file not found\n'
 short_description=$'Simple markdown documentation templates\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a8ddc3085c0bd75f808305b573edf755e62ddc0b"
+sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
 sourceLine="435"
 summary="Document an item and generate a template (markdown). To custom"
 summaryComputed="true"

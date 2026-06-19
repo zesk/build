@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="-b - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal."$'\n'"-B - Flag. Causes chunks that include only blank lines to be ignored."$'\n'"-i - Flag. Ignores the case of letters.  E.g., \"A\" will compare equal to \"a\"."$'\n'"-w - Flag. Ignores all blanks and tabs."$'\n'"-I pattern - String. Optional. Ignore lines which match extended regular expression \`pattern\`."$'\n'"source - File. Required. File to compare to."$'\n'"target ... - File. Required. Target file to compare to. Additional files are compared to \`source\`."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'-b - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal.\n-B - Flag. Causes chunks that include only blank lines to be ignored.\n-i - Flag. Ignores the case of letters.  E.g., "A" will compare equal to "a".\n-w - Flag. Ignores all blanks and tabs.\n-I pattern - String. Optional. Ignore lines which match extended regular expression `pattern`.\nsource - File. Required. File to compare to.\ntarget ... - File. Required. Target file to compare to. Additional files are compared to `source`.\n--help - Flag. Optional. Display this help.\n'
 base="diff.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
 description="Are files identical?"
@@ -12,10 +12,10 @@ fn="filesAreIdentical"
 fnMarker="filesareidentical"
 foundNames=([0]="summary" [1]="argument" [2]="return_code")
 line="47"
-rawComment="Summary: Are files identical?"$'\n'"Argument: -b - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal."$'\n'"Argument: -B - Flag. Causes chunks that include only blank lines to be ignored."$'\n'"Argument: -i - Flag. Ignores the case of letters.  E.g., \"A\" will compare equal to \"a\"."$'\n'"Argument: -w - Flag. Ignores all blanks and tabs."$'\n'"Argument: -I pattern - String. Optional. Ignore lines which match extended regular expression \`pattern\`."$'\n'"Argument: source - File. Required. File to compare to."$'\n'"Argument: target ... - File. Required. Target file to compare to. Additional files are compared to \`source\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Files are identical"$'\n'"Return Code: 1 - Files differ"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
-return_code="0 - Files are identical"$'\n'"1 - Files differ"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Summary: Are files identical?\nArgument: -b - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal.\nArgument: -B - Flag. Causes chunks that include only blank lines to be ignored.\nArgument: -i - Flag. Ignores the case of letters.  E.g., "A" will compare equal to "a".\nArgument: -w - Flag. Ignores all blanks and tabs.\nArgument: -I pattern - String. Optional. Ignore lines which match extended regular expression `pattern`.\nArgument: source - File. Required. File to compare to.\nArgument: target ... - File. Required. Target file to compare to. Additional files are compared to `source`.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - Files are identical\nReturn Code: 1 - Files differ\nReturn Code: 2 - Argument error\n\n'
+return_code=$'0 - Files are identical\n1 - Files differ\n2 - Argument error\n'
 sourceFile="bin/build/tools/diff.sh"
-sourceHash="5d23493f2badd97cf2ab4c1ad08db8aaedcaa952"
+sourceHash="5bd24ee67b35642dc7b13c2b36f2800f3b45750c"
 sourceLine="47"
 summary="Are files identical?"
 summaryComputed=""

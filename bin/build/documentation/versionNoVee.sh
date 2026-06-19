@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="version.sh"
@@ -15,7 +15,7 @@ line="42"
 rawComment=$'Summary: Remove `v` from versions\nStrip leading `v` from version tags. Useful when you standardize on the non-`v` versions or wish to sort without the `v`.\nArgument: --help - Flag. Optional. Display this help.\nTake one or more versions and strip the leading `v`\nstdin: Versions containing a preceding `v` character (optionally)\nstdout: Versions with the initial `v` (if it exists) removed\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/version.sh"
-sourceHash="cb6d9642368b7b2c276fb293b83d8e5124812afb"
+sourceHash="c99a643316ae012c003405614babad883b2035e7"
 sourceLine="42"
 stdin=$'Versions containing a preceding `v` character (optionally)\n'
 stdout=$'Versions with the initial `v` (if it exists) removed\n'

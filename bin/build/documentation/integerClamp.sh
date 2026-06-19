@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'minimum - Integer|Empty. Minimum integer value to output.\nmaximum - Integer|Empty. Maximum integer value to output.\n--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -15,7 +15,7 @@ line="597"
 rawComment=$'Clamp digits between two integers\nReads stdin digits, one per line, and outputs only integer values between $min and $max\nArgument: minimum - Integer|Empty. Minimum integer value to output.\nArgument: maximum - Integer|Empty. Maximum integer value to output.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="64a763a2e70568a8f8724961b50fb82c045e8f58"
+sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
 sourceLine="597"
 summary="Clamp digits between two integers"
 summaryComputed="true"

@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"message ... - String. Optional. Any message to display as the badge"$'\n'""
+argument=$'--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.\nmessage ... - String. Optional. Any message to display as the badge\n'
 base="iterm2.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Set the badge for the iTerm2 console"$'\n'""$'\n'""
+description=$'Set the badge for the iTerm2 console\n\n'
 descriptionLineCount="2"
-environment="LC_TERMINAL"$'\n'""
+environment=$'LC_TERMINAL\n'
 file="bin/build/tools/iterm2.sh"
 fn="iTerm2Badge"
 fnMarker="iterm2badge"
 foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="environment")
 line="665"
-rawComment="Summary: Set Badge Message"$'\n'"Set the badge for the iTerm2 console"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"Argument: message ... - String. Optional. Any message to display as the badge"$'\n'"stdin: message - String. Optional. Message to display if not supplied as an argument."$'\n'"Environment: LC_TERMINAL"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Summary: Set Badge Message\nSet the badge for the iTerm2 console\nArgument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.\nArgument: message ... - String. Optional. Any message to display as the badge\nstdin: message - String. Optional. Message to display if not supplied as an argument.\nEnvironment: LC_TERMINAL\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="addbed4a0b68e5f665a51ab97d2b99c073dd7c02"
+sourceHash="58eeb81a4d81f00507a1a74ca99c3238d4499cb1"
 sourceLine="665"
-stdin="message - String. Optional. Message to display if not supplied as an argument."$'\n'""
+stdin=$'message - String. Optional. Message to display if not supplied as an argument.\n'
 summary="Set Badge Message"
 summaryComputed=""
 usage="iTerm2Badge [ --ignore | -i ] [ message ... ]"

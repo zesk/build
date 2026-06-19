@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="builtin - String. Required. String to check if it's a bash builtin."$'\n'""
+argument=$'builtin - String. Required. String to check if it\'s a bash builtin.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Useful for introspection or validation - checks if a token is a bash built-in (e.g. \`cd\`) vs. a binary on the system (\`/bin/cd\`)."$'\n'"Implementation taken directly from the Bash man page."$'\n'""$'\n'""
+description=$'Useful for introspection or validation - checks if a token is a bash built-in (e.g. `cd`) vs. a binary on the system (`/bin/cd`).\nImplementation taken directly from the Bash man page.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/bash.sh"
 fn="isBashBuiltin"
 fnMarker="isbashbuiltin"
 foundNames=([0]="summary" [1]="argument" [2]="return_code")
 line="100"
-rawComment="Summary: Is a token a bash builtin?"$'\n'"Useful for introspection or validation - checks if a token is a bash built-in (e.g. \`cd\`) vs. a binary on the system (\`/bin/cd\`)."$'\n'"Implementation taken directly from the Bash man page."$'\n'"Argument: builtin - String. Required. String to check if it's a bash builtin."$'\n'"Return Code: 0 - Yes, this string is a bash builtin command."$'\n'"Return Code: 1 - No, this is not a bash builtin command"$'\n'""$'\n'""
-return_code="0 - Yes, this string is a bash builtin command."$'\n'"1 - No, this is not a bash builtin command"$'\n'""
+rawComment=$'Summary: Is a token a bash builtin?\nUseful for introspection or validation - checks if a token is a bash built-in (e.g. `cd`) vs. a binary on the system (`/bin/cd`).\nImplementation taken directly from the Bash man page.\nArgument: builtin - String. Required. String to check if it\'s a bash builtin.\nReturn Code: 0 - Yes, this string is a bash builtin command.\nReturn Code: 1 - No, this is not a bash builtin command\n\n'
+return_code=$'0 - Yes, this string is a bash builtin command.\n1 - No, this is not a bash builtin command\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="c338e57d5d9111ed127b37263341910041a4b278"
+sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
 sourceLine="100"
 summary="Is a token a bash builtin?"
 summaryComputed=""

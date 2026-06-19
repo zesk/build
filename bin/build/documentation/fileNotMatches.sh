@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"pattern ... - String. Required.\`grep -e\` Pattern to find in files."$'\n'"-- - Delimiter. Required. exception."$'\n'"exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"-- - Delimiter. Required. file."$'\n'"file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\npattern ... - String. Required.`grep -e` Pattern to find in files.\n-- - Delimiter. Required. exception.\nexception ... - String. Optional. `grep -e` File pattern which should be ignored.\n-- - Delimiter. Required. file.\nfile ... - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.\n'
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Find list of files which do NOT match a specific pattern or patterns and output them"$'\n'""$'\n'""
+description=$'Find list of files which do NOT match a specific pattern or patterns and output them\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/file.sh"
 fn="fileNotMatches"
 fnMarker="filenotmatches"
 foundNames=([0]="argument")
 line="677"
-rawComment="Find list of files which do NOT match a specific pattern or patterns and output them"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pattern ... - String. Required.\`grep -e\` Pattern to find in files."$'\n'"Argument: -- - Delimiter. Required. exception."$'\n'"Argument: exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"Argument: -- - Delimiter. Required. file."$'\n'"Argument: file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Find list of files which do NOT match a specific pattern or patterns and output them\nArgument: --help - Flag. Optional. Display this help.\nArgument: pattern ... - String. Required.`grep -e` Pattern to find in files.\nArgument: -- - Delimiter. Required. exception.\nArgument: exception ... - String. Optional. `grep -e` File pattern which should be ignored.\nArgument: -- - Delimiter. Required. file.\nArgument: file ... - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
+sourceHash="c688f25ccc836a3de5e08fcee0b11da564d05e7a"
 sourceLine="677"
 summary="Find list of files which do NOT match a specific"
 summaryComputed="true"

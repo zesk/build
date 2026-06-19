@@ -1,12 +1,12 @@
 ### `__dateFromTimestamp`
 
-> undocumented
+> Platform `dateFromTimestamp`
 
 #### Usage
 
     __dateFromTimestamp value format [ isUTC ]
 
-No documentation for `__dateFromTimestamp`.
+Platform-specific implementation of `dateFromTimestamp`.
 
 > Location: `bin/build/tools/platform/Darwin.sh`
 

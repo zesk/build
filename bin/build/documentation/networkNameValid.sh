@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"name - String. Network name to test for validity."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\nname - String. Network name to test for validity.\n'
 base="network.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Must be valid name containing alphabetic characters, dashes, or dots."$'\n'"Dotted sections must be no longer than 63 characters; total name must be no longer than 253 characters."$'\n'""$'\n'""
+description=$'Must be valid name containing alphabetic characters, dashes, or dots.\nDotted sections must be no longer than 63 characters; total name must be no longer than 253 characters.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/network.sh"
 fn="networkNameValid"
 fnMarker="networknamevalid"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="stdin")
 line="115"
-rawComment="Summary: Is a network host name valid?"$'\n'"Must be valid name containing alphabetic characters, dashes, or dots."$'\n'"Dotted sections must be no longer than 63 characters; total name must be no longer than 253 characters."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: name - String. Network name to test for validity."$'\n'"Return Code: 0 - All network names passed in are valid."$'\n'"Return Code: 1 - One or more network names passed in are not valid"$'\n'"stdin: line:String - Network names to test for validity."$'\n'""$'\n'""
-return_code="0 - All network names passed in are valid."$'\n'"1 - One or more network names passed in are not valid"$'\n'""
+rawComment=$'Summary: Is a network host name valid?\nMust be valid name containing alphabetic characters, dashes, or dots.\nDotted sections must be no longer than 63 characters; total name must be no longer than 253 characters.\nArgument: --help - Flag. Optional. Display this help.\nArgument: name - String. Network name to test for validity.\nReturn Code: 0 - All network names passed in are valid.\nReturn Code: 1 - One or more network names passed in are not valid\nstdin: line:String - Network names to test for validity.\n\n'
+return_code=$'0 - All network names passed in are valid.\n1 - One or more network names passed in are not valid\n'
 sourceFile="bin/build/tools/network.sh"
-sourceHash="c6bb29c8fed5128e9b6862594b56a1536f11596a"
+sourceHash="8e348568373c9cc01fe79d8a8cf35f22192cc6bb"
 sourceLine="115"
-stdin="line:String - Network names to test for validity."$'\n'""
+stdin=$'line:String - Network names to test for validity.\n'
 summary="Is a network host name valid?"
 summaryComputed=""
 usage="networkNameValid [ --help ] [ name ]"

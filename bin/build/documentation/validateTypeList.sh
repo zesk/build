@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="validate.sh"
@@ -15,7 +15,7 @@ line="447"
 rawComment=$'List types which can be validated.\nstdout: Type\nArgument: --help - Flag. Optional. Display this help.\nSummary: Types which can be validated\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="d52b014f1de008857f44b5fdf4bddc8e365bcaaa"
+sourceHash="a4b43ecbd0d4dcb27db3462e1bc350d414e8fa2e"
 sourceLine="447"
 stdout=$'Type\n'
 summary="Types which can be validated"

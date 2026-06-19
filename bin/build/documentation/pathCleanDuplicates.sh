@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="path.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Cleans the path and removes non-directory entries and duplicates"$'\n'""$'\n'"Maintains ordering."$'\n'""$'\n'""
+description=$'Cleans the path and removes non-directory entries and duplicates\n\nMaintains ordering.\n\n'
 descriptionLineCount="4"
-environment="PATH"$'\n'""
+environment=$'PATH\n'
 file="bin/build/tools/path.sh"
 fn="pathCleanDuplicates"
 fnMarker="pathcleanduplicates"
 foundNames=([0]="argument" [1]="environment")
 line="95"
-rawComment="Cleans the path and removes non-directory entries and duplicates"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Maintains ordering."$'\n'"Environment: PATH"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Cleans the path and removes non-directory entries and duplicates\nArgument: --help - Flag. Optional. Display this help.\nMaintains ordering.\nEnvironment: PATH\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/path.sh"
-sourceHash="21f0a5cf2e762f067606fe4d4a3c0e6f7a52a264"
+sourceHash="2041cf2a94fb5395067f19d0ae334a8a6432088e"
 sourceLine="95"
 summary="Cleans the path and removes non-directory entries and duplicates"
 summaryComputed="true"

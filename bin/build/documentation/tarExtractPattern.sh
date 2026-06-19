@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="pattern - The file pattern to extract"$'\n'""
+argument=$'pattern - The file pattern to extract\n'
 base="tar.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Platform agnostic tar extract with wildcards"$'\n'""$'\n'"e.g. \`tar -xf '*/file.json'\` or \`tar -xf --wildcards '*/file.json'\` depending on OS"$'\n'""$'\n'"\`tar\` command is not cross-platform so this differentiates between the GNU and BSD command line arguments."$'\n'""$'\n'""
+description=$'Platform agnostic tar extract with wildcards\n\ne.g. `tar -xf \'*/file.json\'` or `tar -xf --wildcards \'*/file.json\'` depending on OS\n\n`tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments.\n\n'
 descriptionLineCount="6"
 file="bin/build/tools/tar.sh"
 fn="tarExtractPattern"
 fnMarker="tarextractpattern"
 foundNames=([0]="short_description" [1]="argument" [2]="stdin" [3]="stdout")
 line="19"
-rawComment="Platform agnostic tar extract with wildcards"$'\n'"e.g. \`tar -xf '*/file.json'\` or \`tar -xf --wildcards '*/file.json'\` depending on OS"$'\n'"\`tar\` command is not cross-platform so this differentiates between the GNU and BSD command line arguments."$'\n'"Short description: Platform agnostic tar extract"$'\n'"Argument: pattern - The file pattern to extract"$'\n'"stdin: A gzipped-tar file"$'\n'"stdout: The desired file"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-short_description="Platform agnostic tar extract"$'\n'""
+rawComment=$'Platform agnostic tar extract with wildcards\ne.g. `tar -xf \'*/file.json\'` or `tar -xf --wildcards \'*/file.json\'` depending on OS\n`tar` command is not cross-platform so this differentiates between the GNU and BSD command line arguments.\nShort description: Platform agnostic tar extract\nArgument: pattern - The file pattern to extract\nstdin: A gzipped-tar file\nstdout: The desired file\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+short_description=$'Platform agnostic tar extract\n'
 sourceFile="bin/build/tools/tar.sh"
-sourceHash="7a8a92654406b6853c275aeac20e6584694326aa"
+sourceHash="79038e9694b736c4f6e652ce1ea60e6ae631086e"
 sourceLine="19"
-stdin="A gzipped-tar file"$'\n'""
-stdout="The desired file"$'\n'""
+stdin=$'A gzipped-tar file\n'
+stdout=$'The desired file\n'
 summary="Platform agnostic tar extract with wildcards"
 summaryComputed="true"
 usage="tarExtractPattern [ pattern ]"

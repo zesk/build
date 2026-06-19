@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="hook.sh"
@@ -16,7 +16,7 @@ line="378"
 rawComment=$'Load hook environment variables used to find hooks.\nEnsures `BUILD_HOOK_EXTENSIONS` and `BUILD_HOOK_DIRS` are set to their proper defaults.\nIf already loaded, this function has no effect.\nSummary: Load hook-related environment variables\nEnvironment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/hook.sh"
-sourceHash="6238c9ff87d29d71c91395b97242252de0f96fd5"
+sourceHash="d7e5ca8901bb43435b977751cbb2ef47e4b94072"
 sourceLine="378"
 summary="Load hook-related environment variables"
 summaryComputed=""

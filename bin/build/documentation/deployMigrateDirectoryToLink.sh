@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="deployHome - Directory. Required. Deployment database home."$'\n'"applicationPath - Directory. Required. Application target path."$'\n'""
+argument=$'deployHome - Directory. Required. Deployment database home.\napplicationPath - Directory. Required. Application target path.\n'
 base="deploy.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Automatically convert application deployments using non-links to links."$'\n'""$'\n'""
+description=$'Automatically convert application deployments using non-links to links.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/deploy.sh"
 fn="deployMigrateDirectoryToLink"
 fnMarker="deploymigratedirectorytolink"
 foundNames=([0]="argument")
 line="248"
-rawComment="Argument: deployHome - Directory. Required. Deployment database home."$'\n'"Argument: applicationPath - Directory. Required. Application target path."$'\n'"Automatically convert application deployments using non-links to links."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Argument: deployHome - Directory. Required. Deployment database home.\nArgument: applicationPath - Directory. Required. Application target path.\nAutomatically convert application deployments using non-links to links.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deploy.sh"
-sourceHash="9800c80d1e803796230e87b8fd398df05b0442b9"
+sourceHash="e0d57c87cddcd626993066f2fbdabd8666252165"
 sourceLine="248"
 summary="Automatically convert application deployments using non-links to links."
 summaryComputed="true"

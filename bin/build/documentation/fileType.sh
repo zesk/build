@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="item - String. Optional. Thing to classify"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'item - String. Optional. Thing to classify\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Better type handling of shell objects"$'\n'""$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""$'\n'""
+description=$'Better type handling of shell objects\n\nOutputs one of `type` output or enhancements:\n- `builtin`, `function`, `alias`, `file`\n- `link-directory`, `link-file`, `link-dead`, `directory`, `integer`, `unknown`\n\n'
 descriptionLineCount="6"
 file="bin/build/tools/file.sh"
 fn="fileType"
 fnMarker="filetype"
 foundNames=([0]="argument")
 line="540"
-rawComment="Argument: item - String. Optional. Thing to classify"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Better type handling of shell objects"$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Argument: item - String. Optional. Thing to classify\nArgument: --help - Flag. Optional. Display this help.\nBetter type handling of shell objects\nOutputs one of `type` output or enhancements:\n- `builtin`, `function`, `alias`, `file`\n- `link-directory`, `link-file`, `link-dead`, `directory`, `integer`, `unknown`\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
+sourceHash="c688f25ccc836a3de5e08fcee0b11da564d05e7a"
 sourceLine="540"
 summary="Better type handling of shell objects"
 summaryComputed="true"

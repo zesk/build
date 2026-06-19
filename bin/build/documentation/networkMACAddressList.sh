@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--install - Flag. Optional. Install any packages required to get \`ifconfig\` installed first."$'\n'"--help - Flag. Optional. This help."$'\n'""
+argument=$'--install - Flag. Optional. Install any packages required to get `ifconfig` installed first.\n--help - Flag. Optional. This help.\n'
 base="network.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="List MAC addresses associated with this system using \`ifconfig\`"$'\n'""$'\n'""
+description=$'List MAC addresses associated with this system using `ifconfig`\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/network.sh"
 fn="networkMACAddressList"
 fnMarker="networkmacaddresslist"
 foundNames=([0]="output" [1]="argument")
 line="169"
-output="lines:IPv4"$'\n'""
-rawComment="List MAC addresses associated with this system using \`ifconfig\`"$'\n'"Output: lines:IPv4"$'\n'"Argument: --install - Flag. Optional. Install any packages required to get \`ifconfig\` installed first."$'\n'"Argument: --help - Flag. Optional. This help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+output=$'lines:IPv4\n'
+rawComment=$'List MAC addresses associated with this system using `ifconfig`\nOutput: lines:IPv4\nArgument: --install - Flag. Optional. Install any packages required to get `ifconfig` installed first.\nArgument: --help - Flag. Optional. This help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/network.sh"
-sourceHash="c6bb29c8fed5128e9b6862594b56a1536f11596a"
+sourceHash="8e348568373c9cc01fe79d8a8cf35f22192cc6bb"
 sourceLine="169"
 summary="List MAC addresses associated with this system using \`ifconfig\`"
 summaryComputed="true"

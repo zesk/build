@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"--temporary temporaryPath - Directory. Optional. Use this as a temporary directory instead of the default."$'\n'"--cache cacheDirectory - Directory. Optional. Directory used to cache information between calls; if supplied for similar calls saves time in subsequent calls."$'\n'"--overhead - Flag. Optional. Report on timing used by this function."$'\n'"--path path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"callable - Callable. Optional. Program to run and watch directory before and after."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""
+argument=$'--ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.\n--temporary temporaryPath - Directory. Optional. Use this as a temporary directory instead of the default.\n--cache cacheDirectory - Directory. Optional. Directory used to cache information between calls; if supplied for similar calls saves time in subsequent calls.\n--overhead - Flag. Optional. Report on timing used by this function.\n--path path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.\npath - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.\ncallable - Callable. Optional. Program to run and watch directory before and after.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Run a command and ensure files are not modified"$'\n'""$'\n'""
+description=$'Run a command and ensure files are not modified\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/debug.sh"
 fn="housekeeper"
 fnMarker="housekeeper"
 foundNames=([0]="argument")
 line="419"
-rawComment="Run a command and ensure files are not modified"$'\n'"Argument: --ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"Argument: --temporary temporaryPath - Directory. Optional. Use this as a temporary directory instead of the default."$'\n'"Argument: --cache cacheDirectory - Directory. Optional. Directory used to cache information between calls; if supplied for similar calls saves time in subsequent calls."$'\n'"Argument: --overhead - Flag. Optional. Report on timing used by this function."$'\n'"Argument: --path path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"Argument: path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"Argument: callable - Callable. Optional. Program to run and watch directory before and after."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Run a command and ensure files are not modified\nArgument: --ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.\nArgument: --temporary temporaryPath - Directory. Optional. Use this as a temporary directory instead of the default.\nArgument: --cache cacheDirectory - Directory. Optional. Directory used to cache information between calls; if supplied for similar calls saves time in subsequent calls.\nArgument: --overhead - Flag. Optional. Report on timing used by this function.\nArgument: --path path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.\nArgument: path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.\nArgument: callable - Callable. Optional. Program to run and watch directory before and after.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="31fe892c1ce36e9aab313274a8fe87aa1c2ff9a6"
+sourceHash="c698b75c5757732f1b8a82693f110a2be335611f"
 sourceLine="419"
 summary="Run a command and ensure files are not modified"
 summaryComputed="true"

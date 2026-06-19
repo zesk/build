@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'group - String. Required. Currently allowed: "python"\n'
 base="package.sh"
@@ -15,7 +15,7 @@ line="783"
 rawComment=$'Uninstall a package group\nArgument: group - String. Required. Currently allowed: "python"\nAny unrecognized groups are uninstalled using the name as-is.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"
-sourceHash="6c84223fe5bc14c2b9baec08ee22b36edea72ad6"
+sourceHash="3044284fc1f27bf20924a72ed04c7da3af05f86f"
 sourceLine="783"
 summary="Uninstall a package group"
 summaryComputed="true"

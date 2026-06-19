@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="message - Optional. String. Why failure occurred."$'\n'""
+argument=$'message - Optional. String. Why failure occurred.\n'
 base="junit.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Open tag for \`failure\` - test failed"$'\n'"Argument ... - String. Optional. Name/value tag attributes"$'\n'"Attributes:"$'\n'"- \`type=AssertionError\`"$'\n'""$'\n'""
+description=$'Open tag for `failure` - test failed\nArgument ... - String. Optional. Name/value tag attributes\nAttributes:\n- `type=AssertionError`\n\n'
 descriptionLineCount="5"
-example="    <failure message=\"Expected value did not match.\" type=\"AssertionError\">"$'\n'"        Failure description or stack trace"$'\n'"    </failure>"$'\n'""
+example=$'    <failure message="Expected value did not match." type="AssertionError">\n        Failure description or stack trace\n    </failure>\n'
 file="bin/build/tools/junit.sh"
 fn="junitTestCaseFailureOpen"
 fnMarker="junittestcasefailureopen"
 foundNames=([0]="example" [1]="argument")
 line="265"
-rawComment="Open tag for \`failure\` - test failed"$'\n'"Example:     <failure message=\"Expected value did not match.\" type=\"AssertionError\">"$'\n'"Example:         Failure description or stack trace"$'\n'"Example:     </failure>"$'\n'"Argument: message - Optional. String. Why failure occurred."$'\n'"Argument ... - String. Optional. Name/value tag attributes"$'\n'"Attributes:"$'\n'"- \`type=AssertionError\`"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Open tag for `failure` - test failed\nExample:     <failure message="Expected value did not match." type="AssertionError">\nExample:         Failure description or stack trace\nExample:     </failure>\nArgument: message - Optional. String. Why failure occurred.\nArgument ... - String. Optional. Name/value tag attributes\nAttributes:\n- `type=AssertionError`\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/junit.sh"
-sourceHash="b434c2cb872c8920849edb82446bed7ed134f6d2"
+sourceHash="a70894c42131c6c776b314f435ca478555a88f0b"
 sourceLine="265"
 summary="Open tag for \`failure\` - test failed"
 summaryComputed="true"

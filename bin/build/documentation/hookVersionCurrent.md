@@ -6,7 +6,9 @@
 
     hookVersionCurrent [ --help ] [ --application application ]
 
-Application current version
+Get the application's current version.
+
+Wrapper for the hook `version-current`.
 
 Extracts the version from the repository
 

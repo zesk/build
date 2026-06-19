@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -16,7 +16,7 @@ rawComment=$'Set up a pre-commit hook and create a cache of our files by extensi
 return_code=$'0 - One or more files are available as part of the commit\n1 - Error, or zero files are available as part of the commit\n'
 see=$'gitPreCommitCleanup\n'
 sourceFile="bin/build/tools/git.sh"
-sourceHash="a0d23919137c5539c67fd2fa09a1b037d4933cfd"
+sourceHash="5e91a5d4b3beafc28e8b01755133cb215bd453d8"
 sourceLine="882"
 summary="Set up a pre-commit hook and create a cache of"
 summaryComputed="true"

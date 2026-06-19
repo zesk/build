@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--verbose - Flag. Optional. Display progress to the terminal.\n--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n--force - Flag. Optional. Force even if it was updated recently.\n'
 base="package.sh"
@@ -15,7 +15,7 @@ line="149"
 rawComment=$'Upgrade packages lists and sources\nArgument: --help - Flag. Optional. Display this help.\nArgument: --verbose - Flag. Optional. Display progress to the terminal.\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nArgument: --force - Flag. Optional. Force even if it was updated recently.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"
-sourceHash="6c84223fe5bc14c2b9baec08ee22b36edea72ad6"
+sourceHash="3044284fc1f27bf20924a72ed04c7da3af05f86f"
 sourceLine="149"
 summary="Upgrade packages lists and sources"
 summaryComputed="true"

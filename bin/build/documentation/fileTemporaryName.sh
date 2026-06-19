@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="handler - Function. Required. Function to call on failure. Function Type: returnMessage"$'\n'"--help - Flag. Optional. Display this help."$'\n'"... - Arguments. Optional. Any additional arguments are passed through."$'\n'""
+argument=$'handler - Function. Required. Function to call on failure. Function Type: returnMessage\n--help - Flag. Optional. Display this help.\n... - Arguments. Optional. Any additional arguments are passed through.\n'
 base="file.sh"
-build_debug="temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks"$'\n'""
+build_debug=$'temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks\n'
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Wrapper for \`mktemp\`. Generate a temporary file name, and fail using a function"$'\n'""$'\n'""
+description=$'Wrapper for `mktemp`. Generate a temporary file name, and fail using a function\n\n'
 descriptionLineCount="2"
-environment="BUILD_DEBUG"$'\n'""
+environment=$'BUILD_DEBUG\n'
 file="bin/build/tools/file.sh"
 fn="fileTemporaryName"
 fnMarker="filetemporaryname"
 foundNames=([0]="argument" [1]="requires" [2]="build_debug" [3]="environment")
 line="944"
-rawComment="Wrapper for \`mktemp\`. Generate a temporary file name, and fail using a function"$'\n'"Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: ... - Arguments. Optional. Any additional arguments are passed through."$'\n'"Requires: mktemp helpArgument catchEnvironment bashDocumentation"$'\n'"BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks"$'\n'"Environment: BUILD_DEBUG"$'\n'""$'\n'""
-requires="mktemp helpArgument catchEnvironment bashDocumentation"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Wrapper for `mktemp`. Generate a temporary file name, and fail using a function\nArgument: handler - Function. Required. Function to call on failure. Function Type: returnMessage\nArgument: --help - Flag. Optional. Display this help.\nArgument: ... - Arguments. Optional. Any additional arguments are passed through.\nRequires: mktemp helpArgument catchEnvironment bashDocumentation\nBUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks\nEnvironment: BUILD_DEBUG\n\n'
+requires=$'mktemp helpArgument catchEnvironment bashDocumentation\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"
-sourceHash="1ddfd7452bcc3ae87f5e31f996487d77938a316d"
+sourceHash="c688f25ccc836a3de5e08fcee0b11da564d05e7a"
 sourceLine="944"
 summary="Wrapper for \`mktemp\`. Generate a temporary file name, and fail"
 summaryComputed="true"

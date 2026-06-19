@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument="none"
 base="docker-compose.sh"
@@ -15,7 +15,7 @@ line="62"
 rawComment=$'Uninstalls `docker-compose`\nstderr: Upon failure error log is output\nSummary: Uninstall `docker-compose`\nReturn Code: 1 - If installation fails\nReturn Code: 0 - If installation succeeds\n\n'
 return_code=$'1 - If installation fails\n0 - If installation succeeds\n'
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="0e7630785e46a17c77dad4f7fd6017843dcfbc7c"
+sourceHash="b92e02315c04b81650c815dca874d1ee5d96f43d"
 sourceLine="62"
 stderr=$'Upon failure error log is output\n'
 summary="Uninstall \`docker-compose\`"

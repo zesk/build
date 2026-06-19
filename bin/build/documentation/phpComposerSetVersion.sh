@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--version - String. Use this version instead of current version."$'\n'"--home - Directory. Optional. Use this directory for the location of \`composer.json\`."$'\n'"--status - Flag. Optional. When set, returns 0 when te version was updated successfully and \$(returnCode identical) when the files are the same"$'\n'"--quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit."$'\n'""
+argument=$'--version - String. Use this version instead of current version.\n--home - Directory. Optional. Use this directory for the location of `composer.json`.\n--status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same\n--quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit.\n'
 base="php-composer.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="For any project, ensures the \`version\` field in \`composer.json\` matches \`hookRun version-current\`"$'\n'""$'\n'"Run as a commit hook for any PHP project or as part of your build or development process"$'\n'""$'\n'"Typically the version is copied in without the leading \`v\`."$'\n'""$'\n'""
+description=$'For any project, ensures the `version` field in `composer.json` matches `hookRun version-current`\n\nRun as a commit hook for any PHP project or as part of your build or development process\n\nTypically the version is copied in without the leading `v`.\n\n'
 descriptionLineCount="6"
 file="bin/build/tools/php-composer.sh"
 fn="phpComposerSetVersion"
 fnMarker="phpcomposersetversion"
 foundNames=([0]="argument" [1]="return_code")
 line="132"
-rawComment="For any project, ensures the \`version\` field in \`composer.json\` matches \`hookRun version-current\`"$'\n'"Run as a commit hook for any PHP project or as part of your build or development process"$'\n'"Typically the version is copied in without the leading \`v\`."$'\n'"Argument: --version - String. Use this version instead of current version."$'\n'"Argument: --home - Directory. Optional. Use this directory for the location of \`composer.json\`."$'\n'"Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and \$(returnCode identical) when the files are the same"$'\n'"Argument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit."$'\n'"Return Code: 0 - File was updated successfully."$'\n'"Return Code: 1 - Environment error"$'\n'"Return Code: 2 - Argument error"$'\n'"Return Code: 105 - Identical files (only when --status is passed)"$'\n'""$'\n'""
-return_code="0 - File was updated successfully."$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'"105 - Identical files (only when --status is passed)"$'\n'""
+rawComment=$'For any project, ensures the `version` field in `composer.json` matches `hookRun version-current`\nRun as a commit hook for any PHP project or as part of your build or development process\nTypically the version is copied in without the leading `v`.\nArgument: --version - String. Use this version instead of current version.\nArgument: --home - Directory. Optional. Use this directory for the location of `composer.json`.\nArgument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same\nArgument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit.\nReturn Code: 0 - File was updated successfully.\nReturn Code: 1 - Environment error\nReturn Code: 2 - Argument error\nReturn Code: 105 - Identical files (only when --status is passed)\n\n'
+return_code=$'0 - File was updated successfully.\n1 - Environment error\n2 - Argument error\n105 - Identical files (only when --status is passed)\n'
 sourceFile="bin/build/tools/php-composer.sh"
-sourceHash="bd1432d86d4869b148826e34d41c5e80b7226e3b"
+sourceHash="284c8b11be32c7230c70f426ed02768d5940b977"
 sourceLine="132"
 summary="For any project, ensures the \`version\` field in \`composer.json\` matches"
 summaryComputed="true"

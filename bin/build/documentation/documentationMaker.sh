@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--verbose - Flag. Optional. Be wordy.\n--default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`\nsourcePath - Exists. Required. File or directory to convert.\ntargetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.\nmapFunction ... - Function. Optional. Mapping function to use, and any arguments.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="452"
 rawComment=$'Generate documentation using source markdown and a mapping function.\nArgument: --verbose - Flag. Optional. Be wordy.\nArgument: --default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`\nArgument: sourcePath - Exists. Required. File or directory to convert.\nArgument: targetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.\nArgument: mapFunction ... - Function. Optional. Mapping function to use, and any arguments.\nReturn Code: 0 - Success\nReturn Code: 1 - Template file not found\n\n'
 return_code=$'0 - Success\n1 - Template file not found\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a8ddc3085c0bd75f808305b573edf755e62ddc0b"
+sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
 sourceLine="452"
 summary="Generate documentation using source markdown and a mapping function."
 summaryComputed="true"

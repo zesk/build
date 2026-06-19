@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--debug - Enable debugging. Defaults to `BUILD_DEBUG`\n--deploy - Flag. Optional. default setting - handles the remote deploy.\n--revert - Flag. Optional. Revert changes just made.\n--cleanup - Flag. Optional. Cleanup after success.\n--home deployPath - Directory. Required. Path where the deployments database is on remote system.\n--id applicationId - String. Required. Should match `APPLICATION_ID` in `.env`\n--application applicationPath - String. Required. Path on the remote system where the application is live\n--target targetPackage - Filename. Optional. Package name, defaults to `app.tar.gz`\n'
 base="deployment.sh"
@@ -15,7 +15,7 @@ line="215"
 rawComment=$'This is **run on the remote system** after deployment; environment files are correct.\nIt is run inside the deployment home directory in the new application folder.\nCurrent working directory on deploy is `deployHome/applicationId/app`.\nCurrent working directory on cleanup is `applicationHome/`\nCurrent working directory on undo is `applicationHome/`\nNote that these MAY be the same or different directories depending on how the application is linked to the deployment\nArgument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`\nArgument: --deploy - Flag. Optional. default setting - handles the remote deploy.\nArgument: --revert - Flag. Optional. Revert changes just made.\nArgument: --cleanup - Flag. Optional. Cleanup after success.\nArgument: --home deployPath - Directory. Required. Path where the deployments database is on remote system.\nArgument: --id applicationId - String. Required. Should match `APPLICATION_ID` in `.env`\nArgument: --application applicationPath - String. Required. Path on the remote system where the application is live\nArgument: --target targetPackage - Filename. Optional. Package name, defaults to `app.tar.gz`\nTest: testDeployRemoteFinish - INCOMPLETE\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deployment.sh"
-sourceHash="c83a0dd0653d309658aea997da0121e2c9a4e4f4"
+sourceHash="ded5c32cfe60687758c0b6c630a945e032b9311e"
 sourceLine="215"
 summary="This is **run on the remote system** after deployment; environment"
 summaryComputed="true"

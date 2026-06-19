@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--suffix versionSuffix - String. Optional. word to use between version and index as: `{current}rc{nextIndex}`\n'
 base="git.sh"
@@ -18,7 +18,7 @@ line="336"
 rawComment=$'Generates a git tag for a build version, so `v1.0d1`, `v1.0d2`, for version `v1.0`.\nTag a version of the software in git and push tags to origin.\nIf this fails it will output the installation log.\nWhen this tool succeeds the git repository contains a tag with the suffix and an index which represents the build index.\nDefault is: `--suffix rc` **release candidate**\n- `d` - for **development**\n- `s` - for **staging**\n- `rc` - for **release candidate**\nArgument: --suffix versionSuffix - String. Optional. word to use between version and index as: `{current}rc{nextIndex}`\nHook: version-current\nEnvironment: BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is `rc`.\nEnvironment: BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/git.sh"
-sourceHash="a0d23919137c5539c67fd2fa09a1b037d4933cfd"
+sourceHash="5e91a5d4b3beafc28e8b01755133cb215bd453d8"
 sourceLine="336"
 summary="Generates a git tag for a build version, so \`v1.0d1\`,"
 summaryComputed="true"

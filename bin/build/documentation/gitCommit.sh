@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--last - Flag. Optional. Append last comment\n-- - Flag. Optional. Skip updating release notes with comment.\n--help - Flag. Optional. I need somebody.\ncomment - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message.\n'
 base="git.sh"
@@ -16,7 +16,7 @@ line="462"
 rawComment=$'Argument: --last - Flag. Optional. Append last comment\nArgument: -- - Flag. Optional. Skip updating release notes with comment.\nArgument: --help - Flag. Optional. I need somebody.\nArgument: comment - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message.\nCommits all files added to git and also update release notes with comment\nComment wisely. Does not duplicate comments. Check your release notes.\nExample:     c last\nExample:     c --last\nExample:     c --\nExample:\nExample: ... are all equivalent.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/git.sh"
-sourceHash="a0d23919137c5539c67fd2fa09a1b037d4933cfd"
+sourceHash="5e91a5d4b3beafc28e8b01755133cb215bd453d8"
 sourceLine="462"
 summary="Commits all files added to git and also update release"
 summaryComputed="true"

@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument="none"
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Returns whether the shell has the debugging flag set"$'\n'""$'\n'"Useful if you need to temporarily enable or disable it."$'\n'""$'\n'""
+description=$'Returns whether the shell has the debugging flag set\n\nUseful if you need to temporarily enable or disable it.\n\n'
 descriptionLineCount="4"
 file="bin/build/tools/debug.sh"
 fn="isBashDebug"
 fnMarker="isbashdebug"
 foundNames=([0]="return_code")
 line="134"
-rawComment="Returns whether the shell has the debugging flag set"$'\n'"Useful if you need to temporarily enable or disable it."$'\n'"Return Code: 0 - bash debugging (\`set -x\`) is enabled"$'\n'"Return Code: 1 - bash debugging (\`set -x\`) is not enabled"$'\n'""$'\n'""
-return_code="0 - bash debugging (\`set -x\`) is enabled"$'\n'"1 - bash debugging (\`set -x\`) is not enabled"$'\n'""
+rawComment=$'Returns whether the shell has the debugging flag set\nUseful if you need to temporarily enable or disable it.\nReturn Code: 0 - bash debugging (`set -x`) is enabled\nReturn Code: 1 - bash debugging (`set -x`) is not enabled\n\n'
+return_code=$'0 - bash debugging (`set -x`) is enabled\n1 - bash debugging (`set -x`) is not enabled\n'
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="31fe892c1ce36e9aab313274a8fe87aa1c2ff9a6"
+sourceHash="c698b75c5757732f1b8a82693f110a2be335611f"
 sourceLine="134"
 summary="Returns whether the shell has the debugging flag set"
 summaryComputed="true"

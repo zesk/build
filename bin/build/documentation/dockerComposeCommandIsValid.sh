@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'command - String. Required. The command to test.\n--help - Flag. Optional. Display this help.\n'
 base="docker-compose.sh"
@@ -16,7 +16,7 @@ rawComment=$'Summary: Validate docker compose subcommands\nIs this a docker comp
 return_code=$'0 - Yes, it is.\n1 - No, it is not.\n'
 see=$'dockerComposeCommandList\n'
 sourceFile="bin/build/tools/docker-compose.sh"
-sourceHash="0e7630785e46a17c77dad4f7fd6017843dcfbc7c"
+sourceHash="b92e02315c04b81650c815dca874d1ee5d96f43d"
 sourceLine="126"
 summary="Validate docker compose subcommands"
 summaryComputed=""

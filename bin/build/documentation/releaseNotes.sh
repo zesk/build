@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--application application - Directory. Optional. Application home directory.\nversion - String. Optional. Version for the release notes path. If not specified uses the current version.\n'
 base="version.sh"
@@ -19,7 +19,7 @@ output=$'docs/release/version.md\n'
 rawComment=$'Summary: Output path to current release notes\nOutput path to current release notes\nIf this fails it outputs an error to stderr\nWhen this tool succeeds it outputs the path to the current release notes file\nEnvironment: BUILD_RELEASE_NOTES\nArgument: --application application - Directory. Optional. Application home directory.\nArgument: version - String. Optional. Version for the release notes path. If not specified uses the current version.\nOutput: docs/release/version.md\nHook: version-current\nExample:     open $(bin/build/release-notes.sh)\nExample:     vim $(releaseNotes)\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/version.sh"
-sourceHash="cb6d9642368b7b2c276fb293b83d8e5124812afb"
+sourceHash="c99a643316ae012c003405614babad883b2035e7"
 sourceLine="147"
 summary="Output path to current release notes"
 summaryComputed=""

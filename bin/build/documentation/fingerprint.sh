@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--cached fingerprint - String. Optional. Instead of computing the \`application-fingerprint\` using the hook, use this value."$'\n'"--verbose - Flag. Optional. Be verbose. Default based on value of \`fingerprint\` in \`BUILD_DEBUG\`."$'\n'"--quiet - Flag. Optional. Be quiet (turns verbose off)."$'\n'"--audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn't; or should be ignored."$'\n'"--check - Flag. Optional. Check if the fingerprint is up to date and output the current value."$'\n'"--key - String. Optional. Update this key in the JSON file."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--cached fingerprint - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.\n--verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.\n--quiet - Flag. Optional. Be quiet (turns verbose off).\n--audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn\'t; or should be ignored.\n--check - Flag. Optional. Check if the fingerprint is up to date and output the current value.\n--key - String. Optional. Update this key in the JSON file.\n'
 base="fingerprint.sh"
-build_debug="fingerprint - By default be verbose even if the flag is not specified. (Use \`--quiet\` to silence if needed)"$'\n'""
+build_debug=$'fingerprint - By default be verbose even if the flag is not specified. (Use `--quiet` to silence if needed)\n'
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Update file from \`APPLICATION_JSON\` with application fingerprint."$'\n'""$'\n'""
+description=$'Update file from `APPLICATION_JSON` with application fingerprint.\n\n'
 descriptionLineCount="2"
-environment="BUILD_DEBUG"$'\n'""
+environment=$'BUILD_DEBUG\n'
 file="bin/build/tools/fingerprint.sh"
 fn="fingerprint"
 fnMarker="fingerprint"
 foundNames=([0]="argument" [1]="build_debug" [2]="environment")
 line="21"
-rawComment="Update file from \`APPLICATION_JSON\` with application fingerprint."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --cached fingerprint - String. Optional. Instead of computing the \`application-fingerprint\` using the hook, use this value."$'\n'"Argument: --verbose - Flag. Optional. Be verbose. Default based on value of \`fingerprint\` in \`BUILD_DEBUG\`."$'\n'"Argument: --quiet - Flag. Optional. Be quiet (turns verbose off)."$'\n'"Argument: --audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn't; or should be ignored."$'\n'"Argument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value."$'\n'"Argument: --key - String. Optional. Update this key in the JSON file."$'\n'"BUILD_DEBUG: fingerprint - By default be verbose even if the flag is not specified. (Use \`--quiet\` to silence if needed)"$'\n'"Environment: BUILD_DEBUG"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Update file from `APPLICATION_JSON` with application fingerprint.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --cached fingerprint - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.\nArgument: --verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.\nArgument: --quiet - Flag. Optional. Be quiet (turns verbose off).\nArgument: --audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn\'t; or should be ignored.\nArgument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value.\nArgument: --key - String. Optional. Update this key in the JSON file.\nBUILD_DEBUG: fingerprint - By default be verbose even if the flag is not specified. (Use `--quiet` to silence if needed)\nEnvironment: BUILD_DEBUG\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/fingerprint.sh"
-sourceHash="8de0ec32625ef9a0f5906d97dfce3ab571176e60"
+sourceHash="09bfb4855f1d7e37c0a2ca04a3551d8859472826"
 sourceLine="21"
 summary="Update file from \`APPLICATION_JSON\` with application fingerprint."
 summaryComputed="true"

@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'""
+argument=$'projectName - String. Required. Github project name in the form of `owner/repository`\n'
 base="github.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Get the latest JSON structure"$'\n'""$'\n'""
+description=$'Get the latest JSON structure\n\n'
 descriptionLineCount="2"
-environment="GITHUB_ACCESS_TOKEN"$'\n'""
+environment=$'GITHUB_ACCESS_TOKEN\n'
 file="bin/build/tools/github.sh"
 fn="githubLatest"
 fnMarker="githublatest"
 foundNames=([0]="argument" [1]="environment")
 line="146"
-rawComment="Get the latest JSON structure"$'\n'"Argument: projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Get the latest JSON structure\nArgument: projectName - String. Required. Github project name in the form of `owner/repository`\nEnvironment: GITHUB_ACCESS_TOKEN\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/github.sh"
-sourceHash="78bfd8da6696d3200febc3511ccf98fdbe04cf42"
+sourceHash="9f85a7c547f753beb3c8eab96c8971ada032c885"
 sourceLine="146"
 summary="Get the latest JSON structure"
 summaryComputed="true"

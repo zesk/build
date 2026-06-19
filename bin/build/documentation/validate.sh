@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 ##### Text and formats
 ##### Numbers
@@ -28,7 +28,7 @@ rawComment=$'Summary: Validate a value by type\nArgument: handler - Function. Re
 requires=$'__validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable __validateTypeType\nisFunction throwArgument helpArgument decorate\n'
 return_code=$'0 - `value` is valid, stdout is a filtered version of the value to be used\n2 - `value` is invalid, output reason to stderr\n120 - `value` is invalid, return calling function immediately\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="d52b014f1de008857f44b5fdf4bddc8e365bcaaa"
+sourceHash="a4b43ecbd0d4dcb27db3462e1bc350d414e8fa2e"
 sourceLine="95"
 summary="Validate a value by type"
 summaryComputed=""

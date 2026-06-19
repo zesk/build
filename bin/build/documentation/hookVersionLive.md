@@ -6,7 +6,9 @@
 
     hookVersionLive [ --help ] [ --application application ]
 
-Application deployed version
+Get the application's deployed (e.g. live and published) version.
+
+Wrapper for the hook `version-live`.
 
 > Location: `bin/build/tools/hooks.sh`
 

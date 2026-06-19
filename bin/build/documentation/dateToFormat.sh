@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="date - String. Required. String in the form \`YYYY-MM-DD\` (e.g. \`2023-10-15\`)"$'\n'"format - String. Optional. Format string for the \`date\` command (e.g. \`%s\`)"$'\n'""
+argument=$'date - String. Required. String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)\nformat - String. Optional. Format string for the `date` command (e.g. `%s`)\n'
 base="date.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Converts a date (\`YYYY-MM-DD\`) to another format."$'\n'""$'\n'"Compatible with BSD and GNU date."$'\n'""$'\n'""
+description=$'Converts a date (`YYYY-MM-DD`) to another format.\n\nCompatible with BSD and GNU date.\n\n'
 descriptionLineCount="4"
-example="    dateToFormat 2023-04-20 %s 1681948800"$'\n'"    timestamp=\$(dateToFormat '2023-10-15' %s)"$'\n'""
+example=$'    dateToFormat 2023-04-20 %s 1681948800\n    timestamp=$(dateToFormat \'2023-10-15\' %s)\n'
 file="bin/build/tools/date.sh"
 fn="dateToFormat"
 fnMarker="datetoformat"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="return_code")
 line="22"
-rawComment="Converts a date (\`YYYY-MM-DD\`) to another format."$'\n'"Summary: Platform agnostic date conversion"$'\n'"Compatible with BSD and GNU date."$'\n'"Argument: date - String. Required. String in the form \`YYYY-MM-DD\` (e.g. \`2023-10-15\`)"$'\n'"Argument: format - String. Optional. Format string for the \`date\` command (e.g. \`%s\`)"$'\n'"Example:     dateToFormat 2023-04-20 %s 1681948800"$'\n'"Example:     timestamp=\$(dateToFormat '2023-10-15' %s)"$'\n'"Return Code: 1 - if parsing fails"$'\n'"Return Code: 0 - if parsing succeeds"$'\n'""$'\n'""
-return_code="1 - if parsing fails"$'\n'"0 - if parsing succeeds"$'\n'""
+rawComment=$'Converts a date (`YYYY-MM-DD`) to another format.\nSummary: Platform agnostic date conversion\nCompatible with BSD and GNU date.\nArgument: date - String. Required. String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)\nArgument: format - String. Optional. Format string for the `date` command (e.g. `%s`)\nExample:     dateToFormat 2023-04-20 %s 1681948800\nExample:     timestamp=$(dateToFormat \'2023-10-15\' %s)\nReturn Code: 1 - if parsing fails\nReturn Code: 0 - if parsing succeeds\n\n'
+return_code=$'1 - if parsing fails\n0 - if parsing succeeds\n'
 sourceFile="bin/build/tools/date.sh"
-sourceHash="8b6a5808143207c1b2329179a4d73d95ea46d8cc"
+sourceHash="f805c1fba776a6a463c0d2a3bcdd87e48790701e"
 sourceLine="22"
 summary="Platform agnostic date conversion"
 summaryComputed=""

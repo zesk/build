@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--clean - Flag. Optional. Clean directory of all files first.\ndirectory - Directory. Required. Directory to create extension lists.\nfile0 ... - String. Optional. List of files to add to the extension list.\n--help - Flag. Optional. Display this help.\n'
 base="platform.sh"
@@ -16,7 +16,7 @@ line="336"
 rawComment=$'Argument: --clean - Flag. Optional. Clean directory of all files first.\nArgument: directory - Directory. Required. Directory to create extension lists.\nArgument: file0 ... - String. Optional. List of files to add to the extension list.\nArgument: --help - Flag. Optional. Display this help.\nInput: Takes a list of files, one per line\nGenerates a directory containing files with `extension` as the file names.\nAll files passed to this are added to the `@` file, the `!` file is used for files without extensions.\nExtension parsing is done by removing the final dot from the filename:\n- `foo.sh` -> `"sh"`\n- `foo.tar.gz` -> `"gz"`\n- `foo.` -> `"!"``\n- `foo-bar` -> `"!"``\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="d7df02b1e70f9738cebc0806fb800f2bd1519995"
+sourceHash="9eca1abb18f09a5ac7ffdbb78f76016096d40900"
 sourceLine="336"
 summary="Generates a directory containing files with \`extension\` as the file"
 summaryComputed="true"

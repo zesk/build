@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"threshold - UnsignedInteger. Optional. If process count exceeds this threshold, run the hook and return 1."$'\n'"... - Arguments. Optional. Pass these arguments to the hook."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--quiet - Flag. Optional. Do not output a message when threshold is exceeded."$'\n'"--hook hookName - EmptyString. Optional. Run this hook. Defaults to \`notify'"$'\n'"--sleep sleepTime - PositiveInteger. Optional. Sleep time between checks in milliseconds."$'\n'"--timeout timeoutTime - PositiveInteger. Optional. Time out watching after \`timeoutTime\` milliseconds."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\nthreshold - UnsignedInteger. Optional. If process count exceeds this threshold, run the hook and return 1.\n... - Arguments. Optional. Pass these arguments to the hook.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--quiet - Flag. Optional. Do not output a message when threshold is exceeded.\n--hook hookName - EmptyString. Optional. Run this hook. Defaults to `notify\'\n--sleep sleepTime - PositiveInteger. Optional. Sleep time between checks in milliseconds.\n--timeout timeoutTime - PositiveInteger. Optional. Time out watching after `timeoutTime` milliseconds.\n'
 base="process.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Watch the number of processes matching \`token\` and fail if it exceeds a threshold"$'\n'"Argument:"$'\n'""$'\n'""
+description=$'Watch the number of processes matching `token` and fail if it exceeds a threshold\nArgument:\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/process.sh"
 fn="processCountWatcher"
 fnMarker="processcountwatcher"
 foundNames=([0]="argument" [1]="return_code")
 line="318"
-rawComment="Watch the number of processes matching \`token\` and fail if it exceeds a threshold"$'\n'"Argument:"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: threshold - UnsignedInteger. Optional. If process count exceeds this threshold, run the hook and return 1."$'\n'"Argument: ... - Arguments. Optional. Pass these arguments to the hook."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --quiet - Flag. Optional. Do not output a message when threshold is exceeded."$'\n'"Argument: --hook hookName - EmptyString. Optional. Run this hook. Defaults to \`notify'"$'\n'"Argument: --sleep sleepTime - PositiveInteger. Optional. Sleep time between checks in milliseconds."$'\n'"Argument: --timeout timeoutTime - PositiveInteger. Optional. Time out watching after \`timeoutTime\` milliseconds."$'\n'"Return Code: 0 - Sleep was interrupted"$'\n'"Return Code: 1 - Process count exceeded threshold"$'\n'""$'\n'""
-return_code="0 - Sleep was interrupted"$'\n'"1 - Process count exceeded threshold"$'\n'""
+rawComment=$'Watch the number of processes matching `token` and fail if it exceeds a threshold\nArgument:\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: threshold - UnsignedInteger. Optional. If process count exceeds this threshold, run the hook and return 1.\nArgument: ... - Arguments. Optional. Pass these arguments to the hook.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --quiet - Flag. Optional. Do not output a message when threshold is exceeded.\nArgument: --hook hookName - EmptyString. Optional. Run this hook. Defaults to `notify\'\nArgument: --sleep sleepTime - PositiveInteger. Optional. Sleep time between checks in milliseconds.\nArgument: --timeout timeoutTime - PositiveInteger. Optional. Time out watching after `timeoutTime` milliseconds.\nReturn Code: 0 - Sleep was interrupted\nReturn Code: 1 - Process count exceeded threshold\n\n'
+return_code=$'0 - Sleep was interrupted\n1 - Process count exceeded threshold\n'
 sourceFile="bin/build/tools/process.sh"
-sourceHash="0b517df56f78b0f4641c01677f31d5f0db9297ca"
+sourceHash="284af7fbd4ece4323768b5fe0879f350dcf5f6b1"
 sourceLine="318"
 summary="Watch the number of processes matching \`token\` and fail if"
 summaryComputed="true"

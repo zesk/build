@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'directoryPath ... - One or more directories to create\n--help - Flag. Optional. Display this help.\n--mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.\n--owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.\n'
 base="directory.sh"
@@ -17,7 +17,7 @@ rawComment=$'Given a list of directories, ensure they exist and create them if t
 requires=$'throwArgument decorate catchEnvironment dirname\nchmod chown\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/directory.sh"
-sourceHash="72fb531bf15b4fc22d2cd595509333fbeece21df"
+sourceHash="56e2e47efbd4d48b0fa152ed5f06ec8d0ff20d9e"
 sourceLine="194"
 summary="Given a list of directories, ensure they exist and create"
 summaryComputed="true"
