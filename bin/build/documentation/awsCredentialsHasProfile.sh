@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="profileName - The credentials profile to load (default value is \`default\` and loads section identified by \`[default]\` in \`~/.aws/credentials\`)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\n--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Extract a profile from a credentials file"$'\n'""$'\n'"If the AWS credentials file is not found, returns exit code 1 and outputs nothing."$'\n'"If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing."$'\n'""$'\n'""
+description=$'Extract a profile from a credentials file\n\nIf the AWS credentials file is not found, returns exit code 1 and outputs nothing.\nIf the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.\n\n'
 descriptionLineCount="5"
-example="    setFile=\$(fileTemporaryName \"\$handler\") || return \$?"$'\n'"    if awsEnvironment \"\$profile\" > \"\$setFile\"; then"$'\n'"    eval \$(cat \"\$setFile\")"$'\n'"    rm \"\$setFile\""$'\n'"    else"$'\n'"    decorate error \"Need \$profile profile in aws credentials file\"\`"$'\n'"    exit 1"$'\n'"    fi"$'\n'""
+example=$'    setFile=$(fileTemporaryName "$handler") || return $?\n    if awsEnvironment "$profile" > "$setFile"; then\n    eval $(cat "$setFile")\n    rm "$setFile"\n    else\n    decorate error "Need $profile profile in aws credentials file"`\n    exit 1\n    fi\n'
 file="bin/build/tools/aws.sh"
 fn="awsCredentialsHasProfile"
 fnMarker="awscredentialshasprofile"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="195"
-rawComment="Extract a profile from a credentials file"$'\n'"If the AWS credentials file is not found, returns exit code 1 and outputs nothing."$'\n'"If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing."$'\n'"Summary: Get credentials and output environment variables for AWS authentication"$'\n'"Argument: profileName - The credentials profile to load (default value is \`default\` and loads section identified by \`[default]\` in \`~/.aws/credentials\`)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     setFile=\$(fileTemporaryName \"\$handler\") || return \$?"$'\n'"Example:     if awsEnvironment \"\$profile\" > \"\$setFile\"; then"$'\n'"Example:     eval \$(cat \"\$setFile\")"$'\n'"Example:     rm \"\$setFile\""$'\n'"Example:     else"$'\n'"Example:     decorate error \"Need \$profile profile in aws credentials file\"\`"$'\n'"Example:     exit 1"$'\n'"Example:     fi"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Extract a profile from a credentials file\nIf the AWS credentials file is not found, returns exit code 1 and outputs nothing.\nIf the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.\nSummary: Get credentials and output environment variables for AWS authentication\nArgument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\nArgument: --help - Flag. Optional. Display this help.\nExample:     setFile=$(fileTemporaryName "$handler") || return $?\nExample:     if awsEnvironment "$profile" > "$setFile"; then\nExample:     eval $(cat "$setFile")\nExample:     rm "$setFile"\nExample:     else\nExample:     decorate error "Need $profile profile in aws credentials file"`\nExample:     exit 1\nExample:     fi\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 setFile=""
 sourceFile="bin/build/tools/aws.sh"
-sourceHash="3749f2a78e228db0a269cf15a470e384e355e706"
+sourceHash="9d4ed3ead974a5078fada208dc2c1f1e7d157af7"
 sourceLine="195"
 summary="Get credentials and output environment variables for AWS authentication"
 summaryComputed=""

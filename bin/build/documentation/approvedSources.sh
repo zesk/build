@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--debug - Flag. Optional. Show a lot of information about the approved cache.\n--no-delete - Flag. Optional. Do not delete stale approval files.\n--delete - Flag. Optional. Delete stale approval files.\n'
 base="interactive.sh"
@@ -16,7 +16,7 @@ line="108"
 rawComment=$'List approved Bash script sources which can be loaded automatically by project hooks.\nArgument: --debug - Flag. Optional. Show a lot of information about the approved cache.\nArgument: --no-delete - Flag. Optional. Do not delete stale approval files.\nArgument: --delete - Flag. Optional. Delete stale approval files.\nApproved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.\nStale files are ones which no longer are associated with a file\'s current fingerprint.\nEnvironment: XDG_STATE_HOME\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="e498f36ea8a183a8b53d5b3a569214c3365c46ed"
+sourceHash="f4796c0b7d055e906c15497340e62fd7c9cdd8ad"
 sourceLine="108"
 summary="List approved Bash script sources which can be loaded automatically"
 summaryComputed="true"

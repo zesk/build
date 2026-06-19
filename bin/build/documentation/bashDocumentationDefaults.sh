@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--target templateTarget - FileDirectory. Required. Create templates here.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="documentation.sh"
@@ -15,7 +15,7 @@ line="709"
 rawComment=$'Summary: Generate base template files for Bash code documentation.\nGenerates the following (with example content):\n- `applicationName.md` - `Zesk Build`\n- `applicationOwner.md` - `Market Acumen, Inc.`\n- `year.md` - `2026`\n- `version.md` - `v0.43.2`\n- `timestamp.md` - `1779910142`\n- `timestampString.md` - `2026-05-27 15:29:15`\nArgument: --target templateTarget - FileDirectory. Required. Create templates here.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nFailure is dirty; target directory may be modified even on failure.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="a8ddc3085c0bd75f808305b573edf755e62ddc0b"
+sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
 sourceLine="709"
 summary="Generate base template files for Bash code documentation."
 summaryComputed=""

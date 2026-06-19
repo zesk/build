@@ -1,1 +1,1 @@
-[_installRemotePackage]({rel}guide/installer.md#_installremotepackage) - Installs {name} in a local project directory if not installed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/install.sh#L95))
+[_installRemotePackage]({rel}guide/installer.md#_installremotepackage) - Installs {name} in a local project directory if not installed. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/install.sh#L96))

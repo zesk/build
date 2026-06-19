@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'directoryOrFile - Exists. Required. Directory or file to `source` `.sh` files found.\n--info - Flag. Optional. Show user what they should do (press a key).\n--no-info - Flag. Optional. Hide user info (what they should do ... press a key)\n--verbose - Flag. Optional. Show what is done as status messages.\n--clear - Flag. Optional. Clear the approval status for file given.\n--prefix - String. Optional. Display this text before each status messages.\n'
 base="interactive.sh"
@@ -17,7 +17,7 @@ rawComment=$'Argument: directoryOrFile - Exists. Required. Directory or file to 
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 security=$'Loads bash files\n'
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="e498f36ea8a183a8b53d5b3a569214c3365c46ed"
+sourceHash="f4796c0b7d055e906c15497340e62fd7c9cdd8ad"
 sourceLine="91"
 summary="Loads files or a directory of \`.sh\` files using \`source\`"
 summaryComputed="true"

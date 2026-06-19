@@ -31,6 +31,8 @@ __dateToFormat() {
 }
 
 # Requires: date
+# Summary: Platform `dateFromTimestamp`
+# Platform-specific implementation of `dateFromTimestamp`.
 # Argument: value - Integer. Required.
 # Argument: format - String. Required.
 # Argument: isUTC - Boolean. Optional. Defaults to `true`.

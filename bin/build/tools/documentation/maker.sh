@@ -391,7 +391,9 @@ __documentationFileCompileFunction() {
     sourceFile=$(catchReturn "$handler" __bashDocumentation_FindFunctionDefinitions "$sourcePath" "$fun") || return $?
     local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
     if [ "$sourcesFound" -gt 1 ]; then
-      throwEnvironment "$handler" "${prefix} Multiple sources found for $prettyFun (x$sourcesFound): ${sourceFile//$'\n'/, }" || return $?
+      local remainingFiles && remainingFiles=$(sed "1d" <<<"$sourceFile")
+      sourceFile=$(catchReturn "$handler" head -n 1 <<<"$sourceFile") || return $?
+      statusMessage --last decorate warning "${prefix} Multiple sources found for $prettyFun (x$sourcesFound), using $(decorate file "$sourceFile"): ${remainingFiles//$'\n'/, }"
     fi
     [ -f "$sourceFile" ] || throwEnvironment "$handler" "${prefix} No source found for $prettyFun" || return $?
 

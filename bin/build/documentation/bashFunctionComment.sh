@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="source - File. Required. File where the function is defined."$'\n'"functionName - String. Required. The name of the bash function to extract the documentation for."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'source - File. Required. File where the function is defined.\nfunctionName - String. Required. The name of the bash function to extract the documentation for.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Outputs a function comment in a file."$'\n'"Excludes lines similarly to \`bashFirstComment\`."$'\n'""$'\n'""
+description=$'Outputs a function comment in a file.\nExcludes lines similarly to `bashFirstComment`.\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/bash.sh"
 fn="bashFunctionComment"
 fnMarker="bashfunctioncomment"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="requires")
 line="631"
-rawComment="Summary: Output the comment for a function in a file"$'\n'"Outputs a function comment in a file."$'\n'"Excludes lines similarly to \`bashFirstComment\`."$'\n'"See: bashFirstComment"$'\n'"Argument: source - File. Required. File where the function is defined."$'\n'"Argument: functionName - String. Required. The name of the bash function to extract the documentation for."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: grep cut fileReverseLines helpArgument"$'\n'"Requires: bashDocumentation"$'\n'""$'\n'""
-requires="grep cut fileReverseLines helpArgument"$'\n'"bashDocumentation"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-see="bashFirstComment"$'\n'""
+rawComment=$'Summary: Output the comment for a function in a file\nOutputs a function comment in a file.\nExcludes lines similarly to `bashFirstComment`.\nSee: bashFirstComment\nArgument: source - File. Required. File where the function is defined.\nArgument: functionName - String. Required. The name of the bash function to extract the documentation for.\nArgument: --help - Flag. Optional. Display this help.\nRequires: grep cut fileReverseLines helpArgument\nRequires: bashDocumentation\n\n'
+requires=$'grep cut fileReverseLines helpArgument\nbashDocumentation\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+see=$'bashFirstComment\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="c338e57d5d9111ed127b37263341910041a4b278"
+sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
 sourceLine="631"
 summary="Output the comment for a function in a file"
 summaryComputed=""

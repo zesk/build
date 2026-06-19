@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="This tests \`AWS_ACCESS_KEY_ID\` and \`AWS_SECRET_ACCESS_KEY\` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1."$'\n'"Fails if either \`AWS_ACCESS_KEY_ID\` or \`AWS_SECRET_ACCESS_KEY\` is blank"$'\n'""$'\n'""
+description=$'This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.\nFails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank\n\n'
 descriptionLineCount="3"
-environment="AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)"$'\n'"AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)"$'\n'""
-example="    if awsHasEnvironment; then"$'\n'"    ..."$'\n'"    fi"$'\n'""
+environment=$'AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)\nAWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)\n'
+example=$'    if awsHasEnvironment; then\n    ...\n    fi\n'
 file="bin/build/tools/aws.sh"
 fn="awsHasEnvironment"
 fnMarker="awshasenvironment"
 foundNames=([0]="argument" [1]="return_code" [2]="environment" [3]="example" [4]="summary")
 line="117"
-rawComment="This tests \`AWS_ACCESS_KEY_ID\` and \`AWS_SECRET_ACCESS_KEY\` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1."$'\n'"Fails if either \`AWS_ACCESS_KEY_ID\` or \`AWS_SECRET_ACCESS_KEY\` is blank"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - If environment needs to be updated"$'\n'"Return Code: 1 - If the environment seems to be set already"$'\n'"Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)"$'\n'"Environment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)"$'\n'"Example:     if awsHasEnvironment; then"$'\n'"Example:     ..."$'\n'"Example:     fi"$'\n'"Summary: Test whether the AWS environment variables are set or not"$'\n'""$'\n'""
-return_code="0 - If environment needs to be updated"$'\n'"1 - If the environment seems to be set already"$'\n'""
+rawComment=$'This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.\nFails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - If environment needs to be updated\nReturn Code: 1 - If the environment seems to be set already\nEnvironment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)\nEnvironment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)\nExample:     if awsHasEnvironment; then\nExample:     ...\nExample:     fi\nSummary: Test whether the AWS environment variables are set or not\n\n'
+return_code=$'0 - If environment needs to be updated\n1 - If the environment seems to be set already\n'
 sourceFile="bin/build/tools/aws.sh"
-sourceHash="3749f2a78e228db0a269cf15a470e384e355e706"
+sourceHash="9d4ed3ead974a5078fada208dc2c1f1e7d157af7"
 sourceLine="117"
 summary="Test whether the AWS environment variables are set or not"
 summaryComputed=""

@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="script - File. Required. Bash script to fetch requires tokens from."$'\n'""
+argument=$'script - File. Required. Bash script to fetch requires tokens from.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Gets a list of the \`Requires:\` comments in a bash file."$'\n'"Returns a unique list of tokens"$'\n'""$'\n'""
+description=$'Gets a list of the `Requires:` comments in a bash file.\nReturns a unique list of tokens\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/bash.sh"
 fn="bashGetRequires"
 fnMarker="bashgetrequires"
 foundNames=([0]="argument" [1]="summary")
 line="45"
-rawComment="Argument: script - File. Required. Bash script to fetch requires tokens from."$'\n'"Summary: Fetch requirements lines from a bash file"$'\n'"Gets a list of the \`Requires:\` comments in a bash file."$'\n'"Returns a unique list of tokens"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Argument: script - File. Required. Bash script to fetch requires tokens from.\nSummary: Fetch requirements lines from a bash file\nGets a list of the `Requires:` comments in a bash file.\nReturns a unique list of tokens\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="c338e57d5d9111ed127b37263341910041a4b278"
+sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
 sourceLine="45"
 summary="Fetch requirements lines from a bash file"
 summaryComputed=""
