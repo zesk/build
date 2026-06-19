@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument="none"
 base="prompt.sh"
@@ -20,7 +20,7 @@ requires=$'buildHome statusMessage buildEnvironmentGetDirectory directoryRequire
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'consoleConfigureColorMode\n'
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="2f5a82d1f8c3a101b06abd0c96a2942f9be434a5"
+sourceHash="327354bff34979cd168a58de2b82b2b19b4cf694"
 sourceLine="247"
 summary="Terminal colors to match projects"
 summaryComputed=""

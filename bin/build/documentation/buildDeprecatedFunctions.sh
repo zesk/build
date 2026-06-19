@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -15,7 +15,7 @@ line="65"
 rawComment=$'List all functions which are currently deprecated in Zesk Build\nstdout: String\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="4f33224ddeb67ea2ecba444cebf438f57c2d3683"
+sourceHash="d8ce2a61cda62a4ee857835d348af45ba012bbb2"
 sourceLine="65"
 stdout=$'String\n'
 summary="List all functions which are currently deprecated in Zesk Build"

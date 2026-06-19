@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'startDirectory - Directory. Required. Context in which the command should run.\ncommand - Callable. Required. Command to run in new context.\n... - Arguments. Optional. Arguments to the `command`.\n'
 base="build.sh"
@@ -16,7 +16,7 @@ line="708"
 rawComment=$'Run a command and ensure the build tools context matches the current project.\nUseful when you need to ensure the command is run with the correct version of Zesk Build.\nArgument: startDirectory - Directory. Required. Context in which the command should run.\nArgument: command - Callable. Required. Command to run in new context.\nArgument: ... - Arguments. Optional. Arguments to the `command`.\nAvoid infinite loops here, call down.\nExample:     buildEnvironmentContext "$(pwd)" environmentFileLoad "$(pwd)/.env" --execute timing --slow 500 "$(pwd)/bin/ping.py"\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="4f33224ddeb67ea2ecba444cebf438f57c2d3683"
+sourceHash="d8ce2a61cda62a4ee857835d348af45ba012bbb2"
 sourceLine="708"
 summary="Run a command and ensure the build tools context matches"
 summaryComputed="true"

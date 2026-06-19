@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-11
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--exclude pattern - String. Optional. String passed to \`! -path pattern\` in \`find\`"$'\n'"directory ... - Directory. Required. Directory to \`source\` all \`.sh\` files used."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--exclude pattern - String. Optional. String passed to `! -path pattern` in `find`\ndirectory ... - Directory. Required. Directory to `source` all `.sh` files used.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Load a directory of bash scripts, excluding any dot directories (\`*/.*/*\`), and optionally any additional"$'\n'"files if you use \`--exclude\`. But recursively loads scripts in sorted alphabetic order within the directory until one fails."$'\n'"All files must be executable."$'\n'"Load a directory of \`.sh\` files using \`source\` to make the code available."$'\n'"Has security implications. Use with caution and ensure your directory is protected."$'\n'""$'\n'""
+description=$'Load a directory of bash scripts, excluding any dot directories (`*/.*/*`), and optionally any additional\nfiles if you use `--exclude`. But recursively loads scripts in sorted alphabetic order within the directory until one fails.\nAll files must be executable.\nLoad a directory of `.sh` files using `source` to make the code available.\nHas security implications. Use with caution and ensure your directory is protected.\n\n'
 descriptionLineCount="6"
 file="bin/build/tools/bash.sh"
 fn="bashSourcePath"
 fnMarker="bashsourcepath"
 foundNames=([0]="summary" [1]="argument" [2]="security")
 line="216"
-rawComment="Summary: Load a directory of bash scripts"$'\n'"Load a directory of bash scripts, excluding any dot directories (\`*/.*/*\`), and optionally any additional"$'\n'"files if you use \`--exclude\`. But recursively loads scripts in sorted alphabetic order within the directory until one fails."$'\n'"All files must be executable."$'\n'"Argument: --exclude pattern - String. Optional. String passed to \`! -path pattern\` in \`find\`"$'\n'"Argument: directory ... - Directory. Required. Directory to \`source\` all \`.sh\` files used."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Security: Loads bash files"$'\n'"Load a directory of \`.sh\` files using \`source\` to make the code available."$'\n'"Has security implications. Use with caution and ensure your directory is protected."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-security="Loads bash files"$'\n'""
+rawComment=$'Summary: Load a directory of bash scripts\nLoad a directory of bash scripts, excluding any dot directories (`*/.*/*`), and optionally any additional\nfiles if you use `--exclude`. But recursively loads scripts in sorted alphabetic order within the directory until one fails.\nAll files must be executable.\nArgument: --exclude pattern - String. Optional. String passed to `! -path pattern` in `find`\nArgument: directory ... - Directory. Required. Directory to `source` all `.sh` files used.\nArgument: --help - Flag. Optional. Display this help.\nSecurity: Loads bash files\nLoad a directory of `.sh` files using `source` to make the code available.\nHas security implications. Use with caution and ensure your directory is protected.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+security=$'Loads bash files\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="c338e57d5d9111ed127b37263341910041a4b278"
+sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
 sourceLine="216"
 summary="Load a directory of bash scripts"
 summaryComputed=""
