@@ -959,7 +959,6 @@ _documentationFunctionsListSeeUnfinished() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Summary: Interactively watch count of unresolved `SEE:` tokens in documentation
 # Runs an infinite loop in the console until there are zero unresolved `SEE:` tokens in the documentation path.
 # Searches Markdown (`.md`) files a single level deep.
