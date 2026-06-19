@@ -89,6 +89,8 @@
 - [`MARIADB_BINARY_CONNECT` mariadb Connect Executable]({rel}env/#vendor) – **Executable**. MariaDB binary for database connections
 - [`MARIADB_BINARY_DUMP` mariadb Dump Executable]({rel}env/#vendor) – **Executable**. MariaDB binary for dump
 - [`NODE_PACKAGE_MANAGER` node Package Manager]({rel}env/#vendor) – **Executable**. The package manager used for node operations. Usually `yarn` or
+- [`NOTIFY_URL` Notification URL]({rel}env/#notify) – **URL**. URL to send default notifications
+- [`NOTIFY_URL_AUTHORIZATION` Notification URL]({rel}env/#notify) – **Secret**. Authorization token for default notifications
 - [`PATH` Executable Search Path]({rel}env/#bash) – **DirectoryList**. A colon `:` separated list of paths to search for
 - [`PRODUCTION` Production Flag]({rel}env/#bash) – **Boolean**. Is this a production system? e.g. remove unnecessary runtime checks.
 - [`PROMPT_COMMAND` Prompt function]({rel}env/#bash) – **Callable**. Command is run before displaying the prompt, receives exit status

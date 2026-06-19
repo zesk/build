@@ -23,8 +23,7 @@ __testDebugTermDisplay() {
 #
 __testSection() {
   [ -n "$*" ] || returnArgument "Blank argument $(debuggingStack)"
-  consoleLineFill
-  decorate box --size 0 "$@"
+  statusMessage --last decorate box --size 0 "$@"
 }
 
 #

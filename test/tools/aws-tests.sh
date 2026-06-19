@@ -112,52 +112,50 @@ _isAWSKeyUpToDateTest() {
 
 # Tag: slow
 testAWSExpiration() {
-  local thisYear thisMonth expirationDays start
-  local oldDate
+  local expirationDays
+  local oldDate="${AWS_ACCESS_KEY_DATE-NOPE}"
 
-  oldDate="${AWS_ACCESS_KEY_DATE-NOPE}"
+  local start && start=$(timingStart)
+  statusMessage --last decorate info "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
+  local thisYear && thisYear=$(($(date +%Y) + 0))
+  local thisMonth && thisMonth="$(date +%m)"
 
-  start=$(timingStart)
-  __testSection "AWS_ACCESS_KEY_DATE/awsIsKeyUpToDate testing"
-  thisYear=$(($(date +%Y) + 0))
-  thisMonth="$(date +%m)"
-
-  __testSection null AWS_ACCESS_KEY_DATE
+  statusMessage --last decorate info null AWS_ACCESS_KEY_DATE
   unset AWS_ACCESS_KEY_DATE
   assertExitCode --stderr-match "blank" 2 awsIsKeyUpToDate || return $?
 
-  __testSection blank AWS_ACCESS_KEY_DATE
+  statusMessage --last decorate info blank AWS_ACCESS_KEY_DATE
   export AWS_ACCESS_KEY_DATE=
   assertExitCode --stderr-match "blank" 2 awsIsKeyUpToDate || return $?
 
-  __testSection bad AWS_ACCESS_KEY_DATE
+  statusMessage --last decorate info bad AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=99999
   assertExitCode --stderr-match "is not type" --stderr-match "Date" 2 awsIsKeyUpToDate || return $?
 
-  __testSection OLD AWS_ACCESS_KEY_DATE
+  statusMessage --last decorate info OLD AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=2020-01-01
   _isAWSKeyUpToDateTest "$LINENO" false || return $?
 
-  __testSection THIS-01-01 366
+  statusMessage --last decorate info THIS-01-01 366
   AWS_ACCESS_KEY_DATE="$thisYear-01-01"
   expirationDays=366
   _isAWSKeyUpToDateTest "$LINENO" true "$expirationDays" || return $?
 
-  __testSection LAST-01-01 365
+  statusMessage --last decorate info LAST-01-01 365
   AWS_ACCESS_KEY_DATE="$((thisYear - 1))-01-01"
   expirationDays=365
   _isAWSKeyUpToDateTest "$LINENO" false "$expirationDays" || return $?
 
-  __testSection THIS-THIS-01 365
+  statusMessage --last decorate info THIS-THIS-01 365
   AWS_ACCESS_KEY_DATE="$thisYear-$thisMonth-01"
   _isAWSKeyUpToDateTest "$LINENO" true "$expirationDays" || return $?
 
-  __testSection dateYesterday 0
+  statusMessage --last decorate info dateYesterday 0
   AWS_ACCESS_KEY_DATE=$(dateYesterday)
   expirationDays=0
   _isAWSKeyUpToDateTest "$LINENO" false $expirationDays || return $?
 
-  __testSection dateYesterday 1
+  statusMessage --last decorate info dateYesterday 1
   expirationDays=1
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
@@ -168,13 +166,13 @@ testAWSExpiration() {
   AWS_ACCESS_KEY_DATE=$(dateToday)
 
   expirationDays=0
-  __testSection dateToday $expirationDays
+  statusMessage --last decorate info dateToday $expirationDays
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
   expirationDays=1
-  __testSection dateToday $expirationDays
+  statusMessage --last decorate info dateToday $expirationDays
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
   expirationDays=2
-  __testSection dateToday $expirationDays
+  statusMessage --last decorate info dateToday $expirationDays
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
   timingReport "$start" Done

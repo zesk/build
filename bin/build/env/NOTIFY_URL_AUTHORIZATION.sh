@@ -3,6 +3,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Notify
 # Type: Secret
-# URL to send default notifications
+# Authorization token for default notifications
 # See: notifyURL
 NOTIFY_URL_AUTHORIZATION=${NOTIFY_URL_AUTHORIZATION-}

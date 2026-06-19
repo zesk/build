@@ -13,6 +13,7 @@ Docker
 Documentation
 Installation
 Internal
+Notify
 PHP
 Testing
 Vendor

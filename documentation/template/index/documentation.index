@@ -713,6 +713,7 @@ nodePackageManagerUninstall documentation/source/tools/node.md
 nodePackageManagerValid documentation/source/tools/node.md
 nodeUninstall documentation/source/tools/node.md
 notify documentation/source/tools/interactive.md
+notifyURL documentation/source/tools/notify.md
 npmInstall documentation/source/tools/install.md
 npmInstall documentation/source/tools/node.md
 npmInstall documentation/source/tools/npm.md

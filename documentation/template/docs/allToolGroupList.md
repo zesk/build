@@ -64,6 +64,7 @@
 - [Network functions]({rel}tools/network.md)
 - [New and uncategorized functions ({missingFunctionTotal})]({rel}tools/todo.md)
 - [node Functions]({rel}tools/node.md)
+- [notify Functions]({rel}tools/notify.md)
 - [npm Functions]({rel}tools/npm.md)
 - [OpenTOFU]({rel}tools/tofu.md)
 - [Package Manager Tools]({rel}tools/package.md)

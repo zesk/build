@@ -140,6 +140,11 @@
 
 - `__BUILD_HAS_TTY` &mdash; TTY Cached Result *Boolean*. Cached value of the availability of `/dev/tty`. [notes](#__build_has_tty)
 
+## Notify
+
+- `NOTIFY_URL` &mdash; Notification URL *URL*. URL to send default notifications [notes](#notify_url)
+- `NOTIFY_URL_AUTHORIZATION` &mdash; Notification URL *Secret*. Authorization token for default notifications [notes](#notify_url_authorization)
+
 ## PHP
 
 - `XDEBUG_ENABLED` &mdash; xDebug Enabled Flag *Boolean*. Is xdebug enabled? The application can honor this environment variable [notes](#xdebug_enabled)

@@ -12,11 +12,15 @@ _hookTestFailed() {
   return 1
 }
 
-testWhichHook() {
+testHookNotify() {
   local handler="returnMessage"
-  local home
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  NOTIFY_URL="" assertExitCode 0 hookNotify --tags "test" --title "Testing notify" "This is a test. I love tests." || return $?
+}
 
-  home=$(catchReturn "$handler" buildHome) || return $?
+testHookFind() {
+  local handler="returnMessage"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
   assertEquals "$home/bin/build/hooks/version-current.sh" "$(hookFind version-current)" || return $?
 }
 

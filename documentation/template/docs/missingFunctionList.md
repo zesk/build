@@ -8,6 +8,8 @@
 
 {buildFunctionsSeeLoop}
 
+{hookNotify}
+
 {isDockerComposeCommand}
 
 {networkIPValid}

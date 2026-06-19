@@ -1,6 +1,6 @@
 <!-- {!skip} -->
 
-                                                                                                                                                                                       #!/usr/bin/env bash
+                                                                                                                           #!/usr/bin/env bash
     #
     # Example code and patterns
     #
@@ -50,7 +50,7 @@
       while [ $# -gt 0 ]; do
         local argument="$1" __index=$((__count - $# + 1))
         # __IDENTICAL__ __checkBlankArgumentHandler 1
-        [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+        [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
         case "$argument" in
         # _IDENTICAL_ helpHandler 1
         --help) "$handler" 0 && return $? || return $? ;;
@@ -62,7 +62,7 @@
         --target) shift && target="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $? ;;
         *)
           # _IDENTICAL_ argumentUnknownHandler 1
-          throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+          throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
           ;;
         esac
         shift
@@ -135,7 +135,7 @@
       __source bin/build/tools.sh "$@"
     }
     
-    # IDENTICAL returnMessage 31
+    # IDENTICAL returnMessage 32
     
     # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
     # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -145,9 +145,10 @@
     returnMessage() {
       local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
       if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
-      local t="${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> "
-      isUnsignedInteger "$c" || returnMessage 2 "$t${h#_} non-integer \"$c\"" "$@" || return $?
-      if [ "$c" != "0" ]; then printf "%s%s %s\n" "❌ $t" "[$c]" "${*-§}" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
+      # __IDENTICAL__ localTrace 1
+      local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
+      isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\" ($trace)" "$@" || return $?
+      if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
     }
     _returnMessage() {
       # __IDENTICAL__ bashDocumentation 1
@@ -198,13 +199,13 @@
       while [ $# -gt 0 ]; do
         local argument="$1" __index=$((__count - $# + 1))
         # __IDENTICAL__ __checkBlankArgumentHandler 1
-        [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+        [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
         case "$argument" in
         # _IDENTICAL_ helpHandler 1
         --help) "$handler" 0 && return $? || return $? ;;
         *)
           # _IDENTICAL_ argumentUnknownHandler 1
-          throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+          throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
           ;;
         esac
         shift
@@ -222,4 +223,4 @@
     }
     
     # __tools ../.. __hookGitPostCommit "$@"
-[0;32mUpdated example[0m [1m[35;48;2;0;0;0m27ms[0m[0m [38;2;34;34;34;48;2;0;0;0m[27][0m
+[0;32mUpdated example[0m [1m[35;48;2;0;0;0m26ms[0m[0m [38;2;34;34;34;48;2;0;0;0m[26][0m
