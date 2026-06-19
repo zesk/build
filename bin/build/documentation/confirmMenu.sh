@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="--choice choiceCharacter - String. Required. Character to accept."$'\n'"--default default - String. Optional. Character to choose when there is a timeout or other failure."$'\n'"--result resultFile - File. Required. File to write the result to."$'\n'"--attempts attemptCount - PositiveInteger. Optional. Number of attempts to try and get valid unput from the user."$'\n'"--timeout timeoutSeconds - PositiveInteger. Optional. Number of seconds to wait for user input before stopping."$'\n'"--prompt promptString - String. Optional. String to suffix the prompt with (usually tells the user what to do)"$'\n'"message - String. Optional. Display this message as the confirmation menu."$'\n'""
+argument=$'--choice choiceCharacter - String. Required. Character to accept.\n--default default - String. Optional. Character to choose when there is a timeout or other failure.\n--result resultFile - File. Required. File to write the result to.\n--attempts attemptCount - PositiveInteger. Optional. Number of attempts to try and get valid unput from the user.\n--timeout timeoutSeconds - PositiveInteger. Optional. Number of seconds to wait for user input before stopping.\n--prompt promptString - String. Optional. String to suffix the prompt with (usually tells the user what to do)\nmessage - String. Optional. Display this message as the confirmation menu.\n'
 base="interactive.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Ask the user for a menu of options"$'\n'""$'\n'""
+description=$'Ask the user for a menu of options\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/interactive.sh"
 fn="confirmMenu"
 fnMarker="confirmmenu"
 foundNames=([0]="return_code" [1]="argument")
 line="181"
-rawComment="Ask the user for a menu of options"$'\n'"Return Code: interrupt - Attempts exceeded"$'\n'"Return Code: timeout - Timeout"$'\n'"Argument: --choice choiceCharacter - String. Required. Character to accept."$'\n'"Argument: --default default - String. Optional. Character to choose when there is a timeout or other failure."$'\n'"Argument: --result resultFile - File. Required. File to write the result to."$'\n'"Argument: --attempts attemptCount - PositiveInteger. Optional. Number of attempts to try and get valid unput from the user."$'\n'"Argument: --timeout timeoutSeconds - PositiveInteger. Optional. Number of seconds to wait for user input before stopping."$'\n'"Argument: --prompt promptString - String. Optional. String to suffix the prompt with (usually tells the user what to do)"$'\n'"Argument: message - String. Optional. Display this message as the confirmation menu."$'\n'""$'\n'""
-return_code="interrupt - Attempts exceeded"$'\n'"timeout - Timeout"$'\n'""
+rawComment=$'Ask the user for a menu of options\nReturn Code: interrupt - Attempts exceeded\nReturn Code: timeout - Timeout\nArgument: --choice choiceCharacter - String. Required. Character to accept.\nArgument: --default default - String. Optional. Character to choose when there is a timeout or other failure.\nArgument: --result resultFile - File. Required. File to write the result to.\nArgument: --attempts attemptCount - PositiveInteger. Optional. Number of attempts to try and get valid unput from the user.\nArgument: --timeout timeoutSeconds - PositiveInteger. Optional. Number of seconds to wait for user input before stopping.\nArgument: --prompt promptString - String. Optional. String to suffix the prompt with (usually tells the user what to do)\nArgument: message - String. Optional. Display this message as the confirmation menu.\n\n'
+return_code=$'interrupt - Attempts exceeded\ntimeout - Timeout\n'
 sourceFile="bin/build/tools/interactive.sh"
-sourceHash="e498f36ea8a183a8b53d5b3a569214c3365c46ed"
+sourceHash="f4796c0b7d055e906c15497340e62fd7c9cdd8ad"
 sourceLine="181"
 summary="Ask the user for a menu of options"
 summaryComputed="true"
