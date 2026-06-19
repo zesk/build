@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-12
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument="character - Required. Single character to test."$'\n'"class ... - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any)."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'character - Required. Single character to test.\nclass ... - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).\n--help - Flag. Optional. Display this help.\n'
 base="character.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Does this character match one or more character classes?"$'\n'"See:"$'\n'""$'\n'""
+description=$'Does this character match one or more character classes?\nSee:\n\n'
 descriptionLineCount="3"
 file="bin/build/tools/character.sh"
 fn="characterIsClass"
 fnMarker="characterisclass"
 foundNames=([0]="summary" [1]="argument")
 line="56"
-rawComment="Summary: Check a character matches any character class"$'\n'"Does this character match one or more character classes?"$'\n'"See:"$'\n'"Argument: character - Required. Single character to test."$'\n'"Argument: class ... - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any)."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Summary: Check a character matches any character class\nDoes this character match one or more character classes?\nSee:\nArgument: character - Required. Single character to test.\nArgument: class ... - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/character.sh"
-sourceHash="79294e27750fb832d5811293e7b59bef672c64a7"
+sourceHash="859d1cafed674e6fde294a1f7fca6b467b276cf8"
 sourceLine="56"
 summary="Check a character matches any character class"
 summaryComputed=""
