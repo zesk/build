@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'colorScheme - String. Optional. Color scheme to choose: `light`, `dark`, `forest`\n--help - Flag. Optional. Display this help.\n'
 base="prompt.sh"
@@ -16,7 +16,7 @@ line="174"
 rawComment=$'Summary: Color scheme values for prompts\nColor schemes for prompts. Use this as an argument to `bashPrompt --colors`.\nExample:     bashPrompt --colors "$(bashPromptColorScheme dark)"\nOptions are:\n- forest\n- light (default)\n- dark\nArgument: colorScheme - String. Optional. Color scheme to choose: `light`, `dark`, `forest`\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/prompt.sh"
-sourceHash="2f5a82d1f8c3a101b06abd0c96a2942f9be434a5"
+sourceHash="327354bff34979cd168a58de2b82b2b19b4cf694"
 sourceLine="174"
 summary="Color scheme values for prompts"
 summaryComputed=""

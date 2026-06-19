@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.\npath ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.\n'
 base="platform.sh"
@@ -17,7 +17,7 @@ rawComment=$'Summary: Make shell files executable\nMakes all `*.sh` files execut
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'bashMakeExecutable\n'
 sourceFile="bin/build/tools/platform.sh"
-sourceHash="d7df02b1e70f9738cebc0806fb800f2bd1519995"
+sourceHash="9eca1abb18f09a5ac7ffdbb78f76016096d40900"
 sourceLine="124"
 summary="Make shell files executable"
 summaryComputed=""

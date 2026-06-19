@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.\n--delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.\nfileToCheck ... - File. Optional. Shell file to validate.\n'
 base="lint.sh"
@@ -15,7 +15,7 @@ line="206"
 rawComment=$'Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.\nArgument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.\nArgument: fileToCheck ... - File. Optional. Shell file to validate.\nRun checks interactively until errors are all fixed.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/lint.sh"
-sourceHash="001a8d080c4474bfc3bf86b18fd321bcc4aa033e"
+sourceHash="a8b2d492a178af746e06876c16f2fad5052a9650"
 sourceLine="206"
 summary="Run checks interactively until errors are all fixed."
 summaryComputed="true"
