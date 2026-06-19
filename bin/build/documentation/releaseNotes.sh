@@ -2,24 +2,24 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument=$'--application application - Directory. Optional. Application home directory.\nversion - String. Optional. Version for the release notes path. If not specified uses the current version.\n'
+argument="--application application - Directory. Optional. Application home directory."$'\n'"version - String. Optional. Version for the release notes path. If not specified uses the current version."$'\n'""
 base="version.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Output path to current release notes\n\nIf this fails it outputs an error to stderr\n\nWhen this tool succeeds it outputs the path to the current release notes file\n\n'
+description="Output path to current release notes"$'\n'""$'\n'"If this fails it outputs an error to stderr"$'\n'""$'\n'"When this tool succeeds it outputs the path to the current release notes file"$'\n'""$'\n'""
 descriptionLineCount="6"
-environment=$'BUILD_RELEASE_NOTES\n'
-example=$'    open $(bin/build/release-notes.sh)\n    vim $(releaseNotes)\n'
+environment="BUILD_RELEASE_NOTES"$'\n'""
+example="    open \$(bin/build/release-notes.sh)"$'\n'"    vim \$(releaseNotes)"$'\n'""
 file="bin/build/tools/version.sh"
 fn="releaseNotes"
 fnMarker="releasenotes"
 foundNames=([0]="summary" [1]="environment" [2]="argument" [3]="output" [4]="hook" [5]="example")
-hook=$'version-current\n'
+hook="version-current"$'\n'""
 line="147"
-output=$'docs/release/version.md\n'
-rawComment=$'Summary: Output path to current release notes\nOutput path to current release notes\nIf this fails it outputs an error to stderr\nWhen this tool succeeds it outputs the path to the current release notes file\nEnvironment: BUILD_RELEASE_NOTES\nArgument: --application application - Directory. Optional. Application home directory.\nArgument: version - String. Optional. Version for the release notes path. If not specified uses the current version.\nOutput: docs/release/version.md\nHook: version-current\nExample:     open $(bin/build/release-notes.sh)\nExample:     vim $(releaseNotes)\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+output="docs/release/version.md"$'\n'""
+rawComment="Summary: Output path to current release notes"$'\n'"Output path to current release notes"$'\n'"If this fails it outputs an error to stderr"$'\n'"When this tool succeeds it outputs the path to the current release notes file"$'\n'"Environment: BUILD_RELEASE_NOTES"$'\n'"Argument: --application application - Directory. Optional. Application home directory."$'\n'"Argument: version - String. Optional. Version for the release notes path. If not specified uses the current version."$'\n'"Output: docs/release/version.md"$'\n'"Hook: version-current"$'\n'"Example:     open \$(bin/build/release-notes.sh)"$'\n'"Example:     vim \$(releaseNotes)"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="c99a643316ae012c003405614babad883b2035e7"
+sourceHash="bc1b9451662b72c8cd1a5449c555029672f21b39"
 sourceLine="147"
 summary="Output path to current release notes"
 summaryComputed=""

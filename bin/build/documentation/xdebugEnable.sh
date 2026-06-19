@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="xdebug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Enable Xdebug on systems that have it.\n\nThis changes the value of `XDEBUG_ENABLED` to `true`. Programs must honor this and invoke the debugger.\n\n'
+description="Enable Xdebug on systems that have it."$'\n'""$'\n'"This changes the value of \`XDEBUG_ENABLED\` to \`true\`. Programs must honor this and invoke the debugger."$'\n'""$'\n'""
 descriptionLineCount="4"
-environment=$'XDEBUG_ENABLED\n'
+environment="XDEBUG_ENABLED"$'\n'""
 file="bin/build/tools/xdebug.sh"
 fn="xdebugEnable"
 fnMarker="xdebugenable"
 foundNames=([0]="summary" [1]="environment" [2]="argument")
 line="62"
-rawComment=$'Summary: Enable Xdebug\nEnable Xdebug on systems that have it.\nThis changes the value of `XDEBUG_ENABLED` to `true`. Programs must honor this and invoke the debugger.\nEnvironment: XDEBUG_ENABLED\nArgument: --help - Flag. Optional. Display this help.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Enable Xdebug"$'\n'"Enable Xdebug on systems that have it."$'\n'"This changes the value of \`XDEBUG_ENABLED\` to \`true\`. Programs must honor this and invoke the debugger."$'\n'"Environment: XDEBUG_ENABLED"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/xdebug.sh"
-sourceHash="7f9e2ea2b3b9a370ead8571ef15416ec1291d14d"
+sourceHash="d783e70f3766fcf2b5ebe80af81390390fe99322"
 sourceLine="62"
 summary="Enable Xdebug"
 summaryComputed=""

@@ -45,6 +45,14 @@
 
 {bashDocumentationAllFunctions}
 
+## See Hunting
+
+{documentationFunctionsListSeeUnfinished}
+
+{documentationFunctionsSeeLoop}
+
+{documentationFunctionsSeeDirty}
+
 ## Indexes
 
 {documentationIndexGenerate}

@@ -5,18 +5,18 @@
 argument="none"
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Returns whether the shell has the error exit flag set\n\nUseful if you need to temporarily enable or disable it.\n\nOctober 2024 - Does appear to be inherited by subshells\n\n    set -e\n    printf "$(isErrorExit; printf %d $?)"\n\nOutputs `1` always\n\n'
+description="Returns whether the shell has the error exit flag set"$'\n'""$'\n'"Useful if you need to temporarily enable or disable it."$'\n'""$'\n'"October 2024 - Does appear to be inherited by subshells"$'\n'""$'\n'"    set -e"$'\n'"    printf \"\$(isErrorExit; printf %d \$?)\""$'\n'""$'\n'"Outputs \`1\` always"$'\n'""$'\n'""
 descriptionLineCount="11"
 file="bin/build/tools/debug.sh"
 fn="isErrorExit"
 fnMarker="iserrorexit"
 foundNames=([0]="requires")
 line="291"
-rawComment=$'Returns whether the shell has the error exit flag set\nUseful if you need to temporarily enable or disable it.\nOctober 2024 - Does appear to be inherited by subshells\n    set -e\n    printf "$(isErrorExit; printf %d $?)"\nOutputs `1` always\nRequires: -\n\n'
-requires=$'-\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Returns whether the shell has the error exit flag set"$'\n'"Useful if you need to temporarily enable or disable it."$'\n'"October 2024 - Does appear to be inherited by subshells"$'\n'"    set -e"$'\n'"    printf \"\$(isErrorExit; printf %d \$?)\""$'\n'"Outputs \`1\` always"$'\n'"Requires: -"$'\n'""$'\n'""
+requires="-"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="c698b75c5757732f1b8a82693f110a2be335611f"
+sourceHash="6a81e40ae02c7a2796eae34880ff8f69d143fa24"
 sourceLine="291"
 summary="Returns whether the shell has the error exit flag set"
 summaryComputed="true"

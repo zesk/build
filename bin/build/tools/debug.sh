@@ -314,7 +314,6 @@ _isErrorExit() {
 # Return Code: 0 - No leaks detected in the command
 # DOC TEMPLATE: returnCodeLeak 1
 # Return Code: 108 - A leak was detected in the command
-# DOC TEMPLATE: returnCodeArgument 1
 # Return Code: 1 - Argument error, {fn} was called incorrectly.
 # BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
 plumber() {

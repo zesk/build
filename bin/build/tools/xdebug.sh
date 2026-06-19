@@ -7,7 +7,7 @@
 # Environment: XDEBUG_ENABLED
 
 __xdebugInstallationArtifact() {
-  printf -- "%s\n" "/etc/xdebug-enabled"
+  artifact="/etc/xdebug-enabled"
 }
 
 # Summary: Install the xdebug PHP Debugger
@@ -37,7 +37,7 @@ xdebugInstall() {
     muzzle catchEnvironment "$handler" pecl install xdebug || return $?
   fi
 
-  local artifact && artifact=$(__xdebugInstallationArtifact)
+  local artifact && __xdebugInstallationArtifact
   date | muzzle catchEnvironment "$handler" tee "$artifact" || return $?
 }
 _xdebugInstall() {
@@ -46,7 +46,7 @@ _xdebugInstall() {
 }
 
 __xdebug_Require() {
-  local artifact && artifact=$(__xdebugInstallationArtifact) || :
+  local artifact && __xdebugInstallationArtifact
   [ -f "$artifact" ] || throwArgument "$1" "xdebug is not installed on this system" || return $?
 }
 

@@ -9,6 +9,7 @@ __bashPromptModule_TermColors() {
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
 
   local home && home=$(catchReturn "$handler" buildHome) || return 0
+  # shellcheck disable=SC2015
   local otherHome && otherHome=$(catchReturn "$handler" bashLibraryHome "bin/build/tools.sh" 2>/dev/null) || :
   local savedState=""
   local debug=false

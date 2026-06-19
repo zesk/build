@@ -84,7 +84,7 @@ _fileCopyWouldChange() {
 # Security: Loads bash files
 # Loads files or a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
-# DOC TEMPLATE: approvedCacheNote 4
+# DOC TEMPLATE: approvedCacheNote 3
 # Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
 # Stale files are ones which no longer are associated with a file's current fingerprint.
 # Environment: XDG_STATE_HOME
@@ -101,7 +101,7 @@ _approveBashSource() {
 # Argument: --debug - Flag. Optional. Show a lot of information about the approved cache.
 # Argument: --no-delete - Flag. Optional. Do not delete stale approval files.
 # Argument: --delete - Flag. Optional. Delete stale approval files.
-# DOC TEMPLATE: approvedCacheNote 4
+# DOC TEMPLATE: approvedCacheNote 3
 # Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
 # Stale files are ones which no longer are associated with a file's current fingerprint.
 # Environment: XDG_STATE_HOME

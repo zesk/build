@@ -236,6 +236,7 @@ environmentOutput() {
   ! $__debugFlag || printf "%s\n" "# above is arrays"
   while ! $__finished; do
     IFS="=" read -r -d $'\0' __name __value || __finished=true
+    # shellcheck disable=SC2015
     [ -n "$__name" ] && [ "${__name%\%}" = "$__name" ] || continue
     [ "${#__skipPrefix[@]}" -eq 0 ] || ! stringBegins "$__name" "${__skipPrefix[@]}" || continue
     [ "${#__skipNames[@]}" -eq 0 ] || ! inArray "$__name" "${__skipNames[@]}" || continue

@@ -16,6 +16,11 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# DOC TEMPLATE: approvedCacheNote 3
+# Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
+# Stale files are ones which no longer are associated with a file's current fingerprint.
+# Environment: XDG_STATE_HOME
+
 # COMPILED toolsLoader 2
 # This section is removed during build as the compiled tools file contains the majority of the code, below.
 # -- COMPILED toolsLoader END

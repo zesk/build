@@ -943,3 +943,50 @@ _bashDocumentationDeriveSee() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Summary: List files with unresolved `SEE:` tokens in documentation path
+# Generate a list of files which have unresolved `SEE:` tokens in the documentation path.
+# Searches Markdown (`.md`) files a single level deep.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: path - Directory. Required. The documentation path to examine.
+# stdout: File
+documentationFunctionsListSeeUnfinished() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationFunctionsListSeeUnfinished() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
+# Summary: Interactively watch count of unresolved `SEE:` tokens in documentation
+# Runs an infinite loop in the console until there are zero unresolved `SEE:` tokens in the documentation path.
+# Searches Markdown (`.md`) files a single level deep.
+# You can fix tokens by running `documentationFunctionsCompile` or building the documentation which usually updates environment templates.
+# Delays 10 seconds between checks.
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: path - Directory. Required. The documentation path to examine.
+documentationFunctionsSeeLoop() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationFunctionsSeeLoop() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Dirty documentation files with unresolved `SEE:` tokens in documentation path
+# Changes the modification date of the associated files such that it will be regenerated with `documentationFunctionsCompile`.
+# See: documentationFunctionsCompile
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: path - Directory. Required. The documentation path to examine.
+documentationFunctionsSeeDirty() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationFunctionsSeeDirty() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

@@ -2,23 +2,23 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument=$'command ... - Callable. Command to run\n--temporary tempPath - Directory. Optional. Use this for the temporary path.\n--leak envName ... - EnvironmentVariable. Variable name which is OK to leak.\n--verbose - Flag. Optional. Be verbose.\n--help - Flag. Optional. Display this help.\n'
+argument="command ... - Callable. Command to run"$'\n'"--temporary tempPath - Directory. Optional. Use this for the temporary path."$'\n'"--leak envName ... - EnvironmentVariable. Variable name which is OK to leak."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="debug.sh"
-build_debug=$'plumber-verbose - The plumber outputs the exact variable captures before and after\nplumber-verbose - The plumber outputs the exact variable captures before and after\n'
+build_debug="plumber-verbose - The plumber outputs the exact variable captures before and after"$'\n'"plumber-verbose - The plumber outputs the exact variable captures before and after"$'\n'""
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Run command and detect any global or local leaks\n\n'
+description="Run command and detect any global or local leaks"$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/debug.sh"
 fn="plumber"
 fnMarker="plumber"
 foundNames=([0]="requires" [1]="argument" [2]="build_debug" [3]="return_code")
-line="320"
-rawComment=$'Run command and detect any global or local leaks\nRequires: declare diff grep\nRequires: throwArgument decorate validate isCallable\nRequires: fileTemporaryName textRemoveFields\nArgument: command ... - Callable. Command to run\nArgument: --temporary tempPath - Directory. Optional. Use this for the temporary path.\nArgument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak.\nArgument: --verbose - Flag. Optional. Be verbose.\nArgument: --help - Flag. Optional. Display this help.\nBUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after\nReturn Code: 0 - No leaks detected in the command\nReturn Code: 108 - A leak was detected in the command\nReturn Code: 1 - Argument error, {fn} was called incorrectly.\nBUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after\n\n'
-requires=$'declare diff grep\nthrowArgument decorate validate isCallable\nfileTemporaryName textRemoveFields\n'
-return_code=$'0 - No leaks detected in the command\n108 - A leak was detected in the command\n1 - Argument error, plumber was called incorrectly.\n'
+line="319"
+rawComment="Run command and detect any global or local leaks"$'\n'"Requires: declare diff grep"$'\n'"Requires: throwArgument decorate validate isCallable"$'\n'"Requires: fileTemporaryName textRemoveFields"$'\n'"Argument: command ... - Callable. Command to run"$'\n'"Argument: --temporary tempPath - Directory. Optional. Use this for the temporary path."$'\n'"Argument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak."$'\n'"Argument: --verbose - Flag. Optional. Be verbose."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after"$'\n'"Return Code: 0 - No leaks detected in the command"$'\n'"Return Code: 108 - A leak was detected in the command"$'\n'"Return Code: 1 - Argument error, {fn} was called incorrectly."$'\n'"BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after"$'\n'""$'\n'""
+requires="declare diff grep"$'\n'"throwArgument decorate validate isCallable"$'\n'"fileTemporaryName textRemoveFields"$'\n'""
+return_code="0 - No leaks detected in the command"$'\n'"108 - A leak was detected in the command"$'\n'"1 - Argument error, plumber was called incorrectly."$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="c698b75c5757732f1b8a82693f110a2be335611f"
-sourceLine="320"
+sourceHash="6a81e40ae02c7a2796eae34880ff8f69d143fa24"
+sourceLine="319"
 summary="Run command and detect any global or local leaks"
 summaryComputed="true"
 usage="plumber [ command ... ] [ --temporary tempPath ] [ --leak envName ... ] [ --verbose ] [ --help ]"

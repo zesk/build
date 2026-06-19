@@ -5,17 +5,17 @@
 argument="none"
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Returns whether the shell has the debugging flag set\n\nUseful if you need to temporarily enable or disable it.\n\n'
+description="Returns whether the shell has the debugging flag set"$'\n'""$'\n'"Useful if you need to temporarily enable or disable it."$'\n'""$'\n'""
 descriptionLineCount="4"
 file="bin/build/tools/debug.sh"
 fn="isBashDebug"
 fnMarker="isbashdebug"
 foundNames=([0]="return_code")
 line="134"
-rawComment=$'Returns whether the shell has the debugging flag set\nUseful if you need to temporarily enable or disable it.\nReturn Code: 0 - bash debugging (`set -x`) is enabled\nReturn Code: 1 - bash debugging (`set -x`) is not enabled\n\n'
-return_code=$'0 - bash debugging (`set -x`) is enabled\n1 - bash debugging (`set -x`) is not enabled\n'
+rawComment="Returns whether the shell has the debugging flag set"$'\n'"Useful if you need to temporarily enable or disable it."$'\n'"Return Code: 0 - bash debugging (\`set -x\`) is enabled"$'\n'"Return Code: 1 - bash debugging (\`set -x\`) is not enabled"$'\n'""$'\n'""
+return_code="0 - bash debugging (\`set -x\`) is enabled"$'\n'"1 - bash debugging (\`set -x\`) is not enabled"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="c698b75c5757732f1b8a82693f110a2be335611f"
+sourceHash="6a81e40ae02c7a2796eae34880ff8f69d143fa24"
 sourceLine="134"
 summary="Returns whether the shell has the debugging flag set"
 summaryComputed="true"

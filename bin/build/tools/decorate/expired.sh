@@ -71,7 +71,7 @@ __decorateExtensionExpired() {
   local tempResults && tempResults=$(fileTemporaryName "$handler") || return $?
   local withinDays=0 && dateWithinDays "$keyDate" "$upToDateDays" >"$tempResults" || withinDays=$?
   [ "$withinDays" -le 1 ] || returnClean "$withinDays" "$tempResults" || return "$withinDays"
-  local expireDays expireTimestamp && read -r expireDays expireTimestamp <"$tempResults" || :
+  local expireDays expireTimestamp && read -r expireDays expireTimestamp <"$tempResults" || throwEnvironment "$handler" "Unable to parse \"$tempResults\" into days/timestamp" || return $?
   catchReturn "$handler" rm -rf "$tempResults" || return $?
   if ! isInteger "$expireDays"; then
     throwArgument "$handler" "Unable to compute expire days: \"$keyDate\" \"$upToDateDays\" $expireDays $expireTimestamp " || return $?

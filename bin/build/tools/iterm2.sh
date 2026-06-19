@@ -684,6 +684,7 @@ iTerm2Badge() {
     esac
     shift
   done
+  # shellcheck disable=SC2015
   local finished=false && [ "${#message[@]}" -gt 0 ] || while ! $finished; do
     IFS="" read -d $'\n' -r line || finished=true
     message+=("$line")

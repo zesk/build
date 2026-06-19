@@ -63,7 +63,9 @@ directoryWatch() {
     local elapsed=$((stop - start))
     elapsed=$(((elapsed + 999) / 1000))
 
-    local newTimestamp newFile && read -r newTimestamp newFile <"$stateFile" || :
+    local newTimestamp newFile
+    read -r newTimestamp newFile <"$stateFile" || :
+
     if [ "$newTimestamp" != "$lastTimestamp" ] || [ "$newFile" != "$lastFile" ]; then
       returnClean 0 "${clean[@]}"
       return $?

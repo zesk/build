@@ -5,18 +5,18 @@
 argument="none"
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Output current open files\nstdout\n\n'
+description="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
 descriptionLineCount="3"
 file="bin/build/tools/debug.sh"
 fn="filesOpenStatus"
 fnMarker="filesopenstatus"
 foundNames=()
-line="584"
-rawComment=$'Output current open files\nstdout\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+line="583"
+rawComment="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
-sourceHash="c698b75c5757732f1b8a82693f110a2be335611f"
-sourceLine="584"
+sourceHash="6a81e40ae02c7a2796eae34880ff8f69d143fa24"
+sourceLine="583"
 summary="Output current open files"
 summaryComputed="true"
 usage="filesOpenStatus"

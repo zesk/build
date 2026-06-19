@@ -319,6 +319,7 @@ __buildEnvironmentMakeFile() {
   local handler="$1" templateHome="$2" name="$3" value="$4"
 
   [ -n "$value" ] || value="\${$name-}"
+  # shellcheck disable=SC2015
   local template && template=$(buildEnvironmentFiles --application "$templateHome" "$name" 2>/dev/null | tail -n 1) || :
 
   __buildEnvironmentFileHeader "$handler" || return $?

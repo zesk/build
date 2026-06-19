@@ -2,22 +2,22 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument=$'--count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.\n--title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes.\n--rel rel - EmptyString. Relative link text to display before links. Defaults to `.`\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
+argument="--count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5."$'\n'"--title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes."$'\n'"--rel rel - EmptyString. Relative link text to display before links. Defaults to \`.\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'""
 base="version.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Outputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.\nOutput show release notes in reverse version order:\n- the catenation of the release notes files (`count` items)\n- a blank line\n- the title line and a blank line (or nothing if title line is blank)\n- list links to remaining release notes (`- [v0.0.1](./0.0.1.md)` for example)\n\n'
+description="Outputs full release notes, a separator (title), and then a list to all remaining release notes in markdown."$'\n'"Output show release notes in reverse version order:"$'\n'"- the catenation of the release notes files (\`count\` items)"$'\n'"- a blank line"$'\n'"- the title line and a blank line (or nothing if title line is blank)"$'\n'"- list links to remaining release notes (\`- [v0.0.1](./0.0.1.md)\` for example)"$'\n'""$'\n'""
 descriptionLineCount="7"
 file="bin/build/tools/version.sh"
 fn="releaseNotesMarkdown"
 fnMarker="releasenotesmarkdown"
 foundNames=([0]="summary" [1]="argument" [2]="stdout")
 line="69"
-rawComment=$'Summary: Generate markdown for release notes\nOutputs full release notes, a separator (title), and then a list to all remaining release notes in markdown.\nOutput show release notes in reverse version order:\n- the catenation of the release notes files (`count` items)\n- a blank line\n- the title line and a blank line (or nothing if title line is blank)\n- list links to remaining release notes (`- [v0.0.1](./0.0.1.md)` for example)\nArgument: --count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5.\nArgument: --title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes.\nArgument: --rel rel - EmptyString. Relative link text to display before links. Defaults to `.`\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nstdout: markdown\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Generate markdown for release notes"$'\n'"Outputs full release notes, a separator (title), and then a list to all remaining release notes in markdown."$'\n'"Output show release notes in reverse version order:"$'\n'"- the catenation of the release notes files (\`count\` items)"$'\n'"- a blank line"$'\n'"- the title line and a blank line (or nothing if title line is blank)"$'\n'"- list links to remaining release notes (\`- [v0.0.1](./0.0.1.md)\` for example)"$'\n'"Argument: --count fullCount - PositiveInteger. Number of recent release notes to include in the output. Defaults to 5."$'\n'"Argument: --title titleText - EmptyString. Markdown text to display between the recent release notes and the links to release notes."$'\n'"Argument: --rel rel - EmptyString. Relative link text to display before links. Defaults to \`.\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"stdout: markdown"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="c99a643316ae012c003405614babad883b2035e7"
+sourceHash="bc1b9451662b72c8cd1a5449c555029672f21b39"
 sourceLine="69"
-stdout=$'markdown\n'
+stdout="markdown"$'\n'""
 summary="Generate markdown for release notes"
 summaryComputed=""
 usage="releaseNotesMarkdown [ --count fullCount ] [ --title titleText ] [ --rel rel ] [ --help ] [ --handler handler ]"

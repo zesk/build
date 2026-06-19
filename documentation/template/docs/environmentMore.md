@@ -1,76 +1,4 @@
 
-## `__BASH_PROMPT_MARKERS`
-
-> **Prompt marker list** &mdash; Bash Prompt escape codes for prompt reporting
-> > **Type**: *Array:EmptyString* • **Category**: *Bash Prompt*
-
-List of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.
-
-### See Also
-
-- [iTerm2Init]({rel}tools/iterm2.md#iterm2init) - Add iTerm2 support to console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L828))- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
-
-
-## `__BASH_PROMPT_MODULES`
-
-> **Prompt module list** &mdash; List of functions to run each prompt command
-> > **Type**: *Array:Callable* • **Category**: *Bash Prompt*
-
-List of modules to run each prompt command.
-
-Manage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.
-
-Make your functions *really* fast otherwise the shell becomes sluggish. Also try:
-
-    BUILD_DEBUG=bashPrompt
-
-To report on each command and timing.
-
-An automatic reporting occurs when commands exceed 0.3s.
-
-### See Also
-
-- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
-
-
-## `__BASH_PROMPT_PREVIOUS`
-
-> **Prompt command previous result** &mdash; Previous result code
-> > **Type**: *Array* • **Category**: *Bash Prompt*
-
-Previous result code
-
-### See Also
-
-- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
-
-
-## `__BASH_PROMPT_SLOW`
-
-> **Prompt command slow threshold** &mdash; Bash Prompt slow timer
-> > **Type**: *PositiveInteger* • **Category**: *Bash Prompt*
-
-Number of milliseconds after which a `bashPrompt` command is considered slow.
-
-### See Also
-
-- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
-
-
-## `__BUILD_HAS_TTY`
-
-> **TTY Cached Result** &mdash; Cached value of the availability of `/dev/tty`.
-> > **Type**: *Boolean* • **Category**: *Internal*
-
-Cached value of the availability of `/dev/tty`.
-Possible values are `true` or `false` or blank.
-
-- `true` - `/dev/tty` appears to be operating without errors
-- `false` - `/dev/tty` appears to be disconnected and can not be used
-
-This value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.
-
-
 ## `APACHE_HOME`
 
 > **Apache Home Directory** &mdash; Constant for the Apache configuration home directory.
@@ -85,6 +13,14 @@ Constant for the Apache configuration home directory.
 > > **Type**: *String* • **Category**: *Deployment*
 
 Time when a build was initiated, set upon first invocation if not already.
+
+
+## `APPLICATION_CODE`
+
+> **Application Code Name** &mdash; This is the unique code name of the application. Use
+> > **Type**: *String* • **Category**: *Application*
+
+This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness.
 
 
 ## `APPLICATION_CODE_EXTENSIONS`
@@ -103,14 +39,6 @@ List of extensions for code in the application. Required.
 List of path names to ignore for application code. (e.g. `/vendor/`, `/node_modules/`, etc.)
 
 
-## `APPLICATION_CODE`
-
-> **Application Code Name** &mdash; This is the unique code name of the application. Use
-> > **Type**: *String* • **Category**: *Application*
-
-This is the unique code name of the application. Use a domain name suffix to ensure global uniqueness.
-
-
 ## `APPLICATION_ID`
 
 > **Application ID** &mdash; This is the unique hash which represents the source code
@@ -119,20 +47,20 @@ This is the unique code name of the application. Use a domain name suffix to ens
 This is the unique hash which represents the source code state (typically a git hash)
 
 
-## `APPLICATION_JSON_PREFIX`
-
-> **Application JSON Prefix** &mdash; Prefix to place we can store things in the JSON
-> > **Type**: *String* • **Category**: *Application*
-
-Prefix to place we can store things in the JSON file (e.g. to set the fingerprint)
-
-
 ## `APPLICATION_JSON`
 
 > **Application JSON File** &mdash; Path to the application configuration JSON
 > > **Type**: *ApplicationFile* • **Category**: *Application*
 
 Path to the application configuration JSON
+
+
+## `APPLICATION_JSON_PREFIX`
+
+> **Application JSON Prefix** &mdash; Prefix to place we can store things in the JSON
+> > **Type**: *String* • **Category**: *Application*
+
+Prefix to place we can store things in the JSON file (e.g. to set the fingerprint)
 
 
 ## `APPLICATION_NAME`
@@ -267,20 +195,20 @@ If true then colors are shown, blank means guess the value, false means no color
 - [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
 
 
-## `BUILD_COMPANY_LINK`
-
-> **Company URL** &mdash; Legal copyright holder website for this codebase
-> > **Type**: *URL* • **Category**: *Application*
-
-Legal copyright holder website for this codebase
-
-
 ## `BUILD_COMPANY`
 
 > **Company Name** &mdash; Legal copyright holder for this codebase
 > > **Type**: *String* • **Category**: *Application*
 
 Legal copyright holder for this codebase
+
+
+## `BUILD_COMPANY_LINK`
+
+> **Company URL** &mdash; Legal copyright holder website for this codebase
+> > **Type**: *URL* • **Category**: *Application*
+
+Legal copyright holder website for this codebase
 
 
 ## `BUILD_COMPOSER_VERSION`
@@ -295,14 +223,6 @@ Version of composer to use for building vendor directory
 - [phpComposer]({rel}tools/php.md#phpcomposer) - Run Composer commands on code ([source](https://github.com/zesk/build/blob/main/bin/build/tools/php-composer.sh#L29))
 
 
-## `BUILD_DEBUG_LINES`
-
-> **Debugging output lines** &mdash; Number of lines of debugging output to send to stderr
-> > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
-
-Number of lines of debugging output to send to stderr before stopping
-
-
 ## `BUILD_DEBUG`
 
 > **Debugging Flag** &mdash; Constant for turning debugging on during build to find errors
@@ -310,6 +230,14 @@ Number of lines of debugging output to send to stderr before stopping
 
 Constant for turning debugging on during build to find errors in the build scripts.
 Enable debugging globally in the build scripts. Set to a comma (`,`) delimited list string to enable specific debugging, or `true` for ALL debugging, `false` (or blank) for NO debugging.
+
+
+## `BUILD_DEBUG_LINES`
+
+> **Debugging output lines** &mdash; Number of lines of debugging output to send to stderr
+> > **Type**: *PositiveInteger* • **Category**: *Build Configuration*
+
+Number of lines of debugging output to send to stderr before stopping
 
 
 ## `BUILD_DEVELOPMENT_HOME`
@@ -694,6 +622,14 @@ Not referenced in this product; referenced via [rxvt](https://rxvt.sourceforge.n
 Constant for the directory where services are monitored by daemontools
 
 
+## `DEPLOYMENT`
+
+> **Deployment Code** &mdash; Target deployment for this code
+> > **Type**: *String* • **Category**: *Deployment*
+
+Target deployment for this code
+
+
 ## `DEPLOY_REMOTE_HOME`
 
 > **Remote directory for deployment** &mdash; Path on the remote server where the application deployment home
@@ -714,14 +650,6 @@ A list of one ore more user@host for installation of the application
 - [deployApplication]({rel}tools/deploy.md#deployapplication) - Deploy an application from a deployment repository ([source](https://github.com/zesk/build/blob/main/bin/build/tools/deploy.sh#L43))
 
 
-## `DEPLOYMENT`
-
-> **Deployment Code** &mdash; Target deployment for this code
-> > **Type**: *String* • **Category**: *Deployment*
-
-Target deployment for this code
-
-
 ## `DISPLAY`
 
 > **X Display** &mdash; Environment variable for X windows display.
@@ -739,16 +667,16 @@ From the user's perspective, every X server has a display name of the form: `hos
 Binary for editing files
 
 
-## `GIT_OPEN_LINKS`
+## `GITHUB_ACCESS_TOKEN`
 
-> **Git Open Links Flag** &mdash; Open links from git remotes in `gitCommit`
-> > **Type**: *Boolean* • **Category**: *Development*
+> **GitHub Access Token** &mdash; Access token used for release
+> > **Type**: *Secret* • **Category**: *Development*
 
-Open links from git remotes in `gitCommit`
+Access token used for release
 
 ### See Also
 
-- [gitCommit]({rel}tools/git.md#gitcommit) - Commits all files added to git and also update release ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L462))- [gitCommit]({rel}tools/git.md#gitcommit) - Commits all files added to git and also update release ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L462))
+- [githubRelease]({rel}tools/github.md#githubrelease) - Generate a release on GitHub using API ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
 
 
 ## `GITHUB_ACCESS_TOKEN_EXPIRE`
@@ -757,18 +685,6 @@ Open links from git remotes in `gitCommit`
 > > **Type**: *Date* • **Category**: *Development*
 
 GitHub Access token expiration date. Invalid AFTER this date.
-
-### See Also
-
-- [githubRelease]({rel}tools/github.md#githubrelease) - Generate a release on GitHub using API ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
-
-
-## `GITHUB_ACCESS_TOKEN`
-
-> **GitHub Access Token** &mdash; Access token used for release
-> > **Type**: *Secret* • **Category**: *Development*
-
-Access token used for release
 
 ### See Also
 
@@ -799,12 +715,36 @@ Repository owner for release
 - [githubRelease]({rel}tools/github.md#githubrelease) - Generate a release on GitHub using API ([source](https://github.com/zesk/build/blob/main/bin/build/tools/github.sh#L184))
 
 
+## `GIT_OPEN_LINKS`
+
+> **Git Open Links Flag** &mdash; Open links from git remotes in `gitCommit`
+> > **Type**: *Boolean* • **Category**: *Development*
+
+Open links from git remotes in `gitCommit`
+
+### See Also
+
+- [gitCommit]({rel}tools/git.md#gitcommit) - Commits all files added to git and also update release ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L462))- [gitCommit]({rel}tools/git.md#gitcommit) - Commits all files added to git and also update release ([source](https://github.com/zesk/build/blob/main/bin/build/tools/git.sh#L462))
+
+
 ## `HOME`
 
 > **User Home** &mdash; Current user's home directory.
 > > **Type**: *Directory* • **Category**: *Bash*
 
 Current user's home directory.
+
+
+## `IP_URL`
+
+> **IP Lookup URL** &mdash; URL to look up IP my address remotely
+> > **Type**: *URL* • **Category**: *Build Configuration*
+
+URL to look up IP my address remotely
+
+### See Also
+
+- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L184))
 
 
 ## `IP_URL_FILTER`
@@ -814,18 +754,6 @@ Current user's home directory.
 
 jq filter to parse IP_URL result (assuming JSON)
 if blank, no filter is used and raw result is returned
-
-### See Also
-
-- [networkIPLookup]({rel}tools/network.md#networkiplookup) - Get the current IP address of a host ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L184))
-
-
-## `IP_URL`
-
-> **IP Lookup URL** &mdash; URL to look up IP my address remotely
-> > **Type**: *URL* • **Category**: *Build Configuration*
-
-URL to look up IP my address remotely
 
 ### See Also
 
@@ -878,24 +806,24 @@ The package manager used for node operations. Usually `yarn` or `npm`.
 Default is `yarn`.
 
 
-## `NOTIFY_URL_AUTHORIZATION`
-
-> **Notification URL** &mdash; Authorization token for default notifications
-> > **Type**: *Secret* • **Category**: *Notify*
-
-Authorization token for default notifications
-
-### See Also
-
-- [notifyURL]({rel}tools/notify.md#notifyurl) - Send a notification by submitting data to a URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/notify.sh#L20))
-
-
 ## `NOTIFY_URL`
 
 > **Notification URL** &mdash; URL to send default notifications
 > > **Type**: *URL* • **Category**: *Notify*
 
 URL to send default notifications
+
+### See Also
+
+- [notifyURL]({rel}tools/notify.md#notifyurl) - Send a notification by submitting data to a URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/notify.sh#L20))
+
+
+## `NOTIFY_URL_AUTHORIZATION`
+
+> **Notification URL** &mdash; Authorization token for default notifications
+> > **Type**: *Secret* • **Category**: *Notify*
+
+Authorization token for default notifications
 
 ### See Also
 
@@ -1037,4 +965,76 @@ See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) 
 
 Base directory for user-specific state files to be stored
 See [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.
+
+
+## `__BASH_PROMPT_MARKERS`
+
+> **Prompt marker list** &mdash; Bash Prompt escape codes for prompt reporting
+> > **Type**: *Array:EmptyString* • **Category**: *Bash Prompt*
+
+List of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.
+
+### See Also
+
+- [iTerm2Init]({rel}tools/iterm2.md#iterm2init) - Add iTerm2 support to console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/iterm2.sh#L828))- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
+
+## `__BASH_PROMPT_MODULES`
+
+> **Prompt module list** &mdash; List of functions to run each prompt command
+> > **Type**: *Array:Callable* • **Category**: *Bash Prompt*
+
+List of modules to run each prompt command.
+
+Manage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.
+
+Make your functions *really* fast otherwise the shell becomes sluggish. Also try:
+
+    BUILD_DEBUG=bashPrompt
+
+To report on each command and timing.
+
+An automatic reporting occurs when commands exceed 0.3s.
+
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
+
+## `__BASH_PROMPT_PREVIOUS`
+
+> **Prompt command previous result** &mdash; Previous result code
+> > **Type**: *Array* • **Category**: *Bash Prompt*
+
+Previous result code
+
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
+
+## `__BASH_PROMPT_SLOW`
+
+> **Prompt command slow threshold** &mdash; Bash Prompt slow timer
+> > **Type**: *PositiveInteger* • **Category**: *Bash Prompt*
+
+Number of milliseconds after which a `bashPrompt` command is considered slow.
+
+### See Also
+
+- [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
+
+
+## `__BUILD_HAS_TTY`
+
+> **TTY Cached Result** &mdash; Cached value of the availability of `/dev/tty`.
+> > **Type**: *Boolean* • **Category**: *Internal*
+
+Cached value of the availability of `/dev/tty`.
+Possible values are `true` or `false` or blank.
+
+- `true` - `/dev/tty` appears to be operating without errors
+- `false` - `/dev/tty` appears to be disconnected and can not be used
+
+This value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.
 

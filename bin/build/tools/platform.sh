@@ -136,7 +136,7 @@ bashMakeExecutable() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --find)
-      local tempArgs && shift && IFS=' ' read -r -a tempArgs <<<"${1-}" || :
+      local tempArgs && shift && IFS=' ' read -r -a tempArgs <<<"${1-}"
       findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
       ;;
     *)

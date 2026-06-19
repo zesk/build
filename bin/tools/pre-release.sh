@@ -30,8 +30,8 @@ __buildPreReleaseStep() {
   return "$exitCode"
 }
 
-__buildPreReleaseLintFiles() {
-  find "$1" -name '*.sh' ! -path '*/.*/*' ! -path '*/bin/build/documentation/*' | bashLintFiles
+buildPreReleaseLintFiles() {
+  find "${1-.}" -name '*.sh' ! -path '*/.*/*' ! -path '*/bin/build/documentation/*' | bashLintFiles
 }
 
 buildPreRelease() {
@@ -48,7 +48,7 @@ buildPreRelease() {
   __buildPreReleaseStep "$handler" "$interruptCode" "Identical repair (internal, long)" "$home/bin/build/repair.sh" --internal --fingerprint || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
-  __buildPreReleaseStep "$handler" "$interruptCode" "Linting" __buildPreReleaseLintFiles "$home" || exitCode=$?
+  __buildPreReleaseStep "$handler" "$interruptCode" "Linting" buildPreReleaseLintFiles "$home" || exitCode=$?
   [ "$exitCode" != "$interruptCode" ] || return "$interruptCode"
 
   __buildPreReleaseStep "$handler" "$interruptCode" "Usage remove deprecated" buildFunctionsRemoveDeprecated || exitCode=$?

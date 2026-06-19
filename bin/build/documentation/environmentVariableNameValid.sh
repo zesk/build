@@ -2,20 +2,20 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument=$'variableName ... - String. Required. Exit status 0 if all variables names are valid ones.\n--help - Flag. Optional. Display this help.\n'
+argument="variableName ... - String. Required. Exit status 0 if all variables names are valid ones."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="environment.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Validates zero or more environment variable names.\n\n- alpha\n- digit\n- underscore\n\nFirst letter MUST NOT be a digit\n\n'
+description="Validates zero or more environment variable names."$'\n'""$'\n'"- alpha"$'\n'"- digit"$'\n'"- underscore"$'\n'""$'\n'"First letter MUST NOT be a digit"$'\n'""$'\n'""
 descriptionLineCount="8"
 file="bin/build/tools/environment.sh"
 fn="environmentVariableNameValid"
 fnMarker="environmentvariablenamevalid"
 foundNames=([0]="argument")
 line="16"
-rawComment=$'Argument: variableName ... - String. Required. Exit status 0 if all variables names are valid ones.\nArgument: --help - Flag. Optional. Display this help.\nValidates zero or more environment variable names.\n- alpha\n- digit\n- underscore\nFirst letter MUST NOT be a digit\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Argument: variableName ... - String. Required. Exit status 0 if all variables names are valid ones."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Validates zero or more environment variable names."$'\n'"- alpha"$'\n'"- digit"$'\n'"- underscore"$'\n'"First letter MUST NOT be a digit"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceHash="826be0f8110f59efcfce779523586dcd286b263b"
+sourceHash="18e820488a866ed32d204bb355260d6eeb9c6cf1"
 sourceLine="16"
 summary="Validates zero or more environment variable names."
 summaryComputed="true"

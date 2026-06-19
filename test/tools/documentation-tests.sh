@@ -161,3 +161,26 @@ __isolateTest() {
   consoleLine '='
   assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
 }
+
+testBashSeeHunting() {
+  local handler="returnMessage"
+
+  assertExitCode --stderr-match "is not type" --stderr-match "Directory" 2 documentationFunctionsListSeeUnfinished || return $?
+  assertExitCode --stderr-match "is not type" --stderr-match "Directory" 2 documentationFunctionsSeeLoop || return $?
+  assertExitCode --stderr-match "is not type" --stderr-match "Directory" 2 documentationFunctionsSeeDirty || return $?
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local myPath="$home/bin/build/documentation"
+  assertEquals "0" "$(documentationFunctionsListSeeUnfinished "$myPath" | fileLineCount)" || return $?
+  assertExitCode 0 documentationFunctionsSeeLoop "$myPath" || return $?
+  assertExitCode 0 documentationFunctionsSeeDirty "$myPath" || return $?
+
+  myPath=$(fileTemporaryName "$handler" -d) || return $?
+  local clean=("$myPath")
+  printf "%s\n" "{SEE:missing}" | tee "$myPath/a.md" "$myPath/index.md" "$myPath/secret.md" >/dev/null || return $?
+  assertExitCode --stdout-match "index" --stdout-match "secret" --stdout-no-match "/" --stdout-no-match ".md" 0 documentationFunctionsListSeeUnfinished "$myPath" || return $?
+  assertEquals 3 "$(documentationFunctionsListSeeUnfinished "$myPath" | fileLineCount)" || return $?
+
+  returnClean 0 "${clean[@]}" || return $?
+}

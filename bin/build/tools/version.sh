@@ -18,7 +18,7 @@ isVersion() {
   [ "${1-}" != "--help" ] || helpArgument "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || return 1
-    local parts=() && IFS=. read -r -a parts < <(printf "%s\n" "$1") || :
+    local parts=() && IFS="." read -d $'\n' -r -a parts <<<"$1"
     local part && for part in "${parts[@]}"; do
       isUnsignedInteger "$part" || return 1
     done

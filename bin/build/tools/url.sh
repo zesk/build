@@ -246,7 +246,7 @@ urlParseItem() {
     esac
     shift
   done
-  [ $counter -gt 0 ] || throwArgument "$handler" "Need at least one URL" || return $?
+  [ "$counter" -gt 0 ] || throwArgument "$handler" "Need at least one URL" || return $?
 }
 _urlParseItem() {
   # __IDENTICAL__ bashDocumentation 1

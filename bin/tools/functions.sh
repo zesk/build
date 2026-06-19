@@ -3,41 +3,37 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# List templates with unresolved `SEE:` tokens in Zesk Build.
 buildFunctionsListSeeUnfinished() {
   local handler="_${FUNCNAME[0]}"
-
   local home && home=$(catchReturn "$handler" buildHome) || return $?
-
-  local path="$home/bin/build/documentation"
-  find "$path" -mindepth 1 -maxdepth 1 -type f -name '*.md' -print0 | xargs -0 grep -l '{SEE' | cut -c $((${#path} + 2))- | cut -f 1 -d . | sort
+  catchReturn "$handler" documentationFunctionsListSeeUnfinished "$home/bin/build/documentation" || return $?
 }
 _buildFunctionsListSeeUnfinished() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Interactive count of templates with unresolved `SEE:` tokens in Zesk Build.
 buildFunctionsSeeLoop() {
-  local count=99
-
-  while [ "$count" -gt 0 ]; do
-    count=$(buildFunctionsListSeeUnfinished | fileLineCount)
-    [ "$count" -gt 0 ] || break
-    decorate big "$count" | decorate red
-    buildFunctionsListSeeUnfinished | head -10
-    sleep 10 && clear
-  done
+  local handler="_${FUNCNAME[0]}"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  catchReturn "$handler" documentationFunctionsSeeLoop "$home/bin/build/documentation" || return $?
+}
+_buildFunctionsSeeLoop() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Re-generate templates with unresolved `SEE:` tokens in Zesk Build.
 buildFunctionsSeeAgain() {
   local handler="_${FUNCNAME[0]}"
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local fun && while read -r fun; do
-    local funFile="$home/bin/build/documentation/$fun.md"
-    [ ! -f "$funFile" ] || catchReturn "$handler" touch -d "1970-01-01T00:00:00" "$funFile" || return $?
-  done < <(buildFunctionsListSeeUnfinished)
-  __buildFunctionsCompile "$handler" --stdin "$@" < <(buildFunctionsListSeeUnfinished)
+  local docPath="$home/bin/build/documentation"
+  catchReturn "$handler" documentationFunctionsSeeDirty "$docPath" || return $?
+  __buildFunctionsCompile "$handler" --stdin "$@" < <(documentationFunctionsListSeeUnfinished "$docPath")
 }
 _buildFunctionsSeeAgain() {
   # __IDENTICAL__ bashDocumentation 1

@@ -2,23 +2,23 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-19
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="version.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Strip leading `v` from version tags. Useful when you standardize on the non-`v` versions or wish to sort without the `v`.\n\nTake one or more versions and strip the leading `v`\n\n'
+description="Strip leading \`v\` from version tags. Useful when you standardize on the non-\`v\` versions or wish to sort without the \`v\`."$'\n'""$'\n'"Take one or more versions and strip the leading \`v\`"$'\n'""$'\n'""
 descriptionLineCount="4"
 file="bin/build/tools/version.sh"
 fn="versionNoVee"
 fnMarker="versionnovee"
 foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="stdout")
 line="42"
-rawComment=$'Summary: Remove `v` from versions\nStrip leading `v` from version tags. Useful when you standardize on the non-`v` versions or wish to sort without the `v`.\nArgument: --help - Flag. Optional. Display this help.\nTake one or more versions and strip the leading `v`\nstdin: Versions containing a preceding `v` character (optionally)\nstdout: Versions with the initial `v` (if it exists) removed\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Remove \`v\` from versions"$'\n'"Strip leading \`v\` from version tags. Useful when you standardize on the non-\`v\` versions or wish to sort without the \`v\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Take one or more versions and strip the leading \`v\`"$'\n'"stdin: Versions containing a preceding \`v\` character (optionally)"$'\n'"stdout: Versions with the initial \`v\` (if it exists) removed"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/version.sh"
-sourceHash="c99a643316ae012c003405614babad883b2035e7"
+sourceHash="bc1b9451662b72c8cd1a5449c555029672f21b39"
 sourceLine="42"
-stdin=$'Versions containing a preceding `v` character (optionally)\n'
-stdout=$'Versions with the initial `v` (if it exists) removed\n'
+stdin="Versions containing a preceding \`v\` character (optionally)"$'\n'""
+stdout="Versions with the initial \`v\` (if it exists) removed"$'\n'""
 summary="Remove \`v\` from versions"
 summaryComputed=""
 usage="versionNoVee [ --help ]"

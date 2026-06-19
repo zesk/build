@@ -1,4 +1,20 @@
 
+## Zesk Build release v0.44.5
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.44.4
+- Added {SEE:documentationFunctionsListSeeUnfinished}, {SEE:documentationFunctionsSeeLoop}, and {SEE:
+  documentationFunctionsSeeDirty} (enabling this for other projects) ({SEE:buildFunctionsSeeAgain}, {SEE:
+  buildFunctionsListSeeUnfinished}, and {SEE:buildFunctionsSeeLoop})
+
+## Zesk Build release v0.44.4
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.44.3
+- Fixed some typos in the documentation
+
 ## Zesk Build release v0.44.3
 
 > Copyright &copy; 2026 Market Acumen, Inc.
@@ -35,46 +51,10 @@
 - Added [SECURITY.md](../SECURITY.md)
 - Added `./uri/` subdirectory to templates; allows for URI-escaped versions of variables
 
-## Zesk Build release v0.44.0
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.43.1
-- {SEE:releaseNotesPage} was renamed as it was the same name as a function previously.
-- Reorganized documentation indexes.
-- Made documentation function heading depth one level deeper to provide better outlined structure
-- `markdownRemoveUnfinishedSections --preprocess` allows a function to sanitize sections prior to checking for tokens to
-  allow for various tokens to persist. Added `__removeRel` to allow `{"SEE"}` tokens to persist with replaced values.
-  `See Also` sections should now appear in documentation.
-- `usageArgument` functions have been removed from the codebase.
-- More documentation cleanup and adding of `Summary:` comments. 
-
-## Zesk Build release v0.43.1
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.43.0
-- Fixed `SEE` and documentation generation paths
-- Fixed documentation
-- Fixed variable undefined in `documentationEnvironmentMake`
-- Added fingerprinting to `documentationIdenticalRepair`
-- Added hooks `documentation-files` `documentation-fingerprint`
-- Added {SEE:bashFunctionNameValid}
-- Added {SEE:buildFunctionsExclude} 
-- `documentationFilesAdd` now honors `.gitignore` files
-- Added `fileModificationTimesBefore` and `fileModificationTimesAfter` 
-- `fingerprint` supports `--hook` to allow for alternate files for fingerprinting
-- Removed duplicate declaration of `listJoin`
-- Added `processCountWatcher`
-- Added {SEE:releaseNotesMarkdown}
-- `validate "$handler" Fingerprint` now supports `hookName:keyName` syntax to support alternate hooks.
-- Switched to the **Apache License**, moved `LICENSE.md` to `LICENSE.txt`
-- Semantics of `buildEnvironmentGet` changed to only load variables when the global is unset.
-- `pythonVirtual` now deletes non-compatible `.venv` environments when created on another platform (issue with Docker)
-- Added `--audit` flag to `fingerprint` hook, now used for both `application-fingerprint` and `documentation-fingerprint`
-
 # Past Releases
 
+- [v0.44.0](./v0.44.0.md)
+- [v0.43.1](./v0.43.1.md)
 - [v0.43.0](./v0.43.0.md)
 - [v0.42.5](./v0.42.5.md)
 - [v0.42.4](./v0.42.4.md)
