@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-19
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nredValue - Integer. Optional. Red RGB value (0-255)\ngreenValue - Integer. Optional. Red RGB value (0-255)\nblueValue - Integer. Optional. Red RGB value (0-255)\n'
 base="colors.sh"
@@ -16,7 +16,7 @@ line="505"
 rawComment=$'Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11\nReturn an integer between 0 and 100\nColors are between 0 and 255\nArgument: --help - Flag. Optional. Display this help.\nArgument: redValue - Integer. Optional. Red RGB value (0-255)\nArgument: greenValue - Integer. Optional. Red RGB value (0-255)\nArgument: blueValue - Integer. Optional. Red RGB value (0-255)\nstdin: 3 integer values [ Optional ]\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="64a763a2e70568a8f8724961b50fb82c045e8f58"
+sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
 sourceLine="505"
 stdin=$'3 integer values [ Optional ]\n'
 summary="Return an integer between 0 and 100"
