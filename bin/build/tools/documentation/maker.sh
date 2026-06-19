@@ -388,7 +388,7 @@ __documentationFileCompileFunction() {
     # ********************************************************************************************************************
 
     [ -n "$sourcePath" ] || throwArgument "$handler" "Missing source path to find $fun" || return $?
-    sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$sourcePath" "$fun") || return $?
+    sourceFile=$(catchReturn "$handler" __bashDocumentation_FindFunctionDefinitions "$sourcePath" "$fun") || return $?
     local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
     if [ "$sourcesFound" -gt 1 ]; then
       throwEnvironment "$handler" "${prefix} Multiple sources found for $prettyFun (x$sourcesFound): ${sourceFile//$'\n'/, }" || return $?

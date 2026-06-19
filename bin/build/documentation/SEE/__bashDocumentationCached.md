@@ -1,1 +1,1 @@
-[__bashDocumentationCached]({rel}tools/usage.md#__bashdocumentationcached) - Display cached usage for a function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L167))
+[__bashDocumentationCached]({rel}tools/internal.md#__bashdocumentationcached) - Display cached usage for a function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L167))

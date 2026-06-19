@@ -1,0 +1,1 @@
+[__usageMessage]({rel}tools/internal.md#__usagemessage) - Output the message for usage consistently ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L94))

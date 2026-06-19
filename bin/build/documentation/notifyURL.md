@@ -27,6 +27,6 @@ Send a notification by submitting data to a URL
 
 #### Environment
 
-- {SEE:NOTIFY_URL}
-- {SEE:NOTIFY_URL_AUTHORIZATION}
+- [`NOTIFY_URL` Notification URL]({rel}env/#notify) – **URL**. URL to send default notifications
+- [`NOTIFY_URL_AUTHORIZATION` Notification URL]({rel}env/#notify) – **Secret**. Authorization token for default notifications
 

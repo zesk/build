@@ -1,0 +1,1 @@
+- `NOTIFY_URL` &mdash; Notification URL *URL*. URL to send default notifications [notes](#notify_url)

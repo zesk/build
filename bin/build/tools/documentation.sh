@@ -392,10 +392,10 @@ __bashDocumentation_FindFunctionDefinitions() {
   [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
   local directory && directory=$(validate "$handler" Directory "directory" "${1-}") && shift || return $?
 
-  local foundCount=0 phraseCount=${#@}
+  local foundCount=0 phraseCount="$#"
   while [ "$#" -gt 0 ]; do
-    local fn=$1 escaped
-    escaped=$(quoteGrepPattern "$fn")
+    local fn="$1"
+    local escaped && escaped=$(quoteGrepPattern "$fn")
     local functionPattern="^$escaped\(\) \{|^function $escaped \{"
     if find "$directory" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -l -E "$functionPattern"; then
       foundCount=$((foundCount + 1))

@@ -1,0 +1,28 @@
+### `__functionSettings`
+
+> Load cached function comment values
+
+#### Usage
+
+    __functionSettings [ home ] [ functionName ] [ generatePath ]
+
+Load cached function comment values
+
+> Location: `bin/build/tools/usage.sh`
+
+#### Arguments
+
+- `home` - Directory. BUILD_HOME
+- `functionName` - String. Function to fetch settings for
+- `generatePath` - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.
+
+#### Return codes
+
+- `0` - Success
+- `1` - Environment error
+- `2` - Argument error
+
+#### Environment
+
+- [`BUILD_DOCUMENTATION_PATH` Build Documentation Path List]({rel}env/#bash) – **DirectoryList**. Search path for documentation settings file.
+

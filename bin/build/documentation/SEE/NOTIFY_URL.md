@@ -1,0 +1,1 @@
+[`NOTIFY_URL` Notification URL]({rel}env/#notify) – **URL**. URL to send default notifications

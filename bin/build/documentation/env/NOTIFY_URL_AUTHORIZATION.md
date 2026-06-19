@@ -1,0 +1,1 @@
+- `NOTIFY_URL_AUTHORIZATION` &mdash; Notification URL *Secret*. Authorization token for default notifications [notes](#notify_url_authorization)
