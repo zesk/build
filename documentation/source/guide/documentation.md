@@ -251,10 +251,10 @@ documentation:
 - `Description` - A description of the function
 - `Summary` - A shorter summary of the function
 
-### Teating-related variables for functions
+### Testing-related variables for functions
 
 The following are supported by the testing system - you place these on the test function itself, not the target
-function:
+function.
 
 So, for example, if our test was `./test/tools/my-tests.sh`, our test function can be annotated:
 
@@ -266,12 +266,12 @@ So, for example, if our test was `./test/tools/my-tests.sh`, our test function c
       ...
     }
 
-### No effect on test results if enabled (or disabled)
+#### No effect on test results if enabled (or disabled)
 
 - `Tag` - `SpaceDelimitedList`. Tag tests with labels to filter easily and run only certain tests.
 - `Test-Housekeeper-Overhead` - `Boolean`. Show overhead of the housekeeper used in a function (for enabled tests)
 
-### These may change test results if enabled (or disabled)
+#### These may change test results if enabled (or disabled)
 
 - `Test-Housekeeper` - `Boolean`. `true` or `false` to enable/disable the `housekeeper` for a test. The `housekeeper`
   monitors the

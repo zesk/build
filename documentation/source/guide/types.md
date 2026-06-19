@@ -30,7 +30,7 @@ our [documentation](./documentation.md). The types available for arguments or an
 
 - `Executable` - A bash binary found in the `PATH`.
 - `Function` - A bash function.
-- `Callable` - Something which is either `Executable` or `Callable`.
+- `Callable` - Something which is either `Executable` or `Function`.
 
 ## File and Directory Types
 
