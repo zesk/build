@@ -310,9 +310,9 @@ __buildEnvironmentMakeFile bin/build/tools/build.sh 317
 __buildFingerUpdate bin/tools/development.sh 143
 __buildFingerUpdateLoop bin/tools/development.sh 158
 __buildFunctionLoader bin/build/tools.sh 76
-__buildFunctionsCheckDerived bin/build/tools/documentation/maker.sh 523
+__buildFunctionsCheckDerived bin/build/tools/documentation/maker.sh 525
 __buildFunctionsCompile bin/tools/functions.sh 72
-__buildFunctionsDerived bin/build/tools/documentation/maker.sh 507
+__buildFunctionsDerived bin/build/tools/documentation/maker.sh 509
 __buildHelp bin/developer.sh 33
 __buildIdenticalRepair bin/build/repair.sh 35
 __buildInternalFunctions bin/tools/functions.sh 45
@@ -386,7 +386,7 @@ __coverageLoader bin/build/tools/coverage.sh 4
 __crontabGenerate bin/build/tools/crontab.sh 11
 __daemontoolsRequirements bin/build/tools/daemontools.sh 276
 __daemontoolsServiceRunner bin/build/identical/daemontools-service.sh 103
-__dateFromTimestamp bin/build/tools/platform/Darwin.sh 36
+__dateFromTimestamp bin/build/tools/platform/Darwin.sh 38
 __dateFromTimestamp bin/build/tools/platform/not-Darwin.sh 55
 __dateToFormat bin/build/tools/platform/Darwin.sh 28
 __dateToFormat bin/build/tools/platform/not-Darwin.sh 26
@@ -398,7 +398,7 @@ __decorate bin/build/install.sample.sh 1523
 __decorate bin/build/map.sh 862
 __decorate bin/build/tools/decorate/core.sh 50
 __decorateBigBinary bin/build/tools/platform/Alpine.sh 31
-__decorateBigBinary bin/build/tools/platform/Darwin.sh 65
+__decorateBigBinary bin/build/tools/platform/Darwin.sh 67
 __decorateBigBinary bin/build/tools/platform/not-Alpine.sh 26
 __decorateExtensionAt bin/build/tools/decorate/big.sh 97
 __decorateExtensionBig bin/build/tools/decorate/big.sh 54
@@ -561,7 +561,7 @@ __fileExtensionListsLog bin/build/tools/platform.sh 307
 __fileListColumn bin/build/tools/file.sh 621
 __fileModificationTimes bin/build/tools/platform/Darwin.sh 10
 __fileModificationTimes bin/build/tools/platform/not-Darwin.sh 8
-__fileRealPath bin/build/tools/platform/Darwin.sh 48
+__fileRealPath bin/build/tools/platform/Darwin.sh 50
 __fileRealPath bin/build/tools/platform/not-Darwin.sh 37
 __filesOpenList bin/build/tools/debug.sh 572
 __functionLoader bin/build/tools.sh 58
@@ -581,7 +581,7 @@ __githubInstallationURL bin/build/install-bin-build.sh 49
 __githubLatestVariable bin/build/tools/github.sh 56
 __gitPreCommitCache bin/build/tools/git.sh 865
 __gitPushHelper bin/build/hooks/git-post-commit.sh 92
-__groupID bin/build/tools/platform/Darwin.sh 91
+__groupID bin/build/tools/platform/Darwin.sh 93
 __groupID bin/build/tools/platform/not-Darwin.sh 60
 __hookApplicationEnvironment bin/build/hooks/application-environment.sh 17
 __hookApplicationFiles bin/build/hooks/application-files.sh 18
@@ -637,7 +637,7 @@ __hookVersionAlready bin/build/hooks/version-already.sh 20
 __hookVersionCreated bin/build/hooks/version-created.sh 20
 __hookVersionCurrent bin/build/hooks/version-current.sh 19
 __hookVersionNotes bin/build/hooks/version-notes.sh 14
-__hostname bin/build/tools/platform/Darwin.sh 53
+__hostname bin/build/tools/platform/Darwin.sh 55
 __hostname bin/build/tools/platform/not-Darwin.sh 44
 __htmlCode bin/build/tools/coverage/report.sh 254
 __identicalCheck bin/build/tools/_identical/check.sh 11
@@ -732,7 +732,7 @@ __iTerm2Version bin/build/tools/iterm2.sh 707
 __jqObject bin/build/tools/json.sh 69
 __jqPathClean bin/build/tools/json.sh 61
 __jsonSetValue bin/build/tools/json.sh 223
-__linkRename bin/build/tools/platform/Darwin.sh 43
+__linkRename bin/build/tools/platform/Darwin.sh 45
 __linkRename bin/build/tools/platform/not-Darwin.sh 31
 __loadLinuxFunctions bin/build/tools/platform/Linux.sh 8
 __mapEnvironmentFun bin/build/identical/mapEnvironmentFun.sh 58
@@ -763,17 +763,17 @@ __ownLogHome bin/build/identical/daemontools-log.sh 112
 __packageCheckFunction bin/build/identical/_installRemotePackage.sh 46
 __packageListFunction bin/build/tools/package.sh 12
 __packageManagerDefault bin/build/tools/platform/Alpine.sh 24
-__packageManagerDefault bin/build/tools/platform/Darwin.sh 79
+__packageManagerDefault bin/build/tools/platform/Darwin.sh 81
 __packageManagerDefault bin/build/tools/platform/not-Alpine.sh 17
 __packageUpFunction bin/build/tools/package.sh 65
 __packageUrlFunction bin/build/identical/_installRemotePackage.sh 34
 __packageVersionFunction bin/build/identical/_installRemotePackage.sh 23
-__pcregrep bin/build/tools/platform/Darwin.sh 69
+__pcregrep bin/build/tools/platform/Darwin.sh 71
 __pcregrep bin/build/tools/platform/Debian.sh 6
 __pcregrep bin/build/tools/platform/Fedora.sh 6
 __pcregrep bin/build/tools/platform/Ubuntu.sh 6
 __pcregrepBinary bin/build/tools/platform/Alpine.sh 35
-__pcregrepBinary bin/build/tools/platform/Darwin.sh 73
+__pcregrepBinary bin/build/tools/platform/Darwin.sh 75
 __pcregrepBinary bin/build/tools/platform/Debian.sh 10
 __pcregrepBinary bin/build/tools/platform/Fedora.sh 10
 __pcregrepBinary bin/build/tools/platform/Ubuntu.sh 10
@@ -839,7 +839,7 @@ __testLoadFlags bin/build/tools/test/flags.sh 60
 __testLookup bin/build/tools/test/main.sh 556
 __testMatches bin/build/tools/test/flags.sh 98
 __testPlatformName bin/build/tools/platform/Alpine.sh 18
-__testPlatformName bin/build/tools/platform/Darwin.sh 61
+__testPlatformName bin/build/tools/platform/Darwin.sh 63
 __testPlatformName bin/build/tools/platform/not-Alpine.sh 11
 __testPlatforms bin/build/tools/test/flags.sh 82
 __testRun bin/build/tools/test/run.sh 13
@@ -879,7 +879,7 @@ __textSHACached bin/build/tools/text/sha.sh 60
 __throwEnvironment bin/build/tools/deprecated.sh 792
 __throwValidate bin/build/tools/completion.sh 378
 __timestamp bin/build/tools/platform/Alpine.sh 11
-__timestamp bin/build/tools/platform/Darwin.sh 58
+__timestamp bin/build/tools/platform/Darwin.sh 60
 __timestamp bin/build/tools/platform/not-Alpine.sh 8
 __tools bin/build/deprecated.sh 338
 __tools bin/build/hooks/git-post-commit.sh 42

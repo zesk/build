@@ -175,11 +175,12 @@ testGithubStuff suite=github test/tools/github-tests.sh  tag=remote-dependency
 testGithubURLParse suite=github test/tools/github-tests.sh
 testGithubVersionLive suite=github test/tools/github-tests.sh
 testGroupID suite=group test/tools/group-tests.sh
+testHookFind suite=hook test/tools/hook-tests.sh
+testHookNotify suite=hook test/tools/hook-tests.sh
 testHooksWhichSeemBenign suite=hook test/tools/hook-tests.sh
 testHooksWhichSeemBenignHome suite=hook test/tools/hook-tests.sh
 testHookSystem suite=hook test/tools/hook-tests.sh  tag=slow
 testVersionLive suite=hook test/tools/hook-tests.sh
-testWhichHook suite=hook test/tools/hook-tests.sh
 testHookVersionCurrent suite=hooks test/tools/hooks-tests.sh
 testHookVersionLive suite=hooks test/tools/hooks-tests.sh
 testHostnameFull suite=host test/tools/host-tests.sh

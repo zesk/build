@@ -1,6 +1,6 @@
 <!-- {!skip} -->
 
-                                                                                                                                                                              #!/usr/bin/env bash
+                                                                                                                     #!/usr/bin/env bash
     #
     # Example code and patterns
     #
@@ -223,4 +223,4 @@
     }
     
     # __tools ../.. __hookGitPostCommit "$@"
-[0;32mUpdated example[0m [1m[35;48;2;0;0;0m32ms[0m[0m [38;2;34;34;34;48;2;0;0;0m[32][0m
+[0;32mUpdated example[0m [1m[35;48;2;0;0;0m33ms[0m[0m [38;2;34;34;34;48;2;0;0;0m[33][0m

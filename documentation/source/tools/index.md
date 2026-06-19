@@ -94,6 +94,7 @@
 - [Installation](./install.md) – Install other software like `aws` or `python` using package managers or custom
   techniques.
 - [Pipeline](./pipeline.md) – Pipeline tools
+- [Notify](./notify.md) – Notify tools
 - [Utilities](./utilities.md) – Some handy utilities
 - [Version](./version.md) – Release version management for your application
 - [Web](./web.md) – Web tools
