@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--application applicationHome - Path. Optional. Directory of alternate application home.\n--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nhookName ... - String. Required. Hook to source.\n'
 base="hook.sh"
@@ -15,6 +15,7 @@ fn="hookSource"
 fnMarker="hooksource"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="example" [4]="see" [5]="test" [6]="environment" [7]="build_debug")
 line="186"
+original="hookSource"
 rawComment=$'Run a hook in the project located at `./bin/hooks/`\nSee (Hooks documentation)[../hooks/index.md] for standard hooks.\nSummary: Run a project hook\nHooks provide an easy way to customize your build. Hooks are binary files located in your project directory at `./bin/hooks/` and are named `hookName` with a `.sh` extension added.\nSo the hook for `version-current` would be a file at:\n    bin/hooks/version-current.sh\nSample hooks (scripts) can be found in the build source code at `./bin/hooks/`.\nDefault hooks (scripts) can be found in the current build version at `bin/build/hooks/`\nArgument: --application applicationHome - Path. Optional. Directory of alternate application home.\nArgument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nArgument: hookName ... - String. Required. Hook to source.\nReturn Code: Any - The hook exit code is returned if it is run\nReturn Code: 1 - is returned if the hook is not found\nExample:     version="$({fn} version-current)"\nSee: hookExists hookRun hookRunOptional hookSourceOptional\nTest: testHookSystem\nEnvironment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG\nBUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information\n\n'
 return_code=$'Any - The hook exit code is returned if it is run\n1 - is returned if the hook is not found\n'
 see=$'hookExists hookRun hookRunOptional hookSourceOptional\n'

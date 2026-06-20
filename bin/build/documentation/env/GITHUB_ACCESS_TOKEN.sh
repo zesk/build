@@ -10,6 +10,7 @@ file="bin/build/env/GITHUB_ACCESS_TOKEN.sh"
 fn="GITHUB_ACCESS_TOKEN"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="GitHub Access Token"
+original="GITHUB_ACCESS_TOKEN"
 rawComment=$'Name: GitHub Access Token\nSee: githubRelease\nCategory: Development\nType: Secret\nAccess token used for release\n\n'
 see=$'githubRelease\n'
 sourceFile="bin/build/env/GITHUB_ACCESS_TOKEN.sh"

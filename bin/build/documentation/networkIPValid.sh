@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nip - String. IP to test for validity.\n'
 base="network.sh"
@@ -12,6 +12,7 @@ fn="networkIPValid"
 fnMarker="networkipvalid"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="stdin")
 line="63"
+original="networkIPValid"
 rawComment=$'Summary: Is a network IP valid?\nMust be valid IPv4 or IPv6 address.\nArgument: --help - Flag. Optional. Display this help.\nArgument: ip - String. IP to test for validity.\nReturn Code: 0 - All network IPs passed in are valid.\nReturn Code: 1 - One or more network IPs passed in are not valid\nstdin: line:String - Network IPs to test for validity.\n\n'
 return_code=$'0 - All network IPs passed in are valid.\n1 - One or more network IPs passed in are not valid\n'
 sourceFile="bin/build/tools/network.sh"

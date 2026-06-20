@@ -10,6 +10,7 @@ file="bin/build/env/AWS_REGION.sh"
 fn="AWS_REGION"
 foundNames=([0]="name" [1]="category" [2]="vendor" [3]="see" [4]="type")
 name="AWS Region"
+original="AWS_REGION"
 rawComment=$'Name: AWS Region\nRegion for Amazon Web Services\nCategory: Amazon Web Services\nVendor: Amazon Web Services\nSee: awsIPAccess\nType: String\n\n'
 see=$'awsIPAccess\n'
 sourceFile="bin/build/env/AWS_REGION.sh"

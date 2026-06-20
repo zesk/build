@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--copy - Flag. Optional. Copy the hook but do not execute it.\n--verbose - Flag. Optional. Be verbose about what is done.\n--application home - Directory. Optional. Set the application home directory to this prior to looking for hooks.\nhookName - String. Optional. A hook or hook names to install. See `gitHookTypes`\n--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -12,6 +12,7 @@ fn="gitInstallHooks"
 fnMarker="gitinstallhooks"
 foundNames=([0]="argument" [1]="see")
 line="747"
+original="gitInstallHooks"
 rawComment=$'Install one or more git hooks from Zesk Build hooks.\nZesk Build hooks are named `git-hookName.sh` in `bin/hooks/` so `git-pre-commit.sh` will be installed as the `pre-commit` hook for git.\nArgument: --copy - Flag. Optional. Copy the hook but do not execute it.\nArgument: --verbose - Flag. Optional. Be verbose about what is done.\nArgument: --application home - Directory. Optional. Set the application home directory to this prior to looking for hooks.\nArgument: hookName - String. Optional. A hook or hook names to install. See `gitHookTypes`\nHook types:\n- `pre-commit`\n- `pre-push`\n- `pre-merge-commit`\n- `pre-rebase`\n- `pre-receive`\n- `update`\n- `post-update`\n- `post-commit`\nSee: gitHookTypes\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'gitHookTypes\n'

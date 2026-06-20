@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'applicationHome - Directory. Required. Application home to get the version from.\n'
 base="deploy.sh"
@@ -12,6 +12,7 @@ fn="deployApplicationVersion"
 fnMarker="deployapplicationversion"
 foundNames=([0]="argument")
 line="59"
+original="deployApplicationVersion"
 rawComment=$'Argument: applicationHome - Directory. Required. Application home to get the version from.\nExtracts version from an application either from `.deploy` files or from the the `.env` if\nthat does not exist.\nChecks `APPLICATION_ID` and `APPLICATION_TAG` and uses first non-blank value.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deploy.sh"

@@ -11,6 +11,7 @@ file="bin/build/env/BUILD_TARGET.sh"
 fn="BUILD_TARGET"
 foundNames=([0]="name" [1]="category" [2]="type" [3]="default")
 name="Build Application Target File Name"
+original="BUILD_TARGET"
 rawComment=$'Name: Build Application Target File Name\nThe file to generate when generating builds\nCategory: Deployment\nType: String\nDefault: app.tar.gz\n\n'
 sourceFile="bin/build/env/BUILD_TARGET.sh"
 sourceHash="9e02268bda044796c362ccd844a0d22f4640c88c"

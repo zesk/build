@@ -31,5 +31,5 @@ Appends any passed in arguments as path segments.
 
 #### Environment
 
-- [`XDG_CACHE_HOME` Main Cache Directory]({rel}env/#build_configuration) – **Directory**. Main Cache Directory
+- {SEE:XDG_CACHE_HOME}
 

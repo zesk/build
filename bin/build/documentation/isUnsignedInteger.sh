@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'value - EmptyString. Value to test if it is an unsigned integer.\n'
 base="example.sh"
@@ -12,12 +12,13 @@ fn="isUnsignedInteger"
 fnMarker="isunsignedinteger"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="return_code" [4]="requires")
 line="163"
+original="isUnsignedInteger"
 rawComment=$'Summary: Is value an unsigned integer?\nTest if a value is a 0 or greater integer. Leading "+" is ok.\nSee: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash\nArgument: value - EmptyString. Value to test if it is an unsigned integer.\nReturn Code: 0 - if it is an unsigned integer\nReturn Code: 1 - if it is not an unsigned integer\nRequires: returnMessage\n\n'
 requires=$'returnMessage\n'
 return_code=$'0 - if it is an unsigned integer\n1 - if it is not an unsigned integer\n'
 see=$'https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash\n'
 sourceFile="bin/build/tools/example.sh"
-sourceHash="cf29457a1745e4022c8b8e4883372bcecfdb438c"
+sourceHash="39dcc6a6e5c1025e3c1a1539d90cae2b137e9d41"
 sourceLine="163"
 summary="Is value an unsigned integer?"
 summaryComputed=""

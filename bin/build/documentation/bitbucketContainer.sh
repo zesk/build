@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'envFile - File. Required. One or more environment files which are suitable to load for docker; must be valid\nextraArgs ... - Arguments. Optional. The first non-file argument to `bitbucketContainer` is passed directly through to `docker run` as arguments\n'
 base="bitbucket.sh"
@@ -12,6 +12,7 @@ fn="bitbucketContainer"
 fnMarker="bitbucketcontainer"
 foundNames=([0]="argument" [1]="return_code" [2]="updated")
 line="66"
+original="bitbucketContainer"
 rawComment=$'Argument: envFile - File. Required. One or more environment files which are suitable to load for docker; must be valid\nArgument: extraArgs ... - Arguments. Optional. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments\nReturn Code: 1 - If already inside docker, or the environment file passed is not valid\nReturn Code: 0 - Success\nReturn Code: Any - `docker run` error code is returned if non-zero\nRun the default build container for build testing on BitBucket\nUpdated: 2026-01-15\n\n'
 return_code=$'1 - If already inside docker, or the environment file passed is not valid\n0 - Success\nAny - `docker run` error code is returned if non-zero\n'
 sourceFile="bin/build/tools/bitbucket.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'item - String. Optional. Thing to classify\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
@@ -12,6 +12,7 @@ fn="fileType"
 fnMarker="filetype"
 foundNames=([0]="argument")
 line="540"
+original="fileType"
 rawComment=$'Argument: item - String. Optional. Thing to classify\nArgument: --help - Flag. Optional. Display this help.\nBetter type handling of shell objects\nOutputs one of `type` output or enhancements:\n- `builtin`, `function`, `alias`, `file`\n- `link-directory`, `link-file`, `link-dead`, `directory`, `integer`, `unknown`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"

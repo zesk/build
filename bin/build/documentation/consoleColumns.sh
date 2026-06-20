@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -13,14 +13,15 @@ file="bin/build/tools/colors.sh"
 fn="consoleColumns"
 fnMarker="consolecolumns"
 foundNames=([0]="summary" [1]="stdout" [2]="argument" [3]="see" [4]="example" [5]="environment" [6]="side_effect")
-line="407"
+line="384"
+original="consoleColumns"
 rawComment=$'Summary: Column count in current console\nOutput the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.\nstdout: Integer\nArgument: --help - Flag. Optional. Display this help.\nSee: stty\nExample:     textRepeat $(consoleColumns)\nEnvironment: - `COLUMNS` - May be defined after calling this\nEnvironment: - `LINES` - May be defined after calling this\nSide Effect: MAY define two environment variables\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'stty\n'
 side_effect=$'MAY define two environment variables\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
-sourceLine="407"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceLine="384"
 stdout=$'Integer\n'
 summary="Column count in current console"
 summaryComputed=""

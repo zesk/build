@@ -9,6 +9,7 @@ file="bin/build/env/GIT_BRANCH_FORMAT.sh"
 fn="GIT_BRANCH_FORMAT"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Git Branch Format String"
+original="GIT_BRANCH_FORMAT"
 rawComment=$'Name: Git Branch Format String\nSee: gitBranchify\nCategory: Development\nType: String\n\n'
 see=$'gitBranchify\n'
 sourceFile="bin/build/env/GIT_BRANCH_FORMAT.sh"

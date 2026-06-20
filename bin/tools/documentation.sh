@@ -90,6 +90,11 @@ buildDocumentationBuild() {
   # Ensure we have our target
   catchEnvironment "$handler" muzzle directoryRequire "$documentationTarget" "$templateCompiled" "$indexHome" || return $?
 
+  statusMessage decorate notice "Copying assets ..."
+  local item && for item in js images; do
+    catchReturn "$handler" rm -rf "$documentationTarget/$item" || return $?
+    catchReturn "$handler" cp -R "$documentationSource/$item" "$documentationTarget/$item" || return $?
+  done
   statusMessage decorate notice "Updating document templates ..."
   statusMessage --last timing --name "Updated document templates in" documentationIdenticalRepair --fingerprint "$documentationSource" "$home/documentation/template" || return $?
 

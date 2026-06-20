@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
@@ -14,6 +14,7 @@ fn="awsHasEnvironment"
 fnMarker="awshasenvironment"
 foundNames=([0]="argument" [1]="return_code" [2]="environment" [3]="example" [4]="summary")
 line="117"
+original="awsHasEnvironment"
 rawComment=$'This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.\nFails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - If environment needs to be updated\nReturn Code: 1 - If the environment seems to be set already\nEnvironment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)\nEnvironment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)\nExample:     if awsHasEnvironment; then\nExample:     ...\nExample:     fi\nSummary: Test whether the AWS environment variables are set or not\n\n'
 return_code=$'0 - If environment needs to be updated\n1 - If the environment seems to be set already\n'
 sourceFile="bin/build/tools/aws.sh"

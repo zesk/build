@@ -1,0 +1,1 @@
+[decorate wrap]({rel}#__decorateextensionwrap) - Prefix output lines with a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/wrap.sh#L22))

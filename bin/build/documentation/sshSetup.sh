@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--force - Flag. Optional. Force the program to create a new key if one exists\nserver - String. Required. Servers to connect to to set up authorization\n'
 base="ssh.sh"
@@ -12,6 +12,7 @@ fn="sshSetup"
 fnMarker="sshsetup"
 foundNames=([0]="argument" [1]="requires")
 line="206"
+original="sshSetup"
 rawComment=$'Set up SSH for a user with ID and backup keys in `~/.ssh`\nCreate a key for a user for SSH authentication to other servers.\nAdd .ssh key for current user\nArgument: --force - Flag. Optional. Force the program to create a new key if one exists\nArgument: server - String. Required. Servers to connect to to set up authorization\nYou will need the password for this server for the current user.\nRequires: userRecordHome catchEnvironment throwEnvironment\n\n'
 requires=$'userRecordHome catchEnvironment throwEnvironment\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

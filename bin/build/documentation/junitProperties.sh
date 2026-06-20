@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="junit.sh"
@@ -12,6 +12,7 @@ fn="junitProperties"
 fnMarker="junitproperties"
 foundNames=([0]="_example")
 line="106"
+original="junitProperties"
 rawComment=$'Full properties output. Properties are output depending on content containing a newline or not.\n Example:     <properties>\n Example:         <property name="version" value="1.774"/>\n Example:         <property name="commit" value="ef7bebf"/>\n Example:         <property name="browser" value="Google Chrome"/>\n Example:         <property name="ci" value="https://github.com/actions/runs/1234"/>\n Example:         <property name="config">\n Example:             Config line #1\n Example:             Config line #2\n Example:             Config line #3\n Example:         </property>\n Example:     </properties>\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/junit.sh"

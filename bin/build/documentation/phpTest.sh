@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--env-file envFile - File. Optional. Environment file to load.\n--home homeDirectory - Directory. Optional. Directory for application home.\n'
 base="php.sh"
@@ -13,6 +13,7 @@ fnMarker="phptest"
 foundNames=([0]="argument" [1]="hook")
 hook=$'test-setup - Move or copy files prior to docker-compose build to build test container"\ntest-runner - Run PHP Unit and any other tests inside the container"\ntest-cleanup - Reverse of test-setup hook actions"\n'
 line="336"
+original="phpTest"
 rawComment=$'Argument: --env-file envFile - File. Optional. Environment file to load.\nArgument: --home homeDirectory - Directory. Optional. Directory for application home.\nTest a docker-based PHP application during build\nHook: test-setup - Move or copy files prior to docker-compose build to build test container"\nHook: test-runner - Run PHP Unit and any other tests inside the container"\nHook: test-cleanup - Reverse of test-setup hook actions"\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/php.sh"

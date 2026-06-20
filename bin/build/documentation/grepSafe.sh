@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n... - Arguments. Passed directly to `grep`.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="grepSafe"
 fnMarker="grepsafe"
 foundNames=([0]="return_code" [1]="argument" [2]="see" [3]="requires")
 line="75"
+original="grepSafe"
 rawComment=$'`grep` but returns 0 when nothing matches\nAllow blank files or no matches:\n- `grep` - returns 1 - no lines selected\n- `grep` - returns 0 - lines selected\nReturn Code: 0 - Normal operation\nArgument: --help - Flag. Optional. Display this help.\nArgument: ... - Arguments. Passed directly to `grep`.\nSee: grep\nRequires: grep returnMap\n\n'
 requires=$'grep returnMap\n'
 return_code=$'0 - Normal operation\n'

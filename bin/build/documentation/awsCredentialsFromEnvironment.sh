@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--profile profileName - String. Optional. The credentials profile to write (default value is `default`)\n--force - Flag. Optional. Write the credentials file even if the profile already exists\n--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
@@ -12,6 +12,7 @@ fn="awsCredentialsFromEnvironment"
 fnMarker="awscredentialsfromenvironment"
 foundNames=([0]="summary" [1]="argument")
 line="252"
+original="awsCredentialsFromEnvironment"
 rawComment=$'Write the credentials to the AWS credentials file.\nIf the AWS credentials file is not found, returns exit code 1 and outputs nothing.\nIf the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.\nSummary: Write an AWS profile to the AWS credentials file\nArgument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)\nArgument: --force - Flag. Optional. Write the credentials file even if the profile already exists\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/aws.sh"

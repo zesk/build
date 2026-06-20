@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--exclude pattern - String. Optional. String passed to `! -path pattern` in `find`\ndirectory ... - Directory. Required. Directory to `source` all `.sh` files used.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
@@ -12,11 +12,12 @@ fn="bashSourcePath"
 fnMarker="bashsourcepath"
 foundNames=([0]="summary" [1]="argument" [2]="security")
 line="216"
+original="bashSourcePath"
 rawComment=$'Summary: Load a directory of bash scripts\nLoad a directory of bash scripts, excluding any dot directories (`*/.*/*`), and optionally any additional\nfiles if you use `--exclude`. But recursively loads scripts in sorted alphabetic order within the directory until one fails.\nAll files must be executable.\nArgument: --exclude pattern - String. Optional. String passed to `! -path pattern` in `find`\nArgument: directory ... - Directory. Required. Directory to `source` all `.sh` files used.\nArgument: --help - Flag. Optional. Display this help.\nSecurity: Loads bash files\nLoad a directory of `.sh` files using `source` to make the code available.\nHas security implications. Use with caution and ensure your directory is protected.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 security=$'Loads bash files\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="216"
 summary="Load a directory of bash scripts"
 summaryComputed=""

@@ -22,9 +22,9 @@ Loads application environment variables, set them to their default values if nee
 
 #### Environment
 
-- [`BUILD_TIMESTAMP` Build Timestamp]({rel}env/#deployment) – **UnsignedInteger**. Time when a build was initiated, set upon first invocation
-- [`APPLICATION_BUILD_DATE` Application Build Date]({rel}env/#deployment) – **String**. Time when a build was initiated, set upon first invocation
-- [`APPLICATION_VERSION` Application Version]({rel}env/#deployment) – **String**. This is the version number which can be displayed
-- [`APPLICATION_ID` Application ID]({rel}env/#deployment) – **String**. This is the unique hash which represents the source code
-- [`APPLICATION_TAG` Application Tag]({rel}env/#deployment) – **String**. This is the full version number including debugging or release
+- {SEE:BUILD_TIMESTAMP}
+- {SEE:APPLICATION_BUILD_DATE}
+- {SEE:APPLICATION_VERSION}
+- {SEE:APPLICATION_ID}
+- {SEE:APPLICATION_TAG}
 

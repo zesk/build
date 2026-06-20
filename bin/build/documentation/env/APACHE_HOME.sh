@@ -11,6 +11,7 @@ file="bin/build/env/APACHE_HOME.sh"
 fn="APACHE_HOME"
 foundNames=([0]="name" [1]="default" [2]="category" [3]="vendor" [4]="type")
 name="Apache Home Directory"
+original="APACHE_HOME"
 rawComment=$'Name: Apache Home Directory\nConstant for the Apache configuration home directory.\nDefault: /etc/apache2\nCategory: Vendor\nVendor: Apache\nType: Directory\n\n'
 sourceFile="bin/build/env/APACHE_HOME.sh"
 sourceHash="d7f6a17620d6cb5e5ea61746eacfe3f0d59a5018"

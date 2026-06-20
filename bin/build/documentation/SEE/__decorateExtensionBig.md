@@ -1,0 +1,1 @@
+[decorate big]({rel}tools/decorate.md#__decorateextensionbig) - Display large text in the console for banners and important ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/big.sh#L55))

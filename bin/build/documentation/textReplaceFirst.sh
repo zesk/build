@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'searchString - String. Thing to search for.\nreplaceString - String. Thing to replace search string with.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="textReplaceFirst"
 fnMarker="textreplacefirst"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="216"
+original="textReplaceFirst"
 rawComment=$'Replaces the first and only the first occurrence of a pattern in a line with a replacement string.\nWithout arguments, displays help.\nArgument: searchString - String. Thing to search for.\nArgument: replaceString - String. Thing to replace search string with.\nstdin: Reads lines from stdin until EOF\nstdout: Outputs modified lines\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

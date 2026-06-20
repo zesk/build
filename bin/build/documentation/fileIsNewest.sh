@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--ignore - Flag. Optional. Ignore files which do not exist.\nsourceFile - File. Required. File to check\ntargetFile ... - File. Optional. One or more files to compare. All must exist.\n--help - Flag. Optional. Display this help.\n'
 base="file.sh"
@@ -12,6 +12,7 @@ fn="fileIsNewest"
 fnMarker="fileisnewest"
 foundNames=([0]="argument" [1]="return_code")
 line="268"
+original="fileIsNewest"
 rawComment=$'Check to see if the first file is the newest one\nIf `sourceFile` is modified AFTER ALL `targetFile`s, return `0``\nOtherwise return `1``\nArgument: --ignore - Flag. Optional. Ignore files which do not exist.\nArgument: sourceFile - File. Required. File to check\nArgument: targetFile ... - File. Optional. One or more files to compare. All must exist.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 1 - `sourceFile`, \'targetFile\' does not exist, or\nReturn Code: 0 - All files exist and `sourceFile` is the oldest file\n\n'
 return_code=$'1 - `sourceFile`, \'targetFile\' does not exist, or\n0 - All files exist and `sourceFile` is the oldest file\n'
 sourceFile="bin/build/tools/file.sh"

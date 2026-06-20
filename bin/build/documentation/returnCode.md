@@ -42,5 +42,5 @@ Unknown error code is 254, end of range is 255 which is not used. Use `returnCod
 #### See Also
 
 - [stackoverflow.com](https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux)
-- [returnCodeString]({rel}tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L60))
+- {SEE:returnCodeString}
 

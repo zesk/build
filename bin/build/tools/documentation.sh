@@ -25,12 +25,13 @@ __documentationLoader() {
 # Summary: Extract documentation from bash comments
 # Extract documentation variables from a comment stripped of the `# ` prefixes.
 #
-# Usage: {fn} [ --generate ] [ --no-cache | --cache ] [ --help ] handler function sourceFile
+# Usage: {fn} [ --generate ] [ --no-cache | --cache ] [ --help ] [ --function | --environment ] itemName sourceFile [ sourceLine ]
 #
 # A few special values are generated/computed:
 #
 # - `description` - Any line in the comment which is not in variable is appended to the field `description`
-# - `fn` - The function name (no parenthesis or anything)
+# - `original` - `itemName` unmodified
+# - `fn` - The function name (no parenthesis or anything) (can be changed from `itemName`)
 # - `base` - The basename of the file
 # - `file` - The relative path name of the file from the application root
 # - `summary` - Defaults to first ten words of `description`
@@ -46,9 +47,9 @@ __documentationLoader() {
 # - `depends` - Any dependencies (list)
 #
 # Summary: Generate a set of name/value pairs to document bash entities
-# Argument: fn - String. Required. Name of `fn`
+# Argument: itemName - String. Required. Name of item we are documenting. Usually a function name or environment variable name.
 # Argument: sourceFile - File. Required.
-# Argument: sourceLine - PositiveInteger. Optional.
+# Argument: sourceLine - PositiveInteger. Optional. The line in the source file where the item is defined.
 # Argument: --generate - Flag. Optional. Generate cached files.
 # Argument: --no-cache - Flag. Optional. Skip any attempt to cache anything.
 # Argument: --cache - Flag. Optional. Force use of cache.
@@ -57,6 +58,7 @@ __documentationLoader() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Pipe stripped comments to extract information
+# See: bashFunctionComment bashFirstComment
 # BUILD_DEBUG: usage-cache-skip - Skip caching by default (override with `--cache`)
 bashDocumentationExtract() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
@@ -856,20 +858,20 @@ bashDocumentationDeriveFunction() {
   [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument: $*" || return $?
   [ -n "$settingsFile" ] || throwArgument "$handler" "Missing settingsFile" || return $?
 
-  local fn && fn=$(environmentValueRead "$settingsFile" fn) || return $?
-  local targetFile && targetFile="$(dirname "$settingsFile")/${fn}.md"
+  local original && original=$(environmentValueRead "$settingsFile" original) || return $?
+  local targetFile && targetFile="$(dirname "$settingsFile")/${original}.md"
   local template && [ -n "$template" ] || template=$(catchReturn "$handler" documentationTemplate function) || return $?
   if $checkFlag; then
     local sourceFile && sourceFile=$(environmentValueRead "$settingsFile" sourceFile) || return $?
     if [ -f "$targetFile" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile"; then
       catchReturn "$handler" touch "$targetFile" || return $?
-      ! $verboseFlag || statusMessage decorate success "Checked fn $(decorate file "$targetFile")"
+      ! $verboseFlag || statusMessage decorate success "Checked function $(decorate file "$targetFile")"
       return 0
     fi
     return 1
   fi
-  catchReturn "$handler" bashDocumentationMarkdown --template "$template" "$fn" >"$targetFile" || return $?
-  ! $verboseFlag || statusMessage decorate success "Created fn $(decorate file "$targetFile")"
+  catchReturn "$handler" bashDocumentationMarkdown --template "$template" "$original" >"$targetFile" || return $?
+  ! $verboseFlag || statusMessage decorate success "Created function $(decorate file "$targetFile")"
 }
 _bashDocumentationDeriveFunction() {
   # __IDENTICAL__ bashDocumentation 1
@@ -877,7 +879,7 @@ _bashDocumentationDeriveFunction() {
 }
 
 # Summary: Generate SEE markdown content
-# Generate `SEE/{fn}.md` - Derived file generator.
+# Generate `SEE/{"fn"}.md` - Derived file generator.
 # File is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -909,16 +911,16 @@ bashDocumentationDeriveSee() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local fn && fn=$(environmentValueRead "$settingsFile" fn) || return $?
+  local original && original=$(environmentValueRead "$settingsFile" original) || return $?
   local documentationPath && if ! documentationPath=$(environmentValueRead "$settingsFile" documentationPath); then
-    if ! documentationPath=$(directoryChange "$home" find "$source" -type f -name '*.md' -print0 | xargs -0 grep -l "{$fn}" | sort | head -n 1); then
-      decorate warning "No documentationPath found for $fn" || :
+    if ! documentationPath=$(directoryChange "$home" find "$source" -type f -name '*.md' -print0 | xargs -0 grep -l "{$original}" | sort | head -n 1); then
+      decorate warning "No documentationPath found for $original" || :
     else
       documentationPath=${documentationPath#"$home/"}
       environmentValueWrite "documentationPath" "$documentationPath" >>"$settingsFile"
     fi
   fi
-  local targetFile && targetFile="$(__documentationFile "$home" "SEE/$fn" true)"
+  local targetFile && targetFile="$(__documentationFile "$home" "SEE/$original" true)"
   [ -n "$template" ] || template=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
   if $checkFlag; then
     if [ -f "$targetFile" ] && [ -f "$documentationPath" ] && fileIsNewest "$targetFile" "$settingsFile" "$template" "$sourceFile" "$documentationPath"; then

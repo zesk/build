@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n-- - Flag. Optional. Interactive mode on fixing errors.\n--home home - Directory. Optional. Sanitize files starting here. (Defaults to `buildHome`)\n--interactive - Flag. Optional. Interactive mode on fixing errors.\n--check checkDirectory - Directory. Optional. Check shell scripts in this directory for common errors.\n... - Additional arguments are passed to `bashLintFiles` `validateFileContents`\n'
 base="bash.sh"
@@ -13,10 +13,11 @@ fn="bashSanitize"
 fnMarker="bashsanitize"
 foundNames=([0]="argument" [1]="configuration_file")
 line="33"
+original="bashSanitize"
 rawComment=$'Sanitize bash files for code quality.\nArgument: --help - Flag. Optional. Display this help.\nArgument: -- - Flag. Optional. Interactive mode on fixing errors.\nArgument: --home home - Directory. Optional. Sanitize files starting here. (Defaults to `buildHome`)\nArgument: --interactive - Flag. Optional. Interactive mode on fixing errors.\nArgument: --check checkDirectory - Directory. Optional. Check shell scripts in this directory for common errors.\nArgument: ... - Additional arguments are passed to `bashLintFiles` `validateFileContents`\nConfiguration File: bashSanitize.conf (file containing simple `stringContains` matches to skip file NAMES, one per line, e.g. `etc/docker`)\nused in find `find ... ! -path \'*LINE*\'` and in grep -e \'LINE\'\nTODO - use one mechanism for bashSanitize.conf format\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="33"
 summary="Sanitize bash files for code quality."
 summaryComputed="true"

@@ -25,6 +25,6 @@ When this tool succeeds the git repository contains a tag with the suffix and an
 
 #### Environment
 
-- [`BUILD_VERSION_SUFFIX` Build Version Suffix]({rel}env/#build_configuration) – **String**. Default suffix used in `gitTagVersion` - String. Version suffix to use as a default. If not specified the default is `rc`.
-- [`BUILD_MAXIMUM_TAGS_PER_VERSION` Maximum Git Tags per Version]({rel}env/#build_configuration) – **PositiveInteger**. Number of versions tags (d0, d1, d2, etc.) to look - Integer. Number of integers to attempt to look for when incrementing.
+- {SEE:BUILD_VERSION_SUFFIX} - String. Version suffix to use as a default. If not specified the default is `rc`.
+- {SEE:BUILD_MAXIMUM_TAGS_PER_VERSION} - Integer. Number of integers to attempt to look for when incrementing.
 

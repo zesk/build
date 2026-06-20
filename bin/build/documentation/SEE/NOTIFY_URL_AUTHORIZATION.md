@@ -1,1 +1,1 @@
-[`NOTIFY_URL_AUTHORIZATION` Notification URL]({rel}env/#notify) – **Secret**. Authorization token for default notifications
+[`NOTIFY_URL_AUTHORIZATION` Notification URL Authorization Token]({rel}env/#notify) – **Secret**. Authorization token for default notifications.

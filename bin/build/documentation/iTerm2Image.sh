@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--width width - PositiveInteger. Width in columns to display image.\n--height height - PositiveInteger. Height in rows to display image.\n--preserve-aspect-ratio - Flag. Preserve the aspect ratio.\n--scale - Flag. Do not preserve the aspect ratio, scale the image.\n--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.\n'
 base="iterm2.sh"
@@ -12,10 +12,11 @@ fn="iTerm2Image"
 fnMarker="iterm2image"
 foundNames=([0]="argument" [1]="stdout")
 line="265"
+original="iTerm2Image"
 rawComment=$'Output an image to the console\nArgument: --width width - PositiveInteger. Width in columns to display image.\nArgument: --height height - PositiveInteger. Height in rows to display image.\nArgument: --preserve-aspect-ratio - Flag. Preserve the aspect ratio.\nArgument: --scale - Flag. Do not preserve the aspect ratio, scale the image.\nArgument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.\nstdout: No output, however, if in an iTerm2 terminal it will display an image in the console at the cursor position\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="58eeb81a4d81f00507a1a74ca99c3238d4499cb1"
+sourceHash="04b5b95900782435a2524d52704ddd8201c9d15c"
 sourceLine="265"
 stdout=$'No output, however, if in an iTerm2 terminal it will display an image in the console at the cursor position\n'
 summary="Output an image to the console"

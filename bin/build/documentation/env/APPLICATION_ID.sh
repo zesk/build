@@ -10,6 +10,7 @@ file="bin/build/env/APPLICATION_ID.sh"
 fn="APPLICATION_ID"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Application ID"
+original="APPLICATION_ID"
 rawComment=$'Name: Application ID\nThis is the unique hash which represents the source code state (typically a git hash)\nCategory: Deployment\nType: String\n\n'
 sourceFile="bin/build/env/APPLICATION_ID.sh"
 sourceHash="09567603c2fb28c656634a9947a3c4d0299eec96"

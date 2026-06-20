@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--title keyTitle - String. Optional. Title of the key.\n--name keyName - String. Required. Name of the key used to generate file names.\n--url remoteUrl - URL. Required. Remote URL of gpg key.\n--help - Flag. Optional. Display this help.\n'
 base="apt.sh"
@@ -12,6 +12,7 @@ fn="aptKeyAdd"
 fnMarker="aptkeyadd"
 foundNames=([0]="argument" [1]="return_code")
 line="77"
+original="aptKeyAdd"
 rawComment=$'Add keys to enable apt to download terraform directly from hashicorp.com\nArgument: --title keyTitle - String. Optional. Title of the key.\nArgument: --name keyName - String. Required. Name of the key used to generate file names.\nArgument: --url remoteUrl - URL. Required. Remote URL of gpg key.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 1 - if environment is awry\nReturn Code: 0 - Apt key is installed AOK\n\n'
 return_code=$'1 - if environment is awry\n0 - Apt key is installed AOK\n'
 sourceFile="bin/build/tools/apt.sh"

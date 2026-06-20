@@ -24,5 +24,5 @@ Load cached function comment values
 
 #### Environment
 
-- [`BUILD_DOCUMENTATION_PATH` Build Documentation Path List]({rel}env/#bash) – **DirectoryList**. Search path for documentation settings file.
+- {SEE:BUILD_DOCUMENTATION_PATH}
 

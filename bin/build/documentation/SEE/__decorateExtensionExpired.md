@@ -1,0 +1,1 @@
+[decorate expired]({rel}tools/decorate.md#__decorateextensionexpired) - Utility to display key expiration ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/expired.sh#L40))

@@ -149,7 +149,7 @@ _validateThrow() {
 # Valid validate type
 # Requires: _validateThrow
 __validateTypeType() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  [ -n "${1-}" ] || _validateThrow "validate Type is blank" || return $?
   local type="${1-:__NOT__}" typeFunction=""
   __validateMapper "$type"
   isFunction "$typeFunction" || _validateThrow "Invalid type $1 -> $type" || return $?
@@ -159,7 +159,7 @@ __validateTypeType() {
 # Non-empty string
 # Requires: _validateThrow
 __validateTypeString() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  [ -n "${1-}" ] || _validateThrow "validate String is blank" || return $?
   printf "%s\n" "${1-}"
 }
 

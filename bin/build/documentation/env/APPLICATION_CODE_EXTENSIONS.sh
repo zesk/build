@@ -10,6 +10,7 @@ file="bin/build/env/APPLICATION_CODE_EXTENSIONS.sh"
 fn="APPLICATION_CODE_EXTENSIONS"
 foundNames=([0]="name" [1]="type" [2]="category")
 name="Application Code File Extension List"
+original="APPLICATION_CODE_EXTENSIONS"
 rawComment=$'Name: Application Code File Extension List\nType: ColonDelimitedList\nCategory: Application\nList of extensions for code in the application. Required.\n\n'
 sourceFile="bin/build/env/APPLICATION_CODE_EXTENSIONS.sh"
 sourceHash="fd299703691add1d9390c1d14b7d5973742be766"

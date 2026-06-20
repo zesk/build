@@ -1,0 +1,1 @@
+[bashApplicationAlias]({rel}#bashapplicationalias) - Create alias for project ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L711))

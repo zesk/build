@@ -10,6 +10,7 @@ file="bin/build/env/DEPLOY_REMOTE_HOME.sh"
 fn="DEPLOY_REMOTE_HOME"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Remote directory for deployment"
+original="DEPLOY_REMOTE_HOME"
 rawComment=$'Name: Remote directory for deployment\nPath on the remote server where the application deployment home is (per application)\nCategory: Deployment\nType: RemoteDirectory\n\n'
 sourceFile="bin/build/env/DEPLOY_REMOTE_HOME.sh"
 sourceHash="ca6689833b0b62c969a129efa25642d77fa83af9"

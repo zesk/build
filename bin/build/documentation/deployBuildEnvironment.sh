@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--env-file envFile - File. Optional. Environment file to load - can handle any format.\n--debug - Flag. Optional. Enable debugging.\n--first - Flag. Optional. When it is the first deployment, use this flag.\n--home deployPath - Directory. Required. Path where the deployments database is on remote system. Uses\n--id applicationId - String. Required. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_ID` environment.\n--application applicationPath - String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_HOME` environment.\n--target targetPackage - Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.\n'
 base="deployment.sh"
@@ -13,6 +13,7 @@ fn="deployBuildEnvironment"
 fnMarker="deploybuildenvironment"
 foundNames=([0]="argument" [1]="file" [2]="environment" [3]="test")
 line="33"
+original="deployBuildEnvironment"
 rawComment=$'Deploy to a host\nArgument: --env-file envFile - File. Optional. Environment file to load - can handle any format.\nArgument: --debug - Flag. Optional. Enable debugging.\nArgument: --first - Flag. Optional. When it is the first deployment, use this flag.\nArgument: --home deployPath - Directory. Required. Path where the deployments database is on remote system. Uses\nArgument: --id applicationId - String. Required. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_ID` environment.\nArgument: --application applicationPath - String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_HOME` environment.\nArgument: --target targetPackage - Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.\nLoads `./.build.env` if it exists.\nFile: `./.build.env`\nEnvironment: DEPLOY_REMOTE_HOME - path on remote host for deployment data\nEnvironment: APPLICATION_REMOTE_HOME - path on remote host for application\nEnvironment: DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)\nEnvironment: APPLICATION_ID - Version to be deployed\nEnvironment: BUILD_TARGET - The application package name\nNot possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.\nTest: testDeployBuildEnvironment - INCOMPLETE\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deployment.sh"

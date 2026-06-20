@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'applicationLinkPath - Path. Required. Path where the link is created.\napplicationPath - Path. Optional. Path where the link will point to. If not supplied uses current working directory.\n'
 base="deploy.sh"
@@ -13,6 +13,7 @@ fn="deployLink"
 fnMarker="deploylink"
 foundNames=([0]="environment" [1]="argument" [2]="summary" [3]="return_code")
 line="236"
+original="deployLink"
 rawComment=$'Environment: PWD\nArgument: applicationLinkPath - Path. Required. Path where the link is created.\nArgument: applicationPath - Path. Optional. Path where the link will point to. If not supplied uses current working directory.\nLink new version of application.\nWhen called, current directory is the **new** application and the `applicationLinkPath` which is\npassed as an argument is the place where the **new** application should be linked to\nin order to activate it.\nSummary: Link deployment to new version of the application\nReturn Code: 0 - Success\nReturn Code: 1 - Environment error\nReturn Code: 2 - Argument error\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deploy.sh"

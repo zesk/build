@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="docker.sh"
@@ -12,6 +12,7 @@ fn="dockerPlatformDefault"
 fnMarker="dockerplatformdefault"
 foundNames=([0]="outputs_one_of")
 line="25"
+original="dockerPlatformDefault"
 outputs_one_of=$'`linux/arm64`, `linux/mips64`, `linux/amd64`\n'
 rawComment=$'Fetch the default platform for docker\nOutputs one of: `linux/arm64`, `linux/mips64`, `linux/amd64`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

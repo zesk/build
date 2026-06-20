@@ -26,11 +26,11 @@ Display cached usage for a function
 
 #### Environment
 
-- [`BUILD_HOME` Build Home Directory]({rel}env/#build_configuration) – **Directory**. `BUILD_HOME` is `.` when this code is installed - at [`BUILD_COLORS` Build Colors Flag]({rel}env/#decoration) – **Boolean**. If true then colors are shown, blank means guess the [`BUILD_DOCUMENTATION_PATH` Build Documentation Path List]({rel}env/#bash) – **DirectoryList**. Search path for documentation settings file.
+- {SEE:BUILD_HOME} {SEE:BUILD_COLORS} {SEE:BUILD_DOCUMENTATION_PATH}
 
 #### Requires
 
-- [decorateThemed]({rel}tools/decoration.md#decoratethemed) - Applies the current theme to text rendered using \`decorateThemelessMode\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/theme.sh#L70))
-- [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
-- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- {SEE:decorateThemed}
+- {SEE:catchEnvironment}
+- {SEE:decorate}
 

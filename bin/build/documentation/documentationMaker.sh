@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--verbose - Flag. Optional. Be wordy.\n--default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`\nsourcePath - Exists. Required. File or directory to convert.\ntargetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.\nmapFunction ... - Function. Optional. Mapping function to use, and any arguments.\n'
 base="documentation.sh"
@@ -11,12 +11,13 @@ file="bin/build/tools/documentation.sh"
 fn="documentationMaker"
 fnMarker="documentationmaker"
 foundNames=([0]="argument" [1]="return_code")
-line="452"
+line="454"
+original="documentationMaker"
 rawComment=$'Generate documentation using source markdown and a mapping function.\nArgument: --verbose - Flag. Optional. Be wordy.\nArgument: --default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`\nArgument: sourcePath - Exists. Required. File or directory to convert.\nArgument: targetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.\nArgument: mapFunction ... - Function. Optional. Mapping function to use, and any arguments.\nReturn Code: 0 - Success\nReturn Code: 1 - Template file not found\n\n'
 return_code=$'0 - Success\n1 - Template file not found\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
-sourceLine="452"
+sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
+sourceLine="454"
 summary="Generate documentation using source markdown and a mapping function."
 summaryComputed="true"
 usage="documentationMaker [ --verbose ] [ --default defaultValue ] sourcePath [ targetPath ] [ mapFunction ... ]"

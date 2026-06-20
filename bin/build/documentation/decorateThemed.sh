@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="theme.sh"
@@ -12,6 +12,7 @@ fn="decorateThemed"
 fnMarker="decoratethemed"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="70"
+original="decorateThemed"
 rawComment=$'Applies the current theme to text rendered using `decorateThemelessMode`\nArgument: --help - Flag. Optional. Display this help.\nstdin: Text to apply current theme to\nstdout: Console-ready text\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/theme.sh"

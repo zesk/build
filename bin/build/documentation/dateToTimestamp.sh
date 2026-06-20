@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)\n--help - Flag. Optional. Display this help.\n'
 base="date.sh"
@@ -14,6 +14,7 @@ fn="dateToTimestamp"
 fnMarker="datetotimestamp"
 foundNames=([0]="argument" [1]="environment" [2]="return_code" [3]="example")
 line="51"
+original="dateToTimestamp"
 rawComment=$'Converts a date to an integer timestamp\nArgument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: Compatible with BSD and GNU date.\nReturn Code: 1 - if parsing fails\nReturn Code: 0 - if parsing succeeds\nExample:     timestamp=$(dateToTimestamp \'2023-10-15\')\n\n'
 return_code=$'1 - if parsing fails\n0 - if parsing succeeds\n'
 sourceFile="bin/build/tools/date.sh"

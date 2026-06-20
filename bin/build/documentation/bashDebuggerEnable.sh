@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="debugger.sh"
@@ -12,6 +12,7 @@ fn="bashDebuggerEnable"
 fnMarker="bashdebuggerenable"
 foundNames=([0]="summary" [1]="____usage" [2]="argument" [3]="see")
 line="63"
+original="bashDebuggerEnable"
 rawComment=$'Summary: Enable the debugger\nEnables the debugger immediately.\n    Usage: bashDebuggerEnable [ --help ]\nArgument: --help - Flag. Optional. Display this help.\nSaves file descriptors 0 1 and 2 as 20, 21 and 22 respectively\nSee: bashDebug bashDebuggerDisable\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'bashDebug bashDebuggerDisable\n'

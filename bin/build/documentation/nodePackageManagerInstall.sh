@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="node.sh"
@@ -12,6 +12,7 @@ fn="nodePackageManagerInstall"
 fnMarker="nodepackagemanagerinstall"
 foundNames=()
 line="170"
+original="nodePackageManagerInstall"
 rawComment=$'Installs the selected package manager for node\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/node.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--local - Flag. Optional. Local yesterday\n--help - Flag. Optional. Display this help.\n'
 base="date.sh"
@@ -13,6 +13,7 @@ fn="dateYesterday"
 fnMarker="dateyesterday"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires")
 line="119"
+original="dateYesterday"
 rawComment=$'Returns yesterday\'s date, in `YYYY-MM-DD` format. (same as `%F`)\nSummary: Yesterday\'s date (UTC time)\nArgument: --local - Flag. Optional. Local yesterday\nArgument: --help - Flag. Optional. Display this help.\nExample:     rotated="$log.$({fn} --local)"\nRequires: throwArgument date convertValue dateFromTimestamp bashDocumentation\n\n'
 requires=$'throwArgument date convertValue dateFromTimestamp bashDocumentation\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

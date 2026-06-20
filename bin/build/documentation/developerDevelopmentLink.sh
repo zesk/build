@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.\n--reset - Flag. Optional. Revert the link and reinstall using the original binary.\n--development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path.\n--version-json jsonFile - ApplicationFile. Required. The library JSON file to check.\n--version-selector jsonFile - String. Optional. Query to extract version from JSON file (defaults to `.version`). API.\n--variable variableNameValue - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to. API.\n--binary - String. Optional. The binary to install the library remotely if needed to revert back. API.\n--composer composerPackage - String. Optional. The composer package to convert to a link (or copy.). API.\n--path applicationPath - ApplicationDirectory. Required. The library path to convert to a link (or copy). API.\n'
 base="developer.sh"
@@ -12,6 +12,7 @@ fn="developerDevelopmentLink"
 fnMarker="developerdevelopmentlink"
 foundNames=([0]="argument" [1]="see" [2]="test")
 line="223"
+original="developerDevelopmentLink"
 rawComment=$'Link a current library with another version being developed nearby using a link\nDoes not work inside docker containers unless you explicitly do some magic with paths (maybe we will add this)\nArgument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.\nArgument: --reset - Flag. Optional. Revert the link and reinstall using the original binary.\nArgument: --development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path.\nArgument: --version-json jsonFile - ApplicationFile. Required. The library JSON file to check.\nArgument: --version-selector jsonFile - String. Optional. Query to extract version from JSON file (defaults to `.version`). API.\nArgument: --variable variableNameValue - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to. API.\nArgument: --binary - String. Optional. The binary to install the library remotely if needed to revert back. API.\nArgument: --composer composerPackage - String. Optional. The composer package to convert to a link (or copy.). API.\nArgument: --path applicationPath - ApplicationDirectory. Required. The library path to convert to a link (or copy). API.\nSee: buildDevelopmentLink\nTest: TODO\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'buildDevelopmentLink\n'

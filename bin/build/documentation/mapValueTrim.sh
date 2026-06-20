@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'mapFile - File. Required. a file containing bash environment definitions\nvalue - String. Optional. One or more values to map using said environment file.\n'
 base="map.sh"
@@ -12,6 +12,7 @@ fn="mapValueTrim"
 fnMarker="mapvaluetrim"
 foundNames=([0]="argument")
 line="232"
+original="mapValueTrim"
 rawComment=$'Maps a string using an environment file\nArgument: mapFile - File. Required. a file containing bash environment definitions\nArgument: value - String. Optional. One or more values to map using said environment file.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/map.sh"

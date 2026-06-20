@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"--badge text - String. Display this text as decorate at"$'\n'"--prefix prefix - String."$'\n'"counter - Integer. Required. Count down from."$'\n'"binary - Callable. Required. Run this with any additional arguments when the countdown is completed."$'\n'"... - Arguments. Optional. Passed to binary."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n--badge text - String. Display this text as decorate at\n--prefix prefix - String.\ncounter - Integer. Required. Count down from.\nbinary - Callable. Required. Run this with any additional arguments when the countdown is completed.\n... - Arguments. Optional. Passed to binary.\n'
 base="interactive.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Display a message and count down display"$'\n'""$'\n'""
+description=$'Display a message and count down display\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/interactive.sh"
 fn="interactiveCountdown"
 fnMarker="interactivecountdown"
 foundNames=([0]="argument")
 line="225"
-rawComment="Display a message and count down display"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --badge text - String. Display this text as decorate at"$'\n'"Argument: --prefix prefix - String."$'\n'"Argument: counter - Integer. Required. Count down from."$'\n'"Argument: binary - Callable. Required. Run this with any additional arguments when the countdown is completed."$'\n'"Argument: ... - Arguments. Optional. Passed to binary."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="interactiveCountdown"
+rawComment=$'Display a message and count down display\nArgument: --help - Flag. Optional. Display this help.\nArgument: --badge text - String. Display this text as decorate at\nArgument: --prefix prefix - String.\nArgument: counter - Integer. Required. Count down from.\nArgument: binary - Callable. Required. Run this with any additional arguments when the countdown is completed.\nArgument: ... - Arguments. Optional. Passed to binary.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/interactive.sh"
 sourceHash="6e0d41188cc236cd7170c65cbacacbb7f30b9788"
 sourceLine="225"

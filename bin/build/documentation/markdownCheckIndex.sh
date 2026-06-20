@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'indexFile ... - File. Required. One or more index files to check.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="markdown.sh"
@@ -12,6 +12,7 @@ fn="markdownCheckIndex"
 fnMarker="markdowncheckindex"
 foundNames=([0]="argument")
 line="177"
+original="markdownCheckIndex"
 rawComment=$'Argument: indexFile ... - File. Required. One or more index files to check.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nDisplays any markdown files next to the given index file which are not found within the index file as links.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/markdown.sh"

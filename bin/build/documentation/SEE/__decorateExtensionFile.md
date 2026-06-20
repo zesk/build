@@ -1,0 +1,1 @@
+[__decorateExtensionFile]({rel}tools/decorate.md#__decorateextensionfile) - decorate file links ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L268))

@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--error - Flag. Add ERR trap."$'\n'"--clear - Flag. Remove all traps."$'\n'"--interrupt - Flag. Add INT trap."$'\n'"--already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--error - Flag. Add ERR trap.\n--clear - Flag. Remove all traps.\n--interrupt - Flag. Add INT trap.\n--already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0.\n'
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Adds a trap to capture the debugging stack on interrupt."$'\n'"Use this in a bash script which runs forever or runs in an infinite loop to"$'\n'"determine where the problem or loop exists."$'\n'"The file is named \`./.interrupt.log\` and is appended each time the program is terminated or exits improperly."$'\n'""$'\n'""
+description=$'Adds a trap to capture the debugging stack on interrupt.\nUse this in a bash script which runs forever or runs in an infinite loop to\ndetermine where the problem or loop exists.\nThe file is named `./.interrupt.log` and is appended each time the program is terminated or exits improperly.\n\n'
 descriptionLineCount="5"
 file="bin/build/tools/debug.sh"
 fn="bashDebugInterruptFile"
 fnMarker="bashdebuginterruptfile"
 foundNames=([0]="summary" [1]="requires" [2]="argument")
 line="203"
-rawComment="Summary: Output debugging stack on program termination"$'\n'"Adds a trap to capture the debugging stack on interrupt."$'\n'"Use this in a bash script which runs forever or runs in an infinite loop to"$'\n'"determine where the problem or loop exists."$'\n'"The file is named \`./.interrupt.log\` and is appended each time the program is terminated or exits improperly."$'\n'"Requires: trap"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --error - Flag. Add ERR trap."$'\n'"Argument: --clear - Flag. Remove all traps."$'\n'"Argument: --interrupt - Flag. Add INT trap."$'\n'"Argument: --already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0."$'\n'""$'\n'""
-requires="trap"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="bashDebugInterruptFile"
+rawComment=$'Summary: Output debugging stack on program termination\nAdds a trap to capture the debugging stack on interrupt.\nUse this in a bash script which runs forever or runs in an infinite loop to\ndetermine where the problem or loop exists.\nThe file is named `./.interrupt.log` and is appended each time the program is terminated or exits improperly.\nRequires: trap\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --error - Flag. Add ERR trap.\nArgument: --clear - Flag. Remove all traps.\nArgument: --interrupt - Flag. Add INT trap.\nArgument: --already-error - Flag. If the signals are already installed, then throw an error. Otherwise exits 0.\n\n'
+requires=$'trap\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/debug.sh"
 sourceHash="6a81e40ae02c7a2796eae34880ff8f69d143fa24"
 sourceLine="203"

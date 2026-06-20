@@ -10,6 +10,7 @@ file="bin/build/env/DEPLOYMENT.sh"
 fn="DEPLOYMENT"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Deployment Code"
+original="DEPLOYMENT"
 rawComment=$'Name: Deployment Code\nTarget deployment for this code\nCategory: Deployment\nType: String\n\n'
 sourceFile="bin/build/env/DEPLOYMENT.sh"
 sourceHash="536a8ff3e23ec499ffcf9473828b39a91ceb69d8"

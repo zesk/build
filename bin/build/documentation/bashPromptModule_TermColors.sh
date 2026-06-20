@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="prompt.sh"
@@ -15,6 +15,7 @@ fn="bashPromptModule_TermColors"
 fnMarker="bashpromptmodule_termcolors"
 foundNames=([0]="summary" [1]="see" [2]="file" [3]="example" [4]="requires" [5]="build_debug" [6]="environment")
 line="247"
+original="bashPromptModule_TermColors"
 rawComment=$'Summary: Terminal colors to match projects\nSets the console colors based on the project you are currently in.\nDefine your color configuration file (values of `bg=FFF` etc. one per line, comments allowed)\nWill fill in missing bright or non-bright colors which are unspecified. (`blue` implies `br_blue` and so on)\nSets `decorateStyle` for valid styles\nSee: consoleConfigureColorMode\nFile: ./etc/iterm2-colors.conf\nFile: ./etc/term-colors.conf\nFile: ./.term-colors.conf\nExample:     bashPrompt --order 80 bashPromptModule_TermColors\nRequires: buildHome statusMessage buildEnvironmentGetDirectory directoryRequire  textSHA --cachedecorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode\nBUILD_DEBUG: term-colors - When `bashPromptModule_TermColors` is enabled, will show colors and how they are applied\nSupport for iTerm2 is built-in and automatic\nEnvironment: BUILD_TERM_COLORS_STATE\n\n'
 requires=$'buildHome statusMessage buildEnvironmentGetDirectory directoryRequire  textSHA --cachedecorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

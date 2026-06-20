@@ -1,3 +1,7 @@
+{bashApplicationAlias}
+
+{bashApplicationAliases}
+
 {buildDocumentationEnvironment}
 
 {buildDocumentationTemplates}
@@ -7,6 +11,8 @@
 {buildFunctionsSeeAgain}
 
 {buildFunctionsSeeLoop}
+
+{buildPreReleaseLintFiles}
 
 {hookNotify}
 

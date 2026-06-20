@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\n--profile profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\n--comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).\n--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
@@ -13,6 +13,7 @@ fn="awsEnvironmentFromCredentials"
 fnMarker="awsenvironmentfromcredentials"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="169"
+original="awsEnvironmentFromCredentials"
 rawComment=$'Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.\nIf the AWS credentials file is not found, returns exit code 1 and outputs nothing.\nIf the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.\nSummary: Get credentials and output environment variables for AWS authentication\nArgument: profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\nArgument: --profile profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\nArgument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).\nArgument: --help - Flag. Optional. Display this help.\nBoth forms can be used, but the profile should be supplied once and only once.\nExample:     setFile=$(fileTemporaryName "$handler") || return $?\nExample:     if awsEnvironment "$profile" > "$setFile"; then\nExample:     eval $(cat "$setFile")\nExample:     rm "$setFile"\nExample:     else\nExample:     decorate error "Need $profile profile in aws credentials file"`\nExample:     exit 1\nExample:     fi\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 setFile=""

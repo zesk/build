@@ -15,6 +15,7 @@ __bashDocumentationSettingsHeader() {
   printf '%s\n' '# shellcheck disable=SC2034'
 
   catchReturn "$handler" __dumpSimpleValue "fn" "$fn" || return $?
+  catchReturn "$handler" __dumpSimpleValue "original" "$fn" || return $?
 }
 
 # Caching version - __bashDocumentationExtractDirect does the actual work

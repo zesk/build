@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="mariadb.sh"
@@ -12,6 +12,7 @@ fn="mariadbUninstall"
 fnMarker="mariadbuninstall"
 foundNames=([0]="return_code")
 line="32"
+original="mariadbUninstall"
 rawComment=$'Uninstall `mariadb`\nWhen this tool succeeds the `mariadb` binary will no longer be available in the local operating system.\nReturn Code: 1 - If uninstallation fails\nReturn Code: 0 - If uninstallation succeeds\n\n'
 return_code=$'1 - If uninstallation fails\n0 - If uninstallation succeeds\n'
 sourceFile="bin/build/tools/mariadb.sh"

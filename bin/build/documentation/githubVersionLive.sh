@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--name name - String. Optional. GitHub repository name to use. If not specified, uses `{env:GITHUB_REPOSITORY_NAME}`.\n--owner owner - String. Optional. GitHub repository owner to use. If not specified, uses `{env:GITHUB_REPOSITORY_OWNER}`.\n'
 base="github.sh"
@@ -13,6 +13,7 @@ fn="githubVersionLive"
 fnMarker="githubversionlive"
 foundNames=([0]="argument" [1]="environment")
 line="328"
+original="githubVersionLive"
 rawComment=$'Fetch the current live version of software using GitHub APIs\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --name name - String. Optional. GitHub repository name to use. If not specified, uses `{env:GITHUB_REPOSITORY_NAME}`.\nArgument: --owner owner - String. Optional. GitHub repository owner to use. If not specified, uses `{env:GITHUB_REPOSITORY_OWNER}`.\nEnvironment: GITHUB_REPOSITORY_OWNER\nEnvironment: GITHUB_REPOSITORY_NAME\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/github.sh"

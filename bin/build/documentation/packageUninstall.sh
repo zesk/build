@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'package - String. Required. One or more packages to uninstall\n--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n'
 base="package.sh"
@@ -13,6 +13,7 @@ fn="packageUninstall"
 fnMarker="packageuninstall"
 foundNames=([0]="example" [1]="summary" [2]="argument")
 line="524"
+original="packageUninstall"
 rawComment=$'Removes packages using the current package manager.\nExample:     {fn} shellcheck\nSummary: Removes packages using package manager\nArgument: package - String. Required. One or more packages to uninstall\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"

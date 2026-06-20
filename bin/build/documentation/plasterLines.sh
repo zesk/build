@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="colors.sh"
@@ -11,12 +11,13 @@ file="bin/build/tools/colors.sh"
 fn="plasterLines"
 fnMarker="plasterlines"
 foundNames=()
-line="265"
+line="242"
+original="plasterLines"
 rawComment=$'Outputs a line and fills the remainder with space\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
-sourceLine="265"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceLine="242"
 summary="Outputs a line and fills the remainder with space"
 summaryComputed="true"
 usage="plasterLines"

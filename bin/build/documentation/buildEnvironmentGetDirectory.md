@@ -32,5 +32,5 @@ Modifies local environment. Not usually run within a subshell.
 #### Environment
 
 - $envName
-- [`BUILD_ENVIRONMENT_DIRS` Build Environment Directory List]({rel}env/#build_configuration) – **DirectoryList**. Search directory for environment definition files. `:` separated. - `:` separated list of paths to load env files
+- {SEE:BUILD_ENVIRONMENT_DIRS} - `:` separated list of paths to load env files
 

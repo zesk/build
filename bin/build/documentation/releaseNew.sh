@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--non-interactive - Flag. Optional. If new version is needed, use default version"$'\n'"versionName - Optional. Set the new version name to this - must be after live version in version order"$'\n'""
+argument=$'--non-interactive - Flag. Optional. If new version is needed, use default version\nversionName - Optional. Set the new version name to this - must be after live version in version order\n'
 base="version.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="**New release** - generates files in system for a new release."$'\n'""$'\n'"*Requires* hook \`version-current\`, optionally \`version-live\`"$'\n'""$'\n'"Uses semantic versioning \`MAJOR.MINOR.PATCH\`"$'\n'""$'\n'"Checks the live version versus the version in code and prompts to"$'\n'"generate a new release file if needed."$'\n'""$'\n'"A release notes template file is added at \`./documentation/source/release/\`. This file is"$'\n'"also added to \`git\` the first time."$'\n'""$'\n'""
+description=$'**New release** - generates files in system for a new release.\n\n*Requires* hook `version-current`, optionally `version-live`\n\nUses semantic versioning `MAJOR.MINOR.PATCH`\n\nChecks the live version versus the version in code and prompts to\ngenerate a new release file if needed.\n\nA release notes template file is added at `./documentation/source/release/`. This file is\nalso added to `git` the first time.\n\n'
 descriptionLineCount="12"
 file="bin/build/tools/version.sh"
 fn="releaseNew"
 fnMarker="releasenew"
 foundNames=([0]="argument" [1]="summary" [2]="hook" [3]="return_code")
-hook="version-current"$'\n'"version-live"$'\n'"version-created"$'\n'"version-already"$'\n'""
+hook=$'version-current\nversion-live\nversion-created\nversion-already\n'
 line="255"
-rawComment="Argument: --non-interactive - Flag. Optional. If new version is needed, use default version"$'\n'"Argument: versionName - Optional. Set the new version name to this - must be after live version in version order"$'\n'"Summary: Generate a new release notes and bump the version"$'\n'"Hook: version-current"$'\n'"Hook: version-live"$'\n'"Hook: version-created"$'\n'"Hook: version-already"$'\n'"Return Code: 0 - Release generated or has already been generated"$'\n'"Return Code: 1 - If new version needs to be created and \`--non-interactive\`"$'\n'"**New release** - generates files in system for a new release."$'\n'"*Requires* hook \`version-current\`, optionally \`version-live\`"$'\n'"Uses semantic versioning \`MAJOR.MINOR.PATCH\`"$'\n'"Checks the live version versus the version in code and prompts to"$'\n'"generate a new release file if needed."$'\n'"A release notes template file is added at \`./documentation/source/release/\`. This file is"$'\n'"also added to \`git\` the first time."$'\n'""$'\n'""
-return_code="0 - Release generated or has already been generated"$'\n'"1 - If new version needs to be created and \`--non-interactive\`"$'\n'""
+original="releaseNew"
+rawComment=$'Argument: --non-interactive - Flag. Optional. If new version is needed, use default version\nArgument: versionName - Optional. Set the new version name to this - must be after live version in version order\nSummary: Generate a new release notes and bump the version\nHook: version-current\nHook: version-live\nHook: version-created\nHook: version-already\nReturn Code: 0 - Release generated or has already been generated\nReturn Code: 1 - If new version needs to be created and `--non-interactive`\n**New release** - generates files in system for a new release.\n*Requires* hook `version-current`, optionally `version-live`\nUses semantic versioning `MAJOR.MINOR.PATCH`\nChecks the live version versus the version in code and prompts to\ngenerate a new release file if needed.\nA release notes template file is added at `./documentation/source/release/`. This file is\nalso added to `git` the first time.\n\n'
+return_code=$'0 - Release generated or has already been generated\n1 - If new version needs to be created and `--non-interactive`\n'
 sourceFile="bin/build/tools/version.sh"
 sourceHash="bc1b9451662b72c8cd1a5449c555029672f21b39"
 sourceLine="255"

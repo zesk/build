@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="returnCode - UnsignedInteger. Optional. Exit code to possibly display with message."$'\n'"message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'""
 base="usage.sh"
@@ -12,6 +12,7 @@ fn="__usageMessage"
 fnMarker="__usagemessage"
 foundNames=([0]="argument" [1]="requires")
 line="94"
+original="__usageMessage"
 rawComment="Output the message for usage consistently"$'\n'"Argument: returnCode - UnsignedInteger. Optional. Exit code to possibly display with message."$'\n'"Argument: message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'"Requires: decorate returnCodeString"$'\n'""$'\n'""
 requires="decorate returnCodeString"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

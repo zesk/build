@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nrequiredVariable ... - EnvironmentVariable. Optional. One or more environment variables which should be non-blank and included in the `.env` file.\n-- - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment. Should appear once and only once.\noptionalVariable ... - EnvironmentVariable. Optional. One or more environment variables which are included if blank or not\n'
 base="application.sh"
@@ -13,6 +13,7 @@ fn="environmentFileApplicationMake"
 fnMarker="environmentfileapplicationmake"
 foundNames=([0]="argument" [1]="environment")
 line="82"
+original="environmentFileApplicationMake"
 rawComment=$'Argument: --help - Flag. Optional. Display this help.\nArgument: requiredVariable ... - EnvironmentVariable. Optional. One or more environment variables which should be non-blank and included in the `.env` file.\nArgument: -- - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment. Should appear once and only once.\nArgument: optionalVariable ... - EnvironmentVariable. Optional. One or more environment variables which are included if blank or not\nCreate environment file `.env` for build.\nNote that this does NOT change or modify the current environment.\nEnvironment: APPLICATION_VERSION - reserved and set to `hookRun version-current` if not set already\nEnvironment: APPLICATION_BUILD_DATE - reserved and set to current date; format like SQL.\nEnvironment: APPLICATION_TAG - reserved and set to `hookRun application-id`\nEnvironment: APPLICATION_ID - reserved and set to `hookRun application-tag`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/environment/application.sh"

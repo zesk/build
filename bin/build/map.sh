@@ -28,8 +28,8 @@ returnMessage() {
   local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
   if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
   # __IDENTICAL__ localTrace 1
-  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
-  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\" ($trace)" "$@" || return $?
+  local trace="§ ${BASH_SOURCE[2]#"${BUILD_HOME-}/"}:${BASH_LINENO[1]-} ${FUNCNAME[2]}"
+  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\"" "$@" "($trace)" || return $?
   if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
 }
 _returnMessage() {
@@ -162,7 +162,7 @@ __usageMessageStyle() {
 __usageMessage() {
   local returnCode="${1-0}"
   # __IDENTICAL__ localTrace 1
-  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
+  local trace="§ ${BASH_SOURCE[2]#"${BUILD_HOME-}/"}:${BASH_LINENO[1]-} ${FUNCNAME[2]}"
   [ $# -eq 0 ] || shift
   local suffix="$*" icon="" style=""
   __usageMessageIcon "$returnCode"
@@ -783,7 +783,7 @@ _validateThrow() {
 # Valid validate type
 # Requires: _validateThrow
 __validateTypeType() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  [ -n "${1-}" ] || _validateThrow "validate Type is blank" || return $?
   local type="${1-:__NOT__}" typeFunction=""
   __validateMapper "$type"
   isFunction "$typeFunction" || _validateThrow "Invalid type $1 -> $type" || return $?
@@ -793,7 +793,7 @@ __validateTypeType() {
 # Non-empty string
 # Requires: _validateThrow
 __validateTypeString() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  [ -n "${1-}" ] || _validateThrow "validate String is blank" || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -815,7 +815,7 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL decorate 355
+# IDENTICAL decorate 357
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -852,11 +852,9 @@ _consoleHasColors() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Semantics-based
-#
+# Summary: output escape codes if console supports it
 # Argument: label - Text label
-# Argument: lightStartCode - Escape code label for light mode (color)
+# Argument: startCode - Escape code label for color or style
 # Argument: endCode - Escape end code
 # Argument: text ... - Text to output.
 # Requires: consoleHasColors printf
@@ -878,8 +876,11 @@ __decorate() {
 decorations() {
   [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
-    underline no-underline bold no-bold \
-    black black-contrast blue cyan green magenta orange red white yellow \
+    underline no-underline \
+    bold no-bold \
+    black black-contrast \
+    white white-contrast \
+    red green blue cyan orange magenta yellow \
     code info notice success warning error subtle label value decoration
 }
 _decorations() {
@@ -1030,7 +1031,7 @@ fi
 # Default array styles, override if you wish
 # Environment: __BUILD_DECORATE
 __decorateStylesBase() {
-  local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=48;5;0;37:yellow=48;5;16;38;5;11:"
+  local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=6:white-contrast=48;5;0;37:yellow=48;5;16;38;5;11:"
   styles="$styles:$(printf "%s:" "$@")"
   styles="$styles:code=97;44:warning=93;41 Warning:error=91 ERROR:"
   export __BUILD_DECORATE
@@ -1118,7 +1119,8 @@ __decorateExtensionEach() {
 
 # fn: decorate BOLD
 # Summary: Add bold style to another style
-# Example: decorate BOLD info Info is more important
+# Example: > `decorate BOLD info Info is more important`
+# Example: **`Info is more important`**
 # Argument: style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.
 # Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
 __decorateExtensionBOLD() {

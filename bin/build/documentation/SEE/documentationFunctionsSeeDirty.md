@@ -1,1 +1,1 @@
-[documentationFunctionsSeeDirty]({rel}tools/documentation.md#documentationfunctionsseedirty) - Dirty documentation files with unresolved \`SEE:\` tokens in documentation path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L986))
+[documentationFunctionsSeeDirty]({rel}tools/documentation.md#documentationfunctionsseedirty) - Dirty documentation files with unresolved \`SEE:\` tokens in documentation path ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L987))

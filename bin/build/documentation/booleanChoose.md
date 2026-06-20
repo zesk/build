@@ -24,7 +24,7 @@ Boolean selector
 
 #### Requires
 
-- [isBoolean]({rel}tools/sugar-core.md#isboolean) - Boolean test ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L79))
-- [returnArgument]({rel}tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L257))
+- {SEE:isBoolean}
+- {SEE:returnArgument}
 - [`printf`]({rel}guide/builtin.md#printf)
 

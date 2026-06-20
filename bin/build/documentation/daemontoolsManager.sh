@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--home serviceHome - Directory. Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.\n--interval intervalSeconds - PositiveInteger. Optional. Number of seconds to check for presence of the file. Defaults to 10.\n--stat statFile - FileDirectory. Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.\n--chirp chirpSeconds - PositiveInteger. Optional. Output a message saying we\'re alive every `chirpSeconds` seconds.\n--action actions - String. Optional. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.\nservice0 - Directory. Required. Service to control (e.g. `/etc/service/application/`)\nfile1 - File. Required. Absolute path to a file. Presence of  `file` triggers `action`\n'
 base="daemontools.sh"
@@ -13,6 +13,7 @@ fn="daemontoolsManager"
 fnMarker="daemontoolsmanager"
 foundNames=([0]="argument" [1]="environment")
 line="471"
+original="daemontoolsManager"
 rawComment=$'Runs a daemon which monitors files and operates on services.\nTo request a specific action write the file with the action as the first line.\nAllows control across user boundaries. (e.g. user can control root services)\nSpecify actions more than once on the command line to specify more than one set of permissions.\nArgument: --home serviceHome - Directory. Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.\nArgument: --interval intervalSeconds - PositiveInteger. Optional. Number of seconds to check for presence of the file. Defaults to 10.\nArgument: --stat statFile - FileDirectory. Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.\nArgument: --chirp chirpSeconds - PositiveInteger. Optional. Output a message saying we\'re alive every `chirpSeconds` seconds.\nArgument: --action actions - String. Optional. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.\nArgument: service0 - Directory. Required. Service to control (e.g. `/etc/service/application/`)\nArgument: file1 - File. Required. Absolute path to a file. Presence of  `file` triggers `action`\nEnvironment: DAEMONTOOLS_HOME - The default home directory for `daemontools`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/daemontools.sh"

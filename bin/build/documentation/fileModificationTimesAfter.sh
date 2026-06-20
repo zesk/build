@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'directory - Directory. Required. Must exist - directory to list.\ntimestamp - PositiveInteger. Required. Timestamp to compare file timestamps with.\nfindArgs - Arguments. Optional. Optional additional arguments to modify the find query\n'
 base="file.sh"
@@ -13,6 +13,7 @@ fn="fileModificationTimesAfter"
 fnMarker="filemodificationtimesafter"
 foundNames=([0]="argument" [1]="example" [2]="output")
 line="170"
+original="fileModificationTimesAfter"
 output=$'1704312758 bin/build/deprecated.sh\n1705347087 bin/build/tools.sh\n1705442647 bin/build/build.json\n'
 rawComment=$'List files modified after a specific timestamp (inclusive)\nOutput is sorted from newest time to oldest time (reverse chronological).\nArgument: directory - Directory. Required. Must exist - directory to list.\nArgument: timestamp - PositiveInteger. Required. Timestamp to compare file timestamps with.\nArgument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query\nExample: {fn} "$myDir" "$yesterdayNoon" ! -path "*/.*/*"\nOutput: 1704312758 bin/build/deprecated.sh\nOutput: 1705347087 bin/build/tools.sh\nOutput: 1705442647 bin/build/build.json\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

@@ -678,3 +678,40 @@ _bashFunctionNameValid() {
 #              to each member of the array in turn, and the expansion is the resultant list.
 #
 #              The result of the expansion is subject to word splitting and pathname expansion as described below.
+
+# Summary: Create aliases for projects
+# stdin: String Directory String:line
+# Reads from `stdin` lines which is broken into three tokens by spaces:
+#     alias pathName projectName
+# The directories which exist at $HOME/$pathName will have aliases created for the project in Bash:
+# - `g-alias` - Change directory to this project (temporary)
+# - `G-alias` - Change directory and set application home to this project (survives logout)
+# The `projectName` is optional as it is extracted from the target project using the `APPLICATION_NAME`.
+# Environment: APPLICATION_NAME
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+bashApplicationAliases() {
+  __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_bashApplicationAliases() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Create alias for project
+# This creates an alias for a project:
+# - `g-alias` - Change directory to this project (temporary)
+# - `G-alias` - Change directory and set application home to this project (survives logout)
+# stdout: ConsoleText
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: alias - String. Required. Alias to generate.
+# Argument: path - UserDirectory. Required. Project path relative to user home (or absolute)
+# Argument: name - String. Optional. Project name to use
+bashApplicationAlias() {
+  __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_bashApplicationAlias() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

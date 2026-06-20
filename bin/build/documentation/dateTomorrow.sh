@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--local - Flag. Optional. Local tomorrow\n--help - Flag. Optional. Display this help.\n'
 base="date.sh"
@@ -13,6 +13,7 @@ fn="dateTomorrow"
 fnMarker="datetomorrow"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires")
 line="145"
+original="dateTomorrow"
 rawComment=$'Summary: Tomorrow\'s date in UTC\nReturns tomorrow\'s date (UTC time), in `YYYY-MM-DD` format. (same as `%F`)\nArgument: --local - Flag. Optional. Local tomorrow\nArgument: --help - Flag. Optional. Display this help.\nExample:     rotated="$log.$({fn})"\nRequires: throwArgument date convertValue dateFromTimestamp bashDocumentation\n\n'
 requires=$'throwArgument date convertValue dateFromTimestamp bashDocumentation\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

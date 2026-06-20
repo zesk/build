@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'applicationPath - Directory. Required. Application target path.\n'
 base="deploy.sh"
@@ -12,6 +12,7 @@ fn="deployMove"
 fnMarker="deploymove"
 foundNames=([0]="argument")
 line="192"
+original="deployMove"
 rawComment=$'Safe application deployment by moving\nArgument: applicationPath - Directory. Required. Application target path.\nDeploy current application to target path\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deploy.sh"

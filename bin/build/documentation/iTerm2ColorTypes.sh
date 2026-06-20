@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="iterm2.sh"
@@ -12,10 +12,11 @@ fn="iTerm2ColorTypes"
 fnMarker="iterm2colortypes"
 foundNames=()
 line="240"
+original="iTerm2ColorTypes"
 rawComment=$'Colors for various UI elements\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="58eeb81a4d81f00507a1a74ca99c3238d4499cb1"
+sourceHash="04b5b95900782435a2524d52704ddd8201c9d15c"
 sourceLine="240"
 summary="Colors for various UI elements"
 summaryComputed="true"

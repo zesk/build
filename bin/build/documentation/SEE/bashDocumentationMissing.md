@@ -1,1 +1,1 @@
-[bashDocumentationMissing]({rel}tools/documentation.md#bashdocumentationmissing) - Generate templates of functions missing from documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L770))
+[bashDocumentationMissing]({rel}tools/documentation.md#bashdocumentationmissing) - Generate templates of functions missing from documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L772))

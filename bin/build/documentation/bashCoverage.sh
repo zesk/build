@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--target reportFile - File. Optional. Write coverage data to this file.\nthingToRun - Callable. Required. Function to run and collect coverage data.\n'
 base="coverage.sh"
@@ -12,6 +12,7 @@ fn="bashCoverage"
 fnMarker="bashcoverage"
 foundNames=([0]="argument" [1]="see")
 line="15"
+original="bashCoverage"
 rawComment=$'Argument: --target reportFile - File. Optional. Write coverage data to this file.\nArgument: thingToRun - Callable. Required. Function to run and collect coverage data.\nCollect code coverage statistics for a code sample\nConvert resulting files using `bashCoverageReport`\nSee: bashCoverageReport\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'bashCoverageReport\n'

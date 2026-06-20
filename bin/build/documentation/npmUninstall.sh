@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="npm.sh"
@@ -12,6 +12,7 @@ fn="npmUninstall"
 fnMarker="npmuninstall"
 foundNames=()
 line="68"
+original="npmUninstall"
 rawComment=$'Core as part of some systems - so this succeeds and it still exists\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/npm.sh"

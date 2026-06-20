@@ -1,0 +1,1 @@
+[decorate box]({rel}tools/decorate.md#__decorateextensionbox) - Box around content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/box.sh#L58))

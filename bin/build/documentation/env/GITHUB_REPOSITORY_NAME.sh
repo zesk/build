@@ -10,6 +10,7 @@ file="bin/build/env/GITHUB_REPOSITORY_NAME.sh"
 fn="GITHUB_REPOSITORY_NAME"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="GitHub Repository Name"
+original="GITHUB_REPOSITORY_NAME"
 rawComment=$'Name: GitHub Repository Name\nSee: githubRelease\nCategory: Development\nType: String\nRepository name for release\n\n'
 see=$'githubRelease\n'
 sourceFile="bin/build/env/GITHUB_REPOSITORY_NAME.sh"

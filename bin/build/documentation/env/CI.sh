@@ -10,6 +10,7 @@ file="bin/build/env/CI.sh"
 fn="CI"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Continuous Integration"
+original="CI"
 rawComment=$'Name: Continuous Integration\nIf this value is non-blank, then console `statusMessage`s are just output normally.\nSee: statusMessage\nSee: consoleHasAnimation\nContinuous Integration - this is set to a non-blank value in:\n- Bitbucket pipelines\nCategory: Continuous Integration\nType: String\n\n'
 see=$'statusMessage\nconsoleHasAnimation\n'
 sourceFile="bin/build/env/CI.sh"

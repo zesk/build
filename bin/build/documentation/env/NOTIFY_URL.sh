@@ -10,6 +10,7 @@ file="bin/build/env/NOTIFY_URL.sh"
 fn="NOTIFY_URL"
 foundNames=([0]="name" [1]="category" [2]="type" [3]="see")
 name="Notification URL"
+original="NOTIFY_URL"
 rawComment=$'Name: Notification URL\nCategory: Notify\nType: URL\nURL to send default notifications\nSee: notifyURL\n\n'
 see=$'notifyURL\n'
 sourceFile="bin/build/env/NOTIFY_URL.sh"

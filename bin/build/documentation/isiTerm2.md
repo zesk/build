@@ -23,6 +23,6 @@ Succeeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`
 
 #### Environment
 
-- [`LC_TERMINAL` Terminal Application]({rel}env/#bash) – **String**. LC_TERMINAL typically identifies the terminal application
-- [`TERM` Terminal Type]({rel}env/#bash) – **String**. The current terminal type.
+- {SEE:LC_TERMINAL}
+- {SEE:TERM}
 

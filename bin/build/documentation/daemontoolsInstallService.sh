@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--home serviceHome - Path. Optional. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.\nserviceFile - Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.\nserviceName - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.\n--name serviceName - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.\n--log logHome - Path. Optional. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`\n--escalate - Flag. Optional. Only if the source file is owned by a non-root user.\n--log-arguments ... -- - ArgumentsList. Optional. List of arguments for the logger.\n--arguments ... -- - ArgumentsList. Optional. List of arguments for the service.\n-- ... - Arguments. Optional. List of arguments for the service.\n'
 base="daemontools.sh"
@@ -12,6 +12,7 @@ fn="daemontoolsInstallService"
 fnMarker="daemontoolsinstallservice"
 foundNames=([0]="argument")
 line="54"
+original="daemontoolsInstallService"
 rawComment=$'Install a daemontools service which runs a binary as the file owner.\nInstalls a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.\nArgument: --home serviceHome - Path. Optional. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.\nArgument: serviceFile - Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.\nArgument: serviceName - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.\nArgument: --name serviceName - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.\nArgument: --log logHome - Path. Optional. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`\nArgument: --escalate - Flag. Optional. Only if the source file is owned by a non-root user.\nArgument: --log-arguments ... -- - ArgumentsList. Optional. List of arguments for the logger.\nArgument: --arguments ... -- - ArgumentsList. Optional. List of arguments for the service.\nArgument: -- ... - Arguments. Optional. List of arguments for the service.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/daemontools.sh"

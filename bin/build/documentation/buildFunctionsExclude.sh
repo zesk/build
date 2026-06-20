@@ -1,24 +1,25 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="build.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Removes any function from the text stream which is in \`buildFunctions\`"$'\n'""$'\n'""
+description=$'Removes any function from the text stream which is in `buildFunctions`\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/build.sh"
 fn="buildFunctionsExclude"
 fnMarker="buildfunctionsexclude"
 foundNames=([0]="summary" [1]="stdin" [2]="stdout" [3]="argument")
 line="130"
-rawComment="Summary: Exclude any function which is a build function"$'\n'"Removes any function from the text stream which is in \`buildFunctions\`"$'\n'"stdin: line:Function"$'\n'"stdout: line:Function"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="buildFunctionsExclude"
+rawComment=$'Summary: Exclude any function which is a build function\nRemoves any function from the text stream which is in `buildFunctions`\nstdin: line:Function\nstdout: line:Function\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
 sourceHash="3536417f338a1ca40272c9da86efb3b9c3c2d9de"
 sourceLine="130"
-stdin="line:Function"$'\n'""
-stdout="line:Function"$'\n'""
+stdin=$'line:Function\n'
+stdout=$'line:Function\n'
 summary="Exclude any function which is a build function"
 summaryComputed=""
 usage="buildFunctionsExclude [ --help ]"

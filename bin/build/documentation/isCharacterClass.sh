@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'className - String. Required. Class to check.\ncharacter ... - String. Optional. Characters to test.\n--help - Flag. Optional. Display this help.\n'
 base="character.sh"
@@ -12,6 +12,7 @@ fn="isCharacterClass"
 fnMarker="ischaracterclass"
 foundNames=([0]="argument")
 line="172"
+original="isCharacterClass"
 rawComment=$'Poor-man\'s bash character class matching\nReturns true if all `characters` are of `className`\n`className` can be one of:\n    alnum   alpha   ascii   blank   cntrl   digit   graph   lower\n    print   punct   space   upper   word    xdigit\nArgument: className - String. Required. Class to check.\nArgument: character ... - String. Optional. Characters to test.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/character.sh"

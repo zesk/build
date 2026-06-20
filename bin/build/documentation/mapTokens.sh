@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'`prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)\n`suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)\n'
 base="map.sh"
@@ -14,6 +14,7 @@ fn="mapTokens"
 fnMarker="maptokens"
 foundNames=([0]="argument" [1]="environment" [2]="short_description" [3]="depends")
 line="118"
+original="mapTokens"
 rawComment=$'Argument: `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)\nArgument: `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)\nEnvironment: None.\nShort description: list mappable variables in a file (without prefix or suffix)\nDepends: sed quoteSedPattern\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 short_description=$'list mappable variables in a file (without prefix or suffix)\n'

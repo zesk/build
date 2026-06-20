@@ -169,40 +169,17 @@ _colorSampleCombinations() {
 
 # Summary: Output colors
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
-#
+# stdout: ConsoleText
 colorSampleStyles() {
   [ $# -eq 0 ] || helpArgument "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  local styles=(
-    red
-    green
-    blue
-    cyan
-    orange
-    magenta
-    black
-    black-contrast
-    white
-    underline
-    bold
-    code
-    info
-    notice
-    success
-    error
-    label
-    value
-    warning
-    decoration
-    subtle
-  )
   local text="$*" i
   [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
-  local style && for style in "${styles[@]}"; do
+  local style && while read -r style; do
     local label
-    label=$(textAlignLeft 10 "$style")
+    label=$(textAlignLeft 15 "$style")
     printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$style" "     $label: $text")"
     printf -- "%s%s\n" "$(decorate reset --)" "$(decorate BOLD "$style" "BOLD $label: $text")"
-  done
+  done < <(decorations)
 }
 _colorSampleStyles() {
   # __IDENTICAL__ bashDocumentation 1

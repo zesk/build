@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="yum.sh"
@@ -12,6 +12,7 @@ fn="yumIsInstalled"
 fnMarker="yumisinstalled"
 foundNames=([0]="summary" [1]="argument")
 line="14"
+original="yumIsInstalled"
 rawComment=$'Summary: Is yum installed?\nIs the yum package manager installed?\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/yum.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="iterm2.sh"
@@ -13,10 +13,11 @@ fn="isiTerm2"
 fnMarker="isiterm2"
 foundNames=([0]="argument" [1]="environment")
 line="36"
+original="isiTerm2"
 rawComment=$'Is the current console iTerm2?\nSucceeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: LC_TERMINAL\nEnvironment: TERM\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/iterm2.sh"
-sourceHash="58eeb81a4d81f00507a1a74ca99c3238d4499cb1"
+sourceHash="04b5b95900782435a2524d52704ddd8201c9d15c"
 sourceLine="36"
 summary="Is the current console iTerm2?"
 summaryComputed="true"

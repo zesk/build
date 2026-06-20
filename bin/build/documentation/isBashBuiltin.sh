@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'builtin - String. Required. String to check if it\'s a bash builtin.\n'
 base="bash.sh"
@@ -12,10 +12,11 @@ fn="isBashBuiltin"
 fnMarker="isbashbuiltin"
 foundNames=([0]="summary" [1]="argument" [2]="return_code")
 line="100"
+original="isBashBuiltin"
 rawComment=$'Summary: Is a token a bash builtin?\nUseful for introspection or validation - checks if a token is a bash built-in (e.g. `cd`) vs. a binary on the system (`/bin/cd`).\nImplementation taken directly from the Bash man page.\nArgument: builtin - String. Required. String to check if it\'s a bash builtin.\nReturn Code: 0 - Yes, this string is a bash builtin command.\nReturn Code: 1 - No, this is not a bash builtin command\n\n'
 return_code=$'0 - Yes, this string is a bash builtin command.\n1 - No, this is not a bash builtin command\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="100"
 summary="Is a token a bash builtin?"
 summaryComputed=""

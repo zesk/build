@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_NPM_VERSION.sh"
 fn="BUILD_NPM_VERSION"
 foundNames=([0]="name" [1]="see" [2]="type" [3]="category")
 name="npm Version"
+original="BUILD_NPM_VERSION"
 rawComment=$'Name: npm Version\nVersion of npm to install using native `npm` binary.\nSee: npmInstall\nType: String\nCategory: Installation\n\n'
 see=$'npmInstall\n'
 sourceFile="bin/build/env/BUILD_NPM_VERSION.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 apt_get=$'xxd\n'
 argument="none"
@@ -14,6 +14,7 @@ fn="dumpBinary"
 fnMarker="dumpbinary"
 foundNames=([0]="depends" [1]="apt_get" [2]="stdin" [3]="stdout")
 line="464"
+original="dumpBinary"
 rawComment=$'Dumps output as hex\nDepends: xxd\napt-get: xxd\nstdin: binary\nstdout: formatted output set to ideal `consoleColumns`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/dump.sh"

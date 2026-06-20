@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.\ntext - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.\n'
 base="date.sh"
@@ -12,6 +12,7 @@ fn="dateValid"
 fnMarker="datevalid"
 foundNames=([0]="summary" [1]="argument")
 line="192"
+original="dateValid"
 rawComment=$'Summary: Is a date valid?\nChecks a date syntax and ensures it\'s a valid calendar date.\nArgument: --help - Flag. Optional. Display this help.\nArgument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.\nArgument: text - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/date.sh"

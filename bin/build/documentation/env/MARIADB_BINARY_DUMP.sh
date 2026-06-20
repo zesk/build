@@ -11,6 +11,7 @@ file="bin/build/env/MARIADB_BINARY_DUMP.sh"
 fn="MARIADB_BINARY_DUMP"
 foundNames=([0]="name" [1]="default" [2]="category" [3]="vendor" [4]="type")
 name="mariadb Dump Executable"
+original="MARIADB_BINARY_DUMP"
 rawComment=$'Name: mariadb Dump Executable\nMariaDB binary for dump\nDefault: blank\nCategory: Vendor\nVendor: MariaDBa\nType: Executable\n\n'
 sourceFile="bin/build/env/MARIADB_BINARY_DUMP.sh"
 sourceHash="830d3b7eee7dab10f88f29a8982e68546bd9c45f"

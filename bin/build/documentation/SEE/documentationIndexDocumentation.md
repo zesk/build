@@ -1,1 +1,1 @@
-[documentationIndexDocumentation]({rel}tools/documentation.md#documentationindexdocumentation) - Generate the documentation index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L350))
+[documentationIndexDocumentation]({rel}tools/documentation.md#documentationindexdocumentation) - Generate the documentation index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L352))

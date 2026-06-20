@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'duration - UnsignedInteger. Optional. Timing to output\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--stop stopUnit - String. Optional. Stop displaying fractional output after this unit is displayed.\n'
 base="timing.sh"
@@ -12,6 +12,7 @@ fn="timingDuration"
 fnMarker="timingduration"
 foundNames=([0]="argument")
 line="191"
+original="timingDuration"
 rawComment=$'Output timing like "1 day, 2 hours, 3 minutes, 4 seconds, 5 ms"\nArgument: duration - UnsignedInteger. Optional. Timing to output\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --stop stopUnit - String. Optional. Stop displaying fractional output after this unit is displayed.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/timing.sh"

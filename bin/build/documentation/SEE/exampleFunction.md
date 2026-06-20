@@ -1,1 +1,0 @@
-[exampleFunction]({rel}tools/unused.md#examplefunction) - This is a sample function with example code and patterns ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L42))

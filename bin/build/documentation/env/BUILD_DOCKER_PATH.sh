@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_DOCKER_PATH.sh"
 fn="BUILD_DOCKER_PATH"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Docker Mapped Path"
+original="BUILD_DOCKER_PATH"
 rawComment=$'Name: Docker Mapped Path\nDefault path for the shell to map the current directory to when launching `dockerLocalContainer`\nSee: dockerLocalContainer\nCategory: Docker\nType: RemoteDirectory\n\n'
 see=$'dockerLocalContainer\n'
 sourceFile="bin/build/env/BUILD_DOCKER_PATH.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--verbose - Flag. Optional. Be verbose.\n--file modifiedFile - File. Optional. Last known modified file in this directory.\n--modified modifiedTimestamp - UnsignedInteger. Optional. Last known modification timestamp in this directory.\n--timeout secondsToRun - UnsignedInteger. Optional. Last known modification timestamp in this directory.\n--state stateFile - File. Optional. Output of `fileModificationTimes` will be saved here (and modified)\ndirectory - Directory. Required. Directory to watch\nfindArguments ... - Arguments. Optional. Passed to find to filter the files examined.\n'
 base="watch.sh"
@@ -12,10 +12,11 @@ fn="directoryWatch"
 fnMarker="directorywatch"
 foundNames=([0]="argument")
 line="20"
+original="directoryWatch"
 rawComment=$'Watch a directory\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --verbose - Flag. Optional. Be verbose.\nArgument: --file modifiedFile - File. Optional. Last known modified file in this directory.\nArgument: --modified modifiedTimestamp - UnsignedInteger. Optional. Last known modification timestamp in this directory.\nArgument: --timeout secondsToRun - UnsignedInteger. Optional. Last known modification timestamp in this directory.\nArgument: --state stateFile - File. Optional. Output of `fileModificationTimes` will be saved here (and modified)\nArgument: directory - Directory. Required. Directory to watch\nArgument: findArguments ... - Arguments. Optional. Passed to find to filter the files examined.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/watch.sh"
-sourceHash="937d5c7e5518dc14814a077c6f33ba79b085abbf"
+sourceHash="5cb0cdd7f6e7f9fddb25a524f1ed3f1ca0440b7e"
 sourceLine="20"
 summary="Watch a directory"
 summaryComputed="true"

@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="text - Text to quote"$'\n'""
+argument=$'text - Text to quote\n'
 base="quote.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Quote strings for inclusion in shell quoted strings"$'\n'""$'\n'"Without arguments, displays help."$'\n'""$'\n'""
+description=$'Quote strings for inclusion in shell quoted strings\n\nWithout arguments, displays help.\n\n'
 descriptionLineCount="4"
-example="    escapeSingleQuotes \"Now I can't not include this in a bash string.\""$'\n'""
+example=$'    escapeSingleQuotes "Now I can\'t not include this in a bash string."\n'
 file="bin/build/tools/quote.sh"
 fn="escapeSingleQuotes"
 fnMarker="escapesinglequotes"
 foundNames=([0]="argument" [1]="output" [2]="example")
 line="105"
-output="Single quotes are prefixed with a backslash"$'\n'""
-rawComment="Quote strings for inclusion in shell quoted strings"$'\n'"Without arguments, displays help."$'\n'"Argument: text - Text to quote"$'\n'"Output: Single quotes are prefixed with a backslash"$'\n'"Example:     {fn} \"Now I can't not include this in a bash string.\""$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="escapeSingleQuotes"
+output=$'Single quotes are prefixed with a backslash\n'
+rawComment=$'Quote strings for inclusion in shell quoted strings\nWithout arguments, displays help.\nArgument: text - Text to quote\nOutput: Single quotes are prefixed with a backslash\nExample:     {fn} "Now I can\'t not include this in a bash string."\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/quote.sh"
 sourceHash="41b7d7acdf58cdf28d010236a6cc47c39bb9d935"
 sourceLine="105"

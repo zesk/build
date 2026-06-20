@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--show - Flag. Optional. Show what would change, do not change anything.\nurl ... - URL. Required. AWS S3 URL to delete\n'
 base="aws.sh"
@@ -12,6 +12,7 @@ fn="awsS3DirectoryDelete"
 fnMarker="awss3directorydelete"
 foundNames=([0]="argument")
 line="417"
+original="awsS3DirectoryDelete"
 rawComment=$'Delete a directory remotely on S3\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --show - Flag. Optional. Show what would change, do not change anything.\nArgument: url ... - URL. Required. AWS S3 URL to delete\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/aws.sh"

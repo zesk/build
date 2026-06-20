@@ -33,5 +33,5 @@ Runs ARM64 by default.
 
 #### Environment
 
-- [`BUILD_DOCKER_PLATFORM` Docker Platform]({rel}env/#docker) – **String**. The platform for `dockerLocalContainer`
+- {SEE:BUILD_DOCKER_PLATFORM}
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--cache cacheDirectory - Optional. Directory.\n--target targetDirectory - Optional. Directory.\nstatsFile - File. Required.\n'
 base="coverage.sh"
@@ -12,6 +12,7 @@ fn="bashCoverageReport"
 fnMarker="bashcoveragereport"
 foundNames=([0]="summary" [1]="argument" [2]="stdin")
 line="58"
+original="bashCoverageReport"
 rawComment=$'Generate a coverage report using the coverage statistics file\n*This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.*\nSummary: Experimental. Likely abandon.\nArgument: --cache cacheDirectory - Optional. Directory.\nArgument: --target targetDirectory - Optional. Directory.\nArgument: statsFile - File. Required.\nstdin: Accepts a stats file\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/coverage.sh"

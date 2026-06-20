@@ -11,6 +11,7 @@ file="bin/build/env/BUILD_COMPOSER_VERSION.sh"
 fn="BUILD_COMPOSER_VERSION"
 foundNames=([0]="name" [1]="type" [2]="default" [3]="see" [4]="category")
 name="Composer Version"
+original="BUILD_COMPOSER_VERSION"
 rawComment=$'Name: Composer Version\nVersion of composer to use for building vendor directory\nType: String\nDefault: latest\nSee: phpComposer\nCategory: Installation\n\n'
 see=$'phpComposer\n'
 sourceFile="bin/build/env/BUILD_COMPOSER_VERSION.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nurl - String. Required. a Uniform Resource Locator\n--prefix prefix - String. Optional. Prefix variable names with this string.\n--integer-port - Flag. Optional. Force the value of `port` to an integer value even if the URL does not provide the port number explicitly.\n--stringUppercase - Flag. Optional. Output variable names in upper case, not lower case (the default).\n'
 base="url.sh"
@@ -13,10 +13,11 @@ fn="urlParse"
 fnMarker="urlparse"
 foundNames=([0]="return_code" [1]="summary" [2]="argument" [3]="example")
 line="93"
+original="urlParse"
 rawComment=$'Simple URL parsing. Converts a `url` into values which can be parsed or evaluated.\nGenerates output which can be evaluated and separates the URL into components.\n- `url` - URL\n- `host` - Host\n- `user` - User\n- `password` - Password\n- `port` - Connection port\n- `name` - Path with the first slash removed\n- `path` - Path\nDoes little to no validation of any characters so best used for well-formed input.\nNow works on multiple URLs, output is separated by a blank line for new entries\nReturn Code: 0 - If parsing succeeds\nReturn Code: 1 - If parsing fails\nSummary: Simple URL Parsing\nArgument: --help - Flag. Optional. Display this help.\nArgument: url - String. Required. a Uniform Resource Locator\nArgument: --prefix prefix - String. Optional. Prefix variable names with this string.\nArgument: --integer-port - Flag. Optional. Force the value of `port` to an integer value even if the URL does not provide the port number explicitly.\nArgument: --stringUppercase - Flag. Optional. Output variable names in upper case, not lower case (the default).\nExample:     eval "$(urlParse scheme://user:password@host:port/path)"\nExample:     echo $name\n\n'
 return_code=$'0 - If parsing succeeds\n1 - If parsing fails\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="3ed3b955b3a7b632b60fea2e330a81c2699cd660"
+sourceHash="f32b7cbe9339aa8f7842cb180b43f028a41f69e6"
 sourceLine="93"
 summary="Simple URL Parsing"
 summaryComputed=""

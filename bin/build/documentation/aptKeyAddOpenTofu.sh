@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="tofu.sh"
@@ -12,6 +12,7 @@ fn="aptKeyAddOpenTofu"
 fnMarker="aptkeyaddopentofu"
 foundNames=([0]="argument" [1]="return_code" [2]="see")
 line="19"
+original="aptKeyAddOpenTofu"
 rawComment=$'Add keys to enable apt to download tofu directly from opentofu.org\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 1 - if environment is awry\nReturn Code: 0 - All good to install terraform\nSee: aptKeyRemoveOpenTofu\n\n'
 return_code=$'1 - if environment is awry\n0 - All good to install terraform\n'
 see=$'aptKeyRemoveOpenTofu\n'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\npattern ... - String. Required.`grep -e` Pattern to find in files.\n-- - Delimiter. Required. exception.\nexception ... - String. Optional. `grep -e` File pattern which should be ignored.\n-- - Delimiter. Required. file.\nfile ... - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.\n'
 base="file.sh"
@@ -12,6 +12,7 @@ fn="fileNotMatches"
 fnMarker="filenotmatches"
 foundNames=([0]="argument")
 line="677"
+original="fileNotMatches"
 rawComment=$'Find list of files which do NOT match a specific pattern or patterns and output them\nArgument: --help - Flag. Optional. Display this help.\nArgument: pattern ... - String. Required.`grep -e` Pattern to find in files.\nArgument: -- - Delimiter. Required. exception.\nArgument: exception ... - String. Optional. `grep -e` File pattern which should be ignored.\nArgument: -- - Delimiter. Required. file.\nArgument: file ... - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"

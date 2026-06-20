@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -12,6 +12,7 @@ fn="gitPreCommitSetup"
 fnMarker="gitprecommitsetup"
 foundNames=([0]="see" [1]="argument" [2]="return_code")
 line="882"
+original="gitPreCommitSetup"
 rawComment=$'Set up a pre-commit hook and create a cache of our files by extension.\nSee: gitPreCommitCleanup\nArgument: --help - Flag. Optional. Display this help.\nReturn code: 0 - One or more files are available as part of the commit\nReturn code: 1 - Error, or zero files are available as part of the commit\n\n'
 return_code=$'0 - One or more files are available as part of the commit\n1 - Error, or zero files are available as part of the commit\n'
 see=$'gitPreCommitCleanup\n'

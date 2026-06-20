@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_URL_BINARY.sh"
 fn="BUILD_URL_BINARY"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="URL Executable"
+original="BUILD_URL_BINARY"
 rawComment=$'Name: URL Executable\nBinary used in __urlOpen\nSee: urlOpen\nCategory: Decoration\nType: Callable\n\n'
 see=$'urlOpen\n'
 sourceFile="bin/build/env/BUILD_URL_BINARY.sh"

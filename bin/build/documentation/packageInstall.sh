@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'package - One or more packages to install\n--verbose - Flag. Optional. Display progress to the terminal.\n--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n--force - Flag. Optional. Force even if it was updated recently.\n--show-log - Flag. Optional. Show package manager logs.\n'
 artifact=$'`packageInstall.log` is left in the `buildCacheDirectory`\n'
@@ -14,6 +14,7 @@ fn="packageInstall"
 fnMarker="packageinstall"
 foundNames=([0]="example" [1]="return_code" [2]="summary" [3]="argument" [4]="artifact")
 line="377"
+original="packageInstall"
 rawComment=$'Install packages using a package manager.\nSupported managers:\n- apk\n- apt-get\n- brew\nExample:     {fn} shellcheck\nReturn Code: 0 - If `apk` is not installed, returns 0.\nReturn Code: 1 - If `apk` fails to install the packages\nSummary: Install packages using a package manager\nArgument: package - One or more packages to install\nArtifact: `{fn}.log` is left in the `buildCacheDirectory`\nArgument: --verbose - Flag. Optional. Display progress to the terminal.\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nArgument: --force - Flag. Optional. Force even if it was updated recently.\nArgument: --show-log - Flag. Optional. Show package manager logs.\n\n'
 return_code=$'0 - If `apk` is not installed, returns 0.\n1 - If `apk` fails to install the packages\n'
 sourceFile="bin/build/tools/package.sh"

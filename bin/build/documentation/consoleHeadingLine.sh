@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'barText - String. Required. Text to fill line with, repeated. If not specified uses `-`\ndisplayText - String. Optional.  Text to display on the line before the fill bar.\n'
 base="line.sh"
@@ -12,6 +12,7 @@ fn="consoleHeadingLine"
 fnMarker="consoleheadingline"
 foundNames=([0]="argument")
 line="60"
+original="consoleHeadingLine"
 rawComment=$'Output a line and fill columns with a character\nArgument: barText - String. Required. Text to fill line with, repeated. If not specified uses `-`\nArgument: displayText - String. Optional.  Text to display on the line before the fill bar.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/line.sh"

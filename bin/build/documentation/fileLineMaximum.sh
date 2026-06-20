@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="fileLineMaximum"
 fnMarker="filelinemaximum"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="677"
+original="fileLineMaximum"
 rawComment=$'Outputs the maximum line length passed into stdin\nArgument: --help - Flag. Optional. Display this help.\nstdin: Lines are read from standard in and line length is computed for each line\nstdout: `UnsignedInteger`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

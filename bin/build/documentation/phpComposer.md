@@ -37,5 +37,5 @@ This tool uses the local `.composer` directory to cache information between buil
 
 #### Environment
 
-- [`BUILD_COMPOSER_VERSION` Composer Version]({rel}env/#installation) – **String**. Version of composer to use for building vendor directory - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
+- {SEE:BUILD_COMPOSER_VERSION} - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code
 

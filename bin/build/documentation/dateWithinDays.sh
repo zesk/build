@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'keyDate - Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.\nupToDateDays - Integer. Optional. Days that key expires after `keyDate`. Default is 90.\n--name name - String. Optional. Name of the expiring item for error messages.\n--help - Flag. Optional. Display this help.\n'
 base="date.sh"
@@ -13,6 +13,7 @@ fn="dateWithinDays"
 fnMarker="datewithindays"
 foundNames=([0]="summary" [1]="stdout" [2]="return_code" [3]="argument" [4]="example")
 line="271"
+original="dateWithinDays"
 rawComment=$'Summary: Is a date in the past beyond its expiration date?\nstdout: Two tokens on a single line:\nstdout: - UnsignedInteger. Days until expiration.\nstdout: - UnsignedInteger. Expiration timestamp.\nThis tool checks the `keyDate` and checks if it is within `days` of today; if not this fails.\nIt will also fail if:\n- `keyDate` is empty or has an invalid value\n- `upToDateDays` is less than zero\nReturn code: 0 - The date has not expired.\nReturn code: 1 - The date has expired.\nReturn code: 2 - The date is incorrectly formatted.\nReturn code: 2 - Argument error.\nArgument: keyDate - Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.\nArgument: upToDateDays - Integer. Optional. Days that key expires after `keyDate`. Default is 90.\nArgument: --name name - String. Optional. Name of the expiring item for error messages.\nArgument: --help - Flag. Optional. Display this help.\nExample:     if ! dateWithinDays "$AWS_ACCESS_KEY_DATE" 90; then\nExample:       decorate big Failed, update key and reset date\nExample:       exit 99\nExample:     fi\n\n'
 return_code=$'0 - The date has not expired.\n1 - The date has expired.\n2 - The date is incorrectly formatted.\n2 - Argument error.\n'
 sourceFile="bin/build/tools/date.sh"

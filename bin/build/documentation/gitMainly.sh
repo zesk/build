@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
@@ -12,6 +12,7 @@ fn="gitMainly"
 fnMarker="gitmainly"
 foundNames=([0]="return_code")
 line="572"
+original="gitMainly"
 rawComment=$'Return Code: 1 - Already in main, staging, or HEAD, or git merge failed\nReturn Code: 0 - git merge succeeded\nMerge `staging` and `main` branches of a git repository into the current branch.\nWill merge `origin/staging` and `origin/main` after doing a `--pull` for both of them\nCurrent repository should be clean and have no modified files.\n\n'
 return_code=$'1 - Already in main, staging, or HEAD, or git merge failed\n0 - git merge succeeded\n'
 sourceFile="bin/build/tools/git.sh"

@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_NOTIFY_SOUND.sh"
 fn="BUILD_NOTIFY_SOUND"
 foundNames=([0]="name" [1]="see" [2]="type" [3]="category")
 name="Notification Sound"
+original="BUILD_NOTIFY_SOUND"
 rawComment=$'Name: Notification Sound\nSound for notifications. Set to `-` for no sound. Defaults to `zesk-build-notification`.\nSee: darwinNotification\nType: String\nCategory: Build Configuration\n\n'
 see=$'darwinNotification\n'
 sourceFile="bin/build/env/BUILD_NOTIFY_SOUND.sh"

@@ -10,6 +10,7 @@ file="bin/build/env/APPLICATION_TAG.sh"
 fn="APPLICATION_TAG"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Application Tag"
+original="APPLICATION_TAG"
 rawComment=$'Name: Application Tag\nThis is the full version number including debugging or release identifiers\nCategory: Deployment\nType: String\n\n'
 sourceFile="bin/build/env/APPLICATION_TAG.sh"
 sourceHash="702216b2313c66115e74459d4a4e5249d9e1d2c9"

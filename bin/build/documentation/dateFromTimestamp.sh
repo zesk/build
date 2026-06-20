@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'integerTimestamp - Integer. Required. Integer. Required. Integer timestamp offset (Seconds since 1/1/1970 UTC, same as `$(date +%s)`)\nformat - String. Optional. How to output the date (e.g. `%F` - no `+` is required)\n--help - Flag. Optional. Display this help.\n--local - Flag. Optional. Show the local time, not UTC.\n'
 base="date.sh"
@@ -15,6 +15,7 @@ fn="dateFromTimestamp"
 fnMarker="datefromtimestamp"
 foundNames=([0]="example" [1]="argument" [2]="environment" [3]="return_code" [4]="requires")
 line="75"
+original="dateFromTimestamp"
 rawComment=$'Converts an integer date to a date formatted timestamp (e.g. `%Y-%m-%d %H:%M:%S`)\nExample:     dateFromTimestamp 1681966800 %F\nArgument: integerTimestamp - Integer. Required. Integer. Required. Integer timestamp offset (Seconds since 1/1/1970 UTC, same as `$(date +%s)`)\nArgument: format - String. Optional. How to output the date (e.g. `%F` - no `+` is required)\nArgument: --help - Flag. Optional. Display this help.\nArgument: --local - Flag. Optional. Show the local time, not UTC.\nEnvironment: Compatible with BSD and GNU date.\nReturn Code: 0 - If parsing is successful\nReturn Code: 1 - If parsing fails\nExample:     dateField=$(dateFromTimestamp $init %Y)\nRequires: throwArgument decorate validate __dateFromTimestamp bashDocumentation\n\n'
 requires=$'throwArgument decorate validate __dateFromTimestamp bashDocumentation\n'
 return_code=$'0 - If parsing is successful\n1 - If parsing fails\n'

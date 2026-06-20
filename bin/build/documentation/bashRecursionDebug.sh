@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--end - Flag. Optional. Stop testing for recursion."$'\n'""
+argument=$'--end - Flag. Optional. Stop testing for recursion.\n'
 base="debug.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Place this in code where you suspect an infinite loop occurs."$'\n'"It will fail upon a second call; to reset call with \`--end\`"$'\n'"When called twice, fails on the second invocation and dumps a call stack to stderr."$'\n'""$'\n'""
+description=$'Place this in code where you suspect an infinite loop occurs.\nIt will fail upon a second call; to reset call with `--end`\nWhen called twice, fails on the second invocation and dumps a call stack to stderr.\n\n'
 descriptionLineCount="4"
-environment="__BUILD_RECURSION"$'\n'""
+environment=$'__BUILD_RECURSION\n'
 file="bin/build/tools/debug.sh"
 fn="bashRecursionDebug"
 fnMarker="bashrecursiondebug"
 foundNames=([0]="summary" [1]="argument" [2]="requires" [3]="return_code" [4]="environment")
 line="152"
-rawComment="Summary: Recursion detection"$'\n'"Place this in code where you suspect an infinite loop occurs."$'\n'"It will fail upon a second call; to reset call with \`--end\`"$'\n'"Argument: --end - Flag. Optional. Stop testing for recursion."$'\n'"When called twice, fails on the second invocation and dumps a call stack to stderr."$'\n'"Requires: printf unset  export debuggingStack exit"$'\n'"Return Code: 91 - Recursion failure. Exits, actually after sleeping for 99 seconds."$'\n'"Environment: __BUILD_RECURSION"$'\n'""$'\n'""
-requires="printf unset  export debuggingStack exit"$'\n'""
-return_code="91 - Recursion failure. Exits, actually after sleeping for 99 seconds."$'\n'""
+original="bashRecursionDebug"
+rawComment=$'Summary: Recursion detection\nPlace this in code where you suspect an infinite loop occurs.\nIt will fail upon a second call; to reset call with `--end`\nArgument: --end - Flag. Optional. Stop testing for recursion.\nWhen called twice, fails on the second invocation and dumps a call stack to stderr.\nRequires: printf unset  export debuggingStack exit\nReturn Code: 91 - Recursion failure. Exits, actually after sleeping for 99 seconds.\nEnvironment: __BUILD_RECURSION\n\n'
+requires=$'printf unset  export debuggingStack exit\n'
+return_code=$'91 - Recursion failure. Exits, actually after sleeping for 99 seconds.\n'
 sourceFile="bin/build/tools/debug.sh"
 sourceHash="6a81e40ae02c7a2796eae34880ff8f69d143fa24"
 sourceLine="152"

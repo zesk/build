@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_URL_TIMEOUT.sh"
 fn="BUILD_URL_TIMEOUT"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="URL Timeout"
+original="BUILD_URL_TIMEOUT"
 rawComment=$'Name: URL Timeout\nTimeout in seconds for fetching URLs in `urlFetch`\nSee: urlFetch\nCategory: Build Configuration\nType: PositiveInteger\n\n'
 see=$'urlFetch\n'
 sourceFile="bin/build/env/BUILD_URL_TIMEOUT.sh"

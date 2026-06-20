@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'deployHome - Directory. Required. Deployment database home.\nversionName - String. Required. Application ID to look for\n'
 base="deploy.sh"
@@ -12,6 +12,7 @@ fn="deployHasVersion"
 fnMarker="deployhasversion"
 foundNames=([0]="argument")
 line="123"
+original="deployHasVersion"
 rawComment=$'Argument: deployHome - Directory. Required. Deployment database home.\nArgument: versionName - String. Required. Application ID to look for\nDoes a deploy version exist? versionName is the version identifier for deployments\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/deploy.sh"

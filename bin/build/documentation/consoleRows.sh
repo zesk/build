@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -13,13 +13,14 @@ file="bin/build/tools/colors.sh"
 fn="consoleRows"
 fnMarker="consolerows"
 foundNames=([0]="summary" [1]="argument" [2]="see" [3]="example" [4]="environment")
-line="443"
+line="420"
+original="consoleRows"
 rawComment=$'Summary: Row count in current console\nOutput the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.\nArgument: --help - Flag. Optional. Display this help.\nSee: stty\nExample:     tail -n $(consoleRows) "$file"\n`COLUMNS` and `LINES` environment variables may be modified by calling this function.\nEnvironment: COLUMNS LINES\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'stty\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
-sourceLine="443"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceLine="420"
 summary="Row count in current console"
 summaryComputed=""
 usage="consoleRows [ --help ]"

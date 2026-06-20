@@ -10,6 +10,7 @@ file="bin/build/env/TEST_TRACK_ASSERTIONS.sh"
 fn="TEST_TRACK_ASSERTIONS"
 foundNames=([0]="name" [1]="category" [2]="see" [3]="type")
 name="Track Assertions Flag"
+original="TEST_TRACK_ASSERTIONS"
 rawComment=$'Name: Track Assertions Flag\nAssertion tracking testing optimization\nTurn on or off tracking of function assertions within the testing core.\nCategory: Testing\nSee: testSuite assert.sh\nType: Boolean\nIf blank, the default behavior is to track; disable it with setting the value to `false`.\n\n'
 see=$'testSuite assert.sh\n'
 sourceFile="bin/build/env/TEST_TRACK_ASSERTIONS.sh"

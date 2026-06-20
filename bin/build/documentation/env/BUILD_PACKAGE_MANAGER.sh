@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_PACKAGE_MANAGER.sh"
 fn="BUILD_PACKAGE_MANAGER"
 foundNames=([0]="name" [1]="type" [2]="category")
 name="Package Manager Binary"
+original="BUILD_PACKAGE_MANAGER"
 rawComment=$'Name: Package Manager Binary\nType: Executable\nCategory: Installation\nThe default package manager on systems which have more than one package manager available.\n\n'
 sourceFile="bin/build/env/BUILD_PACKAGE_MANAGER.sh"
 sourceHash="e641b643defde1db3f2da6c04c8ac65be529f19d"

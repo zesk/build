@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--debug - Flag. Optional. Show a lot of information about the approved cache."$'\n'"--no-delete - Flag. Optional. Do not delete stale approval files."$'\n'"--delete - Flag. Optional. Delete stale approval files."$'\n'""
+argument=$'--debug - Flag. Optional. Show a lot of information about the approved cache.\n--no-delete - Flag. Optional. Do not delete stale approval files.\n--delete - Flag. Optional. Delete stale approval files.\n'
 base="interactive.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="List approved Bash script sources which can be loaded automatically by project hooks."$'\n'""$'\n'"Approved sources are stored in a cache structure at \`\$XDG_STATE_HOME/.interactiveApproved\`."$'\n'"Stale files are ones which no longer are associated with a file's current fingerprint."$'\n'""$'\n'""
+description=$'List approved Bash script sources which can be loaded automatically by project hooks.\n\nApproved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.\nStale files are ones which no longer are associated with a file\'s current fingerprint.\n\n'
 descriptionLineCount="5"
-environment="XDG_STATE_HOME"$'\n'""
+environment=$'XDG_STATE_HOME\n'
 file="bin/build/tools/interactive.sh"
 fn="approvedSources"
 fnMarker="approvedsources"
 foundNames=([0]="argument" [1]="environment")
 line="108"
-rawComment="List approved Bash script sources which can be loaded automatically by project hooks."$'\n'"Argument: --debug - Flag. Optional. Show a lot of information about the approved cache."$'\n'"Argument: --no-delete - Flag. Optional. Do not delete stale approval files."$'\n'"Argument: --delete - Flag. Optional. Delete stale approval files."$'\n'"Approved sources are stored in a cache structure at \`\$XDG_STATE_HOME/.interactiveApproved\`."$'\n'"Stale files are ones which no longer are associated with a file's current fingerprint."$'\n'"Environment: XDG_STATE_HOME"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="approvedSources"
+rawComment=$'List approved Bash script sources which can be loaded automatically by project hooks.\nArgument: --debug - Flag. Optional. Show a lot of information about the approved cache.\nArgument: --no-delete - Flag. Optional. Do not delete stale approval files.\nArgument: --delete - Flag. Optional. Delete stale approval files.\nApproved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.\nStale files are ones which no longer are associated with a file\'s current fingerprint.\nEnvironment: XDG_STATE_HOME\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/interactive.sh"
 sourceHash="6e0d41188cc236cd7170c65cbacacbb7f30b9788"
 sourceLine="108"

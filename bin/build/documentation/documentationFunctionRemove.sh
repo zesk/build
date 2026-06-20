@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--verbose - Flag. Optional. Use more words or phrases than absolutely essential.\n--dry-run - Flag. Optional. Do not do any thing, just say what would be done.\n--git - Flag. Remove from git.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -11,12 +11,13 @@ file="bin/build/tools/documentation.sh"
 fn="documentationFunctionRemove"
 fnMarker="documentationfunctionremove"
 foundNames=([0]="argument" [1]="stdin")
-line="581"
+line="583"
+original="documentationFunctionRemove"
 rawComment=$'Remove a function from the documentation cache\nArgument: --verbose - Flag. Optional. Use more words or phrases than absolutely essential.\nArgument: --dry-run - Flag. Optional. Do not do any thing, just say what would be done.\nArgument: --git - Flag. Remove from git.\nstdin: functionName - File with function names one per line.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
-sourceLine="581"
+sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
+sourceLine="583"
 stdin=$'functionName - File with function names one per line.\n'
 summary="Remove a function from the documentation cache"
 summaryComputed="true"

@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_MAINTENANCE_VARIABLE.sh"
 fn="BUILD_MAINTENANCE_VARIABLE"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Maintenance Variable Name"
+original="BUILD_MAINTENANCE_VARIABLE"
 rawComment=$'Name: Maintenance Variable Name\nCategory: Application\nType: EnvironmentVariable\nThe maintenance variable name which enables (or disabled) maintenance mode.\nDefault is `MAINTENANCE`.\nThis value is set to `true` or `false`\n\n'
 sourceFile="bin/build/env/BUILD_MAINTENANCE_VARIABLE.sh"
 sourceHash="88b7910d74d317c3bfc2ba1bfff914b88af0abde"

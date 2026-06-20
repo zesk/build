@@ -9,6 +9,7 @@ file="bin/build/env/BUILD_DOCKER_BITBUCKET_IMAGE.sh"
 fn="BUILD_DOCKER_BITBUCKET_IMAGE"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Docker Image for Bitbucket Containers"
+original="BUILD_DOCKER_BITBUCKET_IMAGE"
 rawComment=$'Name: Docker Image for Bitbucket Containers\nSee: bitbucketContainer\nCategory: Continuous Integration: BitBucket\nType: String\n\n'
 see=$'bitbucketContainer\n'
 sourceFile="bin/build/env/BUILD_DOCKER_BITBUCKET_IMAGE.sh"

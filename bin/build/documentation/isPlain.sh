@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'text - String. Required. Text to search for mapping tokens.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="isPlain"
 fnMarker="isplain"
 foundNames=([0]="argument" [1]="return_code")
 line="90"
+original="isPlain"
 rawComment=$'Check if text contains plain text only (no ANSI escape codes, etc.)\nArgument: text - String. Required. Text to search for mapping tokens.\nWithout arguments, displays help.\nReturn code: - `0` - Text is plain\nReturn code: - `1` - Text contains non-plain characters\n\n'
 return_code=$'- `0` - Text is plain\n- `1` - Text contains non-plain characters\n'
 sourceFile="bin/build/tools/text.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'source - File. Required. File where the function is defined.\nfunctionName - String. Required. The name of the bash function to extract the documentation for.\nvariableName - string. Required. Get this variable value\n--prefix - flag. Optional. Find variables with the prefix `variableName`\n--i | --insensitive - Flag. Optional. Case-insensitive match.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
@@ -12,10 +12,11 @@ fn="bashFunctionCommentVariable"
 fnMarker="bashfunctioncommentvariable"
 foundNames=([0]="argument")
 line="410"
+original="bashFunctionCommentVariable"
 rawComment=$'Argument: source - File. Required. File where the function is defined.\nArgument: functionName - String. Required. The name of the bash function to extract the documentation for.\nArgument: variableName - string. Required. Get this variable value\nArgument: --prefix - flag. Optional. Find variables with the prefix `variableName`\nArgument: --i | --insensitive - Flag. Optional. Case-insensitive match.\nArgument: --help - Flag. Optional. Display this help.\nGets a list of the variable values from a bash function comment\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="410"
 summary="Gets a list of the variable values from a bash"
 summaryComputed="true"

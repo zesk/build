@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="docker-compose.sh"
@@ -12,6 +12,7 @@ fn="dockerComposeCommandList"
 fnMarker="dockercomposecommandlist"
 foundNames=([0]="updated" [1]="require_update" [2]="argument")
 line="107"
+original="dockerComposeCommandList"
 rawComment=$'List of docker compose commands\nUpdated: 2025-04-07\nRequire-Update: 90\nArgument: --help - Flag. Optional. Display this help.\n\n'
 require_update=$'90\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

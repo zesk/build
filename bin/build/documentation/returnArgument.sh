@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="message ... - String. Optional. Message to output."$'\n'""
+argument=$'message ... - String. Optional. Message to output.\n'
 base="_sugar.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."$'\n'""$'\n'""
+description=$'Return `argument` error code. Outputs `message ...` to `stderr`.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/_sugar.sh"
 fn="returnArgument"
 fnMarker="returnargument"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
 line="257"
-rawComment="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."$'\n'"Argument: message ... - String. Optional. Message to output."$'\n'"Return Code: 2"$'\n'"Requires: returnMessage"$'\n'""$'\n'""
-requires="returnMessage"$'\n'""
-return_code="2"$'\n'""
+original="returnArgument"
+rawComment=$'Return `argument` error code. Outputs `message ...` to `stderr`.\nArgument: message ... - String. Optional. Message to output.\nReturn Code: 2\nRequires: returnMessage\n\n'
+requires=$'returnMessage\n'
+return_code=$'2\n'
 sourceFile="bin/build/tools/_sugar.sh"
 sourceHash="8d5ac9aefc03ec2923c4a48ed0d33aed85646581"
 sourceLine="257"

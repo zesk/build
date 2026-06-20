@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'nameValue ... - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.\n--help - Flag. Optional. Display this help.\n'
 base="junit.sh"
@@ -13,6 +13,7 @@ fn="junitTestCaseOpen"
 fnMarker="junittestcaseopen"
 foundNames=([0]="example" [1]="argument")
 line="221"
+original="junitTestCaseOpen"
 rawComment=$'Open tag for `testcase` - Test case\nExample:     <testcase name="testCase1" classname="Tests.Registration" assertions="2"\nExample:         time="2.436" file="tests/registration.code" line="24"/>\n- `name=testCase1`\n- `classname=Tests.Registration`\n- `assertions=2`\n- `time=2.436`\n- `file=tests/registration.code`\n- `line=24`\nArgument: nameValue ... - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/junit.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nbinary - String. Required. The binary to look for.\npackageInstallPackage - String. Required. The package name to uninstall if the binary is found in the `$PATH`.\n'
 base="package.sh"
@@ -14,6 +14,7 @@ fn="packageWhichUninstall"
 fnMarker="packagewhichuninstall"
 foundNames=([0]="summary" [1]="example" [2]="argument" [3]="environment")
 line="306"
+original="packageWhichUninstall"
 rawComment=$'Installs an apt package if a binary does not exist in the `which` path (e.g. `$PATH`)\nThe assumption here is that `packageUninstall` will install the desired `binary`.\nConfirms that `binary` is installed after installation succeeds.\nSummary: Install tools using `apt-get` if they are not found\nExample:     packageWhichUninstall mariadb mariadb-client\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\nArgument: binary - String. Required. The binary to look for.\nArgument: packageInstallPackage - String. Required. The package name to uninstall if the binary is found in the `$PATH`.\nEnvironment: Technically this will uninstall the binary and any related files as a package.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"

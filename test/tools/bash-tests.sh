@@ -356,3 +356,48 @@ testBashPipeBehavior() {
 
   unset TEST_PIPE_RAN PIPE_RAN_FILE
 }
+
+__funkyTimeSetup() {
+  local handler="$1" && shift
+  local temp && temp=$(fileTemporaryName "$handler" -d) || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  catchReturn "$handler" directoryRequire "$temp/funkyTime/bin/env" || return $?
+  catchReturn "$handler" cp -R "$home/bin/build" "$temp/funkyTime/bin/build" || return $?
+  catchReturn "$handler" printf -- "%s\n" "#!/usr/bin/env bash" "APPLICATION_NAME=Funky" >"$temp/funkyTime/bin/env/APPLICATION_NAME.sh" || return $?
+  catchReturn "$handler" chmod +x "$temp/funkyTime/bin/env/APPLICATION_NAME.sh" || return $?
+
+  printf "%s\n" "$temp"
+}
+
+testBashApplicationAliases() {
+  local handler="returnMessage"
+
+  assertExitCode --stdout-match "No project" 0 bashApplicationAliases <<<"hello probably-not-a-path" || return $?
+
+  local temp && temp=$(__funkyTimeSetup "$handler") || return $?
+
+  HOME="$temp" assertExitCode --stdout-match "Funky" 0 bashApplicationAliases <<<"funky funkyTime" || return $?
+  HOME="$temp" assertExitCode --stdout-match "The Funk Was Not In Want" --stdout-no-match "Funky" 0 bashApplicationAliases <<<"funky funkyTime The Funk Was Not In Want" || return $?
+
+  unalias g-funky G-funky 2>/dev/null
+  returnClean 0 "$temp"
+}
+
+testBashApplicationAlias() {
+  local handler="returnMessage"
+
+  assertExitCode --stderr-match "alias and path are required" 2 bashApplicationAlias || return $?
+  assertExitCode --stderr-match "alias and path are required" 2 bashApplicationAlias aliasNoPath || return $?
+  assertExitCode --stderr-match "String is blank" 2 bashApplicationAlias "" badPathBlankAlias || return $?
+
+  local temp && temp=$(__funkyTimeSetup "$handler") || return $?
+
+  assertNotExitCode --stderr-match "not found" 0 alias g-funky || return $?
+  assertNotExitCode --stderr-match "not found" 0 alias G-funky || return $?
+  HOME="$temp" catchReturn "$handler" bashApplicationAlias funky funkyTime || return $?
+  assertExitCode 0 alias g-funky || return $?
+  assertExitCode 0 alias G-funky || return $?
+  unalias g-funky G-funky 2>/dev/null
+  returnClean 0 "$temp"
+}

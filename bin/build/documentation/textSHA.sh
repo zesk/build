@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'filename ... - File. One or more filenames to generate a checksum for\n--cache cacheDirectory - Directory. Cache file cache values here for speed optimization.\n'
 base="text.sh"
@@ -15,6 +15,7 @@ fn="textSHA"
 fnMarker="textsha"
 foundNames=([0]="argument" [1]="depends" [2]="summary" [3]="example" [4]="output" [5]="build_debug" [6]="stdin" [7]="stdout")
 line="1034"
+original="textSHA"
 output=$'cf7861b50054e8c680a9552917b43ec2b9edae2b\n'
 rawComment=$'Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff\nYou can use this as a pipe or pass in arguments which are files to be hashed.\nArgument: filename ... - File. One or more filenames to generate a checksum for\nArgument: --cache cacheDirectory - Directory. Cache file cache values here for speed optimization.\nDepends: sha1sum\nSummary: SHA1 checksum of standard input\nExample:     textSHA < "$fileName"\nExample:     textSHA "$fileName0" "$fileName1"\nOutput: cf7861b50054e8c680a9552917b43ec2b9edae2b\nBUILD_DEBUG: textSHA - Outputs all requested textSHA calls to log called `textSHA.log`.\nstdin: any file\nstdout: `String`. A hexadecimal string which uniquely represents the data in `stdin`.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

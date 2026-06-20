@@ -1,0 +1,1 @@
+[decorate each]({rel}tools/decorate.md#__decorateextensioneach) - Runs the following command on each subsequent argument for formatting ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L262))

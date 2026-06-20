@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_VERSION_SUFFIX.sh"
 fn="BUILD_VERSION_SUFFIX"
 foundNames=([0]="name" [1]="type" [2]="see" [3]="category")
 name="Build Version Suffix"
+original="BUILD_VERSION_SUFFIX"
 rawComment=$'Name: Build Version Suffix\nType: String\nDefault suffix used in `gitTagVersion`\nSee: gitTagVersion\nCategory: Build Configuration\n\n'
 see=$'gitTagVersion\n'
 sourceFile="bin/build/env/BUILD_VERSION_SUFFIX.sh"

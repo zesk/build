@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'alternateChar - String. Optional. Use an alternate character or string output\noffset - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is `0`)\n'
 base="line.sh"
@@ -13,6 +13,7 @@ fn="consoleLine"
 fnMarker="consoleline"
 foundNames=([0]="summary" [1]="argument" [2]="see" [3]="example")
 line="14"
+original="consoleLine"
 rawComment=$'Summary: Output a bar as wide as the console\nOutput a bar as wide as the console using the `=` symbol.\nArgument: alternateChar - String. Optional. Use an alternate character or string output\nArgument: offset - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is `0`)\nSee: consoleColumns\nExample:     decorate success $(consoleLine =-)\nExample:     decorate success $(consoleLine "- Success ")\nExample:     decorate magenta $(consoleLine +-)\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'consoleColumns\n'

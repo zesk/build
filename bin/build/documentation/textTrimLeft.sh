@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.\n'
 base="text.sh"
@@ -13,6 +13,7 @@ fn="textTrimLeft"
 fnMarker="texttrimleft"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="example" [4]="summary")
 line="324"
+original="textTrimLeft"
 rawComment=$'Trim spaces and only spaces from the left side of a string passed as arguments or a pipe\nArgument: text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.\nstdin: Reads lines from stdin until EOF\nstdout: Outputs trimmed lines\nExample:     {fn} "$token"\nExample:     grep "$tokenPattern" | {fn} > "$tokensFound"\nSummary: Trim whitespace of a bash argument\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

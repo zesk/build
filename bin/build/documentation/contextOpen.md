@@ -22,6 +22,6 @@ Open a file in a shell using the program we are using. Supports VSCode and PHPSt
 
 #### Environment
 
-- [`EDITOR` Editor Command]({rel}env/#bash) – **Callable**. Binary for editing files - Used as a default editor (first)
-- [`VISUAL` File Preview]({rel}env/#bash) – **Executable**. Binary for viewing files - Used as another default editor (last)
+- {SEE:EDITOR} - Used as a default editor (first)
+- {SEE:VISUAL} - Used as another default editor (last)
 

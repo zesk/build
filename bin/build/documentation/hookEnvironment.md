@@ -26,5 +26,5 @@ If already loaded, this function has no effect.
 
 #### Environment
 
-- [`BUILD_HOOK_EXTENSIONS` Build Hook Extension List]({rel}env/#application) – **ColonDelimitedList**. List of extensions to run when looking for hooks [`BUILD_HOOK_DIRS` Build Hook Directory List]({rel}env/#build_configuration) – **ApplicationDirectoryList**. List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.
+- {SEE:BUILD_HOOK_EXTENSIONS} {SEE:BUILD_HOOK_DIRS}
 

@@ -10,6 +10,7 @@ file="bin/build/env/APPLICATION_CODE.sh"
 fn="APPLICATION_CODE"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Application Code Name"
+original="APPLICATION_CODE"
 rawComment=$'Name: Application Code Name\nThis is the unique code name of the application. Use a domain name suffix to ensure global uniqueness.\nCategory: Application\nType: String\n\n'
 sourceFile="bin/build/env/APPLICATION_CODE.sh"
 sourceHash="f06f43ed6f6994c5e1b2ac9ffad2a47e6aef2a9a"

@@ -9,6 +9,7 @@ file="bin/build/env/BUILD_DOCKER_BITBUCKET_PATH.sh"
 fn="BUILD_DOCKER_BITBUCKET_PATH"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Docker Path for Bitbucket Containers"
+original="BUILD_DOCKER_BITBUCKET_PATH"
 rawComment=$'Name: Docker Path for Bitbucket Containers\nSee: bitbucketContainer\nCategory: Continuous Integration: BitBucket\nType: RemoteDirectory\n\n'
 see=$'bitbucketContainer\n'
 sourceFile="bin/build/env/BUILD_DOCKER_BITBUCKET_PATH.sh"

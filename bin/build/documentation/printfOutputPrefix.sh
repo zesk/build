@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'... - Arguments. Required. printf arguments.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="printfOutputPrefix"
 fnMarker="printfoutputprefix"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="1164"
+original="printfOutputPrefix"
 rawComment=$'Pipe to output some text before any output, otherwise, nothing is output.\nArgument: ... - Arguments. Required. printf arguments.\nWithout arguments, displays help.\nstdin: text (Optional)\nstdout: printf output and then the stdin text IFF stdin text is non-blank\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

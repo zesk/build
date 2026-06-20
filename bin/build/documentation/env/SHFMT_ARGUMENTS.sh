@@ -10,6 +10,7 @@ file="bin/build/env/SHFMT_ARGUMENTS.sh"
 fn="SHFMT_ARGUMENTS"
 foundNames=([0]="name" [1]="category" [2]="see" [3]="type")
 name="Shell Formatting Arguments"
+original="SHFMT_ARGUMENTS"
 rawComment=$'Name: Shell Formatting Arguments\nArguments passed to shfmt when running as a pre-commit hook\nCategory: Bash\nSee: pre-commit-sh.sh\nType: Array\n\n'
 see=$'pre-commit-sh.sh\n'
 sourceFile="bin/build/env/SHFMT_ARGUMENTS.sh"

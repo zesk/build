@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -13,13 +13,14 @@ file="bin/build/tools/colors.sh"
 fn="isTTYAvailable"
 fnMarker="isttyavailable"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="environment" [4]="credits" [5]="url")
-line="376"
+line="353"
+original="isTTYAvailable"
 rawComment=$'Summary: Quiet test for a TTY\nReturns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HAS_TTY` to avoid running the test each call.\nSee: stty\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: __BUILD_HAS_TTY\nCredits: Tim Perry\nURL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'stty\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
-sourceLine="376"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceLine="353"
 summary="Quiet test for a TTY"
 summaryComputed=""
 url=$'https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional\n'

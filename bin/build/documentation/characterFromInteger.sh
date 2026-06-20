@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="character.sh"
@@ -13,6 +13,7 @@ fn="characterFromInteger"
 fnMarker="characterfrominteger"
 foundNames=([0]="credit" [1]="source" [2]="argument")
 line="90"
+original="characterFromInteger"
 rawComment=$'Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)\nCredit: dsmsk80\nSource: https://mywiki.wooledge.org/BashFAQ/071\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 source=$'https://mywiki.wooledge.org/BashFAQ/071\n'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--version versionCode - String. Optional. Install this version of yarn. Defaults to `stable` if `BUILD_YARN_VERSION` is blank or unset.\n--help - Flag. Optional. Display this help.\n'
 base="yarn.sh"
@@ -14,6 +14,7 @@ fnMarker="yarninstall"
 foundNames=([0]="summary" [1]="notes" [2]="environment" [3]="return_code" [4]="test" [5]="argument")
 line="24"
 notes=$'`yarn` is part of node, I think, so no clean uninstall.\n'
+original="yarnInstall"
 rawComment=$'Summary: Install yarn\nInstall yarn in the build environment.\nNotes: `yarn` is part of node, I think, so no clean uninstall.\nWhen this tool succeeds the `yarn` binary is available in the local operating system.\nEnvironment: - BUILD_YARN_VERSION\nReturn Code: 1 - If installation of yarn fails\nReturn Code: 0 - If yarn is already installed or installed without error\nTest: testYarnInstallation\nArgument: --version versionCode - String. Optional. Install this version of yarn. Defaults to `stable` if `BUILD_YARN_VERSION` is blank or unset.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'1 - If installation of yarn fails\n0 - If yarn is already installed or installed without error\n'
 sourceFile="bin/build/tools/yarn.sh"

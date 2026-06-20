@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.\n--pattern filePattern - RelativePath. Required. The file or directory to find the home for.\n--test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.\n'
 base="directory.sh"
@@ -12,6 +12,7 @@ fn="directoryParent"
 fnMarker="directoryparent"
 foundNames=([0]="argument")
 line="314"
+original="directoryParent"
 rawComment=$'Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)\nArgument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.\nArgument: --pattern filePattern - RelativePath. Required. The file or directory to find the home for.\nArgument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/directory.sh"

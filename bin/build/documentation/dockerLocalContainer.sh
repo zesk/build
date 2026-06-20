@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--image imageName - String. Optional. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.\n--path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.\n--platform platform - String. Optional. Platform to run (arm vs intel).\n--env-file envFile - File. Optional. One or more environment files which are suitable to load for docker; must be valid\n--env envVariable=envValue - File. Optional. One or more environment variables to set.\nextraArgs - Mixed. Optional. The first non-file argument to `dockerLocalContainer` is passed directly through to `docker run` as arguments\n'
 base="docker.sh"
@@ -13,6 +13,7 @@ fn="dockerLocalContainer"
 fnMarker="dockerlocalcontainer"
 foundNames=([0]="argument" [1]="return_code" [2]="environment")
 line="122"
+original="dockerLocalContainer"
 rawComment=$'Run a build container using given docker image.\nRuns ARM64 by default.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --image imageName - String. Optional. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.\nArgument: --path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.\nArgument: --platform platform - String. Optional. Platform to run (arm vs intel).\nArgument: --env-file envFile - File. Optional. One or more environment files which are suitable to load for docker; must be valid\nArgument: --env envVariable=envValue - File. Optional. One or more environment variables to set.\nArgument: extraArgs - Mixed. Optional. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments\nReturn Code: 1 - If already inside docker, or the environment file passed is not valid\nReturn Code: 0 - Success\nReturn Code: Any - `docker run` error code is returned if non-zero\nEnvironment: BUILD_DOCKER_PLATFORM\n- `BUILD_DOCKER_PLATFORM` defaults to `linux/arm64` – affects which image platform is used.\n\n'
 return_code=$'1 - If already inside docker, or the environment file passed is not valid\n0 - Success\nAny - `docker run` error code is returned if non-zero\n'
 sourceFile="bin/build/tools/docker.sh"

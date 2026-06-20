@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'-b - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal.\n-B - Flag. Causes chunks that include only blank lines to be ignored.\n-i - Flag. Ignores the case of letters.  E.g., "A" will compare equal to "a".\n-w - Flag. Ignores all blanks and tabs.\n-I pattern - String. Optional. Ignore lines which match extended regular expression `pattern`.\nsource - File. Required. File to compare to.\ntarget ... - File. Required. Target file to compare to. Additional files are compared to `source`.\n--help - Flag. Optional. Display this help.\n'
 base="diff.sh"
@@ -12,6 +12,7 @@ fn="filesAreIdentical"
 fnMarker="filesareidentical"
 foundNames=([0]="summary" [1]="argument" [2]="return_code")
 line="47"
+original="filesAreIdentical"
 rawComment=$'Summary: Are files identical?\nArgument: -b - Flag. Causes trailing blanks (spaces and tabs) to be ignored, and other strings of blanks to compare equal.\nArgument: -B - Flag. Causes chunks that include only blank lines to be ignored.\nArgument: -i - Flag. Ignores the case of letters.  E.g., "A" will compare equal to "a".\nArgument: -w - Flag. Ignores all blanks and tabs.\nArgument: -I pattern - String. Optional. Ignore lines which match extended regular expression `pattern`.\nArgument: source - File. Required. File to compare to.\nArgument: target ... - File. Required. Target file to compare to. Additional files are compared to `source`.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - Files are identical\nReturn Code: 1 - Files differ\nReturn Code: 2 - Argument error\n\n'
 return_code=$'0 - Files are identical\n1 - Files differ\n2 - Argument error\n'
 sourceFile="bin/build/tools/diff.sh"

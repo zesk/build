@@ -24,5 +24,5 @@ When environment variable `TEST_TRACK_ASSERTIONS` is `true` – `testSuite` and 
 
 #### Environment
 
-- [`TEST_TRACK_ASSERTIONS` Track Assertions Flag]({rel}env/#testing) – **Boolean**. Assertion tracking testing optimization
+- {SEE:TEST_TRACK_ASSERTIONS}
 

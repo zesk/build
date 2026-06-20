@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--remove - Flag. Optional. Remove instead of add - only `group`, and `description` required.\n--add - Flag. Optional. Add to security group (default).\n--register - Flag. Optional. Add it if not already added.\n--group group - String. Required. Security Group ID\n--region region - String. Optional. AWS region, defaults to `AWS_REGION`. Must be supplied.\n--port port - Required. for `--add` only. Integer. service port\n--description description - String. Required. Description to identify this record.\n--ip ip - Required. for `--add` only. String. IP Address to add or remove.\n--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
@@ -12,6 +12,7 @@ fn="awsSecurityGroupIPModify"
 fnMarker="awssecuritygroupipmodify"
 foundNames=([0]="argument" [1]="summary")
 line="283"
+original="awsSecurityGroupIPModify"
 rawComment=$'Usages can be\n    {fn} --add --group group [ --region region ] --port port --description description --ip ip\n    {fn} --remove --group group [ --region region ] --description description\nArgument: --remove - Flag. Optional. Remove instead of add - only `group`, and `description` required.\nArgument: --add - Flag. Optional. Add to security group (default).\nArgument: --register - Flag. Optional. Add it if not already added.\nArgument: --group group - String. Required. Security Group ID\nArgument: --region region - String. Optional. AWS region, defaults to `AWS_REGION`. Must be supplied.\nArgument: --port port - Required. for `--add` only. Integer. service port\nArgument: --description description - String. Required. Description to identify this record.\nArgument: --ip ip - Required. for `--add` only. String. IP Address to add or remove.\nArgument: --help - Flag. Optional. Display this help.\nModify an EC2 Security Group and add or remove an IP/port combination to the group.\nSummary: Modify an EC2 Security Group\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/aws.sh"

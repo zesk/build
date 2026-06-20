@@ -1,0 +1,1 @@
+[bashApplicationAliases]({rel}#bashapplicationaliases) - Create aliases for projects ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L693))

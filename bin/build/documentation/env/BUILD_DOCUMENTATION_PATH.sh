@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_DOCUMENTATION_PATH.sh"
 fn="BUILD_DOCUMENTATION_PATH"
 foundNames=([0]="name" [1]="category" [2]="type" [3]="see")
 name="Build Documentation Path List"
+original="BUILD_DOCUMENTATION_PATH"
 rawComment=$'Name: Build Documentation Path List\nCategory: Bash\nType: DirectoryList\nSearch path for documentation settings file.\nA colon `:` separated list of paths to search for function documentation settings file for `__bashDocumentationCached`\nSee: __bashDocumentationCached\n\n'
 see=$'__bashDocumentationCached\n'
 sourceFile="bin/build/env/BUILD_DOCUMENTATION_PATH.sh"

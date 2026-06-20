@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--filter - Function. Optional. Run value through this filter prior to inserting into the JSON file.\n--status - Flag. Optional. When set, returns `0` when the value was updated successfully and `$(returnCode identical)` when the values is the same\n--quiet - Flag. Optional. Do not output anything to `stdout` and just do the action and exit.\n--generator - Function. Optional. Function to generate the value. Defaults to `hookVersionCurrent`.\n--value - String. Optional. Value to set in JSON file. (Skips generation)\n--key - String. Optional. Key to set in JSON file. Defaults to `version`.\nkey - Required. If not specified as `--key`, specify it here.\nfile - File. Required. Modify and update this file\n'
 base="json.sh"
@@ -12,6 +12,7 @@ fn="jsonSetValue"
 fnMarker="jsonsetvalue"
 foundNames=([0]="argument" [1]="return_code")
 line="158"
+original="jsonSetValue"
 rawComment=$'Sets the value of a variable in a JSON file\nArgument: --filter - Function. Optional. Run value through this filter prior to inserting into the JSON file.\nArgument: --status - Flag. Optional. When set, returns `0` when the value was updated successfully and `$(returnCode identical)` when the values is the same\nArgument: --quiet - Flag. Optional. Do not output anything to `stdout` and just do the action and exit.\nArgument: --generator - Function. Optional. Function to generate the value. Defaults to `hookVersionCurrent`.\nArgument: --value - String. Optional. Value to set in JSON file. (Skips generation)\nArgument: --key - String. Optional. Key to set in JSON file. Defaults to `version`.\nArgument: key - Required. If not specified as `--key`, specify it here.\nArgument: file - File. Required. Modify and update this file\nReturn Code: 0 - File was updated successfully.\nReturn Code: 1 - Environment error\nReturn Code: 2 - Argument error\nReturn Code: 105 - Identical files (only when --status is passed)\n\n'
 return_code=$'0 - File was updated successfully.\n1 - Environment error\n2 - Argument error\n105 - Identical files (only when --status is passed)\n'
 sourceFile="bin/build/tools/json.sh"

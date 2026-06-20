@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)\n'
 base="prompt.sh"
@@ -12,6 +12,7 @@ fn="bashUserInput"
 fnMarker="bashuserinput"
 foundNames=([0]="see" [1]="argument")
 line="100"
+original="bashUserInput"
 rawComment=$'Prompt the user properly honoring any attached console.\nArguments are the same as `read`, except:\n`-r` is implied and does not need to be specified\nSee: [read]({rel}guide/builtin.md#read)\nArgument: --help - Flag. Optional. Display this help.\nArgument: ... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'[read]({rel}guide/builtin.md#read)\n'

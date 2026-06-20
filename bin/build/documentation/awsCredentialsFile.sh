@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--verbose - Flag. Optional. Verbose mode\n--create - Flag. Optional. Create the directory and file if it does not exist\n--home homeDirectory - Directory. Optional. Home directory to use instead of `$HOME`.\n'
 base="aws.sh"
@@ -14,6 +14,7 @@ fn="awsCredentialsFile"
 fnMarker="awscredentialsfile"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="return_code")
 line="59"
+original="awsCredentialsFile"
 rawComment=$'Get the credentials file path, optionally outputting errors\nPass a true-ish value to output warnings to stderr on failure\nPass any value to output warnings if the environment or file is not found; otherwise\noutput the credentials file path.\nIf not found, returns with exit code 1.\nSummary: Get the path to the AWS credentials file\nArgument: --help - Flag. Optional. Display this help.\nArgument: --verbose - Flag. Optional. Verbose mode\nArgument: --create - Flag. Optional. Create the directory and file if it does not exist\nArgument: --home homeDirectory - Directory. Optional. Home directory to use instead of `$HOME`.\nExample:     credentials=$(awsCredentialsFile) || throwEnvironment "$handler" "No credentials file found" || return $?\nReturn Code: 1 - If `$HOME` is not a directory or credentials file does not exist\nReturn Code: 0 - If credentials file is found and output to stdout\n\n'
 return_code=$'1 - If `$HOME` is not a directory or credentials file does not exist\n0 - If credentials file is found and output to stdout\n'
 sourceFile="bin/build/tools/aws.sh"

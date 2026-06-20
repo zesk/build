@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'fileName0 - File. Optional. File to dump.\n--symbol symbolString - String. Optional. Prefix for each output line.\n--lines lineCount - PositiveInteger. Optional. Number of lines to output.\n--help - Flag. Optional. Display this help.\n'
 base="dump.sh"
@@ -12,6 +12,7 @@ fn="dumpFile"
 fnMarker="dumpfile"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="198"
+original="dumpFile"
 rawComment=$'Output a file for debugging\nArgument: fileName0 - File. Optional. File to dump.\nstdin: text (optional)\nstdout: formatted text (optional)\nArgument: --symbol symbolString - String. Optional. Prefix for each output line.\nArgument: --lines lineCount - PositiveInteger. Optional. Number of lines to output.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/dump.sh"

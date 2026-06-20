@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--profile profileName - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials\n--services service0,service1,... - List. Required. List of services to add or remove (service names or port numbers)\n--id developerId - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)\n--group securityGroup - String.  String. Required. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.\n--ip ip - IP. Optional. Specify bn IP manually (uses networkIPLookup tool from tools.sh by default)\n--revoke - Flag. Optional. Remove permissions\n--help - Flag. Optional. Show this help\n'
 base="aws.sh"
@@ -13,6 +13,7 @@ fn="awsIPAccess"
 fnMarker="awsipaccess"
 foundNames=([0]="summary" [1]="argument" [2]="environment")
 line="311"
+original="awsIPAccess"
 rawComment=$'Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials\nArgument: --profile profileName - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials\nArgument: --services service0,service1,... - List. Required. List of services to add or remove (service names or port numbers)\nArgument: --id developerId - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)\nArgument: --group securityGroup - String.  String. Required. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.\nArgument: --ip ip - IP. Optional. Specify bn IP manually (uses networkIPLookup tool from tools.sh by default)\nArgument: --revoke - Flag. Optional. Remove permissions\nArgument: --help - Flag. Optional. Show this help\nRegister current IP address in listed security groups to allow for access to deployment systems from a specific IP.\nUse this during deployment to grant temporary access to your systems during deployment only.\nBuild scripts should have a `awsIPAccess --revoke` step afterward, always.\nservices are looked up in /etc/services and match /tcp services only for port selection\nIf no `/etc/services` matches the default values are supported within the script: `mysql`,`postgres`,`ssh`,`http`,`https`\nYou can also simply supply a list of port numbers, and mix and match: `--services ssh,http,3306,12345` is valid\nEnvironment: AWS_REGION\nEnvironment: DEVELOPER_ID\nEnvironment: AWS_ACCESS_KEY_ID\nEnvironment: AWS_SECRET_ACCESS_KEY\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/aws.sh"

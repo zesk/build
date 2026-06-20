@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nnameValue ... - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.\n'
 base="junit.sh"
@@ -12,6 +12,7 @@ fn="junitPropertyList"
 fnMarker="junitpropertylist"
 foundNames=([0]="argument")
 line="122"
+original="junitPropertyList"
 rawComment=$'Argument: --help - Flag. Optional. Display this help.\nOutput list of `property` tags\nArgument: nameValue ... - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/junit.sh"

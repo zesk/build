@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'number - Number. Required. An integer or floating point number\nsingular - String. Required. The singular form of a noun\nlocalePlural - String. Optional. The localePlural form of a noun. If not specified uses `singular` plus an ess.\n'
 base="text.sh"
@@ -14,6 +14,7 @@ fn="localePluralWord"
 fnMarker="localepluralword"
 foundNames=([0]="argument" [1]="example" [2]="stdout")
 line="801"
+original="localePluralWord"
 rawComment=$'Plural word which includes the numeric prefix and the noun.\nArgument: number - Number. Required. An integer or floating point number\nArgument: singular - String. Required. The singular form of a noun\nArgument: localePlural - String. Optional. The localePlural form of a noun. If not specified uses `singular` plus an ess.\nExample:     count=$(fileLineCount "$foxSightings") || return $?\nExample:     printf "We saw %s.\\n" "$(localePluralWord "$count" fox foxes)"\nstdout: `String`. The number (direct) and the localePlural form for non-1 values. e.g. `$(localePluralWord 2 potato potatoes)` = `2 potatoes`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

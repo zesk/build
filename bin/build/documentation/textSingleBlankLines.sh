@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="textSingleBlankLines"
 fnMarker="textsingleblanklines"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="279"
+original="textSingleBlankLines"
 rawComment=$'Ensures blank lines are singular\nUsed often to clean up markdown `.md` files, but can be used for any line-based configuration file which allows blank lines.\nArgument: --help - Flag. Optional. Display this help.\nstdin: Reads lines from stdin until EOF\nstdout: Outputs modified lines where any blank lines are replaced with a single blank line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

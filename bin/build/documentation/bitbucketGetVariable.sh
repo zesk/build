@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 MARIADB_ROOT_PASSWORD=""
 argument=$'varName - Name of the value to extract from `bitbucket-pipelines.yml`\ndefaultValue - Value if not found in pipelines\n'
@@ -14,6 +14,7 @@ fn="bitbucketGetVariable"
 fnMarker="bitbucketgetvariable"
 foundNames=([0]="________apt_lists" [1]="________apt_cache" [2]="________memory" [3]="________image" [4]="____________mariadb_root_password" [5]="argument" [6]="example")
 line="39"
+original="bitbucketGetVariable"
 rawComment=$'Fetch a value from the pipelines YAML file\nAssumes current working directory is project root.\nSimple get value of a variable from the `bitbucket-pipelines.yml` file. It\'s important to note that\nthis does not parse the YML. This is useful if\nyou have a database container as part of your build configuration which requires a root password\nrequired in other scripts; this means you do not have to replicate the value which can lead to errors.\nAn example `bitbucket-pipelines.yml` file may have a header which looks like this:\n    definitions:\n    caches:\n        apt-lists: /var/lib/apt/lists\n        apt-cache: /var/cache/apt\n    services:\n        mariadb:\n        memory: 1024\n        image: mariadb:latest\n        variables:\n            MARIADB_ROOT_PASSWORD: super-secret\nOn this file, the value of `$(bitbucketGetVariable MARIADB_ROOT_PASSWORD)` is `super-secret`; it uses `grep` and `sed` to extract the value.\nArgument: varName - Name of the value to extract from `bitbucket-pipelines.yml`\nArgument: defaultValue - Value if not found in pipelines\nExample:     MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(bitbucketGetVariable MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bitbucket.sh"

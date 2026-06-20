@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\ncharacter ... - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter.\n'
 base="character.sh"
@@ -12,6 +12,7 @@ fn="characterClasses"
 fnMarker="characterclasses"
 foundNames=([0]="argument")
 line="125"
+original="characterClasses"
 rawComment=$'List the classes allowed in `isCharacterClass`\nArgument: --help - Flag. Optional. Display this help.\nArgument: character ... - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/character.sh"

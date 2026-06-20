@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -12,10 +12,11 @@ fn="colorSampleCodes"
 fnMarker="colorsamplecodes"
 foundNames=([0]="summary" [1]="argument")
 line="106"
+original="colorSampleCodes"
 rawComment=$'Summary: Alternate color output\nIf you want to explore what colors are available in your terminal, try this.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
 sourceLine="106"
 summary="Alternate color output"
 summaryComputed=""

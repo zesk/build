@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'package - Additional packages to install\n'
 base="git.sh"
@@ -12,6 +12,7 @@ fn="gitInstall"
 fnMarker="gitinstall"
 foundNames=([0]="argument" [1]="summary")
 line="28"
+original="gitInstall"
 rawComment=$'Installs the `git` binary\nArgument: package - Additional packages to install\nSummary: Install git if needed\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/git.sh"

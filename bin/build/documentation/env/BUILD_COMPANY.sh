@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_COMPANY.sh"
 fn="BUILD_COMPANY"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Company Name"
+original="BUILD_COMPANY"
 rawComment=$'Name: Company Name\nLegal copyright holder for this codebase\nCategory: Application\nType: String\n\n'
 sourceFile="bin/build/env/BUILD_COMPANY.sh"
 sourceHash="cb90476accbd845c4c99e8001d5b8855607bc55e"

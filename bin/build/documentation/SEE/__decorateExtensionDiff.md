@@ -1,0 +1,1 @@
+[decorate diff]({rel}tools/decorate.md#__decorateextensiondiff) - Decoration for \`diff -U0\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/diff.sh#L12))

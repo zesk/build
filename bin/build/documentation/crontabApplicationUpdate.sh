@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--env-file environmentFile - Top-level environment file to pass variables into the user `crontab` template\n--show - Show the crontab instead of installing it\n--user user - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.\n--mapper envMapper - Binary. Optional. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)\n'
 base="crontab.sh"
@@ -13,6 +13,7 @@ fn="crontabApplicationUpdate"
 fnMarker="crontabapplicationupdate"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="68"
+original="crontabApplicationUpdate"
 rawComment=$'Summary: Application-specific crontab management\nKeep crontab synced with files and environment files in an application folder structure.\nStructure is:\n- `appPath/application1/.env`\n- `appPath/application1/.env.local`\n- `appPath/application1/etc/user.crontab`\nSearch for `user.crontab` in `applicationPath` and when found, assign `APPLICATION_NAME` to the top-level directory name\nand `APPLICATION_PATH` to the top-level directory path and then map the file using the environment files given.\nAny `.env` or `.env.local` files found at `$applicationPath/` will be included for each file generation.\nFeasibly for each file, the following environment files are loaded:\n1. `rootEnv`\n2. `applicationPath/applicationName/.env`\n3. `applicationPath/applicationName/.env.local`\nAny files not found are skipped. Note that environment values are not carried between applications.\nArgument: --env-file environmentFile - Top-level environment file to pass variables into the user `crontab` template\nArgument: --show - Show the crontab instead of installing it\nArgument: --user user - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.\nArgument: --mapper envMapper - Binary. Optional. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)\nExample:     {fn} --env-file /etc/myCoolApp.conf --user www-data /var/www/applications\nExample:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/crontab.sh"

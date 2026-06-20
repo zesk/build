@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--first - Flag. Optional. Place any paths after this flag first in the list\n--last - Flag. Optional. Place any paths after this flag last in the list. Default.\npath - the path to be added to the `PATH` environment\n'
 base="path.sh"
@@ -12,6 +12,7 @@ fn="pathConfigure"
 fnMarker="pathconfigure"
 foundNames=([0]="argument")
 line="48"
+original="pathConfigure"
 rawComment=$'Modify the PATH environment variable to add a path.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --first - Flag. Optional. Place any paths after this flag first in the list\nArgument: --last - Flag. Optional. Place any paths after this flag last in the list. Default.\nArgument: path - the path to be added to the `PATH` environment\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/path.sh"

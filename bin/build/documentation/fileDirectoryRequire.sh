@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--help - Flag. Optional. Display this help.\n--mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.\n--owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.\nfileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)\n'
 base="directory.sh"
@@ -14,6 +14,7 @@ fnMarker="filedirectoryrequire"
 foundNames=([0]="example" [1]="argument" [2]="requires")
 line="119"
 logFile=""
+original="fileDirectoryRequire"
 rawComment=$'Given a list of files, ensure their parent directories exist\nCreates the directories for all files passed in.\nExample:     logFile=./.build/$me.log\nExample:     {fn} "$logFile"\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.\nArgument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.\nArgument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)\nRequires: chmod throwArgument decorate catchEnvironment dirname\n\n'
 requires=$'chmod throwArgument decorate catchEnvironment dirname\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

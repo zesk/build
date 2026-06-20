@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'file ... - File. Required. One or more files to `realpath`.\n'
 base="file.sh"
@@ -12,6 +12,7 @@ fn="fileRealPath"
 fnMarker="filerealpath"
 foundNames=([0]="see" [1]="argument" [2]="requires")
 line="435"
+original="fileRealPath"
 rawComment=$'Find the full, actual path of a file avoiding symlinks or redirection.\nSee: readlink realpath\nWithout arguments, displays help.\nArgument: file ... - File. Required. One or more files to `realpath`.\nRequires: executableExists realpath helpArgument bashDocumentation returnArgument\n\n'
 requires=$'executableExists realpath helpArgument bashDocumentation returnArgument\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

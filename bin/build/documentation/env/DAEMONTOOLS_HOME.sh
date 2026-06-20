@@ -10,6 +10,7 @@ file="bin/build/env/DAEMONTOOLS_HOME.sh"
 fn="DAEMONTOOLS_HOME"
 foundNames=([0]="name" [1]="category" [2]="vendor" [3]="type")
 name="Daemontools Home"
+original="DAEMONTOOLS_HOME"
 rawComment=$'Name: Daemontools Home\nConstant for the directory where services are monitored by daemontools\nCategory: Vendor\nVendor: Daemontools\nType: Directory\n\n'
 sourceFile="bin/build/env/DAEMONTOOLS_HOME.sh"
 sourceHash="bdc62a0f84c1ea5cf19d2896828aaa22c85cbae4"

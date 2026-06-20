@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'name - String. Required. Name to write.\nvalue - EmptyString. Optional. Value to write.\n... - EmptyString. Optional. Additional values, when supplied, write this value as an array.\n--help - Flag. Optional. Display this help.\n'
 base="io.sh"
@@ -12,6 +12,7 @@ fn="environmentValueWrite"
 fnMarker="environmentvaluewrite"
 foundNames=([0]="argument")
 line="13"
+original="environmentValueWrite"
 rawComment=$'Write a value to a state file as NAME="value"\nArgument: name - String. Required. Name to write.\nArgument: value - EmptyString. Optional. Value to write.\nArgument: ... - EmptyString. Optional. Additional values, when supplied, write this value as an array.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/environment/io.sh"

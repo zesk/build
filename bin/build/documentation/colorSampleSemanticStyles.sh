@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="colors.sh"
@@ -11,12 +11,13 @@ file="bin/build/tools/colors.sh"
 fn="colorSampleSemanticStyles"
 fnMarker="colorsamplesemanticstyles"
 foundNames=([0]="summary")
-line="215"
+line="192"
+original="colorSampleSemanticStyles"
 rawComment=$'Summary: Output colors\nOutputs sample sentences for the `action` commands to see what they look like.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
-sourceLine="215"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceLine="192"
 summary="Output colors"
 summaryComputed=""
 usage="colorSampleSemanticStyles"

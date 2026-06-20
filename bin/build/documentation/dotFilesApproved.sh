@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'listType - String. Optional. One of `all`, `bash`, `git`, `darwin`, or `mysql`\n'
 base="prompt-modules.sh"
@@ -12,6 +12,7 @@ fn="dotFilesApproved"
 fnMarker="dotfilesapproved"
 foundNames=([0]="argument")
 line="120"
+original="dotFilesApproved"
 rawComment=$'Lists of dot files which can be added to the dotFilesApprovedFile\nArgument: listType - String. Optional. One of `all`, `bash`, `git`, `darwin`, or `mysql`\nIf none specified, returns `bash` list.\nSpecial value `all` returns all values\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/prompt-modules.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -11,13 +11,14 @@ file="bin/build/tools/colors.sh"
 fn="colorNormalize"
 fnMarker="colornormalize"
 foundNames=([0]="argument" [1]="requires")
-line="561"
+line="538"
+original="colorNormalize"
 rawComment=$'Redistribute color values to make brightness adjustments more balanced\nArgument: --help - Flag. Optional. Display this help.\nRequires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich\n\n'
 requires=$'bc catchEnvironment read usageArgumentUnsignedInteger packageWhich\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
-sourceLine="561"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceLine="538"
 summary="Redistribute color values to make brightness adjustments more balanced"
 summaryComputed="true"
 usage="colorNormalize [ --help ]"

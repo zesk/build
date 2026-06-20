@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nfile - File. Optional. File(s) to list bash functions defined within.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
@@ -12,11 +12,12 @@ fn="bashListFunctions"
 fnMarker="bashlistfunctions"
 foundNames=([0]="summary" [1]="argument" [2]="requires" [3]="todo")
 line="363"
+original="bashListFunctions"
 rawComment=$'Summary: List functions in a bash file\nList functions in a given bash file.\nArgument: --help - Flag. Optional. Display this help.\nArgument: file - File. Optional. File(s) to list bash functions defined within.\nArgument: --help - Flag. Optional. Display this help.\nRequires: __bashListFunctions throwArgument decorate usageArgumentFile\nTODO: Try shfmt parsing to json + jq\n\n'
 requires=$'__bashListFunctions throwArgument decorate usageArgumentFile\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="363"
 summary="List functions in a bash file"
 summaryComputed=""

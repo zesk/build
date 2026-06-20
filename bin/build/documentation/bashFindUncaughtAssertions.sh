@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--exclude path - String. Optional. Exclude paths which contain this string\n--exec binary - Executable. Optional. For each failed file run this command.\ndirectory - Directory. Optional. Where to search for files to check.\n--list - Flag. Optional. List files which fail. (Default is simply to exit silently.)\n'
 base="lint.sh"
@@ -12,6 +12,7 @@ fn="bashFindUncaughtAssertions"
 fnMarker="bashfinduncaughtassertions"
 foundNames=([0]="argument")
 line="289"
+original="bashFindUncaughtAssertions"
 rawComment=$'Search bash files for assertions which do not terminate a function and are likely an error\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --exclude path - String. Optional. Exclude paths which contain this string\nArgument: --exec binary - Executable. Optional. For each failed file run this command.\nArgument: directory - Directory. Optional. Where to search for files to check.\nArgument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/lint.sh"

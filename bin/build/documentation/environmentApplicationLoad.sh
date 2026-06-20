@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="application.sh"
@@ -13,6 +13,7 @@ fn="environmentApplicationLoad"
 fnMarker="environmentapplicationload"
 foundNames=([0]="environment" [1]="argument")
 line="27"
+original="environmentApplicationLoad"
 rawComment=$'Loads application environment variables, set them to their default values if needed, and outputs the list of variables and values.\nEnvironment: BUILD_TIMESTAMP\nEnvironment: APPLICATION_BUILD_DATE\nEnvironment: APPLICATION_VERSION\nEnvironment: APPLICATION_ID\nEnvironment: APPLICATION_TAG\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/environment/application.sh"

@@ -11,6 +11,7 @@ file="bin/build/env/__BASH_PROMPT_MODULES.sh"
 fn="__BASH_PROMPT_MODULES"
 foundNames=([0]="name" [1]="summary" [2]="category" [3]="type" [4]="see")
 name="Prompt module list"
+original="__BASH_PROMPT_MODULES"
 rawComment=$'Name: Prompt module list\nSummary: List of functions to run each prompt command\nList of modules to run each prompt command.\nManage with `bashPrompt functionName` to add, `bashPrompt --remove functionName` to remove.\nMake your functions *really* fast otherwise the shell becomes sluggish. Also try:\n    BUILD_DEBUG=bashPrompt\nTo report on each command and timing.\nAn automatic reporting occurs when commands exceed 0.3s.\nCategory: Bash Prompt\nType: Array:Callable\nSee: bashPrompt\n\n'
 see=$'bashPrompt\n'
 sourceFile="bin/build/env/__BASH_PROMPT_MODULES.sh"

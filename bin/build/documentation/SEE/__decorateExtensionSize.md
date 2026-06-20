@@ -1,0 +1,1 @@
+[decorate size]({rel}tools/decorate.md#__decorateextensionsize) - Size converted to kilo, mega, giga bytes. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/size.sh#L14))

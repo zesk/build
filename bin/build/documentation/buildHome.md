@@ -22,5 +22,5 @@ Prints the build home directory (usually same as the application root)
 
 #### Environment
 
-- [`BUILD_HOME` Build Home Directory]({rel}env/#build_configuration) – **Directory**. `BUILD_HOME` is `.` when this code is installed - at
+- {SEE:BUILD_HOME}
 

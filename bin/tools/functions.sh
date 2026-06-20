@@ -47,6 +47,19 @@ __bashDocumentationCached
 __usageMessage
 __functionSettings
 __dateFromTimestamp
+__decorateExtensionBOLD
+__decorateExtensionEach
+__decorateExtensionPair
+__decorateExtensionWrap
+__decorateExtensionQuote
+__decorateExtensionFile
+__decorateExtensionLink
+__decorateExtensionSize
+__decorateExtensionBox
+__decorateExtensionBig
+__decorateExtensionAt
+__decorateExtensionDiff
+__decorateExtensionExpired
 EOF
 }
 

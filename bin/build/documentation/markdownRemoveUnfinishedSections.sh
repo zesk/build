@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--preprocess preprocessFunction - Function. Optional. OneOrMore. A function to filter content via `stdin` prior to checking for tokens.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--help - Flag. Optional. Display this help.\n'
 base="markdown.sh"
@@ -15,6 +15,7 @@ fn="markdownRemoveUnfinishedSections"
 fnMarker="markdownremoveunfinishedsections"
 foundNames=([0]="summary" [1]="argument" [2]="depends" [3]="return_code" [4]="environment" [5]="example")
 line="86"
+original="markdownRemoveUnfinishedSections"
 rawComment=$'Summary: Remove markdown sections with tokens\nGiven a file containing Markdown, remove header and any section which has a variable value still valid.\nThis EXPLICITLY ignores variables with a colon to work with `{SEE:other}` syntax, so these tokens are automatically considered ok.\nThis operates as a filter on a pipe. A section is any group of contiguous lines beginning with a line\nwhich starts with a `#` character and then continuing to but not including the next line which starts with a `#`\ncharacter or the end of file; which corresponds roughly to headings in Markdown.\nIf a section contains an unused variable in the form `{variable}`, the entire section is removed from the output.\nThis can be used to remove sections which have variables or values which are optional.\nIf you need a section to always be displayed; provide default values or blank values for the variables in those sections\nto prevent removal.\nThe preprocessor can be used to hide tokens which are OK or will later be replaced.\nNote the preprocessor function\'s purpose is to hide or remove content which should be ignored when looking for token\ncontent; the actual results of this function are ultimately discarded; however the results are scanned for any valid\ntokens and if any exist then a section is considered unfinished. All preprocessors are run and the final result is examined.\nArgument: --preprocess preprocessFunction - Function. Optional. OneOrMore. A function to filter content via `stdin` prior to checking for tokens.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --help - Flag. Optional. Display this help.\nDepends: read printf\nReturn Code: 0\nEnvironment: None\nExample:     {fn} --preprocess __removeRelLinks < inputFile > outputFile\nExample:     map.sh < "$templateFile" | {fn}\n\n'
 return_code=$'0\n'
 sourceFile="bin/build/tools/markdown.sh"

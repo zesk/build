@@ -25,9 +25,9 @@ Modify the MANPATH environment variable to add a path.
 
 #### Environment
 
-- [`MANPATH` Manual Pages Path]({rel}env/#bash) – **DirectoryList**. A colon `:` separated list of paths to search for
+- [`MANPATH`]({rel}guide/command.md#manpath)
 
 #### See Also
 
-- [manPathRemove]({rel}tools/manpath.md#manpathremove) - Remove a path from the MANPATH environment variable ([source](https://github.com/zesk/build/blob/main/bin/build/tools/manpath.sh#L37))
+- {SEE:manPathRemove}
 

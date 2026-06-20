@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'None.\n'
 base="text.sh"
@@ -15,6 +15,7 @@ fn="consoleToPlain"
 fnMarker="consoletoplain"
 foundNames=([0]="argument" [1]="environment" [2]="write_environment" [3]="credits" [4]="short_description" [5]="source" [6]="depends" [7]="stdin" [8]="stdout")
 line="914"
+original="consoleToPlain"
 rawComment=$'Strip ANSI console escape sequences from a file\nArgument: None.\nEnvironment: None.\nWrite Environment: None.\nCredits: commandlinefu tripleee\nShort description: Remove ANSI escape codes from streams\nSource: https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc\nDepends: sed\nstdin: arbitrary text which may contain ANSI escape sequences for the terminal\nstdout: the same text with those ANSI escape sequences removed\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 short_description=$'Remove ANSI escape codes from streams\n'

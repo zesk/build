@@ -27,8 +27,8 @@ Note that this does NOT change or modify the current environment.
 
 #### Environment
 
-- [`APPLICATION_VERSION` Application Version]({rel}env/#deployment) – **String**. This is the version number which can be displayed - reserved and set to `hookRun version-current` if not set already
-- [`APPLICATION_BUILD_DATE` Application Build Date]({rel}env/#deployment) – **String**. Time when a build was initiated, set upon first invocation - reserved and set to current date; format like SQL.
-- [`APPLICATION_TAG` Application Tag]({rel}env/#deployment) – **String**. This is the full version number including debugging or release - reserved and set to `hookRun application-id`
-- [`APPLICATION_ID` Application ID]({rel}env/#deployment) – **String**. This is the unique hash which represents the source code - reserved and set to `hookRun application-tag`
+- {SEE:APPLICATION_VERSION} - reserved and set to `hookRun version-current` if not set already
+- {SEE:APPLICATION_BUILD_DATE} - reserved and set to current date; format like SQL.
+- {SEE:APPLICATION_TAG} - reserved and set to `hookRun application-id`
+- {SEE:APPLICATION_ID} - reserved and set to `hookRun application-tag`
 

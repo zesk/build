@@ -11,6 +11,7 @@ fn="BUILD_PROMPT_COLORS"
 format=$'colon-separated-list\n'
 foundNames=([0]="name" [1]="format" [2]="category" [3]="see" [4]="type")
 name="Prompt Color List"
+original="BUILD_PROMPT_COLORS"
 rawComment=$'Name: Prompt Color List\nColon-separated list of colors for the prompt\nFormat: colon-separated-list\nColors are escape codes. Last entry is a reset simply to make environment output less messy.\n1. Success color\n2. Failure color\n3. User\n4. Host\n5. Path\nCategory: Decoration\nSee: bashPrompt\nType: ColonDelimitedList\n\n'
 see=$'bashPrompt\n'
 sourceFile="bin/build/env/BUILD_PROMPT_COLORS.sh"

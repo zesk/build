@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'source - Directory. Required. target\ntarget - FileDirectory. Required.\n'
 base="directory.sh"
@@ -12,6 +12,7 @@ fn="directoryClobber"
 fnMarker="directoryclobber"
 foundNames=([0]="argument")
 line="76"
+original="directoryClobber"
 rawComment=$'Argument: source - Directory. Required. target\nArgument: target - FileDirectory. Required.\nCopy directory over another sort-of-atomically\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/directory.sh"

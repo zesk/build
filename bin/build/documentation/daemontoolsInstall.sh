@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="daemontools.sh"
@@ -12,6 +12,7 @@ fn="daemontoolsInstall"
 fnMarker="daemontoolsinstall"
 foundNames=([0]="platform")
 line="12"
+original="daemontoolsInstall"
 platform=$'`docker` containers will not install `daemontools-run` as it kills the container\n'
 rawComment=$'Install daemontools and dependencies\nPlatform: `docker` containers will not install `daemontools-run` as it kills the container\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

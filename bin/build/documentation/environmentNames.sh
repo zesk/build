@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="io.sh"
@@ -13,6 +13,7 @@ fn="environmentNames"
 fnMarker="environmentnames"
 foundNames=([0]="example" [1]="argument")
 line="165"
+original="environmentNames"
 rawComment=$'Example:     {fn} < "$stateFile"\nArgument: --help - Flag. Optional. Display this help.\nList names of environment values set in a bash state file\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/environment/io.sh"

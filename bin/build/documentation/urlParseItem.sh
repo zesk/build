@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'component - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`\nurl ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection\n'
 base="url.sh"
@@ -13,10 +13,11 @@ fn="urlParseItem"
 fnMarker="urlparseitem"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="212"
+original="urlParseItem"
 rawComment=$'Extract a component from one or more URLs.\nComponent names are the same as returned by the base `urlParse` function:\n- `url`\n- `url`\n- `path`\n- `name`\n- `scheme`\n- `user`\n- `password`\n- `host`\n- `port`\n- `portDefault`\n- `error`\nThe component `error` changes the behavior of the function – the function succeeds and returns the error string even if the URL is invalid. This\npermits the retrieval of the error message without any additional formatting if needed.\nSummary: Get a URL component directly\nArgument: component - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`\nArgument: url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection\nExample:     decorate info "Connecting as $(urlParseItem user "$url")"\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="3ed3b955b3a7b632b60fea2e330a81c2699cd660"
+sourceHash="f32b7cbe9339aa8f7842cb180b43f028a41f69e6"
 sourceLine="212"
 summary="Get a URL component directly"
 summaryComputed=""

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'startLine - Integer. Required. Starting line number.\nendLine - Integer. Required. Ending line number.\n--help - Flag. Optional. Display this help.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="fileExtractLines"
 fnMarker="fileextractlines"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="27"
+original="fileExtractLines"
 rawComment=$'Extract a range of lines from a file\nArgument: startLine - Integer. Required. Starting line number.\nArgument: endLine - Integer. Required. Ending line number.\nArgument: --help - Flag. Optional. Display this help.\nstdin: Reads lines until EOF\nstdout: Outputs the selected lines only\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

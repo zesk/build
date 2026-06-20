@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="coverage.sh"
@@ -12,6 +12,7 @@ fn="bashCoverageEnabled"
 fnMarker="bashcoverageenabled"
 foundNames=([0]="argument" [1]="return_code")
 line="114"
+original="bashCoverageEnabled"
 rawComment=$'Is bash coverage currently running?\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - Yes, it\'s running.\nReturn Code: 1 - No, it is not running.=\nReturn Code: 2 - Argument error\n\n'
 return_code=$'0 - Yes, it\'s running.\n1 - No, it is not running.=\n2 - Argument error\n'
 sourceFile="bin/build/tools/coverage.sh"

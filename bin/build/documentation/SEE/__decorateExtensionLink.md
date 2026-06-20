@@ -1,0 +1,1 @@
+[decorate link]({rel}tools/decorate.md#__decorateextensionlink) - decorate web links ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L277))

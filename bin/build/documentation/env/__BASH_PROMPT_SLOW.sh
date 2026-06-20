@@ -11,6 +11,7 @@ file="bin/build/env/__BASH_PROMPT_SLOW.sh"
 fn="__BASH_PROMPT_SLOW"
 foundNames=([0]="name" [1]="summary" [2]="category" [3]="type" [4]="default" [5]="see")
 name="Prompt command slow threshold"
+original="__BASH_PROMPT_SLOW"
 rawComment=$'Name: Prompt command slow threshold\nSummary: Bash Prompt slow timer\nNumber of milliseconds after which a `bashPrompt` command is considered slow.\nCategory: Bash Prompt\nType: PositiveInteger\nDefault: 300\nSee: bashPrompt\n\n'
 see=$'bashPrompt\n'
 sourceFile="bin/build/env/__BASH_PROMPT_SLOW.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'text - String. Required. List of color names in a colon separated list.\n'
 base="prompt.sh"
@@ -12,6 +12,7 @@ fn="bashPromptColorsFormat"
 fnMarker="bashpromptcolorsformat"
 foundNames=([0]="summary" [1]="argument" [2]="stdout" [3]="requires")
 line="205"
+original="bashPromptColorsFormat"
 rawComment=$'Summary: Convert colors to escape codes\nGiven a list of color names, generate the color codes in a colon separated list.\nArgument: text - String. Required. List of color names in a colon separated list.\nstdout: Outputs color *codes* separated by colons.\nRequires: decorations read inArray decorate listJoin\n\n'
 requires=$'decorations read inArray decorate listJoin\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

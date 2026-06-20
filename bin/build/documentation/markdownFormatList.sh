@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="markdown.sh"
@@ -12,6 +12,7 @@ fn="markdownFormatList"
 fnMarker="markdownformatlist"
 foundNames=([0]="stdin" [1]="stdout")
 line="153"
+original="markdownFormatList"
 rawComment=$'Simple function to make list-like things more list-like in Markdown\n1. Remove all trailing spaces from all lines\n2. remove leading "dash space" if it exists (`- `)\n3. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip\n4. Prefix each line with a "dash space" (`- `)\nstdin: reads input from stdin\nstdout: formatted markdown list\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/markdown.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nsoundFile ... - File. Required. Sound file(s) to install in user library.\n--create - Flag. Optional. Create sound directory if it does not exist.\n'
 base="darwin.sh"
@@ -12,6 +12,7 @@ fn="darwinSoundInstall"
 fnMarker="darwinsoundinstall"
 foundNames=([0]="argument")
 line="56"
+original="darwinSoundInstall"
 rawComment=$'Install a sound file for notifications\nArgument: --help - Flag. Optional. Display this help.\nArgument: soundFile ... - File. Required. Sound file(s) to install in user library.\nArgument: --create - Flag. Optional. Create sound directory if it does not exist.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/darwin.sh"

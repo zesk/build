@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="text.sh"
@@ -12,6 +12,7 @@ fn="booleanParse"
 fnMarker="booleanparse"
 foundNames=([0]="return_code" [1]="requires")
 line="155"
+original="booleanParse"
 rawComment=$'Parses text and determines if it\'s true-ish\nReturn Code: 0 - true\nReturn Code: 1 - false\nReturn Code: 2 - Neither\nRequires: stringLowercase helpArgument\nWithout arguments, displays help.\nReturn code: - `0` - Text is plain\nReturn code: - `1` - Text contains non-plain characters\n\n'
 requires=$'stringLowercase helpArgument\n'
 return_code=$'0 - true\n1 - false\n2 - Neither\n- `0` - Text is plain\n- `1` - Text contains non-plain characters\n'

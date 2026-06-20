@@ -10,6 +10,7 @@ file="bin/build/env/__BASH_PROMPT_MARKERS.sh"
 fn="__BASH_PROMPT_MARKERS"
 foundNames=([0]="name" [1]="summary" [2]="see" [3]="category" [4]="type")
 name="Prompt marker list"
+original="__BASH_PROMPT_MARKERS"
 rawComment=$'Name: Prompt marker list\nSummary: Bash Prompt escape codes for prompt reporting\nList of markers to identify to the terminal location of the prompt. Used by `iTerm2` and, hopefully, other terminal applications.\nSee: iTerm2Init\nCategory: Bash Prompt\nType: Array:EmptyString\nSee: bashPrompt\n\n'
 see=$'iTerm2Init\nbashPrompt\n'
 sourceFile="bin/build/env/__BASH_PROMPT_MARKERS.sh"

@@ -58,5 +58,5 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### Environment
 
-- [`PROMPT_COMMAND` Prompt function]({rel}env/#bash) – **Callable**. Command is run before displaying the prompt, receives exit status
+- {SEE:PROMPT_COMMAND}
 

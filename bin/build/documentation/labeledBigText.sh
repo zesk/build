@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--top - Flag. Optional. Place label at the top.\n--bottom - Flag. Optional. Place label at the bottom.\n--prefix prefixText - String. Optional. Optional prefix on each line.\n--tween tweenText - String. Optional. Optional between text after label and before `decorate big` on each line (allows coloring or other decorations).\n--suffix suffixText - String. Optional. Optional suffix on each line.\nlabel - String. Required. Label to place on the left of big text.\ntext - String. Required. Text for `decorate big`.\n'
 base="big.sh"
@@ -13,6 +13,7 @@ fn="labeledBigText"
 fnMarker="labeledbigtext"
 foundNames=([0]="argument" [1]="example")
 line="182"
+original="labeledBigText"
 rawComment=$'Argument: --top - Flag. Optional. Place label at the top.\nArgument: --bottom - Flag. Optional. Place label at the bottom.\nArgument: --prefix prefixText - String. Optional. Optional prefix on each line.\nArgument: --tween tweenText - String. Optional. Optional between text after label and before `decorate big` on each line (allows coloring or other decorations).\nArgument: --suffix suffixText - String. Optional. Optional suffix on each line.\nArgument: label - String. Required. Label to place on the left of big text.\nArgument: text - String. Required. Text for `decorate big`.\nOutputs a label before a decorate big for output.\nThis function will strip any ANSI from the label to calculate correct string sizes.\nExample:     > bin/build/tools.sh labeledBigText --top "Neat: " Done\nExample:     Neat: ▛▀▖\nExample:           ▌ ▌▞▀▖▛▀▖▞▀▖\nExample:           ▌ ▌▌ ▌▌ ▌▛▀\nExample:           ▀▀ ▝▀ ▘ ▘▝▀▘\nExample:     > bin/build/tools.sh labeledBigText --bottom "Neat: " Done\nExample:           ▛▀▖\nExample:           ▌ ▌▞▀▖▛▀▖▞▀▖\nExample:           ▌ ▌▌ ▌▌ ▌▛▀\nExample:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/big.sh"

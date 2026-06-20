@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-18
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--tags tagList - CommaDelimitedList. Optional. Tags for notification. e.g. \`warning,production\`"$'\n'"--priority priority - String. Optional. Priority of the notification. \`low\`, or \`high\`"$'\n'"--title title - String. Optional. Title of the notification."$'\n'"--response responseHandler - Function. Optional. Use this handler to parse the result and output a response ID."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--tags tagList - CommaDelimitedList. Optional. Tags for notification. e.g. `warning,production`\n--priority priority - String. Optional. Priority of the notification. `low`, or `high`\n--title title - String. Optional. Title of the notification.\n--response responseHandler - Function. Optional. Use this handler to parse the result and output a response ID.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--help - Flag. Optional. Display this help.\n'
 base="notify.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
 description="Send a notification by submitting data to a URL"
 descriptionLineCount=""
-environment="NOTIFY_URL"$'\n'"NOTIFY_URL_AUTHORIZATION"$'\n'""
+environment=$'NOTIFY_URL\nNOTIFY_URL_AUTHORIZATION\n'
 file="bin/build/tools/notify.sh"
 fn="notifyURL"
 fnMarker="notifyurl"
 foundNames=([0]="summary" [1]="argument" [2]="environment")
 line="20"
-rawComment="Summary: Send a notification by submitting data to a URL"$'\n'"Argument: --tags tagList - CommaDelimitedList. Optional. Tags for notification. e.g. \`warning,production\`"$'\n'"Argument: --priority priority - String. Optional. Priority of the notification. \`low\`, or \`high\`"$'\n'"Argument: --title title - String. Optional. Title of the notification."$'\n'"Argument: --response responseHandler - Function. Optional. Use this handler to parse the result and output a response ID."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: NOTIFY_URL"$'\n'"Environment: NOTIFY_URL_AUTHORIZATION"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="notifyURL"
+rawComment=$'Summary: Send a notification by submitting data to a URL\nArgument: --tags tagList - CommaDelimitedList. Optional. Tags for notification. e.g. `warning,production`\nArgument: --priority priority - String. Optional. Priority of the notification. `low`, or `high`\nArgument: --title title - String. Optional. Title of the notification.\nArgument: --response responseHandler - Function. Optional. Use this handler to parse the result and output a response ID.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: NOTIFY_URL\nEnvironment: NOTIFY_URL_AUTHORIZATION\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/notify.sh"
 sourceHash="7184eddc1fe10ceca8ce9e9544dc8cc76c532777"
 sourceLine="20"

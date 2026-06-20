@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'link - EmptyString. Required. Link to output.\ntext - String. Optional. Text to display, if none then uses `link`.\n--help - Flag. Optional. Display this help.\n'
 base="console.sh"
@@ -12,6 +12,7 @@ fn="consoleLink"
 fnMarker="consolelink"
 foundNames=([0]="summary" [1]="argument")
 line="191"
+original="consoleLink"
 rawComment=$'Summary: console hyperlinks\nOutput a hyperlink to the console\nOSC 8 standard for terminals\nNo way to test ability, I think. Maybe `tput`.\nArgument: link - EmptyString. Required. Link to output.\nArgument: text - String. Optional. Text to display, if none then uses `link`.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/console.sh"

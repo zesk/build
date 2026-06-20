@@ -9,6 +9,7 @@ file="bin/build/env/GIT_REMOTE.sh"
 fn="GIT_REMOTE"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="GitHub Remote Name"
+original="GIT_REMOTE"
 rawComment=$'Name: GitHub Remote Name\nSee: gitBranchify\nCategory: Development\nType: String\n\n'
 see=$'gitBranchify\n'
 sourceFile="bin/build/env/GIT_REMOTE.sh"

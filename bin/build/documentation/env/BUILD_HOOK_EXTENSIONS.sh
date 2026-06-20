@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_HOOK_EXTENSIONS.sh"
 fn="BUILD_HOOK_EXTENSIONS"
 foundNames=([0]="name" [1]="type" [2]="category")
 name="Build Hook Extension List"
+original="BUILD_HOOK_EXTENSIONS"
 rawComment=$'Name: Build Hook Extension List\nType: ColonDelimitedList\nCategory: Application\nList of extensions to run when looking for hooks\n\n'
 sourceFile="bin/build/env/BUILD_HOOK_EXTENSIONS.sh"
 sourceHash="7f0de51655bd264a9f7a4b7e7ae475af98434660"

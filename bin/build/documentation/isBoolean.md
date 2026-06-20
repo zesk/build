@@ -29,6 +29,6 @@ Is this a boolean? (`true` or `false`)
 
 #### See Also
 
-- [isTrue]({rel}tools/type.md#istrue) - True-ish ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L72))
+- {SEE:isTrue}
 - [booleanParse]({rel}tools/text.md#booleanparse) - Parses text and determines if it's true-ish ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L155))
 

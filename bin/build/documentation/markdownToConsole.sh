@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -11,12 +11,13 @@ file="bin/build/tools/colors.sh"
 fn="markdownToConsole"
 fnMarker="markdowntoconsole"
 foundNames=([0]="summary" [1]="stdin" [2]="stdout" [3]="argument")
-line="474"
+line="451"
+original="markdownToConsole"
 rawComment=$'Summary: Converts backticks, bold and italic to console colors.\nstdin: Markdown\nstdout: decorated console output\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="268db4eebfa21f1472799a690dcd650b6c3639d4"
-sourceLine="474"
+sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceLine="451"
 stdin=$'Markdown\n'
 stdout=$'decorated console output\n'
 summary="Converts backticks, bold and italic to console colors."

@@ -27,10 +27,10 @@ Output a simple error message for a function.
 #### Requires
 
 - [bashFunctionComment]({rel}tools/bash.md#bashfunctioncomment) - Output the comment for a function in a file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L631))
-- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- {SEE:decorate}
 - [`read`]({rel}guide/builtin.md#read)
 - [`printf`]({rel}guide/builtin.md#printf)
-- [returnCodeString]({rel}tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L60))
-- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
+- {SEE:returnCodeString}
+- {SEE:helpArgument}
 - [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 

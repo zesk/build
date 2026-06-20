@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'installDirectory - Directory. Required. You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.\n--help - Flag. Optional. Display this help.\n'
 base="php-composer.sh"
@@ -15,6 +15,7 @@ fnMarker="phpcomposer"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="local_cache" [4]="environment")
 line="29"
 local_cache=$'This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.\n'
+original="phpComposer"
 rawComment=$'Summary: Run Composer commands on code\nRuns composer validate and install on a directory.\nIf this fails it will output the installation log.\nWhen this tool succeeds the `composer` tool has run on a source tree and the `vendor` directory and `composer.lock` are often updated.\nThis tools does not install the `composer` binary into the local environment.\nArgument: installDirectory - Directory. Required. You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.\nArgument: --help - Flag. Optional. Display this help.\nExample:     phpComposer ./app/\nLocal Cache: This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.\nEnvironment: BUILD_COMPOSER_VERSION - String. Default to `latest`. Used to run `docker run composer/$BUILD_COMPOSER_VERSION` on your code\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/php-composer.sh"

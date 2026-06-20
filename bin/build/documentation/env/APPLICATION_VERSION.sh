@@ -10,6 +10,7 @@ file="bin/build/env/APPLICATION_VERSION.sh"
 fn="APPLICATION_VERSION"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Application Version"
+original="APPLICATION_VERSION"
 rawComment=$'Name: Application Version\nThis is the version number which can be displayed\nCategory: Deployment\nType: String\n\n'
 sourceFile="bin/build/env/APPLICATION_VERSION.sh"
 sourceHash="66f7466137e23e682691c5ddd4ba170d82a0d736"

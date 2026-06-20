@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\n--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
@@ -13,6 +13,7 @@ fn="awsCredentialsHasProfile"
 fnMarker="awscredentialshasprofile"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="195"
+original="awsCredentialsHasProfile"
 rawComment=$'Extract a profile from a credentials file\nIf the AWS credentials file is not found, returns exit code 1 and outputs nothing.\nIf the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.\nSummary: Get credentials and output environment variables for AWS authentication\nArgument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)\nArgument: --help - Flag. Optional. Display this help.\nExample:     setFile=$(fileTemporaryName "$handler") || return $?\nExample:     if awsEnvironment "$profile" > "$setFile"; then\nExample:     eval $(cat "$setFile")\nExample:     rm "$setFile"\nExample:     else\nExample:     decorate error "Need $profile profile in aws credentials file"`\nExample:     exit 1\nExample:     fi\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 setFile=""

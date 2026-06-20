@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'packageName - A simple package name which will be expanded to specific platform or package-manager specific package names\n--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n'
 base="package.sh"
@@ -12,6 +12,7 @@ fn="packageMapping"
 fnMarker="packagemapping"
 foundNames=([0]="argument")
 line="829"
+original="packageMapping"
 rawComment=$'Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names\nArgument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/package.sh"

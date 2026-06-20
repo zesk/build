@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_YARN_VERSION.sh"
 fn="BUILD_YARN_VERSION"
 foundNames=([0]="name" [1]="see" [2]="type" [3]="category" [4]="vendor")
 name="Yarn Version"
+original="BUILD_YARN_VERSION"
 rawComment=$'Name: Yarn Version\nVersion of yarn to install using `corepack`\nSee: yarnInstall\nType: String\nCategory: Vendor\nVendor: yarn\n\n'
 see=$'yarnInstall\n'
 sourceFile="bin/build/env/BUILD_YARN_VERSION.sh"

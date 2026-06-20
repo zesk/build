@@ -77,14 +77,14 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### Environment
 
-- [`BUILD_TEST_FLAGS` Test Flags]({rel}env/#testing) – **String**. Test flags affect controls and how tests are run. [`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
+- {SEE:BUILD_TEST_FLAGS} {SEE:BUILD_DEBUG}
 
 #### Requires
 
-- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
 - [cpuLoadAverage]({rel}tools/cpu.md#cpuloadaverage) - Get the load average using uptime ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L390))
 - [consoleConfigureColorMode]({rel}tools/console.md#consoleconfigurecolormode) - Print the suggested color mode for the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/console.sh#L110))
-- [buildEnvironmentLoad]({rel}tools/build.md#buildenvironmentload) - Load one or more environment settings from the environment file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L411))
+- [buildEnvironmentLoad]({rel}tools/build.md#buildenvironmentload) - Load one or more environment settings from the environment file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L412))
 - [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
 - [bashCoverage]({rel}tools/coverage.md#bashcoverage) - Collect code coverage statistics for a code sample ([source](https://github.com/zesk/build/blob/main/bin/build/tools/coverage.sh#L15))
 

@@ -148,7 +148,7 @@ _validateThrow() {
 # Valid validate type
 # Requires: _validateThrow
 __validateTypeType() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  [ -n "${1-}" ] || _validateThrow "validate Type is blank" || return $?
   local type="${1-:__NOT__}" typeFunction=""
   __validateMapper "$type"
   isFunction "$typeFunction" || _validateThrow "Invalid type $1 -> $type" || return $?
@@ -158,7 +158,7 @@ __validateTypeType() {
 # Non-empty string
 # Requires: _validateThrow
 __validateTypeString() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  [ -n "${1-}" ] || _validateThrow "validate String is blank" || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -268,32 +268,86 @@ __validateTypeExecutable() {
   printf "%s\n" "${1-}"
 }
 
-__validateTypeApplicationDirectory() {
-  local home directory="${1-}"
-  home=$(buildHome) || return $?
-  _validateHelperApplicationTest -d "$home" "${directory%/}" || return $?
+########################################################################################################################
+#            _       _   _
+#   _ __ ___| | __ _| |_(_)_   _____
+#  | '__/ _ \ |/ _` | __| \ \ / / _ \
+#  | | |  __/ | (_| | |_| |\ V /  __/
+#  |_|  \___|_|\__,_|\__|_| \_/ \___|
+#
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+
+___validateTypeRelativeDirectory() {
+  local relativeTo="$1" && shift
+  local directory="${1-}"
+  _validateHelperApplicationTest -d "$relativeTo" "${directory%/}" || return $?
 }
 
-__validateTypeApplicationFile() {
-  local home file="${1-}"
-  home=$(buildHome) || return $?
-  _validateHelperApplicationTest -f "$home" "$file" || return $?
+___validateTypeRelativeFile() {
+  local relativeTo="$1" && shift
+  local file="${1-}"
+  _validateHelperApplicationTest -d "$relativeTo" "$file" || return $?
 }
 
-__validateTypeApplicationDirectoryList() {
+___validateTypeRelativeDirectoryList() {
+  local relativeTo="$1" && shift
   local value="${1-}"
-  local home directories=() directory dd=() index=0
+  local directories=() directory dd=() index=0
 
-  home=$(catchReturn "$handler" buildHome) || return $?
-  home="${home%/}"
+  local theBuildHome && theBuildHome=$(catchReturn "$handler" buildHome) || return $?
+  theBuildHome="${theBuildHome%/}"
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
-    directory="$(___validateTypeApplicationDirectory "$home" "$directory")" || _validateThrow "element #$index ($(decorate error "$directory"): $(decorate value "$value")" || return $?
+    directory="$(___validateTypeRelativeDirectory "$relativeTo" "$directory")" || _validateThrow "element #$index ($(decorate error "$directory"): $(decorate value "$value")" || return $?
     dd+=("$directory")
     index=$((index + 1))
   done
   printf "%s\n" "$(listJoin ":" "${dd[@]+"${dd[@]}"}")"
 }
+
+########################################################################################################################
+## Application `BUILD_HOME` Relative ###################################################################################
+########################################################################################################################
+
+__validateTypeApplicationDirectory() {
+  local theBuildHome && theBuildHome=$(buildHome) || return $?
+  ___validateTypeRelativeDirectory "$theBuildHome" "$@"
+}
+
+__validateTypeApplicationFile() {
+  local theBuildHome && theBuildHome=$(buildHome) || return $?
+  ___validateTypeRelativeFile "$theBuildHome" "$@"
+}
+
+__validateTypeApplicationDirectoryList() {
+  local theBuildHome && theBuildHome=$(buildHome) || return $?
+  ___validateTypeRelativeDirectoryList "$theBuildHome" "$@"
+}
+
+########################################################################################################################
+## User `HOME` Relative ################################################################################################
+########################################################################################################################
+
+__validateTypeUserDirectory() {
+  local theUserHome && theUserHome=$(userHome) || return $?
+  ___validateTypeRelativeDirectory "$theUserHome" "$@"
+}
+
+__validateTypeUserFile() {
+  local theUserHome && theUserHome=$(userHome) || return $?
+  ___validateTypeRelativeFile "$theUserHome" "$@"
+}
+
+__validateTypeUserDirectoryList() {
+  local theUserHome && theUserHome=$(userHome) || return $?
+  ___validateTypeRelativeDirectoryList "$theUserHome" "$@"
+}
+
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
 
 # Flags are command line options which set a value to true, usually
 # Placeholder to add type to list

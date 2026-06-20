@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_PAIR_WIDTH.sh"
 fn="BUILD_PAIR_WIDTH"
 foundNames=([0]="name" [1]="see" [2]="type" [3]="category")
 name="Pair Width"
+original="BUILD_PAIR_WIDTH"
 rawComment=$'Name: Pair Width\nWidth for pairs. Defaults to `40`.\nSee: __decorateExtensionPair\nType: PositiveInteger\nCategory: Decoration\n\n'
 see=$'__decorateExtensionPair\n'
 sourceFile="bin/build/env/BUILD_PAIR_WIDTH.sh"

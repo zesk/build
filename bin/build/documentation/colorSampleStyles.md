@@ -14,6 +14,10 @@ Outputs sample sentences for the `consoleAction` commands to see what they look 
 
 - none
 
+#### Writes to standard output
+
+ConsoleText
+
 #### Return codes
 
 - `0` - Success

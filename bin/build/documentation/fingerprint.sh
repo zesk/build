@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--cached fingerprint - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.\n--verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.\n--quiet - Flag. Optional. Be quiet (turns verbose off).\n--audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn\'t; or should be ignored.\n--check - Flag. Optional. Check if the fingerprint is up to date and output the current value.\n--key - String. Optional. Update this key in the JSON file.\n'
 base="fingerprint.sh"
@@ -14,6 +14,7 @@ fn="fingerprint"
 fnMarker="fingerprint"
 foundNames=([0]="argument" [1]="build_debug" [2]="environment")
 line="21"
+original="fingerprint"
 rawComment=$'Update file from `APPLICATION_JSON` with application fingerprint.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --cached fingerprint - String. Optional. Instead of computing the `application-fingerprint` using the hook, use this value.\nArgument: --verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.\nArgument: --quiet - Flag. Optional. Be quiet (turns verbose off).\nArgument: --audit - Flag. Optional. Keep a record of the files between fingerprints and show what changed to see if certain files are changing often and shouldn\'t; or should be ignored.\nArgument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value.\nArgument: --key - String. Optional. Update this key in the JSON file.\nBUILD_DEBUG: fingerprint - By default be verbose even if the flag is not specified. (Use `--quiet` to silence if needed)\nEnvironment: BUILD_DEBUG\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/fingerprint.sh"

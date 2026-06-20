@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'listValue - Required. List value to modify.\nseparator - Required. Separator string for item values (typically `:`)\n--first - Flag. Optional. Place any items after this flag first in the list\n--last - Flag. Optional. Place any items after this flag last in the list. Default.\nitem - the value to be added to the `listValue`\n--help - Flag. Optional. Display this help.\n'
 base="list.sh"
@@ -12,6 +12,7 @@ fn="listAppend"
 fnMarker="listappend"
 foundNames=([0]="summary" [1]="argument")
 line="122"
+original="listAppend"
 rawComment=$'Summary: Add an item to a character-delimited list.\nAdd an item to a list IFF it does not exist in the list already\nArgument: listValue - Required. List value to modify.\nArgument: separator - Required. Separator string for item values (typically `:`)\nArgument: --first - Flag. Optional. Place any items after this flag first in the list\nArgument: --last - Flag. Optional. Place any items after this flag last in the list. Default.\nArgument: item - the value to be added to the `listValue`\nArgument: --help - Flag. Optional. Display this help.\nAdd an item to the beginning or end of a text-delimited list\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/list.sh"

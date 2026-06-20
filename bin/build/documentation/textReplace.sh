@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'needle - String. Required. String to replace.\nreplacement - EmptyString.  String to replace needle with.\nhaystack - EmptyString. Optional. String to modify. If not supplied, reads from standard input.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="textReplace"
 fnMarker="textreplace"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 line="1206"
+original="textReplace"
 rawComment=$'Replace all occurrences of a string within another string\nArgument: needle - String. Required. String to replace.\nArgument: replacement - EmptyString.  String to replace needle with.\nArgument: haystack - EmptyString. Optional. String to modify. If not supplied, reads from standard input.\nstdin: If no haystack supplied reads from standard input and replaces the string on each line read.\nstdout: New string with needle replaced\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

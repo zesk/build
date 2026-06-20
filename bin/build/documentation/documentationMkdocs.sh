@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--path documentationPath - Directory. Optional. Directory where documentation root exists.\n--template yamlTemplate - File. Optional. Name of `mkdocs.yml` template file to generate final file. Default is `mkdocs.template.yml`.\n--package packageName - String. Optional. Install this python package when setting up `mkdocs`.\n--version version - String. Optional. Use this for current version of documentation; defaults to `hookVersionCurrent`\n--clean - Flag. Optional. Clean the python virtual environment first.\n--help - Flag. Optional. Display this help.\n'
 base="mkdocs.sh"
@@ -12,6 +12,7 @@ fn="documentationMkdocs"
 fnMarker="documentationmkdocs"
 foundNames=([0]="summary" [1]="argument" [2]="see")
 line="16"
+original="documentationMkdocs"
 rawComment=$'Summary: mkdocs Utility\nBuild documentation using `mkdocs` and a template.\nArgument: --path documentationPath - Directory. Optional. Directory where documentation root exists.\nArgument: --template yamlTemplate - File. Optional. Name of `mkdocs.yml` template file to generate final file. Default is `mkdocs.template.yml`.\nArgument: --package packageName - String. Optional. Install this python package when setting up `mkdocs`.\nArgument: --version version - String. Optional. Use this for current version of documentation; defaults to `hookVersionCurrent`\nArgument: --clean - Flag. Optional. Clean the python virtual environment first.\nSee: hookVersionCurrent\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'hookVersionCurrent\n'

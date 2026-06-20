@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--dry-run - Flag. Optional. Do not change anything.\n--cull cullCount - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.\nlogFile - File. Required. A log file which exists.\ncount - PositiveInteger. Required. Integer of log file backups to maintain.\n'
 base="log.sh"
@@ -12,6 +12,7 @@ fn="logRotate"
 fnMarker="logrotate"
 foundNames=([0]="argument" [1]="summary")
 line="33"
+original="logRotate"
 rawComment=$'Argument: --help - Flag. Optional. Display this help.\nArgument: --dry-run - Flag. Optional. Do not change anything.\nArgument: --cull cullCount - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.\nArgument: logFile - File. Required. A log file which exists.\nArgument: count - PositiveInteger. Required. Integer of log file backups to maintain.\nSummary: Rotate a log file\nRotates a log file by adding a digit to the end numerically, and moves logs such that the most recent\nlog backup suffix is `.1` and the oldest log backup suffix is `.count`.\nBacks up files as:\n    logFile\n    logFile.1\n    logFile.2\n    logFile.3\n`--cull` will delete `cullCount` files in addition to the backup files if they exist. This is useful if you change this number\nfrom a higher to a lower number and want the extra files deleted.\nBut maintains file descriptors for `logFile`.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/log.sh"

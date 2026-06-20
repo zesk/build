@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"path - Directory. Required. The documentation path to examine."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\npath - Directory. Required. The documentation path to examine.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Changes the modification date of the associated files such that it will be regenerated with \`documentationFunctionsCompile\`."$'\n'""$'\n'""
+description=$'Changes the modification date of the associated files such that it will be regenerated with `documentationFunctionsCompile`.\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/documentation.sh"
 fn="documentationFunctionsSeeDirty"
 fnMarker="documentationfunctionsseedirty"
 foundNames=([0]="summary" [1]="see" [2]="argument")
-line="986"
-rawComment="Summary: Dirty documentation files with unresolved \`SEE:\` tokens in documentation path"$'\n'"Changes the modification date of the associated files such that it will be regenerated with \`documentationFunctionsCompile\`."$'\n'"See: documentationFunctionsCompile"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: path - Directory. Required. The documentation path to examine."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-see="documentationFunctionsCompile"$'\n'""
+line="987"
+original="documentationFunctionsSeeDirty"
+rawComment=$'Summary: Dirty documentation files with unresolved `SEE:` tokens in documentation path\nChanges the modification date of the associated files such that it will be regenerated with `documentationFunctionsCompile`.\nSee: documentationFunctionsCompile\nArgument: --help - Flag. Optional. Display this help.\nArgument: path - Directory. Required. The documentation path to examine.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+see=$'documentationFunctionsCompile\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="7c3d196118740ec8c3cc1fc6f190e82d99a768c2"
-sourceLine="986"
+sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
+sourceLine="987"
 summary="Dirty documentation files with unresolved \`SEE:\` tokens in documentation path"
 summaryComputed=""
 usage="documentationFunctionsSeeDirty [ --help ] path"

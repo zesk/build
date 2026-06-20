@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\nthreshold - UnsignedInteger. Optional. If process count exceeds this threshold, run the hook and return 1.\n... - Arguments. Optional. Pass these arguments to the hook.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--quiet - Flag. Optional. Do not output a message when threshold is exceeded.\n--hook hookName - EmptyString. Optional. Run this hook. Defaults to `notify\'\n--sleep sleepTime - PositiveInteger. Optional. Sleep time between checks in milliseconds.\n--timeout timeoutTime - PositiveInteger. Optional. Time out watching after `timeoutTime` milliseconds.\n'
 base="process.sh"
@@ -12,6 +12,7 @@ fn="processCountWatcher"
 fnMarker="processcountwatcher"
 foundNames=([0]="argument" [1]="return_code")
 line="318"
+original="processCountWatcher"
 rawComment=$'Watch the number of processes matching `token` and fail if it exceeds a threshold\nArgument:\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: threshold - UnsignedInteger. Optional. If process count exceeds this threshold, run the hook and return 1.\nArgument: ... - Arguments. Optional. Pass these arguments to the hook.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --quiet - Flag. Optional. Do not output a message when threshold is exceeded.\nArgument: --hook hookName - EmptyString. Optional. Run this hook. Defaults to `notify\'\nArgument: --sleep sleepTime - PositiveInteger. Optional. Sleep time between checks in milliseconds.\nArgument: --timeout timeoutTime - PositiveInteger. Optional. Time out watching after `timeoutTime` milliseconds.\nReturn Code: 0 - Sleep was interrupted\nReturn Code: 1 - Process count exceeded threshold\n\n'
 return_code=$'0 - Sleep was interrupted\n1 - Process count exceeded threshold\n'
 sourceFile="bin/build/tools/process.sh"

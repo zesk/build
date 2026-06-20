@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--local - Flag. Optional. Local today.\n--help - Flag. Optional. Display this help.\n'
 base="date.sh"
@@ -15,6 +15,7 @@ fn="dateToday"
 fnMarker="datetoday"
 foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="example")
 line="170"
+original="dateToday"
 rawComment=$'Summary: Today\'s date in UTC\nReturns the current date, in YYYY-MM-DD format. (same as `%F`)\nArgument: --local - Flag. Optional. Local today.\nArgument: --help - Flag. Optional. Display this help.\nEnvironment: Compatible with BSD and GNU date.\nExample:     date="$({fn})"\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/date.sh"

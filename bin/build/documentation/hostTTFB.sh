@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nurl - URL. Required. URL to check.\n'
 base="web.sh"
@@ -12,6 +12,7 @@ fn="hostTTFB"
 fnMarker="hostttfb"
 foundNames=([0]="argument")
 line="97"
+original="hostTTFB"
 rawComment=$'Fetch Time to First Byte and other stats\nArgument: --help - Flag. Optional. Display this help.\nArgument: url - URL. Required. URL to check.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/web.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--exec - Executable. Optional. If not supplied uses `urlOpen`.\n--help - Flag. Optional. Display this help.\n'
 base="url.sh"
@@ -12,10 +12,11 @@ fn="urlOpener"
 fnMarker="urlopener"
 foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="stdout")
 line="295"
+original="urlOpener"
 rawComment=$'Summary: URL opener stream filter\nOpen URLs which appear in a stream\n(but continue to output the stream)\nArgument: --exec - Executable. Optional. If not supplied uses `urlOpen`.\nArgument: --help - Flag. Optional. Display this help.\nstdin: text\nstdout: text\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="3ed3b955b3a7b632b60fea2e330a81c2699cd660"
+sourceHash="f32b7cbe9339aa8f7842cb180b43f028a41f69e6"
 sourceLine="295"
 stdin=$'text\n'
 stdout=$'text\n'

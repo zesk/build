@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="daemontools.sh"
@@ -12,6 +12,7 @@ fn="daemontoolsProcessIds"
 fnMarker="daemontoolsprocessids"
 foundNames=([0]="requires")
 line="311"
+original="daemontoolsProcessIds"
 rawComment=$'List any processes associated with daemontools supervisors\nRequires: pgrep read printf\n\n'
 requires=$'pgrep read printf\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

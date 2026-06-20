@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--choice choiceText - String. Optional. Title of the thing.\n--ok - Flag. Optional. Adds "OK" as an option.\n--cancel - Flag. Optional. Adds "Cancel" as an option.\n--default buttonIndex - Integer. Required. The button (0-based index) to make the default button choice.\n--help - Flag. Optional. Display this help.\nmessage ... - String. Required. The message to display in the dialog.\n'
 base="darwin.sh"
@@ -12,6 +12,7 @@ fn="darwinDialog"
 fnMarker="darwindialog"
 foundNames=([0]="argument" [1]="platform")
 line="200"
+original="darwinDialog"
 platform=$'Darwin\n'
 rawComment=$'Argument: --choice choiceText - String. Optional. Title of the thing.\nArgument: --ok - Flag. Optional. Adds "OK" as an option.\nArgument: --cancel - Flag. Optional. Adds "Cancel" as an option.\nArgument: --default buttonIndex - Integer. Required. The button (0-based index) to make the default button choice.\nArgument: --help - Flag. Optional. Display this help.\nArgument: message ... - String. Required. The message to display in the dialog.\nDisplay a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.\nOutputs the selected button text upon exit.\nPlatform: Darwin\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

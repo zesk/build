@@ -4,14 +4,15 @@
 
 #### Usage
 
-    bashDocumentationExtract [ --generate ] [ --no-cache | --cache ] [ --help ] handler function sourceFile
+    bashDocumentationExtract [ --generate ] [ --no-cache | --cache ] [ --help ] [ --function | --environment ] itemName sourceFile [ sourceLine ]
     
 Extract documentation variables from a comment stripped of the `# ` prefixes.
 
 A few special values are generated/computed:
 
 - `description` - Any line in the comment which is not in variable is appended to the field `description`
-- `fn` - The function name (no parenthesis or anything)
+- `original` - `itemName` unmodified
+- `fn` - The function name (no parenthesis or anything) (can be changed from `itemName`)
 - `base` - The basename of the file
 - `file` - The relative path name of the file from the application root
 - `summary` - Defaults to first ten words of `description`
@@ -30,9 +31,9 @@ Otherwise the assumed variables (in addition to above) to define functions are:
 
 #### Arguments
 
-- `fn` - String. Required. Name of `fn`
+- `itemName` - String. Required. Name of item we are documenting. Usually a function name or environment variable name.
 - `sourceFile` - File. Required.
-- `sourceLine` - PositiveInteger. Optional.
+- `sourceLine` - PositiveInteger. Optional. The line in the source file where the item is defined.
 - `--generate` - Flag. Optional. Generate cached files.
 - `--no-cache` - Flag. Optional. Skip any attempt to cache anything.
 - `--cache` - Flag. Optional. Force use of cache.
@@ -55,4 +56,9 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### See Also
+
+- {SEE:bashFunctionComment}
+- {SEE:bashFirstComment}
 

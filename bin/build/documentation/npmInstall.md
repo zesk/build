@@ -23,6 +23,6 @@ When this tool succeeds the `npm` binary is available in the local operating sys
 
 #### Environment
 
-- [`BUILD_NPM_VERSION` npm Version]({rel}env/#installation) – **String**. Version of npm to install using native `npm` binary. - Read-only. Default version. If not specified, uses `latest`.
+- {SEE:BUILD_NPM_VERSION} - Read-only. Default version. If not specified, uses `latest`.
 - - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 

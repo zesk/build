@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--target target - Required. S3 URL. S3 URL to upload to (with path)\nitem - Required. A file or directory to upload to S3. All files and directories are uploaded as the same name in the top-level directory target.\n--profile profileName - String. Optional. S3 Profile to use when using S3\n'
 base="aws.sh"
@@ -12,6 +12,7 @@ fn="awsS3Upload"
 fnMarker="awss3upload"
 foundNames=([0]="argument")
 line="402"
+original="awsS3Upload"
 rawComment=$'Upload a set of files or directories to S3.\nCreates a `manifest.json` file at target with structure:\n- hostname - host name which sent results\n- created - Milliseconds creation time\n- createdString - Milliseconds creation time in current locale language\n- arguments - arguments to this function\nCreates a `files.json` with a list of files as well at `target`.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --target target - Required. S3 URL. S3 URL to upload to (with path)\nArgument: item - Required. A file or directory to upload to S3. All files and directories are uploaded as the same name in the top-level directory target.\nArgument: --profile profileName - String. Optional. S3 Profile to use when using S3\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/aws.sh"

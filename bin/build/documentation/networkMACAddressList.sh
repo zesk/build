@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--install - Flag. Optional. Install any packages required to get `ifconfig` installed first.\n--help - Flag. Optional. This help.\n'
 base="network.sh"
@@ -12,6 +12,7 @@ fn="networkMACAddressList"
 fnMarker="networkmacaddresslist"
 foundNames=([0]="output" [1]="argument")
 line="169"
+original="networkMACAddressList"
 output=$'lines:IPv4\n'
 rawComment=$'List MAC addresses associated with this system using `ifconfig`\nOutput: lines:IPv4\nArgument: --install - Flag. Optional. Install any packages required to get `ifconfig` installed first.\nArgument: --help - Flag. Optional. This help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

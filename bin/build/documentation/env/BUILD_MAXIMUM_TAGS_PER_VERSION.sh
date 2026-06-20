@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_MAXIMUM_TAGS_PER_VERSION.sh"
 fn="BUILD_MAXIMUM_TAGS_PER_VERSION"
 foundNames=([0]="name" [1]="type" [2]="category" [3]="see")
 name="Maximum Git Tags per Version"
+original="BUILD_MAXIMUM_TAGS_PER_VERSION"
 rawComment=$'Name: Maximum Git Tags per Version\nNumber of versions tags (d0, d1, d2, etc.) to look for before giving up in `gitTagVersion`\nType: PositiveInteger\nCategory: Build Configuration\nSee: gitTagVersion\n\n'
 see=$'gitTagVersion\n'
 sourceFile="bin/build/env/BUILD_MAXIMUM_TAGS_PER_VERSION.sh"

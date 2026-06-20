@@ -10,6 +10,7 @@ file="bin/build/env/MANPATH.sh"
 fn="MANPATH"
 foundNames=([0]="name" [1]="category" [2]="type" [3]="see")
 name="Manual Pages Path"
+original="MANPATH"
 rawComment=$'Name: Manual Pages Path\nCategory: Bash\nType: DirectoryList\nA colon `:` separated list of paths to search for manual pages.\nSee [`manPathConfigure`](/tools/platform/#manpathconfigure)\nSee: manPathConfigure\n\n'
 see=$'manPathConfigure\n'
 sourceFile="bin/build/env/MANPATH.sh"

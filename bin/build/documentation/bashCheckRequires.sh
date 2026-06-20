@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--ignore prefix. String. Optional. Ignore exact function names.\n--ignore-prefix prefix - String. Optional. Ignore function names which match the prefix and do not check them.\n--report - Flag. Optional. Output a report of various functions and handler after processing is complete.\n--require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass\n--unused - Flag. Optional. Check for unused functions and report on them.\n'
 base="bash.sh"
@@ -12,11 +12,12 @@ fn="bashCheckRequires"
 fnMarker="bashcheckrequires"
 foundNames=([0]="requires" [1]="argument")
 line="73"
+original="bashCheckRequires"
 rawComment=$'Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements\nScans a bash script for lines which look like:\nRequires: token1 token2\nEach requirement token is:\n- a bash function which MUST be defined\n- a shell script (executable) which must be present\nIf all requirements are met, exit status of 0.\nIf any requirements are not met, exit status of 1 and a list of unmet requirements are listed\nArgument: --help - Flag. Optional. Display this help.\nArgument: --ignore prefix. String. Optional. Ignore exact function names.\nArgument: --ignore-prefix prefix - String. Optional. Ignore function names which match the prefix and do not check them.\nArgument: --report - Flag. Optional. Output a report of various functions and handler after processing is complete.\nArgument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass\nArgument: --unused - Flag. Optional. Check for unused functions and report on them.\n\n'
 requires=$'token1 token2\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="73"
 summary="Checks a bash script to ensure all requirements are met,"
 summaryComputed="true"

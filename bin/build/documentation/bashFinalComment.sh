@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
@@ -12,12 +12,13 @@ fn="bashFinalComment"
 fnMarker="bashfinalcomment"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="requires")
 line="561"
+original="bashFinalComment"
 rawComment=$'Summary: Extract final comment from a stream\nExtracts the final comment from a stream.\nExcludes lines similarly to `bashFirstComment`.\nSee: bashFirstComment\nArgument: --help - Flag. Optional. Display this help.\nRequires: fileReverseLines sed cut grep convertValue\n\n'
 requires=$'fileReverseLines sed cut grep convertValue\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'bashFirstComment\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="561"
 summary="Extract final comment from a stream"
 summaryComputed=""

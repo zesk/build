@@ -10,6 +10,7 @@ file="bin/build/env/AWS_SECRET_ACCESS_KEY.sh"
 fn="AWS_SECRET_ACCESS_KEY"
 foundNames=([0]="name" [1]="category" [2]="vendor" [3]="type")
 name="AWS Secret Access Key"
+original="AWS_SECRET_ACCESS_KEY"
 rawComment=$'Name: AWS Secret Access Key\nPrivate Secret Password for AWS\nCategory: Amazon Web Services\nVendor: Amazon Web Services\nType: Secret\n\n'
 sourceFile="bin/build/env/AWS_SECRET_ACCESS_KEY.sh"
 sourceHash="8b9763cbdb2c15b5f0a451f87d3332a9baecb7d0"

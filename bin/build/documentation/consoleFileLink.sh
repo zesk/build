@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--no-app - Flag. Optional. Do not map the application path in `decoratePath`\nfileName - String. Required. File path to output.\ntext - String. Optional. Text to output linked to file.\n'
 base="console.sh"
@@ -12,6 +12,7 @@ fn="consoleFileLink"
 fnMarker="consolefilelink"
 foundNames=([0]="argument")
 line="225"
+original="consoleFileLink"
 rawComment=$'Output a local file link to the console\nArgument: --no-app - Flag. Optional. Do not map the application path in `decoratePath`\nArgument: fileName - String. Required. File path to output.\nArgument: text - String. Optional. Text to output linked to file.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/console.sh"

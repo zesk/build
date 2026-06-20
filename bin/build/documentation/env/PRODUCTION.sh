@@ -10,6 +10,7 @@ file="bin/build/env/PRODUCTION.sh"
 fn="PRODUCTION"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Production Flag"
+original="PRODUCTION"
 rawComment=$'Name: Production Flag\nIs this a production system? e.g. remove unnecessary runtime checks.\nCategory: Bash\nType: Boolean\n\n'
 sourceFile="bin/build/env/PRODUCTION.sh"
 sourceHash="cefe2b83971091f56f62329df9177773bbbf2ca2"

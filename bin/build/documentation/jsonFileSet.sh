@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'jsonFile - File. Required. File to get value from.\npath - String. Required. dot-separated path to modify (e.g. `extra.fingerprint`)\nvalue ... - EmptyString. Optional. Value to set. If more than one value is set, value is set to an array value. If no value passed, the key is deleted. **Note the difference between a blank argument and NO argument.**\n'
 base="json.sh"
@@ -12,6 +12,7 @@ fn="jsonFileSet"
 fnMarker="jsonfileset"
 foundNames=([0]="argument")
 line="110"
+original="jsonFileSet"
 rawComment=$'Set or delete a value in a JSON file\nArgument: jsonFile - File. Required. File to get value from.\nArgument: path - String. Required. dot-separated path to modify (e.g. `extra.fingerprint`)\nArgument: value ... - EmptyString. Optional. Value to set. If more than one value is set, value is set to an array value. If no value passed, the key is deleted. **Note the difference between a blank argument and NO argument.**\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/json.sh"

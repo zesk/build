@@ -1,0 +1,1 @@
+[decorate pair]({rel}#__decorateextensionpair) - Output a name value pair (decorate extension) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/pair.sh#L16))

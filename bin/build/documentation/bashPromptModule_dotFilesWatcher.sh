@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="prompt-modules.sh"
@@ -13,6 +13,7 @@ fn="bashPromptModule_dotFilesWatcher"
 fnMarker="bashpromptmodule_dotfileswatcher"
 foundNames=([0]="summary" [1]="example" [2]="requires")
 line="95"
+original="bashPromptModule_dotFilesWatcher"
 rawComment=$'Summary: Monitor home directory for new `.` files\nWatches your HOME directory for `.` files which are added and unknown to you.\nExample:     bashPrompt bashPromptModule_dotFilesWatcher\nRequires: sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm\n\n'
 requires=$'sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

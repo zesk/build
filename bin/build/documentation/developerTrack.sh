@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--verbose - Flag. Optional. Be verbose about what the function is doing.\n--list - Flag. Optional. Show the list of what has changed since the first invocation.\n--profile - Flag. Optional. Mark the end of profile definitions.\n--developer - Flag. Optional. Mark the start of developer definitions.\n'
 base="developer.sh"
@@ -12,6 +12,7 @@ fn="developerTrack"
 fnMarker="developertrack"
 foundNames=([0]="summary" [1]="argument" [2]="stdout")
 line="102"
+original="developerTrack"
 rawComment=$'Summary: Track changes to the bash environment\nWith no arguments this function returns the new or changed bash functions, variables, or aliases since marks occurred.\nIn general, you will add `{fn} --profile` at the end of your `.bashrc` file, and you will add `{fn} --developer` at the *start* of your `developer.sh` before you define anything.\nArgument: --verbose - Flag. Optional. Be verbose about what the function is doing.\nArgument: --list - Flag. Optional. Show the list of what has changed since the first invocation.\nArgument: --profile - Flag. Optional. Mark the end of profile definitions.\nArgument: --developer - Flag. Optional. Mark the start of developer definitions.\nstdout: list of function|alias|environment\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/developer.sh"

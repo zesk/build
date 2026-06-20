@@ -41,5 +41,5 @@ Think of them of the "source" (user) and "target" (ssh key) access. Both must ex
 - - `GITHUB_ACCESS_TOKEN_EXPIRE` - Date in `YYYY-MM-DD` format which represents the date when `GITHUB_ACCESS_TOKEN` expires (required)
 - - `GITHUB_REPOSITORY_OWNER` - Owner of the repository (`https://github.com/owner`)
 - - `GITHUB_REPOSITORY_NAME` - Name of the repository (`https://github.com/owner/name`)
-- [`GITHUB_ACCESS_TOKEN` GitHub Access Token]({rel}env/#development) – **Secret**. Access token used for release
+- {SEE:GITHUB_ACCESS_TOKEN}
 

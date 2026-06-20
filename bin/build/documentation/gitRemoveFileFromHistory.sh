@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
@@ -12,6 +12,7 @@ fn="gitRemoveFileFromHistory"
 fnMarker="gitremovefilefromhistory"
 foundNames=()
 line="210"
+original="gitRemoveFileFromHistory"
 rawComment=$'Has a lot of caveats\ngitRemoveFileFromHistory path/to/file\nusually have to `git push --force`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/git.sh"

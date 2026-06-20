@@ -1,0 +1,1 @@
+[decorate at]({rel}tools/cursor.md#__decorateextensionat) - Experimental ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/big.sh#L98))

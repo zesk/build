@@ -184,8 +184,8 @@ returnMessage() {
   local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
   if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
   # __IDENTICAL__ localTrace 1
-  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
-  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\" ($trace)" "$@" || return $?
+  local trace="§ ${BASH_SOURCE[2]#"${BUILD_HOME-}/"}:${BASH_LINENO[1]-} ${FUNCNAME[2]}"
+  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\"" "$@" "($trace)" || return $?
   if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
 }
 _returnMessage() {

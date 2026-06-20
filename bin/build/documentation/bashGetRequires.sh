@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'script - File. Required. Bash script to fetch requires tokens from.\n'
 base="bash.sh"
@@ -12,10 +12,11 @@ fn="bashGetRequires"
 fnMarker="bashgetrequires"
 foundNames=([0]="argument" [1]="summary")
 line="45"
+original="bashGetRequires"
 rawComment=$'Argument: script - File. Required. Bash script to fetch requires tokens from.\nSummary: Fetch requirements lines from a bash file\nGets a list of the `Requires:` comments in a bash file.\nReturns a unique list of tokens\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="45"
 summary="Fetch requirements lines from a bash file"
 summaryComputed=""

@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_HOME.sh"
 fn="BUILD_HOME"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Build Home Directory"
+original="BUILD_HOME"
 rawComment=$'Name: Build Home Directory\n`BUILD_HOME` is `.` when this code is installed - at `./bin/build`. Usually an absolute path and does NOT end with a trailing slash.\nThis is computed from the current source file using `${BASH_SOURCE[0]}`.\nCategory: Build Configuration\nType: Directory\n\n'
 sourceFile="bin/build/env/BUILD_HOME.sh"
 sourceHash="7bd511aaff21c7e361c5cd50fc852d316f46479d"

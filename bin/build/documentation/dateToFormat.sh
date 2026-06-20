@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'date - String. Required. String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)\nformat - String. Optional. Format string for the `date` command (e.g. `%s`)\n'
 base="date.sh"
@@ -13,6 +13,7 @@ fn="dateToFormat"
 fnMarker="datetoformat"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="return_code")
 line="22"
+original="dateToFormat"
 rawComment=$'Converts a date (`YYYY-MM-DD`) to another format.\nSummary: Platform agnostic date conversion\nCompatible with BSD and GNU date.\nArgument: date - String. Required. String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)\nArgument: format - String. Optional. Format string for the `date` command (e.g. `%s`)\nExample:     dateToFormat 2023-04-20 %s 1681948800\nExample:     timestamp=$(dateToFormat \'2023-10-15\' %s)\nReturn Code: 1 - if parsing fails\nReturn Code: 0 - if parsing succeeds\n\n'
 return_code=$'1 - if parsing fails\n0 - if parsing succeeds\n'
 sourceFile="bin/build/tools/date.sh"

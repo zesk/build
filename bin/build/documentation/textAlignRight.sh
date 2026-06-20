@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'characterWidth - Characters to align right\ntext ... - Text to align right\n--help - Flag. Optional. Display this help.\n'
 base="text.sh"
@@ -13,6 +13,7 @@ fn="textAlignRight"
 fnMarker="textalignright"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="1257"
+original="textAlignRight"
 rawComment=$'Format text and align it right using spaces.\nSummary: align text right\nArgument: characterWidth - Characters to align right\nArgument: text ... - Text to align right\nArgument: --help - Flag. Optional. Display this help.\nExample:     printf "%s: %s\\n" "$(textAlignRight 20 Name)" "$name"\nExample:     printf "%s: %s\\n" "$(textAlignRight 20 Profession)" "$occupation"\nExample:                 Name: Juanita\nExample:           Profession: Engineer\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

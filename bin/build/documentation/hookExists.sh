@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.\n--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\n--next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.\nhookName0 - one or more hook names which must exist\n'
 base="hook.sh"
@@ -13,6 +13,7 @@ fn="hookExists"
 fnMarker="hookexists"
 foundNames=([0]="summary" [1]="argument" [2]="return_code" [3]="see" [4]="test" [5]="environment")
 line="230"
+original="hookExists"
 rawComment=$'Does a hook exist in the local project?\nCheck if one or more hook exists. All hooks must exist to succeed.\nSummary: Determine if a hook exists\nArgument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.\nArgument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nArgument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.\nArgument: hookName0 - one or more hook names which must exist\nReturn Code: 0 - If all hooks exist\nSee: hookRun hookRunOptional hookSource hookSourceOptional\nTest: testHookSystem\nEnvironment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG\n\n'
 return_code=$'0 - If all hooks exist\n'
 see=$'hookRun hookRunOptional hookSource hookSourceOptional\n'

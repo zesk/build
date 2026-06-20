@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_TERM_COLORS_STATE.sh"
 fn="BUILD_TERM_COLORS_STATE"
 foundNames=([0]="name" [1]="type" [2]="category" [3]="see")
 name="Terminal Color State"
+original="BUILD_TERM_COLORS_STATE"
 rawComment=$'Name: Terminal Color State\nType: String\nCategory: Application\nState to store state of current terminal color state\nSee: bashPromptModule_TermColors\n\n'
 see=$'bashPromptModule_TermColors\n'
 sourceFile="bin/build/env/BUILD_TERM_COLORS_STATE.sh"

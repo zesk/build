@@ -22,8 +22,8 @@ If no arguments are passed, returns exit code 1.
 
 #### Requires
 
-- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- {SEE:throwArgument}
 - [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
-- [isExecutable]({rel}tools/type.md#isexecutable) - Test if all arguments are executable binaries ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L219))
-- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
+- {SEE:isExecutable}
+- {SEE:isFunction}
 

@@ -24,8 +24,8 @@ Run `handler` with an environment error
 
 #### Requires
 
-- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
-- [returnArgument]({rel}tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L257))
-- [debuggingStack]({rel}tools/dump.md#debuggingstack) - Dump the function and include stacks and the current environment ([source](https://github.com/zesk/build/blob/main/bin/build/tools/dump.sh#L18))
-- [throwEnvironment]({rel}tools/sugar-core.md#throwenvironment) - Run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L226))
+- {SEE:isFunction}
+- {SEE:returnArgument}
+- {SEE:debuggingStack}
+- {SEE:throwEnvironment}
 

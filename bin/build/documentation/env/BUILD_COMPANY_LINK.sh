@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_COMPANY_LINK.sh"
 fn="BUILD_COMPANY_LINK"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Company URL"
+original="BUILD_COMPANY_LINK"
 rawComment=$'Name: Company URL\nLegal copyright holder website for this codebase\nCategory: Application\nType: URL\n\n'
 sourceFile="bin/build/env/BUILD_COMPANY_LINK.sh"
 sourceHash="a830540bc8b79ca5be90c31826c32a7f9eac2a9d"

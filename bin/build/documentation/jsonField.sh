@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\nhandler - Function. Required. Error handler.\njsonFile - File. Required. A JSON file to parse\n... - Arguments. Optional. Passed directly to jq\n'
 base="json.sh"
@@ -12,6 +12,7 @@ fn="jsonField"
 fnMarker="jsonfield"
 foundNames=([0]="argument" [1]="stdout" [2]="stderr" [3]="return_code" [4]="requires")
 line="23"
+original="jsonField"
 rawComment=$'Fetch a non-blank field from a JSON file with error handling\nArgument: --help - Flag. Optional. Display this help.\nArgument: handler - Function. Required. Error handler.\nArgument: jsonFile - File. Required. A JSON file to parse\nArgument: ... - Arguments. Optional. Passed directly to jq\nstdout: selected field\nstderr: error messages\nReturn Code: 0 - Field was found and was non-blank\nReturn Code: 1 - Field was not found or is blank\nRequires: jq executableExists throwEnvironment printf rm decorate head\n\n'
 requires=$'jq executableExists throwEnvironment printf rm decorate head\n'
 return_code=$'0 - Field was found and was non-blank\n1 - Field was not found or is blank\n'

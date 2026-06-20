@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_DOCKER_IMAGE.sh"
 fn="BUILD_DOCKER_IMAGE"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Docker Image"
+original="BUILD_DOCKER_IMAGE"
 rawComment=$'Name: Docker Image\nDefault docker image to use when launching `dockerLocalContainer`\nSee: dockerLocalContainer\nCategory: Docker\nType: String\n\n'
 see=$'dockerLocalContainer\n'
 sourceFile="bin/build/env/BUILD_DOCKER_IMAGE.sh"

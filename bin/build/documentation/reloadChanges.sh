@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-04
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--source source - File. Required. Source file to source upon change.\n--name name - String. Optional. The name to call this when changes occur.\n--path path - Directory. Required. OneOrMore. A directory to scan for changes in `.sh` files\n--file file - File. Required. OneOrMore. A file to watch.å\n--stop - Flag. Optional. Stop watching changes and remove all watches.\n--show - Flag. Optional. Show watched settings and exit.\nsource - File. Optional. If supplied directly on the command line, sets the source.\npath|file ... - DirectoryOrFile. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.\n--help - Flag. Optional. Display this help.\n'
 base="prompt-modules.sh"
@@ -13,6 +13,7 @@ fn="reloadChanges"
 fnMarker="reloadchanges"
 foundNames=([0]="argument" [1]="build_debug")
 line="82"
+original="reloadChanges"
 rawComment=$'Watch or more directories for changes in a file extension and reload a source file if any changes occur.\nArgument: --source source - File. Required. Source file to source upon change.\nArgument: --name name - String. Optional. The name to call this when changes occur.\nArgument: --path path - Directory. Required. OneOrMore. A directory to scan for changes in `.sh` files\nArgument: --file file - File. Required. OneOrMore. A file to watch.å\nArgument: --stop - Flag. Optional. Stop watching changes and remove all watches.\nArgument: --show - Flag. Optional. Show watched settings and exit.\nArgument: source - File. Optional. If supplied directly on the command line, sets the source.\nArgument: path|file ... - DirectoryOrFile. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.\nArgument: --help - Flag. Optional. Display this help.\nBUILD_DEBUG: reloadChanges - prompt module will show debugging information\nBUILD_DEBUG: reloadChangesProfile - prompt module will show profiling information\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/prompt-modules.sh"

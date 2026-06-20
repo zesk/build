@@ -10,6 +10,7 @@ file="bin/build/env/DEPLOY_USER_HOSTS.sh"
 fn="DEPLOY_USER_HOSTS"
 foundNames=([0]="name" [1]="category" [2]="see" [3]="type")
 name="Host list for deployment"
+original="DEPLOY_USER_HOSTS"
 rawComment=$'Name: Host list for deployment\nA list of one ore more user@host for installation of the application\nCategory: Deployment\nSee: deployApplication\nType: String\n\n'
 see=$'deployApplication\n'
 sourceFile="bin/build/env/DEPLOY_USER_HOSTS.sh"

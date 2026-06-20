@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'branch ... - String. Required. List of branch names to check.\n--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -12,6 +12,7 @@ fn="gitBranchExistsLocal"
 fnMarker="gitbranchexistslocal"
 foundNames=([0]="argument" [1]="return_code")
 line="1039"
+original="gitBranchExistsLocal"
 rawComment=$'Does a branch exist locally?\nArgument: branch ... - String. Required. List of branch names to check.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 0 - All branches exist\nReturn Code: 1 - At least one branch does not exist locally\n\n'
 return_code=$'0 - All branches exist\n1 - At least one branch does not exist locally\n'
 sourceFile="bin/build/tools/git.sh"

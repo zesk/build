@@ -1,4 +1,15 @@
 
+## Zesk Build release v0.44.6
+
+> Copyright &copy; 2026 Market Acumen, Inc.
+
+- Previous version: v0.44.5
+- Improved `decorate` documentation
+- Added `original` output for `bashDocumentationExtract` output to know the original function being documented in case
+  `fn` is redefined; the derived documentation required a valid function name.
+- `white-contrast` was added to keep the styles consistent
+- Added `validate` `UserDirectory` `UserFile` and `UserDirectoryList` for user's `$HOME`-relative paths
+
 ## Zesk Build release v0.44.5
 
 > Copyright &copy; 2026 Market Acumen, Inc.
@@ -7,6 +18,7 @@
 - Added {SEE:documentationFunctionsListSeeUnfinished}, {SEE:documentationFunctionsSeeLoop}, and {SEE:
   documentationFunctionsSeeDirty} (enabling this for other projects) ({SEE:buildFunctionsSeeAgain}, {SEE:
   buildFunctionsListSeeUnfinished}, and {SEE:buildFunctionsSeeLoop})
+- Fixed an issue with {SEE:documentationFunctionsCompile} missing functions passed as arguments
 
 ## Zesk Build release v0.44.4
 
@@ -43,16 +55,9 @@
 - Added `validate "$handler" Host` 
 - Deprecated `stringValidate`
 
-## Zesk Build release v0.44.1
-
-> Copyright &copy; 2026 Market Acumen, Inc.
-
-- Previous version: v0.44.0
-- Added [SECURITY.md](../SECURITY.md)
-- Added `./uri/` subdirectory to templates; allows for URI-escaped versions of variables
-
 # Past Releases
 
+- [v0.44.1](./v0.44.1.md)
 - [v0.44.0](./v0.44.0.md)
 - [v0.43.1](./v0.43.1.md)
 - [v0.43.0](./v0.43.0.md)

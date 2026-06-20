@@ -1,9 +1,10 @@
 ## `NOTIFY_URL_AUTHORIZATION`
 
-> **Notification URL** &mdash; Authorization token for default notifications
+> **Notification URL Authorization Token** &mdash; Authorization token for default notifications.
 > > **Type**: *Secret* • **Category**: *Notify*
 
-Authorization token for default notifications
+Authorization token for default notifications.
+Passed as a string to Notify URLs via a header:
 
 ### See Also
 

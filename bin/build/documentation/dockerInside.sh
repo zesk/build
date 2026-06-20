@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="docker.sh"
@@ -13,6 +13,7 @@ fn="dockerInside"
 fnMarker="dockerinside"
 foundNames=([0]="summary" [1]="file" [2]="return_code" [3]="checked" [4]="todo")
 line="74"
+original="dockerInside"
 rawComment=$'Summary: Are we inside a docker container?\nAre we inside a docker container right now?\nDoes a standard test to determine if we\'re inside Docker or not.\nFile: /proc/1/cmdline\nReturn Code: 0 - Yes\nReturn Code: 1 - No\nChecked: 2026-06-04\nTODO: Write a test to check this date every oh, say, 3 months\n\n'
 return_code=$'0 - Yes\n1 - No\n'
 sourceFile="bin/build/tools/docker.sh"

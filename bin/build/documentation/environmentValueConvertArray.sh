@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'encodedValue - String. Required. Value to convert to tokens, one per line\n--help - Flag. Optional. Display this help.\n'
 base="io.sh"
@@ -12,6 +12,7 @@ fn="environmentValueConvertArray"
 fnMarker="environmentvalueconvertarray"
 foundNames=([0]="argument" [1]="stdout")
 line="117"
+original="environmentValueConvertArray"
 rawComment=$'Convert an array value which was loaded already\nArgument: encodedValue - String. Required. Value to convert to tokens, one per line\nstdout: Array values separated by newlines\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/environment/io.sh"

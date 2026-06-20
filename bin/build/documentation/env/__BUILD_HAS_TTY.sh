@@ -10,6 +10,7 @@ file="bin/build/env/__BUILD_HAS_TTY.sh"
 fn="__BUILD_HAS_TTY"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="TTY Cached Result"
+original="__BUILD_HAS_TTY"
 rawComment=$'Name: TTY Cached Result\nCached value of the availability of `/dev/tty`.\nPossible values are `true` or `false` or blank.\n- `true` - `/dev/tty` appears to be operating without errors\n- `false` - `/dev/tty` appears to be disconnected and can not be used\nThis value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.\nCategory: Internal\nType: Boolean\n\n'
 sourceFile="bin/build/env/__BUILD_HAS_TTY.sh"
 sourceHash="60a28e048b2f7030c7e59f741e8797ff45e957d1"

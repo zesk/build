@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'directory - String. A path to convert.\n'
 base="directory.sh"
@@ -12,6 +12,7 @@ fn="directoryRelativePath"
 fnMarker="directoryrelativepath"
 foundNames=([0]="argument" [1]="stdout")
 line="291"
+original="directoryRelativePath"
 rawComment=$'Given a path to a file, compute the path back up to the top in reverse (../..)\nIf path is blank, outputs `.`.\nEssentially converts the slash `/` to a `..`, so convert your source appropriately.\n     directoryRelativePath "/" -> ".."\n     directoryRelativePath "/a/b/c" -> ../../..\nArgument: directory - String. A path to convert.\nstdout: Relative paths, one per line\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/directory.sh"

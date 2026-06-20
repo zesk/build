@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'upToDateDays - PositiveInteger.\n'
 base="aws.sh"
@@ -14,6 +14,7 @@ fn="awsIsKeyUpToDate"
 fnMarker="awsiskeyuptodate"
 foundNames=([0]="environment" [1]="summary" [2]="argument" [3]="example")
 line="91"
+original="awsIsKeyUpToDate"
 rawComment=$'For security we gotta update our keys every 90 days\nThis value would be better encrypted and tied to the AWS_ACCESS_KEY_ID so developers\ncan not just update the value to avoid the security issue.\nThis tool checks the environment `AWS_ACCESS_KEY_DATE` and ensures it\'s within `upToDateDays` of today; if not this fails.\nIt will also fail if:\n- `upToDateDays` is less than zero or greater than 366\n- `AWS_ACCESS_KEY_DATE` is empty or has an invalid value\nOtherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `AWS_ACCESS_KEY_DATE` has not exceeded the number of days.\nEnvironment: AWS_ACCESS_KEY_DATE - Variable used to test\nSummary: Test whether the AWS keys do not need to be updated\nArgument: upToDateDays - PositiveInteger.\nExample:     if ! {fn} 90; then\nExample:         decorate big Failed, update key and reset date\nExample:         exit 99\nExample:     fi\nEnvironment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/aws.sh"

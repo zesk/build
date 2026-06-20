@@ -28,6 +28,6 @@ Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 
 #### Environment
 
-- [`AWS_ACCESS_KEY_ID` AWS Access Key]({rel}env/#amazon_web_services) – **String**. Amazon Web Services IAM Identity - Read-only. If blank, this function succeeds (environment needs to be updated)
-- [`AWS_SECRET_ACCESS_KEY` AWS Secret Access Key]({rel}env/#amazon_web_services) – **Secret**. Private Secret Password for AWS - Read-only. If blank, this function succeeds (environment needs to be updated)
+- {SEE:AWS_ACCESS_KEY_ID} - Read-only. If blank, this function succeeds (environment needs to be updated)
+- {SEE:AWS_SECRET_ACCESS_KEY} - Read-only. If blank, this function succeeds (environment needs to be updated)
 

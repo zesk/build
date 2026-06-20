@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--skip-tag | --no-tag - Flag. Optional. Do not tag the release.\n--name tarFileName - String. Optional. Set BUILD_TARGET via command line (wins)\n--composer arg - Argument. Optional. Supply one or more arguments to `phpComposer` command. (Use multiple times)\n--help - Flag. Optional. Display this help.\nenvironmentVariable ... - EnvironmentVariable. Optional. Environment variables to build into the deployed .env file\n-- - Separator. Required. Separates environment variables to file list\nfile1 file2 dir3 ... - File|Directory. Required. List of files and directories to build into the application package.\n'
 base="php.sh"
@@ -13,6 +13,7 @@ fn="phpBuild"
 fnMarker="phpbuild"
 foundNames=([0]="argument" [1]="environment")
 line="157"
+original="phpBuild"
 rawComment=$'Build deployment using composer, adding environment values to .env and packaging vendor and additional\nfiles into target file, usually `BUILD_TARGET`\nOverride target file generated with environment variable `BUILD_TARGET` which must ae set during build\nand on remote systems during deployment.\nFiles are specified from the application root directory.\n`{fn}` generates the `.build.env` file, which contains the current environment and:\n- BUILD_TARGET\n- BUILD_START_TIMESTAMP\n- APPLICATION_TAG\n- APPLICATION_ID\nArgument: --skip-tag | --no-tag - Flag. Optional. Do not tag the release.\nArgument: --name tarFileName - String. Optional. Set BUILD_TARGET via command line (wins)\nArgument: --composer arg - Argument. Optional. Supply one or more arguments to `phpComposer` command. (Use multiple times)\nArgument: --help - Flag. Optional. Display this help.\nArgument: environmentVariable ... - EnvironmentVariable. Optional. Environment variables to build into the deployed .env file\nArgument: -- - Separator. Required. Separates environment variables to file list\nArgument: file1 file2 dir3 ... - File|Directory. Required. List of files and directories to build into the application package.\nEnvironment: BUILD_TARGET BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_ID APPLICATION_TAG APPLICATION_VERSION\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/php.sh"

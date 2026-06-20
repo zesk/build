@@ -26,12 +26,12 @@ Convert a group name to a group ID
 
 #### Requires
 
-- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- {SEE:throwArgument}
 - getent
 - [`cut`]({rel}guide/command.md#cut)
 - [`printf`]({rel}guide/builtin.md#printf)
 - [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
-- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
+- [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
 - [`grep`]({rel}guide/command.md#grep)
-- [quoteGrepPattern]({rel}tools/quote.md#quotegreppattern) - Quote grep -e patterns for shell use ([source](https://github.com/zesk/build/blob/main/bin/build/tools/quote.sh#L34))
+- {SEE:quoteGrepPattern}
 

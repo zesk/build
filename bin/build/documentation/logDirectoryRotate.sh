@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--dry-run - Flag. Optional. Do not change anything.\n--cull cullCount - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.\nlogPath - Directory. Required. Path where log files exist. Looks for files which match `*.log`.\ncount - PositiveInteger. Required. Integer of log files to maintain.\n'
 base="log.sh"
@@ -12,6 +12,7 @@ fn="logDirectoryRotate"
 fnMarker="logdirectoryrotate"
 foundNames=([0]="summary" [1]="see" [2]="argument")
 line="108"
+original="logDirectoryRotate"
 rawComment=$'Summary: Rotate log files\nFor all log files in logPath with extension `.log`, rotate them safely.\nSee: logRotate\nArgument: --help - Flag. Optional. Display this help.\nArgument: --dry-run - Flag. Optional. Do not change anything.\nArgument: --cull cullCount - UnsignedInteger. Optional. Delete log file indexes which exist beyond the `count`. Default is `0`.\nArgument: logPath - Directory. Required. Path where log files exist. Looks for files which match `*.log`.\nArgument: count - PositiveInteger. Required. Integer of log files to maintain.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'logRotate\n'

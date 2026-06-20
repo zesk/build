@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'package - Additional packages to install\n'
 base="php.sh"
@@ -12,6 +12,7 @@ fn="phpUninstall"
 fnMarker="phpuninstall"
 foundNames=([0]="argument" [1]="summary" [2]="return_code")
 line="40"
+original="phpUninstall"
 rawComment=$'Uninstall `php`\nIf this fails it will output the installation log.\nArgument: package - Additional packages to install\nSummary: Uninstall `php`\nWhen this tool succeeds the `php` binary is no longer available in the local operating system.\nReturn Code: 1 - If uninstallation fails\nReturn Code: 0 - If uninstallation succeeds\n\n'
 return_code=$'1 - If uninstallation fails\n0 - If uninstallation succeeds\n'
 sourceFile="bin/build/tools/php.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'file ... - File. Required. One or more files to examine\n--help - Flag. Optional. Display this help.\n--ignore - Flag. Optional. Ignore files which do not exist.\n'
 base="file.sh"
@@ -12,6 +12,7 @@ fn="fileOldest"
 fnMarker="fileoldest"
 foundNames=([0]="argument")
 line="364"
+original="fileOldest"
 rawComment=$'Output the oldest file in the list.\nArgument: file ... - File. Required. One or more files to examine\nArgument: --help - Flag. Optional. Display this help.\nArgument: --ignore - Flag. Optional. Ignore files which do not exist.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"

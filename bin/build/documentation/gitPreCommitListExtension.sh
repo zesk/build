@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'extension - String. Optional. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.\n--help - Flag. Optional. Display this help.\n'
 base="git.sh"
@@ -12,6 +12,7 @@ fn="gitPreCommitListExtension"
 fnMarker="gitprecommitlistextension"
 foundNames=([0]="argument" [1]="stdout")
 line="979"
+original="gitPreCommitListExtension"
 rawComment=$'List the file(s) of an extension.\nArgument: extension - String. Optional. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.\nArgument: --help - Flag. Optional. Display this help.\nstdout: File. One per line.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/git.sh"

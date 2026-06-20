@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'style - String. Required. The style to fetch or replace.\nnewFormat - String. Optional. The new style formatting options as a string in the form `escapeCodes label`\n'
 base="style.sh"
@@ -12,6 +12,7 @@ fn="decorateStyle"
 fnMarker="decoratestyle"
 foundNames=([0]="summary" [1]="argument")
 line="11"
+original="decorateStyle"
 rawComment=$'Summary: Get or modify a decoration style\nWhen `newFormat` is blank, retrieves the format style.\nOtherwise sets the new style.\nArgument: style - String. Required. The style to fetch or replace.\nArgument: newFormat - String. Optional. The new style formatting options as a string in the form `escapeCodes label`\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/style.sh"

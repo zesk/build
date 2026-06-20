@@ -10,6 +10,7 @@ file="bin/build/env/APPLICATION_CODE_IGNORE.sh"
 fn="APPLICATION_CODE_IGNORE"
 foundNames=([0]="name" [1]="type" [2]="category")
 name="Application Code Ignore Paths"
+original="APPLICATION_CODE_IGNORE"
 rawComment=$'Name: Application Code Ignore Paths\nType: ColonDelimitedList\nCategory: Application\nList of path names to ignore for application code. (e.g. `/vendor/`, `/node_modules/`, etc.)\n\n'
 sourceFile="bin/build/env/APPLICATION_CODE_IGNORE.sh"
 sourceHash="32182b0616c6e01769f7a193c649645ecdcd7ee7"

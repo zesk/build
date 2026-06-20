@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="mariadb.sh"
@@ -12,6 +12,7 @@ fn="mariadbInstall"
 fnMarker="mariadbinstall"
 foundNames=([0]="return_code")
 line="16"
+original="mariadbInstall"
 rawComment=$'Install `mariadb`\nWhen this tool succeeds the `mariadb` binary is available in the local operating system.\nReturn Code: 1 - If installation fails\nReturn Code: 0 - If installation succeeds\n\n'
 return_code=$'1 - If installation fails\n0 - If installation succeeds\n'
 sourceFile="bin/build/tools/mariadb.sh"

@@ -10,6 +10,7 @@ file="bin/build/env/AWS_PROFILE.sh"
 fn="AWS_PROFILE"
 foundNames=([0]="name" [1]="category" [2]="vendor" [3]="type")
 name="AWS Profile"
+original="AWS_PROFILE"
 rawComment=$'Name: AWS Profile\nDefault profile for Amazon Web Services\nCategory: Amazon Web Services\nVendor: Amazon Web Services\nType: String\n\n'
 sourceFile="bin/build/env/AWS_PROFILE.sh"
 sourceHash="cb7592fefa4f1433b282c7bbf6d0aede979d242d"

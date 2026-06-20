@@ -1,1 +1,1 @@
-[documentationIndexLookup]({rel}tools/documentation.md#documentationindexlookup) - Looks up information in the function index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L330))
+[documentationIndexLookup]({rel}tools/documentation.md#documentationindexlookup) - Looks up information in the function index ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L332))

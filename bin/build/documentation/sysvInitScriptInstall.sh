@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'binary - String. Required. Binary to install at startup.\n--help - Flag. Optional. Display this help.\n'
 base="sysvinit.sh"
@@ -12,6 +12,7 @@ fn="sysvInitScriptInstall"
 fnMarker="sysvinitscriptinstall"
 foundNames=([0]="argument")
 line="12"
+original="sysvInitScriptInstall"
 rawComment=$'Install a script to run upon initialization.\nArgument: binary - String. Required. Binary to install at startup.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/sysvinit.sh"

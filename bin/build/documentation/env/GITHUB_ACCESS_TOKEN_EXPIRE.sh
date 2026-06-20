@@ -10,6 +10,7 @@ file="bin/build/env/GITHUB_ACCESS_TOKEN_EXPIRE.sh"
 fn="GITHUB_ACCESS_TOKEN_EXPIRE"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="GitHub Access Token Expiration Date"
+original="GITHUB_ACCESS_TOKEN_EXPIRE"
 rawComment=$'Name: GitHub Access Token Expiration Date\nSee: githubRelease\nCategory: Development\nType: Date\nGitHub Access token expiration date. Invalid AFTER this date.\n\n'
 see=$'githubRelease\n'
 sourceFile="bin/build/env/GITHUB_ACCESS_TOKEN_EXPIRE.sh"

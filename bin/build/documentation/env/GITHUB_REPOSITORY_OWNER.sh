@@ -10,6 +10,7 @@ file="bin/build/env/GITHUB_REPOSITORY_OWNER.sh"
 fn="GITHUB_REPOSITORY_OWNER"
 foundNames=([0]="name" [1]="see" [2]="type" [3]="category")
 name="GitHub Repository Owner"
+original="GITHUB_REPOSITORY_OWNER"
 rawComment=$'Name: GitHub Repository Owner\nSee: githubRelease\nType: String\nCategory: Deployment: GitHub\nRepository owner for release\n\n'
 see=$'githubRelease\n'
 sourceFile="bin/build/env/GITHUB_REPOSITORY_OWNER.sh"

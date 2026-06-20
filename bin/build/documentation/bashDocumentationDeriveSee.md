@@ -6,7 +6,7 @@
 
     bashDocumentationDeriveSee [ --help ] [ --check ] settingsFile
 
-Generate `SEE/bashDocumentationDeriveSee.md` - Derived file generator.
+Generate `SEE/{"fn"}.md` - Derived file generator.
 File is next to `settingsFile`; `--check` checks to see if the file needs to be generated or updated.
 
 > Location: `bin/build/tools/documentation.sh`

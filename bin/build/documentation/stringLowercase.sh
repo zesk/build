@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.\n--help - Flag. Optional. Display this help.\ntext - EmptyString. Required. Text to convert to stringLowercase\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="stringLowercase"
 fnMarker="stringlowercase"
 foundNames=([0]="argument" [1]="stdout" [2]="requires")
 line="864"
+original="stringLowercase"
 rawComment=$'Convert text to stringLowercase\nArgument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.\nArgument: --help - Flag. Optional. Display this help.\nArgument: text - EmptyString. Required. Text to convert to stringLowercase\nstdout: `String`. The stringLowercase version of the `text`.\nRequires: tr\n\n'
 requires=$'tr\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

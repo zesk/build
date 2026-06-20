@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'environmentName - String. Optional. Map this value only. If not specified, all environment variables are mapped.\n--env-file envFile - File. Optional. Load this environment file prior to processing input.\n--prefix - String. Optional. Prefix character for tokens, defaults to `{`.\n--suffix - String. Optional. Suffix character for tokens, defaults to `}`.\n--help - Flag. Optional. Display this help.\n'
 base="map.sh"
@@ -13,6 +13,7 @@ fn="mapEnvironmentFun"
 fnMarker="mapenvironmentfun"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="example" [4]="requires")
 line="404"
+original="mapEnvironmentFun"
 rawComment=$'Summary: Convert tokens in files to environment variable values\nMap tokens in the input stream based on environment values with the same names.\nConverts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.\nUndefined values are not converted.\nUses environment variables passed as arguments or entire exported environment variables are used and mapped to the destination.\nSee: mapEnvironment\nSee: mapValue\nArgument: environmentName - String. Optional. Map this value only. If not specified, all environment variables are mapped.\nArgument: --env-file envFile - File. Optional. Load this environment file prior to processing input.\nArgument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.\nArgument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.\nArgument: --help - Flag. Optional. Display this help.\nExample:     printf %s "{NAME}, {PLACE}.\\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE\nRequires: throwArgument decorate\nRequires: validate\n\n'
 requires=$'throwArgument decorate\nvalidate\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

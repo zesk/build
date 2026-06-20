@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'oldSuffix - String. Required. Old suffix to look rename from.\nnewSuffix - String. Required. New suffix to rename to.\nactionVerb - String. Required. Description to output for found files.\nfile ... - String. Required. One or more files to rename, if found, renaming occurs.\n'
 base="file.sh"
@@ -13,6 +13,7 @@ fn="filesRename"
 fnMarker="filesrename"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 line="30"
+original="filesRename"
 rawComment=$'Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb\nIf files do not exist, does nothing\nUsed to move files, temporarily, sometimes and then move back easily.\nRenames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:\nSummary: Rename a list of files usually to back them up temporarily\nArgument: oldSuffix - String. Required. Old suffix to look rename from.\nArgument: newSuffix - String. Required. New suffix to rename to.\nArgument: actionVerb - String. Required. Description to output for found files.\nArgument: file ... - String. Required. One or more files to rename, if found, renaming occurs.\nExample:     {fn} "" ".$$.backup" hiding etc/app.json etc/config.json\nExample:     ...\nExample:     {fn} ".$$.backup" "" restoring etc/app.json etc/config.json\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/file.sh"

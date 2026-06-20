@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--maximum-length maximumLength - PositiveInteger. Optional. The maximum number of characters to output for each environment variable.\n--skip-env environmentVariable - EnvironmentVariable. Optional. Skip this environment variable (must match exactly).\n--show-skipped - Flag. Show skipped environment variables.\n--help - Flag. Optional. Display this help.\n'
 base="dump.sh"
@@ -12,6 +12,7 @@ fn="dumpEnvironmentUnsafe"
 fnMarker="dumpenvironmentunsafe"
 foundNames=([0]="argument")
 line="346"
+original="dumpEnvironmentUnsafe"
 rawComment=$'Output the environment shamelessly (not secure, not recommended)\nArgument: --maximum-length maximumLength - PositiveInteger. Optional. The maximum number of characters to output for each environment variable.\nArgument: --skip-env environmentVariable - EnvironmentVariable. Optional. Skip this environment variable (must match exactly).\nArgument: --show-skipped - Flag. Show skipped environment variables.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/dump.sh"

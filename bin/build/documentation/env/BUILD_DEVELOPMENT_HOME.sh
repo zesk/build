@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_DEVELOPMENT_HOME.sh"
 fn="BUILD_DEVELOPMENT_HOME"
 foundNames=([0]="name" [1]="type" [2]="category" [3]="see")
 name="Home for Zesk Build development"
+original="BUILD_DEVELOPMENT_HOME"
 rawComment=$'Name: Home for Zesk Build development\nType: String\nCategory: Development\nDirectory where Zesk Build is being developed in the file system (for other projects to test against a changed version)\nSee: buildDevelopmentLink\n\n'
 see=$'buildDevelopmentLink\n'
 sourceFile="bin/build/env/BUILD_DEVELOPMENT_HOME.sh"

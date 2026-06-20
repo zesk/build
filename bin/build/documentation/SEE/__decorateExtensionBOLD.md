@@ -1,0 +1,1 @@
+[decorate BOLD]({rel}tools/decorate.md#__decorateextensionbold) - Add bold style to another style ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L314))

@@ -10,6 +10,7 @@ file="bin/build/env/XDG_CONFIG_DIRS.sh"
 fn="XDG_CONFIG_DIRS"
 foundNames=([0]="name" [1]="summary" [2]="type" [3]="category")
 name="Configuration Path Directories"
+original="XDG_CONFIG_DIRS"
 rawComment=$'Name: Configuration Path Directories\nSummary: Configuration Path Directories\nSearch directory for user-specific configuration files to be stored. `:` separated.\nType: DirectoryList\nCategory: Build Configuration\nSee [basedir-spec](https://specifications.freedesktop.org/basedir-spec/latest/) for explanation of this and other related environment variables.\n\n'
 sourceFile="bin/build/env/XDG_CONFIG_DIRS.sh"
 sourceHash="3f8130245598071313fea4af995aa4b0b6f6d7f8"

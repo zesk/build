@@ -71,5 +71,5 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### See Also
 
-- [identicalWatch]({rel}tools/identical.md#identicalwatch) - Watch a project for changes and propagate them immediately upon ([source](https://github.com/zesk/build/blob/main/bin/build/tools/identical.sh#L150))
+- {SEE:identicalWatch}
 

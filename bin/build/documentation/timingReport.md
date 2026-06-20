@@ -39,5 +39,5 @@ Condition additions `--slow` and `--fast` allow display conditional on the time 
 
 #### See Also
 
-- [timingStart]({rel}tools/timing.md#timingstart) - Start a timer ([source](https://github.com/zesk/build/blob/main/bin/build/tools/timing.sh#L148))
+- {SEE:timingStart}
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. This help.\n--first - Flag. Optional. The first deployment has no prior version and can not be reverted.\n--revert - Flag. Optional. Means this is part of the undo process of a deployment.\n--home deployHome - Directory. Required. Path where the deployments database is on system.\n--id applicationId - String. Required. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`\n--application applicationPath - FileDirectory. Required. Path on the  system where the application is live\n--target targetPackage - Filename. Optional. Package name, defaults to `BUILD_TARGET`\n--message message - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.\n'
 base="deploy.sh"
@@ -14,6 +14,7 @@ fn="deployApplication"
 fnMarker="deployapplication"
 foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="example" [4]="use_hook" [5]="see")
 line="43"
+original="deployApplication"
 rawComment=$'Summary: Deploy an application from a deployment repository\nThis acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.\nArgument: --help - Flag. Optional. This help.\nArgument: --first - Flag. Optional. The first deployment has no prior version and can not be reverted.\nArgument: --revert - Flag. Optional. Means this is part of the undo process of a deployment.\nArgument: --home deployHome - Directory. Required. Path where the deployments database is on system.\nArgument: --id applicationId - String. Required. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`\nArgument: --application applicationPath - FileDirectory. Required. Path on the  system where the application is live\nArgument: --target targetPackage - Filename. Optional. Package name, defaults to `BUILD_TARGET`\nArgument: --message message - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.\nEnvironment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG\nExample: {fn} --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app\nUse-Hook: maintenance\nUse-Hook: deploy-shutdown\nUse-Hook: deploy-activate deploy-start deploy-finish\nSee: deployToRemote\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'deployToRemote\n'

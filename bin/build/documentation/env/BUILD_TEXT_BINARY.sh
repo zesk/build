@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_TEXT_BINARY.sh"
 fn="BUILD_TEXT_BINARY"
 foundNames=([0]="name" [1]="see" [2]="category" [3]="type")
 name="Text Executable"
+original="BUILD_TEXT_BINARY"
 rawComment=$'Name: Text Executable\nBinary used to generate `decorate big`\nSee: decorate big\nSee: __aptStandardPackages\nSee: __apkStandardPackages\nSee: __brewStandardPackages\nCategory: Decoration\nType: Callable\n\n'
 see=$'decorate big\n__aptStandardPackages\n__apkStandardPackages\n__brewStandardPackages\n'
 sourceFile="bin/build/env/BUILD_TEXT_BINARY.sh"

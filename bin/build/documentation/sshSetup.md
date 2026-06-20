@@ -29,7 +29,7 @@ You will need the password for this server for the current user.
 
 #### Requires
 
-- [userRecordHome]({rel}tools/user.md#userrecordhome) - Quick user database query of the user home directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/user.sh#L73))
+- {SEE:userRecordHome}
 - [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
-- [throwEnvironment]({rel}tools/sugar-core.md#throwenvironment) - Run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L226))
+- {SEE:throwEnvironment}
 

@@ -10,6 +10,7 @@ file="bin/build/env/DISPLAY.sh"
 fn="DISPLAY"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="X Display"
+original="DISPLAY"
 rawComment=$'Name: X Display\nCategory: Bash\nType: String\nEnvironment variable for X windows display.\nFrom the user\'s perspective, every X server has a display name of the form: `hostname:displaynumber.screennumber`\n\n'
 sourceFile="bin/build/env/DISPLAY.sh"
 sourceHash="61687ced5cdb5d3cbd376f799befe2a5ba49bd24"

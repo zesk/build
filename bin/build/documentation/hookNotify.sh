@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--sound soundName - String. Optional. Sound name to play. Depends on context of notification.\n--tags tagList - CommaDelimitedList. Optional. Tags for notification. e.g. `warning,production`\n--priority priority - String. Optional. Priority of the notification. `low`, or `high`\n--title title - String. Optional. Title of the notification.\n--help - Flag. Optional. Display this help.\n--application application - Directory. Optional. Application home directory.\n'
 base="hooks.sh"
@@ -12,6 +12,7 @@ fn="hookNotify"
 fnMarker="hooknotify"
 foundNames=([0]="summary" [1]="argument")
 line="75"
+original="hookNotify"
 rawComment=$'Summary: Send a notification\nSend a notification.\nWrapper for the hook `notify`.\nArgument: --sound soundName - String. Optional. Sound name to play. Depends on context of notification.\nArgument: --tags tagList - CommaDelimitedList. Optional. Tags for notification. e.g. `warning,production`\nArgument: --priority priority - String. Optional. Priority of the notification. `low`, or `high`\nArgument: --title title - String. Optional. Title of the notification.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --application application - Directory. Optional. Application home directory.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/hooks.sh"

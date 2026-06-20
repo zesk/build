@@ -1,0 +1,1 @@
+[decorate quote]({rel}tools/decorate.md#__decorateextensionquote) - Double-quote all arguments ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L346))

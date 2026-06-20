@@ -10,6 +10,7 @@ file="bin/build/env/BITBUCKET_REPO_SLUG.sh"
 fn="BITBUCKET_REPO_SLUG"
 foundNames=([0]="name" [1]="category" [2]="vendor" [3]="type")
 name="Bitbucket Repository Slug"
+original="BITBUCKET_REPO_SLUG"
 rawComment=$'Name: Bitbucket Repository Slug\nDefined in BITBUCKET Pipelines, represents the project code name.\nCategory: Continuous Integration\nVendor: BitBucket\nType: String\n\n'
 sourceFile="bin/build/env/BITBUCKET_REPO_SLUG.sh"
 sourceHash="53c6085168ebe8c3552d06d40d865c026ea784c6"

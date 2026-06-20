@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'timingOffset - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.\n--help - Flag. Optional. Display this help.\n'
 base="timing.sh"
@@ -14,6 +14,7 @@ fnMarker="timingelapsed"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires" [4]="stdout" [5]="output")
 init=""
 line="122"
+original="timingElapsed"
 output=$'4232\n'
 rawComment=$'Summary: Show elapsed time from a start time\nArgument: timingOffset - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.\nArgument: --help - Flag. Optional. Display this help.\nExample:     init=$(timingStart)\nExample:     ...\nExample:     timingElapsed "$init"\nRequires: __timestamp returnEnvironment validate date\nstdout: UnsignedInteger\nOutput: 4232\n\n'
 requires=$'__timestamp returnEnvironment validate date\n'

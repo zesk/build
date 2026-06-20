@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--index indexPath - Directory. Required. Where to store documentation indexes for later use.\n--source sourcePath - Directory. Required. The source\n--target templateTarget - FileDirectory. Required. Create templates here.\n'
 base="documentation.sh"
@@ -11,12 +11,13 @@ file="bin/build/tools/documentation.sh"
 fn="bashDocumentationMissing"
 fnMarker="bashdocumentationmissing"
 foundNames=([0]="summary" [1]="argument")
-line="770"
+line="772"
+original="bashDocumentationMissing"
 rawComment=$'Summary: Generate templates of functions missing from documentation\nGenerates:\n- `missingFunctionTotal.md`\n- `missingFunctionList.md`\nin the target directory.\nArgument: --index indexPath - Directory. Required. Where to store documentation indexes for later use.\nArgument: --source sourcePath - Directory. Required. The source\nArgument: --target templateTarget - FileDirectory. Required. Create templates here.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
-sourceLine="770"
+sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
+sourceLine="772"
 summary="Generate templates of functions missing from documentation"
 summaryComputed=""
 usage="bashDocumentationMissing --index indexPath --source sourcePath --target templateTarget"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="developer.sh"
@@ -12,6 +12,7 @@ fn="developerAnnounce"
 fnMarker="developerannounce"
 foundNames=()
 line="9"
+original="developerAnnounce"
 rawComment=$'Announce a list of functions now available\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/developer.sh"

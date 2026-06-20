@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'`count` - UnsignedInteger. Required. Count of times to repeat.\n`text` .. - String. Required. A sequence of characters to repeat.\n--help - Flag. Optional. Display this help.\n'
 base="text.sh"
@@ -13,6 +13,7 @@ fn="textRepeat"
 fnMarker="textrepeat"
 foundNames=([0]="argument" [1]="example" [2]="summary")
 line="1302"
+original="textRepeat"
 rawComment=$'Argument: `count` - UnsignedInteger. Required. Count of times to repeat.\nArgument: `text` .. - String. Required. A sequence of characters to repeat.\nArgument: --help - Flag. Optional. Display this help.\nExample:     textRepeat 80 =\nExample:     decorate info Hello world\nExample:     textRepeat 80 -\nSummary: Repeat a string\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

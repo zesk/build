@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'package - Additional packages to install (using `pipInstall`)\n'
 base="docker-compose.sh"
@@ -12,6 +12,7 @@ fn="dockerComposeInstall"
 fnMarker="dockercomposeinstall"
 foundNames=([0]="argument" [1]="summary" [2]="return_code" [3]="see")
 line="37"
+original="dockerComposeInstall"
 rawComment=$'Install `docker-compose`\nIf this fails it will output the installation log.\nArgument: package - Additional packages to install (using `pipInstall`)\nSummary: Install `docker-compose`\nWhen this tool succeeds the `docker-compose` binary is available in the local operating system.\nReturn Code: 1 - If installation fails\nReturn Code: 0 - If installation succeeds\nSee: pipInstall\n\n'
 return_code=$'1 - If installation fails\n0 - If installation succeeds\n'
 see=$'pipInstall\n'

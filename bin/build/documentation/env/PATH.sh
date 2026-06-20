@@ -10,6 +10,7 @@ file="bin/build/env/PATH.sh"
 fn="PATH"
 foundNames=([0]="name" [1]="category" [2]="type" [3]="see")
 name="Executable Search Path"
+original="PATH"
 rawComment=$'Name: Executable Search Path\nCategory: Bash\nType: DirectoryList\nA colon `:` separated list of paths to search for executables in `bash`.\nSee [`pathConfigure`](/tools/platform/#pathconfigure)\nSee: pathConfigure\n\n'
 see=$'pathConfigure\n'
 sourceFile="bin/build/env/PATH.sh"

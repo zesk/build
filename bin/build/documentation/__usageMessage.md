@@ -23,6 +23,6 @@ Output the message for usage consistently
 
 #### Requires
 
-- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
-- [returnCodeString]({rel}tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L60))
+- {SEE:decorate}
+- {SEE:returnCodeString}
 

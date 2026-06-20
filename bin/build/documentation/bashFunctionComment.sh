@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'source - File. Required. File where the function is defined.\nfunctionName - String. Required. The name of the bash function to extract the documentation for.\n--help - Flag. Optional. Display this help.\n'
 base="bash.sh"
@@ -12,12 +12,13 @@ fn="bashFunctionComment"
 fnMarker="bashfunctioncomment"
 foundNames=([0]="summary" [1]="see" [2]="argument" [3]="requires")
 line="631"
+original="bashFunctionComment"
 rawComment=$'Summary: Output the comment for a function in a file\nOutputs a function comment in a file.\nExcludes lines similarly to `bashFirstComment`.\nSee: bashFirstComment\nArgument: source - File. Required. File where the function is defined.\nArgument: functionName - String. Required. The name of the bash function to extract the documentation for.\nArgument: --help - Flag. Optional. Display this help.\nRequires: grep cut fileReverseLines helpArgument\nRequires: bashDocumentation\n\n'
 requires=$'grep cut fileReverseLines helpArgument\nbashDocumentation\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'bashFirstComment\n'
 sourceFile="bin/build/tools/bash.sh"
-sourceHash="44e2d7bb2f580d31f81f1caec019ec7815f1d160"
+sourceHash="9822477a1f3a6f53599f6f26b9aa3886ba4c5595"
 sourceLine="631"
 summary="Output the comment for a function in a file"
 summaryComputed=""

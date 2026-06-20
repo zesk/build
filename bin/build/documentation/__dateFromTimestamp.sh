@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument=$'value - Integer. Required.\nformat - String. Required.\nisUTC - Boolean. Optional. Defaults to `true`.\n'
+argument="value - Integer. Required."$'\n'"format - String. Required."$'\n'"isUTC - Boolean. Optional. Defaults to \`true\`."$'\n'""
 base="Darwin.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Platform-specific implementation of `dateFromTimestamp`.\n\n'
+description="Platform-specific implementation of \`dateFromTimestamp\`."$'\n'""$'\n'""
 descriptionLineCount="2"
 file="bin/build/tools/platform/Darwin.sh"
 fn="__dateFromTimestamp"
 fnMarker="__datefromtimestamp"
 foundNames=([0]="requires" [1]="summary" [2]="argument")
 line="39"
-rawComment=$'Requires: date\nSummary: Platform `dateFromTimestamp`\nPlatform-specific implementation of `dateFromTimestamp`.\nArgument: value - Integer. Required.\nArgument: format - String. Required.\nArgument: isUTC - Boolean. Optional. Defaults to `true`.\n\n'
-requires=$'date\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+original="__dateFromTimestamp"
+rawComment="Requires: date"$'\n'"Summary: Platform \`dateFromTimestamp\`"$'\n'"Platform-specific implementation of \`dateFromTimestamp\`."$'\n'"Argument: value - Integer. Required."$'\n'"Argument: format - String. Required."$'\n'"Argument: isUTC - Boolean. Optional. Defaults to \`true\`."$'\n'""$'\n'""
+requires="date"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/platform/Darwin.sh"
 sourceHash="1bce34340d0a4bbeedbd5d17b05eded12ac33465"
 sourceLine="39"

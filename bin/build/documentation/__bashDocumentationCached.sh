@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="handler - Function. Required."$'\n'"home - Directory. \`BUILD_HOME\`"$'\n'"functionName - String. Function to display usage for"$'\n'"returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to \`0\` - no error."$'\n'"message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'""
 base="usage.sh"
@@ -13,6 +13,7 @@ fn="__bashDocumentationCached"
 fnMarker="__bashdocumentationcached"
 foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="requires")
 line="167"
+original="__bashDocumentationCached"
 rawComment="Summary: Display cached usage for a function"$'\n'"Argument: handler - Function. Required."$'\n'"Argument: home - Directory. \`BUILD_HOME\`"$'\n'"Argument: functionName - String. Function to display usage for"$'\n'"Argument: returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to \`0\` - no error."$'\n'"Argument: message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'"Environment: BUILD_HOME BUILD_COLORS BUILD_DOCUMENTATION_PATH"$'\n'"Requires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings"$'\n'""$'\n'""
 requires="decorateThemed catchEnvironment __usageMessage decorate __functionSettings"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

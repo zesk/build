@@ -26,14 +26,14 @@ Any values which contain a newline are also skipped.
 
 #### Requires
 
-- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
-- [decorate]({rel}tools/decorate.md#decorate) - Singular decoration function ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L89))
-- [environmentSecureVariables]({rel}tools/environment.md#environmentsecurevariables) - List environment variables related to security ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L45))
-- [grepSafe]({rel}tools/text.md#grepsafe) - \`grep\` but returns 0 when nothing matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L75))
+- {SEE:throwArgument}
+- [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
+- {SEE:environmentSecureVariables}
+- {SEE:grepSafe}
 - [`env`]({rel}guide/command.md#env)
-- [textRemoveFields]({rel}tools/text.md#textremovefields) - Remove fields from left to right from a text file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1104))
+- {SEE:textRemoveFields}
 
 #### See Also
 
-- [environmentSecureVariables]({rel}tools/environment.md#environmentsecurevariables) - List environment variables related to security ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L45))
+- {SEE:environmentSecureVariables}
 

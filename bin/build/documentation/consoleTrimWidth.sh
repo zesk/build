@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'width - UnsignedInteger. Required. Width to maintain.\ntext - String. Optional. Text to trim to a console width.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="consoleTrimWidth"
 fnMarker="consoletrimwidth"
 foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="stdout")
 line="951"
+original="consoleTrimWidth"
 rawComment=$'Summary: Truncate console output width\nArgument: width - UnsignedInteger. Required. Width to maintain.\nArgument: text - String. Optional. Text to trim to a console width.\nstdin: String. Optional. Text to trim to a console width.\nstdout: String. Console string trimmed to the width requested.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

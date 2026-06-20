@@ -1,1 +1,1 @@
-[validateTypeList]({rel}tools/validate.md#validatetypelist) - Types which can be validated ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L447))
+[validateTypeList]({rel}tools/validate.md#validatetypelist) - Types which can be validated ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L506))

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'-x - Flag. Optional. Show exported variables. (verbose)\n--me - Flag. Optional. Show calling function call stack frame.\n--exit - Flag. Optional. Exit with code 0 after output.\n'
 base="dump.sh"
@@ -14,6 +14,7 @@ fn="debuggingStack"
 fnMarker="debuggingstack"
 foundNames=([0]="argument" [1]="requires" [2]="environment" [3]="build_debug")
 line="18"
+original="debuggingStack"
 rawComment=$'Dump the function and include stacks and the current environment\nArgument: -x - Flag. Optional. Show exported variables. (verbose)\nArgument: --me - Flag. Optional. Show calling function call stack frame.\nArgument: --exit - Flag. Optional. Exit with code 0 after output.\nRequires: printf bashDocumentation\nEnvironment: BUILD_DEBUG\nBUILD_DEBUG: debuggingStack - `debuggingStack` shows arguments passed (extra) and exports (optional flag) ALWAYS\nRequires: throwArgument\n\n'
 requires=$'printf bashDocumentation\nthrowArgument\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

@@ -10,6 +10,7 @@ file="bin/build/env/BUILD_DEBUG_LINES.sh"
 fn="BUILD_DEBUG_LINES"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="Debugging output lines"
+original="BUILD_DEBUG_LINES"
 rawComment=$'Name: Debugging output lines\nNumber of lines of debugging output to send to stderr before stopping\nCategory: Build Configuration\nType: PositiveInteger\n\n'
 sourceFile="bin/build/env/BUILD_DEBUG_LINES.sh"
 sourceHash="5285b56565e1d34e80e22c3ff2e1decdb0a0dd87"

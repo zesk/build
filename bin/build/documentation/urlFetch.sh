@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--dump headerFile - String. Optional. Dump the headers to the file specified, specify `-` to output to `stdout`.\n--header header - String. Optional. Send a header in the format \'Name: Value\'\n--wget - Flag. Optional. Force use of wget. If unavailable, fail.\n--redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.\n--curl - Flag. Optional. Force use of curl. If unavailable, fail.\n--binary binaryName - Callable. Use this binary instead. If the base name of the file is not `curl` or `wget` you MUST supply `--argument-format`.\n--argument-format format - String. Optional. Supply `curl` or `wget` for parameter formatting.\n--user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.\n--password password - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.\n--agent userAgent - String. Optional. Specify the user agent string.\n--timeout timeoutSeconds - PositiveInteger. Optional. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.\nurl - URL. Required. URL to fetch to target file.\nfile - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.\n'
 base="url.sh"
@@ -13,11 +13,12 @@ fn="urlFetch"
 fnMarker="urlfetch"
 foundNames=([0]="summary" [1]="argument" [2]="requires" [3]="environment")
 line="566"
+original="urlFetch"
 rawComment=$'Summary: Fetch URL content\nArgument: --help - Flag. Optional. Display this help.\nArgument: --dump headerFile - String. Optional. Dump the headers to the file specified, specify `-` to output to `stdout`.\nArgument: --header header - String. Optional. Send a header in the format \'Name: Value\'\nArgument: --wget - Flag. Optional. Force use of wget. If unavailable, fail.\nArgument: --redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.\nArgument: --curl - Flag. Optional. Force use of curl. If unavailable, fail.\nArgument: --binary binaryName - Callable. Use this binary instead. If the base name of the file is not `curl` or `wget` you MUST supply `--argument-format`.\nArgument: --argument-format format - String. Optional. Supply `curl` or `wget` for parameter formatting.\nArgument: --user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.\nArgument: --password password - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.\nArgument: --agent userAgent - String. Optional. Specify the user agent string.\nArgument: --timeout timeoutSeconds - PositiveInteger. Optional. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.\nArgument: url - URL. Required. URL to fetch to target file.\nArgument: file - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.\nRequires: returnMessage executableExists decorate\nRequires: validate\nRequires: throwArgument\nRequires: throwEnvironment catchEnvironment\nEnvironment: BUILD_URL_TIMEOUT\n\n'
 requires=$'returnMessage executableExists decorate\nvalidate\nthrowArgument\nthrowEnvironment catchEnvironment\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/url.sh"
-sourceHash="3ed3b955b3a7b632b60fea2e330a81c2699cd660"
+sourceHash="f32b7cbe9339aa8f7842cb180b43f028a41f69e6"
 sourceLine="566"
 summary="Fetch URL content"
 summaryComputed=""

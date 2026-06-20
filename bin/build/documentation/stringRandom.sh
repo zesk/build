@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="none"
 base="text.sh"
@@ -14,6 +14,7 @@ fn="stringRandom"
 fnMarker="stringrandom"
 foundNames=([0]="depends" [1]="example" [2]="output" [3]="stdout")
 line="1047"
+original="stringRandom"
 output=$'cf7861b50054e8c680a9552917b43ec2b9edae2b\n'
 rawComment=$'Depends: sha1sum, /dev/random\nDescription: Outputs 40 random hexadecimal characters, stringLowercase.\nExample:     testPassword="$(stringRandom)"\nOutput: cf7861b50054e8c680a9552917b43ec2b9edae2b\nstdout: `String`. A random hexadecimal string.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'

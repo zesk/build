@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--title - String. Optional. Title of the notification.\n--debug - Flag. Optional. Output the osascript as `darwinNotification.debug` at the application root after this call.\n--sound soundName - String. Optional. Sound to play with the notification. Represents a sound base name found in `/Library/Sounds/`.\nmessage ... - String. Optional. Message to display to the user in the dialog.\n'
 base="darwin.sh"
@@ -12,6 +12,7 @@ fn="darwinNotification"
 fnMarker="darwinnotification"
 foundNames=([0]="argument")
 line="127"
+original="darwinNotification"
 rawComment=$'Display a notification for the user\nArgument: --title - String. Optional. Title of the notification.\nArgument: --debug - Flag. Optional. Output the osascript as `darwinNotification.debug` at the application root after this call.\nArgument: --sound soundName - String. Optional. Sound to play with the notification. Represents a sound base name found in `/Library/Sounds/`.\nArgument: message ... - String. Optional. Message to display to the user in the dialog.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/darwin.sh"

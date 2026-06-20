@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--application applicationHome - Path. Optional. Directory of alternate application home.\n--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nhookName ... - String. Required. Hook to source (if it exists).\n'
 base="hook.sh"
@@ -15,6 +15,7 @@ fn="hookSourceOptional"
 fnMarker="hooksourceoptional"
 foundNames=([0]="argument" [1]="return_code" [2]="example" [3]="test" [4]="see" [5]="environment" [6]="build_debug")
 line="209"
+original="hookSourceOptional"
 rawComment=$'Identical to `hookRun` but returns exit code zero if the hook does not exist.\nArgument: --application applicationHome - Path. Optional. Directory of alternate application home.\nArgument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.\nArgument: hookName ... - String. Required. Hook to source (if it exists).\nReturn Code: Any - The hook exit code is returned if it is run\nReturn Code: 0 - is returned if the hook is not found\nExample:     {fn} test-cleanup\nTest: testHookSystem\nSee: hookExists hookRun hookRunOptional hookSource\nEnvironment: BUILD_HOOK_EXTENSIONS\nEnvironment: BUILD_HOOK_DIRS\nEnvironment: BUILD_DEBUG\nBUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information\n\n'
 return_code=$'Any - The hook exit code is returned if it is run\n0 - is returned if the hook is not found\n'
 see=$'hookExists hookRun hookRunOptional hookSource\n'

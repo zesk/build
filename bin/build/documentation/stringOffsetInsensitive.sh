@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'needle - String. Required.\nhaystack - String. Required.\n'
 base="text.sh"
@@ -12,6 +12,7 @@ fn="stringOffsetInsensitive"
 fnMarker="stringoffsetinsensitive"
 foundNames=([0]="argument" [1]="stdout")
 line="1081"
+original="stringOffsetInsensitive"
 rawComment=$'Outputs the integer offset of `needle` if found as substring in `haystack` (case-insensitive)\nIf `haystack` is not found, -1 is output\nArgument: needle - String. Required.\nArgument: haystack - String. Required.\nstdout: `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/text.sh"

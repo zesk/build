@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument="home - Directory. BUILD_HOME"$'\n'"functionName - String. Function to fetch settings for"$'\n'"generatePath - Boolean. Optional. Pass in \`true\` to just generate the file path and *not* require the file to exist."$'\n'""
 base="usage.sh"
@@ -13,6 +13,7 @@ fn="__functionSettings"
 fnMarker="__functionsettings"
 foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="requires")
 line="150"
+original="__functionSettings"
 rawComment="Summary: Load cached function comment values"$'\n'"Argument: home - Directory. BUILD_HOME"$'\n'"Argument: functionName - String. Function to fetch settings for"$'\n'"Argument: generatePath - Boolean. Optional. Pass in \`true\` to just generate the file path and *not* require the file to exist."$'\n'"Environment: BUILD_DOCUMENTATION_PATH"$'\n'"Requires: __documentationFile"$'\n'""$'\n'""
 requires="__documentationFile"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

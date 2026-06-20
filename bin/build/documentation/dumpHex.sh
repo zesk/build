@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--size size - Integer. Output at most size bytes of data.\n'
 base="dump.sh"
@@ -12,6 +12,7 @@ fn="dumpHex"
 fnMarker="dumphex"
 foundNames=([0]="argument")
 line="414"
+original="dumpHex"
 rawComment=$'Output to hex\nArgument: --size size - Integer. Output at most size bytes of data.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/dump.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'action - String. Optional. Action to perform: install run update uninstall\n... - Arguments. Required. Passed to the node package manager. Required. when action is provided.\n'
 base="node.sh"
@@ -13,6 +13,7 @@ fnMarker="nodepackagemanager"
 foundNames=([0]="argument" [1]="no_argument")
 line="109"
 no_argument=$'Outputs the current node package manager code name\n'
+original="nodePackageManager"
 rawComment=$'Run an action using the current node package manager\nProvides an abstraction to libraries to support any node package manager.\nOptionally will output the current node package manager when no arguments are passed.\nArgument: action - String. Optional. Action to perform: install run update uninstall\nArgument: ... - Arguments. Required. Passed to the node package manager. Required. when action is provided.\nNo-Argument: Outputs the current node package manager code name\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/node.sh"

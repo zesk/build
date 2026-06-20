@@ -10,6 +10,7 @@ file="bin/build/env/PS1.sh"
 fn="PS1"
 foundNames=([0]="name" [1]="category" [2]="see" [3]="type")
 name="Bash Command Prompt"
+original="PS1"
 rawComment=$'Name: Bash Command Prompt\nBash Prompt for terminals\nCategory: Bash\nSee: bashPrompt\nType: String\n\n'
 see=$'bashPrompt\n'
 sourceFile="bin/build/env/PS1.sh"

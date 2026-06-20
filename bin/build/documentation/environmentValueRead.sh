@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'stateFile - EnvironmentFile. Required. File to read a value from.\nname - EnvironmentVariable. Required. Variable to read.\ndefault - EmptyString. Optional. Default value of the environment variable if it does not exist.\n--help - Flag. Optional. Display this help.\n'
 base="io.sh"
@@ -12,6 +12,7 @@ fn="environmentValueRead"
 fnMarker="environmentvalueread"
 foundNames=([0]="argument" [1]="return_code")
 line="89"
+original="environmentValueRead"
 rawComment=$'Argument: stateFile - EnvironmentFile. Required. File to read a value from.\nArgument: name - EnvironmentVariable. Required. Variable to read.\nArgument: default - EmptyString. Optional. Default value of the environment variable if it does not exist.\nArgument: --help - Flag. Optional. Display this help.\nReturn Code: 1 - If value is not found and no default argument is supplied (2 arguments)\nReturn Code: 0 - If value\n\n'
 return_code=$'1 - If value is not found and no default argument is supplied (2 arguments)\n0 - If value\n'
 sourceFile="bin/build/tools/environment/io.sh"

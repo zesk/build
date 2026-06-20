@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'None\n'
 base="console.sh"
@@ -12,6 +12,7 @@ fn="consoleDefaultTitle"
 fnMarker="consoledefaulttitle"
 foundNames=([0]="argument")
 line="172"
+original="consoleDefaultTitle"
 rawComment=$'Set the title of the window for the console to "user@hostname: pwd"\nArgument: None\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/console.sh"

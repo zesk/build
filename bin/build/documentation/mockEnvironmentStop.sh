@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-15
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument=$'globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.\n--help - Flag. Optional. Display this help.\n'
 base="test.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Restore a mocked value. Works solely with the default \`saveGlobalName\` (e.g. \`__MOCK_\${globalName}\`)."$'\n'""$'\n'""
+description=$'Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/test.sh"
 fn="mockEnvironmentStop"
 fnMarker="mockenvironmentstop"
 foundNames=([0]="argument")
 line="1451"
-rawComment="Restore a mocked value. Works solely with the default \`saveGlobalName\` (e.g. \`__MOCK_\${globalName}\`)."$'\n'"Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="mockEnvironmentStop"
+rawComment=$'Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).\nArgument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.\nArgument: --help - Flag. Optional. Display this help.\n\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/test.sh"
 sourceHash="1643b40c1684bb3bbf723c7097d1aba261079515"
 sourceLine="1451"

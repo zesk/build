@@ -10,6 +10,7 @@ file="bin/build/env/VISUAL.sh"
 fn="VISUAL"
 foundNames=([0]="name" [1]="category" [2]="type")
 name="File Preview"
+original="VISUAL"
 rawComment=$'Name: File Preview\nBinary for viewing files\nCategory: Bash\nType: Executable\n\n'
 sourceFile="bin/build/env/VISUAL.sh"
 sourceHash="968c9daeec40595fff68fdd102085cad273475db"

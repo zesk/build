@@ -36,7 +36,7 @@ __usageMessageStyle() {
 __usageMessage() {
   local returnCode="${1-0}"
   # __IDENTICAL__ localTrace 1
-  local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
+  local trace="§ ${BASH_SOURCE[2]#"${BUILD_HOME-}/"}:${BASH_LINENO[1]-} ${FUNCNAME[2]}"
   [ $# -eq 0 ] || shift
   local suffix="$*" icon="" style=""
   __usageMessageIcon "$returnCode"

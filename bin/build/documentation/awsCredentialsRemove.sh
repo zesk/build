@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'--profile profileName - String. Optional. The credentials profile to remove.\n--comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).\nprofileName - String. Optional. The credentials profile to remove.\n--help - Flag. Optional. Display this help.\n'
 base="aws.sh"
@@ -12,6 +12,7 @@ fn="awsCredentialsRemove"
 fnMarker="awscredentialsremove"
 foundNames=([0]="argument")
 line="234"
+original="awsCredentialsRemove"
 rawComment=$'Remove credentials from the AWS credentials file\nIf the AWS credentials file is not found, succeeds.\nYou can supply the profile using the `--profile` or directly, but just one.\nArgument: --profile profileName - String. Optional. The credentials profile to remove.\nArgument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).\nArgument: profileName - String. Optional. The credentials profile to remove.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/aws.sh"

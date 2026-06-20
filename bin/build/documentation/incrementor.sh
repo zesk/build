@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'count - Integer. Optional. Sets the value for any following named variables to this value.\nvariable - String. Optional. Variable to change or increment.\n--path cacheDirectory - Directory. Optional. Use this directory path as the state directory.\n--reset - Flag. Optional. Reset all counters to zero.\n--separator - String. Optional. When dumping all variables use this as the separator between name and value. (Default is space: `"  "`)\n--line - String. Optional. When dumping all variables use this as the separator between values. (Default is newline: `$\'\\n\'`)\n'
 base="utilities.sh"
@@ -13,6 +13,7 @@ fn="incrementor"
 fnMarker="incrementor"
 foundNames=([0]="argument" [1]="depends" [2]="see")
 line="52"
+original="incrementor"
 rawComment=$'Argument: count - Integer. Optional. Sets the value for any following named variables to this value.\nArgument: variable - String. Optional. Variable to change or increment.\nArgument: --path cacheDirectory - Directory. Optional. Use this directory path as the state directory.\nArgument: --reset - Flag. Optional. Reset all counters to zero.\nArgument: --separator - String. Optional. When dumping all variables use this as the separator between name and value. (Default is space: `"  "`)\nArgument: --line - String. Optional. When dumping all variables use this as the separator between values. (Default is newline: `$\'\\n\'`)\nSet or increment a incrementor state based on a state directory. If no numeric value is supplied the default is to increment the current value and output it.\nNew values are set to 0 by default so will output `1` upon first handler.\nIf no variable name is supplied it uses the default variable name `default`.\nVariable names can contain alphanumeric characters, underscore, or dash.\nThe special count `?` is used to query variables directly by name without modifying them.\nPassing `?` on the command line without any name arguments will output all incrementors active using the `--separator` and `--line` markers.\nSets `default` incrementor to 1 and outputs `1`\n    {fn} 1\nIncrements the `kitty` counter and outputs `1` on first call and `n + 1` for each subsequent call.\n    {fn} kitty\nSets `kitty` incrementor to 2 and outputs `2`\n    {fn} 2 kitty\nDumps the current incrementors:\n    {fn} ?\n    default 1\n    kitty 2\nThe default cache `--path` is placed within the `buildCacheDirectory`.\nDepends: buildCacheDirectory\nSee: buildCacheDirectory\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'buildCacheDirectory\n'

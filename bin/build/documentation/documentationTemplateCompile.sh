@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`\nsettingsFile - Required. Settings file to be loaded.\n'
 base="documentation.sh"
@@ -11,13 +11,14 @@ file="bin/build/tools/documentation.sh"
 fn="documentationTemplateCompile"
 fnMarker="documentationtemplatecompile"
 foundNames=([0]="argument" [1]="return_code" [2]="short_description")
-line="435"
+line="437"
+original="documentationTemplateCompile"
 rawComment=$'Document an item and generate a template (markdown). To custom format any\nof the fields in this, write functions in the form `_documentationTemplateFormatter_${"name"}` such that\nname matches the variable name (lower case alphanumeric characters and underscores).\nFilter functions should modify the input/output pipe.\nArgument: template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`\nArgument: settingsFile - Required. Settings file to be loaded.\nReturn Code: 0 - Success\nReturn Code: 1 - Template file not found\nShort description: Simple markdown documentation templates\n\n'
 return_code=$'0 - Success\n1 - Template file not found\n'
 short_description=$'Simple markdown documentation templates\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
-sourceLine="435"
+sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
+sourceLine="437"
 summary="Document an item and generate a template (markdown). To custom"
 summaryComputed="true"
 usage="documentationTemplateCompile template settingsFile"

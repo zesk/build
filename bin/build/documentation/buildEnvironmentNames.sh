@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'""
+argument=$'--help - Flag. Optional. Display this help.\n'
 base="build.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Environment:"$'\n'"Output the list of environment variable names which can be loaded via \`buildEnvironmentLoad\` or \`buildEnvironmentGet\`"$'\n'""$'\n'""
+description=$'Environment:\nOutput the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`\n\n'
 descriptionLineCount="3"
-environment="BUILD_ENVIRONMENT_DIRS BUILD_HOME"$'\n'""
+environment=$'BUILD_ENVIRONMENT_DIRS BUILD_HOME\n'
 file="bin/build/tools/build.sh"
 fn="buildEnvironmentNames"
 fnMarker="buildenvironmentnames"
 foundNames=([0]="summary" [1]="argument" [2]="requires" [3]="environment")
 line="218"
-rawComment="Summary: List known environment names"$'\n'"Environment:"$'\n'"Output the list of environment variable names which can be loaded via \`buildEnvironmentLoad\` or \`buildEnvironmentGet\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: convertValue find sort read helpArgument catchReturn"$'\n'"Environment: BUILD_ENVIRONMENT_DIRS BUILD_HOME"$'\n'""$'\n'""
-requires="convertValue find sort read helpArgument catchReturn"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+original="buildEnvironmentNames"
+rawComment=$'Summary: List known environment names\nEnvironment:\nOutput the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`\nArgument: --help - Flag. Optional. Display this help.\nRequires: convertValue find sort read helpArgument catchReturn\nEnvironment: BUILD_ENVIRONMENT_DIRS BUILD_HOME\n\n'
+requires=$'convertValue find sort read helpArgument catchReturn\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
 sourceHash="3536417f338a1ca40272c9da86efb3b9c3c2d9de"
 sourceLine="218"

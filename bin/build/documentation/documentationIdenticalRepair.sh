@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-19
+# Generated on 2026-06-20
 # shellcheck disable=SC2034
 argument=$'templatePath - Directory. Required. Path to the templates to repair.\n--help - Flag. Optional. Display this help.\n'
 base="documentation.sh"
@@ -11,12 +11,13 @@ file="bin/build/tools/documentation.sh"
 fn="documentationIdenticalRepair"
 fnMarker="documentationidenticalrepair"
 foundNames=([0]="argument")
-line="236"
+line="238"
+original="documentationIdenticalRepair"
 rawComment=$'Map template files using our identical functionality\nArgument: templatePath - Directory. Required. Path to the templates to repair.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="ef3313a629019568fc5c7615c4fd5ee40243187d"
-sourceLine="236"
+sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
+sourceLine="238"
 summary="Map template files using our identical functionality"
 summaryComputed="true"
 usage="documentationIdenticalRepair templatePath [ --help ]"

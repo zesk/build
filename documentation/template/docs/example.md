@@ -1,6 +1,6 @@
 <!-- {!skip} -->
 
-                                                                                                                                                                   #!/usr/bin/env bash
+                                                                                                                                                                                                                                                                                                                                                                                                                                              #!/usr/bin/env bash
     #
     # Example code and patterns
     #
@@ -146,8 +146,8 @@
       local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
       if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
       # __IDENTICAL__ localTrace 1
-      local trace="§ ${BASH_SOURCE[1]#"${BUILD_HOME-}/"}:${BASH_LINENO[0]-} ${FUNCNAME[1]}"
-      isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\" ($trace)" "$@" || return $?
+      local trace="§ ${BASH_SOURCE[2]#"${BUILD_HOME-}/"}:${BASH_LINENO[1]-} ${FUNCNAME[2]}"
+      isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\"" "$@" "($trace)" || return $?
       if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
     }
     _returnMessage() {
@@ -223,4 +223,4 @@
     }
     
     # __tools ../.. __hookGitPostCommit "$@"
-[0;32mUpdated example[0m [1m[35;48;2;0;0;0m6ms[0m[0m [38;2;34;34;34;48;2;0;0;0m[6][0m
+[0;32mUpdated example[0m [1m[35;48;2;0;0;0m29ms[0m[0m [38;2;34;34;34;48;2;0;0;0m[29][0m
