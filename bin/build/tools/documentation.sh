@@ -489,10 +489,10 @@ documentationFunctionsCompile() {
   done
 
   [ -n "$source" ] || throwArgument "$handler" "source is required" || return $?
-  aa=(--handler "$handler" --source "$source" "${aa[@]+"${aa[@]}"}")
-  if $allFlag; then
-    # uses stdin
-    documentationFunctionCompile "${aa[@]}" "$@" || return $?
+  set -- --handler "$handler" --source "$source"
+  if $allFlag || [ "${#aa[@]}" -gt 0 ]; then
+    # uses stdin or arguments
+    documentationFunctionCompile "$@" "${aa[@]}" || return $?
   else
     [ -n "$target" ] || throwArgument "$target" "target is required unless you supply --all" || return $?
 
@@ -517,7 +517,7 @@ documentationFunctionsCompile() {
       return 0
     fi
     statusMessage decorate success "Filling in missing functions"
-    documentationFunctionCompile "${aa[@]}" "$@" <"$funFile" || returnClean $? "${clean[@]}" || return $?
+    documentationFunctionCompile "$@" <"$funFile" || returnClean $? "${clean[@]}" || return $?
     catchReturn "$handler" rm -f "${clean[@]}" || return $?
   fi
 }
