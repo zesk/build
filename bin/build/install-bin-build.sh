@@ -1636,7 +1636,7 @@ _isFunction() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 302
+# IDENTICAL decorate 355
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1709,10 +1709,64 @@ _decorations() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Singular decoration function
+# Summary: decorate text using colors and styles
+# Singular decoration function which allows access to console colors, links, and custom formatting for any type in the system.
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration
 # Argument: text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
-# You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
+# If no text is supplied the default is to read input from stdin.
+# ##### Special argument `--`
+#
+# Passing the special argument `--` for text will *skip* reading input from `stdin` and instead continue decorating any
+# additional arguments, if any. This allows blank arguments to be processed correctly by the internal implementation of
+# `decorate` as well as the extensions. To output the text `--` you *MUST* pipe it to `stdin` or pass the argument twice:
+#
+#     > decorate info -- I like two dashes on my lines
+#     I like two dashes on my lines
+#     > decorate info -- -- I like two dashes on my lines
+#     -- I like two dashes on my lines
+#
+# Ideally we would be able to `check` if any input is available on `stdin` without having to wait, but some versions of
+# Bash `read` does not support a timeout of zero (which is effectively a `select` to see if `stdin`
+# has data) this allows us to disambiguate when `stdin` is expected and should be read and cases where arguments may be
+# blank unintentionally but intended to be decorated. Sadly, if `executeInputSupport` worked with a timeout of zero then
+# this would not be needed.
+#
+# The use case where this happens is:
+#
+#     decorate info "${items[@]}"
+#
+# Where `items` may be empty. Without the `--` this takes a second on some platforms for `read` to timeout. Generally
+# speaking, this is acceptable for the behavior but should be avoided at all costs.
+#
+#     😎 dude@mai ~/Developer/build > timing decorate info
+#     decorate info 1 second, 55ms [1055]
+#     😎 dude@mai ~/Developer/build > timing decorate info --
+#     decorate info -- 35ms [35]
+#
+# stdin: String. Optional. Text to decorate.
+# ##### Extending Decorations
+#
+# You can extend this function by writing a your own extension prefixed with `__decorationExtension`.
+#
+# For example, the function `__decorationExtensionCustom` is called for `decorate custom`. The style name is converted as follows prior to determining the function to call:
+#
+# - All `-` characters are converted to `_` characters
+# - The first letter of the style is capitalized. (Remaining characters are unchanged.)
+#
+# If the function exists, it is used for the decoration. Additionally, if the function plus the suffix `.Pure` exists, it is called *without* `executeInputSupport` which means your decoration function **must handle stdin** and **arguments** correctly.
+#
+# This is useful when you handle `stdin` differently than `executeInputSupport` or need to handle `--` parameters differently.
+#
+# Built-in extensions:
+#
+# - {SEE:__decorateExtensionDiff}
+# - {SEE:__decorateExtensionEach}
+# - {SEE:__decorateExtensionFile}
+# - {SEE:__decorateExtensionPair}
+# - {SEE:__decorateExtensionQuote}
+# - {SEE:__decorateExtensionSize}
+# - {SEE:__decorateExtensionWrap}
+#
 # stdout: Decorated text
 # Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
@@ -1914,13 +1968,15 @@ __decorateExtensionBOLD() {
 }
 
 # fn: decorate quote
-# Double-quote all arguments as properly quoted bash string
-# Mostly $ and " are problematic within a string
+# Summary: Double-quote all arguments
+# Double-quote all arguments as properly quoted bash string.
+# Example:     > decorate quote "$title"
+# Example:     "Can't believe it was only \$0.99?"
+# Mostly $ and " are problematic within a string.
 # Requires: printf decorate
 __decorateExtensionQuote() {
   if [ $# -eq 0 ]; then
-    local finished=false
-    while ! $finished; do
+    local finished=false && while ! $finished; do
       local line="" && IFS="" read -d $'\n' -r line || finished=true
       [ -n "$line" ] || ! $finished || continue
       __decorateExtensionQuoteProcessLine "$line" || return $?
@@ -1932,10 +1988,7 @@ __decorateExtensionQuote() {
 
 # Argument: text ... - String. Text to quote
 __decorateExtensionQuoteProcessLine() {
-  local text="$*"
-  text="${text//\"/\\\"}"
-  text="${text//\$/\\\$}"
-  printf -- "\"%s\"\n" "$text"
+  local text="$*" && text="${text//\"/\\\"}" && text="${text//\$/\\\$}" && printf -- "\"%s\"\n" "$text"
 }
 
 # <-- END of IDENTICAL decorate

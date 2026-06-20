@@ -11,9 +11,12 @@
 # Return Code: 0 - stdout contains input wrapped with text
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Argument: prefix - EmptyString. Required. Prefix each line with this text
-# Argument: suffix - String. Optional. Prefix each line with this text
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --fill fillCharacter - Character. Optional. Fill entire line with this character.
+# Argument: --width fillWidth - UnsignedInteger. Optional. Line width to fill with `fillCharacter`.
+# Argument: prefix - EmptyString. Required. Prefix each line with this text
+# Argument: suffix ... - String. Optional. Prefix each line with this text
 # Example:     cat "$file" | decorate wrap "CODE> " " <EOL>"
 # Example:     cat "$errors" | decorate wrap "    ERROR: [" "]"
 __decorateExtensionWrap() {
@@ -48,37 +51,34 @@ __decorateExtensionWrap() {
     catchEnvironment "$handler" cat || return $?
     return 0
   fi
-  if ! isUnsignedInteger "$width"; then
-    width=$(consoleColumns) || throwEnvironment "$handler" "consoleColumns" || return $?
-  fi
-
-  local actualWidth
-  if [ -n "$width" ]; then
-    local strippedText
-    strippedText="$(printf "%s" "$prefix$suffix" | consoleToPlain)"
+  if [ -n "$fill" ]; then
+    if ! isUnsignedInteger "$width"; then
+      width=$(consoleColumns) || throwEnvironment "$handler" "consoleColumns" || return $?
+    fi
+    local actualWidth
+    local strippedText && strippedText="$(printf "%s" "$prefix$suffix" | consoleToPlain)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
       throwArgument "$handler" "$width is too small to support prefix and suffix characters (${#prefix} + ${#suffix}):"$'\n'"prefix=$prefix"$'\n'"suffix=$suffix" || return $?
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing
-      fill=
+      fill=""
     fi
   fi
-  local pad="" line
-  while IFS= read -r line; do
-    if [ -n "$fill" ]; then
-      local cleanLine
-      cleanLine="$(printf "%s" "$line" | consoleToPlain)"
+  if [ -n "$fill" ]; then
+    local line && while IFS="" read -r line; do
+      local cleanLine && cleanLine="$(printf "%s" "$line" | consoleToPlain)"
       padWidth=$((actualWidth - ${#cleanLine}))
-      if [ $padWidth -gt 0 ]; then
-        pad=$(textRepeat "$padWidth" "$fill")
-      else
-        pad=
-      fi
-    fi
-    printf "%s%s%s%s\n" "$prefix" "$line" "$pad" "$suffix"
-  done
+      local pad=""
+      [ "$padWidth" -eq 0 ] || pad=$(textRepeat "$padWidth" "$fill")
+      printf "%s%s%s%s\n" "$prefix" "$line" "$pad" "$suffix"
+    done
+  else
+    local line && while IFS="" read -r line; do
+      printf "%s%s%s\n" "$prefix" "$line" "$suffix"
+    done
+  fi
 }
 ___decorateExtensionWrap() {
   # __IDENTICAL__ bashDocumentation 1

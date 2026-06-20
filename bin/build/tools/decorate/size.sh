@@ -4,8 +4,12 @@
 #
 
 # fn: decorate size
+# Summary: Size converted to kilo, mega, giga bytes.
 # Argument: size - UnsignedInteger. Optional. Size to display.
-# Mostly $ and " are problematic within a string
+# Example:     > decorate size 169204
+# Example:     165k (169204)
+# Example:     > decorate size 16920400232
+# Example:     15G (16920400232)
 # Requires: printf decorate isUnsignedInteger
 __decorateExtensionSize() {
   while [ $# -gt 0 ]; do
