@@ -25,5 +25,5 @@ Determine the environment file names for environment variables
 
 #### Environment
 
-- {SEE:BUILD_ENVIRONMENT_DIRS}
+- [`BUILD_ENVIRONMENT_DIRS` Build Environment Directory List]({rel}env/#build_configuration) – **DirectoryList**. Search directory for environment definition files. `:` separated.
 

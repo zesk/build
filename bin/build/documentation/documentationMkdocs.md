@@ -27,5 +27,5 @@ Build documentation using `mkdocs` and a template.
 
 #### See Also
 
-- {SEE:hookVersionCurrent}
+- [hookVersionCurrent]({rel}tools/hooks.md#hookversioncurrent) - Application current version ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hooks.sh#L93))
 

@@ -24,5 +24,5 @@ Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 #### See Also
 
 - [bashDebug]({rel}tools/debug.md#bashdebug) - Bash debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L43))
-- {SEE:bashDebuggerEnable}
+- [bashDebuggerEnable]({rel}tools/debug.md#bashdebuggerenable) - Enable the debugger ([source](https://github.com/zesk/build/blob/main/bin/build/tools/debugger.sh#L63))
 

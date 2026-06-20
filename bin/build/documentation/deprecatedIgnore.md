@@ -23,5 +23,5 @@ Skips dot directories and release notes by default and any file named `deprecate
 
 #### Environment
 
-- {SEE:BUILD_RELEASE_NOTES}
+- [`BUILD_RELEASE_NOTES` Release Notes Application Path]({rel}env/#build_configuration) – **ApplicationDirectory**. Constant for the release notes path. Defaults to `./docs/release`.
 

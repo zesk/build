@@ -24,5 +24,5 @@ The name is output left-aligned to the `characterWidth` given and colored using 
 
 #### Environment
 
-- {SEE:BUILD_PAIR_WIDTH}
+- [`BUILD_PAIR_WIDTH` Pair Width]({rel}env/#decoration) – **PositiveInteger**. Width for pairs. Defaults to `40`.
 

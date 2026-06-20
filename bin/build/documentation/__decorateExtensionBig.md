@@ -15,7 +15,7 @@ standard (figlet)
     | |__ (_) __ |_   _|____  _| |_
     | '_ \| |/ _` || |/ _ \ \/ / __|
     | |_) | | (_| || |  __/>  <| |_
-    |_.__/|_|\__, ||_|\___/_/\_\__|
+    |_.__/|_|\__, ||_|\___/_/\_\\__|
              |___/
 
 --bigger (figlet)
@@ -25,7 +25,7 @@ standard (figlet)
     | |__  _  __ _| | _____  _| |_
     | '_ \| |/ _` | |/ _ \ \/ / __|
     | |_) | | (_| | |  __/>  <| |_
-    |_.__/|_|\__, |_|\___/_/\_\__|
+    |_.__/|_|\__, |_|\___/_/\_\\__|
               __/ |
              |___/
 
@@ -62,5 +62,5 @@ smmono12 (--bigger) toilet
 
 #### Environment
 
-- {SEE:BUILD_TEXT_BINARY}
+- [`BUILD_TEXT_BINARY` Text Executable]({rel}env/#decoration) – **Callable**. Binary used to generate `decorate big`
 

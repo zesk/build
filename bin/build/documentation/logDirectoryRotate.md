@@ -26,5 +26,5 @@ For all log files in logPath with extension `.log`, rotate them safely.
 
 #### See Also
 
-- {SEE:logRotate}
+- [logRotate]({rel}tools/log.md#logrotate) - Rotate a log file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/log.sh#L33))
 

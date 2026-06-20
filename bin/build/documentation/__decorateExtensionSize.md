@@ -30,6 +30,6 @@ Size converted to kilo, mega, giga bytes.
 #### Requires
 
 - [`printf`]({rel}guide/builtin.md#printf)
-- {SEE:decorate}
-- {SEE:isUnsignedInteger}
+- [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
+- [isUnsignedInteger]({rel}tools/type.md#isunsignedinteger) - Is value an unsigned integer? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L163))
 

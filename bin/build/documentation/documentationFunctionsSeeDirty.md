@@ -23,5 +23,5 @@ Changes the modification date of the associated files such that it will be regen
 
 #### See Also
 
-- [documentationFunctionsCompile]({rel}tools/documentation.md#documentationfunctionscompile) - Extract and build the documentation settings cache and generate derived ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L470))
+- [documentationFunctionsCompile]({rel}tools/documentation.md#documentationfunctionscompile) - Extract and build the documentation settings cache and generate derived ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L475))
 

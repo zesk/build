@@ -24,6 +24,6 @@ Installs x86 or aarch64 binary based on `HOSTTYPE`.
 
 #### Requires
 
-- {SEE:packageInstall}
-- {SEE:urlFetch}
+- [packageInstall]({rel}tools/package.md#packageinstall) - Install packages using a package manager ([source](https://github.com/zesk/build/blob/main/bin/build/tools/package.sh#L377))
+- [urlFetch]({rel}tools/url.md#urlfetch) - Fetch URL content ([source](https://github.com/zesk/build/blob/main/bin/build/tools/url.sh#L566))
 

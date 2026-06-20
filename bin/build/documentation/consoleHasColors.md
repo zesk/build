@@ -21,7 +21,7 @@ Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculat
 
 #### Environment
 
-- {SEE:BUILD_COLORS} - Boolean. Optional. Whether the build system will output ANSI colors.
+- [`BUILD_COLORS` Build Colors Flag]({rel}env/#decoration) – **Boolean**. If true then colors are shown, blank means guess the - Boolean. Optional. Whether the build system will output ANSI colors.
 
 #### Requires
 

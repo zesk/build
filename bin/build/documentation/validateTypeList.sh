@@ -11,13 +11,13 @@ file="bin/build/tools/validate.sh"
 fn="validateTypeList"
 fnMarker="validatetypelist"
 foundNames=([0]="stdout" [1]="argument" [2]="summary")
-line="506"
+line="501"
 original="validateTypeList"
 rawComment=$'List types which can be validated.\nstdout: Type\nArgument: --help - Flag. Optional. Display this help.\nSummary: Types which can be validated\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="5f89904415ec5aff0f26d85665396d1091b18d0c"
-sourceLine="506"
+sourceHash="6aa8ba7c4c01e78e1aaa60bba330293420ad5579"
+sourceLine="501"
 stdout=$'Type\n'
 summary="Types which can be validated"
 summaryComputed=""

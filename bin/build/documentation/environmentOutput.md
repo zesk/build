@@ -26,14 +26,14 @@ Any values which contain a newline are also skipped.
 
 #### Requires
 
-- {SEE:throwArgument}
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
 - [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
-- {SEE:environmentSecureVariables}
-- {SEE:grepSafe}
+- [environmentSecureVariables]({rel}tools/environment.md#environmentsecurevariables) - List environment variables related to security ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L45))
+- [grepSafe]({rel}tools/text.md#grepsafe) - \`grep\` but returns 0 when nothing matches ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L75))
 - [`env`]({rel}guide/command.md#env)
-- {SEE:textRemoveFields}
+- [textRemoveFields]({rel}tools/text.md#textremovefields) - Remove fields from left to right from a text file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1104))
 
 #### See Also
 
-- {SEE:environmentSecureVariables}
+- [environmentSecureVariables]({rel}tools/environment.md#environmentsecurevariables) - List environment variables related to security ([source](https://github.com/zesk/build/blob/main/bin/build/tools/environment.sh#L45))
 

@@ -31,6 +31,6 @@ Icons used:
 #### Environment
 
 - TMPDIR
-- {SEE:BUILD_HOME}
-- {SEE:HOME}
+- [`BUILD_HOME` Build Home Directory]({rel}env/#build_configuration) – **Directory**. `BUILD_HOME` is `.` when this code is installed - at
+- [`HOME` User Home]({rel}env/#bash) – **Directory**. Current user's home directory.
 

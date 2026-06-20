@@ -22,11 +22,11 @@ If no arguments are passed, returns exit code 1.
 
 #### Environment
 
-- {SEE:PATH}
+- [`PATH` Executable Search Path]({rel}env/#bash) – **DirectoryList**. A colon `:` separated list of paths to search for
 
 #### Requires
 
-- {SEE:throwArgument}
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
 - [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 - [`type`]({rel}guide/builtin.md#type)
 

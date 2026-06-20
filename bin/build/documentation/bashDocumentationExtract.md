@@ -59,6 +59,6 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### See Also
 
-- {SEE:bashFunctionComment}
-- {SEE:bashFirstComment}
+- [bashFunctionComment]({rel}tools/bash.md#bashfunctioncomment) - Output the comment for a function in a file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L631))
+- [bashFirstComment]({rel}tools/bash.md#bashfirstcomment) - Extract first comment from a stream ([source](https://github.com/zesk/build/blob/main/bin/build/tools/bash.sh#L588))
 

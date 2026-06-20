@@ -27,16 +27,16 @@ Watches your HOME directory for `.` files which are added and unknown to you.
 #### Requires
 
 - [`sort`]({rel}guide/command.md#sort)
-- {SEE:buildEnvironmentGetDirectory}
+- [buildEnvironmentGetDirectory]({rel}tools/build.md#buildenvironmentgetdirectory) - Load and print one or more environment settings which represents ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L607))
 - [`touch`]({rel}guide/command.md#touch)
-- {SEE:returnEnvironment}
+- [returnEnvironment]({rel}tools/sugar-core.md#returnenvironment) - Return \`environment\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L265))
 - [`read`]({rel}guide/builtin.md#read)
 - [`basename`]({rel}guide/command.md#basename)
-- {SEE:inArray}
-- {SEE:decorate}
+- [inArray]({rel}tools/text.md#inarray) - Check if an element exists in an array ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L393))
+- [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
 - [`printf`]({rel}guide/builtin.md#printf)
-- {SEE:confirmYesNo}
-- {SEE:statusMessage}
+- [confirmYesNo]({rel}tools/interactive.md#confirmyesno) - Read user input and return success on yes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/interactive.sh#L162))
+- [statusMessage]({rel}tools/decorate.md#statusmessage) - Output a status message and display correctly on consoles with animation and in log files ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L293))
 - [`grep`]({rel}guide/command.md#grep)
 - [`rm`]({rel}guide/command.md#rm)
 

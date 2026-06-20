@@ -444,11 +444,16 @@ _documentationTemplateCompile() {
 
 # Generate documentation using source markdown and a mapping function.
 #
+# Tokens are mapped to template paths in `BUILD_DOCUMENTATION_PATH.
+#
 # Argument: --verbose - Flag. Optional. Be wordy.
 # Argument: --default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`
-# Argument: sourcePath - Exists. Required. File or directory to convert.
+# Argument: sourcePath - Exists. Optional. File or directory to convert. Reads from `stdin` if not provided.
 # Argument: targetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.
 # Argument: mapFunction ... - Function. Optional. Mapping function to use, and any arguments.
+# stdin: Text
+# stdout: Text. Tokens are mapped to template paths in `BUILD_DOCUMENTATION_PATH
+# See: BUILD_DOCUMENTATION_PATH
 # Return Code: 0 - Success
 # Return Code: 1 - Template file not found
 documentationMaker() {
@@ -530,8 +535,10 @@ _documentationFunctionsCompile() {
 
 # Summary: Build function documentation
 # Extract and build the documentation settings cache and generate derived files:
-
+#
 # - `--documentation` is required for `SEE:` files
+#
+# Internally calls `documentationFileCompile`.
 #
 # Argument: --force - Flag. Optional. Create files regardless of cache status.
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
@@ -541,6 +548,7 @@ _documentationFunctionsCompile() {
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
 # Argument: functionName ... - String. Optional. Specific functions to compile.
 # stdin: functionName - File with function names one per line.
+# See: documentationFileCompile
 documentationFunctionCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -646,6 +654,7 @@ _documentationFunctionRemove() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: functionName - File with function names one per line.
+# Internal: Internally calls `documentationFileCompileFunction` - implementation
 documentationFileCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

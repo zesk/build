@@ -47,5 +47,5 @@ Outputs a big text message as it gets closer.
 
 #### See Also
 
-- {SEE:dateWithinDays}
+- [dateWithinDays]({rel}tools/date.md#datewithindays) - Is a date in the past beyond its expiration date? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/date.sh#L271))
 

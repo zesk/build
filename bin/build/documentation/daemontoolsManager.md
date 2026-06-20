@@ -34,5 +34,5 @@ Specify actions more than once on the command line to specify more than one set 
 
 #### Environment
 
-- {SEE:DAEMONTOOLS_HOME} - The default home directory for `daemontools`
+- [`DAEMONTOOLS_HOME` Daemontools Home]({rel}env/#vendor) – **Directory**. Constant for the directory where services are monitored by daemontools - The default home directory for `daemontools`
 

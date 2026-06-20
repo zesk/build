@@ -91,7 +91,7 @@ __documentationMaker() {
     --default) shift && aa+=("$argument" "${1-}") ;;
     *)
       if [ -z "$sourcePath" ]; then
-        sourcePath=$(validate "$handler" Exists "sourcePath" "$argument") || return $?
+        [ "$argument" = "-" ] && sourcePath="$argument" || sourcePath=$(validate "$handler" Exists "sourcePath" "$argument") || return $?
       elif [ -z "$targetPath" ]; then
         [ "$argument" = "-" ] && targetPath="$argument" || targetPath=$(validate "$handler" FileDirectory "targetPath" "$argument") || return $?
       else
@@ -101,25 +101,34 @@ __documentationMaker() {
     esac
     shift
   done
+  [ -n "$sourcePath" ] || sourcePath="-"
   [ -n "$targetPath" ] || targetPath="-"
 
   mapper=("${aa[@]+"${aa[@]}"}" __documentationMakerMapper "${mapper[@]+"${mapper[@]}"}" --)
 
   local fileGenerator=() mapStart && mapStart=$(timingStart)
-  if [ -f "$sourcePath" ]; then
-    fileGenerator=(printf "%s\n" "$sourcePath")
-    sourcePath="${sourcePath%/*}"
-  else
+  local clean=()
+  if [ "$sourcePath" = "-" ] || [ -f "$sourcePath" ]; then
+    local savedInput && savedInput=$(fileTemporaryName "$handler") || return $?
+    clean+=("$savedInput")
+    catchReturn "$handler" cat >"$savedInput" || returnClean $? "${clean[@]}" || return $?
+    fileGenerator=(printf "%s\n" "$savedInput")
+    sourceFile=stdin
+  elif [ "$targetPath" != "-" ]; then
     targetPath=$(catchReturn "$handler" directoryRequire "$targetPath") || return $?
     fileGenerator=(find "$sourcePath" -type f -name "*.md" ! -path '*/\.*/*')
   fi
   local targetFile sourceFile && while read -r sourceFile; do
-    local targetName="${sourceFile#"$sourcePath/"}"
     if [ "$targetPath" = "-" ]; then
-      targetFile="$targetPath"
+      returnCode=0
       ! $verboseFlag || statusMessage decorate info "Generating $(decorate file "$sourceFile") to stdout" 1>&2
       mapFunction --handler "$handler" "${mapper[@]}" "-" <"$sourceFile" || returnCode=$?
+      if [ "$returnCode" = 141 ]; then
+        catchReturn "$handler" cat "$sourceFile" && returnCode=0 || returnCode=$?
+      fi
+      returnClean "$returnCode" "${clean[@]}" || return $?
     else
+      local targetName="${sourceFile#"$sourcePath/"}"
       targetFile="${targetPath%/}/$targetName"
       targetFile=$(catchReturn "$handler" fileDirectoryRequire "$targetFile") || return $?
       local returnCode=0 && mapFunction --handler "$handler" "${mapper[@]}" "$targetName" <"$sourceFile" >"$targetFile" || returnCode=$?
@@ -135,7 +144,7 @@ __documentationMaker() {
       $verboseFlag || printf "%s%s\n" "$errorString" "$(decorate file "$sourceFile")" 1>&2
       ;;
     esac
-    ! $verboseFlag || statusMessage timingReport "$mapStart" "${errorString}(.) $verbString $(decorate file "$targetFile")"
+    ! $verboseFlag || statusMessage timingReport "$mapStart" "${errorString}(.) $verbString $(decorate file "$targetFile")" 1>&2
   done < <("${fileGenerator[@]}" | sort)
 }
 
@@ -273,7 +282,7 @@ __documentationFileCompile() {
       local docPath && docPath="$(dirname "$(__documentationFile "$home" "test" true)")" || return $?
       catchReturn "$handler" statusMessage decorate info "Cleaning $docPath" || return $?
       if [ -d "$docPath" ]; then
-        local finder=(find "$docPath" -type f \( -name '*.sh' -or -name '*.md' \) ! -path '*/.*/*')
+        local finder=(find "$docPath" -type f \( -name '*.sh' -or -name '*.md' \) ! -path '*/\.*/*')
         total=$("${finder[@]}" | fileLineCount) || return $?
         catchEnvironment "$handler" "${finder[@]}" -delete || return $?
       fi
@@ -333,6 +342,10 @@ __documentationFileCompileFunction() {
   if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
   # ********************************************************************************************************************
 
+  # # #
+  # # # Load pre-validated arguments
+  # # #
+
   local handler="$1" && shift
   local docPath="$1" && shift
   local sourcePath="$1" && shift
@@ -348,6 +361,10 @@ __documentationFileCompileFunction() {
   __profilePrefix="${__profilePrefix}[$fun] "
   local documentationSettingsFile="$docPath/$fun.sh" seeFile="$docPath/SEE/$fun.md" mdFile="$docPath/$fun.md"
   local ff=("$documentationSettingsFile" "$seeFile" "$mdFile")
+
+  # # #
+  # # # Check the sourceHash to see if the file changed
+  # # #
 
   if [ -z "$sourceFile" ] && [ -f "$documentationSettingsFile" ]; then
     __profileLabel="settings exists"
@@ -380,6 +397,10 @@ __documentationFileCompileFunction() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
+  # # #
+  # # # Need a sourceFile or find it
+  # # #
+
   if [ -z "$sourceFile" ]; then
     __profileLabel="blank source"
     # IDENTICAL profileFunctionMarker 3
@@ -393,7 +414,7 @@ __documentationFileCompileFunction() {
     if [ "$sourcesFound" -gt 1 ]; then
       local remainingFiles && remainingFiles=$(sed "1d" <<<"$sourceFile")
       sourceFile=$(catchReturn "$handler" head -n 1 <<<"$sourceFile") || return $?
-      statusMessage --last decorate warning "${prefix} Multiple sources found for $prettyFun (x$sourcesFound), using $(decorate file "$sourceFile"): ${remainingFiles//$'\n'/, }"
+      statusMessage --last decorate warning "${prefix} Multiple sources found for $prettyFun (x$sourcesFound), using $(decorate file "$sourceFile"):"$'\n'"Ignoring $(decorate orange "${remainingFiles//$'\n'/, }")"
     fi
     [ -f "$sourceFile" ] || throwEnvironment "$handler" "${prefix} No source found for $prettyFun" || return $?
 
@@ -405,6 +426,10 @@ __documentationFileCompileFunction() {
   fi
 
   pathIsAbsolute "$sourceFile" || sourceFile="$home/$sourceFile"
+
+  # # #
+  # # # Validate sourceFile hash against known hash of current files
+  # # #
 
   if ! $force && [ -n "$sourceHash" ]; then
     local computedHash && computedHash=$(catchEnvironment "$handler" textSHA <"$sourceFile") || return $?
@@ -430,9 +455,17 @@ __documentationFileCompileFunction() {
     fi
   fi
 
+  # # #
+  # # # All cache checks are now completed, we are generating it, set up temp files
+  # # #
+
   local tempComment && tempComment=$(fileTemporaryName "$handler") || return $?
   local tempHelp="$tempComment.help"
   clean+=("$tempComment" "$tempHelp")
+
+  # # #
+  # # # Extract the comment into $tempComment
+  # # #
 
   __profileLabel="arguments"
   # IDENTICAL profileFunctionMarker 3
@@ -446,6 +479,11 @@ __documentationFileCompileFunction() {
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
+
+  # # #
+  # # # bashDocumentationExtract into $documentationSettingsFile
+  # # #
+
   (
     local nc=() && $force || nc=(--no-cache)
     catchReturn "$handler" bashDocumentationExtract "${nc[@]+"${nc[@]}"}" --function --generate "$fun" "$sourceFile" <"$tempComment" >"$documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
@@ -456,39 +494,46 @@ __documentationFileCompileFunction() {
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
-  if [ ! -f "$documentationSettingsFile" ]; then
-    throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $(decorate file "$sourceFile") did not generate $documentationSettingsFile"$'\n'"$(dumpPipe <"$tempComment")" || returnClean $? "${clean[@]}" || return $?
-  else
-    # local init && init=$(timingStart)
-    catchReturn "$handler" decorateThemelessMode || return $?
-    fn="" BUILD_DEBUG="usage-cache-skip" BUILD_COLORS=true catchReturn "$handler" bashDocumentation "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
-    catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?
-    {
-      local replace helpCode && helpCode="$(escapeBash <"$tempHelp")"
-      replace="'\$'\e''"
-      helpCode=${helpCode//$'\e'/"$replace"}
-      replace="'\$'\n''"
-      helpCode=${helpCode//$'\n'/"$replace"}
-      catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpConsole" "$helpCode" || returnClean $? "${clean[@]}" || return $?
 
-      helpCode="$(decorateThemed <"$tempHelp" | consoleToPlain | escapeBash)" || throwEnvironment "$handler" "Theme failed" || returnClean $? "${clean[@]}" || return $?
-      replace="'\$'\n''"
-      helpCode=${helpCode//$'\n'/"$replace"}
-      catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpPlain" "$helpCode" || returnClean $? "${clean[@]}" || return $?
-    } >>"$documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
-    if buildDebugEnabled "usage-compile"; then
-      dumpPipe "Help for $fun" <"$tempHelp" 1>&2
-      dumpPipe "Settings for $fun" <"$documentationSettingsFile" 1>&2
-    fi
-    catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-    # catchEnvironment "$handler" printf "%s\n" "# elapsed $(timingFormat "$(timingElapsed "$init")")" >>"$documentationSettingsFile" || return $?
+  # # #
+  # # # Generate themeless help and plain text help
+  # # #
 
-    __profileLabel="decorateThemeless"
-    # IDENTICAL profileFunctionMarker 3
-    # ********************************************************************************************************************
-    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
-    # ********************************************************************************************************************
+  [ -f "$documentationSettingsFile" ] || throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $(decorate file "$sourceFile") did not generate $documentationSettingsFile"$'\n'"$(dumpPipe <"$tempComment")" || returnClean $? "${clean[@]}" || return $?
+
+  # local init && init=$(timingStart)
+  catchReturn "$handler" decorateThemelessMode || return $?
+  fn="" BUILD_DEBUG="usage-cache-skip" BUILD_COLORS=true catchReturn "$handler" bashDocumentation "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
+  catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?
+  {
+    local replace helpCode && helpCode="$(escapeBash <"$tempHelp")"
+    replace="'\$'\e''"
+    helpCode=${helpCode//$'\e'/"$replace"}
+    replace="'\$'\n''"
+    helpCode=${helpCode//$'\n'/"$replace"}
+    catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpConsole" "$helpCode" || returnClean $? "${clean[@]}" || return $?
+
+    helpCode="$(decorateThemed <"$tempHelp" | consoleToPlain | escapeBash)" || throwEnvironment "$handler" "Theme failed" || returnClean $? "${clean[@]}" || return $?
+    replace="'\$'\n''"
+    helpCode=${helpCode//$'\n'/"$replace"}
+    catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpPlain" "$helpCode" || returnClean $? "${clean[@]}" || return $?
+  } >>"$documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
+  if buildDebugEnabled "usage-compile"; then
+    dumpPipe "Help for $fun" <"$tempHelp" 1>&2
+    dumpPipe "Settings for $fun" <"$documentationSettingsFile" 1>&2
   fi
+  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+  # catchEnvironment "$handler" printf "%s\n" "# elapsed $(timingFormat "$(timingElapsed "$init")")" >>"$documentationSettingsFile" || return $?
+
+  __profileLabel="decorateThemeless"
+  # IDENTICAL profileFunctionMarker 3
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
+
+  # # #
+  # # # Generate derived files (this is extensible)
+  # # #
 
   __profileLabel="derived"
   # IDENTICAL profileFunctionMarker 3

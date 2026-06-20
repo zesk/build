@@ -36,7 +36,7 @@ As a caveat, your command to `undo` can NOT take the argument `--` as a paramete
 #### Requires
 
 - [isUnsignedInteger]({rel}tools/type.md#isunsignedinteger) - Is value an unsigned integer? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L163))
-- {SEE:throwArgument}
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
 - [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
 - [execute]({rel}tools/sugar-core.md#execute) - Run binary and output failed command upon error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L140))
 - [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))

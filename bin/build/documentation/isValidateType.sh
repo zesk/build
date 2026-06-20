@@ -12,13 +12,13 @@ file="bin/build/tools/validate.sh"
 fn="isValidateType"
 fnMarker="isvalidatetype"
 foundNames=([0]="summary" [1]="argument" [2]="example")
-line="523"
+line="518"
 original="isValidateType"
 rawComment=$'Summary: Are validate type names valid?\nAre all arguments passed a valid `validate` type?\nArgument: --help - Flag. Optional. Display this help.\nArgument: type - String. Optional. Type to validate as `validate` type.\nExample:     isValidateType string || returnMessage 1 "string is not a type."\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="5f89904415ec5aff0f26d85665396d1091b18d0c"
-sourceLine="523"
+sourceHash="6aa8ba7c4c01e78e1aaa60bba330293420ad5579"
+sourceLine="518"
 summary="Are validate type names valid?"
 summaryComputed=""
 usage="isValidateType [ --help ] [ type ]"

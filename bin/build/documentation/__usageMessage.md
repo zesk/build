@@ -23,6 +23,6 @@ Output the message for usage consistently
 
 #### Requires
 
-- {SEE:decorate}
-- {SEE:returnCodeString}
+- [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
+- [returnCodeString]({rel}tools/sugar-core.md#returncodestring) - Output the exit code as a string ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L60))
 

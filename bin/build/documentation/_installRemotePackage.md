@@ -36,14 +36,14 @@
 - [`rm`]({rel}guide/command.md#rm)
 - [`cat`]({rel}guide/command.md#cat)
 - [`printf`]({rel}guide/builtin.md#printf)
-- {SEE:fileRealPath}
-- {SEE:executableExists}
-- {SEE:returnMessage}
-- {SEE:fileTemporaryName}
-- {SEE:catchArgument}
-- {SEE:throwArgument}
-- {SEE:catchEnvironment}
-- {SEE:decorate}
-- {SEE:validate}
-- {SEE:isFunction}
+- [fileRealPath]({rel}tools/file.md#filerealpath) - Find the full, actual path of a file avoiding symlinks ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L435))
+- [executableExists]({rel}tools/bash.md#executableexists) - Does a binary exist in the PATH? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/platform.sh#L174))
+- [returnMessage]({rel}tools/sugar-core.md#returnmessage) - Return passed in integer return code and output message to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L143))
+- [fileTemporaryName]({rel}tools/file.md#filetemporaryname) - Wrapper for \`mktemp\`. Generate a temporary file name, and fail ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L944))
+- [catchArgument]({rel}tools/sugar-core.md#catchargument) - Run \`command\`, upon failure run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L238))
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
+- [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
+- [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
+- [validate]({rel}tools/validate.md#validate) - Validate a value by type ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L95))
+- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
 

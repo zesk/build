@@ -2,23 +2,23 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Uses list of functions passed in `stdin`; using the `SEE` template.\nOutput to `allFunctionList.md` typically.\n\n'
+description="Uses list of functions passed in \`stdin\`; using the \`SEE\` template."$'\n'"Output to \`allFunctionList.md\` typically."$'\n'""$'\n'""
 descriptionLineCount="3"
 file="bin/build/tools/documentation.sh"
 fn="bashDocumentationAllFunctions"
 fnMarker="bashdocumentationallfunctions"
 foundNames=([0]="summary" [1]="argument" [2]="stdin")
-line="663"
+line="672"
 original="bashDocumentationAllFunctions"
-rawComment=$'Summary: Generate markdown for a list of all functions\nUses list of functions passed in `stdin`; using the `SEE` template.\nOutput to `allFunctionList.md` typically.\nArgument: --help - Flag. Optional. Display this help.\nstdin: Function. Function names one per line.\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: Generate markdown for a list of all functions"$'\n'"Uses list of functions passed in \`stdin\`; using the \`SEE\` template."$'\n'"Output to \`allFunctionList.md\` typically."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Function. Function names one per line."$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
-sourceLine="663"
-stdin=$'Function. Function names one per line.\n'
+sourceHash="f2669a68b4e993cf819200b03f0975ce382e64b6"
+sourceLine="672"
+stdin="Function. Function names one per line."$'\n'""
 summary="Generate markdown for a list of all functions"
 summaryComputed=""
 usage="bashDocumentationAllFunctions [ --help ]"

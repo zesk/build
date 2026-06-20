@@ -25,6 +25,6 @@ Fetch the current live version of software using GitHub APIs
 
 #### Environment
 
-- {SEE:GITHUB_REPOSITORY_OWNER}
-- {SEE:GITHUB_REPOSITORY_NAME}
+- [`GITHUB_REPOSITORY_OWNER` GitHub Repository Owner]({rel}env/#deployment:_github) – **String**. Repository owner for release
+- [`GITHUB_REPOSITORY_NAME` GitHub Repository Name]({rel}env/#development) – **String**. Repository name for release
 

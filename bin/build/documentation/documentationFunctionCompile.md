@@ -1,12 +1,16 @@
 ### `documentationFunctionCompile`
 
-> - `--documentation` is required for `SEE:` files
+> Build function documentation
 
 #### Usage
 
     documentationFunctionCompile [ --force ] [ --clean ] --source codeSource [ --documentation documentationSource ] [ --all ] [ --fingerprint ] [ functionName ... ]
 
+Extract and build the documentation settings cache and generate derived files:
+
 - `--documentation` is required for `SEE:` files
+
+Internally calls `documentationFileCompile`.
 
 > Location: `bin/build/tools/documentation.sh`
 
@@ -29,4 +33,8 @@ functionName - File with function names one per line.
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
+
+#### See Also
+
+- [documentationFileCompile]({rel}tools/documentation.md#documentationfilecompile) - Extract and build the documentation settings cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L658))
 

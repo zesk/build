@@ -31,5 +31,5 @@ String Directory String:line
 
 #### Environment
 
-- {SEE:APPLICATION_NAME}
+- [`APPLICATION_NAME` Application Name]({rel}env/#application) – **String**. This is the display name of the application
 

@@ -24,6 +24,6 @@ Run binary and output failed command upon error
 
 #### Requires
 
-- {SEE:returnMessage}
-- {SEE:helpArgument}
+- [returnMessage]({rel}tools/sugar-core.md#returnmessage) - Return passed in integer return code and output message to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L143))
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 

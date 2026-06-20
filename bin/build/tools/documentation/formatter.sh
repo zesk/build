@@ -55,7 +55,7 @@ _documentationTemplateFormatterSeeStream() {
           printf -- "%s\n" "$seeItem"
           ;;
         *)
-          local seeFile && if seeFile=$(__documentationFile "$home" "SEE/$seeItem"); then
+          local seeFile && if seeFile=$(__documentationFile "$home" "SEE/${seeItem//://}"); then
             printf "%s\n" "$(cat "$seeFile")"
           elif isBashBuiltin "$seeItem" && isFunction "$bf"; then
             printf -- "%s\n" "$("$bf" <<<"$seeItem")"
@@ -167,4 +167,11 @@ _documentationTemplateFormatter_argument() {
 #
 _documentationTemplateFormatter_depends() {
   decorate wrap "    "
+}
+
+#
+# Format depends blocks (indents as a code block)
+#
+_documentationTemplateFormatter_description() {
+  documentationMaker -
 }

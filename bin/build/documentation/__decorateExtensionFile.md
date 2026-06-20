@@ -24,9 +24,9 @@ decorate extension for `file`
 
 #### Environment
 
-- {SEE:BUILD_HOME} TMPDIR HOME
+- [`BUILD_HOME` Build Home Directory]({rel}env/#build_configuration) – **Directory**. `BUILD_HOME` is `.` when this code is installed - at TMPDIR HOME
 
 #### See Also
 
-- {SEE:decoratePath}
+- [decoratePath]({rel}tools/decoration.md#decoratepath) - Display file paths and replace prefixes with icons ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/path.sh#L21))
 

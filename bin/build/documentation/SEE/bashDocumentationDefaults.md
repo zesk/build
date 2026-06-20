@@ -1,1 +1,1 @@
-[bashDocumentationDefaults]({rel}tools/documentation.md#bashdocumentationdefaults) - Generate base template files for Bash code documentation. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L711))
+[bashDocumentationDefaults]({rel}tools/documentation.md#bashdocumentationdefaults) - Generate base template files for Bash code documentation. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L720))

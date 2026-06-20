@@ -31,7 +31,7 @@ It also reports the host, user and current directory back to iTerm2 on every pro
 #### Requires
 
 - [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
-- {SEE:muzzle}
+- [muzzle]({rel}tools/sugar.md#muzzle) - Suppress stdout without piping. Handy when you just want a ([source](https://github.com/zesk/build/blob/main/bin/build/tools/sugar.sh#L53))
 - [bashPrompt]({rel}tools/prompt.md#bashprompt) - Bash prompt toolkit ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L82))
 - [bashPromptMarkers]({rel}tools/prompt.md#bashpromptmarkers) - Set markers for terminal integration ([source](https://github.com/zesk/build/blob/main/bin/build/tools/prompt.sh#L129))
 - iTerm2UpdateState

@@ -22,7 +22,7 @@ Returns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HA
 
 #### Environment
 
-- {SEE:__BUILD_HAS_TTY}
+- [`__BUILD_HAS_TTY` TTY Cached Result]({rel}env/#internal) – **Boolean**. Cached value of the availability of `/dev/tty`.
 
 #### See Also
 

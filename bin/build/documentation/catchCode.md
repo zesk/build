@@ -25,8 +25,8 @@ Run `command`, handle failure with `handler` with `code` and `command` as error
 
 #### Requires
 
-- {SEE:isUnsignedInteger}
-- {SEE:returnArgument}
-- {SEE:isFunction}
-- {SEE:isCallable}
+- [isUnsignedInteger]({rel}tools/type.md#isunsignedinteger) - Is value an unsigned integer? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/example.sh#L163))
+- [returnArgument]({rel}tools/sugar-core.md#returnargument) - Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L257))
+- [isFunction]({rel}tools/type.md#isfunction) - Test if argument are bash functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L177))
+- [isCallable]({rel}tools/type.md#iscallable) - Test if all arguments are callable as a command ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L199))
 

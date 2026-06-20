@@ -2,23 +2,23 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-06-20
 # shellcheck disable=SC2034
-argument=$'--help - Flag. Optional. Display this help.\npath - Directory. Required. The documentation path to examine.\n'
+argument="--help - Flag. Optional. Display this help."$'\n'"path - Directory. Required. The documentation path to examine."$'\n'""
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'Generate a list of files which have unresolved `SEE:` tokens in the documentation path.\nSearches Markdown (`.md`) files a single level deep.\n\n'
+description="Generate a list of files which have unresolved \`SEE:\` tokens in the documentation path."$'\n'"Searches Markdown (\`.md\`) files a single level deep."$'\n'""$'\n'""
 descriptionLineCount="3"
 file="bin/build/tools/documentation.sh"
 fn="documentationFunctionsListSeeUnfinished"
 fnMarker="documentationfunctionslistseeunfinished"
 foundNames=([0]="summary" [1]="argument" [2]="stdout")
-line="956"
+line="965"
 original="documentationFunctionsListSeeUnfinished"
-rawComment=$'Summary: List files with unresolved `SEE:` tokens in documentation path\nGenerate a list of files which have unresolved `SEE:` tokens in the documentation path.\nSearches Markdown (`.md`) files a single level deep.\nArgument: --help - Flag. Optional. Display this help.\nArgument: path - Directory. Required. The documentation path to examine.\nstdout: File\n\n'
-return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
+rawComment="Summary: List files with unresolved \`SEE:\` tokens in documentation path"$'\n'"Generate a list of files which have unresolved \`SEE:\` tokens in the documentation path."$'\n'"Searches Markdown (\`.md\`) files a single level deep."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: path - Directory. Required. The documentation path to examine."$'\n'"stdout: File"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="95bb594086eeaa10ba59684f31d888e7da217309"
-sourceLine="956"
-stdout=$'File\n'
+sourceHash="f2669a68b4e993cf819200b03f0975ce382e64b6"
+sourceLine="965"
+stdout="File"$'\n'""
 summary="List files with unresolved \`SEE:\` tokens in documentation path"
 summaryComputed=""
 usage="documentationFunctionsListSeeUnfinished [ --help ] path"

@@ -36,10 +36,10 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 - [`declare`]({rel}guide/builtin.md#declare)
 - [`diff`]({rel}guide/command.md#diff)
 - [`grep`]({rel}guide/command.md#grep)
-- {SEE:throwArgument}
+- [throwArgument]({rel}tools/sugar-core.md#throwargument) - Run \`handler\` with an argument error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L215))
 - [decorate]({rel}tools/decorate.md#decorate) - decorate text using colors and styles ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/core.sh#L144))
-- {SEE:validate}
+- [validate]({rel}tools/validate.md#validate) - Validate a value by type ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L95))
 - [isCallable]({rel}tools/type.md#iscallable) - Test if all arguments are callable as a command ([source](https://github.com/zesk/build/blob/main/bin/build/tools/type.sh#L199))
 - [fileTemporaryName]({rel}tools/file.md#filetemporaryname) - Wrapper for \`mktemp\`. Generate a temporary file name, and fail ([source](https://github.com/zesk/build/blob/main/bin/build/tools/file.sh#L944))
-- {SEE:textRemoveFields}
+- [textRemoveFields]({rel}tools/text.md#textremovefields) - Remove fields from left to right from a text file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/text.sh#L1104))
 

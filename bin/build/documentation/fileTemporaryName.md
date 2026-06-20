@@ -30,12 +30,12 @@ Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add thes
 
 #### Environment
 
-- {SEE:BUILD_DEBUG}
+- [`BUILD_DEBUG` Debugging Flag]({rel}env/#build_configuration) – **CommaDelimitedList**. Constant for turning debugging on during build to find errors
 
 #### Requires
 
 - [`mktemp`]({rel}guide/command.md#mktemp)
-- {SEE:helpArgument}
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 - [catchEnvironment]({rel}tools/sugar-core.md#catchenvironment) - Run \`command\`, upon failure run \`handler\` with an environment error ([source](https://github.com/zesk/build/blob/main/bin/build/tools/_sugar.sh#L247))
 - [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
 

@@ -29,5 +29,5 @@ exported variables
 - [`grep`]({rel}guide/command.md#grep)
 - [`cut`]({rel}guide/command.md#cut)
 - [bashDocumentation]({rel}tools/documentation.md#bashdocumentation) - Universal function documentation ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L59))
-- {SEE:helpArgument}
+- [helpArgument]({rel}tools/argument.md#helpargument) - Simple help argument handler. ([source](https://github.com/zesk/build/blob/main/bin/build/tools/argument.sh#L576))
 

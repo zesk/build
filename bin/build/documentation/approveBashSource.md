@@ -30,5 +30,5 @@ Stale files are ones which no longer are associated with a file's current finger
 
 #### Environment
 
-- {SEE:XDG_STATE_HOME}
+- [`XDG_STATE_HOME` State Home Directory]({rel}env/#build_configuration) – **Directory**. State Home Directory
 

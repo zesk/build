@@ -34,7 +34,8 @@ _isPositiveInteger() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Test if argument are bash functions
+# Summary: Is argument a bash function?
+# Test if arguments are bash functions.
 # Argument: string - String. Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.

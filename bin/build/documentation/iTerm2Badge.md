@@ -27,5 +27,5 @@ message - String. Optional. Message to display if not supplied as an argument.
 
 #### Environment
 
-- {SEE:LC_TERMINAL}
+- [`LC_TERMINAL` Terminal Application]({rel}env/#bash) – **String**. LC_TERMINAL typically identifies the terminal application
 
