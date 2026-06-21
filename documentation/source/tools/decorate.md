@@ -128,17 +128,25 @@ This should handle reading from `stdin` or arguments and handle either appropria
 
 {colorSampleCombinations}
 
+##### Sample output
+
 <img src="../../images/colorSampleCombinations.png"  alt="Sample colorSampleCombinations output"/>
 
 {colorSampleCodes}
+
+##### Sample output
 
 <img src="../../images/colorSampleCodes.png"  alt="Sample colorSampleCodes output"/>
 
 {colorSampleStyles}
 
+##### Sample output
+
 <img src="../../images/colorSampleStyles.png"  alt="Sample colorSampleStyles output"/>
 
 {colorSampleSemanticStyles}
+
+##### Sample output
 
 <img src="../../images/colorSampleSemanticStyles.png"  alt="Sample colorSampleSemanticStyles output" />
 
