@@ -1,12 +1,12 @@
-### `__validateTypeCallable`
+### `validate Callable`
 
-> undocumented
+> Is callable?
 
 #### Usage
 
     __validateTypeCallable
 
-No documentation for `__validateTypeCallable`.
+Is callable?
 
 > Location: `bin/build/install.sample.sh`
 

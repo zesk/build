@@ -1,1 +1,1 @@
-[__validateTypePositiveInteger]({rel}#__validatetypepositiveinteger) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L745))
+[validate PositiveInteger]({rel}#__validatetypepositiveinteger) - Is a positive integer? (1 or greater) ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L750))

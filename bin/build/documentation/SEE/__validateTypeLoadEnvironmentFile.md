@@ -1,1 +1,1 @@
-[__validateTypeLoadEnvironmentFile]({rel}#__validatetypeloadenvironmentfile) - Validates a value as an environment file which is loaded ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L480))
+[__validateTypeLoadEnvironmentFile]({rel}#__validatetypeloadenvironmentfile) - Validates a value as an environment file which is loaded ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L489))

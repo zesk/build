@@ -1,12 +1,12 @@
-### `__validateTypePositiveInteger`
+### `validate PositiveInteger`
 
-> undocumented
+> Is a positive integer? (1 or greater)
 
 #### Usage
 
     __validateTypePositiveInteger
 
-No documentation for `__validateTypePositiveInteger`.
+Is a positive integer? (1 or greater)
 
 > Location: `bin/build/install.sample.sh`
 

@@ -1,12 +1,12 @@
-### `__validateTypeFunction`
+### `validate Function`
 
-> undocumented
+> Is a valid function currently defined?
 
 #### Usage
 
     __validateTypeFunction
 
-No documentation for `__validateTypeFunction`.
+Is a valid function currently defined?
 
 > Location: `bin/build/install.sample.sh`
 

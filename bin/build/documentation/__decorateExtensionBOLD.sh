@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-21
 # shellcheck disable=SC2034
 argument=$'style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.\ntext ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.\n'
 base="core.sh"
@@ -17,7 +17,7 @@ original="__decorateExtensionBOLD"
 rawComment=$'fn: decorate BOLD\nSummary: Add bold style to another style\nExample: > `decorate BOLD info Info is more important`\nExample: **`Info is more important`**\nArgument: style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.\nArgument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="e6992e7d5127060733a36794bcafe7410442140a"
+sourceHash="3725cb28e12948a0b0e952bb332cba7a3044c792"
 sourceLine="314"
 summary="Add bold style to another style"
 summaryComputed=""

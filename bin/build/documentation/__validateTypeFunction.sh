@@ -5,25 +5,25 @@
 argument="none"
 base="install.sample.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'No documentation for `__validateTypeFunction`.\n'
+description="Is a valid function currently defined?"
 descriptionLineCount=""
 file="bin/build/install.sample.sh"
-fn="__validateTypeFunction"
+fn="validate Function"
 fnMarker="__validatetypefunction"
-foundNames=([0]="requires")
-line="751"
+foundNames=([0]="fn" [1]="summary" [2]="requires")
+line="758"
 original="__validateTypeFunction"
-rawComment=$'Requires: isFunction _validateThrow\n\n'
+rawComment=$'fn: validate Function\nSummary: Is a valid function currently defined?\nRequires: isFunction _validateThrow\n\n'
 requires=$'isFunction _validateThrow\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/install.sample.sh"
-sourceHash="53cbb6e3aa3a4600f9e0ef23bd6290d5ead53c13"
-sourceLine="751"
-summary="undocumented"
+sourceHash="c986aa074a8b33e6b95780ac611bfff080d45f62"
+sourceLine="758"
+summary="Is a valid function currently defined?"
 summaryComputed=""
 usage="__validateTypeFunction"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]m__validateTypeFunction'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]m__validateTypeFunction'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mvalidate Function'$'\e''[0m'$'\n'''$'\n''Is a valid function currently defined?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
 # shellcheck disable=SC2016
-helpPlain='Usage: __validateTypeFunction'$'\n'''$'\n''No documentation for __validateTypeFunction.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+helpPlain='Usage: validate Function'$'\n'''$'\n''Is a valid function currently defined?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
 documentationPath=""

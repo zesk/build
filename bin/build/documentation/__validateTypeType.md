@@ -1,4 +1,4 @@
-### `__validateTypeType`
+### `validate Type`
 
 > Valid validate type
 

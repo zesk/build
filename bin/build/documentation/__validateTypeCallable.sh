@@ -5,25 +5,25 @@
 argument="none"
 base="install.sample.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description=$'No documentation for `__validateTypeCallable`.\n'
+description="Is callable?"
 descriptionLineCount=""
 file="bin/build/install.sample.sh"
-fn="__validateTypeCallable"
+fn="validate Callable"
 fnMarker="__validatetypecallable"
-foundNames=([0]="requires")
-line="757"
+foundNames=([0]="fn" [1]="summary" [2]="requires")
+line="766"
 original="__validateTypeCallable"
-rawComment=$'Requires: isCallable _validateThrow\n\n'
+rawComment=$'fn: validate Callable\nSummary: Is callable?\nRequires: isCallable _validateThrow\n\n'
 requires=$'isCallable _validateThrow\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/install.sample.sh"
-sourceHash="53cbb6e3aa3a4600f9e0ef23bd6290d5ead53c13"
-sourceLine="757"
-summary="undocumented"
+sourceHash="c986aa074a8b33e6b95780ac611bfff080d45f62"
+sourceLine="766"
+summary="Is callable?"
 summaryComputed=""
 usage="__validateTypeCallable"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]m__validateTypeCallable'$'\e''[0m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]m__validateTypeCallable'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mvalidate Callable'$'\e''[0m'$'\n'''$'\n''Is callable?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'
 # shellcheck disable=SC2016
-helpPlain='Usage: __validateTypeCallable'$'\n'''$'\n''No documentation for __validateTypeCallable.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
+helpPlain='Usage: validate Callable'$'\n'''$'\n''Is callable?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'
 documentationPath=""

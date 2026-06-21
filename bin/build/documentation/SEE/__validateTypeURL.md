@@ -1,1 +1,1 @@
-[__validateTypeURL]({rel}#__validatetypeurl) - An URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L470))
+[__validateTypeURL]({rel}#__validatetypeurl) - An URL ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L479))

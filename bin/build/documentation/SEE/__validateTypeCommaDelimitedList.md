@@ -1,1 +1,1 @@
-[__validateTypeCommaDelimitedList]({rel}#__validatetypecommadelimitedlist) - \`,\`-delimited list ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L246))
+[__validateTypeCommaDelimitedList]({rel}#__validatetypecommadelimitedlist) - \`,\`-delimited list ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L255))

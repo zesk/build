@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-21
 # shellcheck disable=SC2034
 argument=$'--type (ascii|line|double-line) - String. Optional. Line style. Default `line`\n--outside outsideStyle - String. Optional. Style to apply to the outside border. (Default `decoration`)\n--inside insideStyle - String. Optional. Style to apply to the inside content. (Default `decoration`)\n--width characterCount - UnsignedInteger|String. Optional. Box width. Specify "auto" to make size of content, or "console" for `consoleWidth`. Defaults to `console`.\n--size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default none)\n--fill fileCharacter - String. Optional. Use this character to fill empty space in the box.\ntext ... - String. Optional. Text to put in the box, one per line.\n--help - Flag. Optional. Display this help.\n'
 base="box.sh"
@@ -18,7 +18,7 @@ output=$'    +==================================================================
 rawComment=$'fn: decorate box\nSummary: Box around content\nArgument: --type (ascii|line|double-line) - String. Optional. Line style. Default `line`\nArgument: --outside outsideStyle - String. Optional. Style to apply to the outside border. (Default `decoration`)\nArgument: --inside insideStyle - String. Optional. Style to apply to the inside content. (Default `decoration`)\nArgument: --width characterCount - UnsignedInteger|String. Optional. Box width. Specify "auto" to make size of content, or "console" for `consoleWidth`. Defaults to `console`.\nArgument: --size lineCount - UnsignedInteger. Optional. Print this many blank lines between the header and title. (Default none)\nArgument: --fill fileCharacter - String. Optional. Use this character to fill empty space in the box.\nArgument: text ... - String. Optional. Text to put in the box, one per line.\nExample:     {fn} --style ascii "Moving ..."\nExample:     {fn} --style line Hello\nExample:     {fn} --style double-line "I\'m sorry, Hal, I\'m afraid I can\'t do that.\nOutput:     +==========================================================================+\nOutput:     | Moving ...                                                               |\nOutput:     +==========================================================================+\nOutput:     ┌──────────────────────────────────────────────────────────────────────────┐\nOutput:     │ Hello                                                                    │\nOutput:     └──────────────────────────────────────────────────────────────────────────┘\nOutput:     ╔══════════════════════════════════════════════════════════════════════════╗\nOutput:     ║ I\'m sorry, Hal, I\'m afraid I can\'t do that.                              ║\nOutput:     ╚══════════════════════════════════════════════════════════════════════════╝\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/box.sh"
-sourceHash="1865f9a5c4e4fec63500f8f11453437ab31cc61f"
+sourceHash="64dfdd99cb605ce363900a59895d0325b860413c"
 sourceLine="58"
 summary="Box around content"
 summaryComputed=""

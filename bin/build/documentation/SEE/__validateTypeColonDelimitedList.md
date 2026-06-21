@@ -1,1 +1,1 @@
-[__validateTypeColonDelimitedList]({rel}#__validatetypecolondelimitedlist) - \`:\`-delimited list ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L235))
+[__validateTypeColonDelimitedList]({rel}#__validatetypecolondelimitedlist) - \`:\`-delimited list ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L244))

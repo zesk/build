@@ -1,1 +1,1 @@
-[__validateTypeFunction]({rel}#__validatetypefunction) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L751))
+[validate Function]({rel}#__validatetypefunction) - Is a valid function currently defined? ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L758))

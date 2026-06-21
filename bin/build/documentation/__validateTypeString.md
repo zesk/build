@@ -1,12 +1,12 @@
-### `__validateTypeString`
+### `validate String`
 
-> Non-empty string
+> Is a non-empty string?
 
 #### Usage
 
     __validateTypeString
 
-Non-empty string
+Non-empty string.
 
 > Location: `bin/build/install.sample.sh`
 

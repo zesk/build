@@ -1,1 +1,1 @@
-[isValidateType]({rel}tools/validate.md#isvalidatetype) - Are validate type names valid? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L518))
+[isValidateType]({rel}tools/validate.md#isvalidatetype) - Are validate type names valid? ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L527))

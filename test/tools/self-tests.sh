@@ -122,6 +122,12 @@ testBuildFunctions() {
   catchEnvironment "$handler" rm -f "$fun" "$fun.deprecated" || return $?
 }
 
+testBuildInternalFunctions() {
+  local handler="returnMessage"
+
+  assertExitCode --stdout-match "__validateType" --stdout-match "__decorateExtension" 0 buildInternalFunctions || return $?
+}
+
 testInstallInstallBuildSelf() {
   local handler="returnMessage"
   local tempDirectory

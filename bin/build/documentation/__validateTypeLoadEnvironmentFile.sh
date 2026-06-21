@@ -11,13 +11,13 @@ file="bin/build/tools/validate.sh"
 fn="__validateTypeLoadEnvironmentFile"
 fnMarker="__validatetypeloadenvironmentfile"
 foundNames=([0]="argument" [1]="return_code")
-line="480"
+line="489"
 original="__validateTypeLoadEnvironmentFile"
 rawComment=$'Validates a value as an environment file which is loaded immediately.\nArgument: variableValue - String. Required.\nReturn Code: 2 - Argument error\nReturn Code: 0 - Success\n\n'
 return_code=$'2 - Argument error\n0 - Success\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="6aa8ba7c4c01e78e1aaa60bba330293420ad5579"
-sourceLine="480"
+sourceHash="4f8ffd4b24993e2c06fe909247c19c030b8e0214"
+sourceLine="489"
 summary="Validates a value as an environment file which is loaded"
 summaryComputed="true"
 usage="__validateTypeLoadEnvironmentFile variableValue"

@@ -1,1 +1,1 @@
-[__validateTypeSecret]({rel}#__validatetypesecret) - A secret ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L465))
+[__validateTypeSecret]({rel}#__validatetypesecret) - A secret ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L474))

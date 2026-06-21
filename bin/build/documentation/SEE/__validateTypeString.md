@@ -1,1 +1,1 @@
-[__validateTypeString]({rel}#__validatetypestring) - Non-empty string ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L739))
+[validate String]({rel}#__validatetypestring) - Is a non-empty string? ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L742))

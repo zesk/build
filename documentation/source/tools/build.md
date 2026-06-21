@@ -35,6 +35,8 @@ Configure a project to use **{applicationName}**.
 
 {buildFunctionsExclude}
 
+{buildInternalFunctions}
+
 {buildDeprecatedFunctions}
 
 {buildCacheDirectory}

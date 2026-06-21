@@ -1,1 +1,1 @@
-[__validateTypeDirectory]({rel}#__validatetypedirectory) - A directory exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L414))
+[__validateTypeDirectory]({rel}#__validatetypedirectory) - A directory exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L423))

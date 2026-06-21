@@ -1,1 +1,1 @@
-[__validateTypeArguments]({rel}#__validatetypearguments) - Zero or more additional arguments ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L241))
+[__validateTypeArguments]({rel}#__validatetypearguments) - Zero or more additional arguments ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L250))

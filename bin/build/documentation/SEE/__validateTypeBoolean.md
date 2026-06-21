@@ -1,1 +1,1 @@
-[__validateTypeBoolean]({rel}#__validatetypeboolean) - Strict boolean \`false\` or \`true\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L359))
+[__validateTypeBoolean]({rel}#__validatetypeboolean) - Strict boolean \`false\` or \`true\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L368))

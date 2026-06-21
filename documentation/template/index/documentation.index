@@ -237,6 +237,7 @@ buildFunctionsRemoveDeprecated documentation/source/tools/internal.md
 buildFunctionsSeeAgain documentation/source/tools/internal.md
 buildFunctionsSeeLoop documentation/source/tools/internal.md
 buildHome documentation/source/tools/build.md
+buildInternalFunctions documentation/source/tools/build.md
 buildPR documentation/source/tools/internal.md
 buildPreRelease documentation/source/tools/internal.md
 buildPreReleaseLintFiles documentation/source/tools/internal.md

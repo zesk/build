@@ -1991,15 +1991,15 @@ __decorateExtensionQuote() {
     local finished=false && while ! $finished; do
       local line="" && IFS="" read -d $'\n' -r line || finished=true
       [ -n "$line" ] || ! $finished || continue
-      __decorateExtensionQuoteProcessLine "$line" || return $?
+      ___decorateExtensionQuoteProcessLine "$line" || return $?
     done
   else
-    __decorateExtensionQuoteProcessLine "$@" || return $?
+    ___decorateExtensionQuoteProcessLine "$@" || return $?
   fi
 }
 
 # Argument: text ... - String. Text to quote
-__decorateExtensionQuoteProcessLine() {
+___decorateExtensionQuoteProcessLine() {
   local text="$*" && text="${text//\"/\\\"}" && text="${text//\$/\\\$}" && printf -- "\"%s\"\n" "$text"
 }
 

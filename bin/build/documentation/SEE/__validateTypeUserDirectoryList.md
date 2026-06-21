@@ -1,1 +1,1 @@
-[__validateTypeUserDirectoryList]({rel}#__validatetypeuserdirectorylist) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L343))
+[__validateTypeUserDirectoryList]({rel}#__validatetypeuserdirectorylist) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L352))

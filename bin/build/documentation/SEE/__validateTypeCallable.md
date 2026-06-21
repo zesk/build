@@ -1,1 +1,1 @@
-[__validateTypeCallable]({rel}#__validatetypecallable) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L757))
+[validate Callable]({rel}#__validatetypecallable) - Is callable? ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L766))

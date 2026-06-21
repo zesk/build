@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-21
 # shellcheck disable=SC2034
 argument=$'style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.\n-- - Flag. Optional. Pass as the first argument after the style to avoid reading arguments from stdin.\n--index - Flag. Optional. Show the index of each item before with a colon. `0:first 1:second` etc.\n--count - Flag. Optional. Show the count of items in the list after the list is generated.\n'
 base="core.sh"
@@ -18,7 +18,7 @@ rawComment=$'fn: decorate each\nRuns the following command on each subsequent ar
 requires=$'decorate printf\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="e6992e7d5127060733a36794bcafe7410442140a"
+sourceHash="3725cb28e12948a0b0e952bb332cba7a3044c792"
 sourceLine="262"
 summary="Runs the following command on each subsequent argument for formatting"
 summaryComputed="true"

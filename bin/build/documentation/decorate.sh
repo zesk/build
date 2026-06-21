@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-21
 # shellcheck disable=SC2034
 ##### Special argument `--`
 ##### Extending Decorations
@@ -22,7 +22,7 @@ rawComment=$'Summary: decorate text using colors and styles\nSingular decoration
 requires=$'isFunction catchArgument catchReturn awk\nbashDocumentation helpArgument\n_decorateInitialize __decorateStyle __decorate executeInputSupport\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/decorate/core.sh"
-sourceHash="e6992e7d5127060733a36794bcafe7410442140a"
+sourceHash="3725cb28e12948a0b0e952bb332cba7a3044c792"
 sourceLine="144"
 stdin=$'String. Optional. Text to decorate.\n'
 stdout=$'Decorated text\n'

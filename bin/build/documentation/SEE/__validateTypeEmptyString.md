@@ -1,1 +1,1 @@
-[__validateTypeEmptyString]({rel}#__validatetypeemptystring) - Any value passes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L218))
+[__validateTypeEmptyString]({rel}#__validatetypeemptystring) - Any value passes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L227))

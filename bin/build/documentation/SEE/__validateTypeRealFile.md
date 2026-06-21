@@ -1,1 +1,1 @@
-[__validateTypeRealFile]({rel}#__validatetyperealfile) - A real path for a file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L441))
+[__validateTypeRealFile]({rel}#__validatetyperealfile) - A real path for a file ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L450))
