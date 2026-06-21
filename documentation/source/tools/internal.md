@@ -25,6 +25,10 @@
 
 {buildDocumentationMkdocs}
 
+{buildDocumentationEnvironment}
+
+{buildDocumentationTemplates}
+
 ### Generating cache files
 
 {buildFunctionsCompile}
@@ -45,9 +49,19 @@
 
 {buildPreRelease}
 
+{buildPreReleaseLintFiles}
+
 {buildAddTool}
 
 {buildPR}
+
+# SEE Hunting
+
+{buildFunctionsListSeeUnfinished}
+
+{buildFunctionsSeeAgain}
+
+{buildFunctionsSeeLoop}
 
 ## Testing Wrappers
 

@@ -69,9 +69,9 @@ Examples:
 - `decorate` `pair` `name` `value ...`
 - `decorate` `wrap` `prefix` `suffix ...`
 - `decorate` `quote` `word` `...`
-- `decorate` `file` `path` 
+- `decorate` `file` `path`
 - `decorate` `link` `url` `[` `text` `]`
-- `decorate` `box` `Hello` 
+- `decorate` `box` `Hello`
 
 {__decorateExtensionBOLD}
 
@@ -128,19 +128,19 @@ This should handle reading from `stdin` or arguments and handle either appropria
 
 {colorSampleCombinations}
 
-<img src="../images/colorSampleCombinations.png"  alt="Sample `colorSampleCombinations` output"/>
+<img src="../../images/colorSampleCombinations.png"  alt="Sample colorSampleCombinations output"/>
 
 {colorSampleCodes}
 
-<img src="../images/colorSampleCodes.png"  alt="Sample `colorSampleCodes` output"/>
+<img src="../../images/colorSampleCodes.png"  alt="Sample colorSampleCodes output"/>
 
 {colorSampleStyles}
 
-<img src="../images/colorSampleStyles.png"  alt="Sample `colorSampleStyles` output"/>
+<img src="../../images/colorSampleStyles.png"  alt="Sample colorSampleStyles output"/>
 
 {colorSampleSemanticStyles}
 
-<img src="../images/colorSampleSemanticStyles.png"  alt="Sample `colorSampleSemanticStyles` output"/>
+<img src="../../images/colorSampleSemanticStyles.png"  alt="Sample colorSampleSemanticStyles output" />
 
 ## Color tools
 

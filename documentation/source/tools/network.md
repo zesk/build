@@ -3,13 +3,17 @@
 <!-- TEMPLATE toolHeader 1 -->
 <hr />
 
-{networkIPList}
+{networkIPValid}
+
+{networkNameValid}
 
 {networkMACAddressList}
 
 {networkNameFull}
 
 {networkIPLookup}
+
+{networkIPList}
 
 <!-- TEMPLATE toolFooter 3 -->
 <hr />

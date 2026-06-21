@@ -19,6 +19,10 @@ Which allows you to navigate between projects and change your current context.
 
 {applicationHomeAliases}
 
+{bashApplicationAlias}
+
+{bashApplicationAliases}
+
 <!-- TEMPLATE toolFooter 3 -->
 <hr />
 

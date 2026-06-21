@@ -6,6 +6,8 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{isDockerComposeCommand}
+
 {documentationBuild}
 
 {versionSort}
@@ -148,77 +150,14 @@ Hides these from [New and uncategorized functions](./todo.md)
 
 {echoBar}
 
-{usageArgumentApplicationDirectory}
-
-{usageArgumentApplicationDirectoryList}
-
-{usageArgumentApplicationFile}
-
-{usageArgumentArguments}
-
-{usageArgumentArray}
-
-{usageArgumentBoolean}
-
-{usageArgumentCallable}
-
-{usageArgumentColonDelimitedList}
-
-{usageArgumentCommaDelimitedList}
-
-{usageArgumentDate}
-
-{usageArgumentDirectory}
-
-{usageArgumentDirectoryList}
-
-{usageArgumentEmptyString}
-
-{usageArgumentEnvironmentVariable}
-
-{usageArgumentExecutable}
-
-{usageArgumentExists}
-
-{usageArgumentFile}
-
-{usageArgumentFileDirectory}
-
-{usageArgumentFlag}
-
-{usageArgumentFunction}
-
-{usageArgumentInteger}
-
-{usageArgumentLink}
-
-{usageArgumentList}
-
-{usageArgumentLoadEnvironmentFile}
-
-{usageArgumentNumber}
-
-{usageArgumentPositiveInteger}
-
-{usageArgumentRealDirectory}
-
-{usageArgumentRealFile}
-
-{usageArgumentRemoteDirectory}
-
-{usageArgumentSecret}
-
-{usageArgumentString}
-
-{usageArgumentUnsignedInteger}
-
-{usageArgumentURL}
+{clearLine}
 
 {maximumFieldLength}
 
 {maximumLineLength}
 
-{clearLine}
+{usageArgumentLoadEnvironmentFile}
+
 
 <!-- TEMPLATE toolFooter 3 -->
 <hr />

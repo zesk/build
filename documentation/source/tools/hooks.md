@@ -11,6 +11,8 @@ These run within the current project regardless of where {applicationName} is lo
 
 {hookVersionLive}
 
+{hookNotify}
+
 ## Application hooks
 
 {__hookNotify}
@@ -80,7 +82,7 @@ These hooks interact with `release-new.sh` and deployment tools but are intended
 
 ## Git hooks
 
-### Pre-commit 
+### Pre-commit
 
 {__hookGitPreCommit}
 
