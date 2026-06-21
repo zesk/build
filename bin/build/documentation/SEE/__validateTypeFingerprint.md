@@ -1,0 +1,1 @@
+[validate \"\$handler\" Fingerprint name \"fingerprintSpec\"]({rel}tools/fingerprint.md#__validatetypefingerprint) - Validates an application fingerprint ([source](https://github.com/zesk/build/blob/main/bin/build/tools/fingerprint.sh#L108))

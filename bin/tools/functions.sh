@@ -40,29 +40,6 @@ _buildFunctionsSeeAgain() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__buildInternalFunctions() {
-  cat <<'EOF'
-_installRemotePackage
-__bashDocumentationCached
-__usageMessage
-__functionSettings
-__dateFromTimestamp
-__decorateExtensionBOLD
-__decorateExtensionEach
-__decorateExtensionPair
-__decorateExtensionWrap
-__decorateExtensionQuote
-__decorateExtensionFile
-__decorateExtensionLink
-__decorateExtensionSize
-__decorateExtensionBox
-__decorateExtensionBig
-__decorateExtensionAt
-__decorateExtensionDiff
-__decorateExtensionExpired
-EOF
-}
-
 # Extract and build the documentation settings cache and generate derived files
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
@@ -71,7 +48,7 @@ EOF
 buildFunctionsCompile() {
   local handler="_${FUNCNAME[0]}"
   __buildFunctionsCompile "$handler" "$@" < <(
-    __buildInternalFunctions
+    buildInternalFunctions
     buildFunctions
   )
 }
@@ -84,7 +61,7 @@ __buildFunctionsCompile() {
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   set -- \
     --handler "$handler" \
-    --source "$home/bin/build/tools" \
+    --source "$home/bin" \
     --documentation "$home/documentation/source" \
     --target "$home/bin/build/documentation" \
     --key "buildFunctions" "$@"

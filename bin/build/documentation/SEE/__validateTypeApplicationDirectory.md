@@ -1,0 +1,1 @@
+[__validateTypeApplicationDirectory]({rel}#__validatetypeapplicationdirectory) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L314))

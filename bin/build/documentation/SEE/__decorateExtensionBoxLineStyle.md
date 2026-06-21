@@ -1,0 +1,1 @@
+[__decorateExtensionBoxLineStyle]({rel}#__decorateextensionboxlinestyle) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/decorate/box.sh#L6))

@@ -1,0 +1,1 @@
+[__validateTypeIP]({rel}#__validatetypeip) - An IP address (IPv4 or IPv6) ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L44))

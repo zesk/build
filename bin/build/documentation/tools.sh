@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-21
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--start startDirectory - Directory. Optional. Start searching for a build installation at this location and searching upwards in the file hierarchy.\n--verbose - Flag. Optional. Be verbose.\n... - Callable. Optional. Run this command after loading in the current build context.\n'
 base="build.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/build.sh"
 fn="tools"
 fnMarker="tools"
 foundNames=([0]="argument")
-line="497"
+line="518"
 original="tools"
 rawComment=$'Run a Zesk Build command or load it\nArgument: --help - Flag. Optional. Display this help.\nArgument: --start startDirectory - Directory. Optional. Start searching for a build installation at this location and searching upwards in the file hierarchy.\nArgument: --verbose - Flag. Optional. Be verbose.\nArgument: ... - Callable. Optional. Run this command after loading in the current build context.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="3536417f338a1ca40272c9da86efb3b9c3c2d9de"
-sourceLine="497"
+sourceHash="05f9d58a539d752f6ac7b8ce8beda48bd30bdb50"
+sourceLine="518"
 summary="Run a Zesk Build command or load it"
 summaryComputed="true"
 usage="tools [ --help ] [ --start startDirectory ] [ --verbose ] [ ... ]"

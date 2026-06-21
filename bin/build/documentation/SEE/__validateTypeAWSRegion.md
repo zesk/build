@@ -1,0 +1,1 @@
+[__validateTypeAWSRegion]({rel}#__validatetypeawsregion) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/aws.sh#L428))

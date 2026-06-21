@@ -1,0 +1,1 @@
+[__validateTypeFlag]({rel}#__validatetypeflag) - Flags are command line options which set a value to ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L354))

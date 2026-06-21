@@ -1,0 +1,1 @@
+[__hookRunner]({rel}#__hookrunner) - Actual implementation of \`hookRun\` and \`hookRunOptional\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/hook.sh#L13))

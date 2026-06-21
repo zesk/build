@@ -1,0 +1,1 @@
+[__validateTypeHost]({rel}#__validatetypehost) - A network name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/network.sh#L50))

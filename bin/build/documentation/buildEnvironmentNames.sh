@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-21
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -12,14 +12,14 @@ file="bin/build/tools/build.sh"
 fn="buildEnvironmentNames"
 fnMarker="buildenvironmentnames"
 foundNames=([0]="summary" [1]="argument" [2]="requires" [3]="environment")
-line="218"
+line="253"
 original="buildEnvironmentNames"
 rawComment=$'Summary: List known environment names\nEnvironment:\nOutput the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`\nArgument: --help - Flag. Optional. Display this help.\nRequires: convertValue find sort read helpArgument catchReturn\nEnvironment: BUILD_ENVIRONMENT_DIRS BUILD_HOME\n\n'
 requires=$'convertValue find sort read helpArgument catchReturn\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="3536417f338a1ca40272c9da86efb3b9c3c2d9de"
-sourceLine="218"
+sourceHash="98c6164d9932c99a6d3b1ab2ae83bc5ff97b54d3"
+sourceLine="253"
 summary="List known environment names"
 summaryComputed=""
 usage="buildEnvironmentNames [ --help ]"

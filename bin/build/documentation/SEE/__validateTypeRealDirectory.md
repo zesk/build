@@ -1,0 +1,1 @@
+[__validateTypeRealDirectory]({rel}#__validatetyperealdirectory) - A real path for a directory ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L432))

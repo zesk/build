@@ -1,0 +1,1 @@
+[__validateTypeUserFile]({rel}#__validatetypeuserfile) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L338))

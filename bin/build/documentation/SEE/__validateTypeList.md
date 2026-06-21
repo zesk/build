@@ -1,0 +1,1 @@
+[__validateTypeList]({rel}#__validatetypelist) - Lists can be zero-length so any value passes ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L230))

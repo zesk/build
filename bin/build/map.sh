@@ -643,7 +643,7 @@ _returnCodeString() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL validate 171
+# IDENTICAL validate 180
 
 # Summary: Validate a value by type
 # Argument: handler - Function. Required. Error handler.
@@ -781,6 +781,7 @@ _validateThrow() {
   return 2
 }
 
+# fn: validate Type
 # Valid validate type
 # Requires: _validateThrow
 __validateTypeType() {
@@ -791,25 +792,33 @@ __validateTypeType() {
   printf "%s\n" "$type"
 }
 
-# Non-empty string
+# Summary: Is a non-empty string?
+# Non-empty string.
+# fn: validate String
 # Requires: _validateThrow
 __validateTypeString() {
   [ -n "${1-}" ] || _validateThrow "validate String is blank" || return $?
   printf "%s\n" "${1-}"
 }
 
+# fn: validate PositiveInteger
+# Summary: Is a positive integer? (1 or greater)
 # Requires: isPositiveInteger _validateThrow
 __validateTypePositiveInteger() {
   isPositiveInteger "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
 }
 
+# fn: validate Function
+# Summary: Is a valid function currently defined?
 # Requires: isFunction _validateThrow
 __validateTypeFunction() {
   isFunction "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
 }
 
+# fn: validate Callable
+# Summary: Is callable?
 # Requires: isCallable _validateThrow
 __validateTypeCallable() {
   isCallable "${1-}" || _validateThrow || return $?

@@ -1,0 +1,1 @@
+[__validateTypeBooleanLike]({rel}#__validatetypebooleanlike) - Boolean-like value ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L365))

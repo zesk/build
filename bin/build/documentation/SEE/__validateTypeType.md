@@ -1,0 +1,1 @@
+[__validateTypeType]({rel}#__validatetypetype) - Valid validate type ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L729))

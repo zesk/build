@@ -3,7 +3,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-__decorateExtensionBoxLineStyle() {
+___decorateExtensionBoxLineStyle() {
   case "$1" in
   ascii) lineStyleCodes="++++-|" ;;
   line) lineStyleCodes="┌┐└┘─│" ;;
@@ -69,7 +69,7 @@ __decorateExtensionBox() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --style) shift && lineStyle="${1-}" && __decorateExtensionBoxLineStyle "$lineStyle" || throwArgument "$handler" "Invalid style: ${1-}" || return $? ;;
+    --style) shift && lineStyle="${1-}" && ___decorateExtensionBoxLineStyle "$lineStyle" || throwArgument "$handler" "Invalid style: ${1-}" || return $? ;;
     --width) shift && argumentWidth="$1" && case "$argumentWidth" in "terminal" | "auto") ;; *) isPositiveInteger "$argumentWidth" || throwArgument "$handler" "Invalid width: $argumentWidth" || return $? ;; esac ;;
     --outside) shift && outside=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
     --inside) shift && inside=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
@@ -90,7 +90,7 @@ __decorateExtensionBox() {
     shift
   done
   if [ -z "$lineStyleCodes" ]; then
-    __decorateExtensionBoxLineStyle "$lineStyle" || throwArgument "$handler" "Invalid --style $lineStyle" || return $?
+    ___decorateExtensionBoxLineStyle "$lineStyle" || throwArgument "$handler" "Invalid --style $lineStyle" || return $?
   fi
 
   if [ "$argumentWidth" = "auto" ]; then

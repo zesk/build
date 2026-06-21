@@ -77,6 +77,12 @@ _buildDeprecatedFunctions() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__buildFunctionsList() {
+  local handler="$1"
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  env -i PATH="$PATH" "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3
+}
+
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --deprecated - Flag. Optional. Include all deprecated functions as well.
@@ -113,10 +119,39 @@ buildFunctions() {
     local grepPattern && grepPattern="$(catchReturn "$handler" listJoin "|" "${pattern[@]}")" || return $?
     [ "${#pattern[@]}" -eq 0 ] || postprocess=(grep -v -e "^\($(quoteGrepPattern "$grepPattern")\)$")
   fi
-  local home && home=$(catchReturn "$handler" buildHome) || return $?
-  env -i PATH="$PATH" "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_' | "${postprocess[@]}"
+  __buildFunctionsList "$handler" | grep -v -e '^_' | "${postprocess[@]}"
 }
 _buildFunctions() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__buildInternalFunctions() {
+  cat <<'EOF'
+_installRemotePackage
+__bashDocumentationCached
+__usageMessage
+__functionSettings
+__dateFromTimestamp
+EOF
+}
+
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --deprecated - Flag. Optional. Include all deprecated functions as well.
+# Environment: BUILD_HOME
+# Prints the list of functions defined in Zesk Build
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# shellcheck disable=SC2120
+buildInternalFunctions() {
+  local handler="_${FUNCNAME[0]}"
+  {
+    __buildFunctionsList "$handler" | grep -e '^\(__decorateExtension\|__hook\|__validateType\)'
+    __buildInternalFunctions
+  } | sort -u
+}
+_buildInternalFunctions() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

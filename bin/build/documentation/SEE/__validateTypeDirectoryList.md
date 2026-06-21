@@ -1,0 +1,1 @@
+[__validateTypeDirectoryList]({rel}#__validatetypedirectorylist) - List of directories separated by \`:\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L383))

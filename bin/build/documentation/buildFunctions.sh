@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-21
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--deprecated - Flag. Optional. Include all deprecated functions as well.\n--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/build.sh"
 fn="buildFunctions"
 fnMarker="buildfunctions"
 foundNames=([0]="argument" [1]="environment")
-line="88"
+line="94"
 original="buildFunctions"
 rawComment=$'Argument: --help - Flag. Optional. Display this help.\nArgument: --deprecated - Flag. Optional. Include all deprecated functions as well.\nEnvironment: BUILD_HOME\nPrints the list of functions defined in Zesk Build\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="3536417f338a1ca40272c9da86efb3b9c3c2d9de"
-sourceLine="88"
+sourceHash="98c6164d9932c99a6d3b1ab2ae83bc5ff97b54d3"
+sourceLine="94"
 summary="Prints the list of functions defined in Zesk Build"
 summaryComputed="true"
 usage="buildFunctions [ --help ] [ --deprecated ] [ --help ]"

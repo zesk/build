@@ -1,0 +1,1 @@
+[__validateTypeRemoteDirectory]({rel}#__validatetyperemotedirectory) - A path which is on a remote system ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L459))

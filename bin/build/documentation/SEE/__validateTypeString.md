@@ -1,0 +1,1 @@
+[__validateTypeString]({rel}#__validatetypestring) - Non-empty string ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L739))
