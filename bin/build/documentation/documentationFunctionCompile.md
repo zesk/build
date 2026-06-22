@@ -18,7 +18,7 @@ Internally calls `documentationFileCompile`.
 
 - `--force` - Flag. Optional. Create files regardless of cache status.
 - `--clean` - Flag. Optional. Clean everything and then exit.
-- `--source codeSource` - Directory. Required. Code source to find functions.
+- `--source codeSource` - DirectoryList. Required. Code source to find functions.
 - `--documentation documentationSource` - Directory. Documentation source to find documentation links.
 - `--all` - Flag. Optional. Check all functions.
 - `--fingerprint` - Flag. Optional. Use fingerprint to ensure results are up to date.
@@ -36,5 +36,5 @@ functionName - File with function names one per line.
 
 #### See Also
 
-- [documentationFileCompile]({rel}tools/documentation.md#documentationfilecompile) - Extract and build the documentation settings cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L658))
+- [documentationFileCompile]({rel}tools/documentation.md#documentationfilecompile) - Extract and build the documentation settings cache ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L660))
 

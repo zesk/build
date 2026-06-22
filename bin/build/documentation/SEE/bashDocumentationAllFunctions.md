@@ -1,1 +1,1 @@
-[bashDocumentationAllFunctions]({rel}tools/documentation.md#bashdocumentationallfunctions) - Generate markdown for a list of all functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L672))
+[bashDocumentationAllFunctions]({rel}tools/documentation.md#bashdocumentationallfunctions) - Generate markdown for a list of all functions ([source](https://github.com/zesk/build/blob/main/bin/build/tools/documentation.sh#L674))

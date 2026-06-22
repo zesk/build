@@ -250,7 +250,7 @@ __documentationFileCompile() {
     --verbose) verboseFlag=true ;;
     --clean) cleanFlag=true ;;
     --force) forceFlag=true ;;
-    --source) shift && sourcePath=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --source) shift && sourcePaths=$(validate "$handler" DirectoryList "$argument" "${1-}") || return $? ;;
     --derive) aa+=("--") && shift && while [ $# -gt 0 ]; do
       [ "$1" != "--" ] || break
       aa+=("$1") && shift
@@ -260,7 +260,7 @@ __documentationFileCompile() {
     shift
   done
 
-  [ -n "$sourcePath" ] || throwArgument "$handler" "--source is required" || return $?
+  [ -n "$sourcePaths" ] || throwArgument "$handler" "--source is required" || return $?
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
@@ -311,6 +311,7 @@ __documentationFileCompile() {
     local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
     bashFunctionNameValid "$fun" || continue
+    (hookRunOptional --application "$home" process-title "$prefix"$'\n'"${handler#_}" &)
     (
       statusMessage timing --name "$prefix $fun" catchReturn "$handler" __documentationFileCompileFunction "$handler" "$docPath" "$sourcePath" "$fun" "" "$prefix" "$forceFlag" "${aa[@]+"${aa[@]}"}" || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?
     ) || returnClean $? "${clean[@]}" || returnUndo $? "${undo[@]}" || return $?

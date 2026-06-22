@@ -117,7 +117,7 @@ buildTestPlatforms() {
     local start exitCode=0 elapsed logFile="$safeTestFiles/$pathName.log"
     start=$(timingStart)
     decorate info "Logging to $(decorate file "$logFile") ..."
-    executeEcho dockerLocalContainer --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" --env-file "/var/buildTest/.test.env" -c "$@" | tee "$logFile" || exitCode=$?
+    dockerLocalContainer --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" --env-file "/var/buildTest/.test.env" -c "$@" | tee "$logFile" || exitCode=$?
     if [ "$exitCode" -eq "$interrupt" ]; then
       returnCode=$interrupt
       break

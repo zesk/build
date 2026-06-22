@@ -11,13 +11,13 @@ file="bin/build/tools/build.sh"
 fn="tools"
 fnMarker="tools"
 foundNames=([0]="argument")
-line="528"
+line="526"
 original="tools"
 rawComment=$'Run a Zesk Build command or load it\nArgument: --help - Flag. Optional. Display this help.\nArgument: --start startDirectory - Directory. Optional. Start searching for a build installation at this location and searching upwards in the file hierarchy.\nArgument: --verbose - Flag. Optional. Be verbose.\nArgument: ... - Callable. Optional. Run this command after loading in the current build context.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="e124ef5402b9ae733bdcd74429b441cd31377260"
-sourceLine="528"
+sourceHash="5313b3e93fc327771b540642fff47051da315c49"
+sourceLine="526"
 summary="Run a Zesk Build command or load it"
 summaryComputed="true"
 usage="tools [ --help ] [ --start startDirectory ] [ --verbose ] [ ... ]"

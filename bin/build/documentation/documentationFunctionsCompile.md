@@ -15,7 +15,7 @@ Extract and build the documentation settings cache and generate derived files
 - `--clean` - Flag. Optional. Clean everything and then exit.
 --all | --stdin- Flag. Optional. Read function names from stdin for examination.
 - `--fingerprint` - Flag. Optional. Use fingerprint to ensure results are up to date.
-- `--source` - Directory. Required. Directory where functions are defined.
+- `--source` - DirectoryList. Required. Lists of directories where functions are defined (`:`-separated)
 - `--key fingerprintKey` - String. Optional. Use this name to cache results in application JSON file if available.
 - `functionName ...` - String. Optional. Specific functions to compile.
 

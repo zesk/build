@@ -82,8 +82,12 @@ __buildBuildShowSettings() {
 }
 
 __buildStatus() {
-  catchReturn "$handler" statusMessage "$@" | tee > >(consoleToPlain >"$messageFile") || return $?
-  ! isiTerm2 || catchReturn "$handler" iTerm2Badge <"$messageFile" || return $?
+  local icon="🛠️" style="$1" && shift
+  local message="$*"
+  [ -n "$message" ] || throwArgument "$handler" "blank message in ${FUNCNAME[0]} <- ${FUNCNAME[1]}" || return $?
+  catchReturn "$handler" hookRunOptional process-title "$icon $message" || return $?
+  local ee=() && case "$style" in error | warning) ee=(--last) ;; esac
+  catchReturn "$handler" statusMessage "${ee[@]+"${ee[@]}"}" decorate "$style" "$message" || return $?
 }
 
 # fn: bin/build.sh
@@ -141,30 +145,28 @@ __buildBuild() {
   done
 
   local start && start=$(timingStart)
-  local messageFile && messageFile=$(fileTemporaryName "$handler") || return $?
-  local clean=("$messageFile")
   (
-    __buildStatus decorate success "🛠️ Building"
+    __buildStatus success "🛠️ Building"
 
-    ! $debugFlag || __buildStatus decorate info "Installing dependencies ..."
-    catchReturn "$handler" packageInstall || returnClean $? "${clean[@]}" || return $?
-    catchReturn "$handler" packageGroupInstall pcregrep || returnClean $? "${clean[@]}" || return $?
+    ! $debugFlag || __buildStatus info "Installing dependencies ..."
+    catchReturn "$handler" packageInstall || return $?
+    catchReturn "$handler" packageGroupInstall pcregrep || return $?
 
     local home && home=$(catchReturn "$handler" buildHome) || return $?
 
     catchReturn "$handler" decorate big "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
     consoleLine "#"
 
-    ! $debugFlag || __buildStatus decorate warning "Running deprecated ..."
+    ! $debugFlag || __buildStatus warning "Running deprecated ..."
     "$home/bin/build/deprecated.sh" --fingerprint || throwEnvironment "$handler" "Deprecated failed" || return $?
 
-    ! $debugFlag || __buildStatus decorate warning "Running identical ..."
+    ! $debugFlag || __buildStatus warning "Running identical ..."
     "$home/bin/build/repair.sh" --internal --fingerprint || throwEnvironment "$handler" "Identical repair failed" || return $?
 
-    ! $debugFlag || __buildStatus decorate warning "Running function build ..."
+    ! $debugFlag || __buildStatus warning "Running function build ..."
     buildFunctionsCompile --fingerprint || throwEnvironment "$handler" "Build Functions derived compile repair failed" || return $?
 
-    ! $debugFlag || __buildStatus decorate info "Updating markdown ..."
+    ! $debugFlag || __buildStatus info "Updating markdown ..."
     if ! __buildBuildUpdateMarkdown "$handler" "$home"; then
       catchEnvironment "$handler" "Can not update the Markdown files" || return $?
     fi
@@ -174,11 +176,11 @@ __buildBuild() {
       local rootShow && rootShow=$(decorate file "$rootPath")
       local path && for path in "$rootPath" "$home/documentation/.docs"; do
         if [ -d "$path" ]; then
-          ! $debugFlag || __buildStatus decorate warning "Removing $path for build" || return $?
+          ! $debugFlag || __buildStatus warning "Removing $path for build" || return $?
           catchEnvironment "$handler" rm -rf "$path" || return $?
         fi
       done
-      ! $debugFlag || __buildStatus decorate warning "Building documentation ..."
+      ! $debugFlag || __buildStatus warning "Building documentation ..."
       catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
 
       [ -d "$rootPath" ] || throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
@@ -186,21 +188,20 @@ __buildBuild() {
     fi
 
     if $commitChanges && gitRepositoryChanged; then
-      ! $debugFlag || __buildStatus decorate info "Repository changed, committing ..."
+      ! $debugFlag || __buildStatus info "Repository changed, committing ..."
       printf -- "%s\n" "CHANGES:" || :
       gitShowChanges | decorate code | decorate wrap "    "
       {
         ! git commit -m "Build version $(hookRun version-current)" -a && git push origin
-      } || __buildStatus --last decorate error "Commit or push failed. Continuing."
+      } || __buildStatus error "Commit or push failed. Continuing."
     elif gitRepositoryChanged; then
-      ! $debugFlag || __buildStatus --last decorate warning "Local repository changed."
+      ! $debugFlag || __buildStatus warning "Local repository changed."
     fi
     envFile="$home/.build.env"
     environmentOutput >"$envFile"
     decorate info "Wrote $(decorate file "$envFile") $(localePluralWord "$(fileSize "$envFile")" byte)" || return $?
-  ) || returnClean $? "${clean[@]}" || return $?
-  __buildStatus --last timingReport "$start" "Built successfully in"
-  returnClean 0 "${clean[@]}" || return $?
+  ) || return $?
+  __buildStatus success "$(timingReport "$start" "Built successfully in")"
 }
 ___buildBuild() {
   # __IDENTICAL__ bashDocumentation 1

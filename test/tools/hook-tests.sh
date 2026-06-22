@@ -52,23 +52,17 @@ testHookSystem() {
 
   unset BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS
 
-  executeEcho decorate pair BUILD_HOOK_EXTENSIONS "${BUILD_HOOK_EXTENSIONS-}" || return $?
-  executeEcho decorate pair BUILD_HOOK_DIRS "${BUILD_HOOK_DIRS-}" || return $?
-
-  catchReturn "$handler" executeEcho buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
-  catchReturn "$handler" executeEcho buildEnvironmentLoad BUILD_HOOK_EXTENSIONS || return $?
-
-  executeEcho decorate pair BUILD_HOOK_EXTENSIONS "${BUILD_HOOK_EXTENSIONS-}" || return $?
-  executeEcho decorate pair BUILD_HOOK_DIRS "${BUILD_HOOK_DIRS-}" || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_HOOK_EXTENSIONS || return $?
 
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   randomApp=$(stringRandom)
   randomDefault=$(stringRandom)
 
-  executeEcho cd "$testDir" || return $?
-  executeEcho mkdir -p "$testDir/bin/hooks" || return $?
-  executeEcho cp -R "$savedHome/bin/build" "$testDir/bin/build" || return $?
+  cd "$testDir" || return $?
+  mkdir -p "$testDir/bin/hooks" || return $?
+  cp -R "$savedHome/bin/build" "$testDir/bin/build" || return $?
   BUILD_HOME="$testDir"
 
   for f in test0.sh test1.sh test3.bash noExtension noExtension.bash; do

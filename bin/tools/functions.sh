@@ -61,7 +61,7 @@ __buildFunctionsCompile() {
   local home && home=$(catchReturn "$handler" buildHome) || return $?
   set -- \
     --handler "$handler" \
-    --source "$home/bin" \
+    --source "$home/bin/build/tools:$home/bin/build/identical:$home/bin" \
     --documentation "$home/documentation/source" \
     --target "$home/bin/build/documentation" \
     --key "buildFunctions" "$@"

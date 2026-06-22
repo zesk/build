@@ -36,7 +36,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
   __buildIdenticalRepair() {
     local handler="_${FUNCNAME[0]}"
     local item aa=() home fingerprint=""
-    local key="repair"
+    local key="repair" tokens=0 firstToken=""
 
     local cleaned=()
     while [ $# -gt 0 ]; do
@@ -49,9 +49,9 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
         return $?
         ;;
       --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
-      --token) local token && shift && token=$(validate "$handler" string "$argument" "${1-}") && cleaned+=("$argument" "$token") || return $? ;;
-      --internal) cleaned+=("$1") ;;
-      *) cleaned+=("$1") ;;
+      --token) local token && shift && token=$(validate "$handler" string "$argument" "${1-}") && cleaned+=("$argument" "$token") && ((++tokens)) && [ -n "$firstToken" ] || firstToken="$token" || return $? ;;
+      --internal | --internal-only) cleaned+=("$1") && title="$1" ;;
+      *) cleaned+=("$1") && ((++tokens)) && [ -n "$firstToken" ] || firstToken="$1" ;;
       esac
       shift
     done
@@ -72,6 +72,12 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     done < <(find "$home" -type d -name identical ! -path "*/.*/*")
 
     set -eou pipefail
+    [ -z "$title" ] || title=" $title"
+    if [ -n "$firstToken" ]; then
+      title="$title: $token ... (#$tokens)"
+    fi
+    local icon="👀"
+    catchReturn "$handler" hookRunOptional process-title "$icon Identical check$title" || return $?
     catchReturn "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 
     [ -z "$fingerprint" ] || fingerprint --cached "$fingerprint" --verbose --key "$key"

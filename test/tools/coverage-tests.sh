@@ -55,7 +55,7 @@ testCoverageReportThing() {
 
   template="$(__bashCoverageReportTemplate "not-covered.html")"
   expected='&nbsp;&nbsp;[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]&nbsp;||&nbsp;<em>return</em>&nbsp;<em>1</em>'
-  executeEcho __bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template"
+  # executeEcho __bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template"
   assertEquals "$expected" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" || return $?
 
   codes=$(printf "%s\n" '[ $# -gt 0 ]')
@@ -64,7 +64,7 @@ testCoverageReportThing() {
   # replace %%%%0%%%% with & -> there's the error
 
   #expected='&nbsp;&nbsp;<em>[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]</em>&nbsp;||&nbsp;return&nbsp;1'
-  executeEcho __bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template"
+  # executeEcho __bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template"
   assertEquals "$expected" "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" || return $?
 }
 

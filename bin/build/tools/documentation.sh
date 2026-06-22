@@ -468,12 +468,12 @@ _documentationMaker() {
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
 # Argument: --all | --stdin- Flag. Optional. Read function names from stdin for examination.
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
-# Argument: --source - Directory. Required. Directory where functions are defined.
+# Argument: --source - DirectoryList. Required. Lists of directories where functions are defined (`:`-separated)
 # Argument: --key fingerprintKey - String. Optional. Use this name to cache results in application JSON file if available.
 # Argument: functionName ... - String. Optional. Specific functions to compile.
 # stdin: Function. Name of functions, one per line to compile if `--all` is not specified.
 documentationFunctionsCompile() {
-  local handler="_${FUNCNAME[0]}" aa=() allFlag=false source="" target=""
+  local handler="_${FUNCNAME[0]}" aa=() allFlag=false sources="" target=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -488,15 +488,15 @@ documentationFunctionsCompile() {
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --all | --stdin) allFlag=true ;;
     --target) shift && target=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
-    --source) shift && source=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --source) shift && sources=$(validate "$handler" DirectoryList "$argument" "${1-}") || return $? ;;
     --key) shift && aa+=("$argument" "${1-}") ;;
     *) aa+=("$1") ;;
     esac
     shift
   done
 
-  [ -n "$source" ] || throwArgument "$handler" "source is required" || return $?
-  set -- --handler "$handler" --source "$source"
+  [ "${#sources[@]}" -gt 0 ] || throwArgument "$handler" "--source is required" || return $?
+  set -- --handler "$handler" --source "$sources"
   if $allFlag || [ "${#aa[@]}" -gt 0 ]; then
     # uses stdin or arguments
     documentationFunctionCompile "$@" "${aa[@]}" || return $?
@@ -507,12 +507,14 @@ documentationFunctionsCompile() {
     local clean=("$funFile")
     # local sourceTimestamp _ && read -r sourceTimestamp _ < <(catchReturn "$handler" fileModifiedRecently "$source") || returnClean $? "${clean[@]}" || return $?
     local targetTimestamp && read -r targetTimestamp _ < <(catchReturn "$handler" fileModifiedRecently "$target") || returnClean $? "${clean[@]}" || return $?
-    local changed=() && IFS=$'\n' read -r -d "" -a changed < <(fileModificationTimesAfter "$source" "$targetTimestamp" -name '*.sh' | textRemoveFields 1)
-    if [ "${#changed[@]}" -gt 0 ]; then
-      local changedFile && for changedFile in "${changed[@]}"; do
-        bashListFunctions <"$changedFile" | grepSafe -v '^_' >>"$funFile"
-      done
-    fi
+    local source && for source in "${sources[@]}"; do
+      local changed=() && IFS=$'\n' read -r -d "" -a changed < <(fileModificationTimesAfter "$source" "$targetTimestamp" -name '*.sh' | textRemoveFields 1)
+      if [ "${#changed[@]}" -gt 0 ]; then
+        local changedFile && for changedFile in "${changed[@]}"; do
+          bashListFunctions <"$changedFile" | grepSafe -v '^_' >>"$funFile"
+        done
+      fi
+    done
     local missingFunction && while read -r missingFunction; do
       ! muzzle __documentationFile "$home" "$missingFunction" || continue
       ! muzzle __documentationFile "SEE/$home" "$missingFunction" || continue
@@ -542,7 +544,7 @@ _documentationFunctionsCompile() {
 #
 # Argument: --force - Flag. Optional. Create files regardless of cache status.
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
-# Argument: --source codeSource - Directory. Required. Code source to find functions.
+# Argument: --source codeSource - DirectoryList. Required. Code source to find functions.
 # Argument: --documentation documentationSource - Directory. Documentation source to find documentation links.
 # Argument: --all - Flag. Optional. Check all functions.
 # Argument: --fingerprint - Flag. Optional. Use fingerprint to ensure results are up to date.
@@ -648,7 +650,7 @@ _documentationFunctionRemove() {
 # Argument: --clean - Flag. Optional. Clean everything and then exit.
 # Argument: --git - Flag. Optional. Do some handy `git` changes. (Adding/removing files)
 # Argument: --all - Flag. Optional. Do everything regardless of cache state.
-# Argument: --source sourcePath - Directory. Required. Find function source code definition in this directory.
+# Argument: --source sourcePath - DirectoryList. Required. Find function source code definition in this directory.
 # Argument: --derive command ... -- - CommandList. Optional. Run this command on each changed settings file to generate derived files.
 # Argument: functionName ... - String. Optional. Specific functions to compile.
 # DOC TEMPLATE: --help 1

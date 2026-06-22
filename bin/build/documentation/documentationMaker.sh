@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
-argument="--verbose - Flag. Optional. Be wordy."$'\n'"--default defaultValue - EmptyString. Optional. Pass \`--default\` flag to \`mapFunction\`"$'\n'"sourcePath - Exists. Optional. File or directory to convert. Reads from \`stdin\` if not provided."$'\n'"targetPath - FileDirectory. Optional. Outputs to \`stdout\` if not specified, otherwise outputs mirror."$'\n'"mapFunction ... - Function. Optional. Mapping function to use, and any arguments."$'\n'""
+argument=$'--verbose - Flag. Optional. Be wordy.\n--default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`\nsourcePath - Exists. Optional. File or directory to convert. Reads from `stdin` if not provided.\ntargetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.\nmapFunction ... - Function. Optional. Mapping function to use, and any arguments.\n'
 base="documentation.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Generate documentation using source markdown and a mapping function."$'\n'""$'\n'"Tokens are mapped to template paths in \`BUILD_DOCUMENTATION_PATH."$'\n'""$'\n'""
+description=$'Generate documentation using source markdown and a mapping function.\n\nTokens are mapped to template paths in `BUILD_DOCUMENTATION_PATH.\n\n'
 descriptionLineCount="4"
 file="bin/build/tools/documentation.sh"
 fn="documentationMaker"
@@ -13,14 +13,14 @@ fnMarker="documentationmaker"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="see" [4]="return_code")
 line="459"
 original="documentationMaker"
-rawComment="Generate documentation using source markdown and a mapping function."$'\n'"Tokens are mapped to template paths in \`BUILD_DOCUMENTATION_PATH."$'\n'"Argument: --verbose - Flag. Optional. Be wordy."$'\n'"Argument: --default defaultValue - EmptyString. Optional. Pass \`--default\` flag to \`mapFunction\`"$'\n'"Argument: sourcePath - Exists. Optional. File or directory to convert. Reads from \`stdin\` if not provided."$'\n'"Argument: targetPath - FileDirectory. Optional. Outputs to \`stdout\` if not specified, otherwise outputs mirror."$'\n'"Argument: mapFunction ... - Function. Optional. Mapping function to use, and any arguments."$'\n'"stdin: Text"$'\n'"stdout: Text. Tokens are mapped to template paths in \`BUILD_DOCUMENTATION_PATH"$'\n'"See: BUILD_DOCUMENTATION_PATH"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Template file not found"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - Template file not found"$'\n'""
-see="BUILD_DOCUMENTATION_PATH"$'\n'""
+rawComment=$'Generate documentation using source markdown and a mapping function.\nTokens are mapped to template paths in `BUILD_DOCUMENTATION_PATH.\nArgument: --verbose - Flag. Optional. Be wordy.\nArgument: --default defaultValue - EmptyString. Optional. Pass `--default` flag to `mapFunction`\nArgument: sourcePath - Exists. Optional. File or directory to convert. Reads from `stdin` if not provided.\nArgument: targetPath - FileDirectory. Optional. Outputs to `stdout` if not specified, otherwise outputs mirror.\nArgument: mapFunction ... - Function. Optional. Mapping function to use, and any arguments.\nstdin: Text\nstdout: Text. Tokens are mapped to template paths in `BUILD_DOCUMENTATION_PATH\nSee: BUILD_DOCUMENTATION_PATH\nReturn Code: 0 - Success\nReturn Code: 1 - Template file not found\n\n'
+return_code=$'0 - Success\n1 - Template file not found\n'
+see=$'BUILD_DOCUMENTATION_PATH\n'
 sourceFile="bin/build/tools/documentation.sh"
-sourceHash="f2669a68b4e993cf819200b03f0975ce382e64b6"
+sourceHash="d51e4672057607172307c44e6065c356ed05ce35"
 sourceLine="459"
-stdin="Text"$'\n'""
-stdout="Text. Tokens are mapped to template paths in \`BUILD_DOCUMENTATION_PATH"$'\n'""
+stdin=$'Text\n'
+stdout=$'Text. Tokens are mapped to template paths in `BUILD_DOCUMENTATION_PATH\n'
 summary="Generate documentation using source markdown and a mapping function."
 summaryComputed="true"
 usage="documentationMaker [ --verbose ] [ --default defaultValue ] [ sourcePath ] [ targetPath ] [ mapFunction ... ]"

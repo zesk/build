@@ -58,6 +58,8 @@ __hookNotify() {
     shift
   done
 
+  $debugFlag || ! buildDebugEnabled notify || debugFlag=true
+
   bashDebugInterruptFile
 
   [ -z "$priority" ] || nn+=(--priority "$priority")
