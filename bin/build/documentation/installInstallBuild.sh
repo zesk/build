@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-21
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. This help.\n--diff - Flag. Optional. Show differences between new and old files if changed.\n--local - Flag. Optional. Use local copy of `install-bin-build.sh` instead of downloaded version.\npath - Directory. Optional. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.\napplicationHome - Directory. Optional. Path to the application home directory. Default is current directory.\n--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -16,7 +16,7 @@ original="installInstallBuild"
 rawComment=$'Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.\nArgument: --help - Flag. Optional. This help.\nArgument: --diff - Flag. Optional. Show differences between new and old files if changed.\nArgument: --local - Flag. Optional. Use local copy of `install-bin-build.sh` instead of downloaded version.\nArgument: path - Directory. Optional. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.\nArgument: applicationHome - Directory. Optional. Path to the application home directory. Default is current directory.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="98c6164d9932c99a6d3b1ab2ae83bc5ff97b54d3"
+sourceHash="ad79bf309643a1d00bc767734ea751c19746a277"
 sourceLine="48"
 summary="Installs \`install-bin-build.sh\` the first time in a new project, and"
 summaryComputed="true"

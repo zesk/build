@@ -1,1 +1,1 @@
-[__functionSettings]({rel}tools/internal.md#__functionsettings) - Load cached function comment values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L150))
+[__functionSettings]({rel}tools/internal.md#__functionsettings) - Load cached function comment values ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L148))

@@ -1,4 +1,4 @@
-## Package Installer Core
+## Installation Core
 
 <!-- TEMPLATE guideHeader 1 -->
 <hr />
@@ -12,7 +12,7 @@ Copy `install.sample.sh` and rename, and keep up to date in your own project wit
 Your installer will download and install your package as outlined
 in [building your own installer](../guide/installer.md).
 
-{_installRemotePackage}
+{installSoftware}
 
 {installInstallBinary}
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-21
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument="none"
 base="install.sample.sh"
@@ -17,7 +17,7 @@ rawComment=$'fn: validate Function\nSummary: Is a valid function currently defin
 requires=$'isFunction _validateThrow\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/install.sample.sh"
-sourceHash="c986aa074a8b33e6b95780ac611bfff080d45f62"
+sourceHash="7fa6d1d17575098db1f685822f51823a469699e8"
 sourceLine="758"
 summary="Is a valid function currently defined?"
 summaryComputed=""

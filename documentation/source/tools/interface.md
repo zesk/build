@@ -15,7 +15,7 @@ The following function signatures are used prevalently as callbacks:
 
 ## Installation function signatures
 
-These are all used in [`_installRemotePackage`](../tools/installer.md#_installremotePackage).
+These are all used in [`installSoftware`](../tools/installer.md#_installremotePackage).
 
 {__packageVersionFunction}
 

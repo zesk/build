@@ -449,11 +449,89 @@ _consoleRows() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 markdownToConsole() {
-  [ $# -eq 0 ] || helpArgument --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  local handler="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  [ "${#headings[@]}" -gt 0 ] || headings=(success success notice info label subtle)
   # shellcheck disable=SC2119
   _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
 }
 _markdownToConsole() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Summary: Convert Markdown Heading lines to console
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --default defaultStyle - String. Optional. Use this style on non-heading lines.
+# Argument: --headings headingStyleList - ColonDelimitedList. Optional. Styles represent each heading depth with the first being `h1`, `h2, etc.
+#
+markdownHeadingsToConsole() {
+  local handler="_${FUNCNAME[0]}"
+  local headings=() default=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --default) shift && default=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --headings) shift && IFS=":" read -r -a headings <<<"$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  [ "${#headings[@]}" -gt 0 ] || headings=(big box success notice info label)
+  local finished=false && while ! $finished; do
+    local line && IFS="" read -d $'\n' -r line || finished=true
+    local style="" remain
+    if [ "${line#\#}" != "$line" ]; then
+      remain="${line#\#* }"
+      local depth=$(("${#line}" - "${#remain}" - 2))
+      style="${headings[depth]}"
+      line="$remain"
+    fi
+    if [ -n "$remain" ] && [ -n "$style" ]; then
+      decorate "$style" "$line"
+    elif [ -n "$default" ]; then
+      decorate "$default" "$line"
+    else
+      printf "%s\n" "$line"
+    fi
+  done
+}
+_markdownHeadingsToConsole() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

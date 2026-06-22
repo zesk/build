@@ -42,7 +42,7 @@ To run commands directly; note this is slower for larger scripts and can be used
 
 {__buildIdenticalRepair}
 
-{_installRemotePackage}
+{installSoftware}
 
 Modify the last line of this file when installing at a different project depth:
 

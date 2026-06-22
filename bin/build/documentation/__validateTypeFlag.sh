@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-21
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument="none"
 base="validate.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/validate.sh"
 fn="__validateTypeFlag"
 fnMarker="__validatetypeflag"
 foundNames=()
-line="363"
+line="370"
 original="__validateTypeFlag"
 rawComment=$'Flags are command line options which set a value to true, usually\nPlaceholder to add type to list\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="4f8ffd4b24993e2c06fe909247c19c030b8e0214"
-sourceLine="363"
+sourceHash="b57b723712fe47b17a65ba1939a889d7dc5a4299"
+sourceLine="370"
 summary="Flags are command line options which set a value to"
 summaryComputed="true"
 usage="__validateTypeFlag"

@@ -362,9 +362,9 @@ __funkyTimeSetup() {
   local temp && temp=$(fileTemporaryName "$handler" -d) || return $?
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  catchReturn "$handler" directoryRequire "$temp/funkyTime/bin/env" || return $?
+  catchReturn "$handler" muzzle directoryRequire "$temp/funkyTime/bin/env" || return $?
   catchReturn "$handler" cp -R "$home/bin/build" "$temp/funkyTime/bin/build" || return $?
-  catchReturn "$handler" printf -- "%s\n" "#!/usr/bin/env bash" "APPLICATION_NAME=Funky" >"$temp/funkyTime/bin/env/APPLICATION_NAME.sh" || return $?
+  catchReturn "$handler" printf -- "%s\n" "#!/usr/bin/env bash" "export APPLICATION_NAME" "APPLICATION_NAME=\"Funky Application\"" >"$temp/funkyTime/bin/env/APPLICATION_NAME.sh" || return $?
   catchReturn "$handler" chmod +x "$temp/funkyTime/bin/env/APPLICATION_NAME.sh" || return $?
 
   printf "%s\n" "$temp"
@@ -373,12 +373,16 @@ __funkyTimeSetup() {
 testBashApplicationAliases() {
   local handler="returnMessage"
 
-  assertExitCode --stdout-match "No project" 0 bashApplicationAliases <<<"hello probably-not-a-path" || return $?
+  assertExitCode --stderr-match "probably-not-a-path" --stderr-match "is not type" --stderr-match "UserDirectory" 0 bashApplicationAliases <<<"hello probably-not-a-path" || return $?
 
   local temp && temp=$(__funkyTimeSetup "$handler") || return $?
 
-  HOME="$temp" assertExitCode --stdout-match "Funky" 0 bashApplicationAliases <<<"funky funkyTime" || return $?
-  HOME="$temp" assertExitCode --stdout-match "The Funk Was Not In Want" --stdout-no-match "Funky" 0 bashApplicationAliases <<<"funky funkyTime The Funk Was Not In Want" || return $?
+  decorate info "HOME is $temp"
+  assertEquals "Funky Application" "$(buildEnvironmentContext "$temp/funkyTime" buildEnvironmentGet APPLICATION_NAME)" || return $?
+
+  HOME="$temp" bashApplicationAliases <<<"funky funkyTime" | dumpPipe bashApplicationAliases
+  HOME="$temp" assertExitCode --stdout-match "Funky Application" 0 bashApplicationAliases <<<"funky funkyTime" || return $?
+  HOME="$temp" assertExitCode --stdout-no-match "Funky Application" --stdout-match "The Funk Was Not In Want" --stdout-no-match "Funky" 0 bashApplicationAliases <<<"funky funkyTime The Funk Was Not In Want" || return $?
 
   unalias g-funky G-funky 2>/dev/null
   returnClean 0 "$temp"
@@ -392,6 +396,8 @@ testBashApplicationAlias() {
   assertExitCode --stderr-match "String is blank" 2 bashApplicationAlias "" badPathBlankAlias || return $?
 
   local temp && temp=$(__funkyTimeSetup "$handler") || return $?
+
+  decorate info "HOME is $(decorate file "$temp")"
 
   assertNotExitCode --stderr-match "not found" 0 alias g-funky || return $?
   assertNotExitCode --stderr-match "not found" 0 alias G-funky || return $?

@@ -1,1 +1,1 @@
-[__validateTypeEnvironmentVariable]({rel}#__validatetypeenvironmentvariable) - A valid environment variable name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L406))
+[__validateTypeEnvironmentVariable]({rel}#__validatetypeenvironmentvariable) - A valid environment variable name ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L413))

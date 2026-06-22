@@ -18,6 +18,12 @@
 #             |_|
 #
 
+_installRemotePackage() {
+  local new="installSoftware"
+  _deprecated "${FUNCNAME[0]} -> $new"
+  "$new" "$@"
+}
+
 # Deprecated: 2026-06
 isDockerComposeCommand() {
   _deprecated "${FUNCNAME[0]} -> dockerComposeCommandIsValid"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument=$'usageFunction - Required. `bash` function already defined to output handler\nenvironmentVariable - String. Optional. One or more environment variables which should be set and non-empty.\n'
 base="usage.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/usage.sh"
 fn="environmentRequire"
 fnMarker="environmentrequire"
 foundNames=([0]="argument" [1]="return_code" [2]="deprecated")
-line="258"
+line="256"
 original="environmentRequire"
 rawComment=$'Requires environment variables to be set and non-blank\nArgument: usageFunction - Required. `bash` function already defined to output handler\nArgument: environmentVariable - String. Optional. One or more environment variables which should be set and non-empty.\nReturn Code: 0 - All environment variables are set and non-empty\nReturn Code: 1 - If any `environmentVariable` variables are not set or are empty.\nDeprecated: 2024-01-01\n\n'
 return_code=$'0 - All environment variables are set and non-empty\n1 - If any `environmentVariable` variables are not set or are empty.\n'
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="6d5896e46e6d1b07f44f2236e80a8bc7cb53e6f8"
-sourceLine="258"
+sourceHash="0efed8cae84d9f9270126ac6b502993ad86e59af"
+sourceLine="256"
 summary="Requires environment variables to be set and non-blank"
 summaryComputed="true"
 usage="environmentRequire usageFunction [ environmentVariable ]"

@@ -2,7 +2,7 @@
 #
 # Identical template
 #
-# Original of _installRemotePackage
+# Original of installSoftware
 #
 # See: bin/build/install-bin-build.sh
 #
@@ -20,7 +20,7 @@
 # stdout: version information
 # Return Code: 0 - Do not upgrade, version is same as remote (stdout is found, current version)
 # Return Code: 1 - Do upgrade, version changed. (stdout is version change details)
-# See: _installRemotePackage
+# See: installSoftware
 __packageVersionFunction() {
   return 0
 }
@@ -31,7 +31,7 @@ __packageVersionFunction() {
 # Takes a single argument, the error handler, a function.
 #
 # Argument: handler - Function. Required. Function to call when an error occurs.
-# See: _installRemotePackage
+# See: installSoftware
 __packageUrlFunction() {
   printf "%s\n" "https://localhost:1234/download.tar.gz"
 }
@@ -43,7 +43,7 @@ __packageUrlFunction() {
 # Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 #
 # If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
-# See: _installRemotePackage
+# See: installSoftware
 __packageCheckFunction() {
   return 0
 }
@@ -52,7 +52,7 @@ __packageCheckFunction() {
 ###################################################################################################################################################################
 ###################################################################################################################################################################
 
-# IDENTICAL _installRemotePackage EOF
+# IDENTICAL installSoftware EOF
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -117,14 +117,14 @@ __packageCheckFunction() {
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
 # Requires: cp rm cat printf fileRealPath executableExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
-_installRemotePackage() {
+installSoftware() {
   local handler="_${FUNCNAME[0]}"
 
   local relative="${1-}" defaultPackagePath="${2-}" packageInstallerName="${3-}"
 
   shift 3
 
-  case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
+  case "${BUILD_DEBUG-}" in 1 | true) _installSoftwareDebug BUILD_DEBUG ;; esac
 
   local source="" name="${FUNCNAME[1]}"
   local localPath="" fetchArguments=() url="" urlFunction="" checkFunction="" installers=()
@@ -193,7 +193,7 @@ _installRemotePackage() {
       return 0
       ;;
     --debug)
-      __installRemotePackageDebug "$argument"
+      _installSoftwareDebug "$argument"
       ;;
     --skip-self) skipSelf=true ;;
     --force) forceFlag=true && installReason="--force specified" ;;
@@ -238,7 +238,7 @@ _installRemotePackage() {
     local newVersion=""
     if newVersion=$("$versionFunction" "$handler" "$applicationHome" "$packagePath" "$fixedVersion"); then
       printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
-      __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
+      _installSoftwareGitCheck "$applicationHome" "$packagePath" || :
       return 0
     fi
     forceFlag=true
@@ -260,7 +260,7 @@ _installRemotePackage() {
   if $installFlag; then
     local start
     start=$(($(catchEnvironment "$handler" date +%s) + 0)) || return $?
-    __installRemotePackageDirectory "$handler" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
+    _installSoftwareDirectory "$handler" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
     [ -d "$packagePath" ] || throwEnvironment "$handler" "Unable to download and install $packagePath (not a directory, still)" || return $?
     suffix="in $(($(date +%s) - start)) seconds$binName"
   else
@@ -276,7 +276,7 @@ _installRemotePackage() {
   local message
   message="Installed $(cat "$messageFile") $suffix"
   catchEnvironment "$handler" rm -f "$messageFile" || return $?
-  __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
+  _installSoftwareGitCheck "$applicationHome" "$packagePath" || :
   message="$message (local)$binName"
   printf -- "%s\n" "$message"
 
@@ -323,14 +323,14 @@ _installRemotePackage() {
       return "$exitCode"
     fi
   fi
-  $skipSelf || __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
+  $skipSelf || _installSoftwareLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
 }
 
-# Error handler for _installRemotePackage
+# Error handler for installSoftware
 # Argument: returnCode - UnsignedInteger. Required. Exit code.
 # Argument: message ... - EmptyString. Optional. Error message to show.
 # Requires: bashSimpleDocumentation
-__installRemotePackage() {
+_installSoftware() {
   local source content
   source=$(basename "${BASH_SOURCE[0]}")
   content="$(bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" | grep -v "INTERNAL")"
@@ -342,21 +342,21 @@ __installRemotePackage() {
 # Debug is enabled, show why
 # Requires: decorate
 # Debugging: 73b0bd4ba49583263542da725669003fc821eb63
-__installRemotePackageDebug() {
+_installSoftwareDebug() {
   decorate orange "${1-} enabled" && set -x
 }
 
 # Install the package directory
 # Requires: uname pushd popd rm tar dirname
 # Requires: catchReturn catchEnvironment throwEnvironment urlFetch
-__installRemotePackageDirectory() {
+_installSoftwareDirectory() {
   local handler="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
   local target="$applicationHome/.$$.package.tar.gz"
 
   shift 5
   if [ -n "$localPath" ]; then
-    __installRemotePackageDirectoryLocal "$handler" "$packagePath" "$applicationHome" "$localPath"
+    _installSoftwareDirectoryLocal "$handler" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
   catchReturn "$handler" urlFetch "$url" "$target" || return $?
@@ -378,7 +378,7 @@ __installRemotePackageDirectory() {
 # Install the build directory from a copy
 # Requires: rm mv cp mkdir
 # Requires: returnUndo catchEnvironment throwEnvironment
-__installRemotePackageDirectoryLocal() {
+_installSoftwareDirectoryLocal() {
   local handler="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
   installPath="${applicationHome%/}/${packagePath#/}"
@@ -399,7 +399,7 @@ __installRemotePackageDirectoryLocal() {
 # Check .gitignore is correct
 # Requires: grep printf
 # Requires: decorate
-__installRemotePackageGitCheck() {
+_installSoftwareGitCheck() {
   local applicationHome="$1" pattern="${2%/}"
   pattern="/${pattern#/}/"
   local ignoreFile="$1/.gitignore"
@@ -418,7 +418,7 @@ __installRemotePackageGitCheck() {
 # Assumes our source handles the `--replace` argument to replace itself.
 # Requires: grep printf chmod wait
 # Requires: returnEnvironment isUnsignedInteger cat returnClean
-__installRemotePackageLocal() {
+_installSoftwareLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   {
     grep -v -e '^__installPackageConfiguration ' <"$source"
@@ -431,4 +431,4 @@ __installRemotePackageLocal() {
   exec "$myBinary.$$" --replace "$myBinary"
 }
 
-# <-- END of IDENTICAL _installRemotePackage
+# <-- END of IDENTICAL installSoftware

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-21
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\ntype - String. Optional. Type to validate as `validate` type.\n'
 base="validate.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/validate.sh"
 fn="isValidateType"
 fnMarker="isvalidatetype"
 foundNames=([0]="summary" [1]="argument" [2]="example")
-line="527"
+line="534"
 original="isValidateType"
 rawComment=$'Summary: Are validate type names valid?\nAre all arguments passed a valid `validate` type?\nArgument: --help - Flag. Optional. Display this help.\nArgument: type - String. Optional. Type to validate as `validate` type.\nExample:     isValidateType string || returnMessage 1 "string is not a type."\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="4f8ffd4b24993e2c06fe909247c19c030b8e0214"
-sourceLine="527"
+sourceHash="b57b723712fe47b17a65ba1939a889d7dc5a4299"
+sourceLine="534"
 summary="Are validate type names valid?"
 summaryComputed=""
 usage="isValidateType [ --help ] [ type ]"

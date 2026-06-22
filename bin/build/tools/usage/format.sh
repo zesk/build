@@ -54,7 +54,7 @@ __usageTemplate() {
       "$(decorate info "$binName")" \
       "$(__documentationFormatArguments "$delimiter" <<<"$options")" \
       "$(__usageGenerator "$((nSpaces + 2))" "$delimiter" <<<"$options" | markdownToConsole | textTrimTail | decorate wrap "    " "$(decorate reset --)")" \
-      "$(markdownToConsole <<<"$description")" |
+      "$(markdownToConsole <<<"$description" | markdownHeadingsToConsole)" |
       textTrimBoth
   else
     printf "%s: %s\n\n%s\n\n" \

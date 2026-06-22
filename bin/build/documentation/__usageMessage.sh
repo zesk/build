@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
-argument="returnCode - UnsignedInteger. Optional. Exit code to possibly display with message."$'\n'"message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'""
+argument=$'returnCode - UnsignedInteger. Optional. Exit code to possibly display with message.\nmessage ... - String. Optional. Display this message which describes why `exitCode` occurred.\n'
 base="usage.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
-description="Output the message for usage consistently"$'\n'""$'\n'""
+description=$'Output the message for usage consistently\n\n'
 descriptionLineCount="2"
 file="bin/build/tools/usage.sh"
 fn="__usageMessage"
@@ -13,11 +13,11 @@ fnMarker="__usagemessage"
 foundNames=([0]="argument" [1]="requires")
 line="94"
 original="__usageMessage"
-rawComment="Output the message for usage consistently"$'\n'"Argument: returnCode - UnsignedInteger. Optional. Exit code to possibly display with message."$'\n'"Argument: message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'"Requires: decorate returnCodeString"$'\n'""$'\n'""
-requires="decorate returnCodeString"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Output the message for usage consistently\nArgument: returnCode - UnsignedInteger. Optional. Exit code to possibly display with message.\nArgument: message ... - String. Optional. Display this message which describes why `exitCode` occurred.\nRequires: decorate returnCodeString\n\n'
+requires=$'decorate returnCodeString\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="6d5896e46e6d1b07f44f2236e80a8bc7cb53e6f8"
+sourceHash="0efed8cae84d9f9270126ac6b502993ad86e59af"
 sourceLine="94"
 summary="Output the message for usage consistently"
 summaryComputed="true"

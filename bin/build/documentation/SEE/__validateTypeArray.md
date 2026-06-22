@@ -1,1 +1,1 @@
-[__validateTypeArray]({rel}#__validatetypearray) - Boolean parsing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L234))
+[__validateTypeArray]({rel}#__validatetypearray) - Boolean parsing ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L241))

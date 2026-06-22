@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
-argument="handler - Function. Required."$'\n'"home - Directory. \`BUILD_HOME\`"$'\n'"functionName - String. Function to display usage for"$'\n'"returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to \`0\` - no error."$'\n'"message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'""
+argument=$'handler - Function. Required.\nhome - Directory. `BUILD_HOME`\nfunctionName - String. Function to display usage for\nreturnCode - UnsignedInteger. Optional. Exit code to display. Defaults to `0` - no error.\nmessage ... - String. Optional. Display this message which describes why `exitCode` occurred.\n'
 base="usage.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
 description="Display cached usage for a function"
 descriptionLineCount=""
-environment="BUILD_HOME BUILD_COLORS BUILD_DOCUMENTATION_PATH"$'\n'""
+environment=$'BUILD_HOME BUILD_COLORS BUILD_DOCUMENTATION_PATH\n'
 file="bin/build/tools/usage.sh"
 fn="__bashDocumentationCached"
 fnMarker="__bashdocumentationcached"
 foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="requires")
-line="167"
+line="165"
 original="__bashDocumentationCached"
-rawComment="Summary: Display cached usage for a function"$'\n'"Argument: handler - Function. Required."$'\n'"Argument: home - Directory. \`BUILD_HOME\`"$'\n'"Argument: functionName - String. Function to display usage for"$'\n'"Argument: returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to \`0\` - no error."$'\n'"Argument: message ... - String. Optional. Display this message which describes why \`exitCode\` occurred."$'\n'"Environment: BUILD_HOME BUILD_COLORS BUILD_DOCUMENTATION_PATH"$'\n'"Requires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings"$'\n'""$'\n'""
-requires="decorateThemed catchEnvironment __usageMessage decorate __functionSettings"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Summary: Display cached usage for a function\nArgument: handler - Function. Required.\nArgument: home - Directory. `BUILD_HOME`\nArgument: functionName - String. Function to display usage for\nArgument: returnCode - UnsignedInteger. Optional. Exit code to display. Defaults to `0` - no error.\nArgument: message ... - String. Optional. Display this message which describes why `exitCode` occurred.\nEnvironment: BUILD_HOME BUILD_COLORS BUILD_DOCUMENTATION_PATH\nRequires: decorateThemed catchEnvironment __usageMessage decorate __functionSettings\n\n'
+requires=$'decorateThemed catchEnvironment __usageMessage decorate __functionSettings\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="6d5896e46e6d1b07f44f2236e80a8bc7cb53e6f8"
-sourceLine="167"
+sourceHash="0efed8cae84d9f9270126ac6b502993ad86e59af"
+sourceLine="165"
 summary="Display cached usage for a function"
 summaryComputed=""
 usage="__bashDocumentationCached handler [ home ] [ functionName ] [ returnCode ] [ message ... ]"

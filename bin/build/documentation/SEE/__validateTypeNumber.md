@@ -1,1 +1,1 @@
-[__validateTypeNumber]({rel}#__validatetypenumber) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L270))
+[__validateTypeNumber]({rel}#__validatetypenumber) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L277))

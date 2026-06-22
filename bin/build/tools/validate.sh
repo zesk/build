@@ -201,12 +201,19 @@ __validateTypeCallable() {
 #
 
 _validateHelperApplicationTest() {
-  local test="$1" home="$2" item="$3"
+  local test="$1" relative="$2" item="$3"
   [ -n "$item" ] || _validateThrow "blank" || return $?
+  # Absolute path AOK
+  if [ "${item#/}" != "$item" ]; then
+    test "$item" || _validateThrow || return $?
+    printf "%s\n" "$item"
+    return 0
+  fi
+  # Relative path AOK
   item="${item#./}"
   item="${item#/}"
-  test "$test" "$home/$item" || _validateThrow || return $?
-  printf "%s\n" "$item"
+  test "$test" "$relative/$item" || _validateThrow || return $?
+  printf "%s\n" "$relative/$item"
 }
 
 # Utility function for `test`

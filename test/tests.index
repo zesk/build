@@ -233,6 +233,7 @@ testMariaDBDump suite=mariadb test/tools/mariadb-tests.sh
 testMariaDBDumpClean suite=mariadb test/tools/mariadb-tests.sh
 testMariaDBInstallation suite=mariadb test/tools/mariadb-tests.sh  tag=package-install
 testMarkdownFormatList suite=markdown test/tools/markdown-tests.sh
+testMarkdownHeadingsToConsole suite=markdown test/tools/markdown-tests.sh
 testMarkdownRemoveSections suite=markdown test/tools/markdown-tests.sh
 testMdoc suite=mdoc test/tools/mdoc-tests.sh  tag=slow-non-critical
 testEverythingElse suite=missing test/tools/missing-tests.sh

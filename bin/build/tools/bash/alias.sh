@@ -26,7 +26,7 @@ __bashApplicationAlias() {
   local alias && alias=$(validate "$handler" String alias "${1-}") && shift || return $?
   local path && path=$(validate "$handler" UserDirectory path "${1-}") && shift || return $?
   local name="$*"
-  [ -n "$name" ] || name="$(buildEnvironmentContext "$path" buildEnvironmentGet --quiet "APPLICATION_NAME" 2>/dev/null)"
+  [ -n "$name" ] || name="$(buildEnvironmentContext "$path" buildEnvironmentGet APPLICATION_NAME)"
   [ -n "$name" ] || name="${path##*/}"
 
   __bashApplicationAliasSetup "$alias" "$path" "$name"
@@ -39,7 +39,7 @@ __bashApplicationAliases() {
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local alias path && while read -r alias path name; do
     local fullPath && if fullPath=$(validate "$handler" UserDirectory path "$path"); then
-      __bashApplicationAliasSetup "$alias" "$fullPath" "$name" || return $?
+      __bashApplicationAlias "$handler" "$alias" "$fullPath" "$name" || return $?
     else
       decorate info "No project $(decorate file "$fullPath")" 1>&2 && returnEnvironment && returnCode=$?
     fi

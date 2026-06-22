@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -16,7 +16,7 @@ original="colorSampleCombinations"
 rawComment=$'Show combinations of foreground and background colors in the console.\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
 sourceLine="137"
 summary="Show combinations of foreground and background colors in the console."
 summaryComputed="true"

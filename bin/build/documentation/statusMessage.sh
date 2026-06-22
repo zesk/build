@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument=$'--last - Flag. Optional. Last message to be output, so output a newline as well at the end.\n--first - Flag. Optional. First message to be output, only clears line if available.\n--inline - Flag. Optional. Inline message displays with newline when animation is NOT available.\ncommand - Required. Commands which output a message.\n'
 base="colors.sh"
@@ -19,7 +19,7 @@ rawComment=$'Output a status message\nThis is intended for messages on a line wh
 requires=$'throwArgument consoleHasAnimation catchEnvironment decorate validate consoleLineFill\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="56a1ebebc064dfac20f0f243c277830691edc5b3"
+sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
 sourceLine="293"
 summary="Output a status message and display correctly on consoles with animation and in log files"
 summaryComputed=""

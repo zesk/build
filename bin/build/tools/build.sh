@@ -128,26 +128,20 @@ _buildFunctions() {
 
 __buildInternalFunctions() {
   cat <<'EOF'
-_installRemotePackage
+installSoftware
 __bashDocumentationCached
-__usageMessage
-__functionSettings
 __dateFromTimestamp
 EOF
 }
 
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: --deprecated - Flag. Optional. Include all deprecated functions as well.
-# Environment: BUILD_HOME
-# Prints the list of functions defined in Zesk Build
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# shellcheck disable=SC2120
+# Prints the list of internal functions defined in Zesk Build - for internal documentation use only.
 buildInternalFunctions() {
   local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   {
-    __buildFunctionsList "$handler" | grep -e '^\(__decorateExtension\|__hook\|__validateType\)'
+    __buildFunctionsList "$handler" | grep -e '^\(__decorateExtension\|__hook\|__usage\|__function\|__validateType\)'
     __buildInternalFunctions
   } | sort -u
 }

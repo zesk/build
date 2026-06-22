@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-20
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
-argument="home - Directory. BUILD_HOME"$'\n'"functionName - String. Function to fetch settings for"$'\n'"generatePath - Boolean. Optional. Pass in \`true\` to just generate the file path and *not* require the file to exist."$'\n'""
+argument=$'home - Directory. BUILD_HOME\nfunctionName - String. Function to fetch settings for\ngeneratePath - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.\n'
 base="usage.sh"
 derivations=([0]="return_code" [1]="fn" [2]="lowerFn" [3]="fnMarker" [4]="argument" [5]="usage")
 description="Load cached function comment values"
 descriptionLineCount=""
-environment="BUILD_DOCUMENTATION_PATH"$'\n'""
+environment=$'BUILD_DOCUMENTATION_PATH\n'
 file="bin/build/tools/usage.sh"
 fn="__functionSettings"
 fnMarker="__functionsettings"
 foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="requires")
-line="150"
+line="148"
 original="__functionSettings"
-rawComment="Summary: Load cached function comment values"$'\n'"Argument: home - Directory. BUILD_HOME"$'\n'"Argument: functionName - String. Function to fetch settings for"$'\n'"Argument: generatePath - Boolean. Optional. Pass in \`true\` to just generate the file path and *not* require the file to exist."$'\n'"Environment: BUILD_DOCUMENTATION_PATH"$'\n'"Requires: __documentationFile"$'\n'""$'\n'""
-requires="__documentationFile"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+rawComment=$'Summary: Load cached function comment values\nArgument: home - Directory. BUILD_HOME\nArgument: functionName - String. Function to fetch settings for\nArgument: generatePath - Boolean. Optional. Pass in `true` to just generate the file path and *not* require the file to exist.\nEnvironment: BUILD_DOCUMENTATION_PATH\nRequires: __documentationFile\n\n'
+requires=$'__documentationFile\n'
+return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/usage.sh"
-sourceHash="6d5896e46e6d1b07f44f2236e80a8bc7cb53e6f8"
-sourceLine="150"
+sourceHash="0efed8cae84d9f9270126ac6b502993ad86e59af"
+sourceLine="148"
 summary="Load cached function comment values"
 summaryComputed=""
 usage="__functionSettings [ home ] [ functionName ] [ generatePath ]"

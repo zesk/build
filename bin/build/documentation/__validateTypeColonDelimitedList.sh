@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-21
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument="none"
 base="validate.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/validate.sh"
 fn="__validateTypeColonDelimitedList"
 fnMarker="__validatetypecolondelimitedlist"
 foundNames=()
-line="244"
+line="251"
 original="__validateTypeColonDelimitedList"
 rawComment=$'`:`-delimited list\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/validate.sh"
-sourceHash="4f8ffd4b24993e2c06fe909247c19c030b8e0214"
-sourceLine="244"
+sourceHash="b57b723712fe47b17a65ba1939a889d7dc5a4299"
+sourceLine="251"
 summary="\`:\`-delimited list"
 summaryComputed="true"
 usage="__validateTypeColonDelimitedList"

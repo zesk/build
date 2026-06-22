@@ -1,1 +1,1 @@
-[__validateTypeApplicationFile]({rel}#__validatetypeapplicationfile) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L328))
+[__validateTypeApplicationFile]({rel}#__validatetypeapplicationfile) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L335))

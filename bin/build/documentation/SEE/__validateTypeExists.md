@@ -1,1 +1,1 @@
-[__validateTypeExists]({rel}#__validatetypeexists) - Validates a value is not blank and exists in the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L413))
+[__validateTypeExists]({rel}#__validatetypeexists) - Validates a value is not blank and exists in the ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L420))

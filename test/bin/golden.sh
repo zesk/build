@@ -39,7 +39,7 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL returnMessage 32
+# IDENTICAL returnMessage 30
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
@@ -49,10 +49,8 @@ __tools() {
 returnMessage() {
   local h="_${FUNCNAME[0]}" c="${1:-1}" && shift 2>/dev/null
   if [ "$c" = "--help" ]; then "$h" 0 && return 0 || return $?; fi
-  # __IDENTICAL__ localTrace 1
-  local trace="§ ${BASH_SOURCE[2]#"${BUILD_HOME-}/"}:${BASH_LINENO[1]-} ${FUNCNAME[2]}"
-  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\"" "$@" "($trace)" || return $?
-  if [ "$c" != "0" ]; then printf "%s [%s] %s (%s)\n" "❌" "$c" "${*-§}" "$trace" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
+  isUnsignedInteger "$c" || returnMessage 2 "${h#_} non-integer \"$c\"" "$@" || return $?
+  if [ "$c" != "0" ]; then printf "%s [%s] %s\n" "❌" "$c" "${*-§}" 1>&2; else printf "%s %s\n" "✅" "${*-§}"; fi && return "$c"
 }
 _returnMessage() {
   # __IDENTICAL__ bashDocumentation 1

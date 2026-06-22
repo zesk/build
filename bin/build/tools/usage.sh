@@ -65,7 +65,7 @@ _bashDocumentation() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __usageMessage 44
+# IDENTICAL __usageMessage 42
 
 # Summary: Icon for usage messages
 # - `0` - meaning no error, icon is `🏆`
@@ -93,8 +93,6 @@ __usageMessageStyle() {
 # Requires: decorate returnCodeString
 __usageMessage() {
   local returnCode="${1-0}"
-  # __IDENTICAL__ localTrace 1
-  local trace="§ ${BASH_SOURCE[2]#"${BUILD_HOME-}/"}:${BASH_LINENO[1]-} ${FUNCNAME[2]}"
   [ $# -eq 0 ] || shift
   local suffix="$*" icon="" style=""
   __usageMessageIcon "$returnCode"
@@ -104,10 +102,10 @@ __usageMessage() {
     printf "%s %s\n" "$icon" "$(decorate "$style" "$suffix")"
   elif [ "$returnCode" != 2 ]; then
     [ -z "$suffix" ] || suffix=" $(decorate warning "$suffix")"
-    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   else
     [ -z "$suffix" ] || suffix=" $(decorate error "$suffix")"
-    printf "%s %s%s%s\n" "$icon" "$trace" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
+    printf "%s %s%s\n" "$icon" "$(decorate "$style" "[$(returnCodeString "$returnCode")]")" "$suffix"
   fi
 }
 

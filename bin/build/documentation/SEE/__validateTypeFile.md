@@ -1,1 +1,1 @@
-[__validateTypeFile]({rel}#__validatetypefile) - A file exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L418))
+[__validateTypeFile]({rel}#__validatetypefile) - A file exists ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L425))

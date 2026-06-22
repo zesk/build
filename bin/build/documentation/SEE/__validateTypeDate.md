@@ -1,1 +1,1 @@
-[__validateTypeDate]({rel}#__validatetypedate) - Date formatted like YYYY-MM-DD ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L386))
+[__validateTypeDate]({rel}#__validatetypedate) - Date formatted like YYYY-MM-DD ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L393))

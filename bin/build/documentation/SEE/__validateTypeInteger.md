@@ -1,1 +1,1 @@
-[__validateTypeInteger]({rel}#__validatetypeinteger) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L265))
+[__validateTypeInteger]({rel}#__validatetypeinteger) - undocumented ([source](https://github.com/zesk/build/blob/main/bin/build/tools/validate.sh#L272))

@@ -11,6 +11,8 @@
 
 {markdownToConsole}
 
+{markdownHeadingsToConsole}
+
 {markdownCheckIndex}
 
 <!-- TEMPLATE toolFooter 3 -->

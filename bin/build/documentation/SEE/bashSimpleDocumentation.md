@@ -1,1 +1,1 @@
-[bashSimpleDocumentation]({rel}tools/usage.md#bashsimpledocumentation) - Simpler \`bashDocumentation\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L198))
+[bashSimpleDocumentation]({rel}tools/usage.md#bashsimpledocumentation) - Simpler \`bashDocumentation\` ([source](https://github.com/zesk/build/blob/main/bin/build/tools/usage.sh#L196))
