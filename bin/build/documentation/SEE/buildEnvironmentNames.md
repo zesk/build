@@ -1,1 +1,1 @@
-[buildEnvironmentNames]({rel}tools/build.md#buildenvironmentnames) - List known environment names ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L253))
+[buildEnvironmentNames]({rel}tools/build.md#buildenvironmentnames) - List known environment names ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L247))

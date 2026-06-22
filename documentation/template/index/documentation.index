@@ -73,8 +73,6 @@ __xmlTagOpen documentation/source/tools/xml.md
 _argumentReturn documentation/source/tools/argument.md
 _arguments documentation/source/tools/argument.md
 _deprecated documentation/source/tools/sugar.md
-_installRemotePackage documentation/source/guide/installer.md
-_installRemotePackage documentation/source/tools/bin.md
 allEnvironmentList documentation/source/index/environment.md
 allFunctionList documentation/source/index/function.md
 allToolGroupList documentation/source/index/group.md
@@ -591,6 +589,8 @@ incrementor documentation/source/tools/utilities.md
 insideDocker documentation/source/tools/unused.md
 installInstallBinary documentation/source/guide/installer.md
 installInstallBuild documentation/source/tools/build.md
+installSoftware documentation/source/guide/installer.md
+installSoftware documentation/source/tools/bin.md
 integerClamp documentation/source/tools/text.md
 interactiveCountdown documentation/source/tools/interactive.md
 interactiveManager documentation/source/tools/interactive.md
@@ -702,6 +702,7 @@ mariadbInstall documentation/source/tools/install.md
 mariadbUninstall documentation/source/tools/install.md
 markdownCheckIndex documentation/source/tools/markdown.md
 markdownFormatList documentation/source/tools/markdown.md
+markdownHeadingsToConsole documentation/source/tools/markdown.md
 markdownIndentHeading documentation/source/tools/markdown.md
 markdownRemoveUnfinishedSections documentation/source/tools/markdown.md
 markdownToConsole documentation/source/tools/markdown.md

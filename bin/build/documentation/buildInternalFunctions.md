@@ -1,19 +1,17 @@
 ### `buildInternalFunctions`
 
-> Prints the list of functions defined in Zesk Build
+> Prints the list of internal functions defined in Zesk Build
 
 #### Usage
 
-    buildInternalFunctions [ --help ] [ --deprecated ] [ --help ]
+    buildInternalFunctions [ --help ]
 
-Prints the list of functions defined in Zesk Build
+Prints the list of internal functions defined in Zesk Build - for internal documentation use only.
 
 > Location: `bin/build/tools/build.sh`
 
 #### Arguments
 
-- `--help` - Flag. Optional. Display this help.
-- `--deprecated` - Flag. Optional. Include all deprecated functions as well.
 - `--help` - Flag. Optional. Display this help.
 
 #### Return codes
@@ -21,8 +19,4 @@ Prints the list of functions defined in Zesk Build
 - `0` - Success
 - `1` - Environment error
 - `2` - Argument error
-
-#### Environment
-
-- [`BUILD_HOME` Build Home Directory]({rel}env/#build_configuration) – **Directory**. `BUILD_HOME` is `.` when this code is installed - at
 

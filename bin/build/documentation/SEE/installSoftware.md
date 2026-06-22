@@ -1,0 +1,1 @@
+[installSoftware]({rel}guide/installer.md#installsoftware) - Installs {name} in a local project directory if not installed. ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L224))

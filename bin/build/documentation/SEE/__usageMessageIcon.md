@@ -1,0 +1,1 @@
+[__usageMessageIcon]({rel}#__usagemessageicon) - Icon for usage messages ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L1022))

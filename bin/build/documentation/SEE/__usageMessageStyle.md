@@ -1,0 +1,1 @@
+[__usageMessageStyle]({rel}tools/usage.md#__usagemessagestyle) - Style usage messages ([source](https://github.com/zesk/build/blob/main/bin/build/install.sample.sh#L1034))

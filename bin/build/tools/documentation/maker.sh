@@ -348,7 +348,7 @@ __documentationFileCompileFunction() {
 
   local handler="$1" && shift
   local docPath="$1" && shift
-  local sourcePath="$1" && shift
+  local sourcePaths && IFS=":" read -r -a sourcePaths <<<"${1-}" && shift
 
   local fun && fun=$(validate "$handler" String "function" "${1-}") && shift || return $?
   local sourceHash="" sourceFile="${1-}" && shift || throwArgument "$handler" "Missing sourceFile" || return $?
@@ -408,15 +408,18 @@ __documentationFileCompileFunction() {
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
 
-    [ -n "$sourcePath" ] || throwArgument "$handler" "Missing source path to find $fun" || return $?
-    sourceFile=$(catchReturn "$handler" __bashDocumentation_FindFunctionDefinitions "$sourcePath" "$fun") || return $?
-    local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
-    if [ "$sourcesFound" -gt 1 ]; then
-      local remainingFiles && remainingFiles=$(sed "1d" <<<"$sourceFile")
-      sourceFile=$(catchReturn "$handler" head -n 1 <<<"$sourceFile") || return $?
-      statusMessage --last decorate warning "${prefix} Multiple sources found for $prettyFun (x$sourcesFound), using $(decorate file "$sourceFile"):"$'\n'"Ignoring $(decorate orange "${remainingFiles//$'\n'/, }")"
-    fi
-    [ -f "$sourceFile" ] || throwEnvironment "$handler" "${prefix} No source found for $prettyFun" || return $?
+    [ "${#sourcePaths[@]}" -gt 0 ] || throwArgument "$handler" "Missing source paths to find $fun" || return $?
+    local sourcePath && for sourcePath in "${sourcePaths[@]}"; do
+      if sourceFile=$(catchReturn "$handler" __bashDocumentation_FindFunctionDefinitions "$sourcePath" "$fun"); then
+        local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
+        if [ "$sourcesFound" -gt 1 ]; then
+          local remainingFiles && remainingFiles=$(sed "1d" <<<"$sourceFile")
+          sourceFile=$(catchReturn "$handler" head -n 1 <<<"$sourceFile") || return $?
+          statusMessage --last decorate warning "${prefix} Multiple sources found for $prettyFun (x$sourcesFound), using $(decorate file "$sourceFile"):"$'\n'"Ignoring $(decorate orange "${remainingFiles//$'\n'/, }")"
+        fi
+      fi
+    done
+    [ -f "$sourceFile" ] || throwEnvironment "$handler" "${prefix} No source found for $prettyFun in ${sourcePaths[*]}" || return $?
 
     __profileLabel="find function source"
     # IDENTICAL profileFunctionMarker 3

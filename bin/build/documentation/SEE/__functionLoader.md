@@ -1,0 +1,1 @@
+[__functionLoader]({rel}#__functionloader) - Loads conditional code based on whether a function is defined ([source](https://github.com/zesk/build/blob/main/bin/build/tools.sh#L57))

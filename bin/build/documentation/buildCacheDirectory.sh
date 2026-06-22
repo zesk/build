@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-21
+# Generated on 2026-06-22
 # shellcheck disable=SC2034
 argument=$'pathSegment - One or more directory or file path, concatenated as path segments using `/`\n--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -13,14 +13,14 @@ file="bin/build/tools/build.sh"
 fn="buildCacheDirectory"
 fnMarker="buildcachedirectory"
 foundNames=([0]="example" [1]="argument" [2]="environment")
-line="190"
+line="184"
 logFile=""
 original="buildCacheDirectory"
 rawComment=$'Path to cache directory for build system.\nDefaults to `$XDG_CACHE_HOME/.build` unless `$XDG_CACHE_HOME` is not a directory.\nAppends any passed in arguments as path segments.\nExample:     logFile=$({fn} test.log)\nArgument: pathSegment - One or more directory or file path, concatenated as path segments using `/`\nEnvironment: XDG_CACHE_HOME\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="98c6164d9932c99a6d3b1ab2ae83bc5ff97b54d3"
-sourceLine="190"
+sourceHash="5313b3e93fc327771b540642fff47051da315c49"
+sourceLine="184"
 summary="Path to cache directory for build system."
 summaryComputed="true"
 usage="buildCacheDirectory [ pathSegment ] [ --help ]"

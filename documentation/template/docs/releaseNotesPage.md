@@ -11,6 +11,7 @@
 - Added `validate` `UserDirectory` `UserFile` and `UserDirectoryList` for user's `$HOME`-relative paths
 - {SEE:documentationMaker} now supports no arguments and reads from standard input and output
 - Your bash markdown documentation description now has `SEE:` tokens replaced automatically
+- Renamed `_installRemotePackage` to {SEE:installSoftware} and made it *public* named
 
 ## Zesk Build release v0.44.5
 
