@@ -70,8 +70,7 @@ __decorateExtensionWrap() {
     local line && while IFS="" read -r line; do
       local cleanLine && cleanLine="$(printf "%s" "$line" | consoleToPlain)"
       padWidth=$((actualWidth - ${#cleanLine}))
-      local pad=""
-      [ "$padWidth" -gt 0 ] || pad=$(textRepeat "$padWidth" "$fill")
+      local pad="" && [ "$padWidth" -le 0 ] || pad=$(textRepeat "$padWidth" "$fill")
       printf "%s%s%s%s\n" "$prefix" "$line" "$pad" "$suffix"
     done
   else
