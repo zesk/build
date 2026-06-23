@@ -497,7 +497,7 @@ markdownHeadingsToConsole() {
   [ "${#headings[@]}" -gt 0 ] || headings=(big box success notice info label)
   local finished=false && while ! $finished; do
     local line && IFS="" read -d $'\n' -r line || finished=true
-    local style="" remain
+    local style="" remain=""
     if [ "${line#\#}" != "$line" ]; then
       remain="${line#\#* }"
       local depth=$(("${#line}" - "${#remain}" - 2))

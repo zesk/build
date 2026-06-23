@@ -245,9 +245,10 @@ testBuildFunctionsHelpCoverage() {
     if [ "${fun#test}" != "$fun" ] || [ "${fun#_}" != "$fun" ] || [ "${fun#usageArgument}" != "$fun" ]; then
       continue
     fi
-    if grep -q -e "^$(quoteGrepPattern "$fun")$" "$deprecatedFunctions"; then
-      statusMessage decorate subtle "Deprecated function: $(decorate code "$fun")"
-    elif inArray "$fun" "${helpless[@]}"; then
+    #if grep -q -e "^$(quoteGrepPattern "$fun")$" "$deprecatedFunctions"; then
+    #  statusMessage decorate subtle "Deprecated function: $(decorate code "$fun")"
+    #elif inArray "$fun" "${helpless[@]}"; then
+    if inArray "$fun" "${helpless[@]}"; then
       statusMessage decorate info "Function has no --help: $(decorate code "$fun")"
     else
       local helpCall=("$fun" --help)
