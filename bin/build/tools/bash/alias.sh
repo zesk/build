@@ -37,7 +37,7 @@ __bashApplicationAliases() {
   local returnCode=0
 
   [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  local alias path && while read -r alias path name; do
+  local alias path name && while read -r alias path name; do
     local fullPath && if fullPath=$(validate "$handler" UserDirectory path "$path"); then
       __bashApplicationAlias "$handler" "$alias" "$fullPath" "$name" || return $?
     else
