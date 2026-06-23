@@ -303,6 +303,7 @@ testBuildEnvironmentLoad suite=self test/tools/self-tests.sh
 testBuildEnvironmentLoadAll suite=self test/tools/self-tests.sh  tag=slow tag=slow-non-critical
 testBuildEnvironmentNames suite=self test/tools/self-tests.sh
 testBuildFunctions suite=self test/tools/self-tests.sh
+testBuildFunctionsExclude suite=self test/tools/self-tests.sh
 testBuildInternalFunctions suite=self test/tools/self-tests.sh
 testBuildRunner suite=self test/tools/self-tests.sh
 testInstallBinBuild suite=self test/tools/self-tests.sh

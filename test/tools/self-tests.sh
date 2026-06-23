@@ -122,6 +122,12 @@ testBuildFunctions() {
   catchEnvironment "$handler" rm -f "$fun" "$fun.deprecated" || return $?
 }
 
+testBuildFunctionsExclude() {
+  assertEquals 0 "$(buildFunctions | buildFunctionsExclude | fileLineCount)" || return $?
+  assertEquals 0 "$(printf "%s\n" "catchReturn" | buildFunctionsExclude | fileLineCount)" || return $?
+  assertEquals 1 "$(printf "%s\n" "catchReturnSkippy" | buildFunctionsExclude | fileLineCount)" || return $?
+}
+
 testBuildInternalFunctions() {
   local handler="returnMessage"
 

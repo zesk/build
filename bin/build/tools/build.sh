@@ -126,6 +126,25 @@ _buildFunctions() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Exclude any function which is a build function
+# Removes any function from the text stream which is in `buildFunctions`
+# stdin: line:Function
+# stdout: line:Function
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+buildFunctionsExclude() {
+  local handler="_${FUNCNAME[0]}"
+  local ff && ff=$(fileTemporaryName "$handler") || return $?
+  local clean=("$ff")
+  catchReturn "$handler" buildFunctions | sort -u >"$ff" || returnClean $? "${clean[@]}" || return $?
+  sort -u | diff -u - "$ff" | grepSafe '^-' | cut -c 2- | grepSafe -v '^-'
+  catchReturn "$handler" rm -f "${clean[@]}" || return $?
+}
+_buildFunctionsExclude() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 __buildInternalFunctions() {
   cat <<'EOF'
 installSoftware
@@ -146,26 +165,6 @@ buildInternalFunctions() {
   } | sort -u
 }
 _buildInternalFunctions() {
-  # __IDENTICAL__ bashDocumentation 1
-  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Summary: Exclude any function which is a build function
-# Removes any function from the text stream which is in `buildFunctions`
-# stdin: line:Function
-# stdout: line:Function
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-buildFunctionsExclude() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || helpArgument "$handler" "$@" || return 0
-  local ff && ff=$(fileTemporaryName "$handler") || return $?
-  local clean=("$ff")
-  catchReturn "$handler" buildFunctions | sort -u >"$ff" || returnClean $? "${clean[@]}" || return $?
-  sort -u | diff -u - "$ff" | grep '^-' | cut -c 2- | grep -v '^-'
-  returnClean $? "${clean[@]}" || return $?
-}
-_buildFunctionsExclude() {
   # __IDENTICAL__ bashDocumentation 1
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

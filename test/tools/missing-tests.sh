@@ -14,7 +14,6 @@
 #
 # No references found for bashDocumentationDefaults
 # No references found for bashDocumentationMissing
-# No references found for buildFunctionsExclude
 
 # bashDocumentationDeriveFunction
 # bashDocumentationDeriveSee
