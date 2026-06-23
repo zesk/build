@@ -134,6 +134,7 @@ _buildFunctions() {
 # Argument: --help - Flag. Optional. Display this help.
 buildFunctionsExclude() {
   local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local ff && ff=$(fileTemporaryName "$handler") || return $?
   local clean=("$ff")
   catchReturn "$handler" buildFunctions | sort -u >"$ff" || returnClean $? "${clean[@]}" || return $?

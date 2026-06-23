@@ -1315,7 +1315,7 @@ textRepeat() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$count" ]; then
-        count="$(validate "$handler" UnsignedInteger "count" "$1")" || return $?
+        count="$(validate "$handler" UnsignedInteger "count" "$1")" || throwArgument "$handler" "textRepeat Bad count: $count"$'\n'"$(debuggingStack)" || return $?
       else
         local powers curPow
         powers=("$*")
