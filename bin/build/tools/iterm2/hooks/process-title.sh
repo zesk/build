@@ -12,10 +12,10 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-set -eou pipefail
-
 # shellcheck source=/dev/null
-if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
+if source "${BASH_SOURCE[0]%/*}/../../../tools.sh"; then
+
+  set -eou pipefail
 
   # Summary: Sets the process title
   # Argument: message - String. Optional. A string to set the process title.
@@ -40,8 +40,11 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
       shift
     done
 
-    [ -n "$message" ] || return 0
-    iTerm2Badge -i "$message"
+    if [ -n "$message" ]; then
+      iTerm2Badge -i "$message"
+    fi
+    # IDENTICAL hookRunOptionalNext 1
+    catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
   }
   ___hookProcessTitle() {
     # __IDENTICAL__ bashDocumentation 1

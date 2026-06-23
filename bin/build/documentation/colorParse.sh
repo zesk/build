@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'color - String. Optional. Color to parse.\n--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/colors.sh"
 fn="colorParse"
 fnMarker="colorparse"
 foundNames=([0]="stdin" [1]="argument")
-line="751"
+line="733"
 original="colorParse"
 rawComment=$'Parse a color and output R G B decimal values\nstdin: list:colors\nArgument: color - String. Optional. Color to parse.\nArgument: --help - Flag. Optional. Display this help.\nTakes arguments or stdin.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
-sourceLine="751"
+sourceHash="3c5d29e3e1c2d6229bfddf23fce762fb65faba52"
+sourceLine="733"
 stdin=$'list:colors\n'
 summary="Parse a color and output R G B decimal values"
 summaryComputed="true"

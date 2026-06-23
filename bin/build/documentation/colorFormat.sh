@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'format - String. Optional. Formatting string.\nred - UnsignedInteger. Optional. Red component.\ngreen - UnsignedInteger. Optional. Blue component.\nblue - UnsignedInteger. Optional. Green component.\n--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/colors.sh"
 fn="colorFormat"
 fnMarker="colorformat"
 foundNames=([0]="stdin" [1]="argument")
-line="712"
+line="694"
 original="colorFormat"
 rawComment=$'Take r g b decimal values and convert them to hex color values\nstdin: list:UnsignedInteger\nArgument: format - String. Optional. Formatting string.\nArgument: red - UnsignedInteger. Optional. Red component.\nArgument: green - UnsignedInteger. Optional. Blue component.\nArgument: blue - UnsignedInteger. Optional. Green component.\nArgument: --help - Flag. Optional. Display this help.\nTakes arguments or stdin values in groups of 3.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
-sourceLine="712"
+sourceHash="3c5d29e3e1c2d6229bfddf23fce762fb65faba52"
+sourceLine="694"
 stdin=$'list:UnsignedInteger\n'
 summary="Take r g b decimal values and convert them to"
 summaryComputed="true"

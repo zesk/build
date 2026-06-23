@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/build.sh"
 fn="buildInternalFunctions"
 fnMarker="buildinternalfunctions"
 foundNames=([0]="argument")
-line="140"
+line="159"
 original="buildInternalFunctions"
 rawComment=$'Argument: --help - Flag. Optional. Display this help.\nPrints the list of internal functions defined in Zesk Build - for internal documentation use only.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="5313b3e93fc327771b540642fff47051da315c49"
-sourceLine="140"
+sourceHash="5cf4ed9c5e3e9e53f3f0a6d4ea1768b9be2b4c46"
+sourceLine="159"
 summary="Prints the list of internal functions defined in Zesk Build"
 summaryComputed="true"
 usage="buildInternalFunctions [ --help ]"

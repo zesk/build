@@ -17,14 +17,19 @@ source "${BASH_SOURCE[0]%/*}/../../../tools.sh" || exit 121
 # Argument: --title title - Set the title of the notification
 # Argument: message ... - Display this message (one per line) in the notification.
 __iTerm2Notify() {
-  export BUILD_HOOK_DIRS
-  buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
+  local handler="_${FUNCNAME[0]}"
+  local __saved=("$@")
+
   if isiTerm2; then
     iTerm2Attention !
     iTerm2Attention start
   fi
-  hookRunOptional --next "${BASH_SOURCE[0]}" "notify" "$@"
-  # echo "BUILD_HOOK_DIRS=$BUILD_HOOK_DIRS"
+  # IDENTICAL hookRunOptionalNext 1
+  catchReturn "$handler" hookRunOptional --next "${BASH_SOURCE[0]}" "$HOOK_NAME" "${__saved[@]+"${__saved[@]}"}" || return $?
+}
+___iTerm2Notify() {
+  # __IDENTICAL__ bashDocumentation 1
+  bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __iTerm2Notify "$@"

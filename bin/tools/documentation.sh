@@ -162,7 +162,7 @@ buildDocumentationTemplates() {
 
   # Make templates
   __buildDocumentationStatus notice "Making templates ..."
-  statusMessage --last timing --name "Made templates in" executeEcho documentationMake "$@" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
+  statusMessage --last timing --name "Made templates in" documentationMake "$@" --template "$templateSource" --source "$templateSource" --target "$templateCompiled" || return $?
 }
 _buildDocumentationTemplates() {
   # __IDENTICAL__ bashDocumentation 1

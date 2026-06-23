@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument="none"
 base="colors.sh"
@@ -16,7 +16,7 @@ original="consoleHasAnimation"
 rawComment=$'Does the console support animation?\nReturn Code: 0 - Supports console animation\nReturn Code: 1 - Does not support console animation\n\n'
 return_code=$'0 - Supports console animation\n1 - Does not support console animation\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
+sourceHash="3c5d29e3e1c2d6229bfddf23fce762fb65faba52"
 sourceLine="55"
 summary="Does the console support animation?"
 summaryComputed="true"

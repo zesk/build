@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'factor - floatValue. Required. Red RGB value (0-255)\nredValue - Integer. Required. Red RGB value (0-255)\ngreenValue - Integer. Required. Red RGB value (0-255)\nblueValue - Integer. Required. Red RGB value (0-255)\n--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -11,14 +11,14 @@ file="bin/build/tools/colors.sh"
 fn="colorMultiply"
 fnMarker="colormultiply"
 foundNames=([0]="argument" [1]="requires")
-line="779"
+line="761"
 original="colorMultiply"
 rawComment=$'Multiply color values by a factor and return the new values\nArgument: factor - floatValue. Required. Red RGB value (0-255)\nArgument: redValue - Integer. Required. Red RGB value (0-255)\nArgument: greenValue - Integer. Required. Red RGB value (0-255)\nArgument: blueValue - Integer. Required. Red RGB value (0-255)\nArgument: --help - Flag. Optional. Display this help.\nRequires: bc\n\n'
 requires=$'bc\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
-sourceLine="779"
+sourceHash="3c5d29e3e1c2d6229bfddf23fce762fb65faba52"
+sourceLine="761"
 summary="Multiply color values by a factor and return the new"
 summaryComputed="true"
 usage="colorMultiply factor redValue greenValue blueValue [ --help ]"

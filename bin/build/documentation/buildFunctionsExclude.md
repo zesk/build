@@ -1,6 +1,6 @@
 ### `buildFunctionsExclude`
 
-> Exclude any function which is a build function
+> Exclude all function names in this library
 
 #### Usage
 

@@ -1,1 +1,1 @@
-[buildInternalFunctions]({rel}tools/build.md#buildinternalfunctions) - Prints the list of internal functions defined in Zesk Build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L140))
+[buildInternalFunctions]({rel}tools/build.md#buildinternalfunctions) - Prints the list of internal functions defined in Zesk Build ([source](https://github.com/zesk/build/blob/main/bin/build/tools/build.sh#L159))

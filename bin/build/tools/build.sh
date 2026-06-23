@@ -126,7 +126,7 @@ _buildFunctions() {
   bashDocumentation "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Summary: Exclude any function which is a build function
+# Summary: Exclude all function names in this library
 # Removes any function from the text stream which is in `buildFunctions`
 # stdin: line:Function
 # stdout: line:Function

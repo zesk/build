@@ -1,1 +1,1 @@
-[markdownHeadingsToConsole]({rel}tools/markdown.md#markdownheadingstoconsole) - Convert Markdown Heading lines to console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L490))
+[markdownHeadingsToConsole]({rel}tools/markdown.md#markdownheadingstoconsole) - Convert Markdown Heading lines to console ([source](https://github.com/zesk/build/blob/main/bin/build/tools/colors.sh#L472))

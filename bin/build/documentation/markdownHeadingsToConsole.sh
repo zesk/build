@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n--default defaultStyle - String. Optional. Use this style on non-heading lines.\n--headings headingStyleList - ColonDelimitedList. Optional. Styles represent each heading depth with the first being `h1`, `h2, etc.\n'
 base="colors.sh"
@@ -11,13 +11,13 @@ file="bin/build/tools/colors.sh"
 fn="markdownHeadingsToConsole"
 fnMarker="markdownheadingstoconsole"
 foundNames=([0]="argument" [1]="summary")
-line="490"
+line="472"
 original="markdownHeadingsToConsole"
 rawComment=$'Argument: --help - Flag. Optional. Display this help.\nSummary: Convert Markdown Heading lines to console\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nArgument: --default defaultStyle - String. Optional. Use this style on non-heading lines.\nArgument: --headings headingStyleList - ColonDelimitedList. Optional. Styles represent each heading depth with the first being `h1`, `h2, etc.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
-sourceLine="490"
+sourceHash="3c5d29e3e1c2d6229bfddf23fce762fb65faba52"
+sourceLine="472"
 summary="Convert Markdown Heading lines to console"
 summaryComputed=""
 usage="markdownHeadingsToConsole [ --help ] [ --handler handler ] [ --default defaultStyle ] [ --headings headingStyleList ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="colors.sh"
@@ -19,7 +19,7 @@ rawComment=$'Summary: Row count in current console\nOutput the number of columns
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 see=$'stty\n'
 sourceFile="bin/build/tools/colors.sh"
-sourceHash="480be5db852b12675144ab1e6476bc78bcb875fa"
+sourceHash="3c5d29e3e1c2d6229bfddf23fce762fb65faba52"
 sourceLine="420"
 summary="Row count in current console"
 summaryComputed=""

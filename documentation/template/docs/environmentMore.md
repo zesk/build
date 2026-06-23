@@ -1,4 +1,4 @@
-
+<!-- moreDirectory=/Users/kent/marketacumen/build/bin/build/documentation/env/more -->
 ## `__BASH_PROMPT_MARKERS`
 
 > **Prompt marker list** &mdash; Bash Prompt escape codes for prompt reporting

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'envName - String. Optional. Name of the environment value to find\n--application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.\n--help - Flag. Optional. Display this help.\n--handler handler - Function. Optional. Use this error handler instead of the default error handler.\n'
 base="build.sh"
@@ -12,13 +12,13 @@ file="bin/build/tools/build.sh"
 fn="buildEnvironmentFiles"
 fnMarker="buildenvironmentfiles"
 foundNames=([0]="argument" [1]="environment")
-line="275"
+line="274"
 original="buildEnvironmentFiles"
 rawComment=$'Determine the environment file names for environment variables\nArgument: envName - String. Optional. Name of the environment value to find\nArgument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.\nArgument: --help - Flag. Optional. Display this help.\nArgument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.\nEnvironment: BUILD_ENVIRONMENT_DIRS\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="5313b3e93fc327771b540642fff47051da315c49"
-sourceLine="275"
+sourceHash="5cf4ed9c5e3e9e53f3f0a6d4ea1768b9be2b4c46"
+sourceLine="274"
 summary="Determine the environment file names for environment variables"
 summaryComputed="true"
 usage="buildEnvironmentFiles [ envName ] [ --application applicationHome ] [ --help ] [ --handler handler ]"

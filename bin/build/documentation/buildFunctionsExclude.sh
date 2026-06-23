@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-06-22
+# Generated on 2026-06-23
 # shellcheck disable=SC2034
 argument=$'--help - Flag. Optional. Display this help.\n'
 base="build.sh"
@@ -11,16 +11,16 @@ file="bin/build/tools/build.sh"
 fn="buildFunctionsExclude"
 fnMarker="buildfunctionsexclude"
 foundNames=([0]="summary" [1]="stdin" [2]="stdout" [3]="argument")
-line="159"
+line="135"
 original="buildFunctionsExclude"
-rawComment=$'Summary: Exclude any function which is a build function\nRemoves any function from the text stream which is in `buildFunctions`\nstdin: line:Function\nstdout: line:Function\nArgument: --help - Flag. Optional. Display this help.\n\n'
+rawComment=$'Summary: Exclude all function names in this library\nRemoves any function from the text stream which is in `buildFunctions`\nstdin: line:Function\nstdout: line:Function\nArgument: --help - Flag. Optional. Display this help.\n\n'
 return_code=$'0 - Success\n1 - Environment error\n2 - Argument error\n'
 sourceFile="bin/build/tools/build.sh"
-sourceHash="5313b3e93fc327771b540642fff47051da315c49"
-sourceLine="159"
+sourceHash="5cf4ed9c5e3e9e53f3f0a6d4ea1768b9be2b4c46"
+sourceLine="135"
 stdin=$'line:Function\n'
 stdout=$'line:Function\n'
-summary="Exclude any function which is a build function"
+summary="Exclude all function names in this library"
 summaryComputed=""
 usage="buildFunctionsExclude [ --help ]"
 # shellcheck disable=SC2016
