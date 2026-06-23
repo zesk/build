@@ -451,26 +451,8 @@ _consoleRows() {
 markdownToConsole() {
   local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-      ;;
-    esac
-    shift
-  done
+  [ $# -eq 0 ] || helpArgument --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
-  [ "${#headings[@]}" -gt 0 ] || headings=(success success notice info label subtle)
   # shellcheck disable=SC2119
   _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
 }
