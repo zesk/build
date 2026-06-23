@@ -212,7 +212,7 @@ __documentationEnvironmentMake() {
   ! $verboseFlag || decorate info "Wrote $(decorate file "$targetPath/environmentCategoryTotal.md")" 1>&2
   # More!
   local moreDocument="$targetPath/environmentMore.md"
-  catchReturn "$handler" printf -- "" >"$moreDocument" || return $?
+  catchReturn "$handler" printf -- "<!-- moreDirectory=$moreDirectory -->" >"$moreDocument" || return $?
   local name && while IFS="" read -r name; do
     printf "\n" >>"$moreDocument"
     cat "$name" >>"$moreDocument"
